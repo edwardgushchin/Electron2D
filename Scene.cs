@@ -82,7 +82,11 @@ namespace Electron2D
 		public Color ClearColor 
 		{ 
 			get { return clearColor; } 
-			set { clearColor = value; } 
+			set 
+			{ 
+				SDL.SDL_SetRenderDrawColor(Game.RenderContext, value.R, value.G, value.B, value.A);
+				clearColor = value; 
+			} 
 		}
 		
 		public int Index { get; internal set; }

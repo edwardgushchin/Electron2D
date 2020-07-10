@@ -21,6 +21,7 @@ namespace Electron2D.Kernel
 			FPS = 0;
 			Resizeble = false;
 			DebugInfo = true;
+			Smoothing = SmoothingType.Linear;
 			Title = "Electron2D Game Engine 0.1";
 		}
 		
@@ -30,7 +31,6 @@ namespace Electron2D.Kernel
 			get { return resolution; }
 			set
 			{
-				
 				resolution = value;
 				if(Game.WindowContext != IntPtr.Zero && resolution != value)
 					SDL.SDL_SetWindowSize(Game.WindowContext, resolution.Width, resolution.Height);
@@ -46,7 +46,7 @@ namespace Electron2D.Kernel
 				if(Game.WindowContext != IntPtr.Zero)
 				{
 					if(value != fullscreen && value == true)
-						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
+						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
 					else if(value != fullscreen && value == false)
 						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 				}	
@@ -58,11 +58,32 @@ namespace Electron2D.Kernel
 		{ 
 			get; set;
 		}
+
+		static SmoothingType smoothing;
+		public static SmoothingType Smoothing
+		{
+			get { return smoothing; }
+			set 
+			{
+				switch(value)
+				{
+					case SmoothingType.Nearest:
+						SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "0");
+						break;
+					case SmoothingType.Linear:
+						SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "1");
+						break;
+					case SmoothingType.Anisotropic:
+						SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "2");
+						break;
+				}
+				smoothing = value;
+			}
+		}
 		public static bool Resizeble { get; set; }
 		public static uint FPS { get; set; }
 		public static string Title { get; set; }
 		public static bool DebugMode { get { return Debugger.IsAttached; } }
-
 		public static bool DebugInfo { get; set; }
 	}
 }

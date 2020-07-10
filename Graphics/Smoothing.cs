@@ -3,11 +3,10 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
 
 namespace Electron2D.Graphics
 {
-    public enum Smoothing {
+    public enum SmoothingType {
         // nearest pixel sampling
         Nearest,
         // linear filtering (supported by OpenGL and Direct3D)

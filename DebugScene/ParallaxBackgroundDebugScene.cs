@@ -23,11 +23,7 @@ namespace Electron2D.DebugScene
                 forest_071, forest_072, forest_081, 
                 forest_082, forest_091, forest_092, background;
 
-        bool layer1, layer2, layer3, layer4, layer5, layer6, layer7, layer8, layer9, layer10;
-        public ParallaxBackgroundDebugScene() : base()
-		{
-			layer1 = layer2 = layer3 = layer4 = layer5 = layer6 = layer7 = layer8 = layer9 = layer10 = true;
-		}
+        public ParallaxBackgroundDebugScene() : base() {}
 
         protected override void OnLoadScene()
 		{
@@ -94,24 +90,33 @@ namespace Electron2D.DebugScene
         double speed_05 = -24.0, speed_04 = -32.0, speed_03 = -64.0, speed_02 = -96.0, speed_01 = -128.0;
         protected override void Update(double deltaTime)
 		{
-            if(layer1) background.Draw();
-            if(layer2) layerDraw(forest_091, forest_092, speed_09 * deltaTime);
-            if(layer3) layerDraw(forest_081, forest_082, speed_08 * deltaTime);
-            if(layer4) layerDraw(forest_071, forest_072, speed_07 * deltaTime);
-            if(layer5) layerDraw(forest_061, forest_062, speed_06 * deltaTime);
-            if(layer6) layerDraw(particles051, particles052, speed_05 * deltaTime);
-            if(layer7) layerDraw(forest_041, forest_042, speed_04 * deltaTime);
-            if(layer8) layerDraw(particles_031, particles_032, speed_03 * deltaTime);
-            if(layer9) layerDraw(bushes_021, bushes_022, speed_02 * deltaTime);
-            if(layer10) layerDraw(mist_011, mist_012, speed_01 * deltaTime);
+            background.Draw();
+            layerDraw(forest_091, forest_092, speed_09 * deltaTime);
+            layerDraw(forest_081, forest_082, speed_08 * deltaTime);
+            layerDraw(forest_071, forest_072, speed_07 * deltaTime);
+            layerDraw(forest_061, forest_062, speed_06 * deltaTime);
+            layerDraw(particles051, particles052, speed_05 * deltaTime);
+            layerDraw(forest_041, forest_042, speed_04 * deltaTime);
+            layerDraw(particles_031, particles_032, speed_03 * deltaTime);
+            layerDraw(bushes_021, bushes_022, speed_02 * deltaTime);
+            layerDraw(mist_011, mist_012, speed_01 * deltaTime);
 
-            Debug.Log($"x: = {forest_092.Transform.Position}, deltaTime = {deltaTime}, speed = {speed_09 * deltaTime}");
+            //Debug.Log($"x: = {forest_092.Transform.Position}, deltaTime = {deltaTime}, speed = {speed_09 * deltaTime}");
         }
 
         protected override void OnKeyDown(object sender, KeyboardEventArgs e)
 		{			
 			if(e.Key == Keyboard.Keys.Escape)
 				SceneManager.ExitGame();
+
+            if(e.Key == Keyboard.Keys.D1)
+                Settings.Smoothing = SmoothingType.Nearest;
+
+            if(e.Key == Keyboard.Keys.D2)
+                Settings.Smoothing = SmoothingType.Linear;
+            
+            if(e.Key == Keyboard.Keys.D3)
+                Settings.Smoothing = SmoothingType.Anisotropic;
 		}
     }
 }

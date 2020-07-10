@@ -33,8 +33,6 @@ namespace Electron2D.Graphics
                 CreateWidnow();
 			    CreateRenderer();
 			    Initialized = true;
-				//SDL.SDL_Rect camera;
-				//SDL.SDL_RenderGetViewport(renderer,  out camera);
                 Debug.Log("Initialization of the graphics rendering subsystem completed successfully.",  Debug.Sender.Render);
             }
             else
@@ -115,11 +113,11 @@ namespace Electron2D.Graphics
 			Dispose();
 		}
 		
-		public void Clear(Color Color)
-		{
-			SDL.SDL_SetRenderDrawColor(renderer, Color.R, Color.G, Color.B, Color.A);
-			SDL.SDL_RenderClear(renderer);
-		}
+		//public void Clear(Color Color)
+		//{
+		//	SDL.SDL_SetRenderDrawColor(renderer, Color.R, Color.G, Color.B, Color.A);
+		//	SDL.SDL_RenderClear(renderer);
+		//}
 		
 		void CreateWidnow()
 		{
@@ -154,7 +152,7 @@ namespace Electron2D.Graphics
 					SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE
 				);
 			}
-			SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "2" );
+			
 		}
 
         void RenderLoop()
@@ -175,6 +173,7 @@ namespace Electron2D.Graphics
 				
 				deltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
 				
+				SDL.SDL_RenderClear(renderer);
 				OnPreUpdate(deltaTime);
 				OnUpdate(deltaTime);
 				SDL.SDL_RenderPresent(renderer);

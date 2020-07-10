@@ -20,6 +20,7 @@ namespace Electron2D
             Settings.DebugInfo = false;
             Settings.Fullscreen = true;
             Settings.Resolution = new Size(1920, 1080);
+            Settings.Smoothing = SmoothingType.Anisotropic;
             
             TestGame = new Game("Electron2D - Parralax Background Demo");
             

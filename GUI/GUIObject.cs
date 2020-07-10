@@ -12,7 +12,7 @@ namespace Electron2D.GUI
     public class GUIObject : IDisposable
 	{
 		RectTransform rectTransform;
-		ScaleMode scaleMode;
+		//ScaleMode scaleMode;
         
         public GUIObject()
         {

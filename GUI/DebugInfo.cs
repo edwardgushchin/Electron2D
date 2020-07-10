@@ -13,7 +13,7 @@ namespace Electron2D.GUI
 {
     internal class DebugInfo
     {
-        Label titleLabel, resolutionLabel, vsyncLabel, 
+        Label titleLabel, resolutionLabel, vsyncLabel, smoothLabel,
 		resizeLabel, fpsLabel, sceneNameLabel, 
 		fullscreenLabel, splitLabel, fontObjectsLabel,
 		guiObjectsLabel, gameObjectsLabel, allObjectsLabel,
@@ -53,6 +53,9 @@ namespace Electron2D.GUI
 
 			vsyncLabel = new Label(font, "V-Sync");
 			obj.Add(vsyncLabel);
+
+			smoothLabel = new Label(font, "Smoothing");
+			obj.Add(smoothLabel);
 
 			fpsLabel = new Label(font, "Frame Per Second");
 			obj.Add(fpsLabel);
@@ -103,7 +106,10 @@ namespace Electron2D.GUI
 			vsyncLabel.RectTransform.Top = fullscreenLabel.RectTransform.Top + padding_bottom;
 			vsyncLabel.RectTransform.Left = padding;
 
-			resizeLabel.RectTransform.Top = vsyncLabel.RectTransform.Top + padding_bottom;
+			smoothLabel.RectTransform.Top = vsyncLabel.RectTransform.Top + padding_bottom;
+			smoothLabel.RectTransform.Left = padding;
+
+			resizeLabel.RectTransform.Top = smoothLabel.RectTransform.Top + padding_bottom;
 			resizeLabel.RectTransform.Left = padding;
 
 			splitLabel.RectTransform.Top = resizeLabel.RectTransform.Top + padding_bottom;
@@ -140,6 +146,7 @@ namespace Electron2D.GUI
 			resolutionLabel.Text = $"Resolution: {Kernel.Settings.Resolution.ToString()}";
 			fullscreenLabel.Text = $"Fullscreen: {Kernel.Settings.Fullscreen}";
 			vsyncLabel.Text = $"V-Sync: {Kernel.Settings.VSinc}";
+			smoothLabel.Text = $"Smoothing: {Kernel.Settings.Smoothing}";
 			resizeLabel.Text = $"Resizeble: {Kernel.Settings.Resizeble}";
 
 			splitLabel.Text = "===============================";
