@@ -78,14 +78,12 @@ namespace Electron2D.Binding.SDL
 		private static extern IntPtr INTERNAL_TTF_LinkedVersion();
 		public static SDL.SDL_version TTF_LinkedVersion()
 		{
-			SDL.SDL_version result;
 			IntPtr result_ptr = INTERNAL_TTF_LinkedVersion();
-			result = (SDL.SDL_version) Marshal.PtrToStructure(
-				result_ptr,
-				typeof(SDL.SDL_version)
-			);
-			return result;
-		}
+            return (SDL.SDL_version)Marshal.PtrToStructure(
+                result_ptr,
+                typeof(SDL.SDL_version)
+            );
+        }
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void TTF_ByteSwappedUNICODE(int swapped);

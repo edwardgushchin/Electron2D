@@ -12,12 +12,11 @@ using Electron2D.Graphics;
 
 namespace Electron2D
 {
-    public class Game
+    public sealed class Game
     {
-		static Render render;
-        EventPool eventPool;
+		private static Render render;
 
-		public Game(string Title)
+        public Game(string Title)
         {
 			Settings.Title = Title;
 
@@ -29,7 +28,7 @@ namespace Electron2D
 			Debug.Message("Licensed under the Apache License, Version 2.0");
 			Debug.NewLine();
 
-			if(Settings.DebugMode) 
+			if(Settings.DebugMode)
 			{
 				Debug.Log("The Electron2D game engine is running in DEBUG mode.", Debug.Sender.Main, Debug.MessageStatus.Warning);
 				Debug.NewLine();
@@ -38,16 +37,15 @@ namespace Electron2D
 			if(!Initialization()) Exit();
         }
 
-		bool Initialization()
+		private bool Initialization()
 		{
-			Debug.Log("Initialization of game engine subsystems...", Debug.Sender.Main);		
+			Debug.Log("Initialization of game engine subsystems...", Debug.Sender.Main);
 
-			eventPool = new EventPool();
-			if(!eventPool.Initialized) return false;
+			Events = new EventPool();
+			if(!Events.Initialized) return false;
 
 			render = new Render();
 			if(!render.Initialized) return false;
-
 
 			SceneManager.SetGameContext(this);
 			SubscriabeEvents();
@@ -57,55 +55,37 @@ namespace Electron2D
 		}
 
 		public Render Render { get { return render; } }
-		internal EventPool Events { get { return eventPool; } }
+        internal EventPool Events { get; private set; }
 
-		internal static IntPtr RenderContext 
-		{
-			get 
-			{ 
-				if(render != null)
-					return render.RenderContext; 
-				return IntPtr.Zero;
-			}
-		}
-		internal static IntPtr WindowContext 
-		{ 
-			get 
-			{ 
-				if(render != null)
-					return render.WindowContext; 
-				return IntPtr.Zero;
-			}
-			set
-			{
-				render.WindowContext = value;
-			}
-		}
+        internal static IntPtr RenderContext => render != null ? render.RenderContext : IntPtr.Zero;
+        internal static IntPtr WindowContext
+        {
+            get => render != null ? render.WindowContext : IntPtr.Zero;
+            set => render.WindowContext = value;
+        }
 
-		public void Play(Scene scene)
+        public void Play(Scene scene)
 		{
 			SceneManager.AddScene(scene);
 			SceneManager.LoadScene(0);
 			render.Start();
 		}
-		
+
 		public void Play(int SceneID)
 		{
 			SceneManager.LoadScene(SceneID);
 			render.Start();
 		}
-		
+
 		public void Play()
 		{
-			if(SceneManager.LoadScene(0))
-				render.Start();
-			else
-			{ 
-				SceneManager.AddScene(new DefaultScene(0));
-				SceneManager.LoadScene(0);
-				render.Start();
-			}
-		}
+            if (!SceneManager.LoadScene(0))
+            {
+                SceneManager.AddScene(new DefaultScene(0));
+                SceneManager.LoadScene(0);
+            }
+            render.Start();
+        }
 
 		public void SetIcon(string Path)
 		{
@@ -121,19 +101,19 @@ namespace Electron2D
 			SDL.SDL_Quit();
 		}
 
-		void SubscriabeEvents()
+		private void SubscriabeEvents()
 		{
 			render.OnPreUpdate += GameUpdate;
 		}
-		
-		void DescribeEvents()
+
+		private void DescribeEvents()
 		{
 			render.OnPreUpdate -= GameUpdate;
 		}
 
-		void GameUpdate(double deltaTime)
+		private void GameUpdate(double deltaTime)
 		{
-			eventPool.Pool();
+			Events.Pool();
 		}
     }
 }

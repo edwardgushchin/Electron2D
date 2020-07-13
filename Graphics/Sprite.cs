@@ -5,33 +5,37 @@
 
 using System;
 
-using Electron2D.Kernel;
-using Electron2D.Graphics;
 using Electron2D.Binding.SDL;
-
-using System.Runtime.InteropServices;
 
 namespace Electron2D.Graphics
 {
     public class Sprite
     {
-
-        IntPtr sprite;
-        SDL.SDL_Rect scr_rect;
-        SDL.SDL_FRect draw_rect; 
-        int width, height, access;
-        uint format;
+        private readonly IntPtr sprite;
+        private SDL.SDL_Rect scr_rect;
+        private SDL.SDL_FRect draw_rect;
+        //private readonly int access;
+        //uint format;
         public Sprite(string path)
         {
             Path = path;
             Transform = new Transform(new Point(0, 0));
             sprite = Image.IMG_LoadTexture(Game.RenderContext, path);
-            SDL.SDL_QueryTexture(sprite, out format, out access, out width, out height); // get the width and height of the texture
+            SDL.SDL_QueryTexture(sprite, out var format, out var access, out int width, out int height); // get the width and height of the texture
 
-            draw_rect = new SDL.SDL_FRect();
-            draw_rect.w = width;
-            draw_rect.h = height;
-            scr_rect.x = 0; scr_rect.y = 0; scr_rect.w = width; scr_rect.h = height; 
+            draw_rect = new SDL.SDL_FRect
+            {
+                w = width,
+                h = height
+            };
+
+            scr_rect = new SDL.SDL_Rect
+            {
+                x = 0,
+                y = 0,
+                w = width,
+                h = height
+            };
         }
 
         public Transform Transform
@@ -39,26 +43,28 @@ namespace Electron2D.Graphics
             get; set;
         }
 
-        void Resize()
+        /*private void Resize()
         {
-            int ratio = 0;
+            int ratio;
             if (width > height)
                 ratio = width / Settings.Resolution.Width;
             else
                 ratio = height / Settings.Resolution.Height;
-            
+
             var newWidth  = ratio * Settings.Resolution.Width;
             var newHeight = ratio * Settings.Resolution.Height;
 
 
-            draw_rect = new SDL.SDL_FRect();
-            draw_rect.w = newWidth;//newWidth;
-            draw_rect.h = newHeight;//newHeight;
+            draw_rect = new SDL.SDL_FRect
+            {
+                w = newWidth,//newWidth;
+                h = newHeight//newHeight;
+            };
             //draw_rect.x = (float)Transform.Position.X;
             //draw_rect.y = (float)Transform.Position.Y;
-        }
+        }*/
 
-        public string Path {get; private set;}
+        public string Path { get; }
 
         public void Draw()
         {

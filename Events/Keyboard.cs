@@ -4,14 +4,12 @@
 */
 
 using System;
-
 using Electron2D.Inputs;
-using Electron2D.Binding.SDL;
 
 namespace Electron2D.Events
 {
 	public delegate void KeyboardEventHundler(object sender, KeyboardEventArgs e);
-	
+
 	public class KeyboardEventArgs : EventArgs
 	{
 		public KeyboardEventArgs(Keyboard.Keys Key, Keyboard.KeyMod Mod)
@@ -19,8 +17,8 @@ namespace Electron2D.Events
 			this.Key = Key;
 			this.Mod = Mod;
 		}
-		
-		public Keyboard.Keys Key { get; private set; }
-		public Keyboard.KeyMod Mod { get; private set; }
+
+		public Keyboard.Keys Key { get; internal set; }
+		public Keyboard.KeyMod Mod { get; internal set; }
 	}
 }

@@ -3,63 +3,54 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-
 namespace Electron2D.Graphics
 {
-
 	public class Transform
 	{
-		Point position, localScale;
-		double degrees;
-		
+		private Point position, localScale;
+
 		public Transform()
 		{
 			position = new Point();
-			degrees = 0;
+            Degrees = 0;
 			localScale = new Point(1, 1);
 		}
-		
+
 		public Transform(Point pos)
 		{
 			position = pos;
-			degrees = 0;
+            Degrees = 0;
 			localScale = new Point(1, 1);
 		}
-		
+
 		// disable once ConvertToAutoProperty
-		public Point Position 
+		public Point Position
 		{
 			get { return position; }
 			private set { position = value; }
 		}
-		
-		// disable once ConvertToAutoProperty
-		public double Degrees 
-		{
-			get { return degrees; }
-			set { degrees = value; }
-		}
-		
-		// disable once ConvertToAutoProperty
-		public Point LocalScale
+
+        // disable once ConvertToAutoProperty
+        public double Degrees { get; set; }
+
+        // disable once ConvertToAutoProperty
+        public Point LocalScale
 		{
 			get { return localScale; }
 			set { localScale = value; }
 		}
-		
+
 		public void Translate(double x, double y)
 		{
 			position.X += x;
 			position.Y += y;
 		}
 
-		
 		public void Rotate(double deg)
 		{
-			degrees += deg;
+            Degrees += deg;
 		}
-		
+
 		public void Scale(double xscale, double yscale)
 		{
 			localScale.X += xscale;

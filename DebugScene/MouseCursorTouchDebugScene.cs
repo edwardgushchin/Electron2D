@@ -3,19 +3,15 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-
 using Electron2D.Kernel;
 using Electron2D.Inputs;
 using Electron2D.Events;
-
 using Electron2D.Graphics;
-using Electron2D.Binding.SDL;
 
 namespace Electron2D.DebugScene
 {
     internal class MouseCursorTouchDebugScene : Scene
-    {	
+    {
 		public MouseCursorTouchDebugScene() : base()
 		{
 			Debug.Log("MouseCursorTouch debug scene loading...", Debug.Sender.Scene);
@@ -31,16 +27,15 @@ namespace Electron2D.DebugScene
 
         protected override void Update(double deltaTime)
 		{
-			
 		}
-		
+
 		protected override void OnKeyDown(object sender, KeyboardEventArgs e)
-		{			
+		{
 			if(e.Key == Keyboard.Keys.Escape)
 				SceneManager.ExitGame();
 
-			if(e.Key == Keyboard.Keys.F11) 
-				Kernel.Settings.Fullscreen = Kernel.Settings.Fullscreen ? false : true;
+			if(e.Key == Keyboard.Keys.F11)
+				Kernel.Settings.Fullscreen = !Kernel.Settings.Fullscreen;
 		}
     }
 }

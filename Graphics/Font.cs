@@ -4,29 +4,23 @@
 */
 
 using System;
-
-using Electron2D.Graphics;
 using Electron2D.Binding.SDL;
-
 using System.Runtime.InteropServices;
 
 namespace Electron2D.Graphics
 {
     public class Font
     {
-        
-        IntPtr font, renderTextSurface, textTexture;
-        string path;
-        SDL.SDL_FRect labelRectangle;
-        SDL.SDL_Surface srcSurfaceTexture;
-        Color color;
-        int size;
-        
+        private IntPtr font, renderTextSurface, textTexture;
+        private SDL.SDL_FRect labelRectangle;
+        private SDL.SDL_Surface srcSurfaceTexture;
+        private int size;
+
         public Font(string path, IntPtr pFont, int size)
         {
-            this.path = path;
+            this.Path = path;
             this.font = pFont;
-            this.color = Color.White;
+            this.Color = Color.White;
             this.size = size;
             this.labelRectangle = new SDL.SDL_FRect();
         }
@@ -36,22 +30,14 @@ namespace Electron2D.Graphics
             get { return size; }
             set
             {
-                font = TTFont.TTF_OpenFont(path, size);
+                font = TTFont.TTF_OpenFont(Path, size);
                 size = value;
             }
         }
 
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
+        public Color Color { get; set; }
 
-        public string Path
-        {
-            get { return path; }
-            set { path = value; }
-        }
+        public string Path { get; set; }
 
         internal void Draw(string text, RectTransform transform, Color color, int size)
         {
@@ -59,7 +45,7 @@ namespace Electron2D.Graphics
             SDL.SDL_DestroyTexture(textTexture);
 
             if (this.size != size) Size = size;
-            
+
             renderTextSurface = TTFont.TTF_RenderText_Blended(font, text, color.ConvertToSDLColor());
             textTexture = SDL.SDL_CreateTextureFromSurface(Game.RenderContext, renderTextSurface);
             srcSurfaceTexture = (SDL.SDL_Surface)Marshal.PtrToStructure(renderTextSurface, typeof(SDL.SDL_Surface));

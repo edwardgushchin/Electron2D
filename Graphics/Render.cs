@@ -13,9 +13,9 @@ namespace Electron2D.Graphics
 {
     public class Render : IDisposable
     {
-        bool renderLoop;
-        IntPtr renderWindow;
-		IntPtr renderer;
+        private bool renderLoop;
+        private IntPtr renderWindow;
+		private IntPtr renderer;
         public event RenderEventHundler OnPreUpdate;
 	    public event RenderEventHundler OnUpdate;
 	    public event RenderEventHundler OnPostUpdate;
@@ -23,12 +23,12 @@ namespace Electron2D.Graphics
         public Render()
 		{
 			renderLoop = false;
-            
+
             var sdl = SDLInit();
             var image = ImageInit();
 			var font = FontInit();
-			
-            if(sdl && image && font) 
+
+            if(sdl && image && font)
             {
                 CreateWidnow();
 			    CreateRenderer();
@@ -43,9 +43,8 @@ namespace Electron2D.Graphics
 
         private bool SDLInit()
         {
-            //
 			SDL.SDL_SetHint(SDL.SDL_HINT_VIDEO_HIGHDPI_DISABLED, "2");
-			
+
 			if(SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) != 0)
             {
                 Debug.Log("An error occurred while initializing the \"SDL module\": " + SDL.SDL_GetError(), Debug.Sender.Render, Debug.MessageStatus.Error);
@@ -94,11 +93,7 @@ namespace Electron2D.Graphics
 			}
 		}
 
-        public bool Initialized
-		{
-			private set;
-			get;
-		}
+        public bool Initialized { get; }
 
         public void Start()
 		{
@@ -106,39 +101,39 @@ namespace Electron2D.Graphics
 			RenderLoop();
 			Stop();
 		}
-		
+
 		public void Stop()
 		{
 			renderLoop = false;
 			Dispose();
 		}
-		
+
 		//public void Clear(Color Color)
 		//{
 		//	SDL.SDL_SetRenderDrawColor(renderer, Color.R, Color.G, Color.B, Color.A);
 		//	SDL.SDL_RenderClear(renderer);
 		//}
-		
-		void CreateWidnow()
+
+		private void CreateWidnow()
 		{
 			var windowFlags = Settings.Fullscreen ?
-				SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : Settings.Resizeble ? 
+				SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : Settings.Resizeble ?
 				SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE : SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN;
-			
+
 			renderWindow = SDL.SDL_CreateWindow(
 
-					Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title, SDL.SDL_WINDOWPOS_CENTERED, 
+					Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title, SDL.SDL_WINDOWPOS_CENTERED,
 					SDL.SDL_WINDOWPOS_CENTERED,
 					Settings.Resolution.Width,
-					Settings.Resolution.Height,				 
+					Settings.Resolution.Height,
 					windowFlags);
 		}
 
-        void CreateRenderer()
+        private void CreateRenderer()
 		{
 			if(Settings.VSinc) {
 				renderer = SDL.SDL_CreateRenderer(
-					renderWindow, -1, 
+					renderWindow, -1,
 					SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC |
 					SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
 					SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE
@@ -147,43 +142,38 @@ namespace Electron2D.Graphics
 			else
 			{
 				renderer = SDL.SDL_CreateRenderer(
-					renderWindow, -1, 
+					renderWindow, -1,
 					SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
 					SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE
 				);
 			}
-			
 		}
 
-        void RenderLoop()
+        private void RenderLoop()
 		{
 			bool cap = Settings.FPS > 0;
 		    var timer_fps = new Timer();
-		    
+
 		    ulong now_counter = SDL.SDL_GetPerformanceCounter();
-			ulong last_counter = 0;
-			double deltaTime = 0;
-			
-			while (renderLoop)
+            while (renderLoop)
 			{
 				timer_fps.Start();
-				
-				last_counter = now_counter;
-				now_counter = SDL.SDL_GetPerformanceCounter();
-				
-				deltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
-				
-				SDL.SDL_RenderClear(renderer);
+
+                ulong last_counter = now_counter;
+                now_counter = SDL.SDL_GetPerformanceCounter();
+
+                double deltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
+
+                SDL.SDL_RenderClear(renderer);
 				OnPreUpdate(deltaTime);
 				OnUpdate(deltaTime);
 				SDL.SDL_RenderPresent(renderer);
 				OnPostUpdate(deltaTime);
-				
-				if( ( cap ) && ( timer_fps.GetTicks() < 1000 / Settings.FPS ) )
+
+				if(cap && ( timer_fps.GetTicks() < 1000 / Settings.FPS ) )
 		        {
 					SDL.SDL_Delay( ( 1000 / Settings.FPS  ) - timer_fps.GetTicks() );
 		        }
-				
 			}
 		}
 

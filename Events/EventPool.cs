@@ -28,102 +28,103 @@ namespace Electron2D.Events
 
 		public bool Initialized
 		{
-			private set;
+			internal set;
 			get;
 		}
-		
+
 		#region Keyboard Events
-		public event KeyboardEventHundler OnKeyDownEvent;
-		public event KeyboardEventHundler OnKeyUpEvent;
+		public event System.EventHandler<KeyboardEventArgs> OnKeyDownEvent;
+		public event System.EventHandler<KeyboardEventArgs> OnKeyUpEvent;
 		#endregion
-		
+
 		#region Mouse Events
-		public event MouseButtonEventHundler OnMouseButtonDownEvent;
-		public event MouseButtonEventHundler OnMouseButtonUpEvent;
-		public event MouseMotionEventHundler OnMouseMotionEvent;
-		public event MouseWheelEventHundler OnMouseWheelEvent;
+		public event System.EventHandler<MouseButtonEventArgs> OnMouseButtonDownEvent;
+		public event System.EventHandler<MouseButtonEventArgs> OnMouseButtonUpEvent;
+		public event System.EventHandler<MouseMotionEventArgs> OnMouseMotionEvent;
+		public event System.EventHandler<MouseWheelEventArgs> OnMouseWheelEvent;
 		#endregion
-		
+
 		#region Window Events
-		public event WindowEventHundler OnWindowShowEvent;
-		public event WindowEventHundler OnWindowHiddenEvent;
-		public event WindowEventHundler OnWindowExposedEvent;
-		public event WindowEventHundler OnWindowMovedEvent;
-		public event WindowEventHundler OnWindowResizedEvent;
-		public event WindowEventHundler OnWindowSizeChangedEvent;
-		public event WindowEventHundler OnWindowMinimizedEvent;
-		public event WindowEventHundler OnWindowMaximizedEvent;
-		public event WindowEventHundler OnWindowRestoredEvent;
-		public event WindowEventHundler OnWindowEnterEvent;
-		public event WindowEventHundler OnWindowLeaveEvent;
-		public event WindowEventHundler OnWindowFocusGainedEvent;
-		public event WindowEventHundler OnWindowFocusLostEvent;
-		public event WindowEventHundler OnWindowCloseEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowShowEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowHiddenEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowExposedEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowMovedEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowResizedEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowSizeChangedEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowMinimizedEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowMaximizedEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowRestoredEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowEnterEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowLeaveEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowFocusGainedEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowFocusLostEvent;
+		public event System.EventHandler<WindowEventArgs> OnWindowCloseEvent;
 		#endregion
-		
+
 		public void Pool()
 		{
-			SDL.SDL_Event e;
-			while (SDL.SDL_PollEvent(out e) == 1)
-			{
-				poolWindowEvent(e);
-				poolKeyEvent(e);
-				poolMouseEvent(e);
-			}
-		}
-		
-		void poolWindowEvent(SDL.SDL_Event e)
+            while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1)
+            {
+                PoolWindowEvent(e);
+                PoolKeyEvent(e);
+                PoolMouseEvent(e);
+            }
+        }
+
+		private void PoolWindowEvent(SDL.SDL_Event e)
 		{
 			if(e.type == SDL.SDL_EventType.SDL_WINDOWEVENT)
 			{
-				if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN)
-					OnWindowShowEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN)
-					OnWindowHiddenEvent(e.window.windowEvent, new WindowEventArgs());
-
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED) 
-					OnWindowExposedEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MOVED)
-					OnWindowMovedEvent(e.window.windowEvent, new WindowEventArgs(new Point(e.window.data1, e.window.data2)));
-			
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED)
-					OnWindowResizedEvent(e.window.windowEvent, new WindowEventArgs(new Size(e.window.data1, e.window.data2)));
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED) {
-					Settings.Resolution = new Size(e.window.data1, e.window.data2);
-					OnWindowSizeChangedEvent(e.window.windowEvent, new WindowEventArgs(new Size(e.window.data1, e.window.data2)));
-				}
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED)
-					OnWindowMaximizedEvent(e.window.windowEvent, new WindowEventArgs());
-			
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED)
-					OnWindowMinimizedEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED)
-					OnWindowRestoredEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER) 
-					OnWindowEnterEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE)
-					OnWindowLeaveEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED)
-					OnWindowFocusGainedEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST)
-					OnWindowFocusLostEvent(e.window.windowEvent, new WindowEventArgs());
-				
-				else if(e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
-					OnWindowCloseEvent(e.window.windowEvent, new WindowEventArgs());
-			}
+                switch (e.window.windowEvent)
+                {
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN:
+                        OnWindowShowEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN:
+                        OnWindowHiddenEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED:
+                        OnWindowExposedEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MOVED:
+                        OnWindowMovedEvent(e.window.windowEvent, new WindowEventArgs(new Point(e.window.data1, e.window.data2)));
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
+                        OnWindowResizedEvent(e.window.windowEvent, new WindowEventArgs(new Size(e.window.data1, e.window.data2)));
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
+                        Settings.Resolution = new Size(e.window.data1, e.window.data2);
+                        OnWindowSizeChangedEvent(e.window.windowEvent, new WindowEventArgs(new Size(e.window.data1, e.window.data2)));
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED:
+                        OnWindowMaximizedEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED:
+                        OnWindowMinimizedEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED:
+                        OnWindowRestoredEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER:
+                        OnWindowEnterEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE:
+                        OnWindowLeaveEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED:
+                        OnWindowFocusGainedEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST:
+                        OnWindowFocusLostEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                    case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
+                        OnWindowCloseEvent(e.window.windowEvent, new WindowEventArgs());
+                        break;
+                }
+            }
 		}
-		
-		void poolKeyEvent(SDL.SDL_Event e )
+
+		private void PoolKeyEvent(SDL.SDL_Event e )
 		{
 			if(e.type == SDL.SDL_EventType.SDL_KEYDOWN)
 			{
@@ -131,7 +132,7 @@ namespace Electron2D.Events
 				Input.SetKeyDown(ev.Key, true);
 				OnKeyDownEvent(e.window.windowEvent, ev);
 			}
-			
+
 			if(e.type == SDL.SDL_EventType.SDL_KEYUP)
 			{
 				var ev = new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod);
@@ -139,18 +140,18 @@ namespace Electron2D.Events
 				OnKeyUpEvent(e.window.windowEvent, new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod));
 			}
 		}
-		
-		void poolMouseEvent(SDL.SDL_Event e)
+
+		private void PoolMouseEvent(SDL.SDL_Event e)
 		{
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN)
 				OnMouseButtonDownEvent(e.window.windowEvent, new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks));
-			
+
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONUP)
 				OnMouseButtonUpEvent(e.window.windowEvent, new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks));
-			
+
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEMOTION)
 				OnMouseMotionEvent(e.window.windowEvent, new MouseMotionEventArgs(new Point(e.motion.x, e.motion.y), e.motion.xrel, e.motion.yrel));
-			
+
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEWHEEL)
 				OnMouseWheelEvent(e.window.windowEvent, new MouseWheelEventArgs(new Point(e.wheel.x, e.wheel.y)));
 		}

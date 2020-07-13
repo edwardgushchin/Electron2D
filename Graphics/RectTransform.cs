@@ -30,80 +30,88 @@ namespace Electron2D.Graphics
 
             public Achors(AchorsPreset Achor)
             {
-                switch (Achor)
+                if (Achor == AchorsPreset.TopLeft)
                 {
-                    case AchorsPreset.TopLeft:
-                        Top = true;
-                        Left = true;
-                        Right = false;
-                        Bottom = false;
-                        break;
-                    case AchorsPreset.TopRight:
-                        Top = true;
-                        Left = false;
-                        Right = true;
-                        Bottom = false;
-                        break;
-                    case AchorsPreset.BottomLeft:
-                        Top = false;
-                        Left = true;
-                        Right = false;
-                        Bottom = true;
-                        break;
-                    case AchorsPreset.BottomRight:
-                        Top = false;
-                        Left = false;
-                        Right = true;
-                        Bottom = true;
-                        break;
-                    case AchorsPreset.MiddleLeft:
-                        Top = true;
-                        Left = true;
-                        Right = false;
-                        Bottom = true;
-                        break;
-                    case AchorsPreset.MiddleRight:
-                        Top = true;
-                        Left = false;
-                        Right = true;
-                        Bottom = true;
-                        break;
-                    case AchorsPreset.MiddleTop:
-                        Top = true;
-                        Left = true;
-                        Right = true;
-                        Bottom = false;
-                        break;
-                    case AchorsPreset.MiddleBottom:
-                        Top = false;
-                        Left = true;
-                        Right = true;
-                        Bottom = true;
-                        break;
-                    case AchorsPreset.Center:
-                        Top = true;
-                        Left = true;
-                        Right = true;
-                        Bottom = true;
-                        break;
-                    case AchorsPreset.None:
-                        Top = false;
-                        Left = false;
-                        Right = false;
-                        Bottom = false;
-                        break;
-                    default:
-                        Top = false;
-                        Left = false;
-                        Right = false;
-                        Bottom = false;
-                        break;
+                    Top = true;
+                    Left = true;
+                    Right = false;
+                    Bottom = false;
+                }
+                else if (Achor == AchorsPreset.TopRight)
+                {
+                    Top = true;
+                    Left = false;
+                    Right = true;
+                    Bottom = false;
+                }
+                else if (Achor == AchorsPreset.BottomLeft)
+                {
+                    Top = false;
+                    Left = true;
+                    Right = false;
+                    Bottom = true;
+                }
+                else if (Achor == AchorsPreset.BottomRight)
+                {
+                    Top = false;
+                    Left = false;
+                    Right = true;
+                    Bottom = true;
+                }
+                else if (Achor == AchorsPreset.MiddleLeft)
+                {
+                    Top = true;
+                    Left = true;
+                    Right = false;
+                    Bottom = true;
+                }
+                else if (Achor == AchorsPreset.MiddleRight)
+                {
+                    Top = true;
+                    Left = false;
+                    Right = true;
+                    Bottom = true;
+                }
+                else if (Achor == AchorsPreset.MiddleTop)
+                {
+                    Top = true;
+                    Left = true;
+                    Right = true;
+                    Bottom = false;
+                }
+                else if (Achor == AchorsPreset.MiddleBottom)
+                {
+                    Top = false;
+                    Left = true;
+                    Right = true;
+                    Bottom = true;
+                }
+                else if (Achor == AchorsPreset.Center)
+                {
+                    Top = true;
+                    Left = true;
+                    Right = true;
+                    Bottom = true;
+                }
+                else if (Achor == AchorsPreset.None)
+                {
+                    Top = false;
+                    Left = false;
+                    Right = false;
+                    Bottom = false;
+                }
+                else
+                {
+                    Top = false;
+                    Left = false;
+                    Right = false;
+                    Bottom = false;
                 }
             }
         }
 
         public double Degrees { get; private set; }
-		
+
 		// disable once ConvertToAutoProperty
 		public Point Scale
 		{

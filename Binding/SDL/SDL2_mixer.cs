@@ -67,13 +67,13 @@ namespace Electron2D.Binding.SDL
 		[Flags]
 		public enum MIX_InitFlags
 		{
-			MIX_INIT_FLAC =		0x00000001,
-			MIX_INIT_MOD =		0x00000002,
-			MIX_INIT_MP3 =		0x00000008,
-			MIX_INIT_OGG =		0x00000010,
-			MIX_INIT_MID =		0x00000020,
-			MIX_INIT_OPUS =		0x00000040
-		}
+            MIX_INIT_FLAC = 0,
+            MIX_INIT_MOD = 1,
+            MIX_INIT_MP3 = 2,
+            MIX_INIT_OGG = 4,
+            MIX_INIT_MID = 8,
+            MIX_INIT_OPUS = 16
+        }
 
 		public struct MIX_Chunk
 		{
@@ -149,14 +149,12 @@ namespace Electron2D.Binding.SDL
 		private static extern IntPtr INTERNAL_MIX_Linked_Version();
 		public static SDL.SDL_version MIX_Linked_Version()
 		{
-			SDL.SDL_version result;
 			IntPtr result_ptr = INTERNAL_MIX_Linked_Version();
-			result = (SDL.SDL_version) Marshal.PtrToStructure(
-				result_ptr,
-				typeof(SDL.SDL_version)
-			);
-			return result;
-		}
+            return (SDL.SDL_version)Marshal.PtrToStructure(
+                result_ptr,
+                typeof(SDL.SDL_version)
+            );
+        }
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int Mix_Init(MIX_InitFlags flags);
@@ -189,7 +187,7 @@ namespace Electron2D.Binding.SDL
 			IntPtr src,
 			int freesrc
 		);
-		
+
 		/* IntPtr refers to a Mix_Chunk* */
 		/* This is an RWops macro in the C header. */
 		public static IntPtr Mix_LoadWAV(string file)

@@ -22,27 +22,15 @@ namespace Electron2D
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
 
-        protected override void Update(double deltaTime)
-		{
-			
-		}
-		
+        protected override void Update(double deltaTime){}
+
 		protected override void OnKeyDown(object sender, KeyboardEventArgs e)
-		{			
+		{
 			if(e.Key == Keyboard.Keys.Escape)
 				SceneManager.ExitGame();
 
-			if(e.Key == Keyboard.Keys.F) 
-			{
-				if(Kernel.Settings.Fullscreen)
-				{
-					Kernel.Settings.Fullscreen = false;
-				}
-				else 
-				{
-					Kernel.Settings.Fullscreen = true;
-				}
-			}
+			if(e.Key == Keyboard.Keys.F)
+                Kernel.Settings.Fullscreen = !Kernel.Settings.Fullscreen;
 		}
     }
 }

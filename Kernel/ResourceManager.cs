@@ -13,8 +13,8 @@ namespace Electron2D.Kernel
 {
     public static class ResourceManager
     {
-        static List<Font> fontCache;
-        static List<Sprite> spriteCache;
+        private static readonly List<Font> fontCache;
+        private static readonly List<Sprite> spriteCache;
 
         static ResourceManager()
         {
@@ -51,11 +51,11 @@ namespace Electron2D.Kernel
                 return f;
             }
             var pFont = TTFont.TTF_OpenFont(path, size);
-            if (pFont != IntPtr.Zero) 
+            if (pFont != IntPtr.Zero)
             {
                 fontCache.Add(new Font(path, pFont, size));
                 Debug.Log($"Resource \"{path}\" was successfully loaded.", Debug.Sender.ResourceManager);
-                return fontCache[fontCache.Count - 1];
+                return fontCache[^1];
             }
             Debug.Log($"Failed to load font! TTFont Error: {SDL.SDL_GetError()}", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
             return null;
@@ -70,7 +70,7 @@ namespace Electron2D.Kernel
             }
             spriteCache.Add(new Sprite(path));
             Debug.Log($"Resource \"{path}\" was successfully loaded.", Debug.Sender.ResourceManager);
-            return spriteCache[spriteCache.Count - 1];
+            return spriteCache[^1];
         }
-    }    
+    }
 }

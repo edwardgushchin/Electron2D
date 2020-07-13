@@ -3,24 +3,20 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-
 using Electron2D.Kernel;
 using Electron2D.Inputs;
 using Electron2D.Events;
-
 using Electron2D.Graphics;
-using Electron2D.Binding.SDL;
 
 namespace Electron2D.DebugScene
 {
     internal class ParallaxBackgroundDebugScene : Scene
-    {	
-		Sprite  mist_011, mist_012, bushes_021, 
-                bushes_022, particles_031, particles_032, 
-                forest_041, forest_042, particles051, 
-                particles052, forest_061, forest_062, 
-                forest_071, forest_072, forest_081, 
+    {
+		private Sprite  mist_011, mist_012, bushes_021,
+                bushes_022, particles_031, particles_032,
+                forest_041, forest_042, particles051,
+                particles052, forest_061, forest_062,
+                forest_071, forest_072, forest_081,
                 forest_082, forest_091, forest_092, background;
 
         public ParallaxBackgroundDebugScene() : base() {}
@@ -66,12 +62,11 @@ namespace Electron2D.DebugScene
             forest_092.Transform.SetPosition(Settings.Resolution.Width, 0);
 
             background = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\10_Sky.png");
-            
 
 			Debug.Log("ParallaxBackground debug scene loaded.", Debug.Sender.Scene);
         }
 
-        void layerDraw(Sprite l1, Sprite l2, double speed)
+        private void LayerDraw(Sprite l1, Sprite l2, double speed)
         {
             l1.Transform.Translate(speed, 0);
             l2.Transform.Translate(speed, 0);
@@ -82,30 +77,29 @@ namespace Electron2D.DebugScene
             if (l1.Transform.Position.X <= -Settings.Resolution.Width)
                 l1.Transform.SetPosition(Settings.Resolution.Width + l2.Transform.Position.X, 0);
             if (l2.Transform.Position.X <= -Settings.Resolution.Width)
-                l2.Transform.SetPosition(Settings.Resolution.Width + l1.Transform.Position.X, 0);  
-            
+                l2.Transform.SetPosition(Settings.Resolution.Width + l1.Transform.Position.X, 0);
         }
 
-        double speed_09 = -2.0, speed_08 = -4.0, speed_07 = -8.0, speed_06 = -16.0;
-        double speed_05 = -24.0, speed_04 = -32.0, speed_03 = -64.0, speed_02 = -96.0, speed_01 = -128.0;
+        private readonly double speed_09 = -2.0, speed_08 = -4.0, speed_07 = -8.0, speed_06 = -16.0;
+        private readonly double speed_05 = -24.0, speed_04 = -32.0, speed_03 = -64.0, speed_02 = -96.0, speed_01 = -128.0;
         protected override void Update(double deltaTime)
 		{
             background.Draw();
-            layerDraw(forest_091, forest_092, speed_09 * deltaTime);
-            layerDraw(forest_081, forest_082, speed_08 * deltaTime);
-            layerDraw(forest_071, forest_072, speed_07 * deltaTime);
-            layerDraw(forest_061, forest_062, speed_06 * deltaTime);
-            layerDraw(particles051, particles052, speed_05 * deltaTime);
-            layerDraw(forest_041, forest_042, speed_04 * deltaTime);
-            layerDraw(particles_031, particles_032, speed_03 * deltaTime);
-            layerDraw(bushes_021, bushes_022, speed_02 * deltaTime);
-            layerDraw(mist_011, mist_012, speed_01 * deltaTime);
+            LayerDraw(forest_091, forest_092, speed_09 * deltaTime);
+            LayerDraw(forest_081, forest_082, speed_08 * deltaTime);
+            LayerDraw(forest_071, forest_072, speed_07 * deltaTime);
+            LayerDraw(forest_061, forest_062, speed_06 * deltaTime);
+            LayerDraw(particles051, particles052, speed_05 * deltaTime);
+            LayerDraw(forest_041, forest_042, speed_04 * deltaTime);
+            LayerDraw(particles_031, particles_032, speed_03 * deltaTime);
+            LayerDraw(bushes_021, bushes_022, speed_02 * deltaTime);
+            LayerDraw(mist_011, mist_012, speed_01 * deltaTime);
 
             //Debug.Log($"x: = {forest_092.Transform.Position}, deltaTime = {deltaTime}, speed = {speed_09 * deltaTime}");
         }
 
         protected override void OnKeyDown(object sender, KeyboardEventArgs e)
-		{			
+		{
 			if(e.Key == Keyboard.Keys.Escape)
 				SceneManager.ExitGame();
 
@@ -114,7 +108,7 @@ namespace Electron2D.DebugScene
 
             if(e.Key == Keyboard.Keys.D2)
                 Settings.Smoothing = SmoothingType.Linear;
-            
+
             if(e.Key == Keyboard.Keys.D3)
                 Settings.Smoothing = SmoothingType.Anisotropic;
 		}

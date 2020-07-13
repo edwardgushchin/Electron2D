@@ -14,8 +14,8 @@ namespace Electron2D
 {
 	public static class Input
 	{
-		static readonly Dictionary<Keyboard.Keys, bool> keyList;
-		
+		private static readonly Dictionary<Keyboard.Keys, bool> keyList;
+
 		static Input()
 		{
 			keyList = new Dictionary<Keyboard.Keys, bool>();
@@ -23,12 +23,12 @@ namespace Electron2D
 				keyList[(Keyboard.Keys)key] = false;
 			}
 		}
-		
+
 		public static bool GetKeyDown(Keyboard.Keys key)
 		{
 			return keyList[key];
 		}
-		
+
 		internal static void SetKeyDown(Keyboard.Keys key, bool value)
 		{
 			keyList[key] = value;
@@ -38,9 +38,8 @@ namespace Electron2D
 		{
 			get
 			{
-				int x, y;
-				SDL.SDL_GetMouseState(out x, out y);
-				return Point.ConvertToDecartPoint(x, y);
+                SDL.SDL_GetMouseState(out int x, out int y);
+                return Point.ConvertToDecartPoint(x, y);
 			}
 		}
 	}

@@ -3,96 +3,86 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-using System.Timers;
 using Electron2D.Graphics;
 using System.Collections.Generic;
-using Electron2D.Binding.SDL;
 
-namespace Electron2D.GUI 
+namespace Electron2D.GUI
 {
     internal class DebugInfo
     {
-        Label titleLabel, resolutionLabel, vsyncLabel, smoothLabel,
-		resizeLabel, fpsLabel, sceneNameLabel, 
-		fullscreenLabel, splitLabel, fontObjectsLabel,
-		guiObjectsLabel, gameObjectsLabel, allObjectsLabel,
+        private Label titleLabel, resolutionLabel, vsyncLabel, smoothLabel,
+		resizeLabel, fpsLabel, sceneNameLabel, fullscreenLabel, splitLabel,
+		fontObjectsLabel, guiObjectsLabel, gameObjectsLabel, allObjectsLabel,
 		mposLabel, split2Label;
-
-        List<GUIObject> obj;
 
         internal DebugInfo()
         {
             Debug.Log("Initializing the debug information Interface...", Debug.Sender.Main);
-            obj = new List<GUIObject>();       
-            
+            ObjectsList = new List<GUIObject>();
+
             CreateLabels();
 			PositionLabels();
 
             Debug.Log("Debug information interface initialized.", Debug.Sender.Main);
         }
 
-        internal List<GUIObject> ObjectsList
-        {
-            get { return obj; }
-        }
+        internal List<GUIObject> ObjectsList { get; }
 
-        void CreateLabels()
+        private void CreateLabels()
 		{
 			var font = Kernel.ResourceManager.LoadFont(@"Resources\Fonts\consola.ttf", 12);
 			font.Color = new Color(0, 0, 0);
-			
+
 			titleLabel = new Label(font, "Title");
-			obj.Add(titleLabel);
-			
+			ObjectsList.Add(titleLabel);
+
 			resolutionLabel = new Label(font, "Resolution");
-			obj.Add(resolutionLabel);
+			ObjectsList.Add(resolutionLabel);
 
 			fullscreenLabel = new Label(font, "Fullscreen");
-			obj.Add(fullscreenLabel);
+			ObjectsList.Add(fullscreenLabel);
 
 			vsyncLabel = new Label(font, "V-Sync");
-			obj.Add(vsyncLabel);
+			ObjectsList.Add(vsyncLabel);
 
 			smoothLabel = new Label(font, "Smoothing");
-			obj.Add(smoothLabel);
+			ObjectsList.Add(smoothLabel);
 
 			fpsLabel = new Label(font, "Frame Per Second");
-			obj.Add(fpsLabel);
+			ObjectsList.Add(fpsLabel);
 
 			mposLabel = new Label(font, "Mouse Position");
-			obj.Add(mposLabel);
+			ObjectsList.Add(mposLabel);
 
 			resizeLabel = new Label(font, "Resizeble");
-			obj.Add(resizeLabel);
+			ObjectsList.Add(resizeLabel);
 
 			splitLabel = new Label(font, "Split");
-			obj.Add(splitLabel);
+			ObjectsList.Add(splitLabel);
 
 			split2Label = new Label(font, "Split");
-			obj.Add(split2Label);
+			ObjectsList.Add(split2Label);
 
 			sceneNameLabel = new Label(font, "Scene");
-			obj.Add(sceneNameLabel);
+			ObjectsList.Add(sceneNameLabel);
 
 			fontObjectsLabel = new Label(font, "Font cache");
-			obj.Add(fontObjectsLabel);
+			ObjectsList.Add(fontObjectsLabel);
 
 			guiObjectsLabel = new Label(font, "GUI objects");
-			obj.Add(guiObjectsLabel);
+			ObjectsList.Add(guiObjectsLabel);
 
 			gameObjectsLabel = new Label(font, "Game objects");
-			obj.Add(gameObjectsLabel);
+			ObjectsList.Add(gameObjectsLabel);
 
 			allObjectsLabel = new Label(font, "All objects");
-			obj.Add(allObjectsLabel);
+			ObjectsList.Add(allObjectsLabel);
 		}
 
-
-        void PositionLabels()
+        private void PositionLabels()
 		{
-			int padding = 10;
-			int padding_bottom = 20;
+            const int padding = 10;
+            const int padding_bottom = 20;
 
 			titleLabel.RectTransform.Top = padding;
 			titleLabel.RectTransform.Left = padding;
@@ -126,7 +116,7 @@ namespace Electron2D.GUI
 
 			split2Label.RectTransform.Top = mposLabel.RectTransform.Top + padding_bottom;
 			split2Label.RectTransform.Left = padding;
-			
+
 			fontObjectsLabel.RectTransform.Top = split2Label.RectTransform.Top + padding_bottom;
 			fontObjectsLabel.RectTransform.Left = padding;
 
@@ -143,7 +133,7 @@ namespace Electron2D.GUI
         internal void Update(double deltaTime, int guiObjectsCount, int gameObjectsCount, int fontCacheCount)
 		{
 			titleLabel.Text= $"Title: {Kernel.Settings.Title}";
-			resolutionLabel.Text = $"Resolution: {Kernel.Settings.Resolution.ToString()}";
+			resolutionLabel.Text = $"Resolution: {Kernel.Settings.Resolution}";
 			fullscreenLabel.Text = $"Fullscreen: {Kernel.Settings.Fullscreen}";
 			vsyncLabel.Text = $"V-Sync: {Kernel.Settings.VSinc}";
 			smoothLabel.Text = $"Smoothing: {Kernel.Settings.Smoothing}";
@@ -152,9 +142,9 @@ namespace Electron2D.GUI
 			splitLabel.Text = "===============================";
 
 			sceneNameLabel.Text = $"Scene: {SceneManager.GetCurrentScene.Name}";
-			fpsLabel.Text = $"Frame Per Second: {((int)(1.0f/deltaTime)).ToString()}";
+			fpsLabel.Text = $"Frame Per Second: {(int)(1.0f/deltaTime)}";
 			mposLabel.Text = $"Mouse position: ({Input.MousePosition.X}; {Input.MousePosition.Y})";
-			
+
 			split2Label.Text = "===============================";
 
 			fontObjectsLabel.Text = $"Font cache: {fontCacheCount} in memory";

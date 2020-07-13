@@ -3,16 +3,13 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-
 using Electron2D.Graphics;
-using Electron2D.Binding.SDL;
 
 namespace Electron2D.GUI
 {
     public class Label : GUIObject
-    {   
-        Font labelFont;
+    {
+        private readonly Font labelFont;
         public Label(Font font, string text)
         {
             labelFont = font;

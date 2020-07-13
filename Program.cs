@@ -9,9 +9,9 @@ using Electron2D.DebugScene;
 
 namespace Electron2D
 {
-    internal class Program
+    internal static class Program
     {
-        static Game TestGame;
+        private static Game TestGame;
         internal static void Main()
         {
             Settings.VSinc = true;
@@ -21,12 +21,11 @@ namespace Electron2D
             Settings.Fullscreen = true;
             Settings.Resolution = new Size(1920, 1080);
             Settings.Smoothing = SmoothingType.Anisotropic;
-            
+
             TestGame = new Game("Electron2D - Parralax Background Demo");
-            
+
             TestGame.SetIcon(@"Resources\\icon.png");
             TestGame.Play(new ParallaxBackgroundDebugScene());
         }
-
     }
 }

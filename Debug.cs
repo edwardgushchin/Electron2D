@@ -27,21 +27,20 @@ namespace Electron2D
 			ResourceManager,
 			FontCache
 		}
-		
+
 		public static void Message(string Message)
 		{
 			Console.WriteLine(Message);
 		}
-		
-		static string GetCurrentTime
+
+		private static string GetCurrentTime
 		{
 			get { return string.Format("[{0:hh:mm:ss:ff}]", DateTime.Now); }
 		}
-		
+
 		public static void Log(string Message)
 		{
-			var date = DateTime.Now;
-			Console.Write($"{GetCurrentTime} ");
+            Console.Write($"{GetCurrentTime} ");
 			Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine(Message);
 			Console.ResetColor();
@@ -54,7 +53,7 @@ namespace Electron2D
 			Console.WriteLine(Message);
 			Console.ResetColor();
 		}
-		
+
 		public static void Log(string Message, MessageStatus Status)
 		{
 			Console.Write($"{GetCurrentTime} ");
@@ -90,7 +89,7 @@ namespace Electron2D
 			Console.WriteLine(Message);
 			Console.ResetColor();
 		}
-		
+
 		public static void NewLine()
 		{
 			Console.WriteLine();

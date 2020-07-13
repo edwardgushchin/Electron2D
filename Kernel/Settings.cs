@@ -24,10 +24,10 @@ namespace Electron2D.Kernel
 			Smoothing = SmoothingType.Linear;
 			Title = "Electron2D Game Engine 0.1";
 		}
-		
-		static Size resolution;
-		public static Size Resolution 
-		{ 
+
+		private static Size resolution;
+		public static Size Resolution
+		{
 			get { return resolution; }
 			set
 			{
@@ -37,33 +37,32 @@ namespace Electron2D.Kernel
 			}
 		}
 
-		static bool fullscreen;
-		public static bool Fullscreen 
-		{ 
+		private static bool fullscreen;
+		public static bool Fullscreen
+		{
 			get { return fullscreen; }
 			set
 			{
 				if(Game.WindowContext != IntPtr.Zero)
 				{
-					if(value != fullscreen && value == true)
+					if(value != fullscreen && value)
 						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
-					else if(value != fullscreen && value == false)
+					else if(value != fullscreen && !value)
 						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
-				}	
+				}
 				fullscreen = value;
-				
 			}
 		}
-		public static bool VSinc 
-		{ 
+		public static bool VSinc
+		{
 			get; set;
 		}
 
-		static SmoothingType smoothing;
+		private static SmoothingType smoothing;
 		public static SmoothingType Smoothing
 		{
 			get { return smoothing; }
-			set 
+			set
 			{
 				switch(value)
 				{

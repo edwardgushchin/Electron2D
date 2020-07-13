@@ -8,14 +8,14 @@ using System;
 namespace Electron2D.Events
 {
 	public delegate void RenderEventHundler(double deltaTime);
-	
+
 	public class RenderEventArgs : EventArgs
 	{
 		public RenderEventArgs(double deltaTime)
 		{
 			this.deltaTime = deltaTime;
 		}
-		
-		public double deltaTime { get; private set; }
-	}
+
+        public double deltaTime { get; }
+    }
 }
