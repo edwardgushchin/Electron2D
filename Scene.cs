@@ -173,10 +173,10 @@ namespace Electron2D
 			#endregion
 		}
 
-		private void Pepiline(double deltaTime)
+		private void Pepiline()
 		{
 			Clear();
-			Update(deltaTime);
+			Update();
 			//UpdateObjects(deltaTime);
 			//UpdateGUIObjects(deltaTime);
 			//if(Settings.DebugInfo) UpdateGUIDebugInfoObjects(deltaTime);
@@ -254,9 +254,9 @@ namespace Electron2D
 		protected virtual void OnLoadScene() {}
 
 		#region Render Virtual Metods
-		protected virtual void PreUpdate(double DeltaTime){}
-		protected virtual void Update(double DeltaTime){}
-		protected virtual void PostUpdate(double DeltaTime){}
+		protected virtual void PreUpdate(){}
+		protected virtual void Update(){}
+		protected virtual void PostUpdate(){}
         #endregion
 
         #region Keyboard Virtual Metods

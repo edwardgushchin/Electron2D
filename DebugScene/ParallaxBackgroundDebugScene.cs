@@ -82,18 +82,18 @@ namespace Electron2D.DebugScene
 
         private readonly double speed_09 = -2.0, speed_08 = -4.0, speed_07 = -8.0, speed_06 = -16.0;
         private readonly double speed_05 = -24.0, speed_04 = -32.0, speed_03 = -64.0, speed_02 = -96.0, speed_01 = -128.0;
-        protected override void Update(double deltaTime)
+        protected override void Update()
 		{
             background.Draw();
-            LayerDraw(forest_091, forest_092, speed_09 * deltaTime);
-            LayerDraw(forest_081, forest_082, speed_08 * deltaTime);
-            LayerDraw(forest_071, forest_072, speed_07 * deltaTime);
-            LayerDraw(forest_061, forest_062, speed_06 * deltaTime);
-            LayerDraw(particles051, particles052, speed_05 * deltaTime);
-            LayerDraw(forest_041, forest_042, speed_04 * deltaTime);
-            LayerDraw(particles_031, particles_032, speed_03 * deltaTime);
-            LayerDraw(bushes_021, bushes_022, speed_02 * deltaTime);
-            LayerDraw(mist_011, mist_012, speed_01 * deltaTime);
+            LayerDraw(forest_091, forest_092, speed_09 * Time.DeltaTime);
+            LayerDraw(forest_081, forest_082, speed_08 * Time.DeltaTime);
+            LayerDraw(forest_071, forest_072, speed_07 * Time.DeltaTime);
+            LayerDraw(forest_061, forest_062, speed_06 * Time.DeltaTime);
+            LayerDraw(particles051, particles052, speed_05 * Time.DeltaTime);
+            LayerDraw(forest_041, forest_042, speed_04 * Time.DeltaTime);
+            LayerDraw(particles_031, particles_032, speed_03 * Time.DeltaTime);
+            LayerDraw(bushes_021, bushes_022, speed_02 * Time.DeltaTime);
+            LayerDraw(mist_011, mist_012, speed_01 * Time.DeltaTime);
 
             //Debug.Log($"x: = {forest_092.Transform.Position}, deltaTime = {deltaTime}, speed = {speed_09 * deltaTime}");
         }

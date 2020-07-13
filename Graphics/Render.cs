@@ -162,13 +162,13 @@ namespace Electron2D.Graphics
                 ulong last_counter = now_counter;
                 now_counter = SDL.SDL_GetPerformanceCounter();
 
-                double deltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
+				Time.DeltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
 
                 SDL.SDL_RenderClear(renderer);
-				OnPreUpdate(deltaTime);
-				OnUpdate(deltaTime);
+				OnPreUpdate();
+				OnUpdate();
 				SDL.SDL_RenderPresent(renderer);
-				OnPostUpdate(deltaTime);
+				OnPostUpdate();
 
 				if(cap && ( timer_fps.GetTicks() < 1000 / Settings.FPS ) )
 		        {

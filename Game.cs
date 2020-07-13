@@ -111,7 +111,7 @@ namespace Electron2D
 			render.OnPreUpdate -= GameUpdate;
 		}
 
-		private void GameUpdate(double deltaTime)
+		private void GameUpdate()
 		{
 			Events.Pool();
 		}

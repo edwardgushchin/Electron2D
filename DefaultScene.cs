@@ -22,7 +22,7 @@ namespace Electron2D
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
 
-        protected override void Update(double deltaTime){}
+        protected override void Update(){}
 
 		protected override void OnKeyDown(object sender, KeyboardEventArgs e)
 		{

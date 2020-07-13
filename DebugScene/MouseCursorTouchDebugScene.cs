@@ -25,7 +25,7 @@ namespace Electron2D.DebugScene
 			Debug.Log("MouseCursorTouch debug scene loaded.", Debug.Sender.Scene);
         }
 
-        protected override void Update(double deltaTime)
+        protected override void Update()
 		{
 		}
 
