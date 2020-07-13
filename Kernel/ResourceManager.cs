@@ -89,5 +89,16 @@ namespace Electron2D.Kernel
             Debug.Log($"Resource \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
             //return new Resource<Sprite>(spriteCache[name]);
         }
+
+        /*public void asd()
+        {
+            long size = 0;
+            object obj = new object();
+            using (System.IO.Stream stream = new System.IO.MemoryStream()) {
+                System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                formatter.Serialize(stream, );
+                size = stream.Length;
+            }
+        }*/
     }
 }

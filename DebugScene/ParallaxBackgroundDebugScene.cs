@@ -15,6 +15,7 @@ namespace Electron2D.DebugScene
     internal class ParallaxBackgroundDebugScene : Scene
     {
         private readonly ParallaxBackground parallax;
+        private Sprite background;
 
         public ParallaxBackgroundDebugScene() : base()
         {
@@ -36,7 +37,7 @@ namespace Electron2D.DebugScene
             ResourceManager.LoadSprite("bg_layer9", @"Resources\Sprites\parralax_demo\09_Forest.png");
             ResourceManager.LoadSprite("bg_layer10", @"Resources\Sprites\parralax_demo\10_Sky.png");
 
-            parallax.Add(new ParallaxLayer("bg_layer10", 0));
+            background = ResourceManager.GetSprite("bg_layer10");
             parallax.Add(new ParallaxLayer("bg_layer9", 2));
             parallax.Add(new ParallaxLayer("bg_layer8", 4));
             parallax.Add(new ParallaxLayer("bg_layer7", 8));
@@ -52,6 +53,7 @@ namespace Electron2D.DebugScene
 
         protected override void Update()
 		{
+            background.Draw();
             parallax.Update();
         }
 
@@ -89,7 +91,8 @@ namespace Electron2D.DebugScene
 
         public ParallaxLayer(string resourceName, double speed)
         {
-            Speed = speed;
+            Speed = -speed;
+
             l1 = ResourceManager.GetSprite(resourceName);
             l2 = ResourceManager.GetSprite(resourceName);
 
@@ -99,8 +102,8 @@ namespace Electron2D.DebugScene
 
         public override void Update()
         {
-            l1t.Translate(new Vector(-Speed * Time.DeltaTime, 0));
-            l2t.Translate(new Vector(-Speed * Time.DeltaTime, 0));
+            l1t.Translate(new Vector(Speed * Time.DeltaTime, 0));
+            l2t.Translate(new Vector(Speed * Time.DeltaTime, 0));
 
             l1.Draw(l1t);
             l2.Draw(l2t);

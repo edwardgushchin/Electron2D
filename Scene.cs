@@ -175,7 +175,7 @@ namespace Electron2D
 
 		private void Pepiline()
 		{
-			Clear();
+			//Clear();
 			Update();
 			//UpdateObjects(deltaTime);
 			//UpdateGUIObjects(deltaTime);

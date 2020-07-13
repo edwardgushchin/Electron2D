@@ -14,14 +14,13 @@ namespace Electron2D.Graphics
         private readonly IntPtr sprite;
         private SDL.SDL_Rect scr_rect;
         private SDL.SDL_FRect draw_rect;
-        //private readonly int access;
-        //uint format;
+
         public Sprite(string path)
         {
             Path = path;
             Transform = new Transform(new Point(0, 0));
             sprite = Image.IMG_LoadTexture(Game.RenderContext, path);
-            SDL.SDL_QueryTexture(sprite, out var format, out var access, out int width, out int height); // get the width and height of the texture
+            SDL.SDL_QueryTexture(sprite, out var format, out var access, out int width, out int height);
 
             draw_rect = new SDL.SDL_FRect
             {
@@ -38,10 +37,7 @@ namespace Electron2D.Graphics
             };
         }
 
-        public Transform Transform
-        {
-            get; set;
-        }
+        public Transform Transform { get; }
 
         /*private void Resize()
         {
@@ -68,9 +64,7 @@ namespace Electron2D.Graphics
 
         public void Draw()
         {
-            draw_rect.x = (float)Transform.Position.X;
-            draw_rect.y = (float)Transform.Position.Y;
-            SDL.SDL_RenderCopyExF(Game.RenderContext, sprite, ref scr_rect, ref draw_rect, Transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+            Draw(Transform);
         }
 
         public void Draw(Transform transform)

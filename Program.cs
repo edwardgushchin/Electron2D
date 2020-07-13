@@ -14,7 +14,7 @@ namespace Electron2D
         private static Game TestGame;
         internal static void Main()
         {
-            Settings.VSinc = false;
+            Settings.VSinc = true;
             //Settings.Resizeble = false;
             //Settings.FPS = 60;
             Settings.DebugInfo = false;
