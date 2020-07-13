@@ -72,5 +72,12 @@ namespace Electron2D.Graphics
             draw_rect.y = (float)Transform.Position.Y;
             SDL.SDL_RenderCopyExF(Game.RenderContext, sprite, ref scr_rect, ref draw_rect, Transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
         }
+
+        public void Draw(Transform transform)
+        {
+            draw_rect.x = (float)transform.Position.X;
+            draw_rect.y = (float)transform.Position.Y;
+            SDL.SDL_RenderCopyExF(Game.RenderContext, sprite, ref scr_rect, ref draw_rect, Transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+        }
     }
 }

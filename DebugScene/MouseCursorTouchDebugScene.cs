@@ -20,7 +20,7 @@ namespace Electron2D.DebugScene
 
         protected override void OnLoadScene()
 		{
-			SetCursor(ResourceManager.LoadSprite(@"Resources\cursor.png"));
+			//SetCursor(ResourceManager.LoadSprite(@"Resources\cursor.png"));
 
 			Debug.Log("MouseCursorTouch debug scene loaded.", Debug.Sender.Scene);
         }

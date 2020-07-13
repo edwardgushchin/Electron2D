@@ -44,11 +44,11 @@ namespace Electron2D
 		protected virtual void Awake() {}
 
 		//Update вызывается каждый кадр
-		public virtual void Update(double deltaTime) {}
+		public virtual void Update() {}
 
-		protected virtual void OnPostUpdate(double deltaTime) {}
+		protected virtual void OnPostUpdate() {}
 
-		protected virtual void OnPreUpdate(double deltaTime) {}
+		protected virtual void OnPreUpdate() {}
 
 		protected virtual void OnDestroy() {}
 

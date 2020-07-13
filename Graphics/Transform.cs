@@ -40,10 +40,16 @@ namespace Electron2D.Graphics
 			set { localScale = value; }
 		}
 
-		public void Translate(double x, double y)
+		/*public void Translate(double x, double y)
 		{
 			position.X += x;
 			position.Y += y;
+		}*/
+
+		public void Translate(Vector vector)
+		{
+			position.X += vector.X;
+			position.Y += vector.Y;
 		}
 
 		public void Rotate(double deg)

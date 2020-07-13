@@ -14,12 +14,12 @@ namespace Electron2D.Kernel
     public static class ResourceManager
     {
         private static readonly List<Font> fontCache;
-        private static readonly List<Sprite> spriteCache;
+        private static readonly Dictionary<string, Sprite> spriteCache;
 
         static ResourceManager()
         {
             fontCache = new List<Font>();
-            spriteCache = new List<Sprite>();
+            spriteCache = new Dictionary<string, Sprite>();
         }
 
         internal static int FontCacheCount
@@ -37,9 +37,14 @@ namespace Electron2D.Kernel
             return fontCache.Find(x => x.Path.Contains(path));
         }
 
-        public static Sprite GetSprite(string path)
+        /*public static Sprite GetSprite(string path)
         {
             return spriteCache.Find(x => x.Path.Contains(path));
+        }*/
+
+        public static Sprite GetSprite(string resourceName)
+        {
+            return spriteCache[resourceName];
         }
 
         public static Font LoadFont(string path, int size)
@@ -61,7 +66,7 @@ namespace Electron2D.Kernel
             return null;
         }
 
-        public static Sprite LoadSprite(string path)
+        /*public static Sprite LoadSprite(string path)
         {
             if(!new System.IO.FileInfo(path).Exists)
             {
@@ -71,6 +76,18 @@ namespace Electron2D.Kernel
             spriteCache.Add(new Sprite(path));
             Debug.Log($"Resource \"{path}\" was successfully loaded.", Debug.Sender.ResourceManager);
             return spriteCache[^1];
+        }*/
+
+        public static void LoadSprite(string name, string path)
+        {
+            if(!new System.IO.FileInfo(path).Exists)
+            {
+                Debug.Log($"Resource not found on path \"{path}\"!", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
+                //return null;
+            }
+            spriteCache.Add(name, new Sprite(path));
+            Debug.Log($"Resource \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
+            //return new Resource<Sprite>(spriteCache[name]);
         }
     }
 }

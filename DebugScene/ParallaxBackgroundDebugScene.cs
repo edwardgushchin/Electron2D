@@ -8,109 +8,109 @@ using Electron2D.Inputs;
 using Electron2D.Events;
 using Electron2D.Graphics;
 
+using System.Collections.Generic;
+
 namespace Electron2D.DebugScene
 {
     internal class ParallaxBackgroundDebugScene : Scene
     {
-		private Sprite  mist_011, mist_012, bushes_021,
-                bushes_022, particles_031, particles_032,
-                forest_041, forest_042, particles051,
-                particles052, forest_061, forest_062,
-                forest_071, forest_072, forest_081,
-                forest_082, forest_091, forest_092, background;
+        private readonly ParallaxBackground parallax;
 
-        public ParallaxBackgroundDebugScene() : base() {}
+        public ParallaxBackgroundDebugScene() : base()
+        {
+            parallax = new ParallaxBackground();
+        }
 
         protected override void OnLoadScene()
 		{
 			Debug.Log("ParallaxBackground debug scene loading...", Debug.Sender.Scene);
 
-            mist_011 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\01_Mist.png");
-            mist_012 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\01_Mist.png");
-            mist_012.Transform.SetPosition(Settings.Resolution.Width, 0);
+            ResourceManager.LoadSprite("bg_layer1", @"Resources\Sprites\parralax_demo\01_Mist.png");
+            ResourceManager.LoadSprite("bg_layer2", @"Resources\Sprites\parralax_demo\02_Bushes.png");
+            ResourceManager.LoadSprite("bg_layer3", @"Resources\Sprites\parralax_demo\03_Particles.png");
+            ResourceManager.LoadSprite("bg_layer4", @"Resources\Sprites\parralax_demo\04_Forest.png");
+            ResourceManager.LoadSprite("bg_layer5", @"Resources\Sprites\parralax_demo\05_Particles.png");
+            ResourceManager.LoadSprite("bg_layer6", @"Resources\Sprites\parralax_demo\06_Forest.png");
+            ResourceManager.LoadSprite("bg_layer7", @"Resources\Sprites\parralax_demo\07_Forest.png");
+            ResourceManager.LoadSprite("bg_layer8", @"Resources\Sprites\parralax_demo\08_Forest.png");
+            ResourceManager.LoadSprite("bg_layer9", @"Resources\Sprites\parralax_demo\09_Forest.png");
+            ResourceManager.LoadSprite("bg_layer10", @"Resources\Sprites\parralax_demo\10_Sky.png");
 
-            bushes_021 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\02_Bushes.png");
-            bushes_022 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\02_Bushes.png");
-            bushes_022.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            particles_031 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\03_Particles.png");
-            particles_032 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\03_Particles.png");
-            particles_032.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            forest_041 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\04_Forest.png");
-            forest_042 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\04_Forest.png");
-            forest_042.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            particles051 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\05_Particles.png");
-            particles052 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\05_Particles.png");
-            particles052.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            forest_061 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\06_Forest.png");
-            forest_062 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\06_Forest.png");
-            forest_062.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            forest_071 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\07_Forest.png");
-            forest_072 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\07_Forest.png");
-            forest_072.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            forest_081 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\08_Forest.png");
-            forest_082 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\08_Forest.png");
-            forest_082.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            forest_091 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\09_Forest.png");
-            forest_092 = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\09_Forest.png");
-            forest_092.Transform.SetPosition(Settings.Resolution.Width, 0);
-
-            background = ResourceManager.LoadSprite(@"Resources\Sprites\parralax_demo\10_Sky.png");
+            parallax.Add(new ParallaxLayer("bg_layer10", 0));
+            parallax.Add(new ParallaxLayer("bg_layer9", 2));
+            parallax.Add(new ParallaxLayer("bg_layer8", 4));
+            parallax.Add(new ParallaxLayer("bg_layer7", 8));
+            parallax.Add(new ParallaxLayer("bg_layer6", 16));
+            parallax.Add(new ParallaxLayer("bg_layer5", 24));
+            parallax.Add(new ParallaxLayer("bg_layer4", 32));
+            parallax.Add(new ParallaxLayer("bg_layer3", 64));
+            parallax.Add(new ParallaxLayer("bg_layer2", 96));
+            parallax.Add(new ParallaxLayer("bg_layer1", 128));
 
 			Debug.Log("ParallaxBackground debug scene loaded.", Debug.Sender.Scene);
         }
 
-        private void LayerDraw(Sprite l1, Sprite l2, double speed)
-        {
-            l1.Transform.Translate(speed, 0);
-            l2.Transform.Translate(speed, 0);
-
-            l1.Draw();
-            l2.Draw();
-
-            if (l1.Transform.Position.X <= -Settings.Resolution.Width)
-                l1.Transform.SetPosition(Settings.Resolution.Width + l2.Transform.Position.X, 0);
-            if (l2.Transform.Position.X <= -Settings.Resolution.Width)
-                l2.Transform.SetPosition(Settings.Resolution.Width + l1.Transform.Position.X, 0);
-        }
-
-        private readonly double speed_09 = -2.0, speed_08 = -4.0, speed_07 = -8.0, speed_06 = -16.0;
-        private readonly double speed_05 = -24.0, speed_04 = -32.0, speed_03 = -64.0, speed_02 = -96.0, speed_01 = -128.0;
         protected override void Update()
 		{
-            background.Draw();
-            LayerDraw(forest_091, forest_092, speed_09 * Time.DeltaTime);
-            LayerDraw(forest_081, forest_082, speed_08 * Time.DeltaTime);
-            LayerDraw(forest_071, forest_072, speed_07 * Time.DeltaTime);
-            LayerDraw(forest_061, forest_062, speed_06 * Time.DeltaTime);
-            LayerDraw(particles051, particles052, speed_05 * Time.DeltaTime);
-            LayerDraw(forest_041, forest_042, speed_04 * Time.DeltaTime);
-            LayerDraw(particles_031, particles_032, speed_03 * Time.DeltaTime);
-            LayerDraw(bushes_021, bushes_022, speed_02 * Time.DeltaTime);
-            LayerDraw(mist_011, mist_012, speed_01 * Time.DeltaTime);
-
-            //Debug.Log($"x: = {forest_092.Transform.Position}, deltaTime = {deltaTime}, speed = {speed_09 * deltaTime}");
+            parallax.Update();
         }
 
         protected override void OnKeyDown(object sender, KeyboardEventArgs e)
 		{
 			if(e.Key == Keyboard.Keys.Escape)
 				SceneManager.ExitGame();
-
-            if(e.Key == Keyboard.Keys.D1)
-                Settings.Smoothing = SmoothingType.Nearest;
-
-            if(e.Key == Keyboard.Keys.D2)
-                Settings.Smoothing = SmoothingType.Linear;
-
-            if(e.Key == Keyboard.Keys.D3)
-                Settings.Smoothing = SmoothingType.Anisotropic;
 		}
+    }
+
+    internal class ParallaxBackground : GameObject
+    {
+        private readonly List<ParallaxLayer> layers;
+
+        public ParallaxBackground()
+        {
+            layers = new List<ParallaxLayer>();
+        }
+
+        public void Add(ParallaxLayer layer)
+        {
+            layers.Add(layer);
+        }
+
+        public override void Update()
+        {
+            layers.ForEach(lay => lay.Update());
+        }
+    }
+
+	internal class ParallaxLayer : GameObject
+    {
+        private readonly Sprite l1, l2;
+        private readonly Transform l1t, l2t;
+
+        public ParallaxLayer(string resourceName, double speed)
+        {
+            Speed = speed;
+            l1 = ResourceManager.GetSprite(resourceName);
+            l2 = ResourceManager.GetSprite(resourceName);
+
+            l1t = new Transform();
+            l2t = new Transform(new Point(Settings.Resolution.Width, 0));
+        }
+
+        public override void Update()
+        {
+            l1t.Translate(new Vector(-Speed * Time.DeltaTime, 0));
+            l2t.Translate(new Vector(-Speed * Time.DeltaTime, 0));
+
+            l1.Draw(l1t);
+            l2.Draw(l2t);
+
+            if (l1t.Position.X <= -Settings.Resolution.Width)
+                l1t.SetPosition(Settings.Resolution.Width + l2t.Position.X, 0);
+            if (l2t.Position.X <= -Settings.Resolution.Width)
+                l2t.SetPosition(Settings.Resolution.Width + l1t.Position.X, 0);
+        }
+
+        public double Speed { get;}
     }
 }

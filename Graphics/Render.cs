@@ -155,6 +155,7 @@ namespace Electron2D.Graphics
 		    var timer_fps = new Timer();
 
 		    ulong now_counter = SDL.SDL_GetPerformanceCounter();
+
             while (renderLoop)
 			{
 				timer_fps.Start();
@@ -165,9 +166,12 @@ namespace Electron2D.Graphics
 				Time.DeltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
 
                 SDL.SDL_RenderClear(renderer);
+
 				OnPreUpdate();
 				OnUpdate();
+
 				SDL.SDL_RenderPresent(renderer);
+
 				OnPostUpdate();
 
 				if(cap && ( timer_fps.GetTicks() < 1000 / Settings.FPS ) )
