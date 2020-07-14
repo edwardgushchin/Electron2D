@@ -14,12 +14,12 @@ namespace Electron2D
         private static Game TestGame;
         internal static void Main()
         {
-            Settings.VSinc = true;
+            Settings.VSinc = false;
             //Settings.Resizeble = false;
             //Settings.FPS = 60;
             Settings.DebugInfo = false;
-            Settings.Fullscreen = true;
-            Settings.Resolution = new Size(1920, 1080);
+            Settings.Fullscreen = false;
+            Settings.Resolution = new Size(1024, 768);
             Settings.Smoothing = SmoothingType.Anisotropic;
 
             TestGame = new Game("Electron2D - Parralax Background Demo");

@@ -9,6 +9,7 @@ using Electron2D.Events;
 using Electron2D.Graphics;
 
 using System.Collections.Generic;
+using Electron2D.Binding.SDL;
 
 namespace Electron2D.DebugScene
 {
@@ -19,6 +20,7 @@ namespace Electron2D.DebugScene
 
         public ParallaxBackgroundDebugScene() : base()
         {
+            SDL.SDL_ShowCursor(SDL.SDL_DISABLE);
             parallax = new ParallaxBackground();
         }
 
@@ -27,6 +29,7 @@ namespace Electron2D.DebugScene
 			Debug.Log("ParallaxBackground debug scene loading...", Debug.Sender.Scene);
 
             ResourceManager.LoadSprite("bg_layer1", @"Resources\Sprites\parralax_demo\01_Mist.png");
+            ResourceManager.GetSprite("bg_layer1").Alpha = 150;
             ResourceManager.LoadSprite("bg_layer2", @"Resources\Sprites\parralax_demo\02_Bushes.png");
             ResourceManager.LoadSprite("bg_layer3", @"Resources\Sprites\parralax_demo\03_Particles.png");
             ResourceManager.LoadSprite("bg_layer4", @"Resources\Sprites\parralax_demo\04_Forest.png");
@@ -42,11 +45,11 @@ namespace Electron2D.DebugScene
             parallax.Add(new ParallaxLayer("bg_layer8", 4));
             parallax.Add(new ParallaxLayer("bg_layer7", 8));
             parallax.Add(new ParallaxLayer("bg_layer6", 16));
-            parallax.Add(new ParallaxLayer("bg_layer5", 24));
+            parallax.Add(new ParallaxParticlesLayer("bg_layer5", 24, 0.125));
             parallax.Add(new ParallaxLayer("bg_layer4", 32));
-            parallax.Add(new ParallaxLayer("bg_layer3", 64));
+            parallax.Add(new ParallaxParticlesLayer("bg_layer3", 64, 0.25));
             parallax.Add(new ParallaxLayer("bg_layer2", 96));
-            parallax.Add(new ParallaxLayer("bg_layer1", 128));
+            parallax.Add(new ParallaxMistLayer("bg_layer1", 128, 5));
 
 			Debug.Log("ParallaxBackground debug scene loaded.", Debug.Sender.Scene);
         }
@@ -67,6 +70,7 @@ namespace Electron2D.DebugScene
     internal class ParallaxBackground : GameObject
     {
         private readonly List<ParallaxLayer> layers;
+        private const double layersSpeed = 1;
 
         public ParallaxBackground()
         {
@@ -80,6 +84,12 @@ namespace Electron2D.DebugScene
 
         public override void Update()
         {
+            //if (Input.GetKeyDown(Keyboard.Keys.A) || Input.GetKeyDown(Keyboard.Keys.Left))
+            //    layers.ForEach(lay => lay.MoveLeft(layersSpeed));
+
+            //if ( Input.GetKeyDown(Keyboard.Keys.D) || Input.GetKeyDown(Keyboard.Keys.Right))
+            layers.ForEach(lay => lay.MoveRight(layersSpeed));
+
             layers.ForEach(lay => lay.Update());
         }
     }
@@ -91,7 +101,7 @@ namespace Electron2D.DebugScene
 
         public ParallaxLayer(string resourceName, double speed)
         {
-            Speed = -speed;
+            Speed = speed;
 
             l1 = ResourceManager.GetSprite(resourceName);
             l2 = ResourceManager.GetSprite(resourceName);
@@ -102,18 +112,157 @@ namespace Electron2D.DebugScene
 
         public override void Update()
         {
-            l1t.Translate(new Vector(Speed * Time.DeltaTime, 0));
-            l2t.Translate(new Vector(Speed * Time.DeltaTime, 0));
+            l1.Draw(l1t);
+            l2.Draw(l2t);
+
+            if (l1t.Position.X <= -Settings.Resolution.Width)
+                l1t.SetPosition(Settings.Resolution.Width + l2t.Position.X, 0);
+            else if (l1t.Position.X >= Settings.Resolution.Width)
+                l1t.SetPosition(-Settings.Resolution.Width + l2t.Position.X, 0);
+
+            if (l2t.Position.X <= -Settings.Resolution.Width)
+                l2t.SetPosition(Settings.Resolution.Width + l1t.Position.X, 0);
+            else if (l2t.Position.X >= Settings.Resolution.Width)
+                l2t.SetPosition(-Settings.Resolution.Width + l1t.Position.X, 0);
+        }
+
+        public virtual void MoveRight(double speed)
+        {
+            var step = new Vector(-speed * Speed * Time.DeltaTime, 0);
+            l1t.Translate(step);
+            l2t.Translate(step);
+        }
+
+        public virtual void MoveLeft(double speed)
+        {
+            var step = new Vector(speed * Speed * Time.DeltaTime, 0);
+            l1t.Translate(step);
+            l2t.Translate(step);
+        }
+
+        public double Speed { get; set; }
+    }
+
+    internal class ParallaxMistLayer : ParallaxLayer
+    {
+        private readonly Sprite l1, l2;
+        private readonly Transform l1t, l2t;
+        private readonly double s_speed;
+
+        public ParallaxMistLayer(string resourceName, double speed, double sspeed) : base(resourceName, speed)
+        {
+            Speed = speed;
+            s_speed = speed;
+
+            l1 = ResourceManager.GetSprite(resourceName);
+            l2 = ResourceManager.GetSprite(resourceName);
+
+            l1t = new Transform();
+            l2t = new Transform(new Point(Settings.Resolution.Width, 0));
+        }
+
+        public override void Update()
+        {
+            var step = new Vector(s_speed * Time.DeltaTime, 0);
+            l1t.Translate(step);
+            l2t.Translate(step);
 
             l1.Draw(l1t);
             l2.Draw(l2t);
 
             if (l1t.Position.X <= -Settings.Resolution.Width)
                 l1t.SetPosition(Settings.Resolution.Width + l2t.Position.X, 0);
+            else if (l1t.Position.X >= Settings.Resolution.Width)
+                l1t.SetPosition(-Settings.Resolution.Width + l2t.Position.X, 0);
+
             if (l2t.Position.X <= -Settings.Resolution.Width)
                 l2t.SetPosition(Settings.Resolution.Width + l1t.Position.X, 0);
+            else if (l2t.Position.X >= Settings.Resolution.Width)
+                l2t.SetPosition(-Settings.Resolution.Width + l1t.Position.X, 0);
+        }
+    }
+
+    internal class ParallaxParticlesLayer : ParallaxLayer
+    {
+        private readonly Sprite lcenter, lright, lbottom, lbottomright;
+        private readonly Transform ltcenter, ltright, ltbottom, ltbottomright;
+        private readonly double upspeed;
+        public ParallaxParticlesLayer(string resourceName, double speed, double up_speed) : base(resourceName, speed)
+        {
+            Speed = speed;
+            upspeed = up_speed;
+
+            lcenter = ResourceManager.GetSprite(resourceName);
+            lright = ResourceManager.GetSprite(resourceName);
+            lbottom = ResourceManager.GetSprite(resourceName);
+            lbottomright = ResourceManager.GetSprite(resourceName);
+
+            ltcenter = new Transform();
+            ltright = new Transform(new Point(Settings.Resolution.Width, 0));
+            ltbottom = new Transform(new Point(0, -Settings.Resolution.Height));
+            ltbottomright = new Transform(new Point(Settings.Resolution.Width, -Settings.Resolution.Height));
         }
 
-        public double Speed { get;}
+        public override void Update()
+        {
+            var vec = new Vector(0, upspeed * Time.DeltaTime);
+            ltcenter.Translate(vec);
+            ltright.Translate(vec);
+            ltbottom.Translate(vec);
+            ltbottomright.Translate(vec);
+
+            if (ltcenter.Position.X <= -Settings.Resolution.Width)
+                ltcenter.SetPosition(Settings.Resolution.Width + ltright.Position.X, ltcenter.Position.Y);
+            else if (ltcenter.Position.X >= Settings.Resolution.Width)
+                ltcenter.SetPosition(-Settings.Resolution.Width + ltright.Position.X, ltcenter.Position.Y);
+
+            if (ltright.Position.X <= -Settings.Resolution.Width)
+                ltright.SetPosition(Settings.Resolution.Width + ltcenter.Position.X, ltright.Position.Y);
+            else if (ltright.Position.X >= Settings.Resolution.Width)
+                ltright.SetPosition(-Settings.Resolution.Width + ltcenter.Position.X, ltright.Position.Y);
+
+            if (ltbottom.Position.X <= -Settings.Resolution.Width)
+                ltbottom.SetPosition(Settings.Resolution.Width + ltbottomright.Position.X, ltbottom.Position.Y);
+            else if (ltbottom.Position.X >= Settings.Resolution.Width)
+                ltbottom.SetPosition(-Settings.Resolution.Width + ltbottomright.Position.X, ltbottom.Position.Y);
+
+            if (ltbottomright.Position.X <= -Settings.Resolution.Width)
+                ltbottomright.SetPosition(Settings.Resolution.Width + ltbottom.Position.X, ltbottomright.Position.Y);
+            else if (ltbottomright.Position.X >= Settings.Resolution.Width)
+                ltbottomright.SetPosition(-Settings.Resolution.Width + ltbottom.Position.X, ltbottomright.Position.Y);
+
+            if (ltcenter.Position.Y >= Settings.Resolution.Height) {
+                ltcenter.SetPosition(ltcenter.Position.X, -Settings.Resolution.Height);
+                ltright.SetPosition(ltright.Position.X, -Settings.Resolution.Height);
+            }
+
+            if (ltbottom.Position.Y >= Settings.Resolution.Height) {
+                ltbottom.SetPosition(ltbottom.Position.X, -Settings.Resolution.Height);
+                ltbottomright.SetPosition(ltbottomright.Position.X, -Settings.Resolution.Height);
+            }
+
+            lcenter.Draw(ltcenter);
+            lright.Draw(ltright);
+            lbottom.Draw(ltbottom);
+            lbottomright.Draw(ltbottomright);
+        }
+
+        public override void MoveRight(double speed)
+        {
+            var step = new Vector(-speed * Speed * Time.DeltaTime, 0);
+            ltcenter.Translate(step);
+            ltright.Translate(step);
+            ltbottom.Translate(step);
+            ltbottomright.Translate(step);
+        }
+
+        public override void MoveLeft(double speed)
+        {
+            var step = new Vector(speed * Speed * Time.DeltaTime, 0);
+            ltcenter.Translate(step);
+            ltright.Translate(step);
+            ltbottom.Translate(step);
+            ltbottomright.Translate(step);
+        }
     }
 }

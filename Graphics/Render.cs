@@ -43,7 +43,7 @@ namespace Electron2D.Graphics
 
         private bool SDLInit()
         {
-			SDL.SDL_SetHint(SDL.SDL_HINT_VIDEO_HIGHDPI_DISABLED, "2");
+			//SDL.SDL_SetHint(SDL.SDL_HINT_VIDEO_HIGHDPI_DISABLED, "2");
 
 			if(SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) != 0)
             {
@@ -73,25 +73,13 @@ namespace Electron2D.Graphics
 			return true;
 		}
 
-        internal IntPtr RenderContext
-		{
-			get
-			{
-				return Initialized ? renderer : IntPtr.Zero;
-			}
-		}
+        internal IntPtr RenderContext => Initialized ? renderer : IntPtr.Zero;
 
-		internal IntPtr WindowContext
-		{
-			get
-			{
-				return Initialized ? renderWindow : IntPtr.Zero;
-			}
-			set
-			{
-				renderWindow = value;
-			}
-		}
+        internal IntPtr WindowContext
+        {
+            get => Initialized ? renderWindow : IntPtr.Zero;
+            set => renderWindow = value;
+        }
 
         public bool Initialized { get; }
 

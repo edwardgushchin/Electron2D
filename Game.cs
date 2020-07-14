@@ -55,6 +55,7 @@ namespace Electron2D
 		}
 
 		public Render Render { get { return render; } }
+
         internal EventPool Events { get; private set; }
 
         internal static IntPtr RenderContext => render != null ? render.RenderContext : IntPtr.Zero;

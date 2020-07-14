@@ -68,6 +68,11 @@ namespace Electron2D.Graphics
 			position = new Point(x, y);
 		}
 
+		public void SetPosition(Point point)
+		{
+			position = point;
+		}
+
 		public override string ToString()
 		{
 			return $"X: {position.X}; Y: {position.Y};";

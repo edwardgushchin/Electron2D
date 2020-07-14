@@ -9,11 +9,13 @@ using Electron2D.Binding.SDL;
 
 namespace Electron2D.Graphics
 {
-    public class Sprite
+    public class Sprite : IDisposable
     {
         private readonly IntPtr sprite;
         private SDL.SDL_Rect scr_rect;
         private SDL.SDL_FRect draw_rect;
+
+        private Size size;
 
         public Sprite(string path)
         {
@@ -21,23 +23,38 @@ namespace Electron2D.Graphics
             Transform = new Transform(new Point(0, 0));
             sprite = Image.IMG_LoadTexture(Game.RenderContext, path);
             SDL.SDL_QueryTexture(sprite, out var format, out var access, out int width, out int height);
+            size = new Size(width, height);
+
+            
 
             draw_rect = new SDL.SDL_FRect
             {
-                w = width,
-                h = height
+                w = size.Width,
+                h = size.Height
             };
 
             scr_rect = new SDL.SDL_Rect
             {
                 x = 0,
                 y = 0,
-                w = width,
-                h = height
+                w = size.Width,
+                h = size.Height
             };
         }
 
+        public byte Alpha
+        {
+            get
+            {
+                SDL.SDL_GetTextureAlphaMod(sprite, out byte a);
+                return a;
+            }
+            set => SDL.SDL_SetTextureAlphaMod(sprite, value);
+        }
+
         public Transform Transform { get; }
+
+        public Size Size { get; }
 
         /*private void Resize()
         {
@@ -62,6 +79,8 @@ namespace Electron2D.Graphics
 
         public string Path { get; }
 
+        private Point Pivot => new Point(size.Width / 2, size.Height / 2);
+
         public void Draw()
         {
             Draw(Transform);
@@ -69,9 +88,16 @@ namespace Electron2D.Graphics
 
         public void Draw(Transform transform)
         {
-            draw_rect.x = (float)transform.Position.X;
-            draw_rect.y = (float)transform.Position.Y;
+            var point = transform.Position.ConvertToSDLPoint();
+            draw_rect.x = (float)(point.X + Pivot.X);
+            draw_rect.y = (float)(point.Y - Pivot.Y);
             SDL.SDL_RenderCopyExF(Game.RenderContext, sprite, ref scr_rect, ref draw_rect, Transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+        }
+
+        public void Dispose()
+        {
+            //SDL.SDL_FreeSurface(sprite);
+            SDL.SDL_free(sprite);
         }
     }
 }

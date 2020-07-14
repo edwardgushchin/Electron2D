@@ -19,20 +19,20 @@ namespace Electron2D.Graphics
 			Y = y;
 		}
 
-		internal static Point ConvertToDecartPoint(double x, double y)
+		internal Point ConvertToDecartPoint()
 		{
-			var newx = x - (Settings.Resolution.Width / 2);
-			var newy = (y - (Settings.Resolution.Height / 2)) * -1;
+			var newx = X - (Settings.Resolution.Width / 2);
+			var newy = (Y - (Settings.Resolution.Height / 2)) * -1;
 
 			return new Point(newx, newy);
 		}
 
-		internal static Point ConvertToSDLPoint(double x, double y)
+		internal Point ConvertToSDLPoint()
 		{
-			var newx = x + (Settings.Resolution.Width / 2);
-			var newy = (y - (Settings.Resolution.Height / 2)) * -1 ;
+			var newx = X - (Settings.Resolution.Width / 2);
+			var newy = (Y - (Settings.Resolution.Height / 2)) * -1 ;
 
-			return new Point(newx, (uint)newy);
+			return new Point(newx, newy);
 		}
 
 		public override bool Equals(object obj)
