@@ -7,54 +7,51 @@ namespace Electron2D.Graphics
 {
 	public class Transform
 	{
-		private Point position, localScale;
+		private Point position;
+		private Vector localScale;
+		private double degrees;
 
 		public Transform()
 		{
 			position = new Point();
-            Degrees = 0;
-			localScale = new Point(1, 1);
+            degrees = 0;
+			localScale = new Vector(1, 1);
 		}
 
 		public Transform(Point pos)
 		{
 			position = pos;
-            Degrees = 0;
-			localScale = new Point(1, 1);
+            degrees = 0;
+			localScale = new Vector(1, 1);
 		}
 
-		// disable once ConvertToAutoProperty
 		public Point Position
 		{
 			get { return position; }
-			private set { position = value; }
+			set { position = value; }
 		}
 
-        // disable once ConvertToAutoProperty
-        public double Degrees { get; set; }
+        public double Degrees
+		{
+			get { return degrees; }
+			set { degrees = value; }
+		}
 
-        // disable once ConvertToAutoProperty
-        public Point LocalScale
+        public Vector LocalScale
 		{
 			get { return localScale; }
 			set { localScale = value; }
 		}
 
-		/*public void Translate(double x, double y)
+		public void Translate(double x, double y)
 		{
 			position.X += x;
 			position.Y += y;
-		}*/
-
-		public void Translate(Vector vector)
-		{
-			position.X += vector.X;
-			position.Y += vector.Y;
 		}
 
 		public void Rotate(double deg)
 		{
-            Degrees += deg;
+            degrees += deg;
 		}
 
 		public void Scale(double xscale, double yscale)
@@ -65,17 +62,17 @@ namespace Electron2D.Graphics
 
 		public void SetPosition(double x, double y)
 		{
-			position = new Point(x, y);
+			Position = new Point(x, y);
 		}
 
 		public void SetPosition(Point point)
 		{
-			position = point;
+			Position = point;
 		}
 
 		public override string ToString()
 		{
-			return $"X: {position.X}; Y: {position.Y};";
+			return $"X: {Position.X}; Y: {Position.Y};";
 		}
 	}
 }

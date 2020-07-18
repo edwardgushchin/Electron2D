@@ -9,7 +9,7 @@ using Electron2D.Graphics;
 
 namespace Electron2D
 {
-	public class GameObject : IDisposable
+	public class GameObject
 	{
         public GameObject()
 		{
@@ -33,12 +33,6 @@ namespace Electron2D
             Awake();
         }
         public bool Enable { get; set; }
-
-		public void Dispose()
-		{
-			Transform = null;
-			Enable = false;
-		}
 
 		//Метод вызывается, когда экземпляр объекта будет загружен
 		protected virtual void Awake() {}

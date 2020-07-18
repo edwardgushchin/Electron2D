@@ -29,7 +29,7 @@ namespace Electron2D.Graphics
 
 		internal Point ConvertToSDLPoint()
 		{
-			var newx = X - (Settings.Resolution.Width / 2);
+			var newx = X + (Settings.Resolution.Width / 2);
 			var newy = (Y - (Settings.Resolution.Height / 2)) * -1 ;
 
 			return new Point(newx, newy);

@@ -14,8 +14,7 @@ namespace Electron2D.Graphics
         private readonly IntPtr sprite;
         private SDL.SDL_Rect scr_rect;
         private SDL.SDL_FRect draw_rect;
-
-        private Size size;
+        private Rect size, rect;
 
         public Sprite(string path)
         {
@@ -23,22 +22,19 @@ namespace Electron2D.Graphics
             Transform = new Transform(new Point(0, 0));
             sprite = Image.IMG_LoadTexture(Game.RenderContext, path);
             SDL.SDL_QueryTexture(sprite, out var format, out var access, out int width, out int height);
-            size = new Size(width, height);
-
-            
+            rect = new Rect(width, height);
+            size = new Rect(width * Transform.LocalScale.X, height * Transform.LocalScale.Y);
 
             draw_rect = new SDL.SDL_FRect
             {
-                w = size.Width,
-                h = size.Height
+                w = (float)size.Width,
+                h = (float)size.Height
             };
 
             scr_rect = new SDL.SDL_Rect
             {
-                x = 0,
-                y = 0,
-                w = size.Width,
-                h = size.Height
+                w = (int)rect.Width,
+                h = (int)rect.Height
             };
         }
 
@@ -52,9 +48,9 @@ namespace Electron2D.Graphics
             set => SDL.SDL_SetTextureAlphaMod(sprite, value);
         }
 
-        public Transform Transform { get; }
+        public Transform Transform { get; set; }
 
-        public Size Size { get; }
+        public Rect Size { get { return size; } }
 
         /*private void Resize()
         {
@@ -89,8 +85,13 @@ namespace Electron2D.Graphics
         public void Draw(Transform transform)
         {
             var point = transform.Position.ConvertToSDLPoint();
-            draw_rect.x = (float)(point.X + Pivot.X);
+
+            size.Width = rect.Width * transform.LocalScale.X;
+            size.Height = rect.Height * transform.LocalScale.Y;
+            draw_rect.x = (float)(point.X - Pivot.X);
             draw_rect.y = (float)(point.Y - Pivot.Y);
+            draw_rect.w = (float)size.Width;
+            draw_rect.h = (float)size.Height;
             SDL.SDL_RenderCopyExF(Game.RenderContext, sprite, ref scr_rect, ref draw_rect, Transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
         }
 
