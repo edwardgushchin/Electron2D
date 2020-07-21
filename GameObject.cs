@@ -9,25 +9,25 @@ using Electron2D.Graphics;
 
 namespace Electron2D
 {
-	public class GameObject
+	public class Entity
 	{
-        public GameObject()
+        public Entity()
 		{
 			Transform = new Transform(new Point());
 			Enable = true;
 			Awake();
 		}
 
-		public GameObject(float x, float y)
+		public Entity(float x, float y)
 		{
 			Transform = new Transform(new Point(x, y));
 			Enable = true;
 			Awake();
 		}
 
-        public Transform Transform { get; private set; }
+        public Transform Transform { get; }
 
-        public GameObject(bool enable)
+        public Entity(bool enable)
         {
             this.Enable = enable;
             Awake();

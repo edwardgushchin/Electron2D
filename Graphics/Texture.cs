@@ -9,23 +9,22 @@ using Electron2D.Binding.SDL;
 
 namespace Electron2D.Graphics
 {
-    internal class Texture : IDisposable
+    public class Texture : IDisposable
     {
-        private readonly IntPtr texture;
-        private SDL.SDL_Rect rect;
+        internal SDL.SDL_Rect Rectangle;
 
-        public Texture(string path)
+        internal Texture(string path)
         {
-            texture = Image.IMG_LoadTexture(Game.RenderContext, path);
-            SDL.SDL_QueryTexture(texture, out var format, out var access, out int width, out int height);
-            rect = new SDL.SDL_Rect { w = width, h = height };
+            TexturePtr = Image.IMG_LoadTexture(Game.RenderContext, path);
+            SDL.SDL_QueryTexture(TexturePtr, out var format, out var access, out int width, out int height);
+            Rectangle = new SDL.SDL_Rect { w = width, h = height };
         }
 
-        public SDL.SDL_Rect Rectangle => rect;
+        internal IntPtr TexturePtr { get; }
 
         public void Dispose()
         {
-            SDL.SDL_DestroyTexture(texture);
+            SDL.SDL_DestroyTexture(TexturePtr);
         }
     }
 }

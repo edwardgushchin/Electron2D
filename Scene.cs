@@ -214,11 +214,6 @@ namespace Electron2D
 				//obj.Update(deltaTime);
 			//});
 		}*/
-		private void Clear()
-		{
-			SDL.SDL_SetRenderDrawColor(game.Render.RenderContext, clearColor.R, clearColor.G, clearColor.B, clearColor.A);
-			SDL.SDL_RenderClear(game.Render.RenderContext);
-		}
 
 		public void Start()
 		{
@@ -226,7 +221,7 @@ namespace Electron2D
 			OnLoadScene();
 		}
 
-		public void AddObject(GameObject obj)
+		public void AddEntity(Entity obj)
 		{
 			//objectsList.Add(obj);
 		}

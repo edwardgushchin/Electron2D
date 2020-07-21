@@ -22,8 +22,8 @@ namespace Electron2D.DebugScene
 		{
 			Debug.Log("SpritePositionDebugScene debug scene loading...", Debug.Sender.Scene);
 
-            ResourceManager.LoadSprite("spaceShips_005", @"Resources\Sprites\space_shooter_demo\Ships\spaceShips_005.png");
-            spaceShip = ResourceManager.GetSprite("spaceShips_005");
+            ResourceManager.LoadTexture("spaceShips_005", @"Resources\Sprites\space_shooter_demo\Ships\spaceShips_005.png");
+            spaceShip = new Sprite(ResourceManager.GetTexture("spaceShips_005"));
             spaceShip.Transform.LocalScale = new Vector { X = 0.5, Y = 0.5 };
             spaceShip.Transform.SetPosition(0,0);
             Debug.Log($"size={spaceShip.Size}");
@@ -33,7 +33,7 @@ namespace Electron2D.DebugScene
 
         protected override void Update()
 		{
-            Camera.Transform.Translate(50 * Time.DeltaTime, 0);
+            //Camera.Transform.Translate(50 * Time.DeltaTime, 0);
             spaceShip.Transform.Degrees += 5 * Time.DeltaTime;
             spaceShip.Draw();
 		}

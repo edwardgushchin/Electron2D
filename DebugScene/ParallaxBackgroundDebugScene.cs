@@ -3,7 +3,7 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using Electron2D.Kernel;
+/*using Electron2D.Kernel;
 using Electron2D.Inputs;
 using Electron2D.Events;
 using Electron2D.Graphics;
@@ -16,7 +16,7 @@ namespace Electron2D.DebugScene
     internal class ParallaxBackgroundDebugScene : Scene
     {
         private readonly ParallaxBackground parallax;
-        private Sprite background;
+        private Texture background;
 
         public ParallaxBackgroundDebugScene() : base()
         {
@@ -28,19 +28,19 @@ namespace Electron2D.DebugScene
 		{
 			Debug.Log("ParallaxBackground debug scene loading...", Debug.Sender.Scene);
 
-            ResourceManager.LoadSprite("bg_layer1", @"Resources\Sprites\parralax_demo\01_Mist.png");
-            //ResourceManager.GetSprite("bg_layer1").Alpha = 150;
-            ResourceManager.LoadSprite("bg_layer2", @"Resources\Sprites\parralax_demo\02_Bushes.png");
-            ResourceManager.LoadSprite("bg_layer3", @"Resources\Sprites\parralax_demo\03_Particles.png");
-            ResourceManager.LoadSprite("bg_layer4", @"Resources\Sprites\parralax_demo\04_Forest.png");
-            ResourceManager.LoadSprite("bg_layer5", @"Resources\Sprites\parralax_demo\05_Particles.png");
-            ResourceManager.LoadSprite("bg_layer6", @"Resources\Sprites\parralax_demo\06_Forest.png");
-            ResourceManager.LoadSprite("bg_layer7", @"Resources\Sprites\parralax_demo\07_Forest.png");
-            ResourceManager.LoadSprite("bg_layer8", @"Resources\Sprites\parralax_demo\08_Forest.png");
-            ResourceManager.LoadSprite("bg_layer9", @"Resources\Sprites\parralax_demo\09_Forest.png");
-            ResourceManager.LoadSprite("bg_layer10", @"Resources\Sprites\parralax_demo\10_Sky.png");
+            ResourceManager.LoadTexture("bg_layer1", @"Resources\textures\parralax_demo\01_Mist.png");
+            //ResourceManager.Gettexture("bg_layer1").Alpha = 150;
+            ResourceManager.LoadTexture("bg_layer2", @"Resources\textures\parralax_demo\02_Bushes.png");
+            ResourceManager.LoadTexture("bg_layer3", @"Resources\textures\parralax_demo\03_Particles.png");
+            ResourceManager.LoadTexture("bg_layer4", @"Resources\textures\parralax_demo\04_Forest.png");
+            ResourceManager.LoadTexture("bg_layer5", @"Resources\textures\parralax_demo\05_Particles.png");
+            ResourceManager.LoadTexture("bg_layer6", @"Resources\textures\parralax_demo\06_Forest.png");
+            ResourceManager.LoadTexture("bg_layer7", @"Resources\textures\parralax_demo\07_Forest.png");
+            ResourceManager.LoadTexture("bg_layer8", @"Resources\textures\parralax_demo\08_Forest.png");
+            ResourceManager.LoadTexture("bg_layer9", @"Resources\textures\parralax_demo\09_Forest.png");
+            ResourceManager.LoadTexture("bg_layer10", @"Resources\textures\parralax_demo\10_Sky.png");
 
-            background = ResourceManager.GetSprite("bg_layer10");
+            background = ResourceManager.GetTexture("bg_layer10");
             parallax.Add(new ParallaxLayer("bg_layer9", 2));
             parallax.Add(new ParallaxLayer("bg_layer8", 4));
             parallax.Add(new ParallaxLayer("bg_layer7", 8));
@@ -96,7 +96,7 @@ namespace Electron2D.DebugScene
 
 	internal class ParallaxLayer : GameObject
     {
-        private readonly Sprite sprite;
+        private readonly Texture texture;
 
         private readonly double speed;
         private readonly Transform ltcenter, ltright;
@@ -105,7 +105,7 @@ namespace Electron2D.DebugScene
         {
             this.speed = speed;
 
-            sprite = ResourceManager.GetSprite(resourceName);
+            texture = ResourceManager.GetTexture(resourceName);
 
             ltcenter = new Transform();
             ltright = new Transform(new Point(Settings.Resolution.Width, 0));
@@ -123,8 +123,8 @@ namespace Electron2D.DebugScene
             else if (ltright.Position.X >= Settings.Resolution.Width)
                 ltright.SetPosition(-Settings.Resolution.Width + ltcenter.Position.X, 0);
 
-            sprite.Draw(ltcenter);
-            sprite.Draw(ltright);
+            texture.Draw(ltcenter);
+            texture.Draw(ltright);
         }
 
         public virtual void MoveRight(double speed)
@@ -144,7 +144,7 @@ namespace Electron2D.DebugScene
 
     internal class ParallaxMistLayer : ParallaxLayer
     {
-        private readonly Sprite sprite;
+        private readonly texture texture;
         private readonly Transform ltcenter, ltright;
         private readonly double force, speed;
 
@@ -153,8 +153,8 @@ namespace Electron2D.DebugScene
             this.speed = speed;
             this.force = force;
 
-            sprite = ResourceManager.GetSprite(resourceName);
-            sprite.Alpha = 150;
+            texture = ResourceManager.Gettexture(resourceName);
+            texture.Alpha = 150;
 
             ltcenter = new Transform();
             ltright = new Transform(new Point(Settings.Resolution.Width, 0));
@@ -176,14 +176,14 @@ namespace Electron2D.DebugScene
             ltcenter.Translate(step, 0);
             ltright.Translate(step, 0);
 
-            sprite.Draw(ltcenter);
-            sprite.Draw(ltright);
+            texture.Draw(ltcenter);
+            texture.Draw(ltright);
         }
     }
 
     internal class ParallaxParticlesLayer : ParallaxLayer
     {
-        private readonly Sprite sprite;
+        private readonly texture texture;
         private readonly Transform ltcenter, ltright, ltbottom, ltbottomright;
         private readonly double upspeed, speed;
         public ParallaxParticlesLayer(string resourceName, double speed, double up_speed) : base(resourceName, speed)
@@ -191,7 +191,7 @@ namespace Electron2D.DebugScene
             this.speed = speed;
             upspeed = up_speed;
 
-            sprite = ResourceManager.GetSprite(resourceName);
+            texture = ResourceManager.Gettexture(resourceName);
 
             ltcenter = new Transform();
             ltright = new Transform(new Point(Settings.Resolution.Width, 0));
@@ -237,10 +237,10 @@ namespace Electron2D.DebugScene
             ltbottom.Translate(0, vec);
             ltbottomright.Translate(0, vec);
 
-            sprite.Draw(ltcenter);
-            sprite.Draw(ltright);
-            sprite.Draw(ltbottom);
-            sprite.Draw(ltbottomright);
+            texture.Draw(ltcenter);
+            texture.Draw(ltright);
+            texture.Draw(ltbottom);
+            texture.Draw(ltbottomright);
         }
 
         public override void MoveRight(double speed)
@@ -261,4 +261,4 @@ namespace Electron2D.DebugScene
             ltbottomright.Translate(step, 0);
         }
     }
-}
+}*/

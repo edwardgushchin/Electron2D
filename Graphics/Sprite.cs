@@ -9,32 +9,24 @@ using Electron2D.Binding.SDL;
 
 namespace Electron2D.Graphics
 {
-    public class Sprite : IDisposable
+    public class Sprite
     {
-        private readonly IntPtr sprite;
-        private SDL.SDL_Rect scr_rect;
+        private readonly Texture srcTexture;
         private SDL.SDL_FRect draw_rect;
         private Rect size, rect;
 
-        public Sprite(string path)
+        public Sprite(Texture texture)
         {
-            Path = path;
             Transform = new Transform(new Point(0, 0));
-            //sprite = Image.IMG_LoadTexture(Game.RenderContext, path);
-            SDL.SDL_QueryTexture(sprite, out var format, out var access, out int width, out int height);
-            rect = new Rect(width, height);
-            size = new Rect(width * Transform.LocalScale.X, height * Transform.LocalScale.Y);
+            Achor = new Point(0.5, 0.5);
+            srcTexture = texture;
+            rect = new Rect(texture.Rectangle.w, texture.Rectangle.h);
+            size = new Rect(texture.Rectangle.w * Transform.LocalScale.X, texture.Rectangle.h * Transform.LocalScale.Y);
 
             draw_rect = new SDL.SDL_FRect
             {
                 w = (float)size.Width,
                 h = (float)size.Height
-            };
-
-            scr_rect = new SDL.SDL_Rect
-            {
-                w = (int)rect.Width,
-                h = (int)rect.Height
             };
         }
 
@@ -42,10 +34,10 @@ namespace Electron2D.Graphics
         {
             get
             {
-                SDL.SDL_GetTextureAlphaMod(sprite, out byte a);
+                SDL.SDL_GetTextureAlphaMod(srcTexture.TexturePtr, out byte a);
                 return a;
             }
-            set => SDL.SDL_SetTextureAlphaMod(sprite, value);
+            set => SDL.SDL_SetTextureAlphaMod(srcTexture.TexturePtr, value);
         }
 
         public Transform Transform { get; set; }
@@ -75,30 +67,31 @@ namespace Electron2D.Graphics
 
         public string Path { get; }
 
-        private Point Pivot => new Point(size.Width / 2, size.Height / 2);
+        public Point Achor { get; set; }
+
+        public Point Center => new Point(draw_rect.x + (size.Width * Achor.X), draw_rect.y + (size.Height * Achor.Y));
+
 
         public void Draw()
         {
             Draw(Transform);
         }
 
-        public void Draw(Transform transform)
+        public void Draw(Transform transformTo)
         {
-            var point = transform.Position.ConvertToSDLPoint();
+            var point = (Transform.Position + transformTo.Position).ConvertToSDLPoint();
 
-            size.Width = rect.Width * transform.LocalScale.X;
-            size.Height = rect.Height * transform.LocalScale.Y;
-            draw_rect.x = (float)(point.X - Pivot.X - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
-            draw_rect.y = (float)(point.Y - Pivot.Y - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
+            size.Width = rect.Width * transformTo.LocalScale.X;
+            size.Height = rect.Height * transformTo.LocalScale.Y;
+            draw_rect.x = (float)(point.X - (size.Width * Achor.X) - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
+            draw_rect.y = (float)(point.Y - (size.Height * Achor.Y) - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
             draw_rect.w = (float)size.Width;
             draw_rect.h = (float)size.Height;
-            SDL.SDL_RenderCopyExF(Game.RenderContext, sprite, ref scr_rect, ref draw_rect, Transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
-        }
 
-        public void Dispose()
-        {
-            //SDL.SDL_FreeSurface(sprite);
-            SDL.SDL_free(sprite);
+            //SDL.SDL_SetRenderDrawColor(Game.RenderContext, 255,0,255,0);
+            SDL.SDL_RenderCopyExF(Game.RenderContext, srcTexture.TexturePtr, ref srcTexture.Rectangle, ref draw_rect, Transform.Degrees + transformTo.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+            //SDL.SDL_RenderDrawPointF(Game.RenderContext, (float)Center.X, (float)Center.Y);
+            //SDL.SDL_SetRenderDrawColor(Game.RenderContext, 0x00, 0x00, 0x00, 0xFF);
         }
     }
 }

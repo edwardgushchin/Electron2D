@@ -14,12 +14,12 @@ namespace Electron2D.Kernel
     public static class ResourceManager
     {
         private static readonly List<Font> fontCache;
-        private static readonly Dictionary<string, Sprite> spriteCache;
+        private static readonly Dictionary<string, Texture> textureCache;
 
         static ResourceManager()
         {
             fontCache = new List<Font>();
-            spriteCache = new Dictionary<string, Sprite>();
+            textureCache = new Dictionary<string, Texture>();
         }
 
         internal static int FontCacheCount
@@ -27,9 +27,9 @@ namespace Electron2D.Kernel
             get { return fontCache.Count; }
         }
 
-        internal static int SpriteCacheCount
+        internal static int TextureCacheCount
         {
-            get { return spriteCache.Count; }
+            get { return textureCache.Count; }
         }
 
         public static Font GetFont(string path)
@@ -42,9 +42,9 @@ namespace Electron2D.Kernel
             return spriteCache.Find(x => x.Path.Contains(path));
         }*/
 
-        public static Sprite GetSprite(string resourceName)
+        public static Texture GetTexture(string resourceName)
         {
-            return spriteCache[resourceName];
+            return textureCache[resourceName];
         }
 
         public static Font LoadFont(string path, int size)
@@ -78,15 +78,15 @@ namespace Electron2D.Kernel
             return spriteCache[^1];
         }*/
 
-        public static void LoadSprite(string name, string path)
+        public static void LoadTexture(string name, string path)
         {
             if(!new System.IO.FileInfo(path).Exists)
             {
-                Debug.Log($"Resource not found on path \"{path}\"!", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
+                Debug.Log($"Texture not found on path \"{path}\"!", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
                 //return null;
             }
-            spriteCache.Add(name, new Sprite(path));
-            Debug.Log($"Resource \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
+            textureCache.Add(name, new Texture(path));
+            Debug.Log($"Texture \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
             //return new Resource<Sprite>(spriteCache[name]);
         }
 
