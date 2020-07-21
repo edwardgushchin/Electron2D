@@ -33,6 +33,7 @@ namespace Electron2D.DebugScene
 
         protected override void Update()
 		{
+            Camera.Transform.Translate(50 * Time.DeltaTime, 0);
             spaceShip.Transform.Degrees += 5 * Time.DeltaTime;
             spaceShip.Draw();
 		}

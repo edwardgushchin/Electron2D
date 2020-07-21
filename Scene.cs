@@ -32,6 +32,7 @@ namespace Electron2D
 			clearColor = Color.Black;
 			//objectsList = new List<GameObject>();
 			//guiObjectsList = new List<GUIObject>();
+			Camera = new Camera();
 			if(Settings.DebugInfo) LoadDebugInfo();
 		}
 
@@ -41,6 +42,7 @@ namespace Electron2D
 			clearColor = Color.Black;
 			//objectsList = new List<GameObject>();
 			//guiObjectsList = new List<GUIObject>();
+			Camera = new Camera();
 			if(Settings.DebugInfo) LoadDebugInfo();
 		}
 
@@ -50,6 +52,7 @@ namespace Electron2D
 			clearColor = sceneColor;
 			//objectsList = new List<GameObject>();
 			//guiObjectsList = new List<GUIObject>();
+			Camera = new Camera();
 			if(Settings.DebugInfo) LoadDebugInfo();
 		}
 
@@ -67,7 +70,9 @@ namespace Electron2D
 			SDL.SDL_SetCursor(SDL.SDL_CreateColorCursor(Image.IMG_Load(cursor.Path), 0, 0));
 		}
 
-		public int GUIObjectsCount
+        public Camera Camera { get; }
+
+        public int GUIObjectsCount
 		{
 			get
 			{

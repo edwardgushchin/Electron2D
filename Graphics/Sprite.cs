@@ -88,8 +88,8 @@ namespace Electron2D.Graphics
 
             size.Width = rect.Width * transform.LocalScale.X;
             size.Height = rect.Height * transform.LocalScale.Y;
-            draw_rect.x = (float)(point.X - Pivot.X);
-            draw_rect.y = (float)(point.Y - Pivot.Y);
+            draw_rect.x = (float)(point.X - Pivot.X - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
+            draw_rect.y = (float)(point.Y - Pivot.Y - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
             draw_rect.w = (float)size.Width;
             draw_rect.h = (float)size.Height;
             SDL.SDL_RenderCopyExF(Game.RenderContext, sprite, ref scr_rect, ref draw_rect, Transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
