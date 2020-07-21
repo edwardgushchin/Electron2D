@@ -20,7 +20,7 @@ namespace Electron2D.Graphics
         {
             Path = path;
             Transform = new Transform(new Point(0, 0));
-            sprite = Image.IMG_LoadTexture(Game.RenderContext, path);
+            //sprite = Image.IMG_LoadTexture(Game.RenderContext, path);
             SDL.SDL_QueryTexture(sprite, out var format, out var access, out int width, out int height);
             rect = new Rect(width, height);
             size = new Rect(width * Transform.LocalScale.X, height * Transform.LocalScale.Y);
