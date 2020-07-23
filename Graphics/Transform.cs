@@ -7,13 +7,14 @@ namespace Electron2D.Graphics
 {
 	public class Transform
 	{
-		private Point position;
+		private Point position, achor;
 		private Vector localScale;
 		private double degrees;
 
 		public Transform()
 		{
 			position = new Point();
+			achor = new Point(0.5, 0.5);
             degrees = 0;
 			localScale = new Vector(1, 1);
 		}
@@ -21,6 +22,7 @@ namespace Electron2D.Graphics
 		public Transform(Point pos)
 		{
 			position = pos;
+			achor = new Point(0.5, 0.5);
             degrees = 0;
 			localScale = new Vector(1, 1);
 		}
@@ -41,6 +43,12 @@ namespace Electron2D.Graphics
 		{
 			get { return localScale; }
 			set { localScale = value; }
+		}
+
+		public Point Achor
+		{
+			get { return achor; }
+			set { achor = value; }
 		}
 
 		public void Translate(double x, double y)

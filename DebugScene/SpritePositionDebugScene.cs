@@ -26,6 +26,7 @@ namespace Electron2D.DebugScene
             spaceShip = new Sprite(ResourceManager.GetTexture("spaceShips_005"));
             spaceShip.Transform.LocalScale = new Vector { X = 0.5, Y = 0.5 };
             spaceShip.Transform.SetPosition(0,0);
+            spaceShip.Debug = true;
             Debug.Log($"size={spaceShip.Size}");
 
 			Debug.Log("SpritePositionDebugScene debug scene loaded.", Debug.Sender.Scene);

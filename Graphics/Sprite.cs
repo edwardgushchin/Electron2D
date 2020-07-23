@@ -6,6 +6,7 @@
 using System;
 
 using Electron2D.Binding.SDL;
+using System.Collections.Generic;
 
 namespace Electron2D.Graphics
 {
@@ -18,17 +19,22 @@ namespace Electron2D.Graphics
         public Sprite(Texture texture)
         {
             Transform = new Transform(new Point(0, 0));
-            Achor = new Point(0.5, 0.5);
             srcTexture = texture;
             rect = new Rect(texture.Rectangle.w, texture.Rectangle.h);
-            size = new Rect(texture.Rectangle.w * Transform.LocalScale.X, texture.Rectangle.h * Transform.LocalScale.Y);
+            if(Parrent == null)
+                size = new Rect(texture.Rectangle.w * Transform.LocalScale.X, texture.Rectangle.h * Transform.LocalScale.Y);
+            else 
+                size = new Rect(texture.Rectangle.w * Parrent.Transform.LocalScale.X, texture.Rectangle.h * Parrent.Transform.LocalScale.Y);
+            //
 
-            draw_rect = new SDL.SDL_FRect
-            {
-                w = (float)size.Width,
-                h = (float)size.Height
-            };
+            draw_rect = new SDL.SDL_FRect();
+
+            Debug = false;
         }
+
+        public Entity Parrent { get; set; }
+
+        public bool Debug { get; set; }
 
         public byte Alpha
         {
@@ -67,31 +73,100 @@ namespace Electron2D.Graphics
 
         public string Path { get; }
 
-        public Point Achor { get; set; }
-
-        public Point Center => new Point(draw_rect.x + (size.Width * Achor.X), draw_rect.y + (size.Height * Achor.Y));
-
+        public Point Center => new Point(draw_rect.x + (size.Width * Transform.Achor.X), draw_rect.y + (size.Height * Transform.Achor.Y));
 
         public void Draw()
         {
-            Draw(Transform);
+            var center = new SDL.SDL_FPoint();
+            Point point;
+            double degrees;
+
+            if(Parrent != null)
+            {
+                point = (Transform.Position + Parrent.Transform.Position).ConvertToSDLPoint();
+                size.Width = rect.Width * (Transform.LocalScale.X * Parrent.Transform.LocalScale.X);
+                size.Height = rect.Height * (Transform.LocalScale.Y * Parrent.Transform.LocalScale.Y);
+                draw_rect.x = (float)(point.X - (size.Width * Parrent.Transform.Achor.X) - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
+                draw_rect.y = (float)(point.Y - (size.Height * Parrent.Transform.Achor.Y) - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
+                draw_rect.w = (float)size.Width;
+                draw_rect.h = (float)size.Height;
+                //хуйня какая-то нерабочая
+                center.x = (float)(size.Width * Transform.Achor.X + Parrent.Transform.Achor.X);
+                center.y = (float)(size.Height * Transform.Achor.Y + Parrent.Transform.Achor.Y);
+                degrees = Parrent.Transform.Degrees + Transform.Degrees;
+            }
+            else
+            {
+                point = Transform.Position.ConvertToSDLPoint();
+                size.Width = rect.Width * Transform.LocalScale.X;
+                size.Height = rect.Height * Transform.LocalScale.Y;
+                draw_rect.x = (float)(point.X - (size.Width * Transform.Achor.X) - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
+                draw_rect.y = (float)(point.Y - (size.Height * Transform.Achor.Y) - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
+                draw_rect.w = (float)size.Width;
+                draw_rect.h = (float)size.Height;
+                center.x = (float)(size.Width * Transform.Achor.X);
+                center.y = (float)(size.Height * Transform.Achor.Y);
+                degrees = Transform.Degrees;
+            }
+            SDL.SDL_RenderCopyExF(Game.RenderContext, srcTexture.TexturePtr, ref srcTexture.Rectangle, ref draw_rect, degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+
+            if(Debug)
+            {
+                SDL.SDL_SetRenderDrawColor(Game.RenderContext, 255, 0, 0, 0);
+                var centerRect = new SDL.SDL_FRect() {x = (float)(point.X - 2), y = (float)(point.Y - 2), w = 4, h = 4};
+                SDL.SDL_RenderFillRectF(Game.RenderContext, ref centerRect);
+                SDL.SDL_SetRenderDrawColor(Game.RenderContext, 0, 255, 0, 0);
+                SDL.SDL_RenderDrawRectF(Game.RenderContext, ref draw_rect);
+                var color = SceneManager.GetCurrentScene.ClearColor;
+                SDL.SDL_SetRenderDrawColor(Game.RenderContext, color.R, color.G, color.B, color.A);
+            }
         }
 
         public void Draw(Transform transformTo)
         {
-            var point = (Transform.Position + transformTo.Position).ConvertToSDLPoint();
+            Point point;
+            var center = new SDL.SDL_FPoint();
+            double degrees;
 
-            size.Width = rect.Width * transformTo.LocalScale.X;
-            size.Height = rect.Height * transformTo.LocalScale.Y;
-            draw_rect.x = (float)(point.X - (size.Width * Achor.X) - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
-            draw_rect.y = (float)(point.Y - (size.Height * Achor.Y) - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
-            draw_rect.w = (float)size.Width;
-            draw_rect.h = (float)size.Height;
+            if(Parrent != null)
+            {
+                point = (transformTo.Position + Parrent.Transform.Position).ConvertToSDLPoint();
+                size.Width = rect.Width * (transformTo.LocalScale.X * Parrent.Transform.LocalScale.X);
+                size.Height = rect.Height * (transformTo.LocalScale.Y * Parrent.Transform.LocalScale.Y);
+                draw_rect.x = (float)(point.X - (size.Width * Parrent.Transform.Achor.X) - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
+                draw_rect.y = (float)(point.Y - (size.Height * Parrent.Transform.Achor.Y) - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
+                draw_rect.w = (float)size.Width;
+                draw_rect.h = (float)size.Height;
+                center.x = (float)(size.Width * Parrent.Transform.Achor.X);
+                center.y = (float)(size.Height * Parrent.Transform.Achor.Y);
+                degrees = Parrent.Transform.Degrees + transformTo.Degrees;
+            }
+            else
+            {
+                point = transformTo.Position.ConvertToSDLPoint();
+                size.Width = rect.Width * transformTo.LocalScale.X;
+                size.Height = rect.Height * transformTo.LocalScale.Y;
+                draw_rect.x = (float)(point.X - (size.Width * transformTo.Achor.X) - SceneManager.GetCurrentScene.Camera.Transform.Position.X);
+                draw_rect.y = (float)(point.Y - (size.Height * transformTo.Achor.Y) - SceneManager.GetCurrentScene.Camera.Transform.Position.Y);
+                draw_rect.w = (float)size.Width;
+                draw_rect.h = (float)size.Height;
+                center.x = (float)(size.Width * transformTo.Achor.X);
+                center.y = (float)(size.Height * transformTo.Achor.Y);
+                degrees = transformTo.Degrees;
+            }
 
-            //SDL.SDL_SetRenderDrawColor(Game.RenderContext, 255,0,255,0);
-            SDL.SDL_RenderCopyExF(Game.RenderContext, srcTexture.TexturePtr, ref srcTexture.Rectangle, ref draw_rect, Transform.Degrees + transformTo.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
-            //SDL.SDL_RenderDrawPointF(Game.RenderContext, (float)Center.X, (float)Center.Y);
-            //SDL.SDL_SetRenderDrawColor(Game.RenderContext, 0x00, 0x00, 0x00, 0xFF);
+            SDL.SDL_RenderCopyExF(Game.RenderContext, srcTexture.TexturePtr, ref srcTexture.Rectangle, ref draw_rect, degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+
+            if(Debug)
+            {
+                SDL.SDL_SetRenderDrawColor(Game.RenderContext, 255, 0, 0, 0);
+                var centerRect = new SDL.SDL_FRect() {x = (float)point.X - 2, y = (float)point.Y - 2, w = 4, h = 4};
+                SDL.SDL_RenderFillRectF(Game.RenderContext, ref centerRect);
+                SDL.SDL_SetRenderDrawColor(Game.RenderContext, 0, 255, 0, 0);
+                SDL.SDL_RenderDrawRectF(Game.RenderContext, ref draw_rect);
+                var color = SceneManager.GetCurrentScene.ClearColor;
+                SDL.SDL_SetRenderDrawColor(Game.RenderContext, color.R, color.G, color.B, color.A);
+            }
         }
     }
 }
