@@ -35,6 +35,18 @@ namespace Electron2D.Graphics
 			return new Point(newx, newy);
 		}
 
+		internal Point Rotate(Point center, double degrees)
+		{
+			double angleInRadians = degrees * (Math.PI / 180);
+            double cosTheta = Math.Cos(-angleInRadians);
+            double sinTheta = Math.Sin(-angleInRadians);
+            return new Point
+            {
+                X = (double) ((cosTheta * (X - center.X)) - (sinTheta * (Y - center.Y)) + center.X),
+                Y = (double) ((sinTheta * (X - center.X)) + (cosTheta * (Y - center.Y)) + center.Y)
+            };
+		}
+
 		public override bool Equals(object obj)
 		{
 			if (obj is Point point)
