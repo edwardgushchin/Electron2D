@@ -9,16 +9,10 @@ namespace Electron2D
 {
 	public class Entity
 	{
-        //private readonly List<Sprite> spriteList;
-
 		public Entity()
 		{
 			Transform = new Transform(new Point());
 			Enable = true;
-			//spriteList = new List<Sprite>();
-			Awake();
-
-			//SceneManager.GetCurrentScene.
 		}
 
 		public Entity(Entity parrent)
@@ -34,17 +28,8 @@ namespace Electron2D
 			Parrent = parrent;
 
 			Enable = true;
-			//spriteList = new List<Sprite>();
-			Awake();
 		}
 
-		/*public Entity(float x, float y)
-		{
-			Transform = new Transform(new Point(x, y));
-			Enable = true;
-			spriteList = new List<Sprite>();
-			Awake();
-		}*/
 
         public Transform Transform { get; }
 
@@ -71,18 +56,6 @@ namespace Electron2D
             }
 		}
 
-        /*public Entity(bool enable)
-        {
-            this.Enable = enable;
-			spriteList = new List<Sprite>();
-            Awake();
-        }*/
-
-		/*public void AddComponent(Sprite sprite)
-		{
-			spriteList.Add(sprite);
-		}*/
-
 		public void DrawSprite(Sprite sprite)
 		{
 			sprite.Draw(AbsoluteTransform);
@@ -102,34 +75,18 @@ namespace Electron2D
 		}
 
         public Entity Parrent { get; }
+
         public bool Enable { get; set; }
 
-		//Метод вызывается, когда экземпляр объекта будет загружен
-		public virtual void Awake() {}
+		public void Update()
+		{
+			OnPreUpdate();
+			OnUpdate();
+			OnPostUpdate();
+		}
 
 		//Update вызывается каждый кадр
-		public virtual void Update()
-		{
-			/*if (Parrent != null)
-            {
-                spriteList.ForEach((Sprite sprite) =>
-                {
-                    sprite.Draw(new Transform
-                    {
-                        Position = Transform.Position + Parrent.Transform.Position,
-                        Degrees = Transform.Degrees + Parrent.Transform.Degrees,
-                        LocalScale = new Vector(
-                            Transform.LocalScale.X * Parrent.Transform.LocalScale.X,
-                            Transform.LocalScale.Y * Parrent.Transform.LocalScale.Y
-                        )
-                    });
-                });
-            }
-            else
-            {
-                spriteList.ForEach((Sprite sprite) => sprite.Draw(Transform));
-            }*/
-        }
+		protected virtual void OnUpdate() {}
 
 		public virtual void OnPostUpdate() {}
 
