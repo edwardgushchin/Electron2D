@@ -3,69 +3,160 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-
 using Electron2D.Graphics;
 
 namespace Electron2D
 {
 	public class Entity
 	{
-        public Entity()
+        //private readonly List<Sprite> spriteList;
+
+		public Entity()
 		{
 			Transform = new Transform(new Point());
 			Enable = true;
+			//spriteList = new List<Sprite>();
+			Awake();
+
+			//SceneManager.GetCurrentScene.
+		}
+
+		public Entity(Entity parrent)
+		{
+			Transform.LocalScale = new Vector(
+				Transform.LocalScale.X + parrent.Transform.LocalScale.X,
+				Transform.LocalScale.Y + parrent.Transform.LocalScale.Y
+			);
+
+			Transform.Position += parrent.Transform.Position;
+			Transform.Degrees += parrent.Transform.Degrees;
+
+			Parrent = parrent;
+
+			Enable = true;
+			//spriteList = new List<Sprite>();
 			Awake();
 		}
 
-		public Entity(float x, float y)
+		/*public Entity(float x, float y)
 		{
 			Transform = new Transform(new Point(x, y));
 			Enable = true;
+			spriteList = new List<Sprite>();
 			Awake();
-		}
+		}*/
 
         public Transform Transform { get; }
 
-        public Entity(bool enable)
+		private Transform AbsoluteTransform
+		{
+			get
+			{
+                if (Parrent != null)
+                {
+                    return new Transform
+                    {
+                        Position = Transform.Position + Parrent.Transform.Position,
+                        Degrees = Transform.Degrees + Parrent.Transform.Degrees,
+                        LocalScale = new Vector(
+                            Transform.LocalScale.X * Parrent.Transform.LocalScale.X,
+                            Transform.LocalScale.Y * Parrent.Transform.LocalScale.Y
+                        )
+                    };
+                }
+                else
+                {
+                    return Transform;
+                }
+            }
+		}
+
+        /*public Entity(bool enable)
         {
             this.Enable = enable;
+			spriteList = new List<Sprite>();
             Awake();
-        }
+        }*/
+
+		/*public void AddComponent(Sprite sprite)
+		{
+			spriteList.Add(sprite);
+		}*/
+
+		public void DrawSprite(Sprite sprite)
+		{
+			sprite.Draw(AbsoluteTransform);
+		}
+
+		public void DrawSprite(Sprite sprite, Transform transform)
+		{
+			var trans = AbsoluteTransform;
+			sprite.Draw(new Transform {
+				Position = trans.Position + transform.Position,
+				Degrees = trans.Degrees + transform.Degrees,
+				LocalScale = new Vector(
+                    trans.LocalScale.X * transform.LocalScale.X,
+                    trans.LocalScale.Y * transform.LocalScale.Y
+                )
+			});
+		}
+
+        public Entity Parrent { get; }
         public bool Enable { get; set; }
 
 		//Метод вызывается, когда экземпляр объекта будет загружен
-		protected virtual void Awake() {}
+		public virtual void Awake() {}
 
 		//Update вызывается каждый кадр
-		public virtual void Update() {}
+		public virtual void Update()
+		{
+			/*if (Parrent != null)
+            {
+                spriteList.ForEach((Sprite sprite) =>
+                {
+                    sprite.Draw(new Transform
+                    {
+                        Position = Transform.Position + Parrent.Transform.Position,
+                        Degrees = Transform.Degrees + Parrent.Transform.Degrees,
+                        LocalScale = new Vector(
+                            Transform.LocalScale.X * Parrent.Transform.LocalScale.X,
+                            Transform.LocalScale.Y * Parrent.Transform.LocalScale.Y
+                        )
+                    });
+                });
+            }
+            else
+            {
+                spriteList.ForEach((Sprite sprite) => sprite.Draw(Transform));
+            }*/
+        }
 
-		protected virtual void OnPostUpdate() {}
+		public virtual void OnPostUpdate() {}
 
-		protected virtual void OnPreUpdate() {}
+		public virtual void OnPreUpdate() {}
 
-		protected virtual void OnDestroy() {}
+		public virtual void OnDestroy() {}
 
-		protected virtual void OnDisable() {}
+		public virtual void OnDisable() {}
 
-		protected virtual void OnEnable() {}
+		public virtual void OnEnable() {}
 
-		protected virtual void OnMouseDown() {}
+		public virtual void OnMouseDown() {}
 
-		protected virtual void OnMouseDrag() {}
+		public virtual void OnMouseDrag() {}
 
-		protected virtual void OnMouseEnter() {}
+		public virtual void OnMouseEnter() {}
 
-		protected virtual void OnMouseExit() {}
+		public virtual void OnMouseExit() {}
 
-		protected virtual void OnMouseOver() {}
+		public virtual void OnMouseOver() {}
 
-		protected virtual void OnMouseUp() {}
+		public virtual void OnMouseUp() {}
 
 		//Передается когда входящий коллайдер контактирует с коллайдером данного объекта
-		//protected virtual void OnCollisionEnter(Collision coll) {}
+		//public virtual void OnCollisionEnter(Collision coll) {}
 
 		//Передается, когда коллайдер другого объекта перестает соприкасаться с коллайдером этого объекта 
-		//protected virtual void void OnCollisionExit(Collision coll)
+		//public virtual void void OnCollisionExit(Collision coll)
 	}
 }

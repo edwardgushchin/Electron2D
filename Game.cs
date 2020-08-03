@@ -22,7 +22,7 @@ namespace Electron2D
 
 			if(Settings.DebugMode) Console.Title = Settings.Title;
 
-			Debug.Message("Electron2D Game Engine version 0.1");
+			Debug.Message("Electron2D Game Engine version 0.1 alpha");
 			Debug.NewLine();
 			Debug.Message("Copyright © 2019-2020 Edward Gushchin");
 			Debug.Message("Licensed under the Apache License, Version 2.0");

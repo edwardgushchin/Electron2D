@@ -22,7 +22,7 @@ namespace Electron2D
 			Event,
 			SceneManager,
 			Scene,
-			GameObject,
+			Entity,
 			GUIObject,
 			ResourceManager,
 			FontCache

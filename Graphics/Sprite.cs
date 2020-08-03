@@ -71,7 +71,7 @@ namespace Electron2D.Graphics
 
         public Point Center => new Point(draw_rect.x + (size.Width * Transform.Achor.X), draw_rect.y + (size.Height * Transform.Achor.Y));
 
-        public void Draw()
+        /*&public void Draw()
         {
             var center = new SDL.SDL_FPoint();
             var point = Transform.Position.ConvertToSDLPoint();
@@ -88,9 +88,9 @@ namespace Electron2D.Graphics
             SDL.SDL_RenderCopyExF(Game.RenderContext, srcTexture.TexturePtr, ref srcTexture.Rectangle, ref draw_rect, Transform.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
 
             if(Debug) DrawDebug(point, Transform);
-        }
+        }*/
 
-        public void Draw(Transform transformTo)
+        internal void Draw(Transform transformTo)
         {
             var point = transformTo.Position.ConvertToSDLPoint();
             var center = new SDL.SDL_FPoint();

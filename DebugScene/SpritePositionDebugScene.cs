@@ -13,20 +13,19 @@ namespace Electron2D.DebugScene
 {
     internal class SpritePositionDebugScene : Scene
     {
-        Sprite spaceShip;
+        //Sprite spaceShip;
         public SpritePositionDebugScene() : base()
 		{
 			ClearColor = new Color(46, 52, 64);
 		}
 
-        protected override void OnLoadScene()
+        /*protected override void OnLoadScene()
 		{
 			Debug.Log("SpritePositionDebugScene debug scene loading...", Debug.Sender.Scene);
 
             ResourceManager.LoadTexture("spaceShips_005", @"Resources\Sprites\space_shooter_demo\Ships\spaceShips_005.png");
             spaceShip = new Sprite(ResourceManager.GetTexture("spaceShips_005"));
             spaceShip.Transform.LocalScale = new Vector { X = 0.5, Y = 0.5 };
-            spaceShip.Transform.SetPosition(0,0);
             spaceShip.Debug = true;
             Debug.Log($"size={spaceShip.Size}");
 
@@ -68,7 +67,7 @@ namespace Electron2D.DebugScene
             }
 
             spaceShip.Transform.Degrees = GetAngle() - 90;
-            spaceShip.Draw();
+            //spaceShip.Draw();
 		}
 
         private double GetAngle()
@@ -83,6 +82,6 @@ namespace Electron2D.DebugScene
 
 			if(e.Key == Keyboard.Keys.F11)
 				Settings.Fullscreen = !Settings.Fullscreen;
-		}
+		}*/
     }
 }

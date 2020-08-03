@@ -22,7 +22,7 @@ namespace Electron2D.Kernel
 			Resizeble = false;
 			DebugInfo = true;
 			Smoothing = SmoothingType.Linear;
-			Title = "Electron2D Game Engine 0.1";
+			Title = "Electron2D Game Engine 0.1 alpha";
 		}
 
 		private static Size resolution;
