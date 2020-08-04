@@ -126,16 +126,15 @@ namespace Electron2D.Events
 
 		private void PoolKeyEvent(SDL.SDL_Event e )
 		{
+			var ev = new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod);
 			if(e.type == SDL.SDL_EventType.SDL_KEYDOWN)
 			{
-				var ev = new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod);
 				Input.SetKeyDown(ev.Key, true);
 				OnKeyDownEvent(e.window.windowEvent, ev);
 			}
 
 			if(e.type == SDL.SDL_EventType.SDL_KEYUP)
 			{
-				var ev = new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod);
 				Input.SetKeyDown(ev.Key, false);
 				OnKeyUpEvent(e.window.windowEvent, new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod));
 			}
@@ -144,10 +143,18 @@ namespace Electron2D.Events
 		private void PoolMouseEvent(SDL.SDL_Event e)
 		{
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN)
-				OnMouseButtonDownEvent(e.window.windowEvent, new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks));
-
+			{
+				var ev = new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks);
+				Input.SetMouseButtonDown(ev.Button, true);
+				OnMouseButtonDownEvent(e.window.windowEvent, ev);
+			}
+			
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONUP)
-				OnMouseButtonUpEvent(e.window.windowEvent, new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks));
+			{
+				var ev = new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks);
+				Input.SetMouseButtonDown(ev.Button, false);
+				OnMouseButtonUpEvent(e.window.windowEvent, ev);
+			}
 
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEMOTION)
 				OnMouseMotionEvent(e.window.windowEvent, new MouseMotionEventArgs(new Point(e.motion.x, e.motion.y), e.motion.xrel, e.motion.yrel));
