@@ -78,16 +78,16 @@ namespace Electron2D.Kernel
             return spriteCache[^1];
         }*/
 
-        public static void LoadTexture(string name, string path)
+        public static Texture LoadTexture(string name, string path)
         {
             if(!new System.IO.FileInfo(path).Exists)
             {
                 Debug.Log($"Texture not found on path \"{path}\"!", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
-                //return null;
+                return null;
             }
             textureCache.Add(name, new Texture(path));
             Debug.Log($"Texture \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
-            //return new Resource<Sprite>(spriteCache[name]);
+            return textureCache[name];
         }
 
         /*public void asd()
