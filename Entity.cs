@@ -56,12 +56,12 @@ namespace Electron2D
             }
 		}
 
-		public void DrawSprite(Sprite sprite)
+		protected void DrawSprite(Sprite sprite)
 		{
 			sprite.Draw(AbsoluteTransform);
 		}
 
-		public void DrawSprite(Sprite sprite, Transform transform)
+		protected void DrawSprite(Sprite sprite, Transform transform)
 		{
 			var trans = AbsoluteTransform;
 			sprite.Draw(new Transform {
@@ -88,27 +88,27 @@ namespace Electron2D
 		//Update вызывается каждый кадр
 		protected virtual void OnUpdate() {}
 
-		public virtual void OnPostUpdate() {}
+		protected virtual void OnPostUpdate() {}
 
-		public virtual void OnPreUpdate() {}
+		protected virtual void OnPreUpdate() {}
 
-		public virtual void OnDestroy() {}
+		protected virtual void OnDestroy() {}
 
-		public virtual void OnDisable() {}
+		protected virtual void OnDisable() {}
 
-		public virtual void OnEnable() {}
+		protected virtual void OnEnable() {}
 
-		public virtual void OnMouseDown() {}
+		protected virtual void OnMouseDown() {}
 
-		public virtual void OnMouseDrag() {}
+		protected virtual void OnMouseDrag() {}
 
-		public virtual void OnMouseEnter() {}
+		protected virtual void OnMouseEnter() {}
 
-		public virtual void OnMouseExit() {}
+		protected virtual void OnMouseExit() {}
 
-		public virtual void OnMouseOver() {}
+		protected virtual void OnMouseOver() {}
 
-		public virtual void OnMouseUp() {}
+		protected virtual void OnMouseUp() {}
 
 		//Передается когда входящий коллайдер контактирует с коллайдером данного объекта
 		//public virtual void OnCollisionEnter(Collision coll) {}
