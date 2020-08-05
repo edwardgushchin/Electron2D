@@ -56,7 +56,7 @@ namespace Electron2D
 			get
 			{
                 SDL.SDL_GetMouseState(out int x, out int y);
-                return new Point(x, y).ConvertToDecartPoint(); //Point.ConvertToDecartPoint(x, y);
+                return new Point(x, y).ConvertToDecartPoint();
 			}
 		}
 	}
