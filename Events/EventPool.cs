@@ -148,7 +148,7 @@ namespace Electron2D.Events
 				Input.SetMouseButtonDown(ev.Button, true);
 				OnMouseButtonDownEvent(e.window.windowEvent, ev);
 			}
-			
+
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONUP)
 			{
 				var ev = new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks);
