@@ -30,7 +30,6 @@ namespace Electron2D
 			Enable = true;
 		}
 
-
         public Transform Transform { get; }
 
 		private Transform AbsoluteTransform

@@ -16,7 +16,7 @@ namespace Electron2D.Graphics
         internal Texture(string path)
         {
             TexturePtr = Image.IMG_LoadTexture(Game.RenderContext, path);
-            SDL.SDL_QueryTexture(TexturePtr, out var format, out var access, out int width, out int height);
+            _ = SDL.SDL_QueryTexture(TexturePtr, out _, out _, out int width, out int height);
             Rectangle = new SDL.SDL_Rect { w = width, h = height };
         }
 
