@@ -55,11 +55,12 @@ namespace Electron2D.Binding.SDL
 		[Flags]
 		public enum IMG_InitFlags
 		{
-			IMG_INIT_JPG =	0x00000001,
-			IMG_INIT_PNG =	0x00000002,
-			IMG_INIT_TIF =	0x00000004,
-			IMG_INIT_WEBP =	0x00000008
-		}
+            None = 0,
+            IMG_INIT_JPG = 0x00000001,
+            IMG_INIT_PNG = 0x00000002,
+            IMG_INIT_TIF = 0x00000004,
+            IMG_INIT_WEBP = 0x00000008
+        }
 
 		public static void SDL_IMAGE_VERSION(out SDL.SDL_version X)
 		{
@@ -72,14 +73,11 @@ namespace Electron2D.Binding.SDL
 		private static extern IntPtr INTERNAL_IMG_Linked_Version();
 		public static SDL.SDL_version IMG_Linked_Version()
 		{
-			SDL.SDL_version result;
-			IntPtr result_ptr = INTERNAL_IMG_Linked_Version();
-			result = (SDL.SDL_version) Marshal.PtrToStructure(
-				result_ptr,
-				typeof(SDL.SDL_version)
-			);
-			return result;
-		}
+            return (SDL.SDL_version)Marshal.PtrToStructure(
+                INTERNAL_IMG_Linked_Version(),
+                typeof(SDL.SDL_version)
+            );
+        }
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int IMG_Init(IMG_InitFlags flags);
