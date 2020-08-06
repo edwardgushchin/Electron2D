@@ -11,7 +11,7 @@ namespace Electron2D
 {
     internal class DefaultScene : Scene
     {
-		public DefaultScene(int Index) : base(Index)
+		public DefaultScene()
 		{
 			Debug.Log("Electron2D demo scene loading...", Debug.Sender.Scene);
 			ClearColor = new Color(46, 52, 64);

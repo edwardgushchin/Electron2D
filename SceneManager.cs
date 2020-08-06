@@ -10,52 +10,54 @@ namespace Electron2D
 {
 	public static class SceneManager
 	{
-		private static readonly List<Scene> sceneList;
-		private static Game gameContext;
+		private static readonly List<Scene> _sceneList;
+		private static Game _gameContext;
 
 		static SceneManager()
 		{
-			sceneList = new List<Scene>();
+			_sceneList = new List<Scene>();
 			PlayingScene = -1;
 			Debug.Log("Initialization of the scene manager subsystem completed successfully.", Debug.Sender.SceneManager);
 		}
 
 		internal static void SetGameContext(Game Game)
 		{
-			gameContext = Game;
+			_gameContext = Game;
 		}
 
 		public static void AddScene(Scene scene)
 		{
-			sceneList.Add(scene);
-			scene.SetGame(gameContext);
+			_sceneList.Add(scene);
+			scene.SetGame(_gameContext);
 		}
 
-		public static Scene GetCurrentScene
-		{
-			get { return sceneList[PlayingScene]; }
-		}
+        public static Scene GetCurrentScene
+        {
+            get
+            {
+                return _sceneList[PlayingScene];
+            }
+        }
 
         public static int PlayingScene { get; set; }
 
         public static bool LoadScene(int index)
 		{
-			if(sceneList.Count == 0)
+			if(_sceneList.Count == 0)
 			{
-				//ExitGame();
 				return false;
 			}
 			if(PlayingScene != -1) {
-				sceneList.FindLast(x => x.Index == PlayingScene).Stop();
+				_sceneList.FindLast(x => x.Index == PlayingScene).Stop();
 			}
 			PlayingScene = index;
-			sceneList.FindLast(x => x.Index == PlayingScene).Start();
+			_sceneList.FindLast(x => x.Index == PlayingScene).Start();
 			return true;
 		}
 
 		public static void ExitGame()
 		{
-			gameContext.Exit();
+			_gameContext.Exit();
 		}
 	}
 }

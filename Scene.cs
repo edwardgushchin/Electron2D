@@ -4,65 +4,36 @@
 */
 
 using System;
-
-using Electron2D.GUI;
 using Electron2D.Events;
-using Electron2D.Kernel;
 using Electron2D.Graphics;
 using Electron2D.Binding.SDL;
-
-using System.Collections.Generic;
 
 namespace Electron2D
 {
 	public class Scene : IDisposable
 	{
-		private Game game;
-		private Color clearColor;
-
-		// Хватит везде пихать лист, это не самое быстрое решение для кэшей
-		//List<GameObject> objectsList;
-		//List<GUIObject> guiObjectsList, debugGuiObjectsList;
-
-		private DebugInfo debugInfo;
+		private Game _game;
+		private Color _clearColor;
 
 		public Scene()
 		{
 			this.Index = 0;
-			clearColor = Color.Black;
-			//objectsList = new List<GameObject>();
-			//guiObjectsList = new List<GUIObject>();
+			_clearColor = Color.Black;
 			Camera = new Camera();
-			if(Settings.DebugInfo) LoadDebugInfo();
 		}
 
 		public Scene(int Index)
 		{
 			this.Index = Index;
-			clearColor = Color.Black;
-			//objectsList = new List<GameObject>();
-			//guiObjectsList = new List<GUIObject>();
+			_clearColor = Color.Black;
 			Camera = new Camera();
-			if(Settings.DebugInfo) LoadDebugInfo();
 		}
 
 		public Scene(int Index, Color sceneColor)
 		{
 			this.Index = Index;
-			clearColor = sceneColor;
-			//objectsList = new List<GameObject>();
-			//guiObjectsList = new List<GUIObject>();
+			_clearColor = sceneColor;
 			Camera = new Camera();
-			if(Settings.DebugInfo) LoadDebugInfo();
-		}
-
-		private void LoadDebugInfo()
-		{
-			//debugGuiObjectsList = new List<GUIObject>();
-			if (Kernel.Settings.DebugMode) {
-				debugInfo = new DebugInfo();
-				//debugGuiObjectsList.AddRange(debugInfo.ObjectsList);
-			}
 		}
 
 		public void SetCursor(Sprite cursor)
@@ -72,31 +43,13 @@ namespace Electron2D
 
         public Camera Camera { get; }
 
-        public int GUIObjectsCount
-		{
-			get
-			{
-				//return guiObjectsList.Count; 
-				return 0;
-			}
-		}
-
-		public int GameObjectsCount
-		{
-			get
-			{
-				//return objectsList.Count; 
-				return 0;
-			}
-		}
-
 		public Color ClearColor
 		{
-			get { return clearColor; }
+			get { return _clearColor; }
 			set
 			{
 				SDL.SDL_SetRenderDrawColor(Game.RenderContext, value.R, value.G, value.B, value.A);
-				clearColor = value;
+				_clearColor = value;
 			}
 		}
 
@@ -105,130 +58,83 @@ namespace Electron2D
 		private void SubscribeEvents()
 		{
 			#region Subscribe to Window event
-			game.Events.OnWindowShowEvent += OnWindowShow;
-			game.Events.OnWindowHiddenEvent += OnWindowHidden;
-			game.Events.OnWindowExposedEvent += OnWindowExposed;
-			game.Events.OnWindowMovedEvent += OnWindowMoved;
-			game.Events.OnWindowResizedEvent += OnWindowResized;
-			game.Events.OnWindowSizeChangedEvent += OnWindowSizeChanged;
-			game.Events.OnWindowMinimizedEvent += OnWindowMinimized;
-			game.Events.OnWindowMaximizedEvent += OnWindowMaximized;
-			game.Events.OnWindowRestoredEvent += OnWindowRestored;
-			game.Events.OnWindowEnterEvent += OnWindowEnter;
-			game.Events.OnWindowLeaveEvent += OnWindowLeave;
-			game.Events.OnWindowFocusGainedEvent += OnWindowFocusGained;
-			game.Events.OnWindowFocusLostEvent += OnWindowFocusLost;
-			game.Events.OnWindowCloseEvent += OnWindowClose;
+			_game.Events.OnWindowShowEvent += OnWindowShow;
+			_game.Events.OnWindowHiddenEvent += OnWindowHidden;
+			_game.Events.OnWindowExposedEvent += OnWindowExposed;
+			_game.Events.OnWindowMovedEvent += OnWindowMoved;
+			_game.Events.OnWindowResizedEvent += OnWindowResized;
+			_game.Events.OnWindowSizeChangedEvent += OnWindowSizeChanged;
+			_game.Events.OnWindowMinimizedEvent += OnWindowMinimized;
+			_game.Events.OnWindowMaximizedEvent += OnWindowMaximized;
+			_game.Events.OnWindowRestoredEvent += OnWindowRestored;
+			_game.Events.OnWindowEnterEvent += OnWindowEnter;
+			_game.Events.OnWindowLeaveEvent += OnWindowLeave;
+			_game.Events.OnWindowFocusGainedEvent += OnWindowFocusGained;
+			_game.Events.OnWindowFocusLostEvent += OnWindowFocusLost;
+			_game.Events.OnWindowCloseEvent += OnWindowClose;
 			#endregion
 
 			#region Subscribe to Render event
-			game.Render.OnPreUpdate += PreUpdate;
-			game.Render.OnUpdate += Pepiline;
-			game.Render.OnPostUpdate += PostUpdate;
+			_game.Render.OnPreUpdate += PreUpdate;
+			_game.Render.OnUpdate += Update;
+			_game.Render.OnPostUpdate += PostUpdate;
 			#endregion
 
 			#region Subscribe to Keyboard events
-			game.Events.OnKeyDownEvent += OnKeyDown;
-			game.Events.OnKeyUpEvent += OnKeyUp;
+			_game.Events.OnKeyDownEvent += OnKeyDown;
+			_game.Events.OnKeyUpEvent += OnKeyUp;
 			#endregion
 
 			#region Subscribe to Mouse events
-			game.Events.OnMouseButtonDownEvent += OnMouseButtonDown;
-			game.Events.OnMouseButtonUpEvent += OnMouseButtonUp;
-			game.Events.OnMouseMotionEvent += OnMouseMotion;
-			game.Events.OnMouseWheelEvent += OnMouseWheel;
+			_game.Events.OnMouseButtonDownEvent += OnMouseButtonDown;
+			_game.Events.OnMouseButtonUpEvent += OnMouseButtonUp;
+			_game.Events.OnMouseMotionEvent += OnMouseMotion;
+			_game.Events.OnMouseWheelEvent += OnMouseWheel;
 			#endregion
 		}
 
 		private void DescribeEvents()
 		{
 			#region Subscribe to Window event
-			game.Events.OnWindowShowEvent -= OnWindowShow;
-			game.Events.OnWindowHiddenEvent -= OnWindowHidden;
-			game.Events.OnWindowExposedEvent -= OnWindowExposed;
-			game.Events.OnWindowMovedEvent -= OnWindowMoved;
-			game.Events.OnWindowResizedEvent -= OnWindowResized;
-			game.Events.OnWindowSizeChangedEvent -= OnWindowSizeChanged;
-			game.Events.OnWindowMinimizedEvent -= OnWindowMinimized;
-			game.Events.OnWindowMaximizedEvent -= OnWindowMaximized;
-			game.Events.OnWindowRestoredEvent -= OnWindowRestored;
-			game.Events.OnWindowEnterEvent -= OnWindowEnter;
-			game.Events.OnWindowLeaveEvent -= OnWindowLeave;
-			game.Events.OnWindowFocusGainedEvent -= OnWindowFocusGained;
-			game.Events.OnWindowFocusLostEvent -= OnWindowFocusLost;
-			game.Events.OnWindowCloseEvent -= OnWindowClose;
+			_game.Events.OnWindowShowEvent -= OnWindowShow;
+			_game.Events.OnWindowHiddenEvent -= OnWindowHidden;
+			_game.Events.OnWindowExposedEvent -= OnWindowExposed;
+			_game.Events.OnWindowMovedEvent -= OnWindowMoved;
+			_game.Events.OnWindowResizedEvent -= OnWindowResized;
+			_game.Events.OnWindowSizeChangedEvent -= OnWindowSizeChanged;
+			_game.Events.OnWindowMinimizedEvent -= OnWindowMinimized;
+			_game.Events.OnWindowMaximizedEvent -= OnWindowMaximized;
+			_game.Events.OnWindowRestoredEvent -= OnWindowRestored;
+			_game.Events.OnWindowEnterEvent -= OnWindowEnter;
+			_game.Events.OnWindowLeaveEvent -= OnWindowLeave;
+			_game.Events.OnWindowFocusGainedEvent -= OnWindowFocusGained;
+			_game.Events.OnWindowFocusLostEvent -= OnWindowFocusLost;
+			_game.Events.OnWindowCloseEvent -= OnWindowClose;
 			#endregion
 
 			#region Subscribe to Render event
-			game.Render.OnPreUpdate -= PreUpdate;
-			game.Render.OnUpdate -= Pepiline;
-			game.Render.OnPostUpdate -= PostUpdate;
+			_game.Render.OnPreUpdate -= PreUpdate;
+			_game.Render.OnUpdate -= Update;
+			_game.Render.OnPostUpdate -= PostUpdate;
 			#endregion
 
 			#region Subscribe to Keyboard events
-			game.Events.OnKeyDownEvent -= OnKeyDown;
-			game.Events.OnKeyUpEvent -= OnKeyUp;
+			_game.Events.OnKeyDownEvent -= OnKeyDown;
+			_game.Events.OnKeyUpEvent -= OnKeyUp;
 			#endregion
 
 			#region Subscribe to Mouse events
-			game.Events.OnMouseButtonDownEvent -= OnMouseButtonDown;
-			game.Events.OnMouseButtonUpEvent -= OnMouseButtonUp;
-			game.Events.OnMouseMotionEvent -= OnMouseMotion;
-			game.Events.OnMouseWheelEvent -= OnMouseWheel;
+			_game.Events.OnMouseButtonDownEvent -= OnMouseButtonDown;
+			_game.Events.OnMouseButtonUpEvent -= OnMouseButtonUp;
+			_game.Events.OnMouseMotionEvent -= OnMouseMotion;
+			_game.Events.OnMouseWheelEvent -= OnMouseWheel;
 			#endregion
 		}
-
-		private void Pepiline()
-		{
-			//Clear();
-			Update();
-			//UpdateObjects(deltaTime);
-			//UpdateGUIObjects(deltaTime);
-			//if(Settings.DebugInfo) UpdateGUIDebugInfoObjects(deltaTime);
-		}
-
-		/*private void UpdateGUIDebugInfoObjects(double deltaTime)
-		{
-			//if(debugInfo != null) 
-			//{
-				//debugInfo.Update(deltaTime, guiObjectsList.Count, objectsList.Count, Kernel.ResourceManager.FontCacheCount);
-				//debugInfo.Update(deltaTime, 0, 0, Kernel.ResourceManager.FontCacheCount);
-				//debugGuiObjectsList.ForEach(delegate(GUIObject obj) {
-				//	obj.Update(deltaTime);
-				//});
-			//}
-		}
-
-		private void UpdateObjects(double deltaTime)
-		{
-			//objectsList.ForEach(delegate(GameObject obj) {
-				//if (obj.Enable) 
-				//obj.Update(deltaTime);
-			//});
-		}
-
-		private void UpdateGUIObjects(double deltaTime)
-		{
-			//guiObjectsList.ForEach(delegate(GUIObject obj) {
-				//if (obj.Enable) 
-				//obj.Update(deltaTime);
-			//});
-		}*/
 
 		public void Start()
 		{
 			SubscribeEvents();
 			OnLoadScene();
-		}
-
-		public void AddEntity(Entity obj)
-		{
-			//objectsList.Add(obj);
-		}
-
-		public void AddGUIObject(GUIObject gobj)
-		{
-			//guiObjectsList.Add(gobj);
 		}
 
 		public void Dispose()
@@ -238,7 +144,7 @@ namespace Electron2D
 
 		internal void SetGame(Game gameContext)
 		{
-			game = gameContext;
+			_game = gameContext;
 		}
 
 		internal void Stop()
@@ -295,22 +201,22 @@ namespace Electron2D
 		/// Событие вызвается при восстановлении окна. Уведомляет о том, что окно должно быть перерисовано
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowExposed(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается после окончания перемещения формы
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowMoved(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается после изменение размера формы.
-		/// Этому событию всегда предшествует <see cref="Electron2D.Game.OnWindowSizeChanged"/>
+		/// Этому событию всегда предшествует <see cref="Game.OnWindowSizeChanged"/>
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowResized(object sender, WindowEventArgs e){}
 
 		/// <summary>
@@ -319,66 +225,66 @@ namespace Electron2D
 		/// если размер был изменен внешним событием, т. е. пользователем или оконным менеджером
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowSizeChanged(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается после сворачивания формы
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowMinimized(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается после разворачивания формы на полный экран
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowMaximized(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается когда окно было восстановлено до нормального размера и положения
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowRestored(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается когда на окно был наведен фокус мыши
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowEnter(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается когда фокус мыши с окна был потерян
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowLeave(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается когда окно получило фокус с клавиатуры
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowFocusGained(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается когда фокус с клавиатуры был потерян
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowFocusLost(object sender, WindowEventArgs e){}
 
 		/// <summary>
 		/// Событие вызывается перед закрытием формы. Если его не переопределять, событие закроет окно
 		/// </summary>
 		/// <param name="sender">Отправитель</param>
-		/// <param name="e">Экземпляр <see cref="Electron2D.Events.WindowEventArgs"/> с данными о событии</param>
+		/// <param name="e">Экземпляр <see cref="WindowEventArgs"/> с данными о событии</param>
 		protected virtual void OnWindowClose(object sender, WindowEventArgs e)
 		{
-			game.Exit();
+			_game.Exit();
 		}
 		#endregion
 	}

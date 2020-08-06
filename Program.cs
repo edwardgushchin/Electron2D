@@ -25,7 +25,7 @@ namespace Electron2D
             TestGame = new Game("Electron2D - Parralax Background Demo");
 
             TestGame.SetIcon(@"Resources\\icon.png");
-            TestGame.Play(new SpritePositionDebugScene());
+            TestGame.Play(new DefaultScene());
         }
     }
 }
