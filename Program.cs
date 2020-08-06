@@ -5,7 +5,6 @@
 
 using Electron2D.Kernel;
 using Electron2D.Graphics;
-using Electron2D.DebugScene;
 
 namespace Electron2D
 {
@@ -14,9 +13,7 @@ namespace Electron2D
         private static Game TestGame;
         internal static void Main()
         {
-            Settings.VSinc = true;
-            //Settings.Resizeble = false;
-            //Settings.FPS = 60;
+            Settings.VSinc = false;
             Settings.DebugInfo = false;
             Settings.Fullscreen = false;
             Settings.Resolution = new Size(1920, 1080);
@@ -25,7 +22,7 @@ namespace Electron2D
             TestGame = new Game("Electron2D - Parralax Background Demo");
 
             TestGame.SetIcon(@"Resources\\icon.png");
-            TestGame.Play(new DefaultScene());
+            TestGame.Play();
         }
     }
 }

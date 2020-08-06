@@ -82,7 +82,7 @@ namespace Electron2D
 		{
             if (!SceneManager.LoadScene(0))
             {
-                SceneManager.AddScene(new DefaultScene(0));
+                SceneManager.AddScene(new DefaultScene());
                 SceneManager.LoadScene(0);
             }
             render.Start();
