@@ -112,8 +112,8 @@ namespace Electron2D.Graphics
 
 					Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title, SDL.SDL_WINDOWPOS_CENTERED,
 					SDL.SDL_WINDOWPOS_CENTERED,
-					Settings.Resolution.Width,
-					Settings.Resolution.Height,
+					(int)Settings.Resolution.Width,
+					(int)Settings.Resolution.Height,
 					windowFlags);
 		}
 
