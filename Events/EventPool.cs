@@ -90,11 +90,11 @@ namespace Electron2D.Events
                         OnWindowMovedEvent(e.window.windowEvent, new WindowEventArgs(new Point(e.window.data1, e.window.data2)));
                         break;
                     case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
-                        OnWindowResizedEvent(e.window.windowEvent, new WindowEventArgs(new Size(e.window.data1, e.window.data2)));
+                        OnWindowResizedEvent(e.window.windowEvent, new WindowEventArgs(new Rect(e.window.data1, e.window.data2)));
                         break;
                     case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
-                        Settings.Resolution = new Size(e.window.data1, e.window.data2);
-                        OnWindowSizeChangedEvent(e.window.windowEvent, new WindowEventArgs(new Size(e.window.data1, e.window.data2)));
+                        Settings.Resolution = new Rect(e.window.data1, e.window.data2);
+                        OnWindowSizeChangedEvent(e.window.windowEvent, new WindowEventArgs(new Rect(e.window.data1, e.window.data2)));
                         break;
                     case SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED:
                         OnWindowMaximizedEvent(e.window.windowEvent, new WindowEventArgs());
