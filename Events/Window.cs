@@ -15,11 +15,11 @@ namespace Electron2D.Events
 	{
 		public WindowEventArgs()
 		{
-			NewSize = new Size();
+			NewSize = new Rect();
 			NewPosition = new Point();
 		}
 
-		public WindowEventArgs(Size newSize)
+		public WindowEventArgs(Rect newSize)
 		{
 			NewSize = newSize;
 			NewPosition = new Point();
@@ -27,14 +27,14 @@ namespace Electron2D.Events
 
 		public WindowEventArgs(Point newPosition)
 		{
-			NewSize = new Size();
+			NewSize = new Rect();
 			NewPosition = newPosition;
 		}
 
 		/// <summary>
 		/// Новый размер окна
 		/// </summary>
-		public Size NewSize { get; private set; }
+		public Rect NewSize { get; private set; }
 
 		/// <summary>
 		/// Новая позиция окна
