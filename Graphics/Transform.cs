@@ -48,6 +48,10 @@ namespace Electron2D.Graphics
 			position.Y += y;
 		}
 
+		public void TranslateX(double x) => position.X += x;
+
+		public void TranslateY(double y) => position.Y += y;
+
 		public void Rotate(double deg)
 		{
             Degrees += deg;
@@ -71,7 +75,7 @@ namespace Electron2D.Graphics
 
 		public override string ToString()
 		{
-			return $"X: {Position.X}; Y: {Position.Y};";
+			return $"X: {Position.X}; Y: {Position.Y}; Angle: {Degrees};";
 		}
 	}
 }
