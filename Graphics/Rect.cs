@@ -7,7 +7,7 @@ using System;
 
 namespace Electron2D.Graphics
 {
-	public struct Rect : IEquatable<Size>
+	public struct Rect : IEquatable<Rect>
 	{
 		public double Width { get; set; }
 		public double Height { get; set; }
@@ -25,14 +25,14 @@ namespace Electron2D.Graphics
 			return false;
 		}
 
-		public bool Equals(Size other)
+		public bool Equals(Rect other)
 		{
 			return this.Width == other.Width && this.Height == other.Height;
 		}
 
 		public override int GetHashCode()
 		{
-			return (Width+Height).GetHashCode();
+			return HashCode.Combine(Width.GetHashCode(), Height.GetHashCode());
 		}
 
 		public static bool operator ==(Rect left, Rect right)

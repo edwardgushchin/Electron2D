@@ -15,7 +15,7 @@ namespace Electron2D.Kernel
 	{
 		static Settings()
 		{
-			resolution = new Size(640, 480);
+			resolution = new Rect(640, 480);
 			fullscreen = false;
 			VSinc = true;
 			FPS = 0;
@@ -25,15 +25,15 @@ namespace Electron2D.Kernel
 			Title = "Electron2D Game Engine 0.1 alpha";
 		}
 
-		private static Size resolution;
-		public static Size Resolution
+		private static Rect resolution;
+		public static Rect Resolution
 		{
 			get { return resolution; }
 			set
 			{
 				resolution = value;
 				if(Game.WindowContext != IntPtr.Zero && resolution != value)
-					SDL.SDL_SetWindowSize(Game.WindowContext, resolution.Width, resolution.Height);
+					SDL.SDL_SetWindowSize(Game.WindowContext, (int)resolution.Width, (int)resolution.Height);
 			}
 		}
 
