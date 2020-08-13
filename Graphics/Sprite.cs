@@ -45,10 +45,10 @@ namespace Electron2D.Graphics
         {
             get
             {
-                SDL.SDL_GetTextureAlphaMod(_srcTexture.TexturePtr, out byte a);
+                SDL.SDL_GetTextureAlphaMod(_srcTexture.Instance, out byte a);
                 return a;
             }
-            set => SDL.SDL_SetTextureAlphaMod(_srcTexture.TexturePtr, value);
+            set => SDL.SDL_SetTextureAlphaMod(_srcTexture.Instance, value);
         }
 
         public Transform Transform { get; set; }
@@ -82,7 +82,7 @@ namespace Electron2D.Graphics
             center.x = (float)(_draw_rect.w * transformTo.Achor.X);
             center.y = (float)(_draw_rect.h * transformTo.Achor.Y);
 
-            SDL.SDL_RenderCopyExF(Game.RenderContext, _srcTexture.TexturePtr, ref _srcTexture.Rectangle, ref _draw_rect, transformTo.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+            SDL.SDL_RenderCopyExF(Game.RenderContext, _srcTexture.Instance, ref _srcTexture.Rectangle, ref _draw_rect, transformTo.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
 
             if(Debug) DrawDebug(point, transformTo);
         }

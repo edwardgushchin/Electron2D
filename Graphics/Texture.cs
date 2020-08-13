@@ -15,16 +15,16 @@ namespace Electron2D.Graphics
 
         internal Texture(string path)
         {
-            TexturePtr = Image.IMG_LoadTexture(Game.RenderContext, path);
-            _ = SDL.SDL_QueryTexture(TexturePtr, out _, out _, out int width, out int height);
+            Instance = Image.IMG_LoadTexture(Game.RenderContext, path);
+            _ = SDL.SDL_QueryTexture(Instance, out _, out _, out int width, out int height);
             Rectangle = new SDL.SDL_Rect { w = width, h = height };
         }
 
-        internal IntPtr TexturePtr { get; }
+        internal IntPtr Instance { get; }
 
         public void Dispose()
         {
-            SDL.SDL_DestroyTexture(TexturePtr);
+            SDL.SDL_DestroyTexture(Instance);
         }
     }
 }
