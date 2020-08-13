@@ -39,7 +39,7 @@ namespace Electron2D.Graphics
 
         public string Path { get; set; }
 
-        internal void Draw(string text, RectTransform transform, Color color, int size)
+        /*internal void Draw(string text, RectTransform transform, Color color, int size)
         {
             SDL.SDL_FreeSurface(renderTextSurface);
             SDL.SDL_DestroyTexture(textTexture);
@@ -56,7 +56,7 @@ namespace Electron2D.Graphics
             labelRectangle.y = (float)transform.Top;
 
             SDL.SDL_RenderCopyExF(Game.RenderContext, textTexture, ref srcSurfaceTexture.clip_rect, ref labelRectangle, transform.Degrees, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
-        }
+        }*/
 
         public void Dispose()
         {
