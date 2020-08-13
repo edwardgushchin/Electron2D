@@ -19,22 +19,6 @@ namespace Electron2D.Graphics
 			Y = y;
 		}
 
-		internal Point ConvertToDecartPoint()
-		{
-			var newx = X - (Settings.Resolution.Width / 2);
-			var newy = (Y - (Settings.Resolution.Height / 2)) * -1;
-
-			return new Point(newx, newy);
-		}
-
-		internal Point ConvertToSDLPoint()
-		{
-			var newx = X + (Settings.Resolution.Width / 2);
-			var newy = (Y - (Settings.Resolution.Height / 2)) * -1 ;
-
-			return new Point(newx, newy);
-		}
-
 		internal Point Rotate(Point center, double degrees)
 		{
 			double angleInRadians = degrees * (Math.PI / 180);
@@ -83,6 +67,21 @@ namespace Electron2D.Graphics
 		{
 			return new Point(left.X - right.X, left.Y - right.Y);
 		}
+
+		public static Point operator -(Point point)
+		{
+			return new Point(-point.X, -point.Y);
+		}
+
+		public static Point operator *(Point left, double right)
+		{
+			return new Point(left.X * right, left.Y * right);
+		}
+
+		public static Point Multiply(Point left, double right)
+        {
+            return left * right;
+        }
 
 		public override string ToString()
 		{
