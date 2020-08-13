@@ -4,6 +4,8 @@
 */
 
 using Electron2D.Graphics;
+using Electron2D.Binding.Box2D.Dynamics;
+using Electron2D.Binding.Box2D.Collision.Shapes;
 
 namespace Electron2D
 {
@@ -30,9 +32,9 @@ namespace Electron2D
 			Enable = true;
 		}
 
-        public Transform Transform { get; }
+        public Transform Transform { get; set; }
 
-		private Transform AbsoluteTransform
+        private Transform AbsoluteTransform
 		{
 			get
 			{
@@ -72,6 +74,44 @@ namespace Electron2D
                 )
 			});
 		}
+
+		/*protected void CreateStaticBody(Physics.PhysicsWorld world, Size size)
+		{
+            BodyDef groundBodyDef = new BodyDef
+            {
+                Position = new System.Numerics.Vector2((float)Transform.Position.X, (float)Transform.Position.Y)
+            };
+
+            physicsBody = world.Instance.CreateBody(groundBodyDef);
+
+            PolygonShape groundBox = new PolygonShape();
+            groundBox.SetAsBox(size.Width / 2, size.Height / 2 );
+
+            physicsBody.CreateFixture(groundBox, 0.0f);
+		}
+
+		protected void CreateDynamicBody(Physics.PhysicsWorld world, Size size)
+		{
+            BodyDef bodyDef = new BodyDef
+            {
+                BodyType = BodyType.DynamicBody,
+                Position = new System.Numerics.Vector2((float)Transform.Position.X, (float)Transform.Position.Y)
+            };
+
+            physicsBody = world.Instance.CreateBody(bodyDef);
+			PolygonShape dynamicBox = new PolygonShape();
+
+			dynamicBox.SetAsBox(size.Width / 2 , size.Height / 2 );
+
+            FixtureDef fixtureDef = new FixtureDef
+            {
+                Shape = dynamicBox,
+                Density = 1.0f,
+                Friction = 0.3f
+            };
+
+            physicsBody.CreateFixture(fixtureDef);
+		}*/
 
         public Entity Parrent { get; }
 
