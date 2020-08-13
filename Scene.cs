@@ -36,9 +36,9 @@ namespace Electron2D
 			Camera = new Camera();
 		}
 
-		public void SetCursor(Sprite cursor)
+		public void SetCursor(string path)
 		{
-			SDL.SDL_SetCursor(SDL.SDL_CreateColorCursor(Image.IMG_Load(cursor.Path), 0, 0));
+			SDL.SDL_SetCursor(SDL.SDL_CreateColorCursor(Image.IMG_Load(path), 0, 0));
 		}
 
         public Camera Camera { get; }
@@ -63,6 +63,7 @@ namespace Electron2D
 			_game.Events.OnWindowExposedEvent += OnWindowExposed;
 			_game.Events.OnWindowMovedEvent += OnWindowMoved;
 			_game.Events.OnWindowResizedEvent += OnWindowResized;
+			_game.Events.OnWindowResizedEvent += Camera.UpdateUnit;
 			_game.Events.OnWindowSizeChangedEvent += OnWindowSizeChanged;
 			_game.Events.OnWindowMinimizedEvent += OnWindowMinimized;
 			_game.Events.OnWindowMaximizedEvent += OnWindowMaximized;
@@ -101,6 +102,7 @@ namespace Electron2D
 			_game.Events.OnWindowExposedEvent -= OnWindowExposed;
 			_game.Events.OnWindowMovedEvent -= OnWindowMoved;
 			_game.Events.OnWindowResizedEvent -= OnWindowResized;
+			_game.Events.OnWindowResizedEvent -= Camera.UpdateUnit;
 			_game.Events.OnWindowSizeChangedEvent -= OnWindowSizeChanged;
 			_game.Events.OnWindowMinimizedEvent -= OnWindowMinimized;
 			_game.Events.OnWindowMaximizedEvent -= OnWindowMaximized;
@@ -133,6 +135,7 @@ namespace Electron2D
 
 		public void Start()
 		{
+			PreLoadScene();
 			SubscribeEvents();
 			OnLoadScene();
 		}
@@ -157,6 +160,7 @@ namespace Electron2D
 			get { return GetType().Name; }
 		}
 
+		protected virtual void PreLoadScene() {}
 		protected virtual void OnLoadScene() {}
 
 		#region Render Virtual Metods
