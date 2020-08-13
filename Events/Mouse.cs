@@ -20,7 +20,8 @@ namespace Electron2D.Events
 		public MouseButtonEventArgs(Mouse.Button button, Point position, byte click)
 		{
 			Button = button;
-			Position = position.ConvertToDecartPoint(); //Point.ConvertToDecartPoint(position.X, position.Y);
+			//Position = position.ConvertToDecartPoint();
+			Position = SceneManager.GetCurrentScene.Camera.ConvertWorldToScreen(position);
 			Click = click;
 		}
 
@@ -36,7 +37,7 @@ namespace Electron2D.Events
 	{
 		public MouseMotionEventArgs(Point position, int xrel, int yrel)
 		{
-			Position = position.ConvertToDecartPoint();
+			Position = SceneManager.GetCurrentScene.Camera.ConvertWorldToScreen(position);
 			XRel = xrel;
 			YRel = yrel;
 		}
