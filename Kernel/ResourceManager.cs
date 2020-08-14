@@ -3,39 +3,37 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
 using System.Collections.Generic;
 
 using Electron2D.Graphics;
-using Electron2D.Binding.SDL;
 
 namespace Electron2D.Kernel
 {
     public static class ResourceManager
     {
-        private static readonly List<Font> fontCache;
+        //private static readonly List<Font> fontCache;
         private static readonly Dictionary<string, Texture> textureCache;
 
         static ResourceManager()
         {
-            fontCache = new List<Font>();
+            //fontCache = new List<Font>();
             textureCache = new Dictionary<string, Texture>();
         }
 
-        internal static int FontCacheCount
+        /*internal static int FontCacheCount
         {
             get { return fontCache.Count; }
-        }
+        }*/
 
         internal static int TextureCacheCount
         {
             get { return textureCache.Count; }
         }
 
-        public static Font GetFont(string path)
+        /*public static Font GetFont(string path)
         {
             return fontCache.Find(x => x.Path.Contains(path));
-        }
+        }*/
 
         /*public static Sprite GetSprite(string path)
         {
@@ -47,7 +45,7 @@ namespace Electron2D.Kernel
             return textureCache[resourceName];
         }
 
-        public static Font LoadFont(string path, int size)
+        /*public static Font LoadFont(string path, int size)
         {
             var f = GetFont(path);
             if (f != null)
@@ -64,7 +62,7 @@ namespace Electron2D.Kernel
             }
             Debug.Log($"Failed to load font! TTFont Error: {SDL.SDL_GetError()}", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
             return null;
-        }
+        }*/
 
         /*public static Sprite LoadSprite(string path)
         {

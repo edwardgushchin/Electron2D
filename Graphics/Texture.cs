@@ -11,16 +11,28 @@ namespace Electron2D.Graphics
 {
     public class Texture : IDisposable
     {
-        internal SDL.SDL_Rect Rectangle;
+        internal SDL.SDL_Rect SdlRect;
 
         internal Texture(string path)
         {
             Instance = Image.IMG_LoadTexture(Game.RenderContext, path);
-            _ = SDL.SDL_QueryTexture(Instance, out _, out _, out int width, out int height);
-            Rectangle = new SDL.SDL_Rect { w = width, h = height };
+            SDL.SDL_QueryTexture(Instance, out uint format, out int access, out int width, out int height);
+            SdlRect = new SDL.SDL_Rect() { w = width, h = height };
+            PixelFormat = format;
+            Access = access;
+            Width = width;
+            Height = height;
         }
 
         internal IntPtr Instance { get; }
+
+        public int Width { get; }
+
+        public int Height { get; }
+
+        public uint PixelFormat { get; }
+
+        public int Access { get; }
 
         public void Dispose()
         {

@@ -10,9 +10,6 @@ using Electron2D.Graphics;
 
 namespace Electron2D.Events
 {
-	/// <summary>
-	/// Description of Mouse.
-	/// </summary>
 	public delegate void MouseButtonEventHundler(object sender, MouseButtonEventArgs e);
 
 	public class MouseButtonEventArgs : EventArgs
@@ -20,8 +17,7 @@ namespace Electron2D.Events
 		public MouseButtonEventArgs(Mouse.Button button, Point position, byte click)
 		{
 			Button = button;
-			//Position = position.ConvertToDecartPoint();
-			Position = SceneManager.GetCurrentScene.Camera.ConvertWorldToScreen(position);
+			Position = SceneManager.GetCurrentScene.Camera.ConvertScreenToWorld(position);
 			Click = click;
 		}
 
@@ -35,17 +31,17 @@ namespace Electron2D.Events
 
 	public class MouseMotionEventArgs : EventArgs
 	{
-		public MouseMotionEventArgs(Point position, int xrel, int yrel)
+		public MouseMotionEventArgs(Point position, int x, int y)
 		{
 			Position = SceneManager.GetCurrentScene.Camera.ConvertWorldToScreen(position);
-			XRel = xrel;
-			YRel = yrel;
+			X = x;
+			Y = y;
 		}
 
 		public Point Position { get; private set; }
 
-        public int XRel { get; }
-        public int YRel { get; }
+        public int X { get; }
+        public int Y { get; }
     }
 
 	public delegate void MouseWheelEventHundler(object sender, MouseWheelEventArgs e );

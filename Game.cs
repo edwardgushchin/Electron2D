@@ -7,8 +7,8 @@ using System;
 
 using Electron2D.Kernel;
 using Electron2D.Events;
-using Electron2D.Binding.SDL;
 using Electron2D.Graphics;
+using Electron2D.Binding.SDL;
 
 namespace Electron2D
 {

@@ -12,10 +12,6 @@ namespace Electron2D.Graphics
 {
     public struct Vector : IEquatable<Vector>, IFormattable
     {
-        public double X;
-
-        public double Y;
-
         public Vector(double value) : this(value, value) { }
 
         public Vector(double x, double y)
@@ -23,6 +19,10 @@ namespace Electron2D.Graphics
             X = x;
             Y = y;
         }
+
+        public double X { get; set; }
+
+        public double Y { get; set; }
 
         public readonly bool Equals(Vector other)
         {
@@ -261,24 +261,6 @@ namespace Electron2D.Graphics
                 value1.X + ((value2.X - value1.X) * amount),
                 value1.Y + ((value2.Y - value1.Y) * amount));
         }
-
-        /*[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 Transform(Vector2 value, Quaternion rotation)
-        {
-            float x2 = rotation.X + rotation.X;
-            float y2 = rotation.Y + rotation.Y;
-            float z2 = rotation.Z + rotation.Z;
-
-            float wz2 = rotation.W * z2;
-            float xx2 = rotation.X * x2;
-            float xy2 = rotation.X * y2;
-            float yy2 = rotation.Y * y2;
-            float zz2 = rotation.Z * z2;
-
-            return new Vector2(
-                value.X * (1.0f - yy2 - zz2) + value.Y * (xy2 - wz2),
-                value.X * (xy2 + wz2) + value.Y * (1.0f - xx2 - zz2));
-        }*/
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector Add(Vector left, Vector right)

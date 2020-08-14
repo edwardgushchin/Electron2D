@@ -4,6 +4,7 @@
 */
 
 using System;
+
 using Electron2D.Binding.SDL;
 
 namespace Electron2D.Graphics
@@ -11,8 +12,6 @@ namespace Electron2D.Graphics
 	public struct Color : IEquatable<Color>
 	{
 		#region Equals and GetHashCode implementation
-		// The code in this region is useful if you want to use this structure in collections.
-		// If you don't need it, you can just remove the region and the ": IEquatable<Color>" declaration.
 
 		public Color(byte R, byte G, byte B)
 		{
@@ -65,21 +64,18 @@ namespace Electron2D.Graphics
 		public override bool Equals(object obj)
 		{
 			if (obj is Color color)
-				return Equals(color); // use Equals method below
+				return Equals(color);
 			else
 				return false;
 		}
 
 		public bool Equals(Color other)
 		{
-			// add comparisions for all members here
 			return R + G + B + A == other.R + other.G + other.B + other.A;
 		}
 
 		public override int GetHashCode()
 		{
-			// combine the hash codes of all members here (e.g. with XOR operator ^)
-			//return (R + G + B + A).GetHashCode();
 			return HashCode.Combine(R, G, B, A);
 		}
 
@@ -92,6 +88,7 @@ namespace Electron2D.Graphics
 		{
 			return !left.Equals(right);
 		}
+
 		#endregion
 	}
 }

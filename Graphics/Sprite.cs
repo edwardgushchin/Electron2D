@@ -9,17 +9,18 @@ namespace Electron2D.Graphics
 {
     public class Sprite
     {
-        private readonly Texture _srcTexture;
+        private readonly Texture _texture;
         private SDL.SDL_FRect _draw_rect;
         private Rect _size, _rect;
 
         public Sprite(Texture texture)
         {
             Transform = new Transform();
-            _srcTexture = texture;
-            _rect = new Rect(texture.Rectangle.w, texture.Rectangle.h);
-            _size = new Rect(texture.Rectangle.w * Transform.LocalScale.X, texture.Rectangle.h * Transform.LocalScale.Y);
             PixelPerUnit = 100;
+
+            _texture = texture;
+            _rect = new Rect(texture.Width, texture.Height);
+            _size = new Rect(texture.Width * Transform.LocalScale.X, texture.Height * Transform.LocalScale.Y);
             _draw_rect = new SDL.SDL_FRect();
 
             Debug = false;
@@ -28,10 +29,11 @@ namespace Electron2D.Graphics
         public Sprite(Texture texture, int pixelPerUnit)
         {
             Transform = new Transform();
-            _srcTexture = texture;
-            _rect = new Rect(texture.Rectangle.w, texture.Rectangle.h);
-            _size = new Rect(texture.Rectangle.w * Transform.LocalScale.X, texture.Rectangle.h * Transform.LocalScale.Y);
             PixelPerUnit = pixelPerUnit;
+
+            _texture = texture;
+            _rect = new Rect(texture.Width, texture.Height);
+            _size = new Rect(texture.Width * Transform.LocalScale.X, texture.Height * Transform.LocalScale.Y);
             _draw_rect = new SDL.SDL_FRect();
 
             Debug = false;
@@ -45,10 +47,10 @@ namespace Electron2D.Graphics
         {
             get
             {
-                SDL.SDL_GetTextureAlphaMod(_srcTexture.Instance, out byte a);
+                SDL.SDL_GetTextureAlphaMod(_texture.Instance, out byte a);
                 return a;
             }
-            set => SDL.SDL_SetTextureAlphaMod(_srcTexture.Instance, value);
+            set => SDL.SDL_SetTextureAlphaMod(_texture.Instance, value);
         }
 
         public Transform Transform { get; set; }
@@ -63,15 +65,14 @@ namespace Electron2D.Graphics
 
         internal void Draw(Transform transformTo)
         {
-            var camera = SceneManager.GetCurrentScene.Camera;
-            var point = camera.ConvertWorldToScreen(transformTo.Position - camera.Transform.Position);
+            var point = Camera.MainCamera.ConvertWorldToScreen(transformTo.Position - Camera.MainCamera.Transform.Position);
 
             var center = new SDL.SDL_FPoint();
 
             _size.Width = _rect.Width * transformTo.LocalScale.X;
             _size.Height = _rect.Height * transformTo.LocalScale.Y;
 
-            var unit = camera.WorldUnit;
+            var unit = Camera.MainCamera.WorldUnit;
 
             _draw_rect.w = (float)(unit * (_size.Width / PixelPerUnit));
             _draw_rect.h = (float)(unit * (_size.Height / PixelPerUnit));
@@ -82,7 +83,7 @@ namespace Electron2D.Graphics
             center.x = (float)(_draw_rect.w * transformTo.Achor.X);
             center.y = (float)(_draw_rect.h * transformTo.Achor.Y);
 
-            SDL.SDL_RenderCopyExF(Game.RenderContext, _srcTexture.Instance, ref _srcTexture.Rectangle, ref _draw_rect, transformTo.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+            SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _texture.SdlRect, ref _draw_rect, transformTo.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
 
             if(Debug) DrawDebug(point, transformTo);
         }

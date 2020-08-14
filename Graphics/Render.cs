@@ -13,16 +13,15 @@ namespace Electron2D.Graphics
 {
     public class Render : IDisposable
     {
-        private bool renderLoop;
-        private IntPtr renderWindow;
-		private IntPtr renderer;
+        private bool _loop;
+        private IntPtr _window, _instance;
         public event RenderEventHundler OnPreUpdate;
 	    public event RenderEventHundler OnUpdate;
 	    public event RenderEventHundler OnPostUpdate;
 
         public Render()
 		{
-			renderLoop = false;
+			_loop = false;
 
             var sdl = SDLInit();
             var image = ImageInit();
@@ -73,34 +72,28 @@ namespace Electron2D.Graphics
 			return true;
 		}
 
-        internal IntPtr RenderContext => Initialized ? renderer : IntPtr.Zero;
+        internal IntPtr RenderContext => Initialized ? _instance : IntPtr.Zero;
 
         internal IntPtr WindowContext
         {
-            get => Initialized ? renderWindow : IntPtr.Zero;
-            set => renderWindow = value;
+            get => Initialized ? _window : IntPtr.Zero;
+            set => _window = value;
         }
 
         public bool Initialized { get; }
 
         public void Start()
 		{
-			renderLoop = true;
+			_loop = true;
 			RenderLoop();
 			Stop();
 		}
 
 		public void Stop()
 		{
-			renderLoop = false;
+			_loop = false;
 			Dispose();
 		}
-
-		//public void Clear(Color Color)
-		//{
-		//	SDL.SDL_SetRenderDrawColor(renderer, Color.R, Color.G, Color.B, Color.A);
-		//	SDL.SDL_RenderClear(renderer);
-		//}
 
 		private void CreateWidnow()
 		{
@@ -108,7 +101,7 @@ namespace Electron2D.Graphics
 				SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : Settings.Resizeble ?
 				SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE : SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN;
 
-			renderWindow = SDL.SDL_CreateWindow(
+			_window = SDL.SDL_CreateWindow(
 
 					Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title, SDL.SDL_WINDOWPOS_CENTERED,
 					SDL.SDL_WINDOWPOS_CENTERED,
@@ -120,8 +113,8 @@ namespace Electron2D.Graphics
         private void CreateRenderer()
 		{
 			if(Settings.VSinc) {
-				renderer = SDL.SDL_CreateRenderer(
-					renderWindow, -1,
+				_instance = SDL.SDL_CreateRenderer(
+					_window, -1,
 					SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC |
 					SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
 					SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE
@@ -129,8 +122,8 @@ namespace Electron2D.Graphics
 			}
 			else
 			{
-				renderer = SDL.SDL_CreateRenderer(
-					renderWindow, -1,
+				_instance = SDL.SDL_CreateRenderer(
+					_window, -1,
 					SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
 					SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE
 				);
@@ -144,7 +137,7 @@ namespace Electron2D.Graphics
 
 		    ulong now_counter = SDL.SDL_GetPerformanceCounter();
 
-            while (renderLoop)
+            while (_loop)
 			{
 				timer_fps.Start();
 
@@ -153,12 +146,12 @@ namespace Electron2D.Graphics
 
 				Time.DeltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
 
-                SDL.SDL_RenderClear(renderer);
+                SDL.SDL_RenderClear(_instance);
 
 				OnPreUpdate();
 				OnUpdate();
 
-				SDL.SDL_RenderPresent(renderer);
+				SDL.SDL_RenderPresent(_instance);
 
 				OnPostUpdate();
 
@@ -171,8 +164,8 @@ namespace Electron2D.Graphics
 
         public void Dispose()
 		{
-			SDL.SDL_DestroyRenderer(renderer);
-			SDL.SDL_DestroyWindow(renderWindow);
+			SDL.SDL_DestroyRenderer(_instance);
+			SDL.SDL_DestroyWindow(_window);
 		}
     }
 }

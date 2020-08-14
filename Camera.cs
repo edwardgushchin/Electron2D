@@ -32,6 +32,11 @@ namespace Electron2D
 
         public Transform Transform { get; set; }
 
+        internal void UpdateUnit(object sender, Events.WindowEventArgs e)
+        {
+            WorldUnit = ConvertWorldToScreen(new Point(1, 0)).X - ConvertWorldToScreen(new Point()).X;
+        }
+
         public Point ConvertScreenToWorld(Point screenPoint)
         {
             var w = Settings.Resolution.Width;
@@ -48,11 +53,6 @@ namespace Electron2D
             );
         }
 
-        internal void UpdateUnit(object sender, Events.WindowEventArgs e)
-        {
-            WorldUnit = ConvertWorldToScreen(new Point(1, 0)).X - ConvertWorldToScreen(new Point()).X;
-        }
-
         public Point ConvertWorldToScreen(Point worldPoint)
         {
             var w = Settings.Resolution.Width;
@@ -65,5 +65,7 @@ namespace Electron2D
 
             return new Point(u * w, (1 - v) * h);
         }
+
+        public static Camera MainCamera => SceneManager.GetCurrentScene.Camera;
     }
 }

@@ -3,11 +3,7 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-
 namespace Electron2D.Events
 {
 	public delegate void RenderEventHundler();
-
-	public class RenderEventArgs : EventArgs{}
 }

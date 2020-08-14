@@ -9,54 +9,55 @@ namespace Electron2D.Kernel
 {
 	public class Timer
 	{
-		private uint mStartTicks, mPausedTicks;
-        private bool mPaused, mStarted;
+		private uint _mStartTicks, _mPausedTicks;
+        private bool _mPaused;
 
-		public Timer()
+        public Timer()
 		{
-			mStartTicks = 0;
-		    mPausedTicks = 0;
+			_mStartTicks = 0;
+		    _mPausedTicks = 0;
 
-		    mPaused = false;
-		    mStarted = false;
+		    _mPaused = false;
+		    IsStarted = false;
 		}
 
 		public void Start()
 		{
-			mStarted = true;
-		    mPaused = false;
-		    mStartTicks = SDL.SDL_GetTicks();
-		    mPausedTicks = 0;
+			_mStartTicks = SDL.SDL_GetTicks();
+		    _mPausedTicks = 0;
+
+			_mPaused = false;
+			IsStarted = true;
 		}
 
         public void Stop()
         {
-		    mStarted = false;
-		    mPaused = false;
-		    mStartTicks = 0;
-    		mPausedTicks = 0;
+		    _mStartTicks = 0;
+    		_mPausedTicks = 0;
+
+			_mPaused = false;
+			IsStarted = false;
         }
 
         public void Pause()
         {
-		    if( mStarted && !mPaused )
+		    if( IsStarted && !_mPaused )
 		    {
-		        mPaused = true;
+		        _mPausedTicks = SDL.SDL_GetTicks() - _mStartTicks;
+		        _mStartTicks = 0;
 
-		        mPausedTicks = SDL.SDL_GetTicks() - mStartTicks;
-		        mStartTicks = 0;
+				_mPaused = true;
 		    }
         }
 
         public void Unpause()
         {
-		    if( mStarted && mPaused )
+		    if( IsStarted && _mPaused )
 		    {
-		        mPaused = false;
+		        _mStartTicks = SDL.SDL_GetTicks() - _mPausedTicks;
+		        _mPausedTicks = 0;
 
-		        mStartTicks = SDL.SDL_GetTicks() - mPausedTicks;
-
-		        mPausedTicks = 0;
+				_mPaused = false;
 		    }
         }
 
@@ -64,29 +65,26 @@ namespace Electron2D.Kernel
         {
 		    uint time = 0;
 
-		    if( mStarted )
+		    if( IsStarted )
 		    {
-		        if( mPaused )
+		        if( _mPaused )
 		        {
-		            time = mPausedTicks;
+		            time = _mPausedTicks;
 		        }
 		        else
 		        {
-		            time = SDL.SDL_GetTicks() - mStartTicks;
+		            time = SDL.SDL_GetTicks() - _mStartTicks;
 		        }
 		    }
 
 		    return time;
         }
 
-        public bool IsStarted
-		{
-		    get { return mStarted; }
-		}
+        public bool IsStarted { get; private set; }
 
-		public bool IsPaused
+        public bool IsPaused
 		{
-		    get { return mPaused && mStarted; }
+		    get { return _mPaused && IsStarted; }
 		}
 	}
 }

@@ -4,6 +4,7 @@
 */
 
 using System;
+
 using Electron2D.Inputs;
 
 namespace Electron2D.Events

@@ -26,7 +26,7 @@ namespace Electron2D.Events
 			}
 		}
 
-		public bool Initialized
+        public bool Initialized
 		{
 			internal set;
 			get;
@@ -126,16 +126,16 @@ namespace Electron2D.Events
 
 		private void PoolKeyEvent(SDL.SDL_Event e )
 		{
-			var ev = new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod);
+			var evnt = new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod);
 			if(e.type == SDL.SDL_EventType.SDL_KEYDOWN)
 			{
-				Input.SetKeyDown(ev.Key, true);
-				OnKeyDownEvent(e.window.windowEvent, ev);
+				Input.SetKeyDown(evnt.Key, true);
+				OnKeyDownEvent(e.window.windowEvent, evnt);
 			}
 
 			if(e.type == SDL.SDL_EventType.SDL_KEYUP)
 			{
-				Input.SetKeyDown(ev.Key, false);
+				Input.SetKeyDown(evnt.Key, false);
 				OnKeyUpEvent(e.window.windowEvent, new KeyboardEventArgs((Keyboard.Keys)e.key.keysym.sym, (Keyboard.KeyMod)e.key.keysym.mod));
 			}
 		}
@@ -144,16 +144,16 @@ namespace Electron2D.Events
 		{
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN)
 			{
-				var ev = new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks);
-				Input.SetMouseButtonDown(ev.Button, true);
-				OnMouseButtonDownEvent(e.window.windowEvent, ev);
+				var evnt = new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks);
+				Input.SetMouseButtonDown(evnt.Button, true);
+				OnMouseButtonDownEvent(e.window.windowEvent, evnt);
 			}
 
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONUP)
 			{
-				var ev = new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks);
-				Input.SetMouseButtonDown(ev.Button, false);
-				OnMouseButtonUpEvent(e.window.windowEvent, ev);
+				var evnt = new MouseButtonEventArgs((Mouse.Button)e.button.button, new Point(e.button.x, e.button.y), e.button.clicks);
+				Input.SetMouseButtonDown(evnt.Button, false);
+				OnMouseButtonUpEvent(e.window.windowEvent, evnt);
 			}
 
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEMOTION)

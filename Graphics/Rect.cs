@@ -9,14 +9,15 @@ namespace Electron2D.Graphics
 {
 	public struct Rect : IEquatable<Rect>
 	{
-		public double Width { get; set; }
-		public double Height { get; set; }
-
 		public Rect(double width, double height) : this()
 		{
 			Width = width;
 			Height = height;
 		}
+
+		public double Width { get; set; }
+
+		public double Height { get; set; }
 
 		public override bool Equals(object obj)
 		{

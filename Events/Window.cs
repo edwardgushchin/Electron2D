@@ -31,14 +31,8 @@ namespace Electron2D.Events
 			NewPosition = newPosition;
 		}
 
-		/// <summary>
-		/// Новый размер окна
-		/// </summary>
 		public Rect NewSize { get; private set; }
 
-		/// <summary>
-		/// Новая позиция окна
-		/// </summary>
 		public Point NewPosition { get; private set; }
 	}
 }

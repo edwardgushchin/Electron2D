@@ -41,7 +41,7 @@ namespace Electron2D.Physics
             _body = _world.CreateBody(_bodyDef);
 
             PolygonShape dynamicBox = new PolygonShape();
-            dynamicBox.SetAsBox(1, 1);
+            dynamicBox.SetAsBox(1.26f/2, 1.26f/2);
 
             FixtureDef fixtureDef = new FixtureDef
             {
@@ -153,7 +153,7 @@ namespace Electron2D.Physics
         }
 
         public Transform Transform
-        { 
+        {
             get
             {
                 if (_body == null)

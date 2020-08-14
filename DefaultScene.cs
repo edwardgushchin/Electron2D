@@ -11,13 +11,13 @@ namespace Electron2D
 {
     internal class DefaultScene : Scene
     {
-		private readonly Sprite sprite;
+		private readonly Sprite _sprite;
 		public DefaultScene()
 		{
 			Debug.Log("Electron2D demo scene loading...", Debug.Sender.Scene);
 			ClearColor = new Color(46, 52, 64);
 
-            sprite = new Sprite(ResourceManager.LoadTexture("sprite", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"));
+            _sprite = new Sprite(ResourceManager.LoadTexture("_sprite", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"));
 
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
@@ -40,26 +40,26 @@ namespace Electron2D
                 Camera.Transform.TranslateX(Camera.Size * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Left))
-				sprite.Transform.TranslateX(-2 * Time.DeltaTime);
+				_sprite.Transform.TranslateX(-2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Right))
-				sprite.Transform.TranslateX(2 * Time.DeltaTime);
+				_sprite.Transform.TranslateX(2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Up))
-				sprite.Transform.TranslateY(2 * Time.DeltaTime);
+				_sprite.Transform.TranslateY(2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Down))
-				sprite.Transform.TranslateY(-2 * Time.DeltaTime);
+				_sprite.Transform.TranslateY(-2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Num4))
-				sprite.Transform.Rotate(-30 * Time.DeltaTime);
+				_sprite.Transform.Rotate(-30 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Num6))
-				sprite.Transform.Rotate(30 * Time.DeltaTime);
+				_sprite.Transform.Rotate(30 * Time.DeltaTime);
 
 			Debug.DrawGrid();
 
-			sprite.Draw();
+			_sprite.Draw();
 		}
 
 		protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)

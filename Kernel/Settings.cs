@@ -11,12 +11,16 @@ using Electron2D.Binding.SDL;
 
 namespace Electron2D.Kernel
 {
-    public static class Settings
+	public static class Settings
 	{
+		private static Rect _resolution;
+		private static bool _fullscreen;
+		private static SmoothingType _smoothing;
+
 		static Settings()
 		{
-			resolution = new Rect(640, 480);
-			fullscreen = false;
+			_resolution = new Rect(640, 480);
+			_fullscreen = false;
 			VSinc = true;
 			FPS = 0;
 			Resizeble = false;
@@ -25,32 +29,30 @@ namespace Electron2D.Kernel
 			Title = "Electron2D Game Engine 0.1 alpha";
 		}
 
-		private static Rect resolution;
 		public static Rect Resolution
 		{
-			get { return resolution; }
+			get { return _resolution; }
 			set
 			{
-				resolution = value;
-				if(Game.WindowContext != IntPtr.Zero && resolution != value)
-					SDL.SDL_SetWindowSize(Game.WindowContext, (int)resolution.Width, (int)resolution.Height);
+				_resolution = value;
+				if(Game.WindowContext != IntPtr.Zero && _resolution != value)
+					SDL.SDL_SetWindowSize(Game.WindowContext, (int)_resolution.Width, (int)_resolution.Height);
 			}
 		}
 
-		private static bool fullscreen;
 		public static bool Fullscreen
 		{
-			get { return fullscreen; }
+			get { return _fullscreen; }
 			set
 			{
 				if(Game.WindowContext != IntPtr.Zero)
 				{
-					if(value != fullscreen && value)
+					if(value != _fullscreen && value)
 						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
-					else if(value != fullscreen && !value)
+					else if(value != _fullscreen && !value)
 						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 				}
-				fullscreen = value;
+				_fullscreen = value;
 			}
 		}
 		public static bool VSinc
@@ -58,10 +60,9 @@ namespace Electron2D.Kernel
 			get; set;
 		}
 
-		private static SmoothingType smoothing;
 		public static SmoothingType Smoothing
 		{
-			get { return smoothing; }
+			get { return _smoothing; }
 			set
 			{
 				switch(value)
@@ -76,7 +77,7 @@ namespace Electron2D.Kernel
 						SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "2");
 						break;
 				}
-				smoothing = value;
+				_smoothing = value;
 			}
 		}
 		public static bool Resizeble { get; set; }

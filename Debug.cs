@@ -5,6 +5,8 @@
 
 using System;
 
+using Electron2D.Graphics;
+
 namespace Electron2D
 {
 	public static class Debug
@@ -93,68 +95,61 @@ namespace Electron2D
 
 		public static void DrawText()
 		{
-
 		}
-
 
 		public static void DrawPoint()
 		{
-
 		}
 
 		public static void DrawPoints()
 		{
-
 		}
 
 		public static void DrawLine()
 		{
-
 		}
 
 		public static void DrawLines()
 		{
-
 		}
 
 		public static void DrawRectangle()
 		{
-
 		}
 
 		public static void DrawRectangles()
 		{
-
 		}
 
 		public static void DrawGrid()
 		{
 			var color = SceneManager.GetCurrentScene.ClearColor;
-			var camera = SceneManager.GetCurrentScene.Camera;
-			var size = new Graphics.Rect(100, 100);
+            const int size = 100;
 
 			Binding.SDL.SDL.SDL_SetRenderDrawColor(Game.RenderContext, 100, 100, 100, 0);
 
-			for (int i = -100; i <= 100; i++)
+			for (int i = -size; i <= size; i++)
 			{
-				var p1 = camera.ConvertWorldToScreen(new Graphics.Point(i - camera.Transform.Position.X, size.Width - camera.Transform.Position.Y));
-				var p2 = camera.ConvertWorldToScreen(new Graphics.Point(i - camera.Transform.Position.X, -size.Width - camera.Transform.Position.Y));
-				var p3 = camera.ConvertWorldToScreen(new Graphics.Point(size.Width - camera.Transform.Position.X, i - camera.Transform.Position.Y));
-				var p4 = camera.ConvertWorldToScreen(new Graphics.Point(-size.Width - camera.Transform.Position.X, i - camera.Transform.Position.Y));
+				var px1 = Camera.MainCamera.ConvertWorldToScreen(new Point(i - Camera.MainCamera.Transform.Position.X, size - Camera.MainCamera.Transform.Position.Y));
+				var py1 = Camera.MainCamera.ConvertWorldToScreen(new Point(i - Camera.MainCamera.Transform.Position.X, -size - Camera.MainCamera.Transform.Position.Y));
 
-				Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y);
-				Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)p3.X, (float)p3.Y, (float)p4.X, (float)p4.Y);
+				var px2 = Camera.MainCamera.ConvertWorldToScreen(new Point(size - Camera.MainCamera.Transform.Position.X, i - Camera.MainCamera.Transform.Position.Y));
+				var py2 = Camera.MainCamera.ConvertWorldToScreen(new Point(-size - Camera.MainCamera.Transform.Position.X, i - Camera.MainCamera.Transform.Position.Y));
+
+				Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)px1.X, (float)px1.Y, (float)py1.X, (float)py1.Y);
+				Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)px2.X, (float)px2.Y, (float)py2.X, (float)py2.Y);
 			}
 
-			var cx1 = camera.ConvertWorldToScreen(new Graphics.Point(0 - camera.Transform.Position.X, size.Width - camera.Transform.Position.Y));
-			var cy1 = camera.ConvertWorldToScreen(new Graphics.Point(0 - camera.Transform.Position.X, -size.Width - camera.Transform.Position.Y));
-			var cx2 = camera.ConvertWorldToScreen(new Graphics.Point(size.Width - camera.Transform.Position.X, 0 - camera.Transform.Position.Y));
-			var cy2 = camera.ConvertWorldToScreen(new Graphics.Point(-size.Width - camera.Transform.Position.X, 0 - camera.Transform.Position.Y));
+			var x1 = Camera.MainCamera.ConvertWorldToScreen(new Point(0 - Camera.MainCamera.Transform.Position.X, size - Camera.MainCamera.Transform.Position.Y));
+			var y1 = Camera.MainCamera.ConvertWorldToScreen(new Point(0 - Camera.MainCamera.Transform.Position.X, -size - Camera.MainCamera.Transform.Position.Y));
+
+			var x2 = Camera.MainCamera.ConvertWorldToScreen(new Point(size - Camera.MainCamera.Transform.Position.X, 0 - Camera.MainCamera.Transform.Position.Y));
+			var y2 = Camera.MainCamera.ConvertWorldToScreen(new Point(-size - Camera.MainCamera.Transform.Position.X, 0 - Camera.MainCamera.Transform.Position.Y));
 
 			Binding.SDL.SDL.SDL_SetRenderDrawColor(Game.RenderContext, 200, 200, 200, 0);
-			Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)cx1.X, (float)cx1.Y, (float)cy1.X, (float)cy1.Y);
+			Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)x1.X, (float)x1.Y, (float)y1.X, (float)y1.Y);
 			Binding.SDL.SDL.SDL_SetRenderDrawColor(Game.RenderContext, 200, 200, 200, 0);
-			Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)cx2.X, (float)cx2.Y, (float)cy2.X, (float)cy2.Y);
+			Binding.SDL.SDL.SDL_RenderDrawLineF(Game.RenderContext, (float)x2.X, (float)x2.Y, (float)y2.X, (float)y2.Y);
 			Binding.SDL.SDL.SDL_SetRenderDrawColor(Game.RenderContext, color.R, color.G, color.B, color.A);
 		}
 

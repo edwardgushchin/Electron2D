@@ -7,60 +7,60 @@ namespace Electron2D.Graphics
 {
 	public class Transform
 	{
-		private Point position;
-		private Vector localScale;
+		private Point _position;
+		private Vector _localScale;
 
 		public Transform()
 		{
-			position = new Point();
+			_position = new Point();
             Achor = new Point(0.5, 0.5);
             Degrees = 0;
-			localScale = new Vector(1, 1);
+			_localScale = new Vector(1, 1);
 		}
 
 		public Transform(Point pos)
 		{
-			position = pos;
+			_position = pos;
             Achor = new Point(0.5, 0.5);
             Degrees = 0;
-			localScale = new Vector(1, 1);
+			_localScale = new Vector(1, 1);
 		}
 
 		public Point Position
 		{
-			get { return position; }
-			set { position = value; }
+			get { return _position; }
+			set { _position = value; }
 		}
 
         public double Degrees { get; set; }
 
         public Vector LocalScale
 		{
-			get { return localScale; }
-			set { localScale = value; }
+			get { return _localScale; }
+			set { _localScale = value; }
 		}
 
         public Point Achor { get; set; }
 
         public void Translate(double x, double y)
 		{
-			position.X += x;
-			position.Y += y;
+			_position.X += x;
+			_position.Y += y;
 		}
 
-		public void TranslateX(double x) => position.X += x;
+		public void TranslateX(double x) => _position.X += x;
 
-		public void TranslateY(double y) => position.Y += y;
+		public void TranslateY(double y) => _position.Y += y;
 
-		public void Rotate(double deg)
+		public void Rotate(double angle)
 		{
-            Degrees += deg;
+            Degrees += angle;
 		}
 
 		public void Scale(double xscale, double yscale)
 		{
-			localScale.X += xscale;
-			localScale.Y += yscale;
+			_localScale.X += xscale;
+			_localScale.Y += yscale;
 		}
 
 		public void SetPosition(double x, double y)

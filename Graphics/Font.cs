@@ -3,26 +3,26 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using System;
-using Electron2D.Binding.SDL;
-using System.Runtime.InteropServices;
+//using System;
+//using Electron2D.Binding.SDL;
+//using System.Runtime.InteropServices;
 
 namespace Electron2D.Graphics
 {
     public class Font
     {
-        private IntPtr font, renderTextSurface, textTexture;
-        private SDL.SDL_FRect labelRectangle;
-        private SDL.SDL_Surface srcSurfaceTexture;
+        /*//private IntPtr font, renderTextSurface, textTexture;
+        //private SDL.SDL_FRect labelRectangle;
+        //private SDL.SDL_Surface srcSurfaceTexture;
         private int size;
 
         public Font(string path, IntPtr pFont, int size)
         {
             this.Path = path;
-            this.font = pFont;
+            //this.font = pFont;
             this.Color = Color.White;
             this.size = size;
-            this.labelRectangle = new SDL.SDL_FRect();
+            //this.labelRectangle = new SDL.SDL_FRect();
         }
 
         public int Size
@@ -30,7 +30,7 @@ namespace Electron2D.Graphics
             get { return size; }
             set
             {
-                font = TTFont.TTF_OpenFont(Path, size);
+                //font = TTFont.TTF_OpenFont(Path, size);
                 size = value;
             }
         }
@@ -60,8 +60,8 @@ namespace Electron2D.Graphics
 
         public void Dispose()
         {
-            SDL.SDL_FreeSurface(renderTextSurface);
-            SDL.SDL_DestroyTexture(textTexture);
+            //SDL.SDL_FreeSurface(renderTextSurface);
+            //SDL.SDL_DestroyTexture(textTexture);
         }
     }
 }

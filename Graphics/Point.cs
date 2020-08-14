@@ -4,26 +4,26 @@
 */
 
 using System;
-using Electron2D.Kernel;
 
 namespace Electron2D.Graphics
 {
 	public struct Point : IEquatable<Point>
 	{
-		public double X { get; set; }
-		public double Y { get; set; }
-
 		public Point(double x, double y) : this()
 		{
 			X = x;
 			Y = y;
 		}
 
+		public double X { get; set; }
+		public double Y { get; set; }
+
 		internal Point Rotate(Point center, double degrees)
 		{
 			double angleInRadians = degrees * (Math.PI / 180);
             double cosTheta = Math.Cos(-angleInRadians);
             double sinTheta = Math.Sin(-angleInRadians);
+
             return new Point
             {
                 X = (double) ((cosTheta * (X - center.X)) - (sinTheta * (Y - center.Y)) + center.X),
