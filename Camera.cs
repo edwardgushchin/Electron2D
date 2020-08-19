@@ -32,6 +32,20 @@ namespace Electron2D
 
         public Transform Transform { get; set; }
 
+        public Bounds Bounds
+        {
+            get
+            {
+                var ratio = Settings.Resolution.Width / Settings.Resolution.Height;
+                var extents = new Point(ratio * _size, _size);
+                var x = Transform.Position.X - extents.X;
+                var y = Transform.Position.Y + extents.Y;
+                var w = extents.X * 2;
+                var h = extents.Y * 2;
+                return new Bounds(x, y, w, h);
+            }
+        }
+
         internal void UpdateUnit(object sender, Events.WindowEventArgs e)
         {
             WorldUnit = ConvertWorldToScreen(new Point(1, 0)).X - ConvertWorldToScreen(new Point()).X;
