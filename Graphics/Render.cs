@@ -151,6 +151,8 @@ namespace Electron2D.Graphics
 				OnPreUpdate();
 				OnUpdate();
 
+				SpriteRenderer.Update();
+
 				SDL.SDL_RenderPresent(_instance);
 
 				OnPostUpdate();

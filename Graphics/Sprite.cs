@@ -9,37 +9,43 @@ namespace Electron2D.Graphics
 {
     public class Sprite
     {
-        private readonly Texture _texture;
+        private Texture _texture;
         private SDL.SDL_FRect _draw_rect;
-        private Rect _size, _rect;
+        private Rect _size, _src_rect;
+        private int _layer;
 
-        public Sprite(Texture texture)
+        public Sprite(Texture texture, Point position)
         {
-            Transform = new Transform();
-            PixelPerUnit = 100;
-
-            _texture = texture;
-            _rect = new Rect(texture.Width, texture.Height);
-            _size = new Rect(texture.Width * Transform.LocalScale.X, texture.Height * Transform.LocalScale.Y);
-            _draw_rect = new SDL.SDL_FRect();
-
-            Debug = false;
+            SpriteInit(texture, position, 0, 100);
         }
 
-        public Sprite(Texture texture, int pixelPerUnit)
+        public Sprite(Texture texture, Point position, int layer)
         {
-            Transform = new Transform();
+            SpriteInit(texture, position, layer, 100);
+        }
+
+        public Sprite(Texture texture, Point position, int layer, int pixelPerUnit)
+        {
+            SpriteInit(texture, position, layer, pixelPerUnit);
+        }
+
+        private void SpriteInit(Texture texture, Point position, int layer, int pixelPerUnit)
+        {
+            Transform = new Transform(position);
             PixelPerUnit = pixelPerUnit;
 
+            _layer = layer;
             _texture = texture;
-            _rect = new Rect(texture.Width, texture.Height);
+            _src_rect = new Rect(texture.Width, texture.Height);
             _size = new Rect(texture.Width * Transform.LocalScale.X, texture.Height * Transform.LocalScale.Y);
             _draw_rect = new SDL.SDL_FRect();
 
             Debug = false;
+
+            SpriteRenderer.Add(this);
         }
 
-        public int PixelPerUnit { get; }
+        public int PixelPerUnit { get; set; }
 
         public bool Debug { get; set; }
 
@@ -61,6 +67,16 @@ namespace Electron2D.Graphics
 
         public Point Center => new Point(_draw_rect.x + (_size.Width * Transform.Achor.X), _draw_rect.y + (_size.Height * Transform.Achor.Y));
 
+        public int Layer
+        {
+            get => _layer;
+            set
+            {
+                _layer = value;
+                SpriteRenderer.Sort();
+            }
+        }
+
         internal void Draw() => Draw(Transform);
 
         internal void Draw(Transform transformTo)
@@ -69,8 +85,8 @@ namespace Electron2D.Graphics
 
             var center = new SDL.SDL_FPoint();
 
-            _size.Width = _rect.Width * transformTo.LocalScale.X;
-            _size.Height = _rect.Height * transformTo.LocalScale.Y;
+            _size.Width = _src_rect.Width * transformTo.LocalScale.X;
+            _size.Height = _src_rect.Height * transformTo.LocalScale.Y;
 
             var unit = Camera.MainCamera.WorldUnit;
 
