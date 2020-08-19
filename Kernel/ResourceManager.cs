@@ -25,10 +25,7 @@ namespace Electron2D.Kernel
             get { return fontCache.Count; }
         }*/
 
-        internal static int TextureCacheCount
-        {
-            get { return textureCache.Count; }
-        }
+        internal static int TextureCacheCount => textureCache.Count;
 
         /*public static Font GetFont(string path)
         {
