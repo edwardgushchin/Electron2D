@@ -29,7 +29,19 @@ namespace Electron2D.Graphics
 		internal static void Update()
 		{
 			_spriteCache.ForEach((Sprite sprite) => {
-				sprite.Draw();
+
+				var cameraBounds = Camera.MainCamera.Bounds;
+				var cameraPos = Camera.MainCamera.Transform.Position;
+				var spritePos = sprite.Transform.Position;
+
+				var left = spritePos.X - cameraPos.X + (sprite.Size.Width / 2) > cameraBounds.X - cameraPos.X;
+				var right = spritePos.X - cameraPos.X - (sprite.Size.Width / 2) < -cameraBounds.X + cameraPos.X;
+				var top = spritePos.Y + cameraPos.Y - (sprite.Size.Height / 2) < cameraBounds.Y + cameraPos.Y;
+				var bottom = spritePos.Y - cameraPos.Y + (sprite.Size.Height / 2) > -cameraBounds.Y + cameraPos.Y;
+
+				if(left && right && top && bottom) {
+					sprite.Draw();
+				}
 			});
 		}
     }
