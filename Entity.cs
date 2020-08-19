@@ -32,7 +32,7 @@ namespace Electron2D
 
         public Transform Transform { get; set; }
 
-        private Transform AbsoluteTransform
+        /*private Transform AbsoluteTransform
 		{
 			get
 			{
@@ -53,9 +53,9 @@ namespace Electron2D
                     return Transform;
                 }
             }
-		}
+		}*/
 
-		protected void DrawSprite(Sprite sprite)
+		/*protected void DrawSprite(Sprite sprite)
 		{
 			sprite.Draw(AbsoluteTransform);
 		}
@@ -71,7 +71,7 @@ namespace Electron2D
                     trans.LocalScale.Y * transform.LocalScale.Y
                 )
 			});
-		}
+		}*/
 
         public Entity Parrent { get; }
 
