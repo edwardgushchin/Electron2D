@@ -17,7 +17,7 @@ namespace Electron2D
 			Debug.Log("Electron2D demo scene loading...", Debug.Sender.Scene);
 			ClearColor = new Color(46, 52, 64);
 
-            _sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), new Point(), 0);
+            //_sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), new Point(), 0);
 			_sprite2 = new Sprite(ResourceManager.LoadTexture("_sprite2", @"Resources\Sprites\platformer\PNG\Tiles\boxCrate_single.png"), new Point(), 1);
 
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
@@ -75,16 +75,16 @@ namespace Electron2D
 			if(e.Key == Keyboard.Keys.Equals)
 			{
 				_sprite2.Layer++;
-				Debug.Log(_sprite2.Layer.ToString());
+				//Debug.Log(_sprite2.Layer.ToString());
 			}
 
 			if(e.Key == Keyboard.Keys.Minus)
 			{
 				_sprite2.Layer--;
-				Debug.Log(_sprite2.Layer.ToString());
+				//Debug.Log(_sprite2.Layer.ToString());
 			}
 
-			Debug.Log(e.Key.ToString());
+			//Debug.Log(e.Key.ToString());
 		}
 
 		protected override void OnMouseWheel(object sender, MouseWheelEventArgs e)
