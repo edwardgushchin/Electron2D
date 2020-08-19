@@ -11,7 +11,7 @@ namespace Electron2D.Graphics
     {
         private static readonly List<Sprite> _spriteCache;
 
-		static SpriteRenderer()
+        static SpriteRenderer()
 		{
 			_spriteCache = new List<Sprite>();
 		}
@@ -21,6 +21,11 @@ namespace Electron2D.Graphics
 			_spriteCache.Add(sprite);
 		}
 
+		internal static void Remove(Sprite sprite)
+		{
+			_spriteCache.Remove(sprite);
+		}
+
 		internal static void Sort()
 		{
 			_spriteCache.Sort((x, y) => x.Layer.CompareTo(y.Layer));
@@ -28,21 +33,30 @@ namespace Electron2D.Graphics
 
 		internal static void Update()
 		{
-			_spriteCache.ForEach((Sprite sprite) => {
+			DrawCalls = 0;
 
+            _spriteCache.ForEach((Sprite sprite) => {
 				var cameraBounds = Camera.MainCamera.Bounds;
 				var cameraPos = Camera.MainCamera.Transform.Position;
 				var spritePos = sprite.Transform.Position;
+				var spriteWidth = sprite.Size.Width / 2;
+				var spriteheight = sprite.Size.Height / 2;
 
-				var left = spritePos.X - cameraPos.X + (sprite.Size.Width / 2) > cameraBounds.X - cameraPos.X;
-				var right = spritePos.X - cameraPos.X - (sprite.Size.Width / 2) < -cameraBounds.X + cameraPos.X;
-				var top = spritePos.Y + cameraPos.Y - (sprite.Size.Height / 2) < cameraBounds.Y + cameraPos.Y;
-				var bottom = spritePos.Y - cameraPos.Y + (sprite.Size.Height / 2) > -cameraBounds.Y + cameraPos.Y;
+				var left = spritePos.X - cameraPos.X + spriteWidth > cameraBounds.X - cameraPos.X;
+				var bottom = spritePos.Y - cameraPos.Y + spriteheight > -cameraBounds.Y + cameraPos.Y;
+				var right = spritePos.X - cameraPos.X - spriteWidth < -cameraBounds.X + cameraPos.X;
+				var top = spritePos.Y + cameraPos.Y - spriteheight < cameraBounds.Y + cameraPos.Y;
 
-				if(left && right && top && bottom) {
+				if(left && right && top && bottom)
+				{
 					sprite.Draw();
+                    DrawCalls++;
 				}
 			});
 		}
+
+		internal static int SpriteCacheCount => _spriteCache.Count;
+
+        internal static int DrawCalls { get; private set; }
     }
 }
