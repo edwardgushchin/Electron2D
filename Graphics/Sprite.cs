@@ -61,7 +61,7 @@ namespace Electron2D.Graphics
 
         public Transform Transform { get; set; }
 
-        public Rect Size { get { return _size; } }
+        public Rect Size { get { return new Rect(_size.Width / PixelPerUnit, _size.Height / PixelPerUnit); } }
 
         public string Path { get; }
 
