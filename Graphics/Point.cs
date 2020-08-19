@@ -18,6 +18,8 @@ namespace Electron2D.Graphics
 		public double X { get; set; }
 		public double Y { get; set; }
 
+		public static Point Zero => new Point();
+
 		internal Point Rotate(Point center, double degrees)
 		{
 			double angleInRadians = degrees * (Math.PI / 180);
