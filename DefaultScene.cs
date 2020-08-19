@@ -11,13 +11,14 @@ namespace Electron2D
 {
     internal class DefaultScene : Scene
     {
-		private readonly Sprite _sprite;
+		private readonly Sprite _sprite1, _sprite2;
 		public DefaultScene()
 		{
 			Debug.Log("Electron2D demo scene loading...", Debug.Sender.Scene);
 			ClearColor = new Color(46, 52, 64);
 
-            _sprite = new Sprite(ResourceManager.LoadTexture("_sprite", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"));
+            _sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), new Point(), 0);
+			_sprite2 = new Sprite(ResourceManager.LoadTexture("_sprite2", @"Resources\Sprites\platformer\PNG\Tiles\boxCrate_single.png"), new Point(), 1);
 
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
@@ -40,26 +41,25 @@ namespace Electron2D
                 Camera.Transform.TranslateX(Camera.Size * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Left))
-				_sprite.Transform.TranslateX(-2 * Time.DeltaTime);
+				_sprite2.Transform.TranslateX(-2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Right))
-				_sprite.Transform.TranslateX(2 * Time.DeltaTime);
+				_sprite2.Transform.TranslateX(2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Up))
-				_sprite.Transform.TranslateY(2 * Time.DeltaTime);
+				_sprite2.Transform.TranslateY(2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Down))
-				_sprite.Transform.TranslateY(-2 * Time.DeltaTime);
+				_sprite2.Transform.TranslateY(-2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Num4))
-				_sprite.Transform.Rotate(-30 * Time.DeltaTime);
+				_sprite2.Transform.Rotate(-30 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Num6))
-				_sprite.Transform.Rotate(30 * Time.DeltaTime);
+				_sprite2.Transform.Rotate(30 * Time.DeltaTime);
+
 
 			Debug.DrawGrid();
-
-			_sprite.Draw();
 		}
 
 		protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)
@@ -71,6 +71,20 @@ namespace Electron2D
 		{
 			if(e.Key == Keyboard.Keys.Escape)
 				SceneManager.ExitGame();
+
+			if(e.Key == Keyboard.Keys.Equals)
+			{
+				_sprite2.Layer++;
+				Debug.Log(_sprite2.Layer.ToString());
+			}
+
+			if(e.Key == Keyboard.Keys.Minus)
+			{
+				_sprite2.Layer--;
+				Debug.Log(_sprite2.Layer.ToString());
+			}
+
+			Debug.Log(e.Key.ToString());
 		}
 
 		protected override void OnMouseWheel(object sender, MouseWheelEventArgs e)
