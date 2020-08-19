@@ -17,8 +17,8 @@ namespace Electron2D
 			Debug.Log("Electron2D demo scene loading...", Debug.Sender.Scene);
 			ClearColor = new Color(46, 52, 64);
 
-            //_sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), new Point(), 0);
-			_sprite2 = new Sprite(ResourceManager.LoadTexture("_sprite2", @"Resources\Sprites\platformer\PNG\Tiles\boxCrate_single.png"), new Point(), 1);
+            _sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), Point.Zero, 0);
+			_sprite2 = new Sprite(ResourceManager.LoadTexture("_sprite2", @"Resources\Sprites\platformer\PNG\Tiles\boxCrate_single.png"), Point.Zero, 1);
 
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
@@ -60,6 +60,8 @@ namespace Electron2D
 
 
 			Debug.DrawGrid();
+
+			Debug.Log($"Draw Calls: {Profiler.DrawCalls}, Texture Cache: {Profiler.TextureCache}, Sprite Cache: {Profiler.SpriteCache}, Time: {(Time.DeltaTime * 1000).ToString("0.00")}ms, FPS: {(int)(1.0f/Time.DeltaTime)}");
 		}
 
 		protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)
