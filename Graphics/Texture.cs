@@ -11,13 +11,13 @@ namespace Electron2D.Graphics
 {
     public class Texture : IDisposable
     {
-        internal SDL.SDL_Rect SdlRect;
+        internal Bounds DrawRect;
 
         internal Texture(string path)
         {
             Instance = Image.IMG_LoadTexture(Game.RenderContext, path);
             SDL.SDL_QueryTexture(Instance, out uint format, out int access, out int width, out int height);
-            SdlRect = new SDL.SDL_Rect() { w = width, h = height };
+            DrawRect = new Bounds { X = 0, Y = 0, Width = width, Height = height};
             PixelFormat = format;
             Access = access;
             Width = width;

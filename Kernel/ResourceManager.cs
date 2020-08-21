@@ -3,6 +3,8 @@
   Licensed under the Apache License, Version 2.0
 */
 
+using System.IO;
+using System.Xml;
 using System.Collections.Generic;
 
 using Electron2D.Graphics;
@@ -75,7 +77,7 @@ namespace Electron2D.Kernel
 
         public static Texture LoadTexture(string name, string path)
         {
-            if(!new System.IO.FileInfo(path).Exists)
+            if(!new FileInfo(path).Exists)
             {
                 Debug.Log($"Texture not found on path \"{path}\"!", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
                 return null;
@@ -83,6 +85,32 @@ namespace Electron2D.Kernel
             textureCache.Add(name, new Texture(path));
             Debug.Log($"Texture \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
             return textureCache[name];
+        }
+
+        public static SpriteSheet LoadTextureAtlas(string name, string path)
+        {
+            Debug.Log($"Texture atlas \"{name}\" loading...", Debug.Sender.ResourceManager, Debug.MessageStatus.Log);
+            if(!new FileInfo(path).Exists)
+            {
+                Debug.Log($"Texture atlas not found on path \"{path}\"!", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
+                return null;
+            }
+
+            var xmlAtlas = new XmlDocument();
+            xmlAtlas.Load(path);
+            var atlasRoot = xmlAtlas.DocumentElement;
+            var texturePath = atlasRoot.Attributes[0].Value;
+
+            if(!new FileInfo(texturePath).Exists)
+            {
+                Debug.Log($"Texture not found on path \"{path}\"!", Debug.Sender.ResourceManager, Debug.MessageStatus.Error);
+                return null;
+            }
+
+            textureCache.Add(name, new Texture(texturePath));
+            var spriteSheet = new SpriteSheet(textureCache[name], atlasRoot);
+            Debug.Log($"Texture atlas \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
+            return spriteSheet;
         }
 
         /*public void asd()

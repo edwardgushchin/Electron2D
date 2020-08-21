@@ -107,7 +107,7 @@ namespace Electron2D.Graphics
 					SDL.SDL_WINDOWPOS_CENTERED,
 					(int)Settings.Resolution.Width,
 					(int)Settings.Resolution.Height,
-					windowFlags);
+					windowFlags | SDL.SDL_WindowFlags.SDL_WINDOW_FOREIGN);
 		}
 
         private void CreateRenderer()

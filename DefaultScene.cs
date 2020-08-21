@@ -17,11 +17,27 @@ namespace Electron2D
 			Debug.Log("Electron2D demo scene loading...", Debug.Sender.Scene);
 			ClearColor = new Color(46, 52, 64);
 
-            _sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), Point.Zero, 0);
-			_sprite2 = new Sprite(ResourceManager.LoadTexture("_sprite2", @"Resources\Sprites\platformer\PNG\Tiles\boxCrate_single.png"), Point.Zero, 1);
+            //_sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), Point.Zero, 0);
+			//_sprite2 = new Sprite(ResourceManager.LoadTexture("_sprite2", @"Resources\Sprites\platformer\PNG\Tiles\boxCrate_single.png"), Point.Zero, 1);
+
+			var atlas = ResourceManager.LoadTextureAtlas("spritesheet_complete", @"Resources\Sprites\platformer\Spritesheets\spritesheet_complete.xml");
+
+			_sprite1 = atlas.Sprite["sand"];
+			
+
+			_sprite2 = atlas.Sprite["alienBeige_front"];
+			
 
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
+
+		protected override void OnLoadScene()
+		{
+			_sprite2.Transform.TranslateY(1.88);
+			
+			_sprite1.Enabled = true;
+			_sprite2.Enabled = true;
+		}
 
         protected override void Update()
 		{
@@ -61,7 +77,7 @@ namespace Electron2D
 
 			Debug.DrawGrid();
 
-			Debug.Log($"Draw Calls: {Profiler.DrawCalls}, Texture Cache: {Profiler.TextureCache}, Sprite Cache: {Profiler.SpriteCache}, Time: {(Time.DeltaTime * 1000).ToString("0.00")}ms, FPS: {(int)(1.0f/Time.DeltaTime)}");
+			//Debug.Log($"Draw Calls: {Profiler.DrawCalls}, Texture Cache: {Profiler.TextureCache}, Sprite Cache: {Profiler.SpriteCache}, Time: {(Time.DeltaTime * 1000).ToString("0.00")}ms, FPS: {(int)(1.0f/Time.DeltaTime)}");
 		}
 
 		protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)

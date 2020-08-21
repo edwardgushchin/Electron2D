@@ -68,13 +68,13 @@ namespace Electron2D.Kernel
 				switch(value)
 				{
 					case SmoothingType.Nearest:
-						SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "0");
+						SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 						break;
 					case SmoothingType.Linear:
-						SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "1");
+						SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 						break;
 					case SmoothingType.Anisotropic:
-						SDL.SDL_SetHint( SDL.SDL_HINT_RENDER_SCALE_QUALITY, "2");
+						SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, "best");
 						break;
 				}
 				_smoothing = value;

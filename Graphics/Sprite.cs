@@ -11,33 +11,41 @@ namespace Electron2D.Graphics
     public class Sprite : IDisposable
     {
         private Texture _texture;
+        private Bounds _bounds;
         private SDL.SDL_FRect _draw_rect;
-        private Rect _size, _src_rect;
+        private Rect _size;
         private int _layer;
 
         public Sprite(Texture texture, Point position)
         {
-            SpriteInit(texture, position, 0, 100);
+            SpriteInit(texture, position, texture.DrawRect, false, 0, 100, true);
         }
 
         public Sprite(Texture texture, Point position, int layer)
         {
-            SpriteInit(texture, position, layer, 100);
+            SpriteInit(texture, position, texture.DrawRect, false, layer, 100, true);
         }
 
         public Sprite(Texture texture, Point position, int layer, int pixelPerUnit)
         {
-            SpriteInit(texture, position, layer, pixelPerUnit);
+            SpriteInit(texture, position, texture.DrawRect, false, layer, pixelPerUnit, true);
         }
 
-        private void SpriteInit(Texture texture, Point position, int layer, int pixelPerUnit)
+        public Sprite(Texture texture, Bounds bounds, int layer, int pixelPerUnit)
+        {
+            SpriteInit(texture, Point.Zero, bounds, true, layer, pixelPerUnit, false);
+        }
+
+        private void SpriteInit(Texture texture, Point position, Bounds bounds, bool package, int layer, int pixelPerUnit, bool enabled)
         {
             Transform = new Transform(position);
             PixelPerUnit = pixelPerUnit;
+            Package = package;
+            Enabled = enabled;
 
             _layer = layer;
             _texture = texture;
-            _src_rect = new Rect(texture.Width, texture.Height);
+            _bounds = bounds;
             _size = new Rect(texture.Width * Transform.LocalScale.X, texture.Height * Transform.LocalScale.Y);
             _draw_rect = new SDL.SDL_FRect();
 
@@ -49,6 +57,12 @@ namespace Electron2D.Graphics
         public int PixelPerUnit { get; set; }
 
         public bool Debug { get; set; }
+
+        public bool Package { get; private set; }
+
+        public bool Enabled { get; set; }
+
+        public Bounds PackageBounds { get; }
 
         public byte Alpha
         {
@@ -86,8 +100,8 @@ namespace Electron2D.Graphics
 
             var center = new SDL.SDL_FPoint();
 
-            _size.Width = _src_rect.Width * transformTo.LocalScale.X;
-            _size.Height = _src_rect.Height * transformTo.LocalScale.Y;
+            _size.Width = _bounds.Width * transformTo.LocalScale.X;
+            _size.Height = _bounds.Height * transformTo.LocalScale.Y;
 
             var unit = Camera.MainCamera.WorldUnit;
 
@@ -100,7 +114,7 @@ namespace Electron2D.Graphics
             center.x = (float)(_draw_rect.w * transformTo.Achor.X);
             center.y = (float)(_draw_rect.h * transformTo.Achor.Y);
 
-            SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _texture.SdlRect, ref _draw_rect, transformTo.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+            SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _bounds.SDLRect, ref _draw_rect, transformTo.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
 
             if(Debug) DrawDebug(point, transformTo);
         }
