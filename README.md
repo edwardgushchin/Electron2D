@@ -55,15 +55,15 @@ namespace MyFirstGame
   * Клавиатура ![100%](https://img.shields.io/badge/100%25-f00FF00)
   * Мышь ![100%](https://img.shields.io/badge/100%25-f00FF00)
 
-* **Покадровая анимация** ![0%](https://img.shields.io/badge/0%25-f00000)
-  * Менеджер анимаций (Animator) ![0%](https://img.shields.io/badge/0%25-f00000)
-  * Анимация ![0%](https://img.shields.io/badge/0%25-f00000)
+* **Покадровая анимация** ![5%](https://img.shields.io/badge/5%25-f00000)
+  * Менеджер анимаций (Animator) ![10%](https://img.shields.io/badge/10%25-f00000)
+  * Анимация ![10%](https://img.shields.io/badge/10%25-f00000)
 
 * **Система частиц** ![0%](https://img.shields.io/badge/0%25-f00000)
 
 * **Система сущностей** (Entity) ![100%](https://img.shields.io/badge/100%25-f00FF00)
 
-![Electron2D ready%](https://img.shields.io/badge/Electron2D%20Ready-48,8%25-FFA500)
+![Electron2D ready%](https://img.shields.io/badge/Electron2D%20Ready-55,6%25-FFA500)
 
 ## Лицензия
 [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
