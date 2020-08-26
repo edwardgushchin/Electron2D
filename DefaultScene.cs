@@ -71,7 +71,6 @@ namespace Electron2D
 			if (Input.GetKeyDown(Keyboard.Keys.Num6))
 				_sprite2.Transform.Rotate(30 * Time.DeltaTime);
 
-
 			Debug.DrawGrid();
 
 			//Debug.Log($"Draw Calls: {Profiler.DrawCalls}, Texture Cache: {Profiler.TextureCache}, Sprite Cache: {Profiler.SpriteCache}, Time: {(Time.DeltaTime * 1000).ToString("0.00")}ms, FPS: {(int)(1.0f/Time.DeltaTime)}");
