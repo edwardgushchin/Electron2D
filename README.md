@@ -17,7 +17,7 @@ using Electron2D;
 
 namespace MyFirstGame
 {
-    class Game
+    class MyGame
     {
         private static Game _myGame;
     
