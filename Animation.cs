@@ -3,12 +3,9 @@
   Licensed under the Apache License, Version 2.0
 */
 
-/*namespace Electron2D.Physics
+namespace Electron2D
 {
-    internal class Material
+    public class Animation
     {
-        public Material()
-        {
-        }
     }
-}*/
+}

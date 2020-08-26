@@ -20,21 +20,18 @@ namespace Electron2D
             //_sprite1 = new Sprite(ResourceManager.LoadTexture("_sprite1", @"Resources\Sprites\platformer\PNG\Tiles\boxExplosive.png"), Point.Zero, 0);
 			//_sprite2 = new Sprite(ResourceManager.LoadTexture("_sprite2", @"Resources\Sprites\platformer\PNG\Tiles\boxCrate_single.png"), Point.Zero, 1);
 
-			var atlas = ResourceManager.LoadTextureAtlas("spritesheet_complete", @"Resources\Sprites\platformer\Spritesheets\spritesheet_complete.xml");
+			var atlas1 = ResourceManager.LoadTextureAtlas("spritesheet_complete", @"Resources\Sprites\platformer\Spritesheets\spritesheet_complete.xml");
 
-			_sprite1 = atlas.Sprite["sand"];
-			
-
-			_sprite2 = atlas.Sprite["alienBeige_front"];
-			
+			_sprite1 = atlas1.Sprite["sand"];
+			_sprite2 = atlas1.Sprite["alienBeige_front"];
 
 			Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
 
 		protected override void OnLoadScene()
 		{
-			_sprite2.Transform.TranslateY(1.88);
-			
+			_sprite2.Transform.TranslateY(1.35);
+
 			_sprite1.Enabled = true;
 			_sprite2.Enabled = true;
 		}
@@ -82,7 +79,7 @@ namespace Electron2D
 
 		protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			Debug.Log($"World: {Camera.ConvertWorldToScreen(Input.MousePosition)}, Screen: {Input.MousePosition}");
+			//Debug.Log($"World: {Camera.ConvertWorldToScreen(Input.MousePosition)}, Screen: {Input.MousePosition}");
 		}
 
 		protected override void OnKeyDown(object sender, KeyboardEventArgs e)
@@ -111,7 +108,7 @@ namespace Electron2D
 
 			if(e.Wheel == Mouse.Wheel.Up && Camera.Size > 1) Camera.Size--;
 
-			Debug.Log($"Camera Size: {Camera.Size}");
+			//Debug.Log($"Camera Size: {Camera.Size}");
 		}
     }
 }

@@ -38,7 +38,7 @@ namespace Electron2D
 
 		private static string GetCurrentTime
 		{
-			get { return string.Format("[{0:hh:mm:ss:ff}]", DateTime.Now); }
+			get { return string.Format("[{0:HH:mm:ss:ff}]", DateTime.Now); }
 		}
 
 		public static void Log(string Message)

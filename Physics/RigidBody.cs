@@ -3,7 +3,7 @@
   Licensed under the Apache License, Version 2.0
 */
 
-using Electron2D.Graphics;
+/*using Electron2D.Graphics;
 using Electron2D.Binding.Box2D.Dynamics;
 using Electron2D.Binding.Box2D.Collision.Shapes;
 
@@ -194,4 +194,4 @@ namespace Electron2D.Physics
 
         Dynamic = 2
     }
-}
+}*/
