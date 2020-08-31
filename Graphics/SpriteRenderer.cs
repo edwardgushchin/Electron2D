@@ -47,7 +47,7 @@ namespace Electron2D.Graphics
 				var right = spritePos.X - cameraPos.X - spriteWidth < -cameraBounds.X + cameraPos.X;
 				var top = spritePos.Y + cameraPos.Y - spriteheight < cameraBounds.Y + cameraPos.Y;
 
-				if(left && right && top && bottom && sprite.Enabled)
+				if(left && right && top && bottom && sprite.Visible)
 				{
 					sprite.Draw();
                     DrawCalls++;

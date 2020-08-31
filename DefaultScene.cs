@@ -32,8 +32,8 @@ namespace Electron2D
 		{
 			_sprite2.Transform.TranslateY(1.35);
 
-			_sprite1.Enabled = true;
-			_sprite2.Enabled = true;
+			_sprite1.Visible = true;
+			_sprite2.Visible = true;
 		}
 
         protected override void Update()
@@ -66,10 +66,10 @@ namespace Electron2D
 				_sprite2.Transform.TranslateY(-2 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Num4))
-				_sprite2.Transform.Rotate(-30 * Time.DeltaTime);
+				_sprite2.Transform.Rotate(30 * Time.DeltaTime);
 
 			if (Input.GetKeyDown(Keyboard.Keys.Num6))
-				_sprite2.Transform.Rotate(30 * Time.DeltaTime);
+				_sprite2.Transform.Rotate(-30 * Time.DeltaTime);
 
 			Debug.DrawGrid();
 

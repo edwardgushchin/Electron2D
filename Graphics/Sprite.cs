@@ -36,12 +36,12 @@ namespace Electron2D.Graphics
             SpriteInit(texture, Point.Zero, bounds, true, layer, pixelPerUnit, false);
         }
 
-        private void SpriteInit(Texture texture, Point position, Bounds bounds, bool package, int layer, int pixelPerUnit, bool enabled)
+        private void SpriteInit(Texture texture, Point position, Bounds bounds, bool package, int layer, int pixelPerUnit, bool visible)
         {
             Transform = new Transform(position);
             PixelPerUnit = pixelPerUnit;
             Package = package;
-            Enabled = enabled;
+            Visible = visible;
 
             _layer = layer;
             _texture = texture;
@@ -60,7 +60,7 @@ namespace Electron2D.Graphics
 
         public bool Package { get; private set; }
 
-        public bool Enabled { get; set; }
+        public bool Visible { get; set; }
 
         public Bounds PackageBounds { get; }
 
