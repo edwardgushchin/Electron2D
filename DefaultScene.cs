@@ -78,7 +78,7 @@ namespace Electron2D
 
 		protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			//Debug.Log($"World: {Camera.ConvertWorldToScreen(Input.MousePosition)}, Screen: {Input.MousePosition}");
+			//Debug.Log($"Screen: {Input.ScreenMousePosition}, World: {Input.WorldMousePosition}");
 		}
 
 		protected override void OnKeyDown(object sender, KeyboardEventArgs e)

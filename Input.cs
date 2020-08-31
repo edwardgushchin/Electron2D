@@ -51,12 +51,21 @@ namespace Electron2D
 			mouseList[button] = value;
 		}
 
-		public static Point MousePosition
+		public static Point ScreenMousePosition
 		{
 			get
 			{
                 SDL.SDL_GetMouseState(out int x, out int y);
-                return SceneManager.GetCurrentScene.Camera.ConvertScreenToWorld(new Point(x, y));
+                return new Point(x, y);
+			}
+		}
+
+		public static Point WorldMousePosition
+		{
+			get
+			{
+                SDL.SDL_GetMouseState(out int x, out int y);
+                return SceneManager.GetCurrentScene.Camera.ConvertScreenToWorld(new Point(x, y) + Camera.MainCamera.Transform.Position);
 			}
 		}
 	}
