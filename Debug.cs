@@ -121,6 +121,7 @@ namespace Electron2D
 		{
 		}
 
+		//Вызывает фриз и скачек неуправляемой памяти на 6 секунде, хз почему
 		public static void DrawGrid()
 		{
 			var color = SceneManager.GetCurrentScene.ClearColor;

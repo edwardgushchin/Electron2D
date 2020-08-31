@@ -13,7 +13,7 @@ namespace Electron2D
         private static Game TestGame;
         internal static void Main()
         {
-            Settings.Resizeble = true;
+            Settings.Resizeble = false;
             Settings.Fullscreen = false;
             Settings.Resolution = new Rect(800, 600);
             Settings.VSinc = false;
