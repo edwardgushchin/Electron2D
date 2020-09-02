@@ -19,6 +19,7 @@ namespace Electron2D.Graphics
 		internal static void Add(Sprite sprite)
 		{
 			_spriteCache.Add(sprite);
+			Sort();
 		}
 
 		internal static void Remove(Sprite sprite)
