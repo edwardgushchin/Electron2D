@@ -10,7 +10,7 @@ namespace Electron2D
 {
     public class Camera
     {
-        private int _size;
+        private double _size;
         public Camera()
         {
             _size = 5;
@@ -18,7 +18,7 @@ namespace Electron2D
             UpdateUnit(null, null);
         }
 
-        public int Size
+        public double Size
         {
             get => _size;
             set
