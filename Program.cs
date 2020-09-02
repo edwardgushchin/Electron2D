@@ -14,10 +14,10 @@ namespace Electron2D
         internal static void Main()
         {
             Settings.Resizeble = false;
+            Settings.Resolution = new Rect(1920, 1080);
             Settings.Fullscreen = false;
-            Settings.Resolution = new Rect(800, 600);
             Settings.VSinc = false;
-            Settings.Smoothing = SmoothingType.Anisotropic;
+            Settings.Smoothing = SmoothingType.Nearest;
 
             TestGame = new Game("Electron2D - Crossplatform 2D Game Engine");
             TestGame.SetIcon(@"Resources\\icon.png");
