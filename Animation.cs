@@ -12,30 +12,41 @@ namespace Electron2D
     public class Animation
     {
         private readonly List<Sprite> _sprites;
-        private readonly int _samples;
+        private readonly double _speed;
         private int _sprite_offset;
         private double _samples_offset;
-        public Animation(string name, int samples)
+
+        public Animation(string name, double speed)
         {
             _sprites = new List<Sprite>();
-            _samples = samples;
+            _speed = speed;
             _sprite_offset = 0;
             _samples_offset = 0;
             Name = name;
+            //Transform = new Transform(position);
         }
 
         public string Name { get; }
 
+        public Transform Transform { get; set; }
+
         public void AddSprite(Sprite sprite)
         {
+            //sprite.PixelPerUnit = _pixelPerUnit;
             _sprites.Add(sprite);
         }
 
-        public void Update()
+        public void Reset()
         {
-            _samples_offset += _samples * 5 * Time.DeltaTime;
+            _sprite_offset = 0;
+            foreach (var s in _sprites) s.Visible = false;
+        }
 
-            if(_samples_offset >= _samples)
+        public void Update(Transform transform, int layer, int pixelPerUnit, bool flipX)
+        {
+            _samples_offset += _speed * Time.DeltaTime;
+
+            if(_samples_offset >= 1)
             {
                 _samples_offset = 0;
 
@@ -44,9 +55,14 @@ namespace Electron2D
                 else
                     _sprite_offset = 0;
 
-                _sprites.ForEach((Sprite s) => s.Visible = false);
+                foreach (var s in _sprites) s.Visible = false;
             }
+
             _sprites[_sprite_offset].Visible = true;
+            _sprites[_sprite_offset].FlipX = flipX;
+            _sprites[_sprite_offset].Transform = transform;
+            _sprites[_sprite_offset].Layer = layer;
+            _sprites[_sprite_offset].PixelPerUnit = pixelPerUnit;
         }
     }
 }

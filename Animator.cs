@@ -5,30 +5,48 @@
 
 using System.Collections.Generic;
 
+using Electron2D.Graphics;
+
 namespace Electron2D
 {
     public class Animator
     {
-        private readonly List<Animation> _animations;
+        private readonly Dictionary<string, Animation> _animations;
+        private string _playedAnimation;
+        private readonly int _layer, _pixelPerUnit;
 
-        public Animator()
+        public Animator(Point position, int layer, int pixelPerUnit)
         {
-            _animations = new List<Animation>();
+            _animations = new Dictionary<string, Animation>();
+            Transform = new Transform(position);
+            _layer = layer;
+            _pixelPerUnit = pixelPerUnit;
         }
 
-		public void Play(string name)
+        public Transform Transform { get; set; }
+
+        public void Play(string name)
+        {
+            Play(name, false);
+        }
+
+		public void Play(string name, bool flipX)
 		{
-			_animations.Find(a => a.Name == name).Update();
+            if(_playedAnimation != null && _playedAnimation != name)
+                _animations[_playedAnimation].Reset();
+            _animations[name].Update(Transform, _layer, _pixelPerUnit, flipX);
+            _playedAnimation = name;
 		}
 
         public void Add(Animation animation)
         {
-            _animations.Add(animation);
+            animation.Reset();
+            _animations.Add(animation.Name, animation);
         }
 
-		public void Remove(Animation animation)
+		public void Remove(string name)
 		{
-			_animations.Remove(animation);
+			_animations.Remove(name);
 		}
     }
 }
