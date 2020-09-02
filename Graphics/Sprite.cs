@@ -16,6 +16,11 @@ namespace Electron2D.Graphics
         private Rect _size;
         private int _layer;
 
+        public Sprite(Texture texture)
+        {
+            SpriteInit(texture, Point.Zero, texture.DrawRect, false, 0, 100, true);
+        }
+
         public Sprite(Texture texture, Point position)
         {
             SpriteInit(texture, position, texture.DrawRect, false, 0, 100, true);
@@ -42,6 +47,7 @@ namespace Electron2D.Graphics
             PixelPerUnit = pixelPerUnit;
             Package = package;
             Visible = visible;
+            FlipX = false;
 
             _layer = layer;
             _texture = texture;
@@ -62,7 +68,9 @@ namespace Electron2D.Graphics
 
         public bool Visible { get; set; }
 
-        public Bounds PackageBounds { get; }
+        public bool FlipX { get; set; }
+
+        public Bounds PackageBounds => _bounds;
 
         public byte Alpha
         {
@@ -80,6 +88,8 @@ namespace Electron2D.Graphics
 
         public string Path { get; }
 
+        public Texture Texture => _texture;
+
         public Point Center => new Point(_draw_rect.x + (_size.Width * Transform.Achor.X), _draw_rect.y + (_size.Height * Transform.Achor.Y));
 
         public int Layer
@@ -94,7 +104,7 @@ namespace Electron2D.Graphics
 
         internal void Draw() => Draw(Transform);
 
-        internal void Draw(Transform transformTo)
+        private void Draw(Transform transformTo)
         {
             var point = Camera.MainCamera.ConvertWorldToScreen(transformTo.Position - Camera.MainCamera.Transform.Position);
 
@@ -105,16 +115,18 @@ namespace Electron2D.Graphics
 
             var unit = Camera.MainCamera.WorldUnit;
 
-            _draw_rect.w = (float)(unit * (_size.Width / PixelPerUnit));
-            _draw_rect.h = (float)(unit * (_size.Height / PixelPerUnit));
+            _draw_rect.w = Convert.ToSingle(unit * (_size.Width / PixelPerUnit));
+            _draw_rect.h = Convert.ToSingle(unit * (_size.Height / PixelPerUnit));
 
-            _draw_rect.x = (float)(point.X - (_draw_rect.w * transformTo.Achor.X));
-            _draw_rect.y = (float)(point.Y - (_draw_rect.h * transformTo.Achor.Y));
+            _draw_rect.x = Convert.ToSingle(point.X - (_draw_rect.w * transformTo.Achor.X));
+            _draw_rect.y = Convert.ToSingle(point.Y - (_draw_rect.h * transformTo.Achor.Y));
 
-            center.x = (float)(_draw_rect.w * transformTo.Achor.X);
-            center.y = (float)(_draw_rect.h * transformTo.Achor.Y);
+            center.x = Convert.ToSingle(_draw_rect.w * transformTo.Achor.X);
+            center.y = Convert.ToSingle(_draw_rect.h * transformTo.Achor.Y);
 
-            SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _bounds.SDLRect, ref _draw_rect, transformTo.Degrees, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+            var flip = FlipX ? SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL : SDL.SDL_RendererFlip.SDL_FLIP_NONE;
+
+            SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _bounds.SDLRect, ref _draw_rect, transformTo.Degrees, ref center, flip);
 
             if(Debug) DrawDebug(point, transformTo);
         }
