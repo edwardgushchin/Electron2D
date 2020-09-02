@@ -13,7 +13,7 @@ namespace Electron2D.Graphics
     {
         private readonly Dictionary<string, Sprite> _spriteCache;
 
-		public SpriteSheet(Texture texture, XmlElement atlas)
+		public SpriteSheet(Texture texture, XmlElement atlas, int pixelPerUnit)
 		{
 			_spriteCache = new Dictionary<string, Sprite>();
 
@@ -25,7 +25,7 @@ namespace Electron2D.Graphics
 				var y = Convert.ToDouble(xnode.Attributes["y"].Value);
 				var n = xnode.Attributes["name"].Value;
 
-				_spriteCache.Add(n, new Sprite(texture, new Bounds(x, y, w, h), 0, 100));
+				_spriteCache.Add(n, new Sprite(texture, new Bounds(x, y, w, h), 0, pixelPerUnit));
 
 				Debug.Log($"Sprite \"{n}\" from texture atlas loaded successfully.", Debug.Sender.ResourceManager, Debug.MessageStatus.Log);
 			}

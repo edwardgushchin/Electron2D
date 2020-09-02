@@ -87,7 +87,7 @@ namespace Electron2D.Kernel
             return textureCache[name];
         }
 
-        public static SpriteSheet LoadTextureAtlas(string name, string path)
+        public static SpriteSheet LoadTextureAtlas(string name, string path, int pixelPerUnit)
         {
             Debug.Log($"Texture atlas \"{name}\" loading...", Debug.Sender.ResourceManager, Debug.MessageStatus.Log);
             if(!new FileInfo(path).Exists)
@@ -108,7 +108,7 @@ namespace Electron2D.Kernel
             }
 
             textureCache.Add(name, new Texture(texturePath));
-            var spriteSheet = new SpriteSheet(textureCache[name], atlasRoot);
+            var spriteSheet = new SpriteSheet(textureCache[name], atlasRoot, pixelPerUnit);
             Debug.Log($"Texture atlas \"{name}\" was successfully loaded.", Debug.Sender.ResourceManager);
             return spriteSheet;
         }
