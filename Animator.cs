@@ -13,7 +13,8 @@ namespace Electron2D
     {
         private readonly Dictionary<string, Animation> _animations;
         private string _playedAnimation;
-        private readonly int _layer, _pixelPerUnit;
+        private readonly int _pixelPerUnit;
+        private int _layer;
 
         public Animator(Point position, int layer, int pixelPerUnit)
         {
@@ -25,6 +26,17 @@ namespace Electron2D
 
         public Transform Transform { get; set; }
 
+        public int Layer 
+        {
+            get => _layer;
+            set
+            {
+                foreach (var a in _animations)
+                    a.Value.UpdateLayer(value);
+                _layer = value;
+            }
+        }
+
         public void Play(string name)
         {
             Play(name, false);
@@ -34,13 +46,14 @@ namespace Electron2D
 		{
             if(_playedAnimation != null && _playedAnimation != name)
                 _animations[_playedAnimation].Reset();
-            _animations[name].Update(Transform, _layer, _pixelPerUnit, flipX);
+            _animations[name].Update(Transform, _pixelPerUnit, flipX);
             _playedAnimation = name;
 		}
 
         public void Add(Animation animation)
         {
             animation.Reset();
+            animation.UpdateLayer(_layer);
             _animations.Add(animation.Name, animation);
         }
 

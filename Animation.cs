@@ -23,7 +23,6 @@ namespace Electron2D
             _sprite_offset = 0;
             _samples_offset = 0;
             Name = name;
-            //Transform = new Transform(position);
         }
 
         public string Name { get; }
@@ -42,7 +41,12 @@ namespace Electron2D
             foreach (var s in _sprites) s.Visible = false;
         }
 
-        public void Update(Transform transform, int layer, int pixelPerUnit, bool flipX)
+        internal void UpdateLayer(int layer)
+        {
+            foreach(var s in _sprites) s.Layer = layer;
+        }
+
+        public void Update(Transform transform, int pixelPerUnit, bool flipX)
         {
             _samples_offset += _speed * Time.DeltaTime;
 
@@ -61,7 +65,7 @@ namespace Electron2D
             _sprites[_sprite_offset].Visible = true;
             _sprites[_sprite_offset].FlipX = flipX;
             _sprites[_sprite_offset].Transform = transform;
-            _sprites[_sprite_offset].Layer = layer;
+            //_sprites[_sprite_offset].Layer = layer;
             _sprites[_sprite_offset].PixelPerUnit = pixelPerUnit;
         }
     }

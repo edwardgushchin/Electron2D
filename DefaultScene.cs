@@ -9,6 +9,7 @@ using Electron2D.Kernel;
 using Electron2D.Inputs;
 using Electron2D.Events;
 using Electron2D.Graphics;
+using System.Collections.Generic;
 
 namespace Electron2D
 {
@@ -45,7 +46,7 @@ namespace Electron2D
             _ground_middle = _tiles.Sprite["ground_middle"];
             _dirt_middle = _tiles.Sprite["dirt_middle"];
 
-            _playerAnimator = new Animator(new Point(-5,-2.5), 10, 15);
+            _playerAnimator = new Animator(new Point(2.2916889999999994,-2.5), 10, 15);
             _oposumAnimator = new Animator(new Point(5, -2.55), 9, 14);
             _eagleAnimator = new Animator(new Point(20, 5), 9, 15);
 
@@ -91,9 +92,11 @@ namespace Electron2D
             Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
 
+        List<Sprite> grounds;
+
         protected override void OnLoadScene()
         {
-            var grounds = new System.Collections.Generic.List<Sprite>();
+            grounds = new List<Sprite>();
 
             for (double i = -12; i <= 13; i++)
             {
@@ -109,6 +112,8 @@ namespace Electron2D
                 grounds.Add(sprite1);
                 grounds.Add(sprite2);
             }
+
+            grounds[15].Debug = true;
         }
 
         protected override void PreUpdate()
@@ -138,7 +143,7 @@ namespace Electron2D
                 _playerAnimator.Transform.TranslateX(5 * Time.DeltaTime);
                 _flipX = false;
                 _playerAnimator.Play("run", _flipX);
-                
+
                 // if (Camera.Transform.Position.X <= 6.07)
                 //    Camera.Transform.Position = new Point(_playerAnimator.Transform.Position.X, 0);
             }
@@ -181,7 +186,6 @@ namespace Electron2D
             if(_eagleAnimator.Transform.Position.X < -20)
                 _eagleAnimator.Transform.Position = new Point(20, 5);
 
-
             //var cameraOffsetPosition = _flipX ? new Point(_playerAnimator.Transform.Position.X - 3, 0) : new Point(_playerAnimator.Transform.Position.X + 3, 0);
             //if (Camera.Transform.Position.X < 6.07 || Camera.Transform.Position.X > -3.79) Camera.Transform.Position = cameraOffsetPosition;
             //if (Camera.Transform.Position.X > -3.79) Camera.Transform.Position = new Point(_playerAnimator.Transform.Position.X - 3, 0);
@@ -189,6 +193,8 @@ namespace Electron2D
             //    Camera.Transform.Position = new Point(_playerAnimator.Transform.Position.X, 0);
 
             Camera.Transform.Position = new Point(Math.Clamp(_playerAnimator.Transform.Position.X, -3.5, 3.9), 0);
+
+            Debug.Log($"Tile Size: {grounds[6].Size}, {Camera.ConvertWorldToScreen(grounds[6].Transform.Position)}");
         }
 
         protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)

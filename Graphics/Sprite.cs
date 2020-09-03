@@ -115,11 +115,11 @@ namespace Electron2D.Graphics
 
             var unit = Camera.MainCamera.WorldUnit;
 
-            _draw_rect.w = Convert.ToSingle(unit * (_size.Width / PixelPerUnit));
-            _draw_rect.h = Convert.ToSingle(unit * (_size.Height / PixelPerUnit));
+            _draw_rect.w = (float)(unit * (_size.Width / PixelPerUnit));
+            _draw_rect.h = (float)(unit * (_size.Height / PixelPerUnit));
 
-            _draw_rect.x = Convert.ToSingle(point.X - (_draw_rect.w * transformTo.Achor.X));
-            _draw_rect.y = Convert.ToSingle(point.Y - (_draw_rect.h * transformTo.Achor.Y));
+            _draw_rect.x = (float)(point.X - (_draw_rect.w * transformTo.Achor.X));
+            _draw_rect.y = (float)(point.Y - (_draw_rect.h * transformTo.Achor.Y));
 
             center.x = Convert.ToSingle(_draw_rect.w * transformTo.Achor.X);
             center.y = Convert.ToSingle(_draw_rect.h * transformTo.Achor.Y);
