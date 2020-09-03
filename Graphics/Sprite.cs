@@ -128,12 +128,9 @@ namespace Electron2D.Graphics
 
             SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _bounds.SDLRect, ref _draw_rect, transformTo.Degrees, ref center, flip);
 
-            dr = new Bounds(_draw_rect.x, _draw_rect.y, _draw_rect.w, _draw_rect.h);
-
             if(Debug) DrawDebug(point, transformTo);
         }
 
-        public Bounds dr;
 
         private void DrawDebug(Point point, Transform transform)
         {
