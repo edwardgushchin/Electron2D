@@ -14,8 +14,8 @@ namespace Electron2D
         internal static void Main()
         {
             Settings.Resizeble = false;
-            Settings.Resolution = new Rect(800, 600);
-            Settings.Fullscreen = false;
+            Settings.Resolution = new Rect(1920, 1080);
+            Settings.Fullscreen = true;
             Settings.VSinc = true;
             Settings.Smoothing = SmoothingType.Nearest;
 

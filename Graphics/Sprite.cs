@@ -118,18 +118,22 @@ namespace Electron2D.Graphics
             _draw_rect.w = (float)(unit * (_size.Width / PixelPerUnit));
             _draw_rect.h = (float)(unit * (_size.Height / PixelPerUnit));
 
-            _draw_rect.x = (float)(point.X - (_draw_rect.w * transformTo.Achor.X));
-            _draw_rect.y = (float)(point.Y - (_draw_rect.h * transformTo.Achor.Y));
+            _draw_rect.x = (float)Math.Round(point.X - (_draw_rect.w * transformTo.Achor.X));
+            _draw_rect.y = (float)Math.Round(point.Y - (_draw_rect.h * transformTo.Achor.Y));
 
-            center.x = Convert.ToSingle(_draw_rect.w * transformTo.Achor.X);
-            center.y = Convert.ToSingle(_draw_rect.h * transformTo.Achor.Y);
+            center.x = (float)(_draw_rect.w * transformTo.Achor.X);
+            center.y = (float)(_draw_rect.h * transformTo.Achor.Y);
 
             var flip = FlipX ? SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL : SDL.SDL_RendererFlip.SDL_FLIP_NONE;
 
             SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _bounds.SDLRect, ref _draw_rect, transformTo.Degrees, ref center, flip);
 
+            dr = new Bounds(_draw_rect.x, _draw_rect.y, _draw_rect.w, _draw_rect.h);
+
             if(Debug) DrawDebug(point, transformTo);
         }
+
+        public Bounds dr;
 
         private void DrawDebug(Point point, Transform transform)
         {

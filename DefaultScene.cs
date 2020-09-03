@@ -113,7 +113,7 @@ namespace Electron2D
                 grounds.Add(sprite2);
             }
 
-            grounds[15].Debug = true;
+            //grounds[28].Debug = true;
         }
 
         protected override void PreUpdate()
@@ -194,7 +194,7 @@ namespace Electron2D
 
             Camera.Transform.Position = new Point(Math.Clamp(_playerAnimator.Transform.Position.X, -3.5, 3.9), 0);
 
-            Debug.Log($"Tile Size: {grounds[6].Size}, {Camera.ConvertWorldToScreen(grounds[6].Transform.Position)}");
+            //Debug.Log($"Tile Size: {grounds[28].Size}, {grounds[28].dr}");
         }
 
         protected override void OnMouseButtonDown(object sender, MouseButtonEventArgs e)
@@ -210,9 +210,9 @@ namespace Electron2D
 
         protected override void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            //if (e.Wheel == Mouse.Wheel.Down) Camera.Size += .1;
+            if (e.Wheel == Mouse.Wheel.Down) Camera.Size += .1;
 
-            //if (e.Wheel == Mouse.Wheel.Up && Camera.Size > .1) Camera.Size -= .1;
+            if (e.Wheel == Mouse.Wheel.Up && Camera.Size > .1) Camera.Size -= .1;
 
             //Debug.Log($"Camera Size: {Camera.Size}");
         }
