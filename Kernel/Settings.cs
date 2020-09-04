@@ -14,13 +14,13 @@ namespace Electron2D.Kernel
 	public static class Settings
 	{
 		private static Rect _resolution;
-		private static bool _fullscreen;
+		private static FullscreenType _fullscreen;
 		private static SmoothingType _smoothing;
 
 		static Settings()
 		{
 			_resolution = new Rect(640, 480);
-			_fullscreen = false;
+			_fullscreen = FullscreenType.None;
 			VSinc = true;
 			FPS = 0;
 			Resizeble = false;
@@ -40,17 +40,30 @@ namespace Electron2D.Kernel
 			}
 		}
 
-		public static bool Fullscreen
+		public static FullscreenType Fullscreen
 		{
-			get { return _fullscreen; }
+			get => _fullscreen;
 			set
 			{
 				if(Game.WindowContext != IntPtr.Zero)
 				{
-					if(value != _fullscreen && value)
+					switch(value)
+					{
+						case FullscreenType.Desktop:
+							SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
+							break;
+						case FullscreenType.Fullscreen:
+							SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
+							break;
+						case FullscreenType.None:
+							SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+							break;
+					}
+					
+					/*if(value != _fullscreen && value)
 						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
 					else if(value != _fullscreen && !value)
-						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);*/
 				}
 				_fullscreen = value;
 			}

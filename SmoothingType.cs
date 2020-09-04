@@ -3,7 +3,7 @@
   Licensed under the Apache License, Version 2.0
 */
 
-namespace Electron2D.Graphics
+namespace Electron2D
 {
     public enum SmoothingType {
         // nearest pixel sampling

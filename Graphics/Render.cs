@@ -97,17 +97,17 @@ namespace Electron2D.Graphics
 
 		private void CreateWidnow()
 		{
-			var windowFlags = Settings.Fullscreen ?
-				SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : Settings.Resizeble ?
-				SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE : SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN;
+			var windowFlags = (SDL.SDL_WindowFlags)Settings.Fullscreen;
+			if (Settings.Resizeble) windowFlags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
 
 			_window = SDL.SDL_CreateWindow(
 
-					Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title, SDL.SDL_WINDOWPOS_CENTERED,
-					SDL.SDL_WINDOWPOS_CENTERED,
-					(int)Settings.Resolution.Width,
-					(int)Settings.Resolution.Height,
-					windowFlags | SDL.SDL_WindowFlags.SDL_WINDOW_FOREIGN);
+				Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title, SDL.SDL_WINDOWPOS_CENTERED,
+				SDL.SDL_WINDOWPOS_CENTERED,
+				(int)Settings.Resolution.Width,
+				(int)Settings.Resolution.Height,
+				windowFlags
+			);
 		}
 
         private void CreateRenderer()

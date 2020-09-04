@@ -46,7 +46,7 @@ namespace Electron2D
             _ground_middle = _tiles.Sprite["ground_middle"];
             _dirt_middle = _tiles.Sprite["dirt_middle"];
 
-            _playerAnimator = new Animator(new Point(2.2916889999999994,-2.5), 10, 15);
+            _playerAnimator = new Animator(new Point(-10,-2.5), 10, 15);
             _oposumAnimator = new Animator(new Point(5, -2.55), 9, 14);
             _eagleAnimator = new Animator(new Point(20, 5), 9, 15);
 
@@ -105,6 +105,7 @@ namespace Electron2D
 
                 sprite1.Transform.Position = new Point(i, -4);
                 sprite1.Visible = true;
+                //sprite1.Debug = true;
 
                 sprite2.Transform.Position = new Point(i, -5);
                 sprite2.Visible = true;
