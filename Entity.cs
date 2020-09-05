@@ -2,86 +2,65 @@
   Copyright (c) 2019-2020 Edward Gushchin.
   Licensed under the Apache License, Version 2.0
 */
+using System;
 
 using Electron2D.Graphics;
 
 namespace Electron2D
 {
-	public class Entity
+	public class Entity : IDisposable
 	{
+		private bool _enabled;
+
 		public Entity()
 		{
 			Transform = new Transform(new Point());
-			Enable = true;
+			_enabled = true;
 		}
 
-		public Entity(Entity parrent)
+		public Entity(Point point)
 		{
-			Transform.LocalScale = new Vector(
-				Transform.LocalScale.X + parrent.Transform.LocalScale.X,
-				Transform.LocalScale.Y + parrent.Transform.LocalScale.Y
-			);
-
-			Transform.Position += parrent.Transform.Position;
-			Transform.Degrees += parrent.Transform.Degrees;
-
-			Parrent = parrent;
-
-			Enable = true;
+			Transform = new Transform(point);
+			_enabled = true;
 		}
 
         public Transform Transform { get; set; }
 
-        /*private Transform AbsoluteTransform
+        public bool Enable
 		{
-			get
+			get => _enabled;
+			set
 			{
-                if (Parrent != null)
-                {
-                    return new Transform
-                    {
-                        Position = Transform.Position + Parrent.Transform.Position,
-                        Degrees = Transform.Degrees + Parrent.Transform.Degrees,
-                        LocalScale = new Vector(
-                            Transform.LocalScale.X * Parrent.Transform.LocalScale.X,
-                            Transform.LocalScale.Y * Parrent.Transform.LocalScale.Y
-                        )
-                    };
-                }
-                else
-                {
-                    return Transform;
-                }
-            }
-		}*/
-
-		/*protected void DrawSprite(Sprite sprite)
-		{
-			sprite.Draw(AbsoluteTransform);
+				if (value && !_enabled)
+					OnEnable();
+				else if (!value && _enabled)
+					OnDisable();
+				_enabled = value;
+			}
 		}
-
-		protected void DrawSprite(Sprite sprite, Transform transform)
-		{
-			var trans = AbsoluteTransform;
-			sprite.Draw(new Transform {
-				Position = trans.Position + transform.Position,
-				Degrees = trans.Degrees + transform.Degrees,
-				LocalScale = new Vector(
-                    trans.LocalScale.X * transform.LocalScale.X,
-                    trans.LocalScale.Y * transform.LocalScale.Y
-                )
-			});
-		}*/
-
-        public Entity Parrent { get; }
-
-        public bool Enable { get; set; }
 
 		public void Update()
 		{
-			OnPreUpdate();
-			OnUpdate();
-			OnPostUpdate();
+			if(_enabled)
+			{
+				OnPreUpdate();
+				OnUpdate();
+				OnPostUpdate();
+			}
+		}
+
+		protected void Attach(Sprite sprite)
+		{
+		}
+
+		protected void Attach(Sprite sprite, Point position)
+		{
+
+		}
+
+		public void Dispose()
+		{
+			OnDestroy();
 		}
 
 		//Update вызывается каждый кадр
