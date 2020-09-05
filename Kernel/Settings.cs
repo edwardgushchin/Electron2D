@@ -59,11 +59,6 @@ namespace Electron2D.Kernel
 							SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 							break;
 					}
-					
-					/*if(value != _fullscreen && value)
-						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
-					else if(value != _fullscreen && !value)
-						SDL.SDL_SetWindowFullscreen(Game.WindowContext, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);*/
 				}
 				_fullscreen = value;
 			}
