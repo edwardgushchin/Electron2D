@@ -98,11 +98,13 @@ namespace Electron2D.Graphics
 		private void CreateWidnow()
 		{
 			var windowFlags = (SDL.SDL_WindowFlags)Settings.Fullscreen;
-			if (Settings.Resizeble) windowFlags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+
+			if (Settings.Resizeble)
+				windowFlags |= SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
 
 			_window = SDL.SDL_CreateWindow(
-
-				Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title, SDL.SDL_WINDOWPOS_CENTERED,
+				Settings.DebugMode ? $"{Settings.Title} [DEBUG]" : Settings.Title,
+				SDL.SDL_WINDOWPOS_CENTERED,
 				SDL.SDL_WINDOWPOS_CENTERED,
 				(int)Settings.Resolution.Width,
 				(int)Settings.Resolution.Height,
@@ -112,22 +114,12 @@ namespace Electron2D.Graphics
 
         private void CreateRenderer()
 		{
-			if(Settings.VSinc) {
-				_instance = SDL.SDL_CreateRenderer(
-					_window, -1,
-					SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC |
-					SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
-					SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE
-				);
-			}
-			else
-			{
-				_instance = SDL.SDL_CreateRenderer(
-					_window, -1,
-					SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
-					SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE
-				);
-			}
+			var renderFlags = SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED | SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE;
+
+			if(Settings.VSinc)
+				renderFlags |= SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC;
+
+			_instance = SDL.SDL_CreateRenderer(_window, -1, renderFlags);
 		}
 
         private void RenderLoop()
