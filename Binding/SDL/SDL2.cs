@@ -2757,7 +2757,7 @@ namespace Electron2D.Binding.SDL
 			IntPtr renderer,
 			IntPtr texture,
 			ref SDL_Rect srcrect,
-			ref SDL_FRect dstrect,
+			ref SDL_Rect dstrect,
 			double angle,
 			ref SDL_FPoint center,
 			SDL_RendererFlip flip
