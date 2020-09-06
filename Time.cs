@@ -9,6 +9,6 @@ namespace Electron2D
     {
         public static double DeltaTime { get; internal set; }
 
-        static Time() {}
+        //static Time() {}
     }
 }
