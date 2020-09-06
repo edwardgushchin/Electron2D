@@ -12,9 +12,9 @@ namespace Electron2D.Graphics
     public struct Bounds
     {
         internal SDL.SDL_Rect SDLRect;
-		private double _x, _y, _w, _h;
+		private float _x, _y, _w, _h;
 
-        public Bounds(double x, double y, double width, double height)
+        public Bounds(float x, float y, float width, float height)
         {
             _x = x;
             _y = y;
@@ -23,7 +23,7 @@ namespace Electron2D.Graphics
 			SDLRect = new SDL.SDL_Rect() { x = (int)_x, y = (int)_y, w = (int)_w, h = (int)_h};
         }
 
-        public double X
+        public float X
         {
             get => _x;
             set
@@ -33,7 +33,7 @@ namespace Electron2D.Graphics
             }
         }
 
-        public double Y
+        public float Y
 		{
 			get => _y;
             set
@@ -43,7 +43,7 @@ namespace Electron2D.Graphics
             }
 		}
 
-        public double Width
+        public float Width
 		{
 			get => _w;
             set
@@ -53,7 +53,7 @@ namespace Electron2D.Graphics
             }
 		}
 
-        public double Height
+        public float Height
 		{
 			get => _h;
             set

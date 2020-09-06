@@ -7,7 +7,7 @@ namespace Electron2D
 {
     public static class Time
     {
-        public static double DeltaTime { get; internal set; }
+        public static float DeltaTime { get; internal set; }
 
         //static Time() {}
     }

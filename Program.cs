@@ -13,9 +13,9 @@ namespace Electron2D
         private static Game TestGame;
         internal static void Main()
         {
-            Settings.Resolution = new Rect(1920, 1080);
+            Settings.Resolution = new Rect(800, 600);
             Settings.Resizeble = false;
-            Settings.Fullscreen = FullscreenType.Fullscreen;
+            Settings.Fullscreen = FullscreenType.None;
             Settings.VSinc = true;
             Settings.Smoothing = SmoothingType.Nearest;
 

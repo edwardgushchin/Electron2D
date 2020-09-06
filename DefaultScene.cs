@@ -26,17 +26,17 @@ namespace Electron2D
             Debug.Log("Electron2D demo scene loading...", Debug.Sender.Scene);
 
             ClearColor = new Color(46, 52, 64);
-            Camera.Size = 5;
+            //Camera.Size = 5;
             _oposum_flipX = false;
 
             new Sprite(ResourceManager.LoadTexture("background", @"Resources\Sprites\sannyland\back.png"), Point.Zero, 0, 15);
-            new Sprite(ResourceManager.LoadTexture("rock", @"Resources\Sprites\sannyland\rock.png"), new Point(1.3, -3), 5, 15);
-            new Sprite(ResourceManager.LoadTexture("shrooms", @"Resources\Sprites\sannyland\shrooms.png"), new Point(2, -3), 6, 15);
-            new Sprite(ResourceManager.LoadTexture("sign", @"Resources\Sprites\sannyland\sign.png"), new Point(-3.5, -2.82), 6, 15);
+            new Sprite(ResourceManager.LoadTexture("rock", @"Resources\Sprites\sannyland\rock.png"), new Point(1.3f, -3), 5, 15);
+            new Sprite(ResourceManager.LoadTexture("shrooms", @"Resources\Sprites\sannyland\shrooms.png"), new Point(2f, -3), 6, 15);
+            new Sprite(ResourceManager.LoadTexture("sign", @"Resources\Sprites\sannyland\sign.png"), new Point(-3.5f, -2.82f), 6, 15);
             _tiles = ResourceManager.LoadTextureAtlas("tileset", @"Resources\Sprites\sannyland\tileset.xml", 15);
-            _house = new Sprite(ResourceManager.LoadTexture("house", @"Resources\Sprites\sannyland\house.png"), new Point(7,0.1), 5, 15);
-            _tree = new Sprite(ResourceManager.LoadTexture("tree", @"Resources\Sprites\sannyland\tree.png"), new Point(3,-0.4), 4, 15);
-            _bush = new Sprite(ResourceManager.LoadTexture("bush", @"Resources\Sprites\sannyland\bush.png"), new Point(-7,-2.57), 4, 15);
+            _house = new Sprite(ResourceManager.LoadTexture("house", @"Resources\Sprites\sannyland\house.png"), new Point(7,0.1f), 5, 15);
+            _tree = new Sprite(ResourceManager.LoadTexture("tree", @"Resources\Sprites\sannyland\tree.png"), new Point(3,-0.4f), 4, 15);
+            _bush = new Sprite(ResourceManager.LoadTexture("bush", @"Resources\Sprites\sannyland\bush.png"), new Point(-7,-2.57f), 4, 15);
 
             var middle = ResourceManager.LoadTexture("middle", @"Resources\Sprites\sannyland\middle.png");
 
@@ -46,8 +46,8 @@ namespace Electron2D
             _ground_middle = _tiles.Sprite["ground_middle"];
             _dirt_middle = _tiles.Sprite["dirt_middle"];
 
-            _playerAnimator = new Animator(new Point(-10,-2.5), 10, 15);
-            _oposumAnimator = new Animator(new Point(5, -2.55), 9, 14);
+            _playerAnimator = new Animator(new Point(-10,-2.5f), 10, 15);
+            _oposumAnimator = new Animator(new Point(5, -2.55f), 9, 14);
             _eagleAnimator = new Animator(new Point(20, 5), 9, 15);
 
             _playerIdleAnimation = new Animation("idle", 10);
@@ -89,6 +89,8 @@ namespace Electron2D
 
             _oposumAnimator.Add(_oposumWalkAnimation);
 
+            //var text = new Texture(100, 100, PixelFormat.RGBA8888);
+
             Debug.Log("Electron2D demo scene loaded.", Debug.Sender.Scene);
         }
 
@@ -98,7 +100,7 @@ namespace Electron2D
         {
             grounds = new List<Sprite>();
 
-            for (double i = -12; i <= 13; i++)
+            for (float i = -12; i <= 13; i++)
             {
                 var sprite1 = new Sprite(_ground_middle.Texture, _ground_middle.PackageBounds, 2, 15);
                 var sprite2 = new Sprite(_dirt_middle.Texture, _dirt_middle.PackageBounds, 2, 15);
@@ -193,7 +195,12 @@ namespace Electron2D
             //if (Camera.Transform.Position.X >= -3.79 || Camera.Transform.Position.X <= 6.07 )
             //    Camera.Transform.Position = new Point(_playerAnimator.Transform.Position.X, 0);
 
-            Camera.Transform.Position = new Point(Math.Clamp(_playerAnimator.Transform.Position.X, -3.5, 3.9), 0);
+            //Camera.Transform.Position = new Point(Math.Clamp(_playerAnimator.Transform.Position.X, -3.5f, 3.9f), 0);
+            //Debug.Log($"{Time.DeltaTime}");
+            var lerpx = Point.LerpX(Camera.Transform.Position, _playerAnimator.Transform.Position, 0, Time.DeltaTime * 3);
+            Camera.Transform.Position = new Point(Math.Clamp(lerpx.X, -3.5f, 3.9f), 0);
+
+            //Debug.Log($"{Camera.Transform.Position}");
 
             //Debug.Log($"Tile Size: {grounds[28].Size}, {grounds[28].dr}");
         }
@@ -211,9 +218,9 @@ namespace Electron2D
 
         protected override void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.Wheel == Mouse.Wheel.Down) Camera.Size += .1;
+            if (e.Wheel == Mouse.Wheel.Down) Camera.Size += .1f;
 
-            if (e.Wheel == Mouse.Wheel.Up && Camera.Size > .1) Camera.Size -= .1;
+            if (e.Wheel == Mouse.Wheel.Up && Camera.Size > .1f) Camera.Size -= .1f;
 
             //Debug.Log($"Camera Size: {Camera.Size}");
         }

@@ -136,7 +136,7 @@ namespace Electron2D.Graphics
                 ulong last_counter = now_counter;
                 now_counter = SDL.SDL_GetPerformanceCounter();
 
-				Time.DeltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
+				Time.DeltaTime = (float)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
 
                 SDL.SDL_RenderClear(_instance);
 

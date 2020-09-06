@@ -19,10 +19,10 @@ namespace Electron2D.Graphics
 
 			foreach(XmlNode xnode in atlas)
 			{
-				var h = Convert.ToDouble(xnode.Attributes["height"].Value);
-				var w = Convert.ToDouble(xnode.Attributes["width"].Value);
-				var x = Convert.ToDouble(xnode.Attributes["x"].Value);
-				var y = Convert.ToDouble(xnode.Attributes["y"].Value);
+				var h = Convert.ToSingle(xnode.Attributes["height"].Value);
+				var w = Convert.ToSingle(xnode.Attributes["width"].Value);
+				var x = Convert.ToSingle(xnode.Attributes["x"].Value);
+				var y = Convert.ToSingle(xnode.Attributes["y"].Value);
 				var n = xnode.Attributes["name"].Value;
 
 				_spriteCache.Add(n, new Sprite(texture, new Bounds(x, y, w, h), 0, pixelPerUnit));

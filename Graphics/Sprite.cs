@@ -117,22 +117,24 @@ namespace Electron2D.Graphics
 
             var unit = Camera.MainCamera.WorldUnit;
 
-            _draw_rect.w = (float)(unit * (_size.Width / PixelPerUnit));
-            _draw_rect.h = (float)(unit * (_size.Height / PixelPerUnit));
+            _draw_rect.w = unit * (_size.Width / PixelPerUnit);
+            _draw_rect.h = unit * (_size.Height / PixelPerUnit);
 
-            _draw_rect.x = (float)(point.X - (_draw_rect.w * transformTo.Achor.X));
-            _draw_rect.y = (float)(point.Y - (_draw_rect.h * transformTo.Achor.Y));
+            _draw_rect.x = point.X - (_draw_rect.w * transformTo.Achor.X);
+            _draw_rect.y = point.Y - (_draw_rect.h * transformTo.Achor.Y);
 
-            center.x = (float)(_draw_rect.w * transformTo.Achor.X);
-            center.y = (float)(_draw_rect.h * transformTo.Achor.Y);
+            center.x = _draw_rect.w * transformTo.Achor.X;
+            center.y = _draw_rect.h * transformTo.Achor.Y;
 
             SDL.SDL_RendererFlip flip = 0;
             if (FlipX) flip |= SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL;
             if (FlipY) flip |= SDL.SDL_RendererFlip.SDL_FLIP_VERTICAL;
+            
+            //if(_layer == 5) Electron2D.Debug.Log($"_draw_rect = {_draw_rect.x}");
 
             SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _bounds.SDLRect, ref _draw_rect, transformTo.Degrees, ref center, flip);
 
-            DrawDebug(point, transformTo);
+            //DrawDebug(point, transformTo);
         }
 
 

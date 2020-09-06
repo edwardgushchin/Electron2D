@@ -9,38 +9,38 @@ namespace Electron2D.Graphics
 {
 	public struct Point : IEquatable<Point>
 	{
-		public Point(double x, double y) : this()
+		public Point(float x, float y) : this()
 		{
 			X = x;
 			Y = y;
 		}
 
-		public double X { get; set; }
-		public double Y { get; set; }
+		public float X { get; set; }
+		public float Y { get; set; }
 
 		public static Point Zero => new Point();
 
-		internal Point Rotate(Point center, double degrees)
+		internal Point Rotate(Point center, float degrees)
 		{
-			double angleInRadians = degrees * (Math.PI / 180);
-            double cosTheta = Math.Cos(-angleInRadians);
-            double sinTheta = Math.Sin(-angleInRadians);
+			float angleInRadians = degrees * (Math.PI / 180);
+            float cosTheta = Math.Cos(-angleInRadians);
+            float sinTheta = Math.Sin(-angleInRadians);
 
             return new Point
             {
-                X = (double) ((cosTheta * (X - center.X)) - (sinTheta * (Y - center.Y)) + center.X),
-                Y = (double) ((sinTheta * (X - center.X)) + (cosTheta * (Y - center.Y)) + center.Y)
+                X = ((cosTheta * (X - center.X)) - (sinTheta * (Y - center.Y)) + center.X),
+                Y = ((sinTheta * (X - center.X)) + (cosTheta * (Y - center.Y)) + center.Y)
             };
 		}
 
-		public static Point Lerp(Point value1, Point value2, double amount)
+		public static Point Lerp(Point value1, Point value2, float amount)
         {
             return new Point(
                 value1.X + ((value2.X - value1.X) * amount),
                 value1.Y + ((value2.Y - value1.Y) * amount));
         }
 
-		public static Point LerpX(Point value1, Point value2, double y, double amount)
+		public static Point LerpX(Point value1, Point value2, float y, float amount)
         {
             return new Point(
                 value1.X + ((value2.X - value1.X) * amount), y);
@@ -88,12 +88,12 @@ namespace Electron2D.Graphics
 			return new Point(-point.X, -point.Y);
 		}
 
-		public static Point operator *(Point left, double right)
+		public static Point operator *(Point left, float right)
 		{
 			return new Point(left.X * right, left.Y * right);
 		}
 
-		public static Point Multiply(Point left, double right)
+		public static Point Multiply(Point left, float right)
         {
             return left * right;
         }

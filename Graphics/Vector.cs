@@ -12,17 +12,17 @@ namespace Electron2D.Graphics
 {
     public struct Vector : IEquatable<Vector>, IFormattable
     {
-        public Vector(double value) : this(value, value) { }
+        public Vector(float value) : this(value, value) { }
 
-        public Vector(double x, double y)
+        public Vector(float x, float y)
         {
             X = x;
             Y = y;
         }
 
-        public double X { get; set; }
+        public float X { get; set; }
 
-        public double Y { get; set; }
+        public float Y { get; set; }
 
         public readonly bool Equals(Vector other)
         {
@@ -30,7 +30,7 @@ namespace Electron2D.Graphics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Dot(Vector value1, Vector value2)
+        public static float Dot(Vector value1, Vector value2)
         {
             return (value1.X * value2.X) + (value1.Y * value2.Y);
         }
@@ -82,13 +82,13 @@ namespace Electron2D.Graphics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector operator *(double left, Vector right)
+        public static Vector operator *(float left, Vector right)
         {
             return new Vector(left, left) * right;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector operator *(Vector left, double right)
+        public static Vector operator *(Vector left, float right)
         {
             return left * new Vector(right, right);
         }
@@ -100,7 +100,7 @@ namespace Electron2D.Graphics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector operator /(Vector value1, double value2)
+        public static Vector operator /(Vector value1, float value2)
         {
             return value1 / new Vector(value2);
         }
@@ -135,13 +135,13 @@ namespace Electron2D.Graphics
         {
             get
             {
-                return new Vector(1.0, 1.0);
+                return new Vector(1.0f, 1.0f);
             }
         }
 
-        public static Vector UnitX { get { return new Vector(1.0, 0.0); } }
+        public static Vector UnitX { get { return new Vector(1.0f, 0.0f); } }
 
-        public static Vector UnitY { get { return new Vector(0.0, 1.0); } }
+        public static Vector UnitY { get { return new Vector(0.0f, 1.0f); } }
 
         public override readonly int GetHashCode()
         {
@@ -200,26 +200,26 @@ namespace Electron2D.Graphics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly double Length()
+        public readonly float Length()
         {
             return Math.Sqrt(Dot(this, this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly double LengthSquared()
+        public readonly float LengthSquared()
         {
             return Dot(this, this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Distance(Vector value1, Vector value2)
+        public static float Distance(Vector value1, Vector value2)
         {
             Vector difference = value1 - value2;
             return Math.Sqrt(Vector.Dot(difference, difference));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double DistanceSquared(Vector value1, Vector value2)
+        public static float DistanceSquared(Vector value1, Vector value2)
         {
             Vector difference = value1 - value2;
             return Vector.Dot(difference, difference);
@@ -234,8 +234,8 @@ namespace Electron2D.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector Reflect(Vector vector, Vector normal)
         {
-            double dot = Dot(vector, normal);
-            return vector - (2 * dot * normal);
+            float dot = Dot(vector, normal);
+            return vector - (2f * dot * normal);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -243,15 +243,15 @@ namespace Electron2D.Graphics
         {
             // This compare order is very important!!!
             // We must follow HLSL behavior in the case user specified min value is bigger than max value.
-            double x = value1.X;
+            float x = value1.X;
             x = (min.X > x) ? min.X : x;  // max(x, minx)
             x = (max.X < x) ? max.X : x;  // min(x, maxx)
 
-            double y = value1.Y;
+            float y = value1.Y;
             y = (min.Y > y) ? min.Y : y;  // max(y, miny)
             y = (max.Y < y) ? max.Y : y;  // min(y, maxy)
 
-            return new Vector(x,y);
+            return new Vector(x, y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -261,6 +261,7 @@ namespace Electron2D.Graphics
                 value1.X + ((value2.X - value1.X) * amount),
                 value1.Y + ((value2.Y - value1.Y) * amount));
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector Add(Vector left, Vector right)
@@ -281,13 +282,13 @@ namespace Electron2D.Graphics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector Multiply(Vector left, double right)
+        public static Vector Multiply(Vector left, float right)
         {
             return left * right;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector Multiply(double left, Vector right)
+        public static Vector Multiply(float left, Vector right)
         {
             return left * right;
         }
@@ -299,7 +300,7 @@ namespace Electron2D.Graphics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector Divide(Vector left, double divisor)
+        public static Vector Divide(Vector left, float divisor)
         {
             return left / divisor;
         }
