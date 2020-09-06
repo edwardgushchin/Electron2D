@@ -48,6 +48,7 @@ namespace Electron2D.Graphics
             Package = package;
             Visible = visible;
             FlipX = false;
+            FlipY = false;
 
             _layer = layer;
             _texture = texture;
@@ -69,6 +70,7 @@ namespace Electron2D.Graphics
         public bool Visible { get; set; }
 
         public bool FlipX { get; set; }
+        public bool FlipY { get; set; }
 
         public Bounds PackageBounds => _bounds;
 
@@ -118,17 +120,19 @@ namespace Electron2D.Graphics
             _draw_rect.w = (float)(unit * (_size.Width / PixelPerUnit));
             _draw_rect.h = (float)(unit * (_size.Height / PixelPerUnit));
 
-            _draw_rect.x = (float)Math.Round(point.X - (_draw_rect.w * transformTo.Achor.X));
-            _draw_rect.y = (float)Math.Round(point.Y - (_draw_rect.h * transformTo.Achor.Y));
+            _draw_rect.x = (float)(point.X - (_draw_rect.w * transformTo.Achor.X));
+            _draw_rect.y = (float)(point.Y - (_draw_rect.h * transformTo.Achor.Y));
 
             center.x = (float)(_draw_rect.w * transformTo.Achor.X);
             center.y = (float)(_draw_rect.h * transformTo.Achor.Y);
 
-            var flip = FlipX ? SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL : SDL.SDL_RendererFlip.SDL_FLIP_NONE;
+            SDL.SDL_RendererFlip flip = 0;
+            if (FlipX) flip |= SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL;
+            if (FlipY) flip |= SDL.SDL_RendererFlip.SDL_FLIP_VERTICAL;
 
             SDL.SDL_RenderCopyExF(Game.RenderContext, _texture.Instance, ref _bounds.SDLRect, ref _draw_rect, transformTo.Degrees, ref center, flip);
 
-            if(Debug) DrawDebug(point, transformTo);
+            DrawDebug(point, transformTo);
         }
 
 
