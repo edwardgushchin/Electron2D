@@ -33,6 +33,19 @@ namespace Electron2D.Graphics
             };
 		}
 
+		public static Point Lerp(Point value1, Point value2, double amount)
+        {
+            return new Point(
+                value1.X + ((value2.X - value1.X) * amount),
+                value1.Y + ((value2.Y - value1.Y) * amount));
+        }
+
+		public static Point LerpX(Point value1, Point value2, double y, double amount)
+        {
+            return new Point(
+                value1.X + ((value2.X - value1.X) * amount), y);
+        }
+
 		public override bool Equals(object obj)
 		{
 			if (obj is Point point)
