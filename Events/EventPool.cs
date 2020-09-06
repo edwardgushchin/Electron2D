@@ -63,16 +63,18 @@ namespace Electron2D.Events
 
 		public void Pool()
 		{
-            while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1)
+			while (SDL.SDL_PollEvent(out SDL.SDL_Event e) == 1)
             {
                 PoolWindowEvent(e);
                 PoolKeyEvent(e);
                 PoolMouseEvent(e);
+				PoolJoysticEvent(e);
             }
         }
 
 		private void PoolWindowEvent(SDL.SDL_Event e)
 		{
+			
 			if(e.type == SDL.SDL_EventType.SDL_WINDOWEVENT)
 			{
                 switch (e.window.windowEvent)
@@ -161,6 +163,54 @@ namespace Electron2D.Events
 
 			if(e.type == SDL.SDL_EventType.SDL_MOUSEWHEEL)
 				OnMouseWheelEvent(e.window.windowEvent, new MouseWheelEventArgs(new Point(e.wheel.x, e.wheel.y)));
+		}
+
+		private void PoolJoysticEvent(SDL.SDL_Event e)
+		{
+			if(e.type == SDL.SDL_EventType.SDL_JOYAXISMOTION)
+			{
+				Debug.Log("SDL_JOYAXISMOTION");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_JOYBALLMOTION)
+			{
+				Debug.Log("SDL_JOYBALLMOTION");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_JOYBUTTONDOWN)
+			{
+				Debug.Log("SDL_JOYBUTTONDOWN");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_JOYBUTTONUP)
+			{
+				Debug.Log("SDL_JOYBUTTONUP");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_JOYDEVICEADDED)
+			{
+				Debug.Log($"SDL_JOYDEVICEADDED");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_JOYDEVICEREMOVED)
+			{
+				Debug.Log("SDL_JOYDEVICEREMOVED");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_JOYHATMOTION)
+			{
+				Debug.Log("SDL_JOYHATMOTION");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_CONTROLLERAXISMOTION)
+			{
+				Debug.Log("SDL_CONTROLLERAXISMOTION");
+			}
+
+			if(e.type == SDL.SDL_EventType.SDL_CONTROLLERBUTTONDOWN)
+			{
+				Debug.Log("SDL_CONTROLLERBUTTONDOWN");
+			}
 		}
 	}
 }
