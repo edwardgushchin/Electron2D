@@ -198,6 +198,7 @@ namespace Electron2D
             //Camera.Transform.Position = new Point(Math.Clamp(_playerAnimator.Transform.Position.X, -3.5f, 3.9f), 0);
             //Debug.Log($"{Time.DeltaTime}");
             var lerpx = Point.LerpX(Camera.Transform.Position, _playerAnimator.Transform.Position, 0, Time.DeltaTime * 3);
+           // Debug.Log($"lerp")
             Camera.Transform.Position = new Point(Math.Clamp(lerpx.X, -3.5f, 3.9f), 0);
 
             //Debug.Log($"{Camera.Transform.Position}");

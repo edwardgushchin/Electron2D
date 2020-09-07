@@ -133,10 +133,14 @@ namespace Electron2D.Graphics
 			{
 				timer_fps.Start();
 
-                ulong last_counter = now_counter;
+                var last_counter = now_counter;
                 now_counter = SDL.SDL_GetPerformanceCounter();
 
-				Time.DeltaTime = (float)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
+				var deltaTime = (double)(now_counter - last_counter) / SDL.SDL_GetPerformanceFrequency();
+
+				Time.DeltaTime = (float)deltaTime;
+
+				Debug.Log($"DeltaTime: {Time.DeltaTime}");
 
                 SDL.SDL_RenderClear(_instance);
 

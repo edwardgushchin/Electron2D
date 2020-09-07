@@ -37,7 +37,8 @@ namespace Electron2D.Graphics
         {
             return new Point(
                 value1.X + ((value2.X - value1.X) * amount),
-                value1.Y + ((value2.Y - value1.Y) * amount));
+                value1.Y + ((value2.Y - value1.Y) * amount)
+			);
         }
 
 		public static Point LerpX(Point value1, Point value2, float y, float amount)
