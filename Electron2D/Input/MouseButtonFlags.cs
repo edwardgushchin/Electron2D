@@ -1,9 +1,11 @@
 ﻿using SDL3;
 
-namespace Electron2D;
+namespace Electron2D.Input;
 
+[Flags]
 public enum MouseButtonFlags : uint
 {
+    None = 0,
     Left = SDL.MouseButtonFlags.Left,
     Middle = SDL.MouseButtonFlags.Middle,
     Right = SDL.MouseButtonFlags.Right,

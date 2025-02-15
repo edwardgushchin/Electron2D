@@ -1,1286 +1,601 @@
-﻿using SDL3;
-
-namespace Electron2D;
+﻿namespace Electron2D.Input;
 
 public enum Keycode : uint
 {
+    Unknown = 0,
+
+    A = 4,
+    B = 5,
+    C = 6,
+    D = 7,
+    E = 8,
+    F = 9,
+    G = 10,
+    H = 11,
+    I = 12,
+    J = 13,
+    K = 14,
+    L = 15,
+    M = 16,
+    N = 17,
+    O = 18,
+    P = 19,
+    Q = 20,
+    R = 21,
+    S = 22,
+    T = 23,
+    U = 24,
+    V = 25,
+    W = 26,
+    X = 27,
+    Y = 28,
+    Z = 29,
+
+    Alpha1 = 30,
+    Alpha2 = 31,
+    Alpha3 = 32,
+    Alpha4 = 33,
+    Alpha5 = 34,
+    Alpha6 = 35,
+    Alpha7 = 36,
+    Alpha8 = 37,
+    Alpha9 = 38,
+    Alpha0 = 39,
+
+    Return = 40,
+    Escape = 41,
+    Backspace = 42,
+    Tab = 43,
+    Space = 44,
+
+    Minus = 45,
+    Equals = 46,
+    Leftbracket = 47,
+    Rightbracket = 48,
+    
+    /// <summary>
+    /// Located at the lower left of the return
+    /// key on ISO keyboards and at the right end
+    /// of the QWERTY row on ANSI keyboards.
+    /// Produces REVERSE SOLIDUS (backslash) and
+    /// VERTICAL LINE in a US layout, REVERSE
+    /// SOLIDUS and VERTICAL LINE in a UK Mac
+    /// layout, NUMBER SIGN and TILDE in a UK
+    /// Windows layout, DOLLAR SIGN and POUND SIGN
+    /// in a Swiss German layout, NUMBER SIGN and
+    /// APOSTROPHE in a German layout, GRAVE
+    /// ACCENT and POUND SIGN in a French Mac
+    /// layout, and ASTERISK and MICRO SIGN in a
+    /// French Windows layout.
+    /// </summary>
+    Backslash = 49,
+    
+    /// <summary>
+    /// ISO USB keyboards actually use this code
+    /// instead of 49 for the same key, but all
+    /// OSes I've seen treat the two codes
+    /// identically. So, as an implementor, unless
+    /// your keyboard generates both of those
+    /// codes and your OS treats them differently,
+    /// you should generate BACKSLASH
+    /// instead of this code. As a user, you
+    /// should not rely on this code because SDL
+    /// will never generate it with most (all?)
+    /// keyboards.
+    /// </summary>
+    NonUshash = 50,
+    Semicolon = 51,
+    Apostrophe = 52,
+    
+    /// <summary>
+    /// Located in the top left corner (on both ANSI
+    /// and ISO keyboards). Produces GRAVE ACCENT and
+    /// TILDE in a US Windows layout and in US and UK
+    /// Mac layouts on ANSI keyboards, GRAVE ACCENT
+    /// and NOT SIGN in a UK Windows layout, SECTION
+    /// SIGN and PLUS-MINUS SIGN in US and UK Mac
+    /// layouts on ISO keyboards, SECTION SIGN and
+    /// DEGREE SIGN in a Swiss German layout (Mac:
+    /// only on ISO keyboards), CIRCUMFLEX ACCENT and
+    /// DEGREE SIGN in a German layout (Mac: only on
+    /// ISO keyboards), SUPERSCRIPT TWO and TILDE in a
+    /// French Windows layout, COMMERCIAL AT and
+    /// NUMBER SIGN in a French Mac layout on ISO
+    /// keyboards, and LESS-THAN SIGN and GREATER-THAN
+    /// SIGN in a Swiss German, German, or French Mac
+    /// layout on ANSI keyboards.
+    /// </summary>
+    Grave = 53,
+    Comma = 54,
+    Period = 55,
+    Slash = 56,
+
+    Capslock = 57,
+
+    F1 = 58,
+    F2 = 59,
+    F3 = 60,
+    F4 = 61,
+    F5 = 62,
+    F6 = 63,
+    F7 = 64,
+    F8 = 65,
+    F9 = 66,
+    F10 = 67,
+    F11 = 68,
+    F12 = 69,
+
+    Printscreen = 70,
+    Scrolllock = 71,
+    Pause = 72,
+    
+    /// <summary>
+    /// insert on PC, help on some Mac keyboards (but
+    /// does send code 73, not 117)
+    /// </summary>
+    Insert = 73,
+    Home = 74,
+    Pageup = 75,
+    Delete = 76,
+    End = 77,
+    Pagedown = 78,
+    Right = 79,
+    Left = 80,
+    Down = 81,
+    Up = 82,
+
     /// <summary>
-    /// 0
+    /// num lock on PC, clear on Mac keyboards
     /// </summary>
-    Unknown = SDL.Keycode.Unknown,
-    
-    /// <summary>
-    /// <c>\r</c>
-    /// </summary>
-    Return = SDL.Keycode.Return,
-    
-    /// <summary>
-    /// <c>\x1B</c>
-    /// </summary>
-    Escape = SDL.Keycode.Escape,
-    
-    /// <summary>
-    /// <c>\b</c>
-    /// </summary>
-    Backspace = SDL.Keycode.Backspace,
-    
-    /// <summary>
-    /// <c>\t</c>
-    /// </summary>
-    Tab = SDL.Keycode.Tab,
-    
-    /// <summary>
-    /// ' '
-    /// </summary>
-    Space = SDL.Keycode.Space,
-    
-    /// <summary>
-    /// <c>!</c>
-    /// </summary>
-    Exclaim = SDL.Keycode.Exclaim,
-    
-    /// <summary>
-    /// <c>"</c>
-    /// </summary>
-    DblApostrophe = SDL.Keycode.DblApostrophe,
-    
-    /// <summary>
-    /// <c>#</c>
-    /// </summary>
-    Hash = SDL.Keycode.Hash,
-    
-    /// <summary>
-    /// <c>$</c>
-    /// </summary>
-    Dollar = SDL.Keycode.Dollar,
-    
-    /// <summary>
-    /// <c>%</c>
-    /// </summary>
-    Percent = SDL.Keycode.Percent,
-    
-    /// <summary>
-    /// <c>&amp;</c>
-    /// </summary>
-    Ampersand = SDL.Keycode.Ampersand,
-    
-    /// <summary>
-    /// <c>\</c>
-    /// </summary>
-    Apostrophe = SDL.Keycode.Apostrophe,
-    
-    /// <summary>
-    /// <c>(</c>
-    /// </summary>
-    LeftParen = SDL.Keycode.LeftParen,
-    
-    /// <summary>
-    /// <c>)</c>
-    /// </summary>
-    RightParen = SDL.Keycode.RightParen,
-    
-    /// <summary>
-    /// <c>*</c>
-    /// </summary>
-    Asterisk = SDL.Keycode.Asterisk,
-    
-    /// <summary>
-    /// <c>+</c>
-    /// </summary>
-    Plus = SDL.Keycode.Plus,
-    
-    /// <summary>
-    /// <c>,</c>
-    /// </summary>
-    Comma = SDL.Keycode.Comma,
-    
-    /// <summary>
-    /// <c>-</c>
-    /// </summary>
-    Minus = SDL.Keycode.Minus,
-    
-    /// <summary>
-    /// <c>.</c>
-    /// </summary>
-    Period = SDL.Keycode.Period,
-    
-    /// <summary>
-    /// <c>/</c>
-    /// </summary>
-    Slash = SDL.Keycode.Slash,
-    
-    /// <summary>
-    /// <c>0</c>
-    /// </summary>
-    Alpha0 = SDL.Keycode.Alpha0,
-    
-    /// <summary>
-    /// <c>1</c>
-    /// </summary>
-    Alpha1 = SDL.Keycode.Alpha1,
-    
-    /// <summary>
-    /// <c>2</c>
-    /// </summary>
-    Alpha2 = SDL.Keycode.Alpha2,
-    
-    /// <summary>
-    /// <c>3</c>
-    /// </summary>
-    Alpha3 = SDL.Keycode.Alpha3,
-    
-    /// <summary>
-    /// <c>4</c>
-    /// </summary>
-    Alpha4 = SDL.Keycode.Alpha4,
-    
-    /// <summary>
-    /// <c>5</c>
-    /// </summary>
-    Alpha5 = SDL.Keycode.Alpha5,
-    
-    /// <summary>
-    /// <c>6</c>
-    /// </summary>
-    Alpha6 = SDL.Keycode.Alpha6,
-    
-    /// <summary>
-    /// <c>7</c>
-    /// </summary>
-    Alpha7 = SDL.Keycode.Alpha7,
-    
-    /// <summary>
-    /// <c>8</c>
-    /// </summary>
-    Alpha8 = SDL.Keycode.Alpha8,
-    
-    /// <summary>
-    /// <c>9</c>
-    /// </summary>
-    Alpha9 = SDL.Keycode.Alpha9,
-    
-    /// <summary>
-    /// <c>:</c>
-    /// </summary>
-    Colon = SDL.Keycode.Colon,
-    
-    /// <summary>
-    /// <c>;</c>
-    /// </summary>
-    Semicolon = SDL.Keycode.Semicolon,
-    
-    /// <summary>
-    /// <c>&lt;</c>
-    /// </summary>
-    Less = SDL.Keycode.Less,
-    
-    /// <summary>
-    /// <c>=</c>
-    /// </summary>
-    Equals = SDL.Keycode.Equals,
-    
-    /// <summary>
-    /// <c>&gt;</c>
-    /// </summary>
-    Greater = SDL.Keycode.Greater,
-    
-    /// <summary>
-    /// <c>?</c>
-    /// </summary>
-    Question = SDL.Keycode.Question,
-    
-    /// <summary>
-    /// <c>@</c>
-    /// </summary>
-    At = SDL.Keycode.At, 
-    
-    /// <summary>
-    /// <c>[</c>
-    /// </summary>
-    LeftBracket = SDL.Keycode.LeftBracket, 
-    
-    /// <summary>
-    /// <c>\</c>
-    /// </summary>
-    Backslash = SDL.Keycode.Backslash, 
-    
-    /// <summary>
-    /// <c>]</c>
-    /// </summary>
-    RightBracket = SDL.Keycode.RightBracket,
-    
-    /// <summary>
-    /// <c>^</c>
-    /// </summary>
-    Caret = SDL.Keycode.Caret,
-    
-    /// <summary>
-    /// <c>_</c>
-    /// </summary>
-    Underscore = SDL.Keycode.Underscore, 
-    
-    /// <summary>
-    /// <c>`</c>
-    /// </summary>
-    Grave = SDL.Keycode.Grave,
-    
-    /// <summary>
-    /// <c>a</c>
-    /// </summary>
-    A = SDL.Keycode.A,
-    
-    /// <summary>
-    /// <c>b</c>
-    /// </summary>
-    B = SDL.Keycode.B,
-    
-    /// <summary>
-    /// <c>c</c>
-    /// </summary>
-    C = SDL.Keycode.C,
-    
-    /// <summary>
-    /// <c>d</c>
-    /// </summary>
-    D = SDL.Keycode.D,
-    
-    /// <summary>
-    /// <c>e</c>
-    /// </summary>
-    E = SDL.Keycode.E,
-    
-    /// <summary>
-    /// <c>f</c>
-    /// </summary>
-    F = SDL.Keycode.F,
-    
-    /// <summary>
-    /// <c>g</c>
-    /// </summary>
-    G = SDL.Keycode.G,
-    
-    /// <summary>
-    /// <c>h</c>
-    /// </summary>
-    H = SDL.Keycode.H,
-    
-    /// <summary>
-    /// <c>i</c>
-    /// </summary>
-    I = SDL.Keycode.I,
-    
-    /// <summary>
-    /// <c>j</c>
-    /// </summary>
-    J = SDL.Keycode.J,
-    
-    /// <summary>
-    /// <c>k</c>
-    /// </summary>
-    K = SDL.Keycode.K,
-    
-    /// <summary>
-    /// <c>l</c>
-    /// </summary>
-    L = SDL.Keycode.L,
-    
-    /// <summary>
-    /// <c>m</c>
-    /// </summary>
-    M = SDL.Keycode.M,
-    
-    /// <summary>
-    /// <c>n</c>
-    /// </summary>
-    N = SDL.Keycode.N,
-    
-    /// <summary>
-    /// <c>o</c>
-    /// </summary>
-    O = SDL.Keycode.O,
-    
-    /// <summary>
-    /// <c>p</c>
-    /// </summary>
-    P = SDL.Keycode.P,
-    
-    /// <summary>
-    /// <c>q</c>
-    /// </summary>
-    Q = SDL.Keycode.Q,
-    
-    /// <summary>
-    /// <c>r</c>
-    /// </summary>
-    R = SDL.Keycode.R,
-    
-    /// <summary>
-    /// <c>s</c>
-    /// </summary>
-    S = SDL.Keycode.S,
-    
-    /// <summary>
-    /// <c>t</c>
-    /// </summary>
-    T = SDL.Keycode.T,
-    
-    /// <summary>
-    /// <c>u</c>
-    /// </summary>
-    U = SDL.Keycode.U,
-    
-    /// <summary>
-    /// <c>v</c>
-    /// </summary>
-    V = SDL.Keycode.V,
-    
-    /// <summary>
-    /// <c>w</c>
-    /// </summary>
-    W = SDL.Keycode.W,
-    
-    /// <summary>
-    /// <c>x</c>
-    /// </summary>
-    X = SDL.Keycode.X,
-    
-    /// <summary>
-    /// <c>y</c>
-    /// </summary>
-    Y = SDL.Keycode.Y,
-    
-    /// <summary>
-    /// <c>z</c>
-    /// </summary>
-    Z = SDL.Keycode.Z,
-    
-    /// <summary>
-    /// <c>{</c>
-    /// </summary>
-    LeftBrace = SDL.Keycode.LeftBrace,
-    
-    /// <summary>
-    /// <c>|</c>
-    /// </summary>
-    Pipe = SDL.Keycode.Pipe,
-    
-    /// <summary>
-    /// <c>}</c>
-    /// </summary>
-    RightBrace = SDL.Keycode.RightBrace,
-    
-    /// <summary>
-    /// <c>~</c>
-    /// </summary>
-    Tilde = SDL.Keycode.Tilde,
-    
-    /// <summary>
-    /// <c>\x7F</c>
-    /// </summary>
-    Delete = SDL.Keycode.Delete,
-    
-    /// <summary>
-    /// <c>±</c>
-    /// </summary>
-    PlusMinus = SDL.Keycode.PlusMinus,
-    
-    /// <summary>
-    /// Capslock)
-    /// </summary>
-    Capslock = SDL.Keycode.Capslock,
-    
-    /// <summary>
-    /// F1
-    /// </summary>
-    F1 = SDL.Keycode.F1,
-    
-    /// <summary>
-    /// F2
-    /// </summary>
-    F2 = SDL.Keycode.F2,
-    
-    /// <summary>
-    /// F3
-    /// </summary>
-    F3 = SDL.Keycode.F3,
-    
-    /// <summary>
-    /// F4
-    /// </summary>
-    F4 = SDL.Keycode.F4,
-    
-    /// <summary>
-    /// F5
-    /// </summary>
-    F5 = SDL.Keycode.F5,
-    
-    /// <summary>
-    /// F6
-    /// </summary>
-    F6 = SDL.Keycode.F6,
-    
-    /// <summary>
-    /// F7
-    /// </summary>
-    F7 = SDL.Keycode.F7,
-    
-    /// <summary>
-    /// F8
-    /// </summary>
-    F8 = SDL.Keycode.F8,
-    
-    /// <summary>
-    /// F9
-    /// </summary>
-    F9 = SDL.Keycode.F9,
-    
-    /// <summary>
-    /// F10
-    /// </summary>
-    F10 = SDL.Keycode.F10,
-    
-    /// <summary>
-    /// F11
-    /// </summary>
-    F11 = SDL.Keycode.F11,
-    
-    /// <summary>
-    /// F12
-    /// </summary>
-    F12 = SDL.Keycode.F12,
-    
-    /// <summary>
-    /// PrintScreen
-    /// </summary>
-    PrintScreen = SDL.Keycode.PrintScreen,
-    
-    /// <summary>
-    /// ScrollLock
-    /// </summary>
-    ScrolLlock = SDL.Keycode.ScrolLlock,
-    
-    /// <summary>
-    /// Pause
-    /// </summary>
-    Pause = SDL.Keycode.Pause,
-    
-    /// <summary>
-    /// Insert
-    /// </summary>
-    Insert = SDL.Keycode.Insert,
-    
-    /// <summary>
-    /// Home
-    /// </summary>
-    Home = SDL.Keycode.Home,
-    
-    /// <summary>
-    /// Pageup
-    /// </summary>
-    Pageup = SDL.Keycode.Pageup,
-    
-    /// <summary>
-    /// End
-    /// </summary>
-    End = SDL.Keycode.End,
-    
-    /// <summary>
-    /// Pagedown
-    /// </summary>
-    Pagedown = SDL.Keycode.Pagedown,
-    
-    /// <summary>
-    /// Right
-    /// </summary>
-    Right = SDL.Keycode.Right,
-    
-    /// <summary>
-    /// Left
-    /// </summary>
-    Left = SDL.Keycode.Left,
-    
-    /// <summary>
-    /// Down
-    /// </summary>
-    Down = SDL.Keycode.Down,
-    
-    /// <summary>
-    /// Up
-    /// </summary>
-    Up = SDL.Keycode.Up,
-    
+    NumLockClear = 83,
+    KpDivide = 84,
+    KpMultiply = 85,
+    KpMinus = 86,
+    KpPlus = 87,
+    KpEnter = 88,
+    Kp1 = 89,
+    Kp2 = 90,
+    Kp3 = 91,
+    Kp4 = 92,
+    Kp5 = 93,
+    Kp6 = 94,
+    Kp7 = 95,
+    Kp8 = 96,
+    Kp9 = 97,
+    Kp0 = 98,
+    KpPeriod = 99,
+
     /// <summary>
-    /// NumLockClear
+    /// This is the additional key that ISO
+    /// keyboards have over ANSI ones,
+    /// located between left shift and Y.
+    /// Produces GRAVE ACCENT and TILDE in a
+    /// US or UK Mac layout, REVERSE SOLIDUS
+    /// (backslash) and VERTICAL LINE in a
+    /// US or UK Windows layout, and
+    /// LESS-THAN SIGN and GREATER-THAN SIGN
+    /// in a Swiss German, German, or French
+    /// layout.
     /// </summary>
-    NumLockClear = SDL.Keycode.NumLockClear,
+    NonUsbackslash = 100,
     
     /// <summary>
-    /// KpDivide
+    /// windows contextual menu, compose
     /// </summary>
-    KpDivide = SDL.Keycode.KpDivide,
+    Application = 101,
     
     /// <summary>
-    /// KpMultiply
+    /// The USB document says this is a status flag,
+    /// not a physical key - but some Mac keyboards
+    /// do have a power key.
     /// </summary>
-    KpMultiply = SDL.Keycode.KpMultiply,
+    Power = 102,
+    KpEquals = 103,
+    F13 = 104,
+    F14 = 105,
+    F15 = 106,
+    F16 = 107,
+    F17 = 108,
+    F18 = 109,
+    F19 = 110,
+    F20 = 111,
+    F21 = 112,
+    F22 = 113,
+    F23 = 114,
+    F24 = 115,
+    Execute = 116,
     
     /// <summary>
-    /// KpMinus
+    /// AL Integrated Help Center
     /// </summary>
-    KpMinus = SDL.Keycode.KpMinus,
+    Help = 117,
     
     /// <summary>
-    /// KpPlus
+    /// Menu (show menu)
     /// </summary>
-    KpPlus = SDL.Keycode.KpPlus,
+    Menu = 118,
+    Select = 119,
     
     /// <summary>
-    /// KpEnter
+    /// AC Stop
     /// </summary>
-    KpEnter = SDL.Keycode.KpEnter,
+    Stop = 120,
     
     /// <summary>
-    /// Kp1
+    /// AC Redo/Repeat
     /// </summary>
-    Kp1 = SDL.Keycode.Kp1,
+    Again = 121,
     
     /// <summary>
-    /// Kp2
+    /// AC Undo
     /// </summary>
-    Kp2 = SDL.Keycode.Kp2,
+    Undo = 122,
     
     /// <summary>
-    /// Kp3
+    /// AC Cut
     /// </summary>
-    Kp3 = SDL.Keycode.Kp3,
+    Cut = 123,
     
     /// <summary>
-    /// Kp4
+    /// AC Copy
     /// </summary>
-    Kp4 = SDL.Keycode.Kp4,
+    Copy = 124,
     
     /// <summary>
-    /// Kp5
+    /// AC Paste
     /// </summary>
-    Kp5 = SDL.Keycode.Kp5,
+    Paste = 125,
     
     /// <summary>
-    /// Kp6
+    /// AC Find
     /// </summary>
-    Kp6 = SDL.Keycode.Kp6,
+    Find = 126,
+    Mute = 127,
+    VolumeUp = 128,
+    VolumeDown = 129,
     
-    /// <summary>
-    /// Kp7
-    /// </summary>
-    Kp7 = SDL.Keycode.Kp7,
-    
-    /// <summary>
-    /// Kp8
-    /// </summary>
-    Kp8 = SDL.Keycode.Kp8,
-    
-    /// <summary>
-    /// Kp9
-    /// </summary>
-    Kp9 = SDL.Keycode.Kp9,
-    
-    /// <summary>
-    /// Kp0
-    /// </summary>
-    Kp0 = SDL.Keycode.Kp0,
-    
-    /// <summary>
-    /// KpPeriod
-    /// </summary>
-    KpPeriod = SDL.Keycode.KpPeriod,
-    
-    /// <summary>
-    /// Application
-    /// </summary>
-    Application = SDL.Keycode.Application,
-    
-    /// <summary>
-    /// Power
-    /// </summary>
-    Power = SDL.Keycode.Power,
-    
-    /// <summary>
-    /// KpEquals
-    /// </summary>
-    KpEquals = SDL.Keycode.KpEquals,
-    
-    /// <summary>
-    /// F13
-    /// </summary>
-    F13 = SDL.Keycode.F13,
-    
-    /// <summary>
-    /// F14
-    /// </summary>
-    F14 = SDL.Keycode.F14,
-    
-    /// <summary>
-    /// F15
-    /// </summary>
-    F15 = SDL.Keycode.F15,
-    
-    /// <summary>
-    /// F16
-    /// </summary>
-    F16 = SDL.Keycode.F16,
-    
-    /// <summary>
-    /// F17
-    /// </summary>
-    F17 = SDL.Keycode.F17,
-    
-    /// <summary>
-    /// F18
-    /// </summary>
-    F18 = SDL.Keycode.F18,
-    
-    /// <summary>
-    /// F19
-    /// </summary>
-    F19 = SDL.Keycode.F19,
-    
-    /// <summary>
-    /// F20
-    /// </summary>
-    F20 = SDL.Keycode.F20,
-    
-    /// <summary>
-    /// F21
-    /// </summary>
-    F21 = SDL.Keycode.F21,
-    
-    /// <summary>
-    /// F22
-    /// </summary>
-    F22 = SDL.Keycode.F22,
-    
-    /// <summary>
-    /// F23
-    /// </summary>
-    F23 = SDL.Keycode.F23,
-    
-    /// <summary>
-    /// F24
-    /// </summary>
-    F24 = SDL.Keycode.F24,
-    
-    /// <summary>
-    /// Execute
-    /// </summary>
-    Execute = SDL.Keycode.Execute,
-    
-    /// <summary>
-    /// Help
-    /// </summary>
-    Help = SDL.Keycode.Help,
-    
-    /// <summary>
-    /// Menu
-    /// </summary>
-    Menu = SDL.Keycode.Menu,
-    
-    /// <summary>
-    /// Select
-    /// </summary>
-    Select = SDL.Keycode.Select,
-    
-    /// <summary>
-    /// Stop
-    /// </summary>
-    Stop = SDL.Keycode.Stop,
-    
-    /// <summary>
-    /// Again
-    /// </summary>
-    Again = SDL.Keycode.Again,
-    
-    /// <summary>
-    /// Undo
-    /// </summary>
-    Undo = SDL.Keycode.Undo,
-    
-    /// <summary>
-    /// Cut
-    /// </summary>
-    Cut = SDL.Keycode.Cut,
-    
-    /// <summary>
-    /// Copy
-    /// </summary>
-    Copy = SDL.Keycode.Copy,
-    
-    /// <summary>
-    /// Paste
-    /// </summary>
-    Paste = SDL.Keycode.Paste,
-    
-    /// <summary>
-    /// Find
-    /// </summary>
-    Find = SDL.Keycode.Find,
-    
-    /// <summary>
-    /// Mute
-    /// </summary>
-    Mute = SDL.Keycode.Mute,
-    
-    /// <summary>
-    /// VolumeUp
-    /// </summary>
-    VolumeUp = SDL.Keycode.VolumeUp,
-    
-    /// <summary>
-    /// VolumeDown
-    /// </summary>
-    VolumeDown = SDL.Keycode.VolumeDown,
-    
-    /// <summary>
-    /// KpComma
-    /// </summary>
-    KpComma = SDL.Keycode.KpComma,
-    
-    /// <summary>
-    /// KpEqualsAs400
-    /// </summary>
-    KpEqualAas400 = SDL.Keycode.KpEqualAas400,
-    
-    /// <summary>
-    /// AltErase
-    /// </summary>
-    AltErase = SDL.Keycode.AltErase,
-    
-    /// <summary>
-    /// SysReq
-    /// </summary>
-    SysReq = SDL.Keycode.SysReq,
-    
-    /// <summary>
-    /// Cancel
-    /// </summary>
-    Cancel = SDL.Keycode.Cancel,
-    
-    /// <summary>
-    /// Clear
-    /// </summary>
-    Clear = SDL.Keycode.Clear,
-    
-    /// <summary>
-    /// Prior
-    /// </summary>
-    Prior = SDL.Keycode.Prior,
-    
-    /// <summary>
-    /// Return2
-    /// </summary>
-    Return2 = SDL.Keycode.Return2,
-    
-    /// <summary>
-    /// Separator
-    /// </summary>
-    Separator = SDL.Keycode.Separator,
     
+     /*
+      not sure whether there's a reason to enable these
+      LOCKINGCAPSLOCK = 130,
+      LOCKINGNUMLOCK = 131,
+      LOCKINGSCROLLLOCK = 132, 
+     */
+     
+    KpComma = 133,
+    KpEqualsAs400 = 134,
+
     /// <summary>
-    /// Out
+    /// used on Asian keyboards, see
+    /// footnotes in USB doc
     /// </summary>
-    Out = SDL.Keycode.Out,
+    International1 = 135,
+    International2 = 136,
     
     /// <summary>
-    /// Oper
+    /// Yen
     /// </summary>
-    Oper = SDL.Keycode.Oper,
+    International3 = 137,
+    International4 = 138,
+    International5 = 139,
+    International6 = 140,
+    International7 = 141,
+    International8 = 142,
+    International9 = 143,
     
     /// <summary>
-    /// ClearAgain
+    /// Hangul/English toggle
     /// </summary>
-    ClearAgain = SDL.Keycode.ClearAgain,
+    Lang1 = 144,
     
     /// <summary>
-    /// CrSel
+    /// Hanja conversion
     /// </summary>
-    CrSel = SDL.Keycode.CrSel,
+    Lang2 = 145,
     
     /// <summary>
-    /// ExSel
+    /// Katakana
     /// </summary>
-    ExSel = SDL.Keycode.ExSel,
+    Lang3 = 146,
     
     /// <summary>
-    /// Kp00
+    /// Hiragana
     /// </summary>
-    Kp00 = SDL.Keycode.Kp00,
+    Lang4 = 147,
     
     /// <summary>
-    /// Kp000
+    /// Zenkaku/Hankaku
     /// </summary>
-    Kp000 = SDL.Keycode.Kp000,
+    Lang5 = 148,
     
     /// <summary>
-    /// ThousandsSeparator
+    /// reserved
     /// </summary>
-    ThousandsSeparator = SDL.Keycode.ThousandsSeparator,
+    Lang6 = 149,
     
     /// <summary>
-    /// DecimalSeparator
+    /// reserved
     /// </summary>
-    DecimalSeparator = SDL.Keycode.DecimalSeparator,
+    Lang7 = 150,
     
     /// <summary>
-    /// CurrencyUnit
+    /// reserved
     /// </summary>
-    CurrenCyUnit = SDL.Keycode.CurrenCyUnit,
+    Lang8 = 151,
     
     /// <summary>
-    /// CurrencySubunit
+    /// reserved
     /// </summary>
-    CurrenCySubunit = SDL.Keycode.CurrenCySubunit,
-    
-    /// <summary>
-    /// KpLeftParen
-    /// </summary>
-    KpLeftParen = SDL.Keycode.KpLeftParen,
-    
-    /// <summary>
-    /// KpRightParen
-    /// </summary>
-    KpRightParen = SDL.Keycode.KpRightParen,
-    
-    /// <summary>
-    /// KpLeftBrace
-    /// </summary>
-    KpLeftBrace = SDL.Keycode.KpLeftBrace,
-    
-    /// <summary>
-    /// KpRightBrace
-    /// </summary>
-    KpRightBrace = SDL.Keycode.KpRightBrace,
-    
-    /// <summary>
-    /// KpTab
-    /// </summary>
-    KpTab = SDL.Keycode.KpTab,
-    
-    /// <summary>
-    /// KpBackspace
-    /// </summary>
-    KpBackspace = SDL.Keycode.KpBackspace,
-    
-    /// <summary>
-    /// KpA
-    /// </summary>
-    KpA = SDL.Keycode.KpA,
-    
-    /// <summary>
-    /// KpB
-    /// </summary>
-    KpB = SDL.Keycode.KpB,
-    
-    /// <summary>
-    /// KpC
-    /// </summary>
-    KpC = SDL.Keycode.KpC,
-    
-    /// <summary>
-    /// KpD
-    /// </summary>
-    KpD = SDL.Keycode.KpD,
-    
-    /// <summary>
-    /// KpE
-    /// </summary>
-    KpE = SDL.Keycode.KpE,
-    
-    /// <summary>
-    /// KpF
-    /// </summary>
-    KpF = SDL.Keycode.KpF,
-    
-    /// <summary>
-    /// KpXor
-    /// </summary>
-    KpXor = SDL.Keycode.KpXor,
-    
-    /// <summary>
-    /// KpPower
-    /// </summary>
-    KpPower = SDL.Keycode.KpPower,
-    
-    /// <summary>
-    /// KpPercent
-    /// </summary>
-    KpPercent = SDL.Keycode.KpPercent,
-    
-    /// <summary>
-    /// KpLess
-    /// </summary>
-    KpLess = SDL.Keycode.KpLess,
-    
-    /// <summary>
-    /// KpGreater
-    /// </summary>
-    KpGreater = SDL.Keycode.KpGreater,
-    
-    /// <summary>
-    /// KpAmpersand
-    /// </summary>
-    KpAmpersand = SDL.Keycode.KpAmpersand,
-    
-    /// <summary>
-    /// KpDblAmpersand
-    /// </summary>
-    KpDblAmpersand = SDL.Keycode.KpDblAmpersand,
-    
-    /// <summary>
-    /// KpVerticalBar
-    /// </summary>
-    KpVerticalBar = SDL.Keycode.KpVerticalBar,
-    
-    /// <summary>
-    /// KpDBLVERTICALBAR
-    /// </summary>
-    KpDblVerticalBar = SDL.Keycode.KpDblVerticalBar,
-    
+    Lang9 = 152,
+
     /// <summary>
-    /// KpDblVerticalBar
+    /// Erase-Eaze
     /// </summary>
-    KpColon = SDL.Keycode.KpColon,
+    AltErase = 153,
+    SysReq = 154,
     
     /// <summary>
-    /// KpHash
+    /// AC Cancel
     /// </summary>
-    KpHash = SDL.Keycode.KpHash,
+    Cancel = 155,
+    Clear = 156,
+    Prior = 157,
+    Return2 = 158,
+    Separator = 159,
+    Out = 160,
+    Oper = 161,
+    ClearAgain = 162,
+    CrSel = 163,
+    ExSel = 164,
+
+    Kp00 = 176,
+    Kp000 = 177,
+    ThousandsSeparator = 178,
+    DecimalSeparator = 179,
+    CurrencyUnit = 180,
+    CurrencySubunit = 181,
+    KpLeftParen = 182,
+    KpRightParen = 183,
+    KpLeftBrace = 184,
+    KpRightBrace = 185,
+    KpTab = 186,
+    KpBackspace = 187,
+    KpA = 188,
+    KpB = 189,
+    KpC = 190,
+    KpD = 191,
+    KpE = 192,
+    KpF = 193,
+    KpXor = 194,
+    KpPower = 195,
+    KpPercent = 196,
+    KpLess = 197,
+    KpGreater = 198,
+    KpAmpersand = 199,
+    KpDblAmpersand = 200,
+    KpVerticalBar = 201,
+    KpDblVerticalBar = 202,
+    KpColon = 203,
+    KpHash = 204,
+    KpSpace = 205,
+    KpAt = 206,
+    KpExClam = 207,
+    KpMemStore = 208,
+    KpMemRecall = 209,
+    KpMemClear = 210,
+    KpMemAdd = 211,
+    KpMemSubtract = 212,
+    KpMemMultiply = 213,
+    KpMemDivide = 214,
+    KpPlusMinus = 215,
+    KpClear = 216,
+    KpClearEntry = 217,
+    KpBinary = 218,
+    KpOctal = 219,
+    KpDecimal = 220,
+    KpHexadecimal = 221,
+
+    LCtrl = 224,
+    LShift = 225,
     
     /// <summary>
-    /// KpSpace
+    /// alt, option
     /// </summary>
-    KpSpace = SDL.Keycode.KpSpace,
+    LAlt = 226,
     
     /// <summary>
-    /// KpAt
+    /// windows, command (apple), meta
     /// </summary>
-    KpAt = SDL.Keycode.KpAt,
+    LGUI = 227,
+    RCtrl = 228,
+    RShift = 229,
     
     /// <summary>
-    /// KpExClam
+    /// alt gr, option
     /// </summary>
-    KpExClam = SDL.Keycode.KpExClam,
+    RAlt = 230,
     
     /// <summary>
-    /// KpMemStore
+    /// windows, command (apple), meta
     /// </summary>
-    KpMemStore = SDL.Keycode.KpMemStore,
-    
-    /// <summary>
-    /// KpMemRecall
-    /// </summary>
-    KpMemRecall = SDL.Keycode.KpMemRecall,
-    
-    /// <summary>
-    /// KpMemClear
-    /// </summary>
-    KpMemClear = SDL.Keycode.KpMemClear,
-    
-    /// <summary>
-    /// KpMemAdd
-    /// </summary>
-    KpMemAdd = SDL.Keycode.KpMemAdd,
-    
-    /// <summary>
-    /// KpMemSubtract
-    /// </summary>
-    KpMemSubtract = SDL.Keycode.KpMemSubtract,
-    
-    /// <summary>
-    /// KpMemMultiply
-    /// </summary>
-    KpMemMultiply = SDL.Keycode.KpMemMultiply,
-    
-    /// <summary>
-    /// KpMemDivide
-    /// </summary>
-    KpMemDivide = SDL.Keycode.KpMemDivide,
-    
-    /// <summary>
-    /// KpPlusMinus)
-    /// </summary>
-    KpPlusMinus = SDL.Keycode.KpPlusMinus,
-    
-    /// <summary>
-    /// KpClear)
-    /// </summary>
-    KpClear = SDL.Keycode.KpClear,
-    
-    /// <summary>
-    /// KpClearEntry
-    /// </summary>
-    KpClearEntry = SDL.Keycode.KpClearEntry,
-    
-    /// <summary>
-    /// KpBinary
-    /// </summary>
-    KpBinary = SDL.Keycode.KpBinary,
-    
-    /// <summary>
-    /// KpOctal
-    /// </summary>
-    KpOctal = SDL.Keycode.KpOctal,
-    
-    /// <summary>
-    /// KpDecimal
-    /// </summary>
-    KpDecimal = SDL.Keycode.KpDecimal,
-    
-    /// <summary>
-    /// KpHexadecimal
-    /// </summary>
-    KpHexadecimal = SDL.Keycode.KpHexadecimal,
-    
-    /// <summary>
-    /// LCtrl
-    /// </summary>
-    LCtrl = SDL.Keycode.LCtrl,
-    
-    /// <summary>
-    /// LShift
-    /// </summary>
-    LShift = SDL.Keycode.LShift,
-    
-    /// <summary>
-    /// LAlt
-    /// </summary>
-    LAlt = SDL.Keycode.LAlt,
-    
-    /// <summary>
-    /// LGUI
-    /// </summary>
-    LGui = SDL.Keycode.LGui,
-    
-    /// <summary>
-    /// RCtrl
-    /// </summary>
-    RCtrl = SDL.Keycode.RCtrl,
-    
-    /// <summary>
-    /// RShift
-    /// </summary>
-    RShift = SDL.Keycode.RShift,
-    
-    /// <summary>
-    /// RAlt
-    /// </summary>
-    RAlt = SDL.Keycode.RAlt,
-    
-    /// <summary>
-    /// RGui
-    /// </summary>
-    RGUI = SDL.Keycode.RGUI,
-    
+    RGUI = 231,
+
     /// <summary>
-    /// Mode
+    /// I'm not sure if this is really not covered
+    /// by any of the above, but since there's a
+    /// special SDL_KMOD_MODE for it I'm adding it here
     /// </summary>
-    Mode = SDL.Keycode.Mode,
-    
+    Mode = 257,
+
     /// <summary>
     /// Sleep
     /// </summary>
-    Sleep = SDL.Keycode.Sleep,
+    Sleep = 258,
     
     /// <summary>
     /// Wake
     /// </summary>
-    Wake = SDL.Keycode.Wake,
+    Wake = 259,
+
+    /// <summary>
+    /// Channel Increment
+    /// </summary>
+    ChannelIncrement = 260,
     
     /// <summary>
-    /// ChannelIncrement
+    /// Channel Decrement
     /// </summary>
-    ChannelIncrement = SDL.Keycode.ChannelIncrement,
+    ChannelDecrement = 261,
+
+    /// <summary>
+    /// Play
+    /// </summary>
+    MediaPlay = 262,
     
     /// <summary>
-    /// ChannelDecrement
+    /// Pause
     /// </summary>
-    ChannelDecrement = SDL.Keycode.ChannelDecrement,
+    MediaPause = 263,
     
     /// <summary>
-    /// MediaPlay
+    /// Record
     /// </summary>
-    MediaPlay = SDL.Keycode.MediaPlay,
+    MediaRecord = 264,
     
     /// <summary>
-    /// MediaPause
+    /// Fast Forward
     /// </summary>
-    MediaPause = SDL.Keycode.MediaPause,
+    MediaFastForward = 265,
     
     /// <summary>
-    /// MediaRecord
+    /// Rewind
     /// </summary>
-    MediaRecord = SDL.Keycode.MediaRecord,
+    MediaRewind = 266,
     
     /// <summary>
-    /// MediaFastForward
+    /// Next Track
     /// </summary>
-    MediaFastForward = SDL.Keycode.MediaFastForward, 
+    MediaNextTrack = 267,
     
     /// <summary>
-    /// MediaRewind
+    /// Previous Track
     /// </summary>
-    MediaRewind = SDL.Keycode.MediaRewind,
+    MediaPreviousTrack = 268,
     
     /// <summary>
-    /// MediaNextTrack
+    /// Stop
     /// </summary>
-    MediaNextTrack = SDL.Keycode.MediaNextTrack,
+    MediaStop = 269,
     
     /// <summary>
-    /// MediaPreviousTrack
+    /// Eject
     /// </summary>
-    MediaPreviousTrack = SDL.Keycode.MediaPreviousTrack,
+    MediaEject = 270,
     
     /// <summary>
-    /// MediaStop
+    /// Play / Pause
     /// </summary>
-    MediaStop = SDL.Keycode.MediaStop, 
+    MediaPlayPause = 271,
     
     /// <summary>
-    /// MediaEject
+    /// Media Select
     /// </summary>
-    MediaEject = SDL.Keycode.MediaEject, 
+    MediaSelect = 272,
     
     /// <summary>
-    /// MediaPlayPause
+    /// AC New
     /// </summary>
-    MediaPlayPause = SDL.Keycode.MediaPlayPause, 
+    ACNew = 273,
     
     /// <summary>
-    /// MediaSelect
+    /// AC Open
     /// </summary>
-    MediaSelect = SDL.Keycode.MediaSelect, 
+    ACOpen = 274,
     
     /// <summary>
-    /// AcNew
+    /// AC Close
     /// </summary>
-    AcNew = SDL.Keycode.AcNew, 
+    ACClose = 275,
     
     /// <summary>
-    /// AcOpen
+    /// AC Exit
     /// </summary>
-    AcOpen = SDL.Keycode.AcOpen, 
+    ACExit = 276,
     
     /// <summary>
-    /// AcClose
+    /// AC Save
     /// </summary>
-    AcClose = SDL.Keycode.AcClose, 
+    ACSave = 277,
     
     /// <summary>
-    /// AcExit
+    /// AC Print
     /// </summary>
-    AcExit = SDL.Keycode.AcExit, 
+    ACPrint = 278,
     
     /// <summary>
-    /// AcSave
+    /// AC Properties
     /// </summary>
-    AcSave = SDL.Keycode.AcSave, 
+    ACProperties = 279,
+
+    /// <summary>
+    /// AC Search
+    /// </summary>
+    ACSearch = 280,
     
     /// <summary>
-    /// AcPrint
+    /// AC Home
     /// </summary>
-    AcPrint = SDL.Keycode.AcPrint, 
+    ACHome = 281,
     
     /// <summary>
-    /// AcProperties
+    /// AC Back
     /// </summary>
-    AcProperties = SDL.Keycode.AcProperties, 
+    ACBack = 282,
     
     /// <summary>
-    /// AcSearch
+    /// AC Forward
     /// </summary>
-    AcSearch = SDL.Keycode.AcSearch,
+    ACForward = 283,
     
     /// <summary>
-    /// AcHome
+    /// AC Stop
     /// </summary>
-    AcHome = SDL.Keycode.AcHome,
+    ACStop = 284,
     
     /// <summary>
-    /// AcBack
+    /// AC Refresh
     /// </summary>
-    AcBack = SDL.Keycode.AcBack, 
+    ACRefresh = 285,
     
     /// <summary>
-    /// AcForward
+    /// AC Bookmarks
     /// </summary>
-    AcForward = SDL.Keycode.AcForward, 
+    ACBookmarks = 286,
+    
+
+    /// <summary>
+    /// Usually situated below the display on phones and
+    /// used as a multi-function feature key for selecting
+    /// a software defined function shown on the bottom left
+    /// of the display.
+    /// </summary>
+    SoftLeft = 287,
     
     /// <summary>
-    /// AcStop
+    /// Usually situated below the display on phones and
+    /// used as a multi-function feature key for selecting
+    /// a software defined function shown on the bottom right
+    /// of the display.
     /// </summary>
-    AcStop = SDL.Keycode.AcStop,
+    SoftRight = 288,
     
     /// <summary>
-    /// AcRefresh
+    /// Used for accepting phone calls.
     /// </summary>
-    AcRefresh = SDL.Keycode.AcRefresh,
+    Call = 289,
     
     /// <summary>
-    /// AcBookmarks
+    /// Used for rejecting phone calls.
     /// </summary>
-    AcBookmarks = SDL.Keycode.AcBookmarks,
-    
-    /// <summary>
-    /// SoftLeft
-    /// </summary>
-    SoftLeft = SDL.Keycode.SoftLeft,
-    
-    /// <summary>
-    /// SoftRight
-    /// </summary>
-    SoftRight = SDL.Keycode.SoftRight,
-    
-    /// <summary>
-    /// Call
-    /// </summary>
-    Call = SDL.Keycode.Call,
-    
-    /// <summary>
-    /// EndCall
-    /// </summary>
-    EndCall = SDL.Keycode.EndCall,
-    
-    /// <summary>
-    /// Extended key Left Tab
-    /// </summary>
-    LeftTab = SDL.Keycode.LeftTab,
-    
-    /// <summary>
-    /// Extended key Level 5 Shift
-    /// </summary>
-    Level5Shift = SDL.Keycode.Level5Shift,
-    
-    /// <summary>
-    /// Extended key Multi-key Compose
-    /// </summary>
-    MultiKeyCompose = SDL.Keycode.MultiKeyCompose,
-    
-    /// <summary>
-    /// Extended key Left Meta
-    /// </summary>
-    LMeta = SDL.Keycode.LMeta,
-    
-    /// <summary>
-    /// Extended key Right Meta
-    /// </summary>
-    RMeta = SDL.Keycode.RMeta,
-    
-    /// <summary>
-    /// Extended key Left Hyper
-    /// </summary>
-    LHyper = SDL.Keycode.LHyper,
-    
-    /// <summary>
-    /// Extended key Right Hyper
-    /// </summary>
-    RHyper = SDL.Keycode.RHyper,
+    EndCall = 290,
 }

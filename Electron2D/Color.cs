@@ -1,4 +1,4 @@
-﻿namespace Electron2D.Input;
+﻿namespace Electron2D;
 
 public struct Color(byte r, byte g, byte b)
 {

@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D", "Electron2D\Electron2D.csproj", "{866C46F5-D6A5-4B66-AA96-489DD22F73DA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F9A787B5-7F45-4678-9416-78553985B9F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartGame", "StartGame\StartGame.csproj", "{7010BD02-F36B-4AED-9F07-704407EB0BFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,12 @@ Global
 		{866C46F5-D6A5-4B66-AA96-489DD22F73DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{866C46F5-D6A5-4B66-AA96-489DD22F73DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{866C46F5-D6A5-4B66-AA96-489DD22F73DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7010BD02-F36B-4AED-9F07-704407EB0BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7010BD02-F36B-4AED-9F07-704407EB0BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7010BD02-F36B-4AED-9F07-704407EB0BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7010BD02-F36B-4AED-9F07-704407EB0BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7010BD02-F36B-4AED-9F07-704407EB0BFC} = {F9A787B5-7F45-4678-9416-78553985B9F7}
 	EndGlobalSection
 EndGlobal

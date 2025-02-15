@@ -2,7 +2,7 @@
 
 namespace Electron2D.Input;
 
-public enum GamepudButton
+public enum GamepadButton
 {
     Invalid = SDL.GamepadButton.Invalid,
     

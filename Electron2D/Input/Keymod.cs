@@ -1,6 +1,6 @@
 ﻿using SDL3;
 
-namespace Electron2D;
+namespace Electron2D.Input;
 
 [Flags]
 public enum Keymod : ushort

@@ -2,5 +2,7 @@
 
 public enum FullscreenMode
 {
-    
+    Disabled,
+    Enabled,
+    Borderless
 }
