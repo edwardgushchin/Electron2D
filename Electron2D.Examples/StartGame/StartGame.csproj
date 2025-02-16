@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Electron2D\Electron2D.csproj" />
       <ProjectReference Include="..\Electron2D\Electron2D.csproj" />
     </ItemGroup>
 
