@@ -2,7 +2,6 @@
 
 namespace Electron2D.Input;
 
-
 /// <summary>
 /// <para>The basic state for the system's power supply.</para>
 /// </summary>

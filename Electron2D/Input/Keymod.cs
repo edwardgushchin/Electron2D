@@ -94,4 +94,4 @@ public enum Keymod : ushort
     /// Any GUI key is down.
     /// </summary>p0
     GUI = LGUI | RGUI
-    }
+}
