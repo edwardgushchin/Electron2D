@@ -12,6 +12,12 @@ public struct Settings
     
     public VSyncMode VSync { get; set; }
 
+    public LogLevel LogLevel
+    {
+        get => Logger.Level;
+        set => Logger.Level = value;
+    }
+
 
     public static Settings LoadFromFile(string filename)
     {

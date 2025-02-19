@@ -15,7 +15,8 @@ internal static class Kernel
             Height = 768,
             Fullscreen = FullscreenMode.Disabled,
             Resizable = true,
-            VSync = VSyncMode.Adaptive
+            VSync = VSyncMode.Adaptive,
+            LogLevel = LogLevel.Debug
         };
         
         _game = new Game("Electron2D Game", ref settings);

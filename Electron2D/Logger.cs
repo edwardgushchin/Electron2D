@@ -4,7 +4,7 @@ public static class Logger
 {
     private static ILogger _logger = new ConsoleLogger();
 
-    public static LogLevel Level
+    internal static LogLevel Level
     {
         get => _logger.Level;
         set => _logger.Level = value;

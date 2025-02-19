@@ -2,7 +2,7 @@
 
 public class ConsoleLogger : ILogger
 {
-    public LogLevel Level { get; set; } = LogLevel.Debug;
+    public LogLevel Level { get; set; } = LogLevel.Info;
 
     public void Log(LogLevel level, string message)
     {
