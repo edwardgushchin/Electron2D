@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using SDL3;
 using Electron2D.Input;
 
@@ -14,8 +15,10 @@ public class Game
     private readonly EventManager _eventManager;
     private readonly SceneManager _sceneManager;
     
-    public Game(string title) 
+    public Game(string title)
     {
+        Logger.Info($"Electron2D Game Engine version {Assembly.GetEntryAssembly()!.GetName().Version} alpha");
+        
         var settings = new Settings
         {
             Width = 800,
@@ -25,6 +28,8 @@ public class Game
             VSync = VSyncMode.Disabled
         };
         
+        PrintDebugInformation(ref settings);
+        
         _windowManager = new WindowManager(title, ref settings);
         _renderer = new Renderer(_windowManager, ref settings);
         _eventManager = new EventManager();
@@ -33,11 +38,38 @@ public class Game
     
     public Game(string title, ref Settings settings) 
     {
+        Logger.Info($"Electron2D Game Engine version {Assembly.GetEntryAssembly()!.GetName().Version} alpha");
+        
+        PrintDebugInformation(ref settings);
+        
         _windowManager = new WindowManager(title, ref settings);
         _renderer = new Renderer(_windowManager, ref settings);
         _eventManager = new EventManager();
         _sceneManager = new SceneManager();
     }
+
+    private void PrintDebugInformation(ref Settings settings)
+    {
+        Logger.Debug($"Информация о платформе: " +
+                     $"OS Type: {PlatformInfo.OSType}, " +
+                     $"OS Version: {PlatformInfo.OSVersion}, " +
+                     $"Machine Name: {PlatformInfo.MachineName}, " +
+                     $"CPU Name: {PlatformInfo.CPUName}, " +
+                     $"CPU Architecture: {PlatformInfo.CPUArchitecture}, " +
+                     $"CPU Cores {PlatformInfo.CPUCores}, " +
+                     $"GPU Name: {PlatformInfo.GPUName}, " +
+                     $"GPU Driver: {PlatformInfo.GPUDriver}, " +
+                     $"RAM Size: {PlatformInfo.SystemRAM}KB, " +
+                     $"User: {PlatformInfo.UserName}, " +
+                     $"Current Directory: {PlatformInfo.CurrentDirectory}");
+        
+        Logger.Debug($"Настройки при запуске: " +
+                     $"Fullscreen: {settings.Fullscreen}{Environment.NewLine}" +
+                     $"Resizable: {settings.Resizable}{Environment.NewLine}" +
+                     $"VSync: {settings.VSync}{Environment.NewLine}" +
+                     $"Size: {settings.Width}x{settings.Height}{Environment.NewLine}");
+    }
+    
 
     public void AddScene(Scene scene, string name)
     {
