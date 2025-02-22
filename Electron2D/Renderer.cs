@@ -9,6 +9,8 @@ internal class Renderer(WindowManager windowManager, ref Settings settings)
 
     public void Initialize()
     {
+        Logger.Info("Initializing render...");
+        
         _rendererHandle = SDL.CreateRenderer(windowManager.GetWindowHandle(), null);
 
         switch (_settings.VSync)
@@ -28,6 +30,8 @@ internal class Renderer(WindowManager windowManager, ref Settings settings)
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        
+        Logger.Info("The render has been successfully initialized.");
     }
     
     public void Clear()
@@ -43,6 +47,7 @@ internal class Renderer(WindowManager windowManager, ref Settings settings)
     public void Shutdown()
     {
         SDL.DestroyRenderer(windowManager.GetWindowHandle());
+        Logger.Info("The renderer has been successfully shutdown.");
     }
     
     internal IntPtr GetRendererHandle() => _rendererHandle;

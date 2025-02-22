@@ -9,6 +9,6 @@ public class ConsoleLogger : ILogger
         if (level < Level)
             return;
         
-        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {level}: {message}");
+        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [{level}]: {message}");
     }
 }

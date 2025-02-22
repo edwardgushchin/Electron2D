@@ -11,12 +11,16 @@ internal class SceneManager
 
     public void Initialize()
     {
-
+        Logger.Info("Initializing scene manager...");
+        
+        Logger.Info("Scene Manager initialized successfully.");
     }
     
     public void AddScene(Scene scene, string sceneName)
     {
         _scenes!.Add(sceneName, scene);
+        
+        Logger.Info($"Scene '{sceneName}' has been successfully added.");
     }
 
     public void AddSceneFromFile(string scenePath, string sceneName)
@@ -28,6 +32,8 @@ internal class SceneManager
     {
         ActiveScene?.Shutdown();
         ActiveScene = _scenes![sceneName];
+        
+        Logger.Info($"Scene '{sceneName}' has been successfully loaded and set as active.");
     }
 
     public void Shutdown()

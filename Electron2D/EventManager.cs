@@ -48,10 +48,14 @@ internal class EventManager
 
     public void Initialize()
     {
+        Logger.Info("Initializing event manager...");
+        
         if (!SDL.InitSubSystem(InitSubsystems))
         {
             throw new ElectronException($"Failed to initialize SDL: {SDL.GetError()}");
         }
+        
+        Logger.Info("The event manager has been initialized successfully.");
     }
 
     public void Update()
@@ -314,5 +318,6 @@ internal class EventManager
     public void Shutdown()
     {
         SDL.QuitSubSystem(InitSubsystems);
+        Logger.Info("The event manager has been successfully shutdown.");
     }
 }

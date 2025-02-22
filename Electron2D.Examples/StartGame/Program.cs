@@ -16,7 +16,7 @@ internal static class Kernel
             Fullscreen = FullscreenMode.Disabled,
             Resizable = true,
             VSync = VSyncMode.Adaptive,
-            LogLevel = LogLevel.Debug
+            LogLevel = LogLevel.Info
         };
         
         _game = new Game("Electron2D Game", ref settings);

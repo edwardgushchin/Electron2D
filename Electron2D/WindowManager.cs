@@ -9,6 +9,8 @@ internal class WindowManager(string title, ref Settings settings)
     
     internal void Initialize()
     {
+        Logger.Info("Initializing window manager...");
+        
         if (!SDL.Init(SDL.InitFlags.Video))
         {
             throw new ElectronException($"Failed to initialize SDL: {SDL.GetError()}");
@@ -41,11 +43,14 @@ internal class WindowManager(string title, ref Settings settings)
         }
         
         _windowHandle = SDL.CreateWindow(title, _settings.Width, _settings.Height, windowFlags);
+        
+        Logger.Info("Window manager initialization was successful.");
     }
 
     internal void Shutdown()
     {
         SDL.DestroyWindow(_windowHandle);
+        Logger.Info("The window manager has been successfully shutdown.");
     }
     
     internal IntPtr GetWindowHandle() => _windowHandle;

@@ -17,7 +17,7 @@ public class Game
     
     public Game(string title)
     {
-        Logger.Info($"Electron2D Game Engine version {Assembly.GetEntryAssembly()!.GetName().Version} alpha");
+        Logger.Info($"Electron2D Game Engine version {Assembly.GetEntryAssembly()!.GetName().Version}");
         
         var settings = new Settings
         {
@@ -38,7 +38,7 @@ public class Game
     
     public Game(string title, ref Settings settings) 
     {
-        Logger.Info($"Electron2D Game Engine version {Assembly.GetEntryAssembly()!.GetName().Version} alpha");
+        Logger.Info($"Electron2D Game Engine version {Assembly.GetEntryAssembly()!.GetName().Version}");
         
         PrintDebugInformation(ref settings);
         
@@ -50,7 +50,7 @@ public class Game
 
     private void PrintDebugInformation(ref Settings settings)
     {
-        Logger.Debug($"Информация о платформе: " +
+        Logger.Debug($"Platform info: " +
                      $"OS Type: {PlatformInfo.OSType}, " +
                      $"OS Version: {PlatformInfo.OSVersion}, " +
                      $"Machine Name: {PlatformInfo.MachineName}, " +
@@ -63,11 +63,11 @@ public class Game
                      $"User: {PlatformInfo.UserName}, " +
                      $"Current Directory: {PlatformInfo.CurrentDirectory}");
         
-        Logger.Debug($"Настройки при запуске: " +
-                     $"Fullscreen: {settings.Fullscreen}{Environment.NewLine}" +
-                     $"Resizable: {settings.Resizable}{Environment.NewLine}" +
-                     $"VSync: {settings.VSync}{Environment.NewLine}" +
-                     $"Size: {settings.Width}x{settings.Height}{Environment.NewLine}");
+        Logger.Debug($"Settings: " +
+                     $"Fullscreen: {settings.Fullscreen}, " +
+                     $"Resizable: {settings.Resizable}, " +
+                     $"VSync: {settings.VSync}, " +
+                     $"Size: {settings.Width}x{settings.Height}");
     }
     
 
@@ -83,6 +83,8 @@ public class Game
 
     public void Play()
     {
+        Logger.Info("Game engine strting...");
+        
         Initialize();
         
         _isRunning = true;
@@ -97,6 +99,8 @@ public class Game
 
         var lastTime = SDL.GetPerformanceCounter();
         var frequency = SDL.GetPerformanceFrequency();
+        
+        Logger.Info("The main loop has started.");
 
         while (_isRunning)
         {
@@ -105,16 +109,12 @@ public class Game
         
             lastTime = currentTime;
             
-            _eventManager.Update();
-        
-            Keyboard.Update();
-            
-            Mouse.Update();
-
             Update(deltaTime);
             
             Render();
         }
+        
+        Logger.Info("The main loop has completed its work.");
 
         Shutdown();
     }
@@ -123,6 +123,8 @@ public class Game
     public void Stop()
     {
         _isRunning = false;
+        
+        Logger.Info("The game engine is shutting down...");
     }
 
     
@@ -141,6 +143,10 @@ public class Game
     {
         _eventManager.Update();
         
+        Keyboard.Update();
+            
+        Mouse.Update();
+
         _sceneManager.ActiveScene?.Update(deltaTime);
     }
 
@@ -167,6 +173,8 @@ public class Game
 
     private void SubscribedEvents()
     {
+        Logger.Info("Subscribe to events...");
+        
         _eventManager.WindowShown += OnWindowShown;
         _eventManager.WindowHidden += OnWindowHidden;
         _eventManager.WindowMoved += OnWindowMoved;
@@ -205,10 +213,14 @@ public class Game
         _eventManager.SensorUpdate += OnSensorUpdate;
         
         _eventManager.Quit += OnQuit;
+        
+        Logger.Info("Subscription to events was successful.");
     }
 
     private void UnsubscribedEvents()
     {
+        Logger.Info("Unsubscribing from events...");
+        
         _eventManager.WindowShown -= OnWindowShown;
         _eventManager.WindowHidden -= OnWindowHidden;
         _eventManager.WindowMoved -= OnWindowMoved;
@@ -247,6 +259,8 @@ public class Game
         _eventManager.SensorUpdate -= OnSensorUpdate;
         
         _eventManager.Quit -= OnQuit;
+        
+        Logger.Info("Unsubscribing from events was successful.");
     }
 
     #region Window events
