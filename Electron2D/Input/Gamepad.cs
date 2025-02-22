@@ -271,7 +271,7 @@ public class Gamepad : IDisposable
     /// <exception cref="ElectronException">Gamepad LED error</exception>
     public void SetLED(Color color)
     {
-        var result = SDL.SetGamepadLED(_handle, color.Red, color.Green, color.Blue);
+        var result = SDL.SetGamepadLED(_handle, color.R, color.G, color.B);
         if(result == false) throw new ElectronException($"Gamepad LED error: {SDL.GetError()}");
     }
 
