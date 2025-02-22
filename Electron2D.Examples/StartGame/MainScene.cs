@@ -31,6 +31,9 @@ public class MainScene : Scene
     public override void OnKeyDown(uint id, Keycode key, Keymod mod, bool repeat)
     {
         if(key == Keycode.Escape) Kernel.Exit();
+        
+        if(key == Keycode.Backspace) 
+            ClearColor = Color.Azure;
     }
 
 

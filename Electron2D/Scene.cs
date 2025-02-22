@@ -3,11 +3,29 @@
 namespace Electron2D;
 
 public abstract class Scene
-{
+{ 
+    private Color _clearColor = Color.Black;
+    
+    public IRenderContext? RenderContext { get; set; }
+    
+    public Color ClearColor
+    {
+        get => _clearColor;
+        set
+        {
+            _clearColor = value;
+            RenderContext?.SetClearColor(_clearColor);
+        }
+    }
+    
     public abstract void OnStart();
+    
     public abstract void OnLoad();
+    
     public abstract void Update(float deltaTime);
+    
     public abstract void Render();
+    
     public abstract void Shutdown();
 
     #region Window events

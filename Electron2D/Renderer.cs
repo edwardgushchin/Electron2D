@@ -2,16 +2,23 @@
 
 namespace Electron2D;
 
-internal class Renderer(WindowManager windowManager, ref Settings settings)
+internal class Renderer(WindowManager windowManager, ref Settings settings) : IRenderContext
 {
     private readonly Settings _settings = settings;
     private IntPtr _rendererHandle;
+    
+    private bool _isInitialized = false;
+    private Color _pendingClearColor;
 
     public void Initialize()
     {
         Logger.Info("Initializing render...");
         
         _rendererHandle = SDL.CreateRenderer(windowManager.GetWindowHandle(), null);
+        
+        _isInitialized = true;
+        
+        SetClearColor(_pendingClearColor);
 
         switch (_settings.VSync)
         {
@@ -32,6 +39,22 @@ internal class Renderer(WindowManager windowManager, ref Settings settings)
         }
         
         Logger.Info("The render has been successfully initialized.");
+    }
+    
+    public void SetClearColor(Color color)
+    {
+        _pendingClearColor = color;
+
+        if (_isInitialized)
+        {
+            SDL.SetRenderDrawColor(_rendererHandle, color.R, color.G, color.B, color.A);
+        }
+    }
+
+    public Color GetClearColor()
+    {
+        SDL.GetRenderDrawColor(_rendererHandle, out var r, out var g, out var b, out var a);
+        return new Color(r, g, b, a);
     }
     
     public void Clear()

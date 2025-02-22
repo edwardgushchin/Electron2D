@@ -21,7 +21,10 @@ internal static class Kernel
         
         _game = new Game("Electron2D Game", ref settings);
         
-        var mainScene = new MainScene();
+        var mainScene = new MainScene
+        {
+            ClearColor = Color.Cyan
+        };
 
         _game.AddScene(mainScene, "MainScene");
         

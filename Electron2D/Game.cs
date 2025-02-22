@@ -78,7 +78,7 @@ public class Game
 
     public void LoadScene(string name)
     {
-        _sceneManager.LoadScene(name);
+        _sceneManager.LoadScene(name, _renderer);
     }
 
     public void Play()
@@ -321,12 +321,12 @@ public class Game
 
     private void OnKeyDown(SDL.KeyboardEvent e)
     {
-        _sceneManager.ActiveScene?.OnKeyDown(e.Which, (Keycode)e.Key, (Keymod)e.Mod, e.Repeat);
+        _sceneManager.ActiveScene?.OnKeyDown(e.Which, (Keycode)e.Scancode, (Keymod)e.Mod, e.Repeat);
     }
     
     private void OnKeyUp(SDL.KeyboardEvent e)
     {
-        _sceneManager.ActiveScene?.OnKeyUp(e.Which, (Keycode)e.Key, (Keymod)e.Mod, e.Repeat);
+        _sceneManager.ActiveScene?.OnKeyUp(e.Which, (Keycode)e.Scancode, (Keymod)e.Mod, e.Repeat);
     }
     
     #endregion

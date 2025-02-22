@@ -28,11 +28,13 @@ internal class SceneManager
         
     }
     
-    public void LoadScene(string sceneName)
+    public void LoadScene(string sceneName, Renderer renderer)
     {
         ActiveScene?.Shutdown();
         ActiveScene = _scenes![sceneName];
-        
+        ActiveScene.RenderContext = renderer;
+        ActiveScene.RenderContext.SetClearColor(ActiveScene.ClearColor);
+
         Logger.Info($"Scene '{sceneName}' has been successfully loaded and set as active.");
     }
 
@@ -40,5 +42,7 @@ internal class SceneManager
     {
         ActiveScene?.Shutdown();
         _scenes!.Clear();
+        
+        Logger.Info("The scene manager has been successfully shutdown.");
     }
 }
