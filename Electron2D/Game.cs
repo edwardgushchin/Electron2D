@@ -1,15 +1,14 @@
-﻿using System.Reflection;
-using System.Runtime.InteropServices;
-using SDL3;
+﻿using SDL3;
 using Electron2D.Input;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
 public class Game
 {
     private bool _isRunning;
-
-    // Подсистемы движка
+    
     private readonly WindowManager _windowManager;
     private readonly Renderer _renderer;
     private readonly EventManager _eventManager;
@@ -70,7 +69,6 @@ public class Game
                      $"Size: {settings.Width}x{settings.Height}");
     }
     
-
     public void AddScene(Scene scene, string name)
     {
         _sceneManager.AddScene(scene, name);
@@ -92,10 +90,11 @@ public class Game
         _eventManager.Update();
         
         Keyboard.Update();
+
         
-        _sceneManager.ActiveScene?.OnStart();
+        _sceneManager.ActiveScene?.InternalAwake();
         
-        _sceneManager.ActiveScene?.OnLoad();
+        _sceneManager.ActiveScene?.InternalStart();
 
         var lastTime = SDL.GetPerformanceCounter();
         var frequency = SDL.GetPerformanceFrequency();
@@ -110,6 +109,8 @@ public class Game
             lastTime = currentTime;
             
             Update(deltaTime);
+
+            FixedUpdate(60);
             
             Render();
         }
@@ -118,26 +119,22 @@ public class Game
 
         Shutdown();
     }
-
     
     public void Stop()
     {
         _isRunning = false;
-        
-        Logger.Info("The game engine is shutting down...");
     }
-
     
     private void Initialize()
     { 
         _windowManager.Initialize();
         _renderer.Initialize();
+        ResourceManager.Initialize(_renderer);
         _eventManager.Initialize();
         _sceneManager.Initialize();
         
         SubscribedEvents();
     }
-
     
     private void Update(float deltaTime)
     {
@@ -147,26 +144,40 @@ public class Game
             
         Mouse.Update();
 
-        _sceneManager.ActiveScene?.Update(deltaTime);
+        _sceneManager.ActiveScene?.InternalUpdate(deltaTime);
+
+        _sceneManager.ActiveScene?.LateUpdate();
+    }
+
+    private void FixedUpdate(float fixedDeltaTime)
+    {
+        
     }
 
     private void Render()
     {
+        _sceneManager.ActiveScene?.OnPreRender();
         _renderer.Clear();
         
-        _sceneManager.ActiveScene?.Render();
+        _sceneManager.ActiveScene?.InternalRender();
         
         _renderer.Present();
+        
+        _sceneManager.ActiveScene?.OnPostRender();
     }
 
     private void Shutdown()
     { 
+        Logger.Info("The game engine is shutting down...");
+        
         UnsubscribedEvents();
         
         _sceneManager.Shutdown();
         _eventManager.Shutdown();
         _renderer.Shutdown();
         _windowManager.Shutdown();
+        
+        Logger.Info("TThe game engine has completed its work successfully.");
         
         SDL.Quit();
     }

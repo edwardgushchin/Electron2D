@@ -22,15 +22,10 @@ internal class SceneManager
         
         Logger.Info($"Scene '{sceneName}' has been successfully added.");
     }
-
-    public void AddSceneFromFile(string scenePath, string sceneName)
-    {
-        
-    }
     
     public void LoadScene(string sceneName, Renderer renderer)
     {
-        ActiveScene?.Shutdown();
+        ActiveScene?.InternalDestroy();
         ActiveScene = _scenes![sceneName];
         ActiveScene.RenderContext = renderer;
         ActiveScene.RenderContext.SetClearColor(ActiveScene.ClearColor);
@@ -40,7 +35,7 @@ internal class SceneManager
 
     public void Shutdown()
     {
-        ActiveScene?.Shutdown();
+        ActiveScene?.InternalDestroy();
         _scenes!.Clear();
         
         Logger.Info("The scene manager has been successfully shutdown.");

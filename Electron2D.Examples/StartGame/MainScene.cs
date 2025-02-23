@@ -1,34 +1,27 @@
-﻿using Electron2D;
+﻿using System.Runtime.InteropServices;
+using Electron2D;
 using Electron2D.Input;
+using SDL3;
 
 namespace StartGame;
 
 public class MainScene : Scene
 {
-    public override void OnStart()
+    private Player _player;
+    private readonly float _playerSpeed = 20f;
+
+    protected override void Awake()
+    {
+        _player = new Player("Player", _playerSpeed);
+        AddGameObject(_player);
+    }
+
+    protected override void Start()
     {
         
     }
 
-    public override void OnLoad()
-    {
-        
-    }
-
-    public override void Update(float deltaTime)
-    {
-        
-    }
-
-    public override void Render()
-    {
-    }
-
-    public override void Shutdown()
-    {
-    }
-
-    public override void OnKeyDown(uint id, Keycode key, Keymod mod, bool repeat)
+    protected override void OnKeyDown(uint id, Keycode key, Keymod mod, bool repeat)
     {
         if(key == Keycode.Escape) Kernel.Exit();
         
@@ -36,8 +29,7 @@ public class MainScene : Scene
             ClearColor = Color.Azure;
     }
 
-
-    public override void OnQuit()
+    protected override void OnQuit()
     {
         Kernel.Exit();
     }

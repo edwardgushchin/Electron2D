@@ -7,7 +7,7 @@ internal class Renderer(WindowManager windowManager, ref Settings settings) : IR
     private readonly Settings _settings = settings;
     private IntPtr _rendererHandle;
     
-    private bool _isInitialized = false;
+    private bool _isInitialized;
     private Color _pendingClearColor;
 
     public void Initialize()
@@ -49,6 +49,11 @@ internal class Renderer(WindowManager windowManager, ref Settings settings) : IR
         {
             SDL.SetRenderDrawColor(_rendererHandle, color.R, color.G, color.B, color.A);
         }
+    }
+
+    public void RenderTexture(Texture texture, Vector2 size, Vector3 position)
+    {
+        SDL.RenderTexture(_rendererHandle, texture.Handle, new SDL.FRect {H = 360, W = 360, X = 0, Y = 0}, new SDL.FRect {W = size.X, H = size.Y, X = position.X, Y = position.Y});
     }
 
     public Color GetClearColor()
