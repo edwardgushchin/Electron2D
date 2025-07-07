@@ -1,41 +1,53 @@
-﻿using Electron2D;
-using Electron2D.Input;
+using Electron2D;
+using Electron2D.Graphics;
+using Electron2D.Inputs;
+using Electron2D.Resources;
 
 namespace StartGame;
 
-public class Player(string name, float speed) : GameObject(name)
+public class Player(string name, Texture player) : Node(name)
 {
-    private Sprite _sprite;
-    private float _speed = speed;
+    private Sprite _playerSprite;
 
     protected override void Awake()
     {
-        _sprite = new Sprite(Texture.LoadFromFile(Path.Combine("assets", "player.png")));
-
-        AddComponent(_sprite);
-    }
-
-    protected override void Start()
-    {
+        _playerSprite = new Sprite("PlayerSprite", player);
+        _playerSprite.PixelsPerUnit = 50;
         
+        AddChild(_playerSprite);
     }
-    
+
     protected override void Update(float deltaTime)
     {
-        if (Keyboard.GetKeyDown(Keycode.A)) 
-            Transform.Position += Vector3.Left * _speed * deltaTime;
+        const float moveSpeed = 2f; // в юнитах в секунду
         
-        if (Keyboard.GetKeyDown(Keycode.D))
-            Transform.Position += Vector3.Right * _speed * deltaTime;
+        _playerSprite.Transform.LocalRotation += moveSpeed * deltaTime;
         
-        if (Keyboard.GetKeyDown(Keycode.W))
-            Transform.Position += Vector3.Up * _speed * deltaTime;
-        
-        if (Keyboard.GetKeyDown(Keycode.S))
-            Transform.Position += Vector3.Down * _speed * deltaTime;
+        //Console.WriteLine("LocalPosition: X={0}, Y={1}", LocalPosition.X, LocalPosition.Y);
 
-        //_sprite.Position = Transform.Position;
-        
-        Logger.Info($"Player update: {Transform.Position.ToString()}");
+        if (Input.GetKeyDown(Scancode.Left))
+        {
+            Transform.LocalPosition = new Vector2(Transform.LocalPosition.X - moveSpeed * deltaTime, Transform.LocalPosition.Y);
+        }
+
+        if (Input.GetKeyDown(Scancode.Right))
+        {
+            Transform.LocalPosition = new Vector2(Transform.LocalPosition.X + moveSpeed * deltaTime, Transform.LocalPosition.Y);
+        }
+
+        if (Input.GetKeyDown(Scancode.Up))
+        {
+            Transform.LocalPosition = new Vector2(Transform.LocalPosition.X, Transform.LocalPosition.Y + moveSpeed * deltaTime);
+        }
+
+        if (Input.GetKeyDown(Scancode.Down))
+        {
+            Transform.LocalPosition = new Vector2(Transform.LocalPosition.X, Transform.LocalPosition.Y - moveSpeed * deltaTime);
+        }
+    }
+
+    public override void Destroy()
+    {
+        _playerSprite.Dispose();
     }
 }

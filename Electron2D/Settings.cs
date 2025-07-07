@@ -1,6 +1,6 @@
-﻿namespace Electron2D;
+namespace Electron2D;
 
-public struct Settings
+public class Settings
 {
     public int Width { get; set; }
     
@@ -12,11 +12,11 @@ public struct Settings
     
     public VSyncMode VSync { get; set; }
 
-    public LogLevel LogLevel
+    /*public LogLevel LogLevel
     {
         get => Logger.Level;
         set => Logger.Level = value;
-    }
+    }*/
 
 
     public static Settings LoadFromFile(string filename)

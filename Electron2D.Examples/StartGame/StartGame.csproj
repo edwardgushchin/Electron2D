@@ -10,14 +10,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Electron2D\Electron2D.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="assets\player.png" />
       <Content Include="assets\player.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Update="assets\hero.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Electron2D\Electron2D.csproj" />
     </ItemGroup>
 
 </Project>

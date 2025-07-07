@@ -9,17 +9,30 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SDL3-CS" Version="3.2.4.6" />
-      <PackageReference Include="SDL3-CS.Native" Version="3.2.4" />
-      <PackageReference Include="SDL3-CS.Native.Image" Version="3.2.0" />
-      <PackageReference Include="SDL3-CS.Native.Mixer" Version="2.8.1" />
-      <PackageReference Include="SDL3-CS.Native.TTF" Version="3.1.2" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Include="../README.md" Pack="true" PackagePath="\"/>
         <None Include="../LICENSE" Pack="true" PackagePath="\"/>
         <None Include="../CODE_OF_CONDUCT.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Electron2D">
+        <HintPath>..\Electron2D.Examples\StartGame\bin\Debug\net9.0\Electron2D.dll</HintPath>
+      </Reference>
+      <Reference Include="SDL3-CS">
+        <HintPath>..\..\SDL3-CS\SDL3-CS\bin\Release\net9.0\SDL3-CS.dll</HintPath>
+      </Reference>
+      <Reference Include="SDL3-CS.Native">
+        <HintPath>..\..\SDL3-CS\SDL3-CS.Native\bin\Release\net9.0\SDL3-CS.Native.dll</HintPath>
+      </Reference>
+      <Reference Include="SDL3-CS.Native.Image">
+        <HintPath>..\..\SDL3-CS\SDL3-CS.Native.Image\bin\Release\net9.0\SDL3-CS.Native.Image.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Audio\" />
+      <Folder Include="Debugging\" />
+      <Folder Include="GUI\" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace Electron2D;
+namespace Electron2D;
 
 public enum FullscreenMode
 {
