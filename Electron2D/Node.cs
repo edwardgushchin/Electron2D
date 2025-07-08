@@ -1,5 +1,3 @@
-using Electron2D.Components;
-
 namespace Electron2D;
 
 public class Node
@@ -73,7 +71,16 @@ public class Node
     
     public bool RemoveChildByName(string name)
     {
-        var child = _children.FirstOrDefault(c => c.Name == name);
+        Node? child = null;
+        foreach (var c in _children)
+        {
+            if (c.Name == name)
+            {
+                child = c;
+                break;
+            }
+        }
+
         if (child != null)
             return RemoveChild(child);
 

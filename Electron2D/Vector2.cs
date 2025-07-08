@@ -4,6 +4,12 @@ namespace Electron2D;
 
 public struct Vector2(float x, float y)
 {
+    public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
+        => LerpUnclamped(a, b, Math.Clamp(t, 0f, 1f));
+    
+    public static Vector2 LerpUnclamped(Vector2 a, Vector2 b, float t)
+        => a + (b - a) * t;
+    
     public static Vector2 RotatePoint(Vector2 point, float angleRadians)
     {
         var cos = MathF.Cos(angleRadians);
@@ -14,14 +20,6 @@ public struct Vector2(float x, float y)
         );
     }
     
-    public static Vector2 Normalize(Vector2 vector)
-    {
-        var length = vector.Length;
-        return length > 0 ? vector / length : Vector2.Zero;
-    }
-
-    public float Length => MathF.Sqrt(X * X + Y * Y);
-    
     public static float Distance(Vector2 a, Vector2 b)
     {
         return (a - b).Length;
@@ -31,6 +29,14 @@ public struct Vector2(float x, float y)
     {
         return a.X * b.X + a.Y * b.Y;
     }
+    
+    public static Vector2 Normalize(Vector2 vector)
+    {
+        var length = vector.Length;
+        return length > 0 ? vector / length : Vector2.Zero;
+    }
+
+    public float Length => MathF.Sqrt(X * X + Y * Y);
     
     public static Vector2 Zero => new(0, 0);
     
@@ -57,6 +63,7 @@ public struct Vector2(float x, float y)
 
     public static implicit operator Vector2(SDL.FPoint r) =>
         new(){ X = r.X, Y = r.Y };
+    
     
     public float X { get; set; } = x;
     public float Y { get; set; } = y;

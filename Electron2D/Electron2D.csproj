@@ -32,7 +32,7 @@
     <ItemGroup>
       <Folder Include="Audio\" />
       <Folder Include="Debugging\" />
-      <Folder Include="GUI\" />
+      <Folder Include="UI\" />
     </ItemGroup>
 
 </Project>

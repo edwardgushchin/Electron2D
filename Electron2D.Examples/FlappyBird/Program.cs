@@ -10,10 +10,8 @@ internal abstract class Program
         var settings = new Settings()
         {
             Fullscreen = FullscreenMode.Disabled,
-            Resizable = true,
+            Resizable = false,
             VSync = VSyncMode.Adaptive,
-            Width = 800,
-            Height = 600,
         };
         
         var game = new Game("FlappyBird", settings);

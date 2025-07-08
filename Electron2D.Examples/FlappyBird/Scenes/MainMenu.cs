@@ -1,4 +1,5 @@
 using Electron2D;
+using Electron2D.Inputs;
 using Electron2D.Resources;
 using FlappyBird.Components;
 
@@ -10,11 +11,19 @@ public class MainMenu : Node
     private readonly Logo _logo;
     private readonly Ready _ready;
     
-    public MainMenu(Texture background, Texture messages) : base("MainMenu")
+    public MainMenu(Texture background, Texture floor, Texture logo, Texture ready) : base("MainMenu")
     {
-        _background = new Background("background", background);
-        _logo = new Logo("logo", messages);
-        _ready = new Ready("ready", messages);
+        _background = new Background("background", background, floor);
+        _logo = new Logo("logo", logo);
+        _ready = new Ready("ready", ready);
+        
+        _ready.OnClick += ReadyOnOnClick;
+    }
+
+    private void ReadyOnOnClick()
+    {
+        _logo.Hide();
+        _ready.Hide();
     }
 
     protected override void Awake()
@@ -22,5 +31,11 @@ public class MainMenu : Node
         AddChild(_background);
         AddChild(_logo);
         AddChild(_ready);
+    }
+
+    protected override void Update(float deltaTime)
+    {
+        if (Input.GetKeyDown(Scancode.KpPlus)) _background.Speed += 0.01f;
+        if (Input.GetKeyDown(Scancode.KpMinus)) _background.Speed -= 0.01f;;
     }
 }

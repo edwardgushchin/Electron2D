@@ -6,7 +6,7 @@ namespace Electron2D.Systems;
 /// </summary>
 internal sealed class SystemManager
 {
-    private readonly List<ISystem> _systems = new();
+    private readonly List<ISystem> _systems = [];
 
     public void Register(ISystem system)
     {

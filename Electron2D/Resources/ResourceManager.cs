@@ -7,7 +7,7 @@ public class ResourceManager
 {
     private readonly Dictionary<string, IResource> _resources = new();
     
-    private Render _render;
+    private readonly Render _render;
 
     internal ResourceManager(Render render)
     {

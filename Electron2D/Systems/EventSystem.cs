@@ -1,6 +1,6 @@
 using SDL3;
 
-namespace Electron2D.Platform;
+namespace Electron2D.Systems;
 
 internal class EventSystem
 {

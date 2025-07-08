@@ -1,16 +1,18 @@
-using Electron2D.Components;
 using Electron2D.Resources;
-using SDL3;
 
 namespace Electron2D.Graphics;
 
 public class Sprite : Node, IDisposable
 {
-    private Texture _texture;
+    private readonly Texture _texture;
     
     private bool _disposed;
     
     private int _layer;
+    
+    private Color      _color      = Color.White;
+    private BlendMode  _blendMode  = BlendMode.Blend;
+    private ScaleMode  _scaleMode  = ScaleMode.Linear;
     
     public Sprite(string name, Texture texture) : base(name)
     {
@@ -55,6 +57,41 @@ public class Sprite : Node, IDisposable
         }
     }
     
+    public Color Color
+    {
+        get => _color;
+        set
+        {
+            if (_color.Equals(value)) return;
+            _color = value;
+            // Влияет на все спрайты, делящие текстуру ─ документируйте это!
+            _texture.SetColorMod(_color.R, _color.G, _color.B);
+            _texture.SetAlphaMod(_color.A);
+        }
+    }
+    
+    public BlendMode BlendMode
+    {
+        get => _blendMode;
+        set
+        {
+            if (_blendMode == value) return;
+            _blendMode = value;
+            _texture.BlendMode = value;
+        }
+    }
+    
+    public ScaleMode ScaleMode
+    {
+        get => _scaleMode;
+        set
+        {
+            if (_scaleMode == value) return;
+            _scaleMode = value;
+            _texture.ScaleMode = value;
+        }
+    }
+    
     /// <summary>
     /// Границы спрайта в мировых координатах.
     /// </summary>
@@ -63,13 +100,14 @@ public class Sprite : Node, IDisposable
         get
         {
             // Центр спрайта в мире
-            Vector2 center = Transform.GlobalPosition;
+            var width  = SourceRect.Width  / PixelsPerUnit * MathF.Abs(Transform.GlobalScale.X);
+            var height = SourceRect.Height / PixelsPerUnit * MathF.Abs(Transform.GlobalScale.Y);
 
-            // Размеры спрайта в юнитах
-            float width = (SourceRect.Width / PixelsPerUnit) * Transform.GlobalScale.X;
-            float height = (SourceRect.Height / PixelsPerUnit) * Transform.GlobalScale.Y;
+            // Смещение от pivot-а до геометрического центра AABB
+            var pivotOffset = new Vector2(0.5f - Center.X, 0.5f - Center.Y);
+            var centerWorld = Transform.GlobalPosition + new Vector2(width  * pivotOffset.X, height * pivotOffset.Y);
 
-            return new Bounds(center, new Vector2(width, height));
+            return new Bounds(centerWorld, new Vector2(width, height));
         }
     }
 

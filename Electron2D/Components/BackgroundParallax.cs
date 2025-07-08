@@ -6,7 +6,7 @@ public class BackgroundParallax(string name) : Node(name)
 {
     private readonly List<ParallaxLayer> _layers = [];
     
-    private float _globalOffsetX = 0f;
+    private float _globalOffsetX;
 
     /// <summary>
     /// Добавляет слой параллакса.
@@ -16,9 +16,17 @@ public class BackgroundParallax(string name) : Node(name)
     /// <param name="speed">Скорость параллакса (0 - неподвижный, 1 - движение как камера).</param>
     /// <param name="layerDepth">Глубина слоя для рендера (сортировка).</param>
     /// <param name="copies">Количество копий спрайта слева и справа (не включая центральный).</param>
-    public void AddLayer(string name, Texture texture, float speed, int layerDepth, int copies, float overlapPixels = 1f)
+    /// <param name="overlapPixels"></param>
+    /// <param name="offsetY"></param>
+    public void AddLayer(string name, Texture texture, float speed, int layerDepth, int copies, float overlapPixels = 1f, float offsetY = 0)
     {
-        var layer = new ParallaxLayer(name, texture, speed, layerDepth, copies, overlapPixels);
+        var layer = new ParallaxLayer(name, texture, speed, layerDepth, copies, overlapPixels)
+        {
+            Transform =
+            {
+                LocalPosition = new Vector2(0, offsetY)
+            }
+        };
         _layers.Add(layer);
         AddChild(layer);
     }

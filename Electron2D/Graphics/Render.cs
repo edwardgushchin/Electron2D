@@ -1,7 +1,6 @@
 using Electron2D.Components;
 using Electron2D.Physics;
 using Electron2D.Platform;
-using Electron2D.Resources;
 using SDL3;
 
 namespace Electron2D.Graphics;

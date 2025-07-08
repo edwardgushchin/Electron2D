@@ -1,8 +1,8 @@
-using Electron2D.Components;
+using Electron2D.Graphics;
 using Electron2D.Physics;
 using SDL3;
 
-namespace Electron2D.Graphics;
+namespace Electron2D.Systems;
 
 internal class RenderSystem(Render renderer)
 {

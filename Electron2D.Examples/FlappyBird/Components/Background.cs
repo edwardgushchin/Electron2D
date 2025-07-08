@@ -8,10 +8,11 @@ public class Background : Node
 {
     private readonly BackgroundParallax _backgroundParallax;
     
-    public Background(string name, Texture texture) : base(name)
+    public Background(string name, Texture sky, Texture floor) : base(name)
     {
         _backgroundParallax = new BackgroundParallax("BackgroundParallax");
-        _backgroundParallax.AddLayer("sky", texture, speed: 0.5f, layerDepth: 0, copies: 10, overlapPixels: 10);
+        _backgroundParallax.AddLayer("sky", sky, speed: 0.2f, layerDepth: 0, copies: 10, overlapPixels: 10);
+        _backgroundParallax.AddLayer("floor", floor, speed: 0.5f, layerDepth: 0, copies: 5, overlapPixels: 23,  -2.5f);
     }
 
     protected override void Awake()
@@ -21,7 +22,7 @@ public class Background : Node
 
     protected override void Update(float deltaTime)
     {
-        _backgroundParallax.SetOffset(Speed * deltaTime);
+        _backgroundParallax.SetOffset(-Speed * deltaTime);
     }
 
     public void ResetPosition()
@@ -29,5 +30,5 @@ public class Background : Node
         _backgroundParallax.ResetOffset();
     }
 
-    private float Speed { get; set; } = -0.5f;
+    public float Speed { get; set; } = 0.5f;
 }

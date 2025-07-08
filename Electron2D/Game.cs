@@ -1,7 +1,5 @@
 using SDL3;
 using Electron2D.Inputs;
-using Electron2D.Platform;
-using Electron2D.Graphics;
 using Electron2D.Components;
 using Electron2D.Resources;
 

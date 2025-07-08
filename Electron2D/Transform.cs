@@ -1,4 +1,4 @@
-namespace Electron2D.Components;
+namespace Electron2D;
 
 public class Transform(Node parent)
 {

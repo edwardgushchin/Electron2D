@@ -14,10 +14,10 @@ public class MainScene : Node
     
     private const float FloorY = -1.32f; // уровень пола
 
-    public MainScene(Texture bird, Texture background) : base("MainScene")
+    public MainScene(Texture bird, Texture background, Texture floor) : base("MainScene")
     {
         _bird = new Bird("bird", bird);
-        _background = new Background("background", background);
+        _background = new Background("background", background, floor);
         
         AddChild(_background);
         AddChild(_bird);

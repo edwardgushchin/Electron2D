@@ -14,10 +14,12 @@ public class Game : Electron2D.Game
     {
         var birdTexture = ResourceManager.LoadTexture("bird", Path.Combine(@"assets\sprites", "redbird-downflap.png"));
         var backgroundTexture = ResourceManager.LoadTexture("background", Path.Combine(@"assets\sprites", "background-day.png"));
-        var messagesTexture = ResourceManager.LoadTexture("messages", Path.Combine(@"assets\sprites", "message.png"));
+        var floorTexture = ResourceManager.LoadTexture("floor", Path.Combine(@"assets\sprites", "base.png"));
+        var logoTexture = ResourceManager.LoadTexture("logo", Path.Combine(@"assets\sprites", "message.png"));
+        var readyTexture = ResourceManager.LoadTexture("ready", Path.Combine(@"assets\sprites", "message.png"));
         
-        _mainScene = new MainScene(messagesTexture, backgroundTexture);
-        _mainMenu = new MainMenu(backgroundTexture, messagesTexture);
+        //_mainScene = new MainScene(messagesTexture, backgroundTexture, floorTexture);
+        _mainMenu = new MainMenu(backgroundTexture, floorTexture, logoTexture, readyTexture);
     }
 
     protected override void Initialize()
