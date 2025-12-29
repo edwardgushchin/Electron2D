@@ -29,6 +29,6 @@ internal class Program
         
         engine.SceneTree.AddChild(new MainScene());
 
-        engine.Run(scene);
+        engine.Run();
     }
 }
