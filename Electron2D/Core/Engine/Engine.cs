@@ -3,7 +3,6 @@ namespace Electron2D;
 
 public sealed class Engine : IDisposable
 {
-    private readonly EngineConfig _cfg;
     private readonly TimeSystem _time = new();
     private readonly EventSystem _events;
     private readonly InputSystem _input = new();
@@ -19,9 +18,6 @@ public sealed class Engine : IDisposable
 
     public Engine(EngineConfig cfg)
     {
-        _cfg = cfg;
-
-        // P0: применяем лимит deferred-free
         SceneTree = new SceneTree(new Node("Root"), cfg.DeferredFreeQueueCapacity);
 
         _events = new EventSystem();
@@ -47,8 +43,13 @@ public sealed class Engine : IDisposable
             _prof.BeginFrame();
 
             _time.BeginFrame();
+
             _events.BeginFrame();
             _input.BeginFrame(_events);
+            _events.EndFrame();
+
+            // Input pipeline (Godot-like)
+            SceneTree.DispatchInputEvents(_events.Events.Input.Read);
 
             while (_time.TryConsumeFixedStep(out var fixedDt))
             {

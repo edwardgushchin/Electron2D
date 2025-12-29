@@ -221,6 +221,12 @@ public class Node
 
     #endregion
     
+    protected void SetInputHandled()
+    {
+        _tree?.MarkInputHandled();
+    }
+
+    
     #endregion
     
     public void AddChild(Node child) => AddChild(child, keepWorldTransform: false);
@@ -516,9 +522,6 @@ public class Node
     {
         result = null;
 
-        static bool IsDot(ReadOnlySpan<char> s) => s.Length == 1 && s[0] == '.';
-        static bool IsDotDot(ReadOnlySpan<char> s) => s.Length == 2 && s[0] == '.' && s[1] == '.';
-
         if (path.IsEmpty || IsDot(path))
         {
             result = this;
@@ -566,6 +569,10 @@ public class Node
 
         result = node;
         return true;
+
+        static bool IsDotDot(ReadOnlySpan<char> s) => s.Length == 2 && s[0] == '.' && s[1] == '.';
+
+        static bool IsDot(ReadOnlySpan<char> s) => s.Length == 1 && s[0] == '.';
     }
 
     private Node? FindChildByName(ReadOnlySpan<char> name)

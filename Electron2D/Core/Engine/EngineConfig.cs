@@ -6,7 +6,6 @@ public sealed class EngineConfig
     public PhysicsConfig Physics { get; init; } = new();
 
     public bool UseFixedStep { get; set; } = true;
-    public float FixedDeltaSeconds { get; set; } = 1.0f / 60.0f;
     public int MaxFixedStepsPerFrame { get; init; } = 8;
 
     public int MaxFps { get; set; } = 0;

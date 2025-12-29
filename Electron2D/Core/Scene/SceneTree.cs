@@ -6,6 +6,7 @@ public sealed class SceneTree
 {
     private Node[] _freeQueue;
     private int _freeCount;
+    private bool _inputHandled;
     private readonly GroupIndex _groups = new();
 
     public SceneTree(Node root, int deferredFreeQueueCapacity  = 1024)
@@ -34,7 +35,9 @@ public sealed class SceneTree
     internal void QueueFree(Node node)
     {
         if ((uint)_freeCount >= (uint)_freeQueue.Length)
-            throw new InvalidOperationException("SceneTree deferred free queue overflow. Increase maxDeferredFreePerFrame.");
+            throw new InvalidOperationException(
+                "SceneTree deferred free queue overflow. Increase DeferredFreeQueueCapacity in EngineConfig.");
+
 
         _freeQueue[_freeCount++] = node;
     }
@@ -49,7 +52,74 @@ public sealed class SceneTree
         }
         _freeCount = 0;
     }
+    
+    public void DispatchInputEvents(ReadOnlySpan<InputEvent> events)
+    {
+        for (var i = 0; i < events.Length; i++)
+        {
+            _inputHandled = false;
+            DispatchInput(Root, events[i]);
+            if (_inputHandled) continue;
 
+            DispatchShortcutInput(Root, events[i]);
+            if (_inputHandled) continue;
+
+            DispatchUnhandledInput(Root, events[i]);
+            if (_inputHandled) continue;
+
+            if (events[i].Type is InputEventType.KeyDown or InputEventType.KeyUp)
+                DispatchUnhandledKeyInput(Root, events[i]);
+        }
+    }
+
+    private bool DispatchInput(Node node, InputEvent ev)
+    {
+        node.InternalInput(ev);
+        if (_inputHandled) return true;
+
+        var count = node.GetChildCount();
+        for (var i = 0; i < count; i++)
+            if (DispatchInput(node.GetChild(i), ev)) return true;
+
+        return false;
+    }
+
+    private bool DispatchShortcutInput(Node node, InputEvent ev)
+    {
+        node.InternalShortcutInput(ev);
+        if (_inputHandled) return true;
+
+        var count = node.GetChildCount();
+        for (var i = 0; i < count; i++)
+            if (DispatchShortcutInput(node.GetChild(i), ev)) return true;
+
+        return false;
+    }
+
+    private bool DispatchUnhandledInput(Node node, InputEvent ev)
+    {
+        node.InternalUnhandledInput(ev);
+        if (_inputHandled) return true;
+
+        var count = node.GetChildCount();
+        for (var i = 0; i < count; i++)
+            if (DispatchUnhandledInput(node.GetChild(i), ev)) return true;
+
+        return false;
+    }
+
+    private bool DispatchUnhandledKeyInput(Node node, InputEvent ev)
+    {
+        node.InternalUnhandledKeyInput(ev);
+        if (_inputHandled) return true;
+
+        var count = node.GetChildCount();
+        for (var i = 0; i < count; i++)
+            if (DispatchUnhandledKeyInput(node.GetChild(i), ev)) return true;
+
+        return false;
+    }
+    
     public void Process(float delta)
         => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
 
@@ -86,4 +156,7 @@ public sealed class SceneTree
         if (mode == ProcessMode.WhenPaused) return Paused;
         return true;
     }
+
+    internal void MarkInputHandled() => _inputHandled = true;
+
 }

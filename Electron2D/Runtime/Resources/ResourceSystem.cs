@@ -32,54 +32,63 @@ internal sealed class ResourceSystem
         _renderer = 0;
     }
 
-    internal Texture GetTexture(string id)
+    public Texture GetTexture(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
-            throw new ArgumentException("Texture id cannot be empty.", nameof(id));
+            throw new ArgumentException("Texture id is empty.", nameof(id));
 
-        if (_textures.TryGetValue(id, out var cached))
-            return cached;
+        if (_textures.TryGetValue(id, out var existing))
+        {
+            if (existing.IsValid)
+                return existing;
 
-        var path = ResolveTexturePath(id);
-        var handle = Image.LoadTexture(_renderer, path);
-        if (handle == 0)
-            throw new InvalidOperationException($"Failed to load texture '{id}' from '{path}'. SDL error: {SDL.GetError()}");
+            // Было unloaded — перезагружаем в тот же объект (важно для кэшей)
+            var newHandle = LoadTextureHandle(id);
+            existing.ReplaceHandle(newHandle);
+            return existing;
+        }
 
+        var handle = LoadTextureHandle(id);
         var tex = new Texture(handle);
-        _textures.Add(id, tex);
+        _textures[id] = tex;
         return tex;
     }
 
-    internal bool TryGetTexture(string id, out Texture texture)
+    public bool TryGetTexture(string id, out Texture texture)
     {
-        if (string.IsNullOrWhiteSpace(id))
-        {
-            texture = null!;
-            return false;
-        }
+        texture = null!;
+        if (string.IsNullOrWhiteSpace(id)) return false;
 
-        if (_textures.TryGetValue(id, out texture!))
-            return true;
+        if (!_textures.TryGetValue(id, out var tex) || !tex.IsValid) return false;
+        texture = tex;
+        return true;
 
-        try
-        {
-            texture = GetTexture(id);
-            return true;
-        }
-        catch
-        {
-            texture = null!;
-            return false;
-        }
+        // “Try” — не грузим с диска автоматически
     }
 
-    internal void UnloadTexture(string id)
+    public void UnloadTexture(string id)
     {
         if (string.IsNullOrWhiteSpace(id)) return;
 
-        if (!_textures.Remove(id, out var tex)) return;
-        if (tex.Handle != 0) SDL.DestroyTexture(tex.Handle);
+        if (!_textures.TryGetValue(id, out var tex))
+            return;
+
+        if (!tex.IsValid)
+            return;
+
+        SDL3.SDL.DestroyTexture(tex.Handle);
+        tex.Invalidate();
     }
+
+    private nint LoadTextureHandle(string id)
+    {
+        var path = ResolveTexturePath(id);
+
+        // Image.LoadTexture требует валидный renderer
+        var handle = Image.LoadTexture(_renderer, path);
+        return handle == 0 ? throw new InvalidOperationException($"LoadTexture failed for '{id}'. Path='{path}'. {SDL3.SDL.GetError()}") : handle;
+    }
+
 
     private string ResolveTexturePath(string id)
     {

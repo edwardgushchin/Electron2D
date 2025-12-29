@@ -108,7 +108,10 @@ internal sealed class EventSystem
 
             if (got < BatchSize) break;
         }
-
+    }
+    
+    public void EndFrame()
+    {
         _events.SwapAll();
     }
 }

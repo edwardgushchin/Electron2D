@@ -16,6 +16,7 @@
       <Content Include="Content\player_idle.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="StartGame.csproj.DotSettings" />
     </ItemGroup>
 
 </Project>
