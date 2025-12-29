@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D", "Electron2D\El
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F9A787B5-7F45-4678-9416-78553985B9F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartGame", "StartGame\StartGame.csproj", "{D34ED837-3749-417F-AB02-60FC886A96B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartGame", "Examples\StartGame\StartGame.csproj", "{D34ED837-3749-417F-AB02-60FC886A96B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

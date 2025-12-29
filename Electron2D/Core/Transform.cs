@@ -49,8 +49,9 @@ public sealed class Transform
         get => _localPosition;
         set
         {
-            if (_localPosition == value) return;
-            _localPosition = value;
+            var q = Quantize(value, InvPosQuantum, PosQuantum);
+            if (_localPosition == q) return;
+            _localPosition = q;
             MarkLocalDirty();
         }
     }
@@ -60,8 +61,9 @@ public sealed class Transform
         get => _localRotation;
         set
         {
-            if (_localRotation == value) return;
-            _localRotation = value;
+            var q = QuantizeAngle(value);
+            if (_localRotation == q) return;
+            _localRotation = q;
             MarkLocalDirty();
         }
     }
@@ -71,8 +73,9 @@ public sealed class Transform
         get => _localScale;
         set
         {
-            if (_localScale == value) return;
-            _localScale = value;
+            var q = Quantize(value, InvScaleQuantum, ScaleQuantum);
+            if (_localScale == q) return;
+            _localScale = q;
             MarkLocalDirty();
         }
     }
@@ -163,21 +166,27 @@ public sealed class Transform
     public void Translate(Vector2 delta)
     {
         if (delta == Vector2.Zero) return;
-        _localPosition += delta;
+        var q = Quantize(_localPosition + delta, InvPosQuantum, PosQuantum);
+        if (_localPosition == q) return;
+        _localPosition = q;
         MarkLocalDirty();
     }
 
     public void Rotate(float radians)
     {
         if (radians == 0f) return;
-        _localRotation += radians;
+        var q = QuantizeAngle(_localRotation + radians);
+        if (_localRotation == q) return;
+        _localRotation = q;
         MarkLocalDirty();
     }
 
     public void Scale(Vector2 scale)
     {
         if (scale == Vector2.One) return;
-        _localScale *= scale;
+        var q = Quantize(_localScale * scale, InvScaleQuantum, ScaleQuantum);
+        if (_localScale == q) return;
+        _localScale = q;
         MarkLocalDirty();
     }
 
@@ -280,5 +289,42 @@ public sealed class Transform
         var c = MathF.Cos(radians);
         var s = MathF.Sin(radians);
         return new Vector2(v.X * c - v.Y * s, v.X * s + v.Y * c);
+    }
+    
+    // Подберите под себя. Для 1 Unit = 1 метр типично:
+    // Pos: 1e-4..1e-3 (0.1–1 мм), Rot: 1e-6..1e-5 рад, Scale: 1e-6
+    private const float PosQuantum   = 1e-4f;
+    private const float RotQuantum   = 1e-6f;
+    private const float ScaleQuantum = 1e-6f;
+
+    private const float InvPosQuantum   = 1f / PosQuantum;
+    private const float InvRotQuantum   = 1f / RotQuantum;
+    private const float InvScaleQuantum = 1f / ScaleQuantum;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float Quantize(float v, float invQ, float q)
+        => MathF.Round(v * invQ, MidpointRounding.AwayFromZero) * q;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Vector2 Quantize(Vector2 v, float invQ, float q)
+        => new(
+            MathF.Round(v.X * invQ, MidpointRounding.AwayFromZero) * q,
+            MathF.Round(v.Y * invQ, MidpointRounding.AwayFromZero) * q);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float WrapAngle(float a)
+    {
+        const float TwoPi = MathF.PI * 2f;
+        a %= TwoPi;
+        if (a <= -MathF.PI) a += TwoPi;
+        else if (a > MathF.PI) a -= TwoPi;
+        return a;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float QuantizeAngle(float radians)
+    {
+        radians = WrapAngle(radians);
+        return Quantize(radians, InvRotQuantum, RotQuantum);
     }
 }

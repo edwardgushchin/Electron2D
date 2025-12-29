@@ -11,6 +11,7 @@ public class Node
     private SceneTree? _tree;
     private bool _readyCalled;
     private bool _isEnabled = true;
+    private bool _isPaused = false;
     private bool _queuedForFree;
 
     #endregion
@@ -478,50 +479,60 @@ public class Node
         return false;
     }
 
-    private bool TryGetNodeByPath(ReadOnlySpan<char> path, out Node node)
+    // Node.cs (заменить TryGetNodeByPath целиком)
+    public bool TryGetNodeByPath(ReadOnlySpan<char> path, out Node? result)
     {
-        node = this;
-        //это работает как и path.SequenceEqual
-        if (path.IsEmpty || path is ".") return true;
+        result = null;
 
-        var index = 0;
-        if (path[0] == '/')
+        static bool IsDot(ReadOnlySpan<char> s) => s.Length == 1 && s[0] == '.';
+        static bool IsDotDot(ReadOnlySpan<char> s) => s.Length == 2 && s[0] == '.' && s[1] == '.';
+
+        if (path.IsEmpty || IsDot(path))
         {
-            if (_tree is null) return false;
-            node = _tree.Root;
-            index = 1;
+            result = this;
+            return true;
         }
 
-        while (index < path.Length)
+        var node = this;
+
+        if (path[0] == '/')
         {
-            var next = path[index..].IndexOf('/');
-            ReadOnlySpan<char> segment;
-            if (next < 0)
+            node = _tree?.Root ?? this;
+            path = path[1..];
+        }
+
+        while (!path.IsEmpty)
+        {
+            var slash = path.IndexOf('/');
+            ReadOnlySpan<char> seg;
+
+            if (slash >= 0)
             {
-                segment = path[index..];
-                index = path.Length;
+                seg = path[..slash];
+                path = path[(slash + 1)..];
+                if (seg.IsEmpty) continue; // '//' => пропускаем
             }
             else
             {
-                segment = path.Slice(index, next);
-                index += next + 1;
+                seg = path;
+                path = ReadOnlySpan<char>.Empty;
             }
 
-            if (segment.IsEmpty || segment is ".")
-                continue;
+            if (IsDot(seg)) continue;
 
-            if (segment is "..")
+            if (IsDotDot(seg))
             {
                 if (node._parent is null) return false;
                 node = node._parent;
                 continue;
             }
 
-            var child = node.FindChildByName(segment);
+            var child = node.FindChildByName(seg);
             if (child is null) return false;
             node = child;
         }
 
+        result = node;
         return true;
     }
 

@@ -4,14 +4,14 @@ namespace Electron2D;
 
 public sealed class SceneTree
 {
-    private readonly List<Node> _freeQueue; // предвыделяем — никаких аллокаций при QueueFree в кадре
+    private Node[] _freeQueue;
+    private int _freeCount;
     private readonly GroupIndex _groups = new();
 
-    public SceneTree(Node root)
+    public SceneTree(Node root, int maxDeferredFreePerFrame = 1024)
     {
         Root = root ?? throw new ArgumentNullException(nameof(root));
-
-        _freeQueue = new List<Node>(64);
+        _freeQueue = new Node[maxDeferredFreePerFrame];
 
         Root.InternalEnterTree(this);
         Root.InternalReady();
@@ -26,16 +26,27 @@ public sealed class SceneTree
     internal void UnregisterFromGroup(string group, int index, Node removedNode)
         => _groups.Remove(group, index, removedNode);
 
-    internal void QueueFree(Node node) => _freeQueue.Add(node);
+    internal void QueueFree(Node node)
+    {
+        if ((uint)_freeCount >= (uint)_freeQueue.Length)
+        {
+            // Политика: либо лог + immediate free, либо исключение.
+            // Я бы делал исключение в Debug и лог+drop в Release.
+            throw new InvalidOperationException("SceneTree deferred free queue overflow. Increase maxDeferredFreePerFrame.");
+        }
+
+        _freeQueue[_freeCount++] = node;
+    }
 
     public void FlushFreeQueue()
     {
-        if (_freeQueue.Count == 0) return;
-
-        for (var i = 0; i < _freeQueue.Count; i++)
-            _freeQueue[i].InternalFreeImmediate();
-
-        _freeQueue.Clear();
+        for (var i = 0; i < _freeCount; i++)
+        {
+            var n = _freeQueue[i];
+            _freeQueue[i] = null!; // разрываем ссылки, чтобы GC мог собрать
+            n.InternalFreeImmediate();
+        }
+        _freeCount = 0;
     }
 
     private sealed class GroupIndex
