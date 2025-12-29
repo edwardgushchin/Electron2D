@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public class RigidBody
+public class WindowSystem
 {
     
 }

@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public class Resources
-{ 
+public class Rigidbody
+{
     
 }
