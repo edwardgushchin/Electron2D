@@ -26,9 +26,8 @@ internal class Program
             TimeScale = 1f,
             PixelPerUnit = 128f
         });
-
-        var scene = new Scene();
-        scene.Root.AddChild(new Game());
+        
+        engine.SceneTree.AddChild(new MainScene());
 
         engine.Run(scene);
     }
