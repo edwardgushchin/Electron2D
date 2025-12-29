@@ -27,7 +27,7 @@ internal class Program
             PixelPerUnit = 128f
         });
         
-        engine.SceneTree.AddChild(new MainScene());
+        engine.SceneTree.Root.AddChild(new MainScene());
 
         engine.Run();
     }

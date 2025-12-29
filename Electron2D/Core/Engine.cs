@@ -2,5 +2,10 @@ namespace Electron2D;
 
 public class Engine
 {
-    public Node SceneTree { get; set; }
+    public SceneTree SceneTree { get; set; }
+
+    public Engine()
+    {
+        SceneTree = new SceneTree(new Node("root"));
+    }
 }

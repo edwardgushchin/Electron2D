@@ -3,7 +3,7 @@ using Electron2D;
 
 namespace StartGame;
 
-public class Player : Node
+public class Player() : Node("Player")
 {
     private SpriteRenderer _sprite;
     private Rigidbody _body;
