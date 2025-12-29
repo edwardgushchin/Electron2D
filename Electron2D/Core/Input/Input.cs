@@ -1,3 +1,5 @@
+using System;
+
 namespace Electron2D;
 
 public static class Input
@@ -8,6 +10,9 @@ public static class Input
     internal static void Unbind() => _sys = null;
 
     public static bool IsKeyDown(Key key)  => _sys is not null && _sys.IsKeyDown((int)key);
-    public static bool IsKeyPress(Key key) => _sys is not null && _sys.IsKeyPress((int)key);
+    public static bool IsKeyPressed(Key key) => _sys is not null && _sys.IsKeyPressed((int)key);
     public static bool IsKeyUp(Key key)    => _sys is not null && _sys.IsKeyUp((int)key);
+
+    [Obsolete("Use IsKeyPressed(...) instead.")]
+    public static bool IsKeyPress(Key key) => IsKeyPressed(key);
 }

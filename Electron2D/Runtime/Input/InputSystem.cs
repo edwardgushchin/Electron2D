@@ -4,8 +4,8 @@ namespace Electron2D;
 
 internal sealed class InputSystem
 {
-    private bool[] _keys = [];
-    private bool[] _prev = [];
+    private bool[] _currentKeys = [];
+    private bool[] _previousKeys = [];
 
     public void Initialize() { }
 
@@ -16,18 +16,18 @@ internal sealed class InputSystem
         // SDL_GetKeyboardState требует PumpEvents; он уже сделан в EventSystem.BeginFrame().
         var state = SDL.GetKeyboardState(out var numKeys);
 
-        if (_keys.Length != numKeys)
+        if (_currentKeys.Length != numKeys)
         {
-            _keys = new bool[numKeys];
-            _prev = new bool[numKeys];
+            _currentKeys = new bool[numKeys];
+            _previousKeys = new bool[numKeys];
         }
         else
         {
             // swap buffers: prev <- keys, keys <- prev
-            (_keys, _prev) = (_prev, _keys);
+            (_currentKeys, _previousKeys) = (_previousKeys, _currentKeys);
         }
 
-        state.CopyTo(_keys);
+        state.CopyTo(_currentKeys);
 
         // Генерация событий без SDL-типов наружу.
         // Важно: публикуем ДО EventSystem.EndFrame(), чтобы оно попало в read-буфер этого кадра.
@@ -35,8 +35,8 @@ internal sealed class InputSystem
 
         for (var i = 0; i < numKeys; i++)
         {
-            var now = _keys[i];
-            var was = _prev[i];
+            var now = _currentKeys[i];
+            var was = _previousKeys[i];
             if (now == was) continue;
 
             ch.TryPublish(new InputEvent(now ? InputEventType.KeyDown : InputEventType.KeyUp, code: i));
@@ -44,11 +44,14 @@ internal sealed class InputSystem
     }
 
     public bool IsKeyDown(int scancode)
-        => (uint)scancode < (uint)_keys.Length && _keys[scancode];
+        => (uint)scancode < (uint)_currentKeys.Length && _currentKeys[scancode];
 
-    public bool IsKeyPress(int scancode)
-        => (uint)scancode < (uint)_keys.Length && _keys[scancode] && !_prev[scancode];
+    public bool IsKeyPressed(int scancode)
+        => (uint)scancode < (uint)_currentKeys.Length && _currentKeys[scancode] && !_previousKeys[scancode];
 
     public bool IsKeyUp(int scancode)
-        => (uint)scancode < (uint)_keys.Length && !_keys[scancode] && _prev[scancode];
+        => (uint)scancode < (uint)_currentKeys.Length && !_currentKeys[scancode] && _previousKeys[scancode];
+
+    public bool IsKeyPress(int scancode)
+        => IsKeyPressed(scancode);
 }
