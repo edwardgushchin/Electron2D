@@ -1,7 +1,9 @@
 namespace Electron2D;
 
-public class Node
+public class Node(string name)
 {
+    public Transform Transform { get; }
+    
     /// <summary>
     /// Этот сигнал генерируется, когда дочерний узел входит в дерево сцены, обычно потому, что этот узел вошел в дерево
     /// </summary>
@@ -63,6 +65,22 @@ public class Node
     }
     
     protected virtual void ExitTree()
+    {
+    }
+    
+    protected virtual void Input(InputEvent inputEvent)
+    {
+    }
+
+    protected virtual void ShortcutInput(InputEvent inputEvent)
+    {
+    }
+
+    protected virtual void UnhandledInput(InputEvent inputEvent)
+    {
+    }
+
+    protected virtual void UnhandledKeyInput(InputEvent inputEvent)
     {
     }
     

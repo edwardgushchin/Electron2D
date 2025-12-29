@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public class Camera : Node
+public class Camera(string name) : Node(name)
 {
     
 }
