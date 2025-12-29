@@ -10,9 +10,16 @@ public sealed class SpriteRenderer : IComponent
 
     private string? _spriteId;
 
-    // Per-sprite PPU (как Unity Sprite Pixels Per Unit).
-    // 100px = 1 world unit по умолчанию.
-    public float PixelsPerUnit { get; set; } = 100f;
+    public float PixelPerUnit
+    {
+        get;
+        set
+        {
+            field = value;
+            _hasCached = false;
+        }
+    } = 100f;
+
 
     // кэш команды (пересобирается при изменении)
     private bool _hasCached;
@@ -27,7 +34,7 @@ public sealed class SpriteRenderer : IComponent
     public void SetSprite(string spriteId, float pixelsPerUnit)
     {
         _spriteId = spriteId;
-        PixelsPerUnit = pixelsPerUnit;
+        PixelPerUnit = pixelsPerUnit;
         _hasCached = false;
     }
 
@@ -40,7 +47,7 @@ public sealed class SpriteRenderer : IComponent
         _spriteId = null;
         _hasCached = false;
         _cached = default;
-        PixelsPerUnit = 100f;
+        PixelPerUnit = 100f;
     }
 
     internal void PrepareRender(RenderQueue q, ResourceSystem resources)
@@ -59,7 +66,7 @@ public sealed class SpriteRenderer : IComponent
             var pos = _owner.Transform.WorldPosition;
             var rot = _owner.Transform.WorldRotation;
 
-            var ppu = PixelsPerUnit;
+            var ppu = PixelPerUnit;
             if (ppu <= 0f) ppu = 100f;
 
             var sizeWorld = new Vector2(tex.Width / ppu, tex.Height / ppu);

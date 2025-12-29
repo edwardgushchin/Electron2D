@@ -47,6 +47,8 @@ public sealed class Engine : IDisposable
             _events.BeginFrame();
             _input.BeginFrame(_events);
             _events.EndFrame();
+            
+            HandleQuitAndCloseRequests();
 
             // Input pipeline (Godot-like)
             SceneTree.DispatchInputEvents(_events.Events.Input.Read);
@@ -64,9 +66,8 @@ public sealed class Engine : IDisposable
             _render.EndFrame();
 
             SceneTree.FlushFreeQueue();
-
-            if (_events.QuitRequested)
-                _running = false;
+            
+            if (SceneTree.QuitRequested) _running = false;
 
             _prof.EndFrame();
 
@@ -74,6 +75,32 @@ public sealed class Engine : IDisposable
             _time.EndFrame();
         }
     }
+    
+    private void HandleQuitAndCloseRequests()
+    {
+        // 1) window close (более конкретно, чем Quit)
+        var win = _events.Events.Window.Read;
+        for (var i = 0; i < win.Length; i++)
+        {
+            if (win[i].Type != WindowEventType.CloseRequested) continue;
+
+            if (SceneTree.OnWindowCloseRequested.HasSubscribers)
+                SceneTree.OnWindowCloseRequested.Emit(win[i].WindowId);
+            else
+                SceneTree.Quit();
+
+            return;
+        }
+
+        // 2) global quit
+        if (!_events.QuitRequested) return;
+
+        if (SceneTree.OnQuitRequested.HasSubscribers)
+            SceneTree.OnQuitRequested.Emit();
+        else
+            SceneTree.Quit();
+    }
+
 
     public void Dispose()
     {

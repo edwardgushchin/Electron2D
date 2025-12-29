@@ -294,11 +294,12 @@ public class Node
 
         OnChildOrderChanged.Emit();
 
-        if (_tree is null) return;
+        if (_tree is null)
+            return;
 
         child.InternalEnterTree(_tree);
+        OnChildEnteredTree.Emit(child);
         child.InternalReady();
-
     }
 
     public void RemoveChild(Node child)
@@ -310,6 +311,7 @@ public class Node
 
         if (child._tree is not null)
         {
+            OnChildExitingTree.Emit(child);
             child.InternalExitTree();
             child.InternalFinalizeExit();
         }
@@ -318,7 +320,7 @@ public class Node
         child._parent = null;
         child.Transform.SetParent(null);
 
-        OnChildOrderChanged?.Emit();
+        OnChildOrderChanged.Emit();
     }
     
     public T AddComponent<T>() where T : class, IComponent, new()
@@ -517,7 +519,6 @@ public class Node
         return false;
     }
 
-    // Node.cs (заменить TryGetNodeByPath целиком)
     public bool TryGetNodeByPath(ReadOnlySpan<char> path, out Node? result)
     {
         result = null;
@@ -571,7 +572,6 @@ public class Node
         return true;
 
         static bool IsDotDot(ReadOnlySpan<char> s) => s.Length == 2 && s[0] == '.' && s[1] == '.';
-
         static bool IsDot(ReadOnlySpan<char> s) => s.Length == 1 && s[0] == '.';
     }
 

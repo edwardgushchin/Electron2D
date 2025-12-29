@@ -11,7 +11,7 @@ public class Player() : Node("Player")
     protected override void Ready()
     {
         _sprite = AddComponent<SpriteRenderer>();
-        _sprite.SetSprite("player_idle", pixelsPerUnit: 100f);
+        _sprite.SetSprite("player_idle.png", pixelsPerUnit: 100f);
 
         _body = AddComponent<Rigidbody>();
         _body.Mass = 1f;

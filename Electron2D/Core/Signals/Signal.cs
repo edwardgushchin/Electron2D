@@ -12,6 +12,9 @@ public sealed class Signal
     private List<Slot>? _slots;
     private int _nextId = 1;
     private int _emitting;
+    private int _aliveCount;
+
+    public bool HasSubscribers => _aliveCount != 0;
 
     public readonly struct Subscription
     {
@@ -27,6 +30,7 @@ public sealed class Signal
 
         var id = _nextId++;
         _slots.Add(new Slot { Id = id, Fn = fn, Once = once });
+        _aliveCount++;
         return new Subscription(id);
     }
 
@@ -40,8 +44,9 @@ public sealed class Signal
             var s = slots[i];
             if (s.Id != sub.Id || s.Fn is null) continue;
 
-            s.Fn = null;      // ленивое удаление
+            s.Fn = null; // ленивое удаление
             slots[i] = s;
+            _aliveCount--;
 
             if (_emitting == 0) Compact(slots);
             return true;
@@ -69,6 +74,7 @@ public sealed class Signal
                 if (!s.Once) continue;
                 s.Fn = null;
                 slots[i] = s;
+                _aliveCount--;
             }
         }
         finally
@@ -106,6 +112,9 @@ public sealed class Signal<T>
     private List<Slot>? _slots;
     private int _nextId = 1;
     private int _emitting;
+    private int _aliveCount;
+
+    public bool HasSubscribers => _aliveCount != 0;
 
     public readonly struct Subscription
     {
@@ -121,6 +130,7 @@ public sealed class Signal<T>
 
         var id = _nextId++;
         _slots.Add(new Slot { Id = id, Fn = fn, Once = once });
+        _aliveCount++;
         return new Subscription(id);
     }
 
@@ -136,6 +146,7 @@ public sealed class Signal<T>
 
             s.Fn = null;
             slots[i] = s;
+            _aliveCount--;
 
             if (_emitting == 0) Compact(slots);
             return true;
@@ -163,6 +174,7 @@ public sealed class Signal<T>
                 if (!s.Once) continue;
                 s.Fn = null;
                 slots[i] = s;
+                _aliveCount--;
             }
         }
         finally

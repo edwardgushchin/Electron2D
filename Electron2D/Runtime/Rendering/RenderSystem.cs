@@ -74,6 +74,7 @@ internal sealed class RenderSystem
         var sprites = _queue.Sprites;
         var cam = _scene?.EnsureCurrentCamera();
         var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
+        var ppuOnScreen = outH / (2f * orthoSize);
         
         for (var i = 0; i < sprites.Length; i++)
         {
@@ -81,8 +82,6 @@ internal sealed class RenderSystem
             var tex = cmd.Texture;
             if (!tex.IsValid) continue;
             
-            var ppuOnScreen = outH / (2f * orthoSize);
-
             // World (0,0) в центре, Y вверх => SDL (0,0) слева-сверху, Y вниз
             var wPx = cmd.SizeWorld.X * ppuOnScreen;
             var hPx = cmd.SizeWorld.Y * ppuOnScreen;

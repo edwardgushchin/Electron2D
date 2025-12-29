@@ -29,18 +29,18 @@ public sealed class Texture
         }
     }
 
-    internal Texture(nint handle)
+    internal Texture(nint handle, int width, int height)
     {
         Handle = handle;
-        _width = 0;
-        _height = 0;
+        _width = width;
+        _height = height;
     }
 
-    internal void ReplaceHandle(nint newHandle)
+    internal void ReplaceHandle(nint handle, int width, int height)
     {
-        Handle = newHandle;
-        _width = 0;
-        _height = 0;
+        Handle = handle;
+        _width = width;
+        _height = height;
     }
 
     internal void Invalidate()

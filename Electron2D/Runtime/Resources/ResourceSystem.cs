@@ -39,18 +39,16 @@ internal sealed class ResourceSystem
 
         if (_textures.TryGetValue(id, out var existing))
         {
-            if (existing.IsValid)
-                return existing;
+            if (existing.IsValid) return existing;
 
-            // Было unloaded — перезагружаем в тот же объект (важно для кэшей)
-            var newHandle = LoadTextureHandle(id);
-            existing.ReplaceHandle(newHandle);
+            var t = LoadTextureHandleAndSize(id);
+            existing.ReplaceHandle(t.Handle, t.W, t.H);
             return existing;
         }
 
-        var handle = LoadTextureHandle(id);
-        var tex = new Texture(handle);
-        _textures[id] = tex;
+        var loaded = LoadTextureHandleAndSize(id);
+        var tex = new Texture(loaded.Handle, loaded.W, loaded.H);
+        _textures.Add(id, tex);
         return tex;
     }
 
@@ -76,7 +74,7 @@ internal sealed class ResourceSystem
         if (!tex.IsValid)
             return;
 
-        SDL3.SDL.DestroyTexture(tex.Handle);
+        SDL.DestroyTexture(tex.Handle);
         tex.Invalidate();
     }
 
@@ -97,5 +95,16 @@ internal sealed class ResourceSystem
 
         // Если id уже абсолютный/содержит директорию — позволяем.
         return Path.IsPathRooted(file) ? file : Path.Combine(_contentRoot, file);
+    }
+    
+    private (nint Handle, int W, int H) LoadTextureHandleAndSize(string id)
+    {
+        var path = Path.Combine(_contentRoot, id);
+
+        var handle = Image.LoadTexture(_renderer, path);
+        if (handle == 0)
+            throw new InvalidOperationException($"LoadTexture failed for '{id}'. Path='{path}'. {SDL.GetError()}");
+
+        return !SDL.GetTextureSize(handle, out var w, out var h) ? throw new InvalidOperationException($"SDL.GetTextureSize failed for '{id}'. {SDL.GetError()}") : (handle, (int)w, (int)h);
     }
 }

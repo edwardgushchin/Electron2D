@@ -9,6 +9,11 @@ public sealed class SceneTree
     private bool _inputHandled;
     private readonly GroupIndex _groups = new();
     private bool _cameraDirty;
+    private bool _quitRequested;
+    public bool QuitRequested => _quitRequested;
+    
+    public readonly Signal OnQuitRequested = new();
+    public readonly Signal<uint> OnWindowCloseRequested = new();
 
 
     public SceneTree(Node root, int deferredFreeQueueCapacity  = 1024)
@@ -214,6 +219,7 @@ public sealed class SceneTree
         return null;
     }
 
-
     internal void MarkInputHandled() => _inputHandled = true;
+    
+    public void Quit() => _quitRequested = true;
 }

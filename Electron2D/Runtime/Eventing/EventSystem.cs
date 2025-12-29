@@ -13,6 +13,10 @@ internal sealed class EventSystem
     public bool QuitRequested => _quitRequested;
 
     public EventQueue Events => _events;
+    
+    public int DroppedEngineEvents { get; private set; }
+    
+    public int DroppedWindowEvents { get; private set; }
 
     public void Initialize(EngineConfig cfg)
     {
@@ -44,6 +48,9 @@ internal sealed class EventSystem
         _quitRequested = false; // P0: quit должен быть "в этом кадре", а не "навсегда"
 
         SDL.PumpEvents();
+        
+        DroppedEngineEvents = 0;
+        DroppedWindowEvents = 0;
 
         var buffer = stackalloc SDL.Event[BatchSize];
         var bufferPtr = (IntPtr)buffer;
@@ -68,13 +75,15 @@ internal sealed class EventSystem
                 {
                     case SDL.EventType.Quit:
                         _quitRequested = true;
-                        _events.Engine.TryPublish(new EngineEvent(EngineEventType.QuitRequested));
+                        if (!_events.Engine.TryPublish(new EngineEvent(EngineEventType.QuitRequested)))
+                            DroppedEngineEvents++;
                         break;
 
                     case SDL.EventType.WindowCloseRequested:
                     {
                         var windowId = e.Window.WindowID;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.CloseRequested, windowId));
+                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.CloseRequested, windowId)))
+                            DroppedWindowEvents++;
                         break;
                     }
 
