@@ -48,6 +48,8 @@ public class Node
     
     public ProcessMode ProcessMode { get; set; }
     
+    internal ReadOnlySpan<IComponent> InternalComponents => _components.AsSpan(0, _compCount);
+    
     #endregion
 
     #region Signals

@@ -12,8 +12,8 @@ internal class Program
             Window = new WindowConfig
             {
                 Title = "My 2D Game",
-                Width = 1280,
-                Height = 720,
+                Width = 800,
+                Height = 600,
                 VSync = VSyncMode.Enabled,
                 Mode = WindowMode.ExclusiveFullscreen,
                 State = WindowState.Normal

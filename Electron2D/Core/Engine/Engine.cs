@@ -1,3 +1,4 @@
+// FILE: Electron2D/Core/Engine/Engine.cs
 namespace Electron2D;
 
 public sealed class Engine : IDisposable
@@ -20,13 +21,11 @@ public sealed class Engine : IDisposable
     {
         _cfg = cfg;
 
-        // ВАЖНО: использовать cfg.MaxDeferredFreePerFrame
-        SceneTree = new SceneTree(new Node("Root"));
+        // P0: применяем лимит deferred-free
+        SceneTree = new SceneTree(new Node("Root"), cfg.DeferredFreeQueueCapacity);
 
-        // ВАЖНО: использовать cfg.MaxEventsPerFrame
         _events = new EventSystem();
 
-        // init order: window -> renderer -> resources -> events -> input -> physics -> time
         _window.Initialize(cfg.Window);
         _render.Initialize(_window, cfg);
         _resources.Initialize(_render, cfg);
@@ -35,6 +34,7 @@ public sealed class Engine : IDisposable
         _physics.Initialize(cfg.Physics);
         _time.Initialize(cfg);
 
+        Resources.Bind(_resources);
         Input.Bind(_input);
     }
 
@@ -59,7 +59,7 @@ public sealed class Engine : IDisposable
             SceneTree.Process(_time.DeltaTime);
 
             _render.BeginFrame();
-            _render.BuildRenderQueue(SceneTree);
+            _render.BuildRenderQueue(SceneTree, _resources);
             _render.EndFrame();
 
             SceneTree.FlushFreeQueue();
@@ -68,12 +68,15 @@ public sealed class Engine : IDisposable
                 _running = false;
 
             _prof.EndFrame();
+
+            // P0: включаем frame-cap (используется только если VSync выключен и MaxFps > 0)
+            _time.EndFrame();
         }
     }
 
     public void Dispose()
     {
-        // Важно разорвать публичный фасад ввода, чтобы после Dispose не дергать мертвую систему
+        Resources.Unbind();
         Input.Unbind();
 
         _resources.Shutdown();

@@ -41,6 +41,8 @@ internal sealed class EventSystem
 
     public unsafe void BeginFrame()
     {
+        _quitRequested = false; // P0: quit должен быть "в этом кадре", а не "навсегда"
+
         SDL.PumpEvents();
 
         var buffer = stackalloc SDL.Event[BatchSize];
@@ -55,8 +57,7 @@ internal sealed class EventSystem
                 minType: (uint)SDL.EventType.First,
                 maxType: (uint)SDL.EventType.Last);
 
-            if (got <= 0)
-                break;
+            if (got <= 0) break;
 
             for (var i = 0; i < got; i++)
             {
@@ -105,8 +106,7 @@ internal sealed class EventSystem
                 }
             }
 
-            if (got < BatchSize)
-                break;
+            if (got < BatchSize) break;
         }
 
         _events.SwapAll();

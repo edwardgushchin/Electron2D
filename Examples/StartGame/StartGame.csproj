@@ -11,4 +11,11 @@
       <ProjectReference Include="..\..\Electron2D\Electron2D.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Content\player_idle.png" />
+      <Content Include="Content\player_idle.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
