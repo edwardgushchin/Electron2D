@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
@@ -8,24 +9,40 @@ public sealed class Transform
     private Transform? _parent;
 
     private Vector2 _localPosition;
-    private float _localRotation;
+    private float   _localRotation;
     private Vector2 _localScale = Vector2.One;
 
-    private bool _localDirty = true;
-    private bool _worldDirty = true;
+    private bool _localMatrixDirty = true;
 
-    private Matrix3x2 _localMatrix;
-    private Matrix3x2 _worldMatrix;
+    // World TRS
+    private bool   _worldDirty = true;
     private Vector2 _worldPosition;
-    private float _worldRotation;
+    private float   _worldRotation;
     private Vector2 _worldScale = Vector2.One;
 
-    internal Transform(Node owner)
-    {
-        _owner = owner;
-    }
+    // World matrix computed only when requested
+    private bool _worldMatrixDirty = true;
+    private Matrix3x2 _localMatrix;
+    private Matrix3x2 _worldMatrix;
+
+    private int _localVersion;
+    private int _worldVersion;
+    private int _parentWorldVersionAtCompute;
+
+    internal Transform(Node owner) => _owner = owner;
 
     internal Transform? Parent => _parent;
+
+    public int LocalVersion => _localVersion;
+
+    /// <summary>
+    /// Версия world TRS. Инкрементится, когда world (pos/rot/scale) реально пересчитан.
+    /// Это и есть "dirt" для рендера/физики: потребители кешируют lastWorldVer.
+    /// </summary>
+    public int WorldVersion
+    {
+        get { UpdateWorldIfNeeded(); return _worldVersion; }
+    }
 
     public Vector2 LocalPosition
     {
@@ -43,7 +60,7 @@ public sealed class Transform
         get => _localRotation;
         set
         {
-            if (_localRotation.Equals(value)) return;
+            if (_localRotation == value) return;
             _localRotation = value;
             MarkLocalDirty();
         }
@@ -62,11 +79,7 @@ public sealed class Transform
 
     public Vector2 WorldPosition
     {
-        get
-        {
-            UpdateWorldIfNeeded();
-            return _worldPosition;
-        }
+        get { UpdateWorldIfNeeded(); return _worldPosition; }
         set
         {
             if (_parent is null)
@@ -76,21 +89,28 @@ public sealed class Transform
             }
 
             _parent.UpdateWorldIfNeeded();
-            var inv = Matrix3x2.Invert(_parent._worldMatrix, out var invMatrix);
-            if (!inv)
-                throw new InvalidOperationException("Cannot invert parent transform matrix.");
 
-            LocalPosition = Vector2.Transform(value, invMatrix);
+            // inverse TRS: local = inv(parent) * world
+            // inv translate
+            var v = value - _parent._worldPosition;
+
+            // inv rotate
+            var pr = _parent._worldRotation;
+            if (pr != 0f) v = Rotate(v, -pr);
+
+            // inv scale (guard)
+            var ps = _parent._worldScale;
+            if (ps.X == 0f || ps.Y == 0f)
+                throw new InvalidOperationException("Cannot set WorldPosition when parent WorldScale has zero component.");
+
+            v = new Vector2(v.X / ps.X, v.Y / ps.Y);
+            LocalPosition = v;
         }
     }
 
     public float WorldRotation
     {
-        get
-        {
-            UpdateWorldIfNeeded();
-            return _worldRotation;
-        }
+        get { UpdateWorldIfNeeded(); return _worldRotation; }
         set
         {
             if (_parent is null)
@@ -106,11 +126,7 @@ public sealed class Transform
 
     public Vector2 WorldScale
     {
-        get
-        {
-            UpdateWorldIfNeeded();
-            return _worldScale;
-        }
+        get { UpdateWorldIfNeeded(); return _worldScale; }
         set
         {
             if (_parent is null)
@@ -120,19 +136,18 @@ public sealed class Transform
             }
 
             _parent.UpdateWorldIfNeeded();
-            LocalScale = new Vector2(
-                value.X / _parent._worldScale.X,
-                value.Y / _parent._worldScale.Y);
+
+            var ps = _parent._worldScale;
+            if (ps.X == 0f || ps.Y == 0f)
+                throw new InvalidOperationException("Cannot set WorldScale when parent WorldScale has zero component.");
+
+            LocalScale = new Vector2(value.X / ps.X, value.Y / ps.Y);
         }
     }
 
     public Matrix3x2 LocalMatrix
     {
-        get
-        {
-            UpdateLocalIfNeeded();
-            return _localMatrix;
-        }
+        get { UpdateLocalMatrixIfNeeded(); return _localMatrix; }
     }
 
     public Matrix3x2 WorldMatrix
@@ -140,6 +155,7 @@ public sealed class Transform
         get
         {
             UpdateWorldIfNeeded();
+            UpdateWorldMatrixIfNeeded();
             return _worldMatrix;
         }
     }
@@ -169,70 +185,100 @@ public sealed class Transform
     {
         if (_parent == parent) return;
         _parent = parent;
-        MarkWorldDirtyFromParent();
-        _owner.MarkTransformDirtyFromParent();
-    }
 
-    internal void MarkWorldDirtyFromParent()
-    {
+        // world зависит от родителя: пересчёт по demand
         _worldDirty = true;
+        _worldMatrixDirty = true;
+        _parentWorldVersionAtCompute = -1;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void MarkLocalDirty()
     {
-        _localDirty = true;
+        _localMatrixDirty = true;
         _worldDirty = true;
-        _owner.MarkTransformDirtyFromSelf();
+        _worldMatrixDirty = true;
+        _localVersion++;
     }
 
-    private void UpdateLocalIfNeeded()
+    private void UpdateLocalMatrixIfNeeded()
     {
-        if (!_localDirty) return;
-        var scale = Matrix3x2.CreateScale(_localScale);
-        var rotation = Matrix3x2.CreateRotation(_localRotation);
-        var translation = Matrix3x2.CreateTranslation(_localPosition);
-        _localMatrix = scale * rotation * translation;
-        _localDirty = false;
+        if (!_localMatrixDirty) return;
+
+        var sx = _localScale.X;
+        var sy = _localScale.Y;
+        var c  = MathF.Cos(_localRotation);
+        var s  = MathF.Sin(_localRotation);
+
+        _localMatrix = new Matrix3x2(
+            c * sx,  s * sx,
+           -s * sy,  c * sy,
+            _localPosition.X, _localPosition.Y);
+
+        _localMatrixDirty = false;
     }
 
     private void UpdateWorldIfNeeded()
     {
-        if (!_worldDirty) return;
-        UpdateLocalIfNeeded();
+        _parent?.UpdateWorldIfNeeded();
+
+        if (!_worldDirty)
+        {
+            var parentVer = _parent?._worldVersion ?? 0;
+            if (_parentWorldVersionAtCompute == parentVer)
+                return;
+        }
 
         if (_parent is null)
         {
-            _worldMatrix = _localMatrix;
+            _worldPosition = _localPosition;
+            _worldRotation = _localRotation;
+            _worldScale    = _localScale;
         }
         else
         {
-            _parent.UpdateWorldIfNeeded();
-            _worldMatrix = _localMatrix * _parent._worldMatrix;
+            // TRS-composition без матричного умножения (быстро; подходит для 2D).
+            // Важно: предполагаем TRS-модель без намеренного shear.
+            var ps = _parent._worldScale;
+
+            var v = new Vector2(_localPosition.X * ps.X, _localPosition.Y * ps.Y);
+
+            var pr = _parent._worldRotation;
+            if (pr != 0f) v = Rotate(v, pr);
+
+            _worldPosition = _parent._worldPosition + v;
+            _worldRotation = _localRotation + _parent._worldRotation;
+            _worldScale    = _localScale * ps;
         }
 
-        _worldPosition = _worldMatrix.Translation;
-        DecomposeAffine2D(_worldMatrix, out _worldScale, out _worldRotation);
         _worldDirty = false;
+        _worldMatrixDirty = true;
+        _parentWorldVersionAtCompute = _parent?._worldVersion ?? 0;
+        _worldVersion++;
     }
 
-    private static void DecomposeAffine2D(in Matrix3x2 matrix, out Vector2 scale, out float rotation)
+    private void UpdateWorldMatrixIfNeeded()
     {
-        var m11 = matrix.M11;
-        var m12 = matrix.M12;
-        var m21 = matrix.M21;
-        var m22 = matrix.M22;
+        if (!_worldMatrixDirty) return;
 
-        var scaleX = MathF.Sqrt((m11 * m11) + (m12 * m12));
-        var scaleY = MathF.Sqrt((m21 * m21) + (m22 * m22));
+        var sx = _worldScale.X;
+        var sy = _worldScale.Y;
+        var c  = MathF.Cos(_worldRotation);
+        var s  = MathF.Sin(_worldRotation);
 
-        if (scaleX == 0f)
-        {
-            rotation = 0f;
-            scale = new Vector2(0f, scaleY);
-            return;
-        }
+        _worldMatrix = new Matrix3x2(
+            c * sx,  s * sx,
+           -s * sy,  c * sy,
+            _worldPosition.X, _worldPosition.Y);
 
-        rotation = MathF.Atan2(m12, m11);
-        scale = new Vector2(scaleX, scaleY);
+        _worldMatrixDirty = false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Vector2 Rotate(Vector2 v, float radians)
+    {
+        var c = MathF.Cos(radians);
+        var s = MathF.Sin(radians);
+        return new Vector2(v.X * c - v.Y * s, v.X * s + v.Y * c);
     }
 }

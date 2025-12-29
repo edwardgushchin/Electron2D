@@ -15,7 +15,7 @@ internal class Program
                 Width = 1280,
                 Height = 720,
                 VSync = true,
-                Mode = WindowMode.Exclusive,
+                Mode = WindowMode.ExclusiveFullscreen,
                 State = WindowState.Normal
             },
             Physics = new PhysicsConfig

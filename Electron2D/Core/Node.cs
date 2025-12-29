@@ -10,6 +10,8 @@ public class Node
     private readonly List<GroupEntry> _groups = [];
     private SceneTree? _tree;
     private bool _readyCalled;
+    private bool _isEnabled = true;
+    private bool _queuedForFree;
 
     #endregion
     
@@ -88,7 +90,9 @@ public class Node
     public readonly Signal OnRenamed = new();
     
     #endregion
-
+    
+    #region Lifecycle methods
+    
     #region EnterTree
     
     protected virtual void EnterTree() {}
@@ -97,17 +101,29 @@ public class Node
     {
         _tree = tree;
 
-        // enter_tree: top-to-bottom :contentReference[oaicite:18]{index=18}
+        // Регистрируем группы этого узла в SceneTree-индексе
+        for (var i = 0; i < _groups.Count; i++)
+        {
+            var e = _groups[i];
+            if (e.TreeIndex >= 0) continue;
+            e.TreeIndex = tree.RegisterInGroup(e.Name, this);
+            _groups[i] = e;
+        }
+
         EnterTree();
-        OnEntered.Emit(); // после EnterTree :contentReference[oaicite:19]{index=19}
+        OnEntered.Emit();
 
-        // У родителя child_entered_tree должен быть после enter_tree+tree_entered ребёнка :contentReference[oaicite:20]{index=20}
-        _parent?.OnChildEnteredTree.Emit(this);
-
-        // Рекурсивно в детей
+        // enter_tree: top-to-bottom
         for (var i = 0; i < _children.Count; i++)
-            _children[i].InternalEnterTree(tree);
+        {
+            var child = _children[i];
+            child.InternalEnterTree(tree);
+
+            // parent signal after child реально вошёл
+            OnChildEnteredTree.Emit(child);
+        }
     }
+
     
     #endregion
 
@@ -117,8 +133,15 @@ public class Node
 
     internal void InternalReady()
     {
-        OnReady.Emit();
+        if (_readyCalled) return;
+
+        // ready: post-order (children, then parent)
+        for (var i = 0; i < _children.Count; i++)
+            _children[i].InternalReady();
+
         Ready();
+        _readyCalled = true;
+        OnReady.Emit();
     }
     
     #endregion
@@ -133,10 +156,7 @@ public class Node
 
     #region PhysicsProcess
     
-    protected virtual void PhysicsProcess(float fixedDelta)
-    {
-        throw new NotImplementedException();
-    }
+    protected virtual void PhysicsProcess(float fixedDelta) {}
 
     internal void InternalPhysicsProcess(float fixedDelta) => PhysicsProcess(fixedDelta);
     
@@ -148,27 +168,25 @@ public class Node
 
     internal void InternalExitTree()
     {
-        // exit_tree: bottom-to-top :contentReference[oaicite:23]{index=23}
+        // exit_tree: bottom-to-top
         for (var i = _children.Count - 1; i >= 0; i--)
-            _children[i].InternalExitTree();
+        {
+            var child = _children[i];
+
+            OnChildExitingTree.Emit(child);
+            child.InternalExitTree();
+        }
 
         ExitTree();
-
-        // tree_exiting: после _exit_tree :contentReference[oaicite:24]{index=24}
         OnExiting.Emit();
-
-        // У родителя child_exiting_tree после tree_exiting ребёнка :contentReference[oaicite:25]{index=25}
-        _parent?.OnChildExitingTree.Emit(this);
     }
+
 
     #endregion
 
     #region Input
 
-    protected virtual void Input(InputEvent inputEvent)
-    {
-        throw new NotImplementedException();
-    }
+    protected virtual void Input(InputEvent inputEvent) {}
     
     internal void InternalInput(InputEvent inputEvent) => Input(inputEvent);
 
@@ -176,10 +194,7 @@ public class Node
 
     #region ShortcutInput
 
-    protected virtual void ShortcutInput(InputEvent inputEvent)
-    {
-        throw new NotImplementedException();
-    }
+    protected virtual void ShortcutInput(InputEvent inputEvent) {}
     
     internal void InternalShortcutInput(InputEvent inputEvent) => ShortcutInput(inputEvent);
 
@@ -187,10 +202,7 @@ public class Node
 
     #region UnhandledInput
 
-    protected virtual void UnhandledInput(InputEvent inputEvent)
-    {
-        throw new NotImplementedException();
-    }
+    protected virtual void UnhandledInput(InputEvent inputEvent) { }
     
     internal void InternalUnhandledInput(InputEvent inputEvent) => UnhandledInput(inputEvent);
 
@@ -198,54 +210,104 @@ public class Node
 
     #region UnhandledKeyInput
 
-    protected virtual void UnhandledKeyInput(InputEvent inputEvent)
-    {
-        throw new NotImplementedException();
-    }
+    protected virtual void UnhandledKeyInput(InputEvent inputEvent) {}
     
     internal  void InternalUnhandledKeyInput(InputEvent inputEvent) => UnhandledKeyInput(inputEvent);
 
     #endregion
     
-    public void AddChild(Node child)
+    #endregion
+    
+    public void AddChild(Node child) => AddChild(child, keepWorldTransform: false);
+
+    public void AddChild(Node child, bool keepWorldTransform)
     {
-        if (child is null) throw new ArgumentNullException(nameof(child));
+        ArgumentNullException.ThrowIfNull(child);
         if (child == this) throw new InvalidOperationException("Cannot add node to itself.");
         if (IsDescendantOf(child)) throw new InvalidOperationException("Cannot create cycles.");
+        
+        // no-op: уже наш ребёнок
+        if (child._parent == this) return;
 
-        // Отцепить от старого родителя (как в большинстве движков)
+        // кеш world если нужно
+        var wp = default(System.Numerics.Vector2);
+        var wr = 0f;
+        var ws = default(System.Numerics.Vector2);
+        if (keepWorldTransform)
+        {
+            wp = child.Transform.WorldPosition;
+            wr = child.Transform.WorldRotation;
+            ws = child.Transform.WorldScale;
+        }
+
+        // Репарент внутри одного и того же SceneTree: НЕ вызываем Exit/Enter
+        if (_tree is not null && ReferenceEquals(child._tree, _tree))
+        {
+            var oldParent = child._parent;
+            if (oldParent is not null)
+            {
+                // удалить из oldParent._children без выхода из дерева
+                var idx = oldParent._children.IndexOf(child);
+                if (idx >= 0)
+                    oldParent._children.RemoveAt(idx);
+                oldParent.OnChildOrderChanged.Emit();
+            }
+
+            _children.Add(child);
+            child._parent = this;
+            child.Transform.SetParent(Transform);
+            OnChildOrderChanged.Emit();
+
+            if (!keepWorldTransform) return;
+            child.Transform.WorldPosition = wp;
+            child.Transform.WorldRotation = wr;
+            child.Transform.WorldScale = ws;
+
+            return;
+        }
+
+        // Иначе — узел мигрирует между деревьями / из orphan → дерево:
         child._parent?.RemoveChild(child);
 
         _children.Add(child);
+
         child._parent = this;
         child.Transform.SetParent(Transform);
 
-        OnChildOrderChanged.Emit(); // список детей изменился :contentReference[oaicite:15]{index=15}
+        if (keepWorldTransform)
+        {
+            child.Transform.WorldPosition = wp;
+            child.Transform.WorldRotation = wr;
+            child.Transform.WorldScale = ws;
+        }
 
-        // Если родитель уже в дереве — ребёнок входит в дерево и получает enter/ready
+        OnChildOrderChanged.Emit();
+
         if (_tree is null) return;
+
         child.InternalEnterTree(_tree);
-        child.InternalReadyIfNeeded();
+        child.InternalReady();
+
     }
 
     public void RemoveChild(Node child)
     {
-        if (child is null) throw new ArgumentNullException(nameof(child));
+        ArgumentNullException.ThrowIfNull(child);
+
         var idx = _children.IndexOf(child);
         if (idx < 0) return;
 
-        // Если ребёнок в дереве — сначала корректный выход поддерева
         if (child._tree is not null)
         {
-            child.InternalExitTree();        // _exit_tree bottom-up :contentReference[oaicite:16]{index=16}
-            child.InternalFinalizeExit();    // “уже вышел” + очистка
+            child.InternalExitTree();
+            child.InternalFinalizeExit();
         }
 
         _children.RemoveAt(idx);
         child._parent = null;
         child.Transform.SetParent(null);
 
-        OnChildOrderChanged.Emit(); // список детей изменился :contentReference[oaicite:17]{index=17}
+        OnChildOrderChanged?.Emit();
     }
     
     public Node GetChild(int index) => _children[index];
@@ -254,7 +316,7 @@ public class Node
 
     public Node GetParent() => _parent ?? throw new InvalidOperationException("Node has no parent.");
 
-    public int GetIntex()
+    public int GetIndex()
     {
         if (_parent is null) return -1;
         return _parent._children.IndexOf(this);
@@ -279,25 +341,51 @@ public class Node
 
     public void AddToGroup(string group, bool persistent = false)
     {
-        if (string.IsNullOrWhiteSpace(group)) throw new ArgumentException("Group name cannot be empty.", nameof(group));
+        if (string.IsNullOrWhiteSpace(group))
+            throw new ArgumentException("Group name cannot be empty.", nameof(group));
+
         for (var i = 0; i < _groups.Count; i++)
         {
             if (_groups[i].Name != group) continue;
-            if (_groups[i].Persistent == persistent) return;
-            _groups[i] = new GroupEntry(group, persistent);
+
+            var e = _groups[i];
+            if (e.Persistent == persistent) return;
+
+            e.Persistent = persistent;
+            _groups[i] = e;
             return;
         }
 
-        _groups.Add(new GroupEntry(group, persistent));
+        var entry = new GroupEntry(group, persistent);
+
+        if (_tree is not null)
+            entry.TreeIndex = _tree.RegisterInGroup(group, this);
+
+        _groups.Add(entry);
     }
 
-    public string[] GetGroups()
+    public int GetGroupCount() => _groups.Count;
+
+    public string GetGroupName(int index) => _groups[index].Name;
+
+    public bool IsGroupPersistent(int index) => _groups[index].Persistent;
+    
+    public void RemoveFromGroup(string group)
     {
-        if (_groups.Count == 0) return [];
-        var result = new string[_groups.Count];
+        if (string.IsNullOrWhiteSpace(group)) return;
+
         for (var i = 0; i < _groups.Count; i++)
-            result[i] = _groups[i].Name;
-        return result;
+        {
+            if (_groups[i].Name != group) continue;
+
+            var e = _groups[i];
+
+            if (_tree is not null && e.TreeIndex >= 0)
+                _tree.UnregisterFromGroup(group, e.TreeIndex, this);
+
+            _groups.RemoveAt(i);
+            return;
+        }
     }
 
     public bool IsInGroup(string group)
@@ -308,32 +396,80 @@ public class Node
         return false;
     }
     
-    internal void InternalReadyIfNeeded()
+    public void QueueFree()
     {
-        if (_readyCalled) return;
+        if (_queuedForFree) return;
+        _queuedForFree = true;
 
-        // ready: post-order (дети, потом родитель) :contentReference[oaicite:21]{index=21}
-        for (var i = 0; i < _children.Count; i++)
-            _children[i].InternalReadyIfNeeded();
+        if (_tree is null)
+        {
+            // вне дерева — освобождаем сразу
+            InternalFreeImmediate();
+            return;
+        }
 
-        Ready();
-        _readyCalled = true;
-        OnReady.Emit(); // после Ready :contentReference[oaicite:22]{index=22}
+        _tree.QueueFree(this);
+    }
+    
+    internal void InternalFreeImmediate()
+    {
+        // root нельзя фришить так
+        if (_parent is null && _tree is not null)
+            throw new InvalidOperationException("Cannot free the SceneTree root.");
+
+        _parent?.RemoveChild(this);
+
+        // после RemoveChild поддерево уже вне дерева: можно уничтожать ресурсы
+        DestroySubtreeBottomUp(this);
     }
 
+    private static void DestroySubtreeBottomUp(Node node)
+    {
+        var list = node._children;
+        for (var i = 0; i < list.Count; i++)
+            DestroySubtreeBottomUp(list[i]);
+
+        node.Destroy();
+    }
+
+    // Пользовательский “деструктор” узла под свои ресурсы (текстуры, аудио, хэндлы).
+    // Вызывается ТОЛЬКО при QueueFree/Free, НЕ при простом RemoveChild.
     
     internal void InternalFinalizeExit()
     {
-        // Очистить tree у поддерева
-        var tree = _tree;
+        // Снять группы из индекса пока _tree ещё доступен
+        if (_tree is not null)
+        {
+            for (var i = 0; i < _groups.Count; i++)
+            {
+                var e = _groups[i];
+                if (e.TreeIndex < 0) continue;
+                _tree.UnregisterFromGroup(e.Name, e.TreeIndex, this);
+                // TreeIndex будет сброшен через callback InternalUpdateGroupIndex(...)
+            }
+        }
+
         _tree = null;
+        _queuedForFree = false;
 
         for (var i = 0; i < _children.Count; i++)
             _children[i].InternalFinalizeExit();
 
-        // tree_exited: “уже вышел и не активен” :contentReference[oaicite:26]{index=26}
         OnExited.Emit();
     }
+    
+    internal void InternalUpdateGroupIndex(string group, int newIndex)
+    {
+        for (var i = 0; i < _groups.Count; i++)
+        {
+            if (_groups[i].Name != group) continue;
+            var e = _groups[i];
+            e.TreeIndex = newIndex;
+            _groups[i] = e;
+            return;
+        }
+    }
+
     
     private bool IsDescendantOf(Node possibleAncestor)
     {
@@ -341,30 +477,12 @@ public class Node
             if (p == possibleAncestor) return true;
         return false;
     }
-    
-    internal void MarkTransformDirtyFromSelf()
-    {
-        for (var i = 0; i < _children.Count; i++)
-            _children[i].MarkTransformDirtyRecursive();
-    }
-
-    internal void MarkTransformDirtyFromParent()
-    {
-        for (var i = 0; i < _children.Count; i++)
-            _children[i].MarkTransformDirtyRecursive();
-    }
-
-    private void MarkTransformDirtyRecursive()
-    {
-        Transform.MarkWorldDirtyFromParent();
-        for (var i = 0; i < _children.Count; i++)
-            _children[i].MarkTransformDirtyRecursive();
-    }
 
     private bool TryGetNodeByPath(ReadOnlySpan<char> path, out Node node)
     {
         node = this;
-        if (path.IsEmpty || path.SequenceEqual(".")) return true;
+        //это работает как и path.SequenceEqual
+        if (path.IsEmpty || path is ".") return true;
 
         var index = 0;
         if (path[0] == '/')
@@ -376,11 +494,11 @@ public class Node
 
         while (index < path.Length)
         {
-            var next = path.Slice(index).IndexOf('/');
+            var next = path[index..].IndexOf('/');
             ReadOnlySpan<char> segment;
             if (next < 0)
             {
-                segment = path.Slice(index);
+                segment = path[index..];
                 index = path.Length;
             }
             else
@@ -417,6 +535,6 @@ public class Node
         }
         return null;
     }
-
-    private readonly record struct GroupEntry(string Name, bool Persistent);
+    
+    public virtual void Destroy() { }
 }

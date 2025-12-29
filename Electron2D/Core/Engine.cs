@@ -8,4 +8,9 @@ public class Engine
     {
         SceneTree = new SceneTree(new Node("root"));
     }
+
+    public void Run()
+    {
+        
+    }
 }
