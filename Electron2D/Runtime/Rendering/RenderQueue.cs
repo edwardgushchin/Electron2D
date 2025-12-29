@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public sealed class RenderQueue(int capacity)
+internal sealed class RenderQueue(int capacity)
 {
     private readonly SpriteCommand[] _sprites = new SpriteCommand[capacity];
     private int _count;

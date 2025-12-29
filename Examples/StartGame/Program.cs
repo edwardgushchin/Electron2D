@@ -14,7 +14,7 @@ internal class Program
                 Title = "My 2D Game",
                 Width = 1280,
                 Height = 720,
-                VSync = true,
+                VSync = VSyncMode.Enabled,
                 Mode = WindowMode.ExclusiveFullscreen,
                 State = WindowState.Normal
             },

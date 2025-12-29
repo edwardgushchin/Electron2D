@@ -19,6 +19,8 @@ public sealed class SceneTree
 
     public Node Root { get; }
 
+    public bool Paused { get; set; }
+
     public ReadOnlySpan<Node> GetNodesInGroup(string group) => _groups.GetNodes(group);
 
     internal int RegisterInGroup(string group, Node node) => _groups.Add(group, node);
@@ -29,11 +31,7 @@ public sealed class SceneTree
     internal void QueueFree(Node node)
     {
         if ((uint)_freeCount >= (uint)_freeQueue.Length)
-        {
-            // Политика: либо лог + immediate free, либо исключение.
-            // Я бы делал исключение в Debug и лог+drop в Release.
             throw new InvalidOperationException("SceneTree deferred free queue overflow. Increase maxDeferredFreePerFrame.");
-        }
 
         _freeQueue[_freeCount++] = node;
     }
@@ -43,10 +41,47 @@ public sealed class SceneTree
         for (var i = 0; i < _freeCount; i++)
         {
             var n = _freeQueue[i];
-            _freeQueue[i] = null!; // разрываем ссылки, чтобы GC мог собрать
+            _freeQueue[i] = null!;
             n.InternalFreeImmediate();
         }
         _freeCount = 0;
+    }
+
+    public void Process(float delta)
+        => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
+
+    public void PhysicsProcess(float fixedDelta)
+        => PhysicsProcessNode(Root, parentMode: ProcessMode.Always, fixedDelta);
+
+    private void ProcessNode(Node node, ProcessMode parentMode, float delta)
+    {
+        var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
+        if (ShouldRun(mode))
+            node.InternalProcess(delta);
+
+        var count = node.GetChildCount();
+        for (var i = 0; i < count; i++)
+            ProcessNode(node.GetChild(i), mode, delta);
+    }
+
+    private void PhysicsProcessNode(Node node, ProcessMode parentMode, float fixedDelta)
+    {
+        var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
+        if (ShouldRun(mode))
+            node.InternalPhysicsProcess(fixedDelta);
+
+        var count = node.GetChildCount();
+        for (var i = 0; i < count; i++)
+            PhysicsProcessNode(node.GetChild(i), mode, fixedDelta);
+    }
+
+    private bool ShouldRun(ProcessMode mode)
+    {
+        if (mode == ProcessMode.Disable) return false;
+        if (mode == ProcessMode.Always) return true;
+        if (mode == ProcessMode.Pausable) return !Paused;
+        if (mode == ProcessMode.WhenPaused) return Paused;
+        return true;
     }
 
     private sealed class GroupIndex

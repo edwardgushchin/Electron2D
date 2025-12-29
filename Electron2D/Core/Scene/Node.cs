@@ -13,6 +13,8 @@ public class Node
     private bool _isEnabled = true;
     private bool _isPaused = false;
     private bool _queuedForFree;
+    private IComponent[] _components = new IComponent[4];
+    private int _compCount;
 
     #endregion
     
@@ -187,33 +189,33 @@ public class Node
 
     #region Input
 
-    protected virtual void Input(InputEvent inputEvent) {}
+    protected virtual void HandleInput(InputEvent inputEvent) {}
     
-    internal void InternalInput(InputEvent inputEvent) => Input(inputEvent);
+    internal void InternalInput(InputEvent inputEvent) => HandleInput(inputEvent);
 
     #endregion
 
     #region ShortcutInput
 
-    protected virtual void ShortcutInput(InputEvent inputEvent) {}
+    protected virtual void HandleShortcutInput(InputEvent inputEvent) {}
     
-    internal void InternalShortcutInput(InputEvent inputEvent) => ShortcutInput(inputEvent);
+    internal void InternalShortcutInput(InputEvent inputEvent) => HandleShortcutInput(inputEvent);
 
     #endregion
 
     #region UnhandledInput
 
-    protected virtual void UnhandledInput(InputEvent inputEvent) { }
+    protected virtual void HandleUnhandledInput(InputEvent inputEvent) { }
     
-    internal void InternalUnhandledInput(InputEvent inputEvent) => UnhandledInput(inputEvent);
+    internal void InternalUnhandledInput(InputEvent inputEvent) => HandleUnhandledInput(inputEvent);
 
     #endregion
 
     #region UnhandledKeyInput
 
-    protected virtual void UnhandledKeyInput(InputEvent inputEvent) {}
+    protected virtual void HandleUnhandledKeyInput(InputEvent inputEvent) {}
     
-    internal  void InternalUnhandledKeyInput(InputEvent inputEvent) => UnhandledKeyInput(inputEvent);
+    internal  void InternalUnhandledKeyInput(InputEvent inputEvent) => HandleUnhandledKeyInput(inputEvent);
 
     #endregion
     
@@ -309,6 +311,21 @@ public class Node
         child.Transform.SetParent(null);
 
         OnChildOrderChanged?.Emit();
+    }
+    
+    public T AddComponent<T>() where T : class, IComponent, new()
+    {
+        var c = new T();
+        AddComponentInstance(c);
+        return c;
+    }
+
+    private void AddComponentInstance(IComponent c)
+    {
+        if ((uint)_compCount >= (uint)_components.Length)
+            Array.Resize(ref _components, _components.Length * 2); // подготовьте capacity при загрузке сцены
+        _components[_compCount++] = c;
+        c.OnAttach(this);
     }
     
     public Node GetChild(int index) => _children[index];
@@ -430,7 +447,18 @@ public class Node
         for (var i = 0; i < list.Count; i++)
             DestroySubtreeBottomUp(list[i]);
 
+        node.DetachAllComponents();
         node.Destroy();
+    }
+
+    private void DetachAllComponents()
+    {
+        for (var i = 0; i < _compCount; i++)
+        {
+            _components[i].OnDetach();
+            _components[i] = null!;
+        }
+        _compCount = 0;
     }
 
     // Пользовательский “деструктор” узла под свои ресурсы (текстуры, аудио, хэндлы).
@@ -452,6 +480,8 @@ public class Node
 
         _tree = null;
         _queuedForFree = false;
+        
+        _readyCalled = false;
 
         for (var i = 0; i < _children.Count; i++)
             _children[i].InternalFinalizeExit();
