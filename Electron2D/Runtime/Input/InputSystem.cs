@@ -1,3 +1,4 @@
+using System;
 using SDL3;
 
 namespace Electron2D;
@@ -46,9 +47,12 @@ internal sealed class InputSystem
     public bool IsKeyDown(int scancode)
         => (uint)scancode < (uint)_keys.Length && _keys[scancode];
 
-    public bool IsKeyPress(int scancode)
+    public bool IsKeyPressed(int scancode)
         => (uint)scancode < (uint)_keys.Length && _keys[scancode] && !_prev[scancode];
 
     public bool IsKeyUp(int scancode)
         => (uint)scancode < (uint)_keys.Length && !_keys[scancode] && _prev[scancode];
+
+    [Obsolete("Use IsKeyPressed instead.")]
+    public bool IsKeyPress(int scancode) => IsKeyPressed(scancode);
 }
