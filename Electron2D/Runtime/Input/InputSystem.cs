@@ -44,11 +44,18 @@ internal sealed class InputSystem
     }
 
     public bool IsKeyDown(int scancode)
-        => (uint)scancode < (uint)_keys.Length && _keys[scancode];
+        => IsValidScancode(scancode) && _keys[scancode];
 
+    public bool IsKeyPressed(int scancode)
+        => IsValidScancode(scancode) && _keys[scancode] && !_prev[scancode];
+
+    [Obsolete("Use IsKeyPressed instead.")]
     public bool IsKeyPress(int scancode)
-        => (uint)scancode < (uint)_keys.Length && _keys[scancode] && !_prev[scancode];
+        => IsKeyPressed(scancode);
 
     public bool IsKeyUp(int scancode)
-        => (uint)scancode < (uint)_keys.Length && !_keys[scancode] && _prev[scancode];
+        => IsValidScancode(scancode) && !_keys[scancode] && _prev[scancode];
+
+    private bool IsValidScancode(int scancode)
+        => (uint)scancode < (uint)_keys.Length;
 }
