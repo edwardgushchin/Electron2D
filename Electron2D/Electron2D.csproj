@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Version>0.1</Version>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,15 +16,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Audio\" />
-      <Folder Include="Debugging\" />
-      <Folder Include="UI\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="SDL3-CS" Version="3.2.16.5" />
-      <PackageReference Include="SDL3-CS.Native" Version="3.2.16" />
-      <PackageReference Include="SDL3-CS.Native.Image" Version="3.2.4" />
+      <PackageReference Include="Box2D.NET" Version="3.1.633" />
+      <PackageReference Include="SDL3-CS" Version="3.3.7-preview.20251222-111333" />
+      <PackageReference Include="SDL3-CS.Native" Version="3.3.7-preview.20251222-111410" />
+      <PackageReference Include="SDL3-CS.Native.Image" Version="3.3.0-preview.20251222-110552" />
+      <PackageReference Include="SDL3-CS.Native.Mixer" Version="3.1.0-preview.20251222-110554" />
+      <PackageReference Include="SDL3-CS.Native.TTF" Version="3.3.0-preview.20251222-110556" />
+      <PackageReference Include="Serilog" Version="4.3.1-dev-02395" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+      <PackageReference Include="Serilog.Sinks.File" Version="8.0.0-dev-02318" />
     </ItemGroup>
 
 </Project>

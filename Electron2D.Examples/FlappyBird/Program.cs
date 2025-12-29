@@ -13,8 +13,9 @@ internal abstract class Program
             Resizable = false,
             VSync = VSyncMode.Adaptive,
         };
+
+        using var game = new Game("FlappyBird", settings);
         
-        var game = new Game("FlappyBird", settings);
         game.Run();
     }
 }

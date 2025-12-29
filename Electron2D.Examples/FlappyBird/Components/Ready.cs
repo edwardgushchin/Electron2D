@@ -12,19 +12,13 @@ public class Ready : Node
     private readonly Sprite _ready;
     private readonly BoxCollider _boxCollider;
     private readonly Vector2 _initialScale;
-    private float _time;
     
     public event Action OnClick;
-
-    // ─── пульсация ───
-    public  float PulseSpeed  { get; set; } = 4f;   // рад/с
-    public  float ScaleFactor { get; set; } = 0.1f; // амплитуда
-    private float   _pulseTime;
-
-    // ─── fade-out ───
-    private const float FadeDuration = 0.3f; // секунд
-    private bool  _fading;
-    private float _fadeElapsed;
+    
+    public float PulseSpeed  { get; set; } = 4f;   // рад/с
+    public float ScaleFactor { get; set; } = 0.1f; // амплитуда
+    private float _pulseTime;
+    
 
     public Ready(string name, Texture texture) : base(name)
     {
@@ -54,33 +48,12 @@ public class Ready : Node
 
     protected override void Update(float dt)
     {
-        // ─── пульсация (пока не начали fade) ───
-        if (!_fading)
-        {
-            _pulseTime += dt;
-            float scale = 1f + MathF.Sin(_pulseTime * PulseSpeed) * ScaleFactor;
-            Transform.LocalScale = _initialScale * scale;
-        }
-
-        // ─── fade-out ───
-        if (_fading)
-        {
-            _fadeElapsed += dt;
-            float t = Math.Clamp(_fadeElapsed / FadeDuration, 0f, 1f);
-
-            // альфа 255 → 0 (линейно)
-            byte a = (byte)(255f * (1f - t));
-            _ready.Color = _ready.Color with { A = a };
-
-            if (t >= 1f)
-            {
-                _ready.IsEnabled = false;  // выключаем спрайт
-                _fading          = false; // анимация завершена
-            }
-        }
+        _pulseTime += dt;
+        var scale = 1f + MathF.Sin(_pulseTime * PulseSpeed) * ScaleFactor;
+        Transform.LocalScale = _initialScale * scale;
 
         // ─── клик мыши ───
-        if (!_fading && Input.GetMouseButtonDown(MouseButtonFlags.Left))
+        if (Input.GetMouseButtonDown(MouseButtonFlags.Left))
         {
             var mousePos = Input.GetMousePosition();
             var worldPos = Camera.ActiveCamera!.ConvertScreenToWorld(mousePos);
@@ -88,12 +61,5 @@ public class Ready : Node
             if (_boxCollider.Contains(worldPos))
                 OnClick?.Invoke();
         }
-    }
-
-    public void Hide()
-    {
-        if (_fading || !_ready.IsEnabled) return;
-        _fading      = true;
-        _fadeElapsed = 0f;
     }
 }

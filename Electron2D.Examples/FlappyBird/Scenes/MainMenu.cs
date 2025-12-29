@@ -11,19 +11,17 @@ public class MainMenu : Node
     private readonly Logo _logo;
     private readonly Ready _ready;
     
-    public MainMenu(Texture background, Texture floor, Texture logo, Texture ready) : base("MainMenu")
+    public MainMenu(Texture background, Texture floor, Texture messages) : base("MainMenu")
     {
         _background = new Background("background", background, floor);
-        _logo = new Logo("logo", logo);
-        _ready = new Ready("ready", ready);
-        
+        _logo = new Logo("logo", messages);
+        _ready = new Ready("ready", messages);
         _ready.OnClick += ReadyOnOnClick;
     }
 
     private void ReadyOnOnClick()
     {
         _logo.Hide();
-        _ready.Hide();
     }
 
     protected override void Awake()
