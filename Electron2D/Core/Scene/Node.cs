@@ -47,6 +47,10 @@ public class Node
     public SceneTree? Tree => _tree;
     
     public ProcessMode ProcessMode { get; set; }
+
+    public int ChildCount => _children.Count;
+
+    public int GroupCount => _groups.Count;
     
     internal ReadOnlySpan<IComponent> InternalComponents => _components.AsSpan(0, _compCount);
     
@@ -217,7 +221,7 @@ public class Node
 
     protected virtual void HandleUnhandledKeyInput(InputEvent inputEvent) {}
     
-    internal  void InternalUnhandledKeyInput(InputEvent inputEvent) => HandleUnhandledKeyInput(inputEvent);
+    internal void InternalUnhandledKeyInput(InputEvent inputEvent) => HandleUnhandledKeyInput(inputEvent);
 
     #endregion
     
@@ -338,11 +342,16 @@ public class Node
         c.OnAttach(this);
     }
     
-    public Node GetChild(int index) => _children[index];
+    public Node GetChildAt(int index) => _children[index];
 
-    public int GetChildCount() => _children.Count;
+    [Obsolete("Use ChildCount property.")]
+    public int GetChildCount() => ChildCount;
 
+    [Obsolete("Use Parent property.")]
     public Node GetParent() => _parent ?? throw new InvalidOperationException("Node has no parent.");
+
+    [Obsolete("Use GetChildAt(int) instead.")]
+    public Node GetChild(int index) => GetChildAt(index);
 
     public int GetIndex()
     {
@@ -392,7 +401,8 @@ public class Node
         _groups.Add(entry);
     }
 
-    public int GetGroupCount() => _groups.Count;
+    [Obsolete("Use GroupCount property.")]
+    public int GetGroupCount() => GroupCount;
 
     public string GetGroupName(int index) => _groups[index].Name;
 

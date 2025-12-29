@@ -86,9 +86,9 @@ public sealed class SceneTree
         node.InternalInput(ev);
         if (_inputHandled) return true;
 
-        var count = node.GetChildCount();
+        var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            if (DispatchInput(node.GetChild(i), ev)) return true;
+            if (DispatchInput(node.GetChildAt(i), ev)) return true;
 
         return false;
     }
@@ -98,9 +98,9 @@ public sealed class SceneTree
         node.InternalShortcutInput(ev);
         if (_inputHandled) return true;
 
-        var count = node.GetChildCount();
+        var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            if (DispatchShortcutInput(node.GetChild(i), ev)) return true;
+            if (DispatchShortcutInput(node.GetChildAt(i), ev)) return true;
 
         return false;
     }
@@ -110,9 +110,9 @@ public sealed class SceneTree
         node.InternalUnhandledInput(ev);
         if (_inputHandled) return true;
 
-        var count = node.GetChildCount();
+        var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            if (DispatchUnhandledInput(node.GetChild(i), ev)) return true;
+            if (DispatchUnhandledInput(node.GetChildAt(i), ev)) return true;
 
         return false;
     }
@@ -122,9 +122,9 @@ public sealed class SceneTree
         node.InternalUnhandledKeyInput(ev);
         if (_inputHandled) return true;
 
-        var count = node.GetChildCount();
+        var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            if (DispatchUnhandledKeyInput(node.GetChild(i), ev)) return true;
+            if (DispatchUnhandledKeyInput(node.GetChildAt(i), ev)) return true;
 
         return false;
     }
@@ -141,9 +141,9 @@ public sealed class SceneTree
         if (ShouldRun(mode))
             node.InternalProcess(delta);
 
-        var count = node.GetChildCount();
+        var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            ProcessNode(node.GetChild(i), mode, delta);
+            ProcessNode(node.GetChildAt(i), mode, delta);
     }
 
     private void PhysicsProcessNode(Node node, ProcessMode parentMode, float fixedDelta)
@@ -152,9 +152,9 @@ public sealed class SceneTree
         if (ShouldRun(mode))
             node.InternalPhysicsProcess(fixedDelta);
 
-        var count = node.GetChildCount();
+        var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            PhysicsProcessNode(node.GetChild(i), mode, fixedDelta);
+            PhysicsProcessNode(node.GetChildAt(i), mode, fixedDelta);
     }
 
     private bool ShouldRun(ProcessMode mode)
@@ -209,10 +209,10 @@ public sealed class SceneTree
     {
         if (node is Camera c) return c;
 
-        var count = node.GetChildCount();
+        var count = node.ChildCount;
         for (var i = 0; i < count; i++)
         {
-            var found = FindFirstCamera(node.GetChild(i));
+            var found = FindFirstCamera(node.GetChildAt(i));
             if (found is not null) return found;
         }
 
