@@ -116,9 +116,9 @@ internal sealed class RenderSystem
                 sr.PrepareRender(_queue, resources);
         }
 
-        var childCount = node.GetChildCount();
+        var childCount = node.ChildCount;
         for (var i = 0; i < childCount; i++)
-            BuildNode(node.GetChild(i), resources);
+            BuildNode(node.GetChildAt(i), resources);
     }
 
     private void ApplyVSync(WindowConfig cfg)

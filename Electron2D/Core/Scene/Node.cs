@@ -42,6 +42,10 @@ public class Node
     public SceneTree? Tree => _tree;
 
     public ProcessMode ProcessMode { get; set; }
+    
+    public int ChildCount => _children.Count;
+
+    public int GroupCount => _groups.Count;
 
     internal ReadOnlySpan<IComponent> InternalComponents => _components.AsSpan(0, _componentCount);
 
@@ -186,11 +190,7 @@ public class Node
         return component;
     }
 
-    public Node GetChild(int index) => _children[index];
-
-    public int GetChildCount() => _children.Count;
-
-    public Node GetParent() => _parent ?? throw new InvalidOperationException("Node has no parent.");
+    public Node GetChildAt(int index) => _children[index];
 
     public int GetIndex()
     {
@@ -239,8 +239,6 @@ public class Node
 
         _groups.Add(entry);
     }
-
-    public int GetGroupCount() => _groups.Count;
 
     public string GetGroupName(int index) => _groups[index].Name;
 
