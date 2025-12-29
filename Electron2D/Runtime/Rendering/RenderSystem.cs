@@ -1,4 +1,3 @@
-using System.Numerics;
 using SDL3;
 
 namespace Electron2D;
@@ -6,8 +5,10 @@ namespace Electron2D;
 internal sealed class RenderSystem
 {
     private RenderQueue _queue = null!;
-    private nint _renderer; // SDL_Renderer*
-    private float _ppu;
+    private nint _renderer;
+    private float _fallbackOrthoSize;
+    private SceneTree? _scene;
+    
 
     internal nint Handle => _renderer;
 
@@ -23,7 +24,14 @@ internal sealed class RenderSystem
         if (_renderer == 0)
             throw new InvalidOperationException($"SDL.CreateRenderer failed. {SDL.GetError()}");
 
-        _ppu = cfg.PixelPerUnit;
+        SDL.GetRenderOutputSize(_renderer, out _, out var outH0);
+
+        // PixelPerUnit остаётся как default Sprite PPU.
+        // Если камер нет — делаем “зум” таким, чтобы 1 unit == PixelPerUnit px на старте.
+        var spritePpu = cfg.PixelPerUnit > 0f ? cfg.PixelPerUnit : 100f;
+        _fallbackOrthoSize = outH0 / (2f * spritePpu);
+        if (_fallbackOrthoSize <= 0f) _fallbackOrthoSize = 5f;
+
         ApplyVSync(cfg.Window);
     }
 
@@ -46,6 +54,7 @@ internal sealed class RenderSystem
 
     public void BuildRenderQueue(SceneTree scene, ResourceSystem resources)
     {
+        _scene = scene;
         BuildNode(scene.Root, resources);
     }
 
@@ -63,18 +72,23 @@ internal sealed class RenderSystem
         var halfH = outH * 0.5f;
 
         var sprites = _queue.Sprites;
+        var cam = _scene?.EnsureCurrentCamera();
+        var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
+        
         for (var i = 0; i < sprites.Length; i++)
         {
             ref readonly var cmd = ref sprites[i];
             var tex = cmd.Texture;
-            if (tex is null || !tex.IsValid) continue;
+            if (!tex.IsValid) continue;
+            
+            var ppuOnScreen = outH / (2f * orthoSize);
 
             // World (0,0) в центре, Y вверх => SDL (0,0) слева-сверху, Y вниз
-            var wPx = cmd.SizeWorld.X * _ppu;
-            var hPx = cmd.SizeWorld.Y * _ppu;
+            var wPx = cmd.SizeWorld.X * ppuOnScreen;
+            var hPx = cmd.SizeWorld.Y * ppuOnScreen;
 
-            var x = halfW + cmd.PosWorld.X * _ppu - wPx * 0.5f;
-            var y = halfH - cmd.PosWorld.Y * _ppu - hPx * 0.5f;
+            var x = halfW + cmd.PosWorld.X * ppuOnScreen - wPx * 0.5f;
+            var y = halfH - cmd.PosWorld.Y * ppuOnScreen - hPx * 0.5f;
 
             var dst = new SDL.FRect { X = x, Y = y, W = wPx, H = hPx };
 

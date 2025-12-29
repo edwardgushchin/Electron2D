@@ -10,6 +10,10 @@ public sealed class SpriteRenderer : IComponent
 
     private string? _spriteId;
 
+    // Per-sprite PPU (как Unity Sprite Pixels Per Unit).
+    // 100px = 1 world unit по умолчанию.
+    public float PixelsPerUnit { get; set; } = 100f;
+
     // кэш команды (пересобирается при изменении)
     private bool _hasCached;
     private SpriteCommand _cached;
@@ -17,6 +21,13 @@ public sealed class SpriteRenderer : IComponent
     public void SetSprite(string spriteId)
     {
         _spriteId = spriteId;
+        _hasCached = false;
+    }
+
+    public void SetSprite(string spriteId, float pixelsPerUnit)
+    {
+        _spriteId = spriteId;
+        PixelsPerUnit = pixelsPerUnit;
         _hasCached = false;
     }
 
@@ -29,6 +40,7 @@ public sealed class SpriteRenderer : IComponent
         _spriteId = null;
         _hasCached = false;
         _cached = default;
+        PixelsPerUnit = 100f;
     }
 
     internal void PrepareRender(RenderQueue q, ResourceSystem resources)
@@ -40,18 +52,24 @@ public sealed class SpriteRenderer : IComponent
 
         if (!_hasCached || ver != _lastWorldVer)
         {
-            // TODO: resources.GetSprite(_spriteId) должен вернуть (Texture, srcPx, sizeWorld, color, sortKey, ...)
+            // TODO: дальше логично заменить на resources.GetSprite(_spriteId) => (Texture, srcRectPx, pivot, ppu, tint, ...)
             var tex = resources.GetTexture(_spriteId);
+            if (!tex.IsValid) return;
 
             var pos = _owner.Transform.WorldPosition;
             var rot = _owner.Transform.WorldRotation;
 
-            // TODO: src/size/sortKey — временно заглушки
+            var ppu = PixelsPerUnit;
+            if (ppu <= 0f) ppu = 100f;
+
+            var sizeWorld = new Vector2(tex.Width / ppu, tex.Height / ppu);
+            sizeWorld *= _owner.Transform.WorldScale;
+
             _cached = new SpriteCommand(
                 tex: tex,
                 srcPx: Vector2.Zero,
                 pos: pos,
-                size: Vector2.One,
+                size: sizeWorld,
                 rot: rot,
                 color: 0xFFFFFFFF,
                 sortKey: 0);

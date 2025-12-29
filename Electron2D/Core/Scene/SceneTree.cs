@@ -8,6 +8,8 @@ public sealed class SceneTree
     private int _freeCount;
     private bool _inputHandled;
     private readonly GroupIndex _groups = new();
+    private bool _cameraDirty;
+
 
     public SceneTree(Node root, int deferredFreeQueueCapacity  = 1024)
     {
@@ -24,6 +26,8 @@ public sealed class SceneTree
     public Node Root { get; }
 
     public bool Paused { get; set; }
+    
+    public Camera? CurrentCamera { get; private set; }
 
     public ReadOnlySpan<Node> GetNodesInGroup(string group) => _groups.GetNodes(group);
 
@@ -156,7 +160,60 @@ public sealed class SceneTree
         if (mode == ProcessMode.WhenPaused) return Paused;
         return true;
     }
+    
+    internal void RegisterCamera(Camera cam)
+    {
+        // Ничего тяжёлого. Если камер нет — ставим первую.
+        if (CurrentCamera is null)
+        {
+            CurrentCamera = cam;
+            _cameraDirty = false;
+        }
+    }
+
+    internal void UnregisterCamera(Camera cam)
+    {
+        if (CurrentCamera == cam)
+        {
+            CurrentCamera = null;
+            _cameraDirty = true; // выберем другую камеру позже (когда узел реально уйдёт из дерева)
+        }
+    }
+
+    internal void SetCurrentCamera(Camera cam)
+    {
+        // Защита от “чужой” камеры
+        if (!ReferenceEquals(cam.Tree, this)) return;
+
+        CurrentCamera = cam;
+        _cameraDirty = false;
+    }
+
+    internal Camera? EnsureCurrentCamera()
+    {
+        if (CurrentCamera is not null) return CurrentCamera;
+        if (!_cameraDirty) return null;
+
+        // Редкий случай: текущая камера удалена. Ищем первую доступную.
+        CurrentCamera = FindFirstCamera(Root);
+        _cameraDirty = false;
+        return CurrentCamera;
+    }
+
+    private static Camera? FindFirstCamera(Node node)
+    {
+        if (node is Camera c) return c;
+
+        var count = node.GetChildCount();
+        for (var i = 0; i < count; i++)
+        {
+            var found = FindFirstCamera(node.GetChild(i));
+            if (found is not null) return found;
+        }
+
+        return null;
+    }
+
 
     internal void MarkInputHandled() => _inputHandled = true;
-
 }

@@ -27,6 +27,13 @@ internal class Program
             PixelPerUnit = 128f
         });
         
+        var mainCam = new Camera("Main")
+        {
+            OrthoSize = 5f,   // видно 10 units по вертикали
+            Current = true
+        };
+
+        engine.SceneTree.Root.AddChild(mainCam);
         engine.SceneTree.Root.AddChild(new MainScene());
 
         engine.Run();
