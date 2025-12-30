@@ -75,10 +75,9 @@ public sealed class Engine : IDisposable
             _time.EndFrame();
         }
     }
-    
+
     private void HandleQuitAndCloseRequests()
     {
-        // 1) window close (более конкретно, чем Quit)
         var win = _events.Events.Window.Read;
         for (var i = 0; i < win.Length; i++)
         {
@@ -89,7 +88,7 @@ public sealed class Engine : IDisposable
             else
                 SceneTree.Quit();
 
-            return;
+            return; // максимум один close на кадр — ок
         }
 
         // 2) global quit
@@ -100,7 +99,7 @@ public sealed class Engine : IDisposable
         else
             SceneTree.Quit();
     }
-
+    
 
     public void Dispose()
     {

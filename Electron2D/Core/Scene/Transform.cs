@@ -171,6 +171,11 @@ public sealed class Transform
         _localPosition = q;
         MarkLocalDirty();
     }
+    
+    public void Translate(float x = 0, float y = 0)
+    {
+        Translate(new Vector2(x, y));
+    }
 
     public void Rotate(float radians)
     {

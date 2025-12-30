@@ -1,3 +1,5 @@
+using SDL3;
+
 namespace Electron2D;
 
 /// <summary>
@@ -17,4 +19,5 @@ public enum Key
     Right = 79,
     Up = 82,
     Down = 81,
+    Backspace = SDL.Scancode.Backspace,
 }

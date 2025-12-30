@@ -54,5 +54,5 @@ internal sealed class InputSystem
         => IsValidScancode(scancode) && !_keys[scancode] && _prev[scancode];
 
     private bool IsValidScancode(int scancode)
-        => (uint)scancode < (uint)_keys.Length && _keys[scancode] && !_prev[scancode];
+        => (uint)scancode < (uint)_keys.Length;
 }

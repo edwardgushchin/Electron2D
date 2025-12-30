@@ -4,10 +4,24 @@ namespace StartGame;
 
 public class MainScene() : Node("MainScene")
 {
-    private Player? _player;
-
+    CloseConfirmControl confirm = null!;
+    
     protected override void Ready()
     {
-        AddChild(_player = new Player());
+        confirm = new CloseConfirmControl();
+        
+        AddChild(confirm);
+        AddChild(new Player());
+
+        SceneTree!.OnQuitRequested.Connect(() => confirm.Open());
+        SceneTree!.OnWindowCloseRequested.Connect(_ => confirm.Open());
+    }
+
+    protected override void HandleUnhandledKeyInput(InputEvent inputEvent)
+    {
+        if (inputEvent is { Type: InputEventType.KeyDown, Code: (int)Key.Escape })
+        {
+            confirm.Open();
+        }
     }
 }

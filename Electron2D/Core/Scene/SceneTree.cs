@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace Electron2D;
 
 public sealed class SceneTree
@@ -29,6 +27,8 @@ public sealed class SceneTree
     public Camera? CurrentCamera { get; private set; }
 
     public bool QuitRequested { get; private set; }
+    
+    public Control? FocusedControl { get; private set; }
 
     public readonly Signal OnQuitRequested = new();
 
@@ -51,21 +51,43 @@ public sealed class SceneTree
     {
         for (var i = 0; i < events.Length; i++)
         {
+            var ev = events[i];
             _inputHandled = false;
-            DispatchInputRecursive(Root, events[i], InputDispatchPhase.Input);
+
+            // 1) Node._input()
+            DispatchInputRecursive(Root, ev, InputDispatchPhase.Input, parentMode: ProcessMode.Always);
             if (_inputHandled) continue;
 
-            DispatchInputRecursive(Root, events[i], InputDispatchPhase.ShortcutInput);
+            // 2) GUI phase (пока: всё в FocusedControl)
+            DispatchGUI(ev);
             if (_inputHandled) continue;
 
-            DispatchInputRecursive(Root, events[i], InputDispatchPhase.UnhandledInput);
-            if (_inputHandled) continue;
+            // 3) Node._shortcut_input() (только “shortcut eligible”)
+            if (IsShortcutEligible(ev.Type))
+            {
+                DispatchInputRecursive(Root, ev, InputDispatchPhase.ShortcutInput, parentMode: ProcessMode.Always);
+                if (_inputHandled) continue;
+            }
 
-            if (events[i].Type is InputEventType.KeyDown or InputEventType.KeyUp)
-                DispatchInputRecursive(Root, events[i], InputDispatchPhase.UnhandledKeyInput);
+            // 4) Node._unhandled_key_input() (только key)
+            if (IsKeyEvent(ev.Type))
+            {
+                DispatchInputRecursive(Root, ev, InputDispatchPhase.UnhandledKeyInput, parentMode: ProcessMode.Always);
+                if (_inputHandled) continue;
+            }
+
+            // 5) Node._unhandled_input()
+            DispatchInputRecursive(Root, ev, InputDispatchPhase.UnhandledInput, parentMode: ProcessMode.Always);
         }
     }
 
+    private static bool IsKeyEvent(InputEventType t)
+        => t is InputEventType.KeyDown or InputEventType.KeyUp;
+
+    private static bool IsShortcutEligible(InputEventType t)
+        => t is InputEventType.KeyDown or InputEventType.KeyUp
+            or InputEventType.GamepadButtonDown or InputEventType.GamepadButtonUp;
+    
     public void Process(float delta)
         => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
 
@@ -110,7 +132,7 @@ public sealed class SceneTree
     internal void SetCurrentCamera(Camera cam)
     {
         // Защита от “чужой” камеры
-        if (!ReferenceEquals(cam.Tree, this)) return;
+        if (!ReferenceEquals(cam.SceneTree, this)) return;
 
         CurrentCamera = cam;
         _cameraDirty = false;
@@ -128,9 +150,45 @@ public sealed class SceneTree
     }
 
     internal void MarkInputHandled() => _inputHandled = true;
-
-    private bool DispatchInputRecursive(Node node, InputEvent ev, InputDispatchPhase phase)
+    
+    internal void SetFocusedControl(Control? control)
     {
+        if (control is null)
+        {
+            FocusedControl = null;
+            return;
+        }
+
+        // Фокусить можно только контрол, который реально в этом дереве
+        if (!ReferenceEquals(control.SceneTree, this)) return;
+
+        FocusedControl = control;
+    }
+
+    internal void UnfocusIf(Control control)
+    {
+        if (ReferenceEquals(FocusedControl, control))
+            FocusedControl = null;
+    }
+
+    private bool DispatchInputRecursive(Node node, InputEvent ev, InputDispatchPhase phase, ProcessMode parentMode)
+    {
+        // effective mode
+        var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
+
+        // reverse depth-first: сначала дети (с конца), потом узел
+        var count = node.ChildCount;
+        for (var i = count - 1; i >= 0; i--)
+        {
+            if (DispatchInputRecursive(node.GetChildAt(i), ev, phase, mode))
+                return true;
+        }
+
+        if (_inputHandled) return true;
+
+        if (!ShouldRun(mode))
+            return false;
+
         switch (phase)
         {
             case InputDispatchPhase.Input:
@@ -139,23 +197,17 @@ public sealed class SceneTree
             case InputDispatchPhase.ShortcutInput:
                 node.InternalShortcutInput(ev);
                 break;
-            case InputDispatchPhase.UnhandledInput:
-                node.InternalUnhandledInput(ev);
-                break;
             case InputDispatchPhase.UnhandledKeyInput:
                 node.InternalUnhandledKeyInput(ev);
+                break;
+            case InputDispatchPhase.UnhandledInput:
+                node.InternalUnhandledInput(ev);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(phase), phase, "Unknown input dispatch phase.");
         }
 
-        if (_inputHandled) return true;
-
-        var count = node.ChildCount;
-        for (var i = 0; i < count; i++)
-            if (DispatchInputRecursive(node.GetChildAt(i), ev, phase)) return true;
-
-        return false;
+        return _inputHandled;
     }
 
     private void ProcessNode(Node node, ProcessMode parentMode, float delta)
@@ -202,12 +254,36 @@ public sealed class SceneTree
 
         return null;
     }
-
-    private enum InputDispatchPhase
+    
+    private void DispatchGUI(InputEvent ev)
     {
-        Input,
-        ShortcutInput,
-        UnhandledInput,
-        UnhandledKeyInput
+        var fc = FocusedControl;
+        if (fc is null) return;
+
+        // Если фокус “протух” (контрол ушёл из дерева) — сбрасываем
+        if (!ReferenceEquals(fc.SceneTree, this))
+        {
+            FocusedControl = null;
+            return;
+        }
+
+        // Уважаем паузу/ProcessMode так же, как и для обычных узлов
+        var mode = GetEffectiveProcessMode(fc);
+        if (!ShouldRun(mode)) return;
+
+        fc.InternalGUIInput(ev);
+    }
+
+    private static ProcessMode GetEffectiveProcessMode(Node node)
+    {
+        var mode = node.ProcessMode;
+        while (mode == ProcessMode.Inherit)
+        {
+            var p = node.Parent;
+            if (p is null) return ProcessMode.Always;
+            node = p;
+            mode = node.ProcessMode;
+        }
+        return mode;
     }
 }

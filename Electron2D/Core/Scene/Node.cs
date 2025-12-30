@@ -10,7 +10,7 @@ public class Node
 
     private string _name;
     private Node? _parent;
-    private SceneTree? _tree;
+    private SceneTree? _sceneTree;
     private bool _readyCalled;
     private bool _queuedForFree;
     private int _componentCount;
@@ -37,9 +37,9 @@ public class Node
 
     public Node? Parent => _parent;
 
-    public bool IsInsideTree => _tree is not null;
+    public bool IsInsideTree => _sceneTree is not null;
 
-    public SceneTree? Tree => _tree;
+    public SceneTree? SceneTree => _sceneTree;
 
     public ProcessMode ProcessMode { get; set; }
     
@@ -112,7 +112,7 @@ public class Node
         }
 
         // Репарент внутри одного и того же SceneTree: НЕ вызываем Exit/Enter
-        if (_tree is not null && ReferenceEquals(child._tree, _tree))
+        if (_sceneTree is not null && ReferenceEquals(child._sceneTree, _sceneTree))
         {
             var oldParent = child._parent;
             if (oldParent is not null)
@@ -154,10 +154,10 @@ public class Node
 
         OnChildOrderChanged.Emit();
 
-        if (_tree is null)
+        if (_sceneTree is null)
             return;
 
-        child.InternalEnterTree(_tree);
+        child.InternalEnterTree(_sceneTree);
         OnChildEnteredTree.Emit(child);
         child.InternalReady();
     }
@@ -169,7 +169,7 @@ public class Node
         var idx = _children.IndexOf(child);
         if (idx < 0) return;
 
-        if (child._tree is not null)
+        if (child._sceneTree is not null)
         {
             OnChildExitingTree.Emit(child);
             child.InternalExitTree();
@@ -234,8 +234,8 @@ public class Node
 
         var entry = new GroupEntry(group, persistent);
 
-        if (_tree is not null)
-            entry.TreeIndex = _tree.RegisterInGroup(group, this);
+        if (_sceneTree is not null)
+            entry.TreeIndex = _sceneTree.RegisterInGroup(group, this);
 
         _groups.Add(entry);
     }
@@ -254,8 +254,8 @@ public class Node
 
             var e = _groups[i];
 
-            if (_tree is not null && e.TreeIndex >= 0)
-                _tree.UnregisterFromGroup(group, e.TreeIndex, this);
+            if (_sceneTree is not null && e.TreeIndex >= 0)
+                _sceneTree.UnregisterFromGroup(group, e.TreeIndex, this);
 
             _groups.RemoveAt(i);
             return;
@@ -275,14 +275,14 @@ public class Node
         if (_queuedForFree) return;
         _queuedForFree = true;
 
-        if (_tree is null)
+        if (_sceneTree is null)
         {
             // вне дерева — освобождаем сразу
             InternalFreeImmediate();
             return;
         }
 
-        _tree.QueueFree(this);
+        _sceneTree.QueueFree(this);
     }
 
     public bool TryGetNodeByPath(ReadOnlySpan<char> path, out Node? result)
@@ -299,7 +299,7 @@ public class Node
 
         if (path[0] == '/')
         {
-            node = _tree?.Root ?? this;
+            node = _sceneTree?.Root ?? this;
             path = path[1..];
         }
 
@@ -353,8 +353,24 @@ public class Node
 
     protected virtual void ExitTree() { }
 
+    /// <summary>
+    /// Вызывается при возникновении события ввода. Событие ввода распространяется вверх по дереву узлов, пока какой-либо узел его не обработает.
+    /// Вызывается только в том случае, если обработка ввода включена, что происходит автоматически, если этот метод переопределен, и может быть переключено с помощью set_process_input().
+    /// Чтобы обработать событие ввода и предотвратить его дальнейшее распространение на другие узлы, можно вызвать Viewport.set_input_as_handled().
+    /// Для игрового ввода обычно лучше подходят <see cref="HandleUnhandledInput"/> и <see cref="HandleUnhandledKeyInput"/>, поскольку они позволяют графическому интерфейсу пользователя перехватывать события первым.
+    /// Примечание: Этот метод вызывается только в том случае, если узел присутствует в дереве сцены (т.е. если он не является «сиротским»).
+    /// </summary>
+    /// <param name="inputEvent"></param>
     protected virtual void HandleInput(InputEvent inputEvent) { }
 
+    /// <summary>
+    /// Вызывается, когда событие ввода не было обработано методом <see cref="HandleInput"/> или каким-либо элементом управления графического интерфейса. Вызывается после _shortcut_input() и после _unhandled_key_input(). Событие ввода распространяется вверх по дереву узлов, пока какой-либо узел его не обработает.
+    /// Вызывается только в том случае, если включена обработка необработанного ввода, что происходит автоматически, если этот метод переопределен, и может быть переключено с помощью set_process_unhandled_input().
+    /// Чтобы обработать событие ввода и остановить его дальнейшее распространение на другие узлы, можно вызвать Viewport.set_input_as_handled().
+    /// Для игрового ввода этот метод обычно лучше подходит, чем <see cref="HandleInput"/>, поскольку события графического интерфейса требуют более высокого приоритета. Для сочетаний клавиш рекомендуется использовать _shortcut_input(), поскольку он вызывается перед этим методом. Наконец, для обработки событий клавиатуры рекомендуется использовать _unhandled_key_input() по соображениям производительности.
+    /// Примечание: Этот метод вызывается только в том случае, если узел присутствует в дереве сцены (т.е. если он не является "сиротским" узлом).
+    /// </summary>
+    /// <param name="inputEvent"></param>
     protected virtual void HandleShortcutInput(InputEvent inputEvent) { }
 
     protected virtual void HandleUnhandledInput(InputEvent inputEvent) { }
@@ -363,12 +379,12 @@ public class Node
 
     protected void SetInputHandled()
     {
-        _tree?.MarkInputHandled();
+        _sceneTree?.MarkInputHandled();
     }
 
     internal void InternalEnterTree(SceneTree tree)
     {
-        _tree = tree;
+        _sceneTree = tree;
 
         // Регистрируем группы этого узла в SceneTree-индексе
         for (var i = 0; i < _groups.Count; i++)
@@ -436,7 +452,7 @@ public class Node
     internal void InternalFreeImmediate()
     {
         // root нельзя фришить так
-        if (_parent is null && _tree is not null)
+        if (_parent is null && _sceneTree is not null)
             throw new InvalidOperationException("Cannot free the SceneTree root.");
 
         _parent?.RemoveChild(this);
@@ -447,19 +463,23 @@ public class Node
 
     internal void InternalFinalizeExit()
     {
+        // Если UI-контрол уходил из дерева — сбросить фокус, чтобы не осталась “висячая” ссылка.
+        if (_sceneTree is not null && this is Control c)
+            _sceneTree.UnfocusIf(c);
+        
         // Снять группы из индекса пока _tree ещё доступен
-        if (_tree is not null)
+        if (_sceneTree is not null)
         {
             for (var i = 0; i < _groups.Count; i++)
             {
                 var e = _groups[i];
                 if (e.TreeIndex < 0) continue;
-                _tree.UnregisterFromGroup(e.Name, e.TreeIndex, this);
+                _sceneTree.UnregisterFromGroup(e.Name, e.TreeIndex, this);
                 // TreeIndex будет сброшен через callback InternalUpdateGroupIndex(...)
             }
         }
 
-        _tree = null;
+        _sceneTree = null;
         _queuedForFree = false;
 
         _readyCalled = false;

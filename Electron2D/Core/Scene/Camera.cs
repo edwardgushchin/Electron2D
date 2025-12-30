@@ -27,24 +27,24 @@ public sealed class Camera : Node
             if (_current == value) return;
             _current = value;
 
-            if (_current && Tree is not null)
-                Tree.SetCurrentCamera(this);
+            if (_current && SceneTree is not null)
+                SceneTree.SetCurrentCamera(this);
         }
     }
 
     protected override void EnterTree()
     {
-        Tree!.RegisterCamera(this);
+        SceneTree!.RegisterCamera(this);
 
         // Если камера помечена Current — делаем её текущей.
         // Если текущей камеры ещё нет — можно выбрать первую вошедшую.
-        if (_current || Tree.CurrentCamera is null)
-            Tree.SetCurrentCamera(this);
+        if (_current || SceneTree.CurrentCamera is null)
+            SceneTree.SetCurrentCamera(this);
     }
 
     protected override void ExitTree()
     {
         // Тут Tree ещё доступен
-        Tree!.UnregisterCamera(this);
+        SceneTree!.UnregisterCamera(this);
     }
 }

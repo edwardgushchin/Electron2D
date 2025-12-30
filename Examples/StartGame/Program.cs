@@ -5,6 +5,8 @@ namespace StartGame;
 
 internal class Program
 {
+    private static bool _closeConfirmOpen;
+    
     public static void Main()
     {
         using var engine = new Engine(new EngineConfig
@@ -35,17 +37,6 @@ internal class Program
 
         engine.SceneTree.Root.AddChild(mainCam);
         engine.SceneTree.Root.AddChild(new MainScene());
-        
-        engine.SceneTree.OnWindowCloseRequested.Connect(_ =>
-        {
-            // показать “Are you sure?” через свой UI, не выходить сразу
-            Console.WriteLine("Are you sure?");
-        });
-
-        engine.SceneTree.OnQuitRequested.Connect(() =>
-        {
-            Console.WriteLine("Are you sure? 2");
-        });
 
         engine.Run();
     }
