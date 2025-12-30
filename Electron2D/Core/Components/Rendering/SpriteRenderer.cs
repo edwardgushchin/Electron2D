@@ -16,6 +16,11 @@ public sealed class SpriteRenderer : IComponent
     private SpriteCommand _cached;
     
     private FlipMode _lastSpriteFlip;
+    
+    private Vector2 _boundsMinWorld;
+    private Vector2 _boundsMaxWorld;
+    private bool _hasBounds;
+
 
     public Color Color
     {
@@ -57,9 +62,12 @@ public sealed class SpriteRenderer : IComponent
         _lastWorldVer = -1;
         _hasCached = false;
         _cached = default;
+        _hasBounds = false;
+        _boundsMinWorld = default;
+        _boundsMaxWorld = default;
     }
 
-    internal void PrepareRender(RenderQueue q, ResourceSystem resources)
+    internal void PrepareRender(RenderQueue q, ResourceSystem resources, in ViewCullRect view)
     {
         var owner = _owner;
         var sprite = _sprite;
@@ -144,12 +152,62 @@ public sealed class SpriteRenderer : IComponent
                 // ВАЖНО: сохраняем уже "итоговый" flip (с учётом Scale)
                 FlipMode = spriteFlip,
             };
-
-            _lastWorldVer = ver;
+            
+            //_lastWorldVer = ver;
+            ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
             _hasCached = true;
         }
+        
+        if (!_hasBounds)
+        {
+            ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+            _hasBounds = true;
+        }
+
+        if (!view.Intersects(in _boundsMinWorld, in _boundsMaxWorld))
+            return;
 
         q.TryPush(in _cached);
     }
+    
+    private static void ComputeWorldBounds(in SpriteCommand cmd, out Vector2 min, out Vector2 max)
+    {
+        var pos = cmd.PositionWorld;
+        var size = cmd.SizeWorld;
+        var origin = cmd.OriginWorld;
 
+        // Local rect relative to pivot (pivot at 0,0)
+        var minRelX = -origin.X;
+        var maxRelX = size.X - origin.X;
+        var minRelY = -origin.Y;
+        var maxRelY = size.Y - origin.Y;
+
+        var rot = cmd.Rotation;
+
+        // Fast path: no rotation
+        if (rot == 0f)
+        {
+            min = new Vector2(pos.X + minRelX, pos.Y + minRelY);
+            max = new Vector2(pos.X + maxRelX, pos.Y + maxRelY);
+            return;
+        }
+
+        var c = MathF.Cos(rot);
+        var s = MathF.Sin(rot);
+
+        // Rotate corners, get AABB in local, then translate by pos
+        // (x',y') = (x*c - y*s, x*s + y*c)
+        var x1 = minRelX * c - minRelY * s; var y1 = minRelX * s + minRelY * c;
+        var x2 = maxRelX * c - minRelY * s; var y2 = maxRelX * s + minRelY * c;
+        var x3 = minRelX * c - maxRelY * s; var y3 = minRelX * s + maxRelY * c;
+        var x4 = maxRelX * c - maxRelY * s; var y4 = maxRelX * s + maxRelY * c;
+
+        var minX = MathF.Min(MathF.Min(x1, x2), MathF.Min(x3, x4));
+        var maxX = MathF.Max(MathF.Max(x1, x2), MathF.Max(x3, x4));
+        var minY = MathF.Min(MathF.Min(y1, y2), MathF.Min(y3, y4));
+        var maxY = MathF.Max(MathF.Max(y1, y2), MathF.Max(y3, y4));
+
+        min = new Vector2(pos.X + minX, pos.Y + minY);
+        max = new Vector2(pos.X + maxX, pos.Y + maxY);
+    }
 }

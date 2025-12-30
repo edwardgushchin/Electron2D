@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public sealed class Camera(string name) : Node(name)
+public class Camera(string name) : Node(name)
 {
     private bool _current;
 

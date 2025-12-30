@@ -39,4 +39,21 @@ public sealed class EngineConfig
     /// Корневая папка контента (простая модель dev/offline-first заготовки).
     /// </summary>
     public string ContentRoot { get; init; } = "Content";
+    
+    /// <summary>
+    /// Рисовать отладочную сетку (1 unit) на фоне (world-space).
+    /// </summary>
+    public bool DebugGridEnabled { get; set; } = false;
+
+    /// <summary>
+    /// Цвет фона при включенной DebugGrid (заменяет SceneTree.ClearColor только на уровне рендера).
+    /// Формат: 0xRRGGBBAA.
+    /// </summary>
+    public Color DebugGridColor { get; set; } = new(47, 47, 56);
+
+    /// <summary>
+    /// Цвет линий сетки (шаг 1 unit). Оси будут автоматически чуть ярче.
+    /// Формат: 0xRRGGBBAA.
+    /// </summary>
+    public Color DebugGridLineColor { get; set; } = new Color(71, 71, 84);
 }

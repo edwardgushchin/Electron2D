@@ -60,7 +60,7 @@ internal sealed class RenderQueue : IDisposable
         return true;
     }
 
-    private void EnsureCapacity(int required)
+    internal void EnsureCapacity(int required)
     {
         if (required <= _buffer.Length)
             return;

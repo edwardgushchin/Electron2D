@@ -77,7 +77,7 @@ public sealed class Engine : IDisposable
 
             SceneTree.Process(_time.DeltaTime);
 
-            _render.BeginFrame();
+            _render.BeginFrame(SceneTree);
             _render.BuildRenderQueue(SceneTree, _resources);
             _render.EndFrame();
 

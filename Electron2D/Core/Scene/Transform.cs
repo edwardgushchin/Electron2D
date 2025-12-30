@@ -186,6 +186,36 @@ public sealed class Transform
     {
         Translate(new Vector2(0, y));
     }
+    
+    public void TranslateSelf(Vector2 delta)
+    {
+        if (delta == Vector2.Zero) return;
+
+        // Обновим world TRS один раз, чтобы не дергать свойства несколько раз.
+        UpdateWorldIfNeeded();
+
+        // Переводим локальный сдвиг (в осях объекта) в world-сдвиг.
+        // Оси "себя" в мире задаются WorldRotation.
+        var a = _worldRotation;
+        var worldDelta = a == 0f ? delta : Rotate(delta, a);
+
+        WorldPosition = _worldPosition + worldDelta;
+    }
+
+    public void TranslateSelf(float x = 0f, float y = 0f)
+    {
+        TranslateSelf(new Vector2(x, y));
+    }
+    
+    public void TranslateSelfX(float x)
+    {
+        TranslateSelf(new Vector2(x, 0));
+    }
+    
+    public void TranslateSelfY(float y)
+    {
+        TranslateSelf(new Vector2(0, y));
+    }
 
     public void Rotate(float radians)
     {

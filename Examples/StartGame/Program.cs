@@ -1,9 +1,8 @@
-﻿using System.Numerics;
-using Electron2D;
+﻿using Electron2D;
 
 namespace StartGame;
 
-internal class Program
+internal static class Program
 {
     public static void Main()
     {
@@ -12,10 +11,12 @@ internal class Program
             Window = new WindowConfig
             {
                 Title = "Electron2D: StartGame example",
+                Mode = WindowMode.ExclusiveFullscreen,
+                Width = 1920,
+                Height = 1080
             },
             DebugGridEnabled = true,
-            DebugGridColor = new Color(47, 47, 56),
-            DebugGridAxisColor = new Color(71, 71, 84)
+            VSync = VSyncMode.Enabled
         });
         
         engine.SceneTree.Root.AddChild(new MainScene());

@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using SDL3;
 
 namespace Electron2D;
@@ -11,6 +12,9 @@ internal sealed class RenderSystem : IDisposable
     private nint _handle; // SDL_Renderer*
     private bool _ownsHandle;
     private const float RadToDeg = 180 / MathF.PI;
+    private bool _viewPreparedThisFrame;
+    private ViewCullRect _viewCull;
+
 
     internal nint Handle => _handle;
     
@@ -19,10 +23,13 @@ internal sealed class RenderSystem : IDisposable
 
 // Если VSync запрошен, но реально отключился (не поддержан), можно предложить cap.
     internal int SuggestedMaxFps { get; private set; } = 0;
+    
+    private bool _debugGridEnabled;
+    private Color _debugGridBackground;
+    private Color _debugGridLine;
+    private Color _debugGridAxis;
+    
 
-    
-    public Color ClearColor { get; set; } = new(0x000000FF);
-    
     private SceneTree? _scene;
 
     private float _ppu;        // pixels per 1 world unit (computed from camera+viewport)
@@ -61,11 +68,20 @@ internal sealed class RenderSystem : IDisposable
         _handle = renderer;
         _ownsHandle = true;
 
+        // Прогрев очереди команд под конфиг, чтобы избежать роста в рантайме.
+        _queue.Preallocate(cfg.RenderQueueCapacity);
+
         // APPLY VSYNC (SDL3)
         // ВАЖНО: cfg не мутируем — фиксируем фактическое состояние в RenderSystem.
         EffectiveVSync = cfg.VSync;
         EffectiveVSyncInterval = Math.Max(1, cfg.VSyncInterval);
         SuggestedMaxFps = 0;
+        
+        _debugGridEnabled = cfg.DebugGridEnabled;
+        _debugGridBackground = cfg.DebugGridColor;
+        _debugGridLine = cfg.DebugGridLineColor;
+        // Оси чуть ярче обычной линии (без нового публичного параметра)
+        _debugGridAxis = AddRgb(_debugGridLine, 0x22);
 
         var requestedVSync = cfg.VSync switch
         {
@@ -120,24 +136,37 @@ internal sealed class RenderSystem : IDisposable
         _fallbackOrthoSize = 5f;
     }
 
-    public void BeginFrame()
+    public void BeginFrame(SceneTree scene)
     {
+        _scene = scene;
+        _viewPreparedThisFrame = false;
+        
+        // P0: очередь команд должна быть frame-local, иначе накапливаем draw calls по кадрам.
         _queue.Clear();
 
-        SDL.SetRenderDrawColor(_handle, ClearColor.Red, ClearColor.Green, ClearColor.Blue, ClearColor.Alpha);
+        var bg = _debugGridEnabled ? _debugGridBackground : scene.ClearColor;
+        SDL.SetRenderDrawColor(_handle, bg.Red, bg.Green, bg.Blue, bg.Alpha);
         SDL.RenderClear(_handle);
     }
+
 
     public void Flush()
     {
         var span = _queue.CommandsMutable;
-        if (span.Length == 0)
+
+        // Если нет команд и сетка выключена — нечего делать.
+        if (span.Length == 0 && !_debugGridEnabled)
             return;
 
-        if (_queue.NeedsSort)
+        // Сортируем только если есть что сортировать.
+        if (span.Length > 1 && _queue.NeedsSort)
             SpriteCommandSorter.Sort(span);
-        
+
         PrepareView();
+
+        // Фон: сетка рисуется ДО спрайтов.
+        if (_debugGridEnabled)
+            DrawDebugGrid1Unit();
 
         // Реальные draw-call’ы в SDL здесь.
         for (int i = 0; i < span.Length; i++)
@@ -216,8 +245,92 @@ internal sealed class RenderSystem : IDisposable
             in dst,
             angleDeg,
             in center,
-            (SDL.FlipMode)cmd.FlipMode
+            ToSdlFlip(cmd.FlipMode)
         );
+        return;
+
+        static SDL.FlipMode ToSdlFlip(FlipMode f)
+        {
+            var m = SDL.FlipMode.None;
+            if ((f & FlipMode.Horizontal) != 0) m |= SDL.FlipMode.Horizontal;
+            if ((f & FlipMode.Vertical) != 0)   m |= SDL.FlipMode.Vertical;
+            return m;
+        }
+    }
+    
+    private void DrawDebugGrid1Unit()
+    {
+        // Половины в world-units (корректно даже при Camera.OrthoSize, т.к. _ppu пересчитан в PrepareView)
+        var viewHalfW = _halfW / _ppu;
+        var viewHalfH = _halfH / _ppu;
+
+        // При вращении камеры берём bounding-square по диагонали, чтобы сетка точно закрыла экран
+        var halfDiag = MathF.Sqrt(viewHalfW * viewHalfW + viewHalfH * viewHalfH);
+
+        var xMin = _camPos.X - halfDiag;
+        var xMax = _camPos.X + halfDiag;
+        var yMin = _camPos.Y - halfDiag;
+        var yMax = _camPos.Y + halfDiag;
+
+        var xi0 = (int)MathF.Floor(xMin);
+        var xi1 = (int)MathF.Ceiling(xMax);
+        var yi0 = (int)MathF.Floor(yMin);
+        var yi1 = (int)MathF.Ceiling(yMax);
+
+        // 1) обычные линии (кроме осей)
+        SetDrawColor(_debugGridLine);
+
+        for (var x = xi0; x <= xi1; x++)
+        {
+            if (x == 0) continue;
+            DrawWorldLine(x, yMin, x, yMax);
+        }
+
+        for (var y = yi0; y <= yi1; y++)
+        {
+            if (y == 0) continue;
+            DrawWorldLine(xMin, y, xMax, y);
+        }
+
+        // 2) оси координат (чуть ярче)
+        SetDrawColor(_debugGridAxis);
+
+        if (0 >= xi0 && 0 <= xi1) DrawWorldLine(0f, yMin, 0f, yMax);
+        if (0 >= yi0 && 0 <= yi1) DrawWorldLine(xMin, 0f, xMax, 0f);
+    }
+
+    private void DrawWorldLine(float x1, float y1, float x2, float y2)
+    {
+        WorldToScreen(x1, y1, out var sx1, out var sy1);
+        WorldToScreen(x2, y2, out var sx2, out var sy2);
+
+        SDL.RenderLine(_handle, sx1, sy1, sx2, sy2);
+    }
+
+    private void WorldToScreen(float wx, float wy, out float sx, out float sy)
+    {
+        var rx = wx - _camPos.X;
+        var ry = wy - _camPos.Y;
+
+        // _cos/_sin уже подготовлены в PrepareView() для rot = -_camRot
+        var vx = rx * _camCos + ry * _camSin;
+        var vy = -rx * _camSin + ry * _camCos;
+
+        sx = _halfW + vx * _ppu;
+        sy = _halfH - vy * _ppu;
+    }
+
+    private void SetDrawColor(in Color c)
+        => SDL.SetRenderDrawColor(_handle, c.Red, c.Green, c.Blue, c.Alpha);
+
+    private static Color AddRgb(in Color c, int delta)
+    {
+        var r = c.Red + delta; if (r > 255) r = 255;
+        var g = c.Green + delta; if (g > 255) g = 255;
+        var b = c.Blue + delta; if (b > 255) b = 255;
+
+        // Color(uint) уже есть (раз используется new(0x000000FF)).
+        return new Color((uint)((r << 24) | (g << 16) | (b << 8) | c.Alpha));
     }
 
     
@@ -228,9 +341,16 @@ internal sealed class RenderSystem : IDisposable
 
         _scene = sceneTree;
 
+        EnsureViewPrepared();
+
         var renderers = sceneTree.SpriteRenderers;
+
+        // опционально (но полезно): заранее гарантировать ёмкость под "все рендереры"
+        // чтобы TryPush не триггерил Rent во время кадра при редком дефиците пула.
+        _queue.EnsureCapacity(renderers.Length);
+
         for (var i = 0; i < renderers.Length; i++)
-            renderers[i].PrepareRender(_queue, resources);
+            renderers[i].PrepareRender(_queue, resources, in _viewCull);
     }
     
     private void PrepareView()
@@ -271,6 +391,38 @@ internal sealed class RenderSystem : IDisposable
         // Pixels per 1 world-unit по вертикали
         _ppu = outH / (2f * orthoSize);
     }
+    
+    private void EnsureViewPrepared()
+    {
+        if (_viewPreparedThisFrame)
+            return;
+
+        PrepareView();
+
+        // half extents in world units
+        var invPpu = _ppu > 0f ? (1f / _ppu) : 0f;
+        var pad = 2f * invPpu; // ~2px safety to avoid edge popping
+        var halfWWorld = _halfW * invPpu;
+        var halfHWorld = _halfH * invPpu;
+
+        // If camera rotated, conservative square that bounds the rotated view rect
+        if (_camHasRot)
+        {
+            var r = MathF.Sqrt(halfWWorld * halfWWorld + halfHWorld * halfHWorld);
+            halfWWorld = r;
+            halfHWorld = r;
+        }
+
+        _viewCull = new ViewCullRect(
+            _camPos.X - halfWWorld - pad,
+            _camPos.Y - halfHWorld - pad,
+            _camPos.X + halfWWorld + pad,
+            _camPos.Y + halfHWorld + pad
+        );
+
+        _viewPreparedThisFrame = true;
+    }
+
 
     public void Shutdown() => Dispose();
     

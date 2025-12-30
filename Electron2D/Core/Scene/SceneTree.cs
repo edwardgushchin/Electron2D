@@ -35,6 +35,8 @@ public sealed class SceneTree
     public bool QuitRequested { get; private set; }
     
     public Control? FocusedControl { get; private set; }
+    
+    public Color ClearColor { get; set; } = new(0x000000FF);
 
     public readonly Signal OnQuitRequested = new();
 
