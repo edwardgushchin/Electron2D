@@ -43,7 +43,6 @@ public sealed class Engine : IDisposable
             fixedDeltaSeconds: cfg.Physics.FixedDelta,
             maxFixedStepsPerFrame: cfg.MaxFixedStepsPerFrame,
             timeScale: cfg.TimeScale,
-            maxFrameDeltaSeconds: 0f,
             vsync: effectiveVsync,
             maxFps: effectiveMaxFps);
 
@@ -101,9 +100,18 @@ public sealed class Engine : IDisposable
             if (win[i].Type != WindowEventType.CloseRequested) continue;
 
             if (SceneTree.OnWindowCloseRequested.HasSubscribers)
+            {
                 SceneTree.OnWindowCloseRequested.Emit(win[i].WindowId);
+            }
+            else if (SceneTree.OnQuitRequested.HasSubscribers)
+            {
+                // Fallback: дать перехватить закрытие через общий quit-сигнал.
+                SceneTree.OnQuitRequested.Emit();
+            }
             else
+            {
                 SceneTree.Quit();
+            }
 
             return; // максимум один close на кадр — ок
         }

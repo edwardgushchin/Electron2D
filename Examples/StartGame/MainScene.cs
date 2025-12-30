@@ -4,42 +4,43 @@ namespace StartGame;
 
 public class MainScene() : Node("MainScene")
 {
-    CloseConfirmControl confirm = null!;
-    float _cameraSpeed = 10f;
-    Camera? _camera;
+    //private CloseConfirmControl _confirm = null!;
+    private const float _cameraSpeed = 6f;
+    private Camera _camera = null!;
+    
     
     protected override void Ready()
     {
-        confirm = new CloseConfirmControl();
+        //_confirm = new CloseConfirmControl();
+        _camera = new Camera("Main");
         
-        AddChild(confirm);
+        AddChild(_camera);
+        //AddChild(_confirm);
         AddChild(new Player());
 
-        SceneTree!.OnQuitRequested.Connect(() => confirm.Open());
-        SceneTree!.OnWindowCloseRequested.Connect(_ => confirm.Open());
+        SceneTree!.Paused = true;
 
-        _camera = SceneTree?.CurrentCamera;
+        //SceneTree!.OnQuitRequested.Connect(() => _confirm.Open());
+        //SceneTree!.OnWindowCloseRequested.Connect(_ => _confirm.Open());
     }
 
     protected override void Process(float delta)
     {
-        if (_camera != null)
-        {
-            if(Input.IsKeyDown(KeyCode.Left)) _camera.Transform.TranslateX(-_cameraSpeed * delta);
-            if(Input.IsKeyDown(KeyCode.Right)) _camera.Transform.TranslateX(_cameraSpeed * delta);
+        if(Input.IsKeyDown(KeyCode.Left)) _camera.Transform.TranslateX(-_cameraSpeed * delta);
+        if(Input.IsKeyDown(KeyCode.Right)) _camera.Transform.TranslateX(_cameraSpeed * delta);
         
-            if(Input.IsKeyDown(KeyCode.Up)) _camera.Transform.TranslateY(_cameraSpeed * delta);
-            if(Input.IsKeyDown(KeyCode.Down)) _camera.Transform.TranslateY(-_cameraSpeed * delta);
+        if(Input.IsKeyDown(KeyCode.Up)) _camera.Transform.TranslateY(_cameraSpeed * delta);
+        if(Input.IsKeyDown(KeyCode.Down)) _camera.Transform.TranslateY(-_cameraSpeed * delta);
         
-            if(Input.IsKeyDown(KeyCode.Space)) _camera.Transform.RotateRight(_cameraSpeed * delta);
-        }
+        if(Input.IsKeyDown(KeyCode.Space)) _camera.Transform.RotateRight(_cameraSpeed * delta);
     }
 
     protected override void HandleUnhandledKeyInput(InputEvent inputEvent)
     {
         if (inputEvent is { Type: InputEventType.KeyDown, Code: KeyCode.Escape })
         {
-            confirm.Open();
+            //_confirm.Open();
+            SceneTree?.Quit();
         }
     }
 }

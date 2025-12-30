@@ -12,10 +12,12 @@ internal class Program
             Window = new WindowConfig
             {
                 Title = "Electron2D: StartGame example",
-            }
+            },
+            DebugGridEnabled = true,
+            DebugGridColor = new Color(47, 47, 56),
+            DebugGridAxisColor = new Color(71, 71, 84)
         });
-
-        engine.SceneTree.Root.AddChild(new Camera("Main"));
+        
         engine.SceneTree.Root.AddChild(new MainScene());
 
         engine.Run();

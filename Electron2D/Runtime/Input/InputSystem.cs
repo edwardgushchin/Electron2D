@@ -28,10 +28,6 @@ internal sealed class InputSystem
             (_keys, _prev) = (_prev, _keys);
         }
 
-        state.CopyTo(_keys);
-
-        // Генерация событий без SDL-типов наружу.
-        // Важно: публикуем ДО EventSystem.EndFrame(), чтобы оно попало в read-буфер этого кадра.
         var ch = events.Events.Input;
 
         for (var i = 0; i < numKeys; i++)
@@ -42,7 +38,11 @@ internal sealed class InputSystem
             var was = _prev[i];
             if (now == was) continue;
 
-            ch.TryPublish(new InputEvent(now ? InputEventType.KeyDown : InputEventType.KeyUp, code: i));
+            if (!ch.TryPublish(new InputEvent(now ? InputEventType.KeyDown : InputEventType.KeyUp, code: i)))
+            {
+                // Минимальная измеримость: если input-канал забит, события теряются.
+                // (Если хотите — можно прокинуть счётчик наружу через ProfilerSystem позже.)
+            }
         }
     }
 

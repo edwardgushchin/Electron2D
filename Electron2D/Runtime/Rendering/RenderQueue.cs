@@ -34,6 +34,12 @@ internal sealed class RenderQueue : IDisposable
         _needsSort = false;
         _sequence = 0;
     }
+    
+    public void Preallocate(int capacity)
+    {
+        if (capacity <= 0) return;
+        EnsureCapacity(capacity);
+    }
 
     public bool TryPush(in SpriteCommand command)
     {

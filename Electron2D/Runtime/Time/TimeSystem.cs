@@ -61,7 +61,6 @@ internal sealed class TimeSystem
         float fixedDeltaSeconds,
         int maxFixedStepsPerFrame,
         float timeScale,
-        float maxFrameDeltaSeconds,
         VSyncMode vsync,
         int maxFps)
     {
