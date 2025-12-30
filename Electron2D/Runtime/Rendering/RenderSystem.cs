@@ -14,6 +14,13 @@ internal sealed class RenderSystem : IDisposable
 
     internal nint Handle => _handle;
     
+    internal VSyncMode EffectiveVSync { get; private set; } = VSyncMode.Disabled;
+    internal int EffectiveVSyncInterval { get; private set; } = 1;
+
+// Если VSync запрошен, но реально отключился (не поддержан), можно предложить cap.
+    internal int SuggestedMaxFps { get; private set; } = 0;
+
+    
     public Color ClearColor { get; set; } = new(0x000000FF);
     
     private SceneTree? _scene;
@@ -49,6 +56,11 @@ internal sealed class RenderSystem : IDisposable
         _ownsHandle = true;
 
         // APPLY VSYNC (SDL3)
+        // ВАЖНО: cfg не мутируем — фиксируем фактическое состояние в RenderSystem.
+        EffectiveVSync = cfg.VSync;
+        EffectiveVSyncInterval = Math.Max(1, cfg.VSyncInterval);
+        SuggestedMaxFps = 0;
+
         var requestedVSync = cfg.VSync switch
         {
             VSyncMode.Disabled => 0,
@@ -62,49 +74,44 @@ internal sealed class RenderSystem : IDisposable
             var err = SDL.GetError();
             Console.WriteLine($"SDL_SetRenderVSync({requestedVSync}) failed: {err}");
 
-            // Fallback: Adaptive -> 1 -> 0
+            // Fallback chain: Adaptive -> 1 -> 0, Interval>1 -> 1 -> 0
             if (requestedVSync == -1)
             {
                 if (SDL.SetRenderVSync(_handle, 1))
                 {
-                    cfg.VSync = VSyncMode.Enabled;
-                    cfg.VSyncInterval = 1;
-                }
-                else
-                {
-                    SDL.SetRenderVSync(_handle, 0); // best-effort
-                    cfg.VSync = VSyncMode.Disabled;
-
-                    // важно: иначе TimeSystem не включит cap
-                    // (можете не выставлять тут, но тогда задайте MaxFps в конфиге руками)
-                    if (cfg.MaxFps <= 0) cfg.MaxFps = 60;
-                }
-            }
-            else if (requestedVSync > 1) // interval could be unsupported
-            {
-                if (SDL.SetRenderVSync(_handle, 1))
-                {
-                    cfg.VSync = VSyncMode.Enabled;
-                    cfg.VSyncInterval = 1;
+                    EffectiveVSync = VSyncMode.Enabled;
+                    EffectiveVSyncInterval = 1;
                 }
                 else
                 {
                     SDL.SetRenderVSync(_handle, 0);
-                    cfg.VSync = VSyncMode.Disabled;
-                    if (cfg.MaxFps <= 0) cfg.MaxFps = 60;
+                    EffectiveVSync = VSyncMode.Disabled;
+                    SuggestedMaxFps = 60;
+                }
+            }
+            else if (requestedVSync > 1)
+            {
+                if (SDL.SetRenderVSync(_handle, 1))
+                {
+                    EffectiveVSync = VSyncMode.Enabled;
+                    EffectiveVSyncInterval = 1;
+                }
+                else
+                {
+                    SDL.SetRenderVSync(_handle, 0);
+                    EffectiveVSync = VSyncMode.Disabled;
+                    SuggestedMaxFps = 60;
                 }
             }
             else
             {
-                cfg.VSync = VSyncMode.Disabled;
-                if (cfg.MaxFps <= 0) cfg.MaxFps = 60;
+                // requestedVSync == 0 или 1, но SetRenderVSync всё равно не сработал
+                EffectiveVSync = VSyncMode.Disabled;
+                SuggestedMaxFps = 60;
             }
         }
 
-        SDL.GetRenderOutputSize(_handle, out _, out var outH0);
-
-        _fallbackOrthoSize = outH0 / (2f * _ppu);
-        if (!(_fallbackOrthoSize > 0f)) _fallbackOrthoSize = 5f;
+        _fallbackOrthoSize = 5f;
     }
 
     public void BeginFrame()
@@ -212,6 +219,7 @@ internal sealed class RenderSystem : IDisposable
             while (sp > 0)
             {
                 var node = stack[--sp];
+                stack[sp] = null!; // важно: не держим ссылки в ArrayPool
 
                 // 1) Компоненты
                 // Предположение: node.Components доступен и содержит IComponent.

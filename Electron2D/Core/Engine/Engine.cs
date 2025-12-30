@@ -29,6 +29,23 @@ public sealed class Engine : IDisposable
         _input.Initialize();
         _physics.Initialize(cfg.Physics);
         _time.Initialize(cfg);
+        
+        // Применяем фактический VSync (RenderSystem мог отключить его из-за неподдержки).
+        var effectiveVsync = _render.EffectiveVSync;
+        var effectiveMaxFps = cfg.MaxFps;
+
+        if (effectiveVsync == VSyncMode.Disabled && effectiveMaxFps <= 0 && _render.SuggestedMaxFps > 0)
+            effectiveMaxFps = _render.SuggestedMaxFps;
+
+        // maxFrameDeltaSeconds сейчас в TimeSystem.Apply не используется — оставляем 0.
+        _time.Apply(
+            useFixedStep: cfg.UseFixedStep,
+            fixedDeltaSeconds: cfg.Physics.FixedDelta,
+            maxFixedStepsPerFrame: cfg.MaxFixedStepsPerFrame,
+            timeScale: cfg.TimeScale,
+            maxFrameDeltaSeconds: 0f,
+            vsync: effectiveVsync,
+            maxFps: effectiveMaxFps);
 
         Resources.Bind(_resources);
         Input.Bind(_input);

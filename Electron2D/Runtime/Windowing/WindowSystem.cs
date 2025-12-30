@@ -8,7 +8,7 @@ internal sealed class WindowSystem
 
     public void Initialize(WindowConfig cfg)
     {
-        if (!SDL.Init(SDL.InitFlags.Video))
+        if (!SDL.InitSubSystem(SDL.InitFlags.Video))
             throw new InvalidOperationException($"SDL.Init(Video) failed. {SDL.GetError()}");
 
         var handle = SDL.CreateWindow(cfg.Title, cfg.Width, cfg.Height, SDL.WindowFlags.Resizable);

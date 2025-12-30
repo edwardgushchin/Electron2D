@@ -8,7 +8,7 @@ public class Player() : Node("Player")
     private Texture _playerTexture;
     private Sprite _playerSprite = null!;
     private const float _speed = 5f;
-    private bool flipX = false;
+    private bool flipX;
     private double acc;
     private int frames;
 
@@ -53,17 +53,15 @@ public class Player() : Node("Player")
         acc += delta;
         frames++;
 
-        if (acc >= 1.0)
-        {
-            var fps = frames / acc;
-            Console.WriteLine($"FPS: {fps:F1}");
-            acc = 0;
-            frames = 0;
-        }
+        if (!(acc >= 1.0)) return;
+        var fps = frames / acc;
+        Console.WriteLine($"FPS: {fps:F1}");
+        acc = 0;
+        frames = 0;
     }
 
     protected override void ExitTree()
     {
-        _playerTexture.Destroy();
+        //Resources.UnloadTexture(_playerTexture);
     }
 }

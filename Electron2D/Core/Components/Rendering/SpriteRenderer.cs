@@ -12,6 +12,8 @@ public sealed class SpriteRenderer : IComponent
 
     private bool _hasCached;
     private SpriteCommand _cached;
+    
+    private FlipMode _lastSpriteFlip;
 
     public Color Color
     {
@@ -59,6 +61,13 @@ public sealed class SpriteRenderer : IComponent
         var sprite = _sprite;
 
         if (owner is null || sprite is null) return;
+        
+        var spriteFlip = sprite.FlipMode;
+        if (spriteFlip != _lastSpriteFlip)
+        {
+            _lastSpriteFlip = spriteFlip;
+            _hasCached = false;
+        }
 
         var ver = owner.Transform.WorldVersion;
 
@@ -114,9 +123,8 @@ public sealed class SpriteRenderer : IComponent
             var originWorld = new Vector2(sizeWorld.X * sprite.Pivot.X, sizeWorld.Y * sprite.Pivot.Y);
 
             // 6) Combine flips: Sprite.FlipMode + flip from negative scale
-            var sdlFlip = (SDL.FlipMode)sprite.FlipMode;
-            if (flipFromScaleX) sdlFlip ^= SDL.FlipMode.Horizontal;
-            if (flipFromScaleY) sdlFlip ^= SDL.FlipMode.Vertical;
+            if (flipFromScaleX) spriteFlip ^= FlipMode.Horizontal;
+            if (flipFromScaleY) spriteFlip ^= FlipMode.Vertical;
 
             _cached = new SpriteCommand
             {
@@ -130,7 +138,7 @@ public sealed class SpriteRenderer : IComponent
                 SortKey = _sortKey,
 
                 // ВАЖНО: сохраняем уже "итоговый" flip (с учётом Scale)
-                FlipMode = (FlipMode)sdlFlip,
+                FlipMode = spriteFlip,
             };
 
             _lastWorldVer = ver;
