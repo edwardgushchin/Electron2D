@@ -34,16 +34,16 @@ internal sealed class RenderSystem : IDisposable
         // Renderer создаётся в Initialize(windowHandle).
     }
 
-    public RenderSystem(nint windowHandle)
+    public RenderSystem(nint windowHandle, EngineConfig cfg)
     {
-        Initialize(windowHandle);
+        Initialize(windowHandle, cfg);
     }
     
     /// <summary>
     /// Инициализирует систему рендера, создавая SDL_Renderer* для указанного SDL_Window*.
     /// </summary>
     /// <remarks>Main thread only (SDL).</remarks>
-    public void Initialize(nint windowHandle)
+    public void Initialize(nint windowHandle, EngineConfig cfg)
     {
         if (windowHandle == 0)
             throw new ArgumentOutOfRangeException(nameof(windowHandle));
@@ -51,20 +51,70 @@ internal sealed class RenderSystem : IDisposable
         if (_handle != 0)
             throw new InvalidOperationException("RenderSystem.Initialize: already initialized.");
 
-        // SDL3: renderer создаётся из окна.
         var renderer = SDL.CreateRenderer(windowHandle, name: null);
         if (renderer == 0)
             throw new InvalidOperationException($"SDL.CreateRenderer failed. {SDL.GetError()}");
 
         _handle = renderer;
         _ownsHandle = true;
-        
+
+        // APPLY VSYNC (SDL3)
+        var requestedVSync = cfg.VSync switch
+        {
+            VSyncMode.Disabled => 0,
+            VSyncMode.Adaptive => -1,
+            VSyncMode.Enabled  => Math.Max(1, cfg.VSyncInterval),
+            _ => 0
+        };
+
+        if (!SDL.SetRenderVSync(_handle, requestedVSync))
+        {
+            var err = SDL.GetError();
+            Console.WriteLine($"SDL_SetRenderVSync({requestedVSync}) failed: {err}");
+
+            // Fallback: Adaptive -> 1 -> 0
+            if (requestedVSync == -1)
+            {
+                if (SDL.SetRenderVSync(_handle, 1))
+                {
+                    cfg.VSync = VSyncMode.Enabled;
+                    cfg.VSyncInterval = 1;
+                }
+                else
+                {
+                    SDL.SetRenderVSync(_handle, 0); // best-effort
+                    cfg.VSync = VSyncMode.Disabled;
+
+                    // важно: иначе TimeSystem не включит cap
+                    // (можете не выставлять тут, но тогда задайте MaxFps в конфиге руками)
+                    if (cfg.MaxFps <= 0) cfg.MaxFps = 60;
+                }
+            }
+            else if (requestedVSync > 1) // interval could be unsupported
+            {
+                if (SDL.SetRenderVSync(_handle, 1))
+                {
+                    cfg.VSync = VSyncMode.Enabled;
+                    cfg.VSyncInterval = 1;
+                }
+                else
+                {
+                    SDL.SetRenderVSync(_handle, 0);
+                    cfg.VSync = VSyncMode.Disabled;
+                    if (cfg.MaxFps <= 0) cfg.MaxFps = 60;
+                }
+            }
+            else
+            {
+                cfg.VSync = VSyncMode.Disabled;
+                if (cfg.MaxFps <= 0) cfg.MaxFps = 60;
+            }
+        }
+
         SDL.GetRenderOutputSize(_handle, out _, out var outH0);
 
-        // Если камер нет — считаем “зум”, чтобы 1 unit ~= ScreenPixelsPerWorldUnit px на старте
         _fallbackOrthoSize = outH0 / (2f * _ppu);
         if (!(_fallbackOrthoSize > 0f)) _fallbackOrthoSize = 5f;
-
     }
 
     public void BeginFrame()

@@ -1,20 +1,17 @@
 namespace Electron2D;
 
-public sealed class Camera : Node
+public sealed class Camera(string name) : Node(name)
 {
-    private float _orthoSize = 5f;
     private bool _current;
-
-    public Camera(string name) : base(name) { }
 
     /// <summary>
     /// Unity-like orthographic size: половина высоты видимого мира в world-units.
     /// </summary>
     public float OrthoSize
     {
-        get => _orthoSize;
-        set => _orthoSize = value > 0f ? value : 0.0001f;
-    }
+        get;
+        set => field = value > 0f ? value : 0.0001f;
+    } = 5f;
 
     /// <summary>
     /// Если true — камера становится текущей (как Godot Camera2D.current).

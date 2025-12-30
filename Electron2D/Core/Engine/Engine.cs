@@ -23,7 +23,7 @@ public sealed class Engine : IDisposable
         _events = new EventSystem();
 
         _window.Initialize(cfg.Window);
-        _render.Initialize(_window.Handle);
+        _render.Initialize(_window.Handle, cfg);
         _resources.Initialize(_render, cfg);
         _events.Initialize(cfg);
         _input.Initialize();

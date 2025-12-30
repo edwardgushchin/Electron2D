@@ -20,6 +20,9 @@ public class Player() : Node("Player")
         _spriteRenderer.SetSprite(_playerSprite);
     }
 
+    double acc;
+    int frames;
+    
     protected override void Process(float delta)
     {
         if(Input.IsKeyDown(KeyCode.W)) Transform.TranslateY(_speed * delta);
@@ -30,7 +33,16 @@ public class Player() : Node("Player")
         if(Input.IsKeyDown(KeyCode.Q)) Transform.RotateLeft(_speed * delta);
         if(Input.IsKeyDown(KeyCode.E)) Transform.RotateRight(_speed * delta);
         
-        Console.WriteLine($"Position: {Transform.WorldPosition}, Rotation: {Transform.WorldRotation}, DeltaTime: {delta}");
+        acc += delta;
+        frames++;
+
+        if (acc >= 1.0)
+        {
+            var fps = frames / acc;
+            Console.WriteLine($"FPS: {fps:F1}");
+            acc = 0;
+            frames = 0;
+        }
     }
 
     protected override void ExitTree()

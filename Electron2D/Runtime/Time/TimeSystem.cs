@@ -44,7 +44,7 @@ internal sealed class TimeSystem
         _fixedDelta = opt.Physics.FixedDelta;
         _maxFixedStepsPerFrame = opt.MaxFixedStepsPerFrame;
 
-        _vsync = opt.Window.VSync;
+        _vsync = opt.VSync;
         _maxFps = opt.MaxFps;
 
         _lastTs = Stopwatch.GetTimestamp();

@@ -4,6 +4,19 @@ public sealed class EngineConfig
 {
     public WindowConfig Window { get; init; } = new();
     public PhysicsConfig Physics { get; init; } = new();
+    
+    public VSyncMode VSync { get; set; } = VSyncMode.Disabled;
+    
+    /// <summary>
+    /// Интервал VSync для рендерера (1 = каждый vblank, 2 = каждый второй vblank и т.д.).
+    /// Используется только при <see cref="VSync"/> == <see cref="VSyncMode.Enabled"/>.
+    /// По умолчанию 1.
+    /// </summary>
+    /// <remarks>
+    /// Драйвер/бэкенд может не поддерживать все значения, поэтому RenderSystem обязан
+    /// проверять успешность установки и при необходимости делать fallback.
+    /// </remarks>
+    public int VSyncInterval { get; set; } = 1;
 
     public bool UseFixedStep { get; set; } = true;
     public int MaxFixedStepsPerFrame { get; init; } = 8;
