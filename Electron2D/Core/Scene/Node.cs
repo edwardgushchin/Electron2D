@@ -47,7 +47,9 @@ public class Node
 
     public int GroupCount => _groups.Count;
 
-    internal ReadOnlySpan<IComponent> InternalComponents => _components.AsSpan(0, _componentCount);
+    public ReadOnlySpan<IComponent> Components => _components.AsSpan(0, _componentCount);
+    
+    public IReadOnlyList<Node> Children => _children;
 
     /// <summary>
     /// Этот сигнал генерируется, когда дочерний узел входит в дерево сцены, обычно потому, что этот узел вошел в дерево

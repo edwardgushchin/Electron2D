@@ -5,8 +5,6 @@ namespace StartGame;
 
 internal class Program
 {
-    private static bool _closeConfirmOpen;
-    
     public static void Main()
     {
         using var engine = new Engine(new EngineConfig

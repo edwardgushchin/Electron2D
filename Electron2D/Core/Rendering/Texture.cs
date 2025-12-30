@@ -3,7 +3,7 @@ using SDL3;
 
 namespace Electron2D;
 
-public sealed class Texture
+public struct Texture
 {
     internal nint Handle { get; private set; } // SDL_Texture*
     internal bool IsValid => Handle != 0;
@@ -67,5 +67,10 @@ public sealed class Texture
 
         _width = wi;
         _height = hi;
+    }
+
+    public void Destroy()
+    {
+        if(Handle != IntPtr.Zero) SDL.DestroyTexture(Handle);
     }
 }

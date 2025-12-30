@@ -54,14 +54,15 @@ internal sealed class ResourceSystem
 
     public bool TryGetTexture(string id, out Texture texture)
     {
-        texture = null!;
+        texture = default;
         if (string.IsNullOrWhiteSpace(id)) return false;
 
-        if (!_textures.TryGetValue(id, out var tex) || !tex.IsValid) return false;
+        // “Try” — не грузим с диска автоматически.
+        if (!_textures.TryGetValue(id, out var tex) || !tex.IsValid)
+            return false;
+
         texture = tex;
         return true;
-
-        // “Try” — не грузим с диска автоматически
     }
 
     public void UnloadTexture(string id)
@@ -78,16 +79,6 @@ internal sealed class ResourceSystem
         tex.Invalidate();
     }
 
-    private nint LoadTextureHandle(string id)
-    {
-        var path = ResolveTexturePath(id);
-
-        // Image.LoadTexture требует валидный renderer
-        var handle = Image.LoadTexture(_renderer, path);
-        return handle == 0 ? throw new InvalidOperationException($"LoadTexture failed for '{id}'. Path='{path}'. {SDL3.SDL.GetError()}") : handle;
-    }
-
-
     private string ResolveTexturePath(string id)
     {
         // Если расширение не задано — считаем, что это png.
@@ -99,7 +90,7 @@ internal sealed class ResourceSystem
     
     private (nint Handle, int W, int H) LoadTextureHandleAndSize(string id)
     {
-        var path = Path.Combine(_contentRoot, id);
+        var path = ResolveTexturePath(id);
 
         var handle = Image.LoadTexture(_renderer, path);
         if (handle == 0)

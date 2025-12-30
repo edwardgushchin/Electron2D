@@ -1,137 +1,239 @@
+using System.Buffers;
+using System.Numerics;
 using SDL3;
 
 namespace Electron2D;
 
-internal sealed class RenderSystem
+internal sealed class RenderSystem : IDisposable
 {
-    private RenderQueue _queue = null!;
-    private nint _renderer;
-    private float _fallbackOrthoSize;
-    private SceneTree? _scene;
+    private readonly RenderQueue _queue = new(initialCapacity: 2048);
+
+    private nint _handle; // SDL_Renderer*
+    private bool _ownsHandle;
+    private const float RadToDeg = 57.2957795f; // 180 / PI
+
+    internal nint Handle => _handle;
     
+    // Минимальный world->screen. Это не "абстракция", а просто параметры.
+    public float ScreenPixelsPerWorldUnit { get; set; } = 100f;
 
-    internal nint Handle => _renderer;
+    public Vector2 CameraPositionWorld { get; set; } = Vector2.Zero;
+    
+    public Color ClearColor { get; set; } = new(0x000000FF);
+    
+    
+    private SceneTree? _scene;
 
-    public void Initialize(WindowSystem window, EngineConfig cfg)
+    private float _ppuOnScreen;
+    private float _halfW;
+    private float _halfH;
+    private Vector2 _camPos;
+
+    // fallback если камеры нет (чтобы не делить на 0)
+    private float _fallbackOrthoSize = 5f;
+
+
+    public RenderQueue Queue => _queue;
+    
+    public RenderSystem()
     {
-        _queue = new RenderQueue(cfg.RenderQueueCapacity);
-
-        var win = window.Handle;
-        if (win == 0)
-            throw new InvalidOperationException("RenderSystem.Initialize: WindowHandle is not created.");
-
-        _renderer = SDL.CreateRenderer(win, null);
-        if (_renderer == 0)
-            throw new InvalidOperationException($"SDL.CreateRenderer failed. {SDL.GetError()}");
-
-        SDL.GetRenderOutputSize(_renderer, out _, out var outH0);
-
-        // PixelPerUnit остаётся как default Sprite PPU.
-        // Если камер нет — делаем “зум” таким, чтобы 1 unit == PixelPerUnit px на старте.
-        var spritePpu = cfg.PixelPerUnit > 0f ? cfg.PixelPerUnit : 100f;
-        _fallbackOrthoSize = outH0 / (2f * spritePpu);
-        if (_fallbackOrthoSize <= 0f) _fallbackOrthoSize = 5f;
-
-        ApplyVSync(cfg.Window);
+        // Renderer создаётся в Initialize(windowHandle).
     }
 
-    public void Shutdown()
+    public RenderSystem(nint windowHandle)
     {
-        if (_renderer != 0)
-            SDL.DestroyRenderer(_renderer);
+        Initialize(windowHandle);
+    }
+    
+    /// <summary>
+    /// Инициализирует систему рендера, создавая SDL_Renderer* для указанного SDL_Window*.
+    /// </summary>
+    /// <remarks>Main thread only (SDL).</remarks>
+    public void Initialize(nint windowHandle)
+    {
+        if (windowHandle == 0)
+            throw new ArgumentOutOfRangeException(nameof(windowHandle));
 
-        _renderer = 0;
+        if (_handle != 0)
+            throw new InvalidOperationException("RenderSystem.Initialize: already initialized.");
+
+        // SDL3: renderer создаётся из окна.
+        var renderer = SDL.CreateRenderer(windowHandle, name: null);
+        if (renderer == 0)
+            throw new InvalidOperationException($"SDL.CreateRenderer failed. {SDL.GetError()}");
+
+        _handle = renderer;
+        _ownsHandle = true;
+        
+        SDL.GetRenderOutputSize(_handle, out _, out var outH0);
+
+        // Если камер нет — считаем “зум”, чтобы 1 unit ~= ScreenPixelsPerWorldUnit px на старте
+        var spritePpu = ScreenPixelsPerWorldUnit > 0f ? ScreenPixelsPerWorldUnit : 100f;
+        _fallbackOrthoSize = outH0 / (2f * spritePpu);
+        if (!(_fallbackOrthoSize > 0f)) _fallbackOrthoSize = 5f;
+
     }
 
     public void BeginFrame()
     {
         _queue.Clear();
 
-        // Черный фон (минимальный базовый кадр)
-        SDL.SetRenderDrawColor(_renderer, 0, 0, 0, 255);
-        SDL.RenderClear(_renderer);
+        SDL.SetRenderDrawColor(_handle, ClearColor.Red, ClearColor.Green, ClearColor.Blue, ClearColor.Alpha);
+        SDL.RenderClear(_handle);
     }
 
-    public void BuildRenderQueue(SceneTree scene, ResourceSystem resources)
+    public void Flush()
     {
-        _scene = scene;
-        BuildNode(scene.Root, resources);
-    }
+        var span = _queue.CommandsMutable;
+        if (span.Length == 0)
+            return;
 
+        if (_queue.NeedsSort)
+            SpriteCommandSorter.Sort(span);
+        
+        PrepareView();
+
+        // Реальные draw-call’ы в SDL здесь.
+        for (int i = 0; i < span.Length; i++)
+            DrawSprite(in span[i]);
+    }
+    
     public void EndFrame()
     {
-        SubmitSprites();
-        SDL.RenderPresent(_renderer);
+        Flush();
+        SDL.RenderPresent(_handle);
     }
 
-    private void SubmitSprites()
+    private void DrawSprite(in SpriteCommand cmd)
     {
-        // Размер backbuffer (важно для fullscreen/HiDPI)
-        SDL.GetRenderOutputSize(_renderer, out var outW, out var outH);
-        var halfW = outW * 0.5f;
-        var halfH = outH * 0.5f;
+        var tex = cmd.Texture;
+        if (!tex.IsValid) return;
 
-        var sprites = _queue.Sprites;
-        var cam = _scene?.EnsureCurrentCamera();
-        var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
-        var ppuOnScreen = outH / (2f * orthoSize);
-        
-        for (var i = 0; i < sprites.Length; i++)
+        // World (0,0) в центре, Y вверх => SDL (0,0) слева-сверху, Y вниз
+        var ppu = _ppuOnScreen;
+
+        var pivotX = _halfW + (cmd.PositionWorld.X - _camPos.X) * ppu;
+        var pivotY = _halfH - (cmd.PositionWorld.Y - _camPos.Y) * ppu;
+
+        var wPx = cmd.SizeWorld.X * ppu;
+        var hPx = cmd.SizeWorld.Y * ppu;
+
+        // Важно: трактуем Pivot/Origin как “из нижнего-левого” (под World Y-up).
+        // Тогда смещение до top-left по Y = (SizeY - OriginY).
+        var originPxX = cmd.OriginWorld.X * ppu;
+        var originPxY = (cmd.SizeWorld.Y - cmd.OriginWorld.Y) * ppu;
+
+        var dst = new SDL.FRect
         {
-            ref readonly var cmd = ref sprites[i];
-            var tex = cmd.Texture;
-            if (!tex.IsValid) continue;
-            
-            // World (0,0) в центре, Y вверх => SDL (0,0) слева-сверху, Y вниз
-            var wPx = cmd.SizeWorld.X * ppuOnScreen;
-            var hPx = cmd.SizeWorld.Y * ppuOnScreen;
-
-            var x = halfW + cmd.PosWorld.X * ppuOnScreen - wPx * 0.5f;
-            var y = halfH - cmd.PosWorld.Y * ppuOnScreen - hPx * 0.5f;
-
-            var dst = new SDL.FRect { X = x, Y = y, W = wPx, H = hPx };
-
-            // Цвет (если захотите) — можно добавить SetTextureColorMod/AlphaMod здесь.
-
-            // Рендер (src = null => вся текстура)
-            if (cmd.Rotation != 0f)
-            {
-                var angleDeg = cmd.Rotation * (180.0 / Math.PI);
-                var center = new SDL.FPoint { X = dst.W * 0.5f, Y = dst.H * 0.5f };
-                SDL.RenderTextureRotated(_renderer, tex.Handle, IntPtr.Zero, in dst, angleDeg, in center, SDL.FlipMode.None);
-            }
-            else
-            {
-                SDL.RenderTexture(_renderer, tex.Handle, IntPtr.Zero, in dst);
-            }
-        }
-    }
-
-    private void BuildNode(Node node, ResourceSystem resources)
-    {
-        var comps = node.InternalComponents;
-        for (var i = 0; i < comps.Length; i++)
-        {
-            if (comps[i] is SpriteRenderer sr)
-                sr.PrepareRender(_queue, resources);
-        }
-
-        var childCount = node.ChildCount;
-        for (var i = 0; i < childCount; i++)
-            BuildNode(node.GetChildAt(i), resources);
-    }
-
-    private void ApplyVSync(WindowConfig cfg)
-    {
-        var desired = cfg.VSync switch
-        {
-            VSyncMode.Disabled => 0,
-            VSyncMode.Enabled => Math.Max(1, cfg.VSyncInterval),
-            VSyncMode.Adaptive => -1,
-            _ => 0
+            X = pivotX - originPxX,
+            Y = pivotY - originPxY,
+            W = wPx,
+            H = hPx
         };
 
-        if (!SDL.SetRenderVSync(_renderer, desired))
-            SDL.SetRenderVSync(_renderer, 0);
+        var src = new SDL.FRect
+        {
+            X = cmd.SrcRect.X,
+            Y = cmd.SrcRect.Y,
+            W = cmd.SrcRect.Width,
+            H = cmd.SrcRect.Height
+        };
+
+        // SDL angle — по часовой (из-за Y вниз). В мире обычно CCW (математика), поэтому минус.
+        var angleDeg = -cmd.Rotation * RadToDeg;
+
+        var center = new SDL.FPoint { X = originPxX, Y = originPxY };
+
+        SDL.SetTextureColorMod(tex.Handle, cmd.Color.Red, cmd.Color.Green, cmd.Color.Blue);
+        SDL.SetTextureAlphaMod(tex.Handle, cmd.Color.Alpha);
+
+        SDL.RenderTextureRotated(_handle, tex.Handle, in src, in dst, angleDeg, in center, SDL.FlipMode.None);
+    }
+
+    
+    public void BuildRenderQueue(SceneTree sceneTree, ResourceSystem resources)
+    {
+        ArgumentNullException.ThrowIfNull(sceneTree);
+        ArgumentNullException.ThrowIfNull(resources);
+
+        // Предположение: корень дерева.
+        var root = sceneTree.Root;
+        _scene = sceneTree;
+
+        var pool = ArrayPool<Node>.Shared;
+        var stack = pool.Rent(128);
+        var sp = 0;
+
+        stack[sp++] = root;
+
+        try
+        {
+            while (sp > 0)
+            {
+                var node = stack[--sp];
+
+                // 1) Компоненты
+                // Предположение: node.Components доступен и содержит IComponent.
+                var comps = node.Components;
+                for (var i = 0; i < comps.Length; i++)
+                {
+                    if (comps[i] is SpriteRenderer sr)
+                        sr.PrepareRender(_queue, resources);
+                }
+
+                // 2) Дети
+                var children = node.Children;
+                for (var i = 0; i < children.Count; i++)
+                {
+                    if (sp == stack.Length)
+                    {
+                        // Grow stack (редко, прогревается).
+                        var newArr = pool.Rent(stack.Length * 2);
+                        Array.Copy(stack, 0, newArr, 0, sp);
+                        pool.Return(stack, clearArray: false);
+                        stack = newArr;
+                    }
+
+                    stack[sp++] = children[i];
+                }
+            }
+        }
+        finally
+        {
+            pool.Return(stack, clearArray: false);
+        }
+    }
+    
+    private void PrepareView()
+    {
+        // Размер backbuffer (важно для fullscreen/HiDPI)
+        SDL.GetRenderOutputSize(_handle, out var outW, out var outH);
+        _halfW = outW * 0.5f;
+        _halfH = outH * 0.5f;
+
+        // Камера
+        var cam = _scene?.EnsureCurrentCamera();
+        _camPos = cam is null ? Vector2.Zero : cam.Transform.WorldPosition;
+
+        var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
+        if (!(orthoSize > 0f)) orthoSize = 0.0001f;
+
+        // Pixels per 1 world-unit по вертикали
+        _ppuOnScreen = outH / (2f * orthoSize);
+        if (!(_ppuOnScreen > 0f))
+            _ppuOnScreen = ScreenPixelsPerWorldUnit > 0f ? ScreenPixelsPerWorldUnit : 100f;
+    }
+
+    public void Shutdown() => Dispose();
+    
+    public void Dispose()
+    {
+        _queue.Dispose();
+
+        if (_ownsHandle && _handle != 0)
+            SDL.DestroyRenderer(_handle);
+
+        _ownsHandle = false;
+        _handle = 0;
     }
 }
