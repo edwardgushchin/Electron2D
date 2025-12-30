@@ -12,7 +12,9 @@ public sealed class Camera(string name) : Node(name)
         get;
         set => field = value > 0f ? value : 0.0001f;
     } = 5f;
-
+    
+    internal void SetCurrentFromTree(bool value) => _current = value;
+    
     /// <summary>
     /// Если true — камера становится текущей (как Godot Camera2D.current).
     /// </summary>
@@ -24,18 +26,28 @@ public sealed class Camera(string name) : Node(name)
             if (_current == value) return;
             _current = value;
 
-            if (_current && SceneTree is not null)
-                SceneTree.SetCurrentCamera(this);
+            var tree = SceneTree;
+            if (tree is null) return;
+
+            if (_current)
+            {
+                tree.SetCurrentCamera(this);
+            }
+            else
+            {
+                // Если текущую камеру явно выключили — сбрасываем current, дерево выберет другую позже.
+                if (ReferenceEquals(tree.CurrentCamera, this))
+                    tree.UnregisterCamera(this);
+            }
         }
     }
-
+    
     protected override void EnterTree()
     {
         SceneTree!.RegisterCamera(this);
 
         // Если камера помечена Current — делаем её текущей.
-        // Если текущей камеры ещё нет — можно выбрать первую вошедшую.
-        if (_current || SceneTree.CurrentCamera is null)
+        if (_current)
             SceneTree.SetCurrentCamera(this);
     }
 

@@ -28,7 +28,13 @@ internal sealed class RenderSystem : IDisposable
     private float _ppu;        // pixels per 1 world unit (computed from camera+viewport)
     private float _halfW;
     private float _halfH;
+
     private Vector2 _camPos;
+    private float _camRot;     // world radians (CCW, Y-up)
+    private float _camCos;     // cos(camRot)
+    private float _camSin;     // sin(camRot)
+    private bool  _camHasRot;
+
 
     // fallback если камеры нет (чтобы не делить на 0)
     private float _fallbackOrthoSize = 5f;
@@ -150,8 +156,23 @@ internal sealed class RenderSystem : IDisposable
         if (!tex.IsValid) return;
 
         // World (0,0) в центре, Y вверх => SDL (0,0) слева-сверху, Y вниз
-        var pivotX = _halfW + (cmd.PositionWorld.X - _camPos.X) * _ppu;
-        var pivotY = _halfH - (cmd.PositionWorld.Y - _camPos.Y) * _ppu;
+        var rel = cmd.PositionWorld - _camPos;
+
+        float vx, vy;
+        if (_camHasRot)
+        {
+            // rotate rel by -camRot: [ c  s; -s  c ]
+            vx = rel.X * _camCos + rel.Y * _camSin;
+            vy = -rel.X * _camSin + rel.Y * _camCos;
+        }
+        else
+        {
+            vx = rel.X;
+            vy = rel.Y;
+        }
+
+        var pivotX = _halfW + vx * _ppu;
+        var pivotY = _halfH - vy * _ppu;
 
         var wPx = cmd.SizeWorld.X * _ppu;
         var hPx = cmd.SizeWorld.Y * _ppu;
@@ -180,7 +201,8 @@ internal sealed class RenderSystem : IDisposable
         };
 
         // SDL angle — по часовой (Y вниз). В мире обычно CCW => минус.
-        var angleDeg = -cmd.Rotation * RadToDeg;
+        var rot = _camHasRot ? (cmd.Rotation - _camRot) : cmd.Rotation;
+        var angleDeg = -rot * RadToDeg;
 
         var center = new SDL.FPoint { X = originPxX, Y = originPxY };
 
@@ -217,13 +239,34 @@ internal sealed class RenderSystem : IDisposable
         SDL.GetRenderOutputSize(_handle, out var outW, out var outH);
         _halfW = outW * 0.5f;
         _halfH = outH * 0.5f;
-
+        
         // Камера
         var cam = _scene?.EnsureCurrentCamera();
-        _camPos = cam is null ? Vector2.Zero : cam.Transform.WorldPosition;
+
+        if (cam is null)
+        {
+            _camPos = Vector2.Zero;
+            _camRot = 0f;
+            _camCos = 1f;
+            _camSin = 0f;
+            _camHasRot = false;
+        }
+        else
+        {
+            _camPos = cam.Transform.WorldPosition;
+
+            _camRot = cam.Transform.WorldRotation;
+            _camHasRot = _camRot != 0f;
+
+            // Важно: для поворота world->view мы используем -camRot,
+            // но можно хранить cos/sin(camRot) и применять формулу поворота на -a: [c s; -s c]
+            _camCos = MathF.Cos(_camRot);
+            _camSin = MathF.Sin(_camRot);
+        }
 
         var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
         if (!(orthoSize > 0f)) orthoSize = 0.0001f;
+        
 
         // Pixels per 1 world-unit по вертикали
         _ppu = outH / (2f * orthoSize);

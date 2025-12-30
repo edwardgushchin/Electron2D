@@ -161,21 +161,20 @@ public sealed class SceneTree
 
     internal void RegisterCamera(Camera cam)
     {
-        // Ничего тяжёлого. Если камер нет — ставим первую.
+        // Если камер нет — ставим первую текущей (и синхронизируем флаги).
         if (CurrentCamera is null)
-        {
-            CurrentCamera = cam;
-            _cameraDirty = false;
-        }
+            SetCurrentCamera(cam);
     }
+
 
     internal void UnregisterCamera(Camera cam)
     {
-        if (CurrentCamera == cam)
-        {
-            CurrentCamera = null;
-            _cameraDirty = true; // выберем другую камеру позже (когда узел реально уйдёт из дерева)
-        }
+        // Камера уходит из дерева — не может оставаться current.
+        cam.SetCurrentFromTree(false);
+
+        if (CurrentCamera != cam) return;
+        CurrentCamera = null;
+        _cameraDirty = true; // выберем другую камеру позже
     }
 
     internal void SetCurrentCamera(Camera cam)
@@ -183,9 +182,21 @@ public sealed class SceneTree
         // Защита от “чужой” камеры
         if (!ReferenceEquals(cam.SceneTree, this)) return;
 
+        if (ReferenceEquals(CurrentCamera, cam))
+        {
+            cam.SetCurrentFromTree(true);
+            _cameraDirty = false;
+            return;
+        }
+
+        var prev = CurrentCamera;
+        prev?.SetCurrentFromTree(false);
+
         CurrentCamera = cam;
+        cam.SetCurrentFromTree(true);
         _cameraDirty = false;
     }
+
 
     internal Camera? EnsureCurrentCamera()
     {
@@ -193,9 +204,14 @@ public sealed class SceneTree
         if (!_cameraDirty) return null;
 
         // Редкий случай: текущая камера удалена. Ищем первую доступную.
-        CurrentCamera = FindFirstCamera(Root);
+        var found = FindFirstCamera(Root);
         _cameraDirty = false;
+
+        if (found is not null) SetCurrentCamera(found);
+        else CurrentCamera = null;
+
         return CurrentCamera;
+
     }
 
     internal void MarkInputHandled() => _inputHandled = true;

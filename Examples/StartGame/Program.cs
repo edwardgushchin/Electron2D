@@ -14,8 +14,8 @@ internal class Program
                 Title = "Electron2D: StartGame example",
             }
         });
-        
-        
+
+        engine.SceneTree.Root.AddChild(new Camera("Main"));
         engine.SceneTree.Root.AddChild(new MainScene());
 
         engine.Run();
