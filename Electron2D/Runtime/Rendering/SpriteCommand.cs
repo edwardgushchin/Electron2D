@@ -19,6 +19,9 @@ internal struct SpriteCommand
 
     /// <summary>Ключ сортировки (слой/порядок). Чем меньше — тем раньше рисуется.</summary>
     public uint SortKey;
+    
+    // NEW: packing rotation/flip спрайта (Sprite.FlipMode)
+    public FlipMode FlipMode;
 
     /// <summary>
     /// Последовательность вставки (назначается очередью) для стабильной сортировки при равных SortKey.

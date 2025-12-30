@@ -1,11 +1,10 @@
-using SDL3;
-
 namespace Electron2D;
 
-public enum FlipMode : byte
+[Flags]
+public enum FlipMode
 {
     None = 0,
     Horizontal = 1,
     Vertical = 2,
-    HorizontalAndVertical
+    HorizontalAndVertical = Horizontal |  Vertical
 }

@@ -35,7 +35,7 @@ public sealed class Sprite
     public Vector2 TextureRectOffset { get; set; }
     public string? AssociatedAlphaTextureId { get; set; }
     public PackingMode PackingMode { get; set; }
-    public FlipMode PackingRotation { get; set; }
+    public FlipMode FlipMode { get; set; }
     public float AtlasTextureScale { get; set; }
     public SpriteMesh? Mesh { get; set; }
 
@@ -148,7 +148,7 @@ public sealed class Sprite
 
         AssociatedAlphaTextureId = associatedAlphaTextureId;
         PackingMode = packingMode;
-        PackingRotation = packingRotation;
+        FlipMode = packingRotation;
         AtlasTextureScale = atlasTextureScale;
 
         Mesh = mesh;

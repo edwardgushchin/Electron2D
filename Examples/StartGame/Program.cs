@@ -12,12 +12,7 @@ internal class Program
             Window = new WindowConfig
             {
                 Title = "Electron2D Game Engine: StartGame example",
-                Mode = WindowMode.ExclusiveFullscreen,
-                Width = 1920,
-                Height = 1080,
-            },
-            VSync = VSyncMode.Adaptive,
-            VSyncInterval = 1
+            }
         });
         
         var mainCam = new Camera("Main")

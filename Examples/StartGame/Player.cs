@@ -8,6 +8,9 @@ public class Player() : Node("Player")
     private Texture _playerTexture;
     private Sprite _playerSprite = null!;
     private const float _speed = 5f;
+    private bool flipX = false;
+    private double acc;
+    private int frames;
 
     protected override void EnterTree()
     {
@@ -20,19 +23,33 @@ public class Player() : Node("Player")
         _spriteRenderer.SetSprite(_playerSprite);
     }
 
-    double acc;
-    int frames;
+    
     
     protected override void Process(float delta)
     {
         if(Input.IsKeyDown(KeyCode.W)) Transform.TranslateY(_speed * delta);
-        if(Input.IsKeyDown(KeyCode.A)) Transform.TranslateX(-_speed * delta);
+        if (Input.IsKeyDown(KeyCode.A))
+        {
+            flipX = true;
+            Transform.TranslateX(-_speed * delta);
+        }
         if(Input.IsKeyDown(KeyCode.S)) Transform.TranslateY(-_speed * delta);
-        if(Input.IsKeyDown(KeyCode.D)) Transform.TranslateX(_speed * delta);
+        if (Input.IsKeyDown(KeyCode.D))
+        {
+            flipX = false;
+            Transform.TranslateX(_speed * delta);
+        }
         
         if(Input.IsKeyDown(KeyCode.Q)) Transform.RotateLeft(_speed * delta);
         if(Input.IsKeyDown(KeyCode.E)) Transform.RotateRight(_speed * delta);
         
+        _playerSprite.FlipMode = flipX ? FlipMode.Horizontal : FlipMode.None;
+
+        PrintFPS(delta);
+    }
+
+    private void PrintFPS(float delta)
+    {
         acc += delta;
         frames++;
 

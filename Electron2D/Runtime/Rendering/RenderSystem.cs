@@ -29,16 +29,6 @@ internal sealed class RenderSystem : IDisposable
 
     public RenderQueue Queue => _queue;
     
-    public RenderSystem()
-    {
-        // Renderer создаётся в Initialize(windowHandle).
-    }
-
-    public RenderSystem(nint windowHandle, EngineConfig cfg)
-    {
-        Initialize(windowHandle, cfg);
-    }
-    
     /// <summary>
     /// Инициализирует систему рендера, создавая SDL_Renderer* для указанного SDL_Window*.
     /// </summary>
@@ -153,15 +143,16 @@ internal sealed class RenderSystem : IDisposable
         if (!tex.IsValid) return;
 
         // World (0,0) в центре, Y вверх => SDL (0,0) слева-сверху, Y вниз
-
         var pivotX = _halfW + (cmd.PositionWorld.X - _camPos.X) * _ppu;
         var pivotY = _halfH - (cmd.PositionWorld.Y - _camPos.Y) * _ppu;
 
         var wPx = cmd.SizeWorld.X * _ppu;
         var hPx = cmd.SizeWorld.Y * _ppu;
 
-        // Важно: трактуем Pivot/Origin как “из нижнего-левого” (под World Y-up).
-        // Тогда смещение до top-left по Y = (SizeY - OriginY).
+        if (!(wPx > 0f) || !(hPx > 0f)) return;
+
+        // Origin задаётся из нижнего-левого (World Y-up).
+        // Смещение до top-left по Y = (SizeY - OriginY).
         var originPxX = cmd.OriginWorld.X * _ppu;
         var originPxY = (cmd.SizeWorld.Y - cmd.OriginWorld.Y) * _ppu;
 
@@ -181,7 +172,7 @@ internal sealed class RenderSystem : IDisposable
             H = cmd.SrcRect.Height
         };
 
-        // SDL angle — по часовой (из-за Y вниз). В мире обычно CCW (математика), поэтому минус.
+        // SDL angle — по часовой (Y вниз). В мире обычно CCW => минус.
         var angleDeg = -cmd.Rotation * RadToDeg;
 
         var center = new SDL.FPoint { X = originPxX, Y = originPxY };
@@ -189,7 +180,15 @@ internal sealed class RenderSystem : IDisposable
         SDL.SetTextureColorMod(tex.Handle, cmd.Color.Red, cmd.Color.Green, cmd.Color.Blue);
         SDL.SetTextureAlphaMod(tex.Handle, cmd.Color.Alpha);
 
-        SDL.RenderTextureRotated(_handle, tex.Handle, in src, in dst, angleDeg, in center, SDL.FlipMode.None);
+        SDL.RenderTextureRotated(
+            _handle,
+            tex.Handle,
+            in src,
+            in dst,
+            angleDeg,
+            in center,
+            (SDL.FlipMode)cmd.FlipMode
+        );
     }
 
     
