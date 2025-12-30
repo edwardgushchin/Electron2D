@@ -36,7 +36,9 @@ internal sealed class InputSystem
 
         for (var i = 0; i < numKeys; i++)
         {
-            var now = _keys[i];
+            var now = state[i];
+            _keys[i] = now;
+
             var was = _prev[i];
             if (now == was) continue;
 

@@ -2,15 +2,34 @@ namespace Electron2D;
 
 public enum InputEventType
 {
-    None = 0,
     KeyDown,
     KeyUp,
+    TextEditing,
+    TextInput,
+    KeymapChanged,
+    KeyboardAdded,
+    KeyboardRemoved,
+    TextEditingCandidates,
+    ScreenKeyboardShown,
+    ScreenKeyboardHidden,
+    
+    MouseMotion,
     MouseButtonDown,
     MouseButtonUp,
-    MouseMotion,
-    TextInput,
-    Wheel,
+    MouseWheel,
+    MouseAdded,
+    MouseRemoved,
+    
+    GamepadAxisMotion,
     GamepadButtonDown,
     GamepadButtonUp,
-    GamepadAxis
+    GamepadAdded,
+    GamepadRemoved,
+    GamepadRemapped,
+    GamepadTouchpadDown,
+    GamepadTouchpadMotion,
+    GamepadTouchpadUp,
+    GamepadSensorUpdate,
+    GamepadUpdateComplete,
+    GamepadSteamHandleUpdated,
 }

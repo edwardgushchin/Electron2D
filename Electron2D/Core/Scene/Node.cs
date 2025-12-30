@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Electron2D;
 
 public class Node
@@ -48,8 +50,6 @@ public class Node
     public int GroupCount => _groups.Count;
 
     public ReadOnlySpan<IComponent> Components => _components.AsSpan(0, _componentCount);
-    
-    public IReadOnlyList<Node> Children => _children;
 
     /// <summary>
     /// Этот сигнал генерируется, когда дочерний узел входит в дерево сцены, обычно потому, что этот узел вошел в дерево
@@ -192,7 +192,9 @@ public class Node
         return component;
     }
 
-    public Node GetChildAt(int index) => _children[index];
+    public Node GetChild(int index) => _children[index];
+    
+    public ReadOnlySpan<Node> Children => CollectionsMarshal.AsSpan(_children);
 
     public int GetIndex()
     {
@@ -397,6 +399,13 @@ public class Node
             _groups[i] = e;
         }
 
+        // Регистрируем render-компоненты, которые были добавлены ДО входа узла в дерево
+        for (var i = 0; i < _componentCount; i++)
+        {
+            if (_components[i] is SpriteRenderer sr)
+                tree.RegisterSpriteRenderer(sr);
+        }
+
         EnterTree();
         OnEntered.Emit();
 
@@ -465,18 +474,27 @@ public class Node
 
     internal void InternalFinalizeExit()
     {
+        var tree = _sceneTree;
+
         // Если UI-контрол уходил из дерева — сбросить фокус, чтобы не осталась “висячая” ссылка.
-        if (_sceneTree is not null && this is Control c)
-            _sceneTree.UnfocusIf(c);
-        
-        // Снять группы из индекса пока _tree ещё доступен
-        if (_sceneTree is not null)
+        if (tree is not null && this is Control c)
+            tree.UnfocusIf(c);
+
+        if (tree is not null)
         {
+            // Снять render-компоненты из индекса, пока tree ещё доступен
+            for (var i = 0; i < _componentCount; i++)
+            {
+                if (_components[i] is SpriteRenderer sr)
+                    tree.UnregisterSpriteRenderer(sr);
+            }
+
+            // Снять группы из индекса пока tree ещё доступен
             for (var i = 0; i < _groups.Count; i++)
             {
                 var e = _groups[i];
                 if (e.TreeIndex < 0) continue;
-                _sceneTree.UnregisterFromGroup(e.Name, e.TreeIndex, this);
+                tree.UnregisterFromGroup(e.Name, e.TreeIndex, this);
                 // TreeIndex будет сброшен через callback InternalUpdateGroupIndex(...)
             }
         }
@@ -510,7 +528,12 @@ public class Node
             Array.Resize(ref _components, _components.Length * 2); // подготовьте capacity при загрузке сцены
         _components[_componentCount++] = component;
         component.OnAttach(this);
+
+        // Если узел уже в дереве — регистрируем renderable сразу.
+        if (_sceneTree is not null && component is SpriteRenderer sr)
+            _sceneTree.RegisterSpriteRenderer(sr);
     }
+
 
     private static void DestroySubtreeBottomUp(Node node)
     {

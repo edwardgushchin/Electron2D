@@ -31,9 +31,14 @@ internal sealed class EventChannel<TEvent>
 
     public void Swap()
     {
+        var oldReadCount = _readCount;
+
         (_read, _write) = (_write, _read);
         _readCount = _writeCount;
         _writeCount = 0;
+
+        if (oldReadCount != 0 && RuntimeHelpers.IsReferenceOrContainsReferences<TEvent>())
+            Array.Clear(_write, 0, oldReadCount);
     }
 
     public void Clear()

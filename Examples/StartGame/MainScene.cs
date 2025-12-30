@@ -19,7 +19,7 @@ public class MainScene() : Node("MainScene")
 
     protected override void HandleUnhandledKeyInput(InputEvent inputEvent)
     {
-        if (inputEvent is { Type: InputEventType.KeyDown, Code: (int)KeyCode.Escape })
+        if (inputEvent is { Type: InputEventType.KeyDown, Code: KeyCode.Escape })
         {
             confirm.Open();
         }

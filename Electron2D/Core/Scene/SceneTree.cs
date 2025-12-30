@@ -1,12 +1,18 @@
+using System.Runtime.InteropServices;
+
 namespace Electron2D;
 
 public sealed class SceneTree
 {
     private readonly GroupIndex _groups = new();
+    private readonly List<SpriteRenderer> _spriteRenderers = new(capacity: 256);
+
     private Node[] _freeQueue;
     private int _freeCount;
     private bool _inputHandled;
     private bool _cameraDirty;
+
+    internal ReadOnlySpan<SpriteRenderer> SpriteRenderers => CollectionsMarshal.AsSpan(_spriteRenderers);
 
     public SceneTree(Node root, int deferredFreeQueueCapacity = 1024)
     {
@@ -101,6 +107,49 @@ public sealed class SceneTree
     internal void UnregisterFromGroup(string group, int index, Node removedNode)
         => _groups.Remove(group, index, removedNode);
 
+    internal void RegisterSpriteRenderer(SpriteRenderer renderer)
+    {
+        ArgumentNullException.ThrowIfNull(renderer);
+
+        if (renderer.SceneIndex >= 0)
+            return;
+
+        renderer.SceneIndex = _spriteRenderers.Count;
+        _spriteRenderers.Add(renderer);
+    }
+
+    internal void UnregisterSpriteRenderer(SpriteRenderer renderer)
+    {
+        ArgumentNullException.ThrowIfNull(renderer);
+
+        var idx = renderer.SceneIndex;
+        if (idx < 0)
+            return;
+
+        // Защита от рассинхронизации индекса (не hot-path)
+        if ((uint)idx >= (uint)_spriteRenderers.Count || !ReferenceEquals(_spriteRenderers[idx], renderer))
+        {
+            idx = _spriteRenderers.IndexOf(renderer);
+            if (idx < 0)
+            {
+                renderer.SceneIndex = -1;
+                return;
+            }
+        }
+
+        var lastIndex = _spriteRenderers.Count - 1;
+
+        if (idx != lastIndex)
+        {
+            var moved = _spriteRenderers[lastIndex];
+            _spriteRenderers[idx] = moved;
+            moved.SceneIndex = idx;
+        }
+
+        _spriteRenderers.RemoveAt(lastIndex);
+        renderer.SceneIndex = -1;
+    }
+
     internal void QueueFree(Node node)
     {
         if ((uint)_freeCount >= (uint)_freeQueue.Length)
@@ -180,7 +229,7 @@ public sealed class SceneTree
         var count = node.ChildCount;
         for (var i = count - 1; i >= 0; i--)
         {
-            if (DispatchInputRecursive(node.GetChildAt(i), ev, phase, mode))
+            if (DispatchInputRecursive(node.GetChild(i), ev, phase, mode))
                 return true;
         }
 
@@ -218,7 +267,7 @@ public sealed class SceneTree
 
         var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            ProcessNode(node.GetChildAt(i), mode, delta);
+            ProcessNode(node.GetChild(i), mode, delta);
     }
 
     private void PhysicsProcessNode(Node node, ProcessMode parentMode, float fixedDelta)
@@ -229,7 +278,7 @@ public sealed class SceneTree
 
         var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            PhysicsProcessNode(node.GetChildAt(i), mode, fixedDelta);
+            PhysicsProcessNode(node.GetChild(i), mode, fixedDelta);
     }
 
     private bool ShouldRun(ProcessMode mode)
@@ -248,7 +297,7 @@ public sealed class SceneTree
         var count = node.ChildCount;
         for (var i = 0; i < count; i++)
         {
-            var found = FindFirstCamera(node.GetChildAt(i));
+            var found = FindFirstCamera(node.GetChild(i));
             if (found is not null) return found;
         }
 

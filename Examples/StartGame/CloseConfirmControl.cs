@@ -18,12 +18,12 @@ public sealed class CloseConfirmControl() : Control("CloseConfirm")
 
         switch (e)
         {
-            case { Type: InputEventType.KeyDown, Code: (int)KeyCode.Escape }:
+            case { Type: InputEventType.KeyDown, Code: KeyCode.Escape }:
                 AcceptEvent();
                 SceneTree!.Quit();
                 Console.WriteLine("Выход...");
                 break;
-            case { Type: InputEventType.KeyDown, Code: (int)KeyCode.Backspace }:
+            case { Type: InputEventType.KeyDown, Code: KeyCode.Backspace }:
                 AcceptEvent();
                 _open = false;
                 Console.WriteLine("Отмена выхода");

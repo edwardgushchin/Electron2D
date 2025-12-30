@@ -79,39 +79,84 @@ internal sealed class EventSystem
                             DroppedEngineEvents++;
                         break;
 
+                    case SDL.EventType.WindowShown:
+                    {
+                        var timestamp = e.Window.Timestamp;
+                        var windowId = e.Window.WindowID;
+                        _events.Window.TryPublish(new WindowEvent(WindowEventType.Shown, timestamp, windowId));
+                        break;
+                    }
+
                     case SDL.EventType.WindowCloseRequested:
                     {
+                        var timestamp = e.Window.Timestamp;
                         var windowId = e.Window.WindowID;
-                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.CloseRequested, windowId)))
+                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.CloseRequested, timestamp, windowId)))
                             DroppedWindowEvents++;
                         break;
                     }
 
                     case SDL.EventType.WindowResized:
-                    case SDL.EventType.WindowPixelSizeChanged:
                     {
+                        var timestamp = e.Window.Timestamp;
                         var windowId = e.Window.WindowID;
                         var w = e.Window.Data1;
                         var h = e.Window.Data2;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.Resized, windowId, w, h));
+                        _events.Window.TryPublish(new WindowEvent(WindowEventType.Resized, timestamp, windowId, w, h));
+                        break;
+                    }
+                    case SDL.EventType.WindowPixelSizeChanged:
+                    {
+                        var timestamp = e.Window.Timestamp;
+                        var windowId = e.Window.WindowID;
+                        var w = e.Window.Data1;
+                        var h = e.Window.Data2;
+                        _events.Window.TryPublish(new WindowEvent(WindowEventType.PixelSizeChanged, timestamp, windowId, w, h));
                         break;
                     }
 
                     case SDL.EventType.WindowFocusGained:
                     {
+                        var timestamp = e.Window.Timestamp;
                         var windowId = e.Window.WindowID;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.FocusGained, windowId));
+                        _events.Window.TryPublish(new WindowEvent(WindowEventType.FocusGained, timestamp, windowId));
                         break;
                     }
 
                     case SDL.EventType.WindowFocusLost:
                     {
+                        var timestamp = e.Window.Timestamp;
                         var windowId = e.Window.WindowID;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.FocusLost, windowId));
+                        _events.Window.TryPublish(new WindowEvent(WindowEventType.FocusLost, timestamp, windowId));
                         break;
                     }
 
                     // TODO: сюда же маппинг input событий в _events.Input.TryPublish(...)
+                    /*Shown,
+                    Hidden,
+                    Exposed,
+                    Moved,
+                    Resized,
+                    PixelSizeChanged,
+                    MetalViewResized,
+                    Minimized,
+                    Maximized,
+                    Restored,
+                    MouseEnter,
+                    MouseLeave,
+                    FocusGained,
+                    FocusLost,
+                    CloseRequested,
+                    HitTest,
+                    ICCProfChanged,
+                    DisplayChanged,
+                    DisplayScaleChanged,
+                    SafeAreaChanged,
+                    Occluded,
+                    EnterFullscreen,
+                    LeaveFullscreen,
+                    Destroyed,
+                    HDRStateChanged,*/
                 }
             }
 

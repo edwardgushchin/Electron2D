@@ -204,53 +204,11 @@ internal sealed class RenderSystem : IDisposable
         ArgumentNullException.ThrowIfNull(sceneTree);
         ArgumentNullException.ThrowIfNull(resources);
 
-        // Предположение: корень дерева.
-        var root = sceneTree.Root;
         _scene = sceneTree;
 
-        var pool = ArrayPool<Node>.Shared;
-        var stack = pool.Rent(128);
-        var sp = 0;
-
-        stack[sp++] = root;
-
-        try
-        {
-            while (sp > 0)
-            {
-                var node = stack[--sp];
-                stack[sp] = null!; // важно: не держим ссылки в ArrayPool
-
-                // 1) Компоненты
-                // Предположение: node.Components доступен и содержит IComponent.
-                var comps = node.Components;
-                for (var i = 0; i < comps.Length; i++)
-                {
-                    if (comps[i] is SpriteRenderer sr)
-                        sr.PrepareRender(_queue, resources);
-                }
-
-                // 2) Дети
-                var children = node.Children;
-                for (var i = 0; i < children.Count; i++)
-                {
-                    if (sp == stack.Length)
-                    {
-                        // Grow stack (редко, прогревается).
-                        var newArr = pool.Rent(stack.Length * 2);
-                        Array.Copy(stack, 0, newArr, 0, sp);
-                        pool.Return(stack, clearArray: false);
-                        stack = newArr;
-                    }
-
-                    stack[sp++] = children[i];
-                }
-            }
-        }
-        finally
-        {
-            pool.Return(stack, clearArray: false);
-        }
+        var renderers = sceneTree.SpriteRenderers;
+        for (var i = 0; i < renderers.Length; i++)
+            renderers[i].PrepareRender(_queue, resources);
     }
     
     private void PrepareView()

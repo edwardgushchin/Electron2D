@@ -1,10 +1,12 @@
 using System.Numerics;
-using SDL3;
 
 namespace Electron2D;
 
 public sealed class SpriteRenderer : IComponent
 {
+    // Индекс в SceneTree render-индексе. -1 => не зарегистрирован.
+    internal int SceneIndex = -1;
+
     private Node? _owner;
     private int _lastWorldVer = -1;
 
@@ -42,6 +44,7 @@ public sealed class SpriteRenderer : IComponent
     {
         ArgumentNullException.ThrowIfNull(owner);
         _owner = owner;
+        SceneIndex = -1;
         _lastWorldVer = -1;
         _hasCached = false;
     }
@@ -50,6 +53,7 @@ public sealed class SpriteRenderer : IComponent
     {
         _owner = null;
         _sprite = null;
+        SceneIndex = -1;
         _lastWorldVer = -1;
         _hasCached = false;
         _cached = default;

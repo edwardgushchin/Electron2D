@@ -11,17 +11,11 @@ internal class Program
         {
             Window = new WindowConfig
             {
-                Title = "Electron2D Game Engine: StartGame example",
+                Title = "Electron2D: StartGame example",
             }
         });
         
-        var mainCam = new Camera("Main")
-        {
-            OrthoSize = 5f,   // видно 10 units по вертикали
-            Current = true
-        };
-
-        engine.SceneTree.Root.AddChild(mainCam);
+        
         engine.SceneTree.Root.AddChild(new MainScene());
 
         engine.Run();
