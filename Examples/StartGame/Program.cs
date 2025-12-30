@@ -11,20 +11,8 @@ internal class Program
         {
             Window = new WindowConfig
             {
-                Title = "My 2D Game",
-                Width = 800,
-                Height = 600,
-                VSync = VSyncMode.Enabled,
-                Mode = WindowMode.Windowed,
-                State = WindowState.Normal
+                Title = "Electron2D Game Engine: StartGame example",
             },
-            Physics = new PhysicsConfig
-            {
-                Gravity = new Vector2(0, -9.81f),
-                FixedDelta = 1f / 60f
-            },
-            TimeScale = 1f,
-            PixelPerUnit = 128f
         });
         
         var mainCam = new Camera("Main")

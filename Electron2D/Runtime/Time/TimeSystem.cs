@@ -20,9 +20,7 @@ internal sealed class TimeSystem
     private int _maxFixedStepsPerFrame = 8;
     private double _accumulator;
     private int _fixedStepsThisFrame;
-
-    // Clamps
-    private float _maxFrameDelta = 0.25f;
+    
 
     // Frame cap (only when vsync disabled)
     private VSyncMode _vsync = VSyncMode.Enabled;
@@ -45,7 +43,6 @@ internal sealed class TimeSystem
         _useFixedStep = opt.UseFixedStep;
         _fixedDelta = opt.Physics.FixedDelta;
         _maxFixedStepsPerFrame = opt.MaxFixedStepsPerFrame;
-        _maxFrameDelta = opt.MaxFrameDeltaSeconds;
 
         _vsync = opt.Window.VSync;
         _maxFps = opt.MaxFps;
@@ -73,7 +70,6 @@ internal sealed class TimeSystem
         _maxFixedStepsPerFrame = maxFixedStepsPerFrame;
 
         _timeScale = timeScale;
-        _maxFrameDelta = maxFrameDeltaSeconds;
 
         _vsync = vsync;
         _maxFps = maxFps;
@@ -91,7 +87,6 @@ internal sealed class TimeSystem
         _lastTs = _frameStartTs;
 
         if (dt < 0) dt = 0;
-        if (dt > _maxFrameDelta) dt = _maxFrameDelta;
 
         _unscaledDelta = (float)dt;
         _delta = _unscaledDelta * _timeScale;

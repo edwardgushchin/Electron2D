@@ -12,23 +12,25 @@ public class Player() : Node("Player")
     protected override void EnterTree()
     {
         _playerTexture = Resources.GetTexture("player_idle.png");
-        _playerSprite = new Sprite(_playerTexture);
+        _playerSprite = new Sprite(_playerTexture)
+        {
+            PixelsPerUnit = 236
+        };
         _spriteRenderer = AddComponent<SpriteRenderer>();
         _spriteRenderer.SetSprite(_playerSprite);
     }
 
-    protected override void Ready()
-    {
-        
-        
-    }
-
     protected override void Process(float delta)
     {
-        if(Input.IsKeyDown(Key.A)) Transform.Translate(x: -_speed * delta);
-        if(Input.IsKeyDown(Key.D)) Transform.Translate(x: _speed * delta);
-        if(Input.IsKeyDown(Key.W)) Transform.Translate(y: _speed * delta);
-        if(Input.IsKeyDown(Key.S)) Transform.Translate(y: -_speed * delta);
+        if(Input.IsKeyDown(KeyCode.W)) Transform.TranslateY(_speed * delta);
+        if(Input.IsKeyDown(KeyCode.A)) Transform.TranslateX(-_speed * delta);
+        if(Input.IsKeyDown(KeyCode.S)) Transform.TranslateY(-_speed * delta);
+        if(Input.IsKeyDown(KeyCode.D)) Transform.TranslateX(_speed * delta);
+        
+        if(Input.IsKeyDown(KeyCode.Q)) Transform.RotateLeft(_speed * delta);
+        if(Input.IsKeyDown(KeyCode.E)) Transform.RotateRight(_speed * delta);
+        
+        Console.WriteLine($"Position: {Transform.WorldPosition}, Rotation: {Transform.WorldRotation}, DeltaTime: {delta}");
     }
 
     protected override void ExitTree()

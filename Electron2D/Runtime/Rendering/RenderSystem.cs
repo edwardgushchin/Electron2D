@@ -10,21 +10,15 @@ internal sealed class RenderSystem : IDisposable
 
     private nint _handle; // SDL_Renderer*
     private bool _ownsHandle;
-    private const float RadToDeg = 57.2957795f; // 180 / PI
+    private const float RadToDeg = 180 / MathF.PI;
 
     internal nint Handle => _handle;
     
-    // Минимальный world->screen. Это не "абстракция", а просто параметры.
-    public float ScreenPixelsPerWorldUnit { get; set; } = 100f;
-
-    public Vector2 CameraPositionWorld { get; set; } = Vector2.Zero;
-    
     public Color ClearColor { get; set; } = new(0x000000FF);
-    
     
     private SceneTree? _scene;
 
-    private float _ppuOnScreen;
+    private float _ppu;        // pixels per 1 world unit (computed from camera+viewport)
     private float _halfW;
     private float _halfH;
     private Vector2 _camPos;
@@ -68,8 +62,7 @@ internal sealed class RenderSystem : IDisposable
         SDL.GetRenderOutputSize(_handle, out _, out var outH0);
 
         // Если камер нет — считаем “зум”, чтобы 1 unit ~= ScreenPixelsPerWorldUnit px на старте
-        var spritePpu = ScreenPixelsPerWorldUnit > 0f ? ScreenPixelsPerWorldUnit : 100f;
-        _fallbackOrthoSize = outH0 / (2f * spritePpu);
+        _fallbackOrthoSize = outH0 / (2f * _ppu);
         if (!(_fallbackOrthoSize > 0f)) _fallbackOrthoSize = 5f;
 
     }
@@ -110,18 +103,17 @@ internal sealed class RenderSystem : IDisposable
         if (!tex.IsValid) return;
 
         // World (0,0) в центре, Y вверх => SDL (0,0) слева-сверху, Y вниз
-        var ppu = _ppuOnScreen;
 
-        var pivotX = _halfW + (cmd.PositionWorld.X - _camPos.X) * ppu;
-        var pivotY = _halfH - (cmd.PositionWorld.Y - _camPos.Y) * ppu;
+        var pivotX = _halfW + (cmd.PositionWorld.X - _camPos.X) * _ppu;
+        var pivotY = _halfH - (cmd.PositionWorld.Y - _camPos.Y) * _ppu;
 
-        var wPx = cmd.SizeWorld.X * ppu;
-        var hPx = cmd.SizeWorld.Y * ppu;
+        var wPx = cmd.SizeWorld.X * _ppu;
+        var hPx = cmd.SizeWorld.Y * _ppu;
 
         // Важно: трактуем Pivot/Origin как “из нижнего-левого” (под World Y-up).
         // Тогда смещение до top-left по Y = (SizeY - OriginY).
-        var originPxX = cmd.OriginWorld.X * ppu;
-        var originPxY = (cmd.SizeWorld.Y - cmd.OriginWorld.Y) * ppu;
+        var originPxX = cmd.OriginWorld.X * _ppu;
+        var originPxY = (cmd.SizeWorld.Y - cmd.OriginWorld.Y) * _ppu;
 
         var dst = new SDL.FRect
         {
@@ -219,9 +211,7 @@ internal sealed class RenderSystem : IDisposable
         if (!(orthoSize > 0f)) orthoSize = 0.0001f;
 
         // Pixels per 1 world-unit по вертикали
-        _ppuOnScreen = outH / (2f * orthoSize);
-        if (!(_ppuOnScreen > 0f))
-            _ppuOnScreen = ScreenPixelsPerWorldUnit > 0f ? ScreenPixelsPerWorldUnit : 100f;
+        _ppu = outH / (2f * orthoSize);
     }
 
     public void Shutdown() => Dispose();

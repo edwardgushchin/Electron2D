@@ -176,6 +176,16 @@ public sealed class Transform
     {
         Translate(new Vector2(x, y));
     }
+    
+    public void TranslateX(float x)
+    {
+        Translate(new Vector2(x, 0));
+    }
+    
+    public void TranslateY(float y)
+    {
+        Translate(new Vector2(0, y));
+    }
 
     public void Rotate(float radians)
     {
@@ -185,6 +195,9 @@ public sealed class Transform
         _localRotation = q;
         MarkLocalDirty();
     }
+    
+    public void RotateRight(float radians) => Rotate(-radians);
+    public void RotateLeft (float radians) => Rotate(+radians);
 
     public void Scale(Vector2 scale)
     {

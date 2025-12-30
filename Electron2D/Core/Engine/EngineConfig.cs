@@ -10,12 +10,7 @@ public sealed class EngineConfig
 
     public int MaxFps { get; set; } = 0;
     public float TimeScale { get; set; } = 1f;
-
-    // P0: TimeSystem ожидает это свойство
-    public float MaxFrameDeltaSeconds { get; set; } = 0.25f;
-
-    public float PixelPerUnit { get; set; } = 128f;
-
+    
     public int EngineEventsPerFrame { get; init; } = 16;
     public int WindowEventsPerFrame { get; init; } = 256;
     public int InputEventsPerFrame  { get; init; } = 512;

@@ -9,9 +9,9 @@ public static class Input
     internal static void Bind(InputSystem system) => _system = system;
     internal static void Unbind() => _system = null;
 
-    public static bool IsKeyDown(Key key) => _system is not null && _system.IsKeyDown((int)key);
+    public static bool IsKeyDown(KeyCode keyCode) => _system is not null && _system.IsKeyDown((int)keyCode);
 
-    public static bool IsKeyPressed(Key key) => _system is not null && _system.IsKeyPressed((int)key);
+    public static bool IsKeyPressed(KeyCode keyCode) => _system is not null && _system.IsKeyPressed((int)keyCode);
 
-    public static bool IsKeyUp(Key key) => _system is not null && _system.IsKeyUp((int)key);
+    public static bool IsKeyUp(KeyCode keyCode) => _system is not null && _system.IsKeyUp((int)keyCode);
 }
