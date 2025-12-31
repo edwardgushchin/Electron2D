@@ -1,10 +1,12 @@
+using SDL3;
+
 namespace Electron2D;
 
 [Flags]
 public enum FlipMode
 {
-    None = 0,
-    Horizontal = 1,
-    Vertical = 2,
-    HorizontalAndVertical = Horizontal |  Vertical
+    None = SDL.FlipMode.None,
+    Horizontal = SDL.FlipMode.Horizontal,
+    Vertical = SDL.FlipMode.Vertical,
+    HorizontalAndVertical = SDL.FlipMode.HorizontalAndVertical
 }

@@ -153,8 +153,12 @@ public sealed class SpriteRenderer : IComponent
                 FlipMode = spriteFlip,
             };
             
-            //_lastWorldVer = ver;
+            _lastWorldVer = ver;
+
+            // Bounds are part of the cached state; compute once here.
             ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+            _hasBounds = true;
+
             _hasCached = true;
         }
         
