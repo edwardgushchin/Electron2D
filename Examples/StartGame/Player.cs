@@ -44,20 +44,6 @@ public class Player() : Node("Player")
         if(Input.IsKeyDown(KeyCode.E)) Transform.RotateRight(_speed * delta);
         
         _playerSprite.FlipMode = flipX ? FlipMode.Horizontal : FlipMode.None;
-
-        PrintFPS(delta);
-    }
-
-    private void PrintFPS(float delta)
-    {
-        acc += delta;
-        frames++;
-
-        if (!(acc >= 1.0)) return;
-        var fps = frames / acc;
-        Console.WriteLine($"FPS: {fps:F1}");
-        acc = 0;
-        frames = 0;
     }
 
     protected override void ExitTree()

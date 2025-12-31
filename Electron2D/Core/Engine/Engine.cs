@@ -48,6 +48,7 @@ public sealed class Engine : IDisposable
 
         Resources.Bind(_resources);
         Input.Bind(_input);
+        Profiler.Bind(_prof);
     }
 
     public void Run()
@@ -57,40 +58,66 @@ public sealed class Engine : IDisposable
         while (_running)
         {
             _prof.BeginFrame();
+            using var _frame = Profiler.Sample(ProfilerSampleId.Frame);
 
             _time.BeginFrame();
 
-            _events.BeginFrame();
-            _input.BeginFrame(_events);
-            _events.EndFrame();
-            
-            HandleQuitAndCloseRequests();
+            using (Profiler.Sample(ProfilerSampleId.EventsPump))
+                _events.BeginFrame();
 
-            // Input pipeline (Godot-like)
-            SceneTree.DispatchInputEvents(_events.Events.Input.Read);
+            using (Profiler.Sample(ProfilerSampleId.InputPoll))
+                _input.BeginFrame(_events);
 
-            while (_time.TryConsumeFixedStep(out var fixedDt))
+            using (Profiler.Sample(ProfilerSampleId.EventsSwap))
+                _events.EndFrame();
+
+            // Event counters (после SwapAll() уже есть ReadCount у каналов)
+            Profiler.SetCounter(ProfilerCounterId.EventsEngineRead, _events.Events.Engine.ReadCount);
+            Profiler.SetCounter(ProfilerCounterId.EventsWindowRead, _events.Events.Window.ReadCount);
+            Profiler.SetCounter(ProfilerCounterId.EventsInputRead, _events.Events.Input.ReadCount);
+            Profiler.SetCounter(ProfilerCounterId.EventsDroppedEngine, _events.DroppedEngineEvents);
+            Profiler.SetCounter(ProfilerCounterId.EventsDroppedWindow, _events.DroppedWindowEvents);
+            Profiler.SetCounter(ProfilerCounterId.InputDroppedEvents, _events.DroppedInputEvents);
+
+            using (Profiler.Sample(ProfilerSampleId.HandleQuitClose))
+                HandleQuitAndCloseRequests();
+
+            using (Profiler.Sample(ProfilerSampleId.SceneDispatchInput))
+                SceneTree.DispatchInputEvents(_events.Events.Input.Read);
+
+            var fixedSteps = 0;
+            using (Profiler.Sample(ProfilerSampleId.SceneFixedStep))
             {
-                _physics.Step(fixedDt, SceneTree);
-                SceneTree.PhysicsProcess(fixedDt);
+                while (_time.TryConsumeFixedStep(out var fixedDt))
+                {
+                    fixedSteps++;
+                    _physics.Step(fixedDt, SceneTree);
+                    SceneTree.PhysicsProcess(fixedDt);
+                }
             }
+            Profiler.SetCounter(ProfilerCounterId.FixedSteps, fixedSteps);
 
-            SceneTree.Process(_time.DeltaTime);
+            using (Profiler.Sample(ProfilerSampleId.SceneProcess))
+                SceneTree.Process(_time.DeltaTime);
 
+            // RenderSystem сам пометит свои фазы (Begin/Build/Sort/Flush/Present)
             _render.BeginFrame(SceneTree);
             _render.BuildRenderQueue(SceneTree, _resources);
             _render.EndFrame();
 
-            SceneTree.FlushFreeQueue();
-            
-            if (SceneTree.QuitRequested) _running = false;
+            using (Profiler.Sample(ProfilerSampleId.SceneFlushFreeQueue))
+                SceneTree.FlushFreeQueue();
+
+            if (SceneTree.QuitRequested)
+                _running = false;
 
             _prof.EndFrame();
 
-            // P0: включаем frame-cap (используется только если VSync выключен и MaxFps > 0)
+            // frame-cap (только если VSync выключен и MaxFps > 0)
             _time.EndFrame();
         }
     }
+
 
     private void HandleQuitAndCloseRequests()
     {
@@ -130,6 +157,7 @@ public sealed class Engine : IDisposable
     {
         Resources.Unbind();
         Input.Unbind();
+        Profiler.Unbind();
 
         _resources.Shutdown();
         _render.Shutdown();

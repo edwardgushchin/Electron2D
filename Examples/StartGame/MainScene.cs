@@ -27,6 +27,12 @@ public class MainScene() : Node("MainScene")
         //SceneTree!.OnWindowCloseRequested.Connect(_ => _confirm.Open());
     }
 
+    protected override void Process(float delta)
+    {
+        if ((Profiler.LastFrame.FrameIndex % 60) == 0)
+            Console.WriteLine(Profiler.LastFrame);
+    }
+
     protected override void HandleUnhandledKeyInput(InputEvent inputEvent)
     {
         if (inputEvent is { Type: InputEventType.KeyDown, Code: KeyCode.Escape })

@@ -42,6 +42,16 @@ public struct Color
             ((uint)b <<  8) |
             ((uint)a <<  0);
     }
+    
+    public Color AddRGB(int delta)
+    {
+        var r = Red + delta; if (r > 255) r = 255;
+        var g = Green + delta; if (g > 255) g = 255;
+        var b = Blue + delta; if (b > 255) b = 255;
+
+        // Color(uint) используется как 0xRRGGBBAA.
+        return new Color((uint)((r << 24) | (g << 16) | (b << 8) | Alpha));
+    }
 
     public byte Red   => (byte)((_color >> 24) & 0xFF);
     public byte Green => (byte)((_color >> 16) & 0xFF);

@@ -28,7 +28,7 @@ internal sealed class InputSystem
             (_keys, _prev) = (_prev, _keys);
         }
 
-        var ch = events.Events.Input;
+        //var ch = events.Events.Input;
 
         for (var i = 0; i < numKeys; i++)
         {
@@ -38,11 +38,10 @@ internal sealed class InputSystem
             var was = _prev[i];
             if (now == was) continue;
 
-            if (!ch.TryPublish(new InputEvent(now ? InputEventType.KeyDown : InputEventType.KeyUp, code: i)))
-            {
-                // Минимальная измеримость: если input-канал забит, события теряются.
-                // (Если хотите — можно прокинуть счётчик наружу через ProfilerSystem позже.)
-            }
+            //if (!ch.TryPublish(new InputEvent(now ? InputEventType.KeyDown : InputEventType.KeyUp, code: i)))
+            //{
+            //    DroppedInputEvents++;
+            //}
         }
     }
 

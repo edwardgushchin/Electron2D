@@ -11,6 +11,10 @@ internal sealed class RenderSystem : IDisposable
 
     private nint _handle; // SDL_Renderer*
     private bool _ownsHandle;
+    
+    private nint _lastTextureThisFrame;
+    private readonly nint[] _uniqueTextureTable = new nint[1024]; // open addressing
+    private int _uniqueTextureCount;
 
     private SceneTree? _scene;
 
@@ -65,16 +69,23 @@ internal sealed class RenderSystem : IDisposable
     {
         ThrowIfNotInitialized();
         ArgumentNullException.ThrowIfNull(scene);
+        
+        using var _ = Profiler.Sample(ProfilerSampleId.RenderBeginFrame);
 
         _scene = scene;
         _viewValidThisFrame = false;
 
         // Очередь команд frame-local: без накопления draw calls между кадрами.
         _queue.Clear();
+        
+        _lastTextureThisFrame = 0;
+        Array.Clear(_uniqueTextureTable, 0, _uniqueTextureTable.Length);
+        _uniqueTextureCount = 0;
 
         var bg = _debugGridEnabled ? _debugGridBackground : scene.ClearColor;
         SDL.SetRenderDrawColor(_handle, bg.Red, bg.Green, bg.Blue, bg.Alpha);
         SDL.RenderClear(_handle);
+        Profiler.AddCounter(ProfilerCounterId.RenderClears, 1);
     }
 
     public void BuildRenderQueue(SceneTree sceneTree, ResourceSystem resources)
@@ -82,6 +93,8 @@ internal sealed class RenderSystem : IDisposable
         ThrowIfNotInitialized();
         ArgumentNullException.ThrowIfNull(sceneTree);
         ArgumentNullException.ThrowIfNull(resources);
+        
+        using var _ = Profiler.Sample(ProfilerSampleId.RenderBuildQueue);
 
         _scene = sceneTree;
 
@@ -97,18 +110,35 @@ internal sealed class RenderSystem : IDisposable
             renderers[i].PrepareRender(_queue, resources, in view.Cull);
     }
 
-    public void Flush()
+    private void Flush()
     {
         ThrowIfNotInitialized();
+        
+        using var _ = Profiler.Sample(ProfilerSampleId.RenderFlush);
 
         var cmds = _queue.CommandsMutable;
 
         // Если нет команд и сетка выключена — нечего делать.
         if (cmds.Length == 0 && !_debugGridEnabled)
             return;
+        
+        // bulk counters (sprites ~= draw calls for sprites in SDL_Renderer path)
+        if (cmds.Length > 0)
+        {
+            Profiler.AddCounter(ProfilerCounterId.RenderSprites, cmds.Length);
+            Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls, cmds.Length);
+            Profiler.AddCounter(ProfilerCounterId.RenderTextureColorMods, cmds.Length);
+            Profiler.AddCounter(ProfilerCounterId.RenderTextureAlphaMods, cmds.Length);
+        }
 
         if (cmds.Length > 1 && _queue.NeedsSort)
-            SpriteCommandSorter.Sort(cmds);
+        {
+            Profiler.AddCounter(ProfilerCounterId.RenderSortTriggered, 1);
+            Profiler.SetCounter(ProfilerCounterId.RenderSortCommands, cmds.Length);
+
+            using (Profiler.Sample(ProfilerSampleId.RenderSort))
+                SpriteCommandSorter.Sort(cmds);
+        }
 
         ref readonly var view = ref EnsureView();
 
@@ -125,7 +155,15 @@ internal sealed class RenderSystem : IDisposable
         ThrowIfNotInitialized();
 
         Flush();
-        SDL.RenderPresent(_handle);
+
+        // finalize render-frame counters
+        Profiler.SetCounter(ProfilerCounterId.RenderUniqueTextures, _uniqueTextureCount);
+
+        using (Profiler.Sample(ProfilerSampleId.RenderPresent))
+        {
+            SDL.RenderPresent(_handle);
+            Profiler.AddCounter(ProfilerCounterId.RenderPresents, 1);
+        }
     }
 
     public void Shutdown() => Dispose();
@@ -240,8 +278,21 @@ internal sealed class RenderSystem : IDisposable
     private void DrawSprite(in SpriteCommand cmd, in ViewState view)
     {
         var tex = cmd.Texture;
-        if (!tex.IsValid)
-            return;
+        if (!tex.IsValid) return;
+        
+        var size = cmd.SizeWorld;
+        if (size is not { X: > 0f, Y: > 0f }) return;
+        
+        // texture bind heuristic: считаем "bind", когда меняется handle в последовательности команд
+        var h = tex.Handle;
+        if (h != _lastTextureThisFrame)
+        {
+            _lastTextureThisFrame = h;
+            Profiler.AddCounter(ProfilerCounterId.RenderTextureBinds, 1);
+        }
+
+        // unique textures per frame (fixed hash table)
+        TrackUniqueTexture(h);
 
         // World -> view (camera space)
         var rel = cmd.PositionWorld - view.CamPos;
@@ -309,6 +360,33 @@ internal sealed class RenderSystem : IDisposable
             (SDL.FlipMode)cmd.FlipMode
         );
     }
+    
+    private void TrackUniqueTexture(nint handle)
+    {
+        if (handle == 0) return;
+
+        // table size = 1024 => mask
+        const int mask = 1024 - 1;
+        var key = (ulong)handle;
+        var idx = (int)((key * 11400714819323198485UL) & mask);
+
+        for (var probe = 0; probe < 1024; probe++)
+        {
+            var cur = _uniqueTextureTable[idx];
+            if (cur == 0)
+            {
+                _uniqueTextureTable[idx] = handle;
+                _uniqueTextureCount++;
+                return;
+            }
+            if (cur == handle)
+                return;
+
+            idx = (idx + 1) & mask;
+        }
+
+        // таблица переполнена — игнорируем (в 2D это крайне маловероятно)
+    }
 
     private void DrawDebugGrid1Unit(in ViewState view)
     {
@@ -355,6 +433,9 @@ internal sealed class RenderSystem : IDisposable
     {
         WorldToScreen(x1, y1, out var sx1, out var sy1, in view);
         WorldToScreen(x2, y2, out var sx2, out var sy2, in view);
+        
+        Profiler.AddCounter(ProfilerCounterId.RenderDebugLines, 1);
+        Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls, 1);
 
         SDL.RenderLine(_handle, sx1, sy1, sx2, sy2);
     }
@@ -383,7 +464,7 @@ internal sealed class RenderSystem : IDisposable
         _debugGridLine = cfg.DebugGridLineColor;
 
         // Оси чуть ярче обычной линии (без нового публичного параметра)
-        _debugGridAxis = AddRgb(_debugGridLine, 0x22);
+        _debugGridAxis = _debugGridLine.AddRGB(0x22);
     }
 
     private void ApplyVSync(EngineConfig cfg)
@@ -447,14 +528,4 @@ internal sealed class RenderSystem : IDisposable
 
     private void SetDrawColor(in Color c)
         => SDL.SetRenderDrawColor(_handle, c.Red, c.Green, c.Blue, c.Alpha);
-
-    private static Color AddRgb(in Color c, int delta)
-    {
-        var r = c.Red + delta; if (r > 255) r = 255;
-        var g = c.Green + delta; if (g > 255) g = 255;
-        var b = c.Blue + delta; if (b > 255) b = 255;
-
-        // Color(uint) используется как 0xRRGGBBAA.
-        return new Color((uint)((r << 24) | (g << 16) | (b << 8) | c.Alpha));
-    }
 }

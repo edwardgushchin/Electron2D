@@ -1,6 +1,8 @@
+using SDL3;
+
 namespace Electron2D;
 
-public readonly struct InputEvent(InputEventType type, int code, float valueX = 0f, float valueY = 0f)
+public readonly struct InputEvent(InputEventType type, SDL.Scancode code, float valueX = 0f, float valueY = 0f)
 {
     public InputEventType Type { get; } = type;
     public KeyCode Code { get; } = (KeyCode)code;

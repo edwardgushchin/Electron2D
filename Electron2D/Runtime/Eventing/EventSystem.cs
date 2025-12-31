@@ -17,6 +17,9 @@ internal sealed class EventSystem
     public int DroppedEngineEvents { get; private set; }
     
     public int DroppedWindowEvents { get; private set; }
+    
+    public int DroppedInputEvents { get; private set; }
+
 
     public void Initialize(EngineConfig cfg)
     {
@@ -51,6 +54,8 @@ internal sealed class EventSystem
         
         DroppedEngineEvents = 0;
         DroppedWindowEvents = 0;
+        DroppedInputEvents = 0;
+
 
         var buffer = stackalloc SDL.Event[BatchSize];
         var bufferPtr = (IntPtr)buffer;
@@ -83,7 +88,8 @@ internal sealed class EventSystem
                     {
                         var timestamp = e.Window.Timestamp;
                         var windowId = e.Window.WindowID;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.Shown, timestamp, windowId));
+                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.Shown, timestamp, windowId)))
+                            DroppedWindowEvents++;
                         break;
                     }
 
@@ -102,7 +108,8 @@ internal sealed class EventSystem
                         var windowId = e.Window.WindowID;
                         var w = e.Window.Data1;
                         var h = e.Window.Data2;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.Resized, timestamp, windowId, w, h));
+                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.Resized, timestamp, windowId, w, h)))
+                            DroppedWindowEvents++;
                         break;
                     }
                     case SDL.EventType.WindowPixelSizeChanged:
@@ -111,7 +118,8 @@ internal sealed class EventSystem
                         var windowId = e.Window.WindowID;
                         var w = e.Window.Data1;
                         var h = e.Window.Data2;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.PixelSizeChanged, timestamp, windowId, w, h));
+                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.PixelSizeChanged, timestamp, windowId, w, h)))
+                            DroppedWindowEvents++;
                         break;
                     }
 
@@ -119,7 +127,8 @@ internal sealed class EventSystem
                     {
                         var timestamp = e.Window.Timestamp;
                         var windowId = e.Window.WindowID;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.FocusGained, timestamp, windowId));
+                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.FocusGained, timestamp, windowId)))
+                            DroppedWindowEvents++;
                         break;
                     }
 
@@ -127,7 +136,21 @@ internal sealed class EventSystem
                     {
                         var timestamp = e.Window.Timestamp;
                         var windowId = e.Window.WindowID;
-                        _events.Window.TryPublish(new WindowEvent(WindowEventType.FocusLost, timestamp, windowId));
+                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.FocusLost, timestamp, windowId)))
+                            DroppedWindowEvents++;
+                        break;
+                    }
+                    case SDL.EventType.KeyDown:
+                    {
+                        if (!_events.Input.TryPublish(new InputEvent(InputEventType.KeyDown, code: e.Key.Scancode)))
+                            DroppedInputEvents++;
+                        break;
+                    }
+                    
+                    case SDL.EventType.KeyUp:
+                    {
+                        if (!_events.Input.TryPublish(new InputEvent(InputEventType.KeyUp, code: e.Key.Scancode)))
+                            DroppedInputEvents++;
                         break;
                     }
 
