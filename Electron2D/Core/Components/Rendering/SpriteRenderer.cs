@@ -8,61 +8,75 @@ public sealed class SpriteRenderer : IComponent
     internal int SceneIndex = -1;
 
     private Node? _owner;
-    private int _lastWorldVer = -1;
-
     private Sprite? _sprite;
 
-    private bool _hasCached;
+    private Color _color = new(0xFFFFFFFF);
+    private uint _sortKey;
+
+    // Кэш команды рендера (пересобирается только при необходимости)
+    private bool _hasCache;
+    private int _lastWorldVersion = -1;
+    private SpriteSnapshot _lastSpriteSnapshot;
+
     private SpriteCommand _cached;
-    
-    private FlipMode _lastSpriteFlip;
-    
     private Vector2 _boundsMinWorld;
     private Vector2 _boundsMaxWorld;
-    private bool _hasBounds;
-
 
     public Color Color
     {
         get => _color;
-        set { _color = value; _hasCached = false; }
+        set
+        {
+            if (_color.Equals(value)) return;
+            _color = value;
+            InvalidateCache();
+        }
     }
-    
-    private Color _color = new(0xFFFFFFFF);
 
     public uint SortKey
     {
         get => _sortKey;
-        set { _sortKey = value; _hasCached = false; }
+        set
+        {
+            if (_sortKey == value) return;
+            _sortKey = value;
+            InvalidateCache();
+        }
     }
-    
-    private uint _sortKey;
 
     public void SetSprite(Sprite sprite)
     {
         ArgumentNullException.ThrowIfNull(sprite);
+
+        if (ReferenceEquals(_sprite, sprite))
+            return;
+
         _sprite = sprite;
-        _hasCached = false;
+        InvalidateCache();
     }
 
     public void OnAttach(Node owner)
     {
         ArgumentNullException.ThrowIfNull(owner);
+
         _owner = owner;
         SceneIndex = -1;
-        _lastWorldVer = -1;
-        _hasCached = false;
+
+        _lastWorldVersion = -1;
+        InvalidateCache();
     }
 
     public void OnDetach()
     {
         _owner = null;
         _sprite = null;
+
         SceneIndex = -1;
-        _lastWorldVer = -1;
-        _hasCached = false;
+        _lastWorldVersion = -1;
+
+        _hasCache = false;
+        _lastSpriteSnapshot = default;
         _cached = default;
-        _hasBounds = false;
         _boundsMinWorld = default;
         _boundsMaxWorld = default;
     }
@@ -72,108 +86,122 @@ public sealed class SpriteRenderer : IComponent
         var owner = _owner;
         var sprite = _sprite;
 
-        if (owner is null || sprite is null) return;
-        
-        var spriteFlip = sprite.FlipMode;
-        if (spriteFlip != _lastSpriteFlip)
-        {
-            _lastSpriteFlip = spriteFlip;
-            _hasCached = false;
-        }
+        if (owner is null || sprite is null)
+            return;
 
-        var ver = owner.Transform.WorldVersion;
+        var worldVer = owner.Transform.WorldVersion;
 
-        if (!_hasCached || ver != _lastWorldVer)
-        {
-            // 1) Texture
-            var tex = sprite.Texture;
-
-            if (!tex.IsValid)
-            {
-                var id = sprite.TextureId;
-                if (id is null) return;
-
-                tex = resources.GetTexture(id);
-                if (!tex.IsValid) return;
-            }
-
-            // 2) Source rect (если не задан — вся текстура)
-            var tr = sprite.TextureRect;
-            if (tr.Width <= 0 || tr.Height <= 0)
-                tr = new Rect(x: 0, y: 0, width: tex.Width, height: tex.Height);
-
-            if (tr.Width <= 0 || tr.Height <= 0)
-                return;
-
-            var srcRect = new Rect(tr.X, tr.Y, tr.Width, tr.Height);
-
-            // 3) PixelsPerUnit
-            var ppu = sprite.PixelsPerUnit;
-            if (!(ppu > 0f) || !float.IsFinite(ppu))
-                ppu = 100f;
-
-            // 4) Base size in world units (before scale)
-            var sizeWorld = new Vector2(tr.Width / ppu, tr.Height / ppu);
-
-            // 5) Apply Transform scale (Unity-like)
-            var ws = owner.Transform.WorldScale;
-            if (!float.IsFinite(ws.X) || !float.IsFinite(ws.Y))
-                ws = Vector2.One;
-
-            // Отрицательный scale превращаем в flip (W/H должны быть положительными)
-            var flipFromScaleX = ws.X < 0f;
-            var flipFromScaleY = ws.Y < 0f;
-
-            ws = new Vector2(MathF.Abs(ws.X), MathF.Abs(ws.Y));
-            sizeWorld = new Vector2(sizeWorld.X * ws.X, sizeWorld.Y * ws.Y);
-
-            // Нулевой размер — ничего не рисуем
-            if (!(sizeWorld.X > 0f) || !(sizeWorld.Y > 0f))
-                return;
-
-            // Pivot нормализованный (0..1) относительно УЖЕ отмасштабированного sizeWorld.
-            var originWorld = new Vector2(sizeWorld.X * sprite.Pivot.X, sizeWorld.Y * sprite.Pivot.Y);
-
-            // 6) Combine flips: Sprite.FlipMode + flip from negative scale
-            if (flipFromScaleX) spriteFlip ^= FlipMode.Horizontal;
-            if (flipFromScaleY) spriteFlip ^= FlipMode.Vertical;
-
-            _cached = new SpriteCommand
-            {
-                Texture = tex,
-                SrcRect = srcRect,
-                PositionWorld = owner.Transform.WorldPosition,
-                SizeWorld = sizeWorld,
-                Rotation = owner.Transform.WorldRotation, // rad
-                OriginWorld = originWorld,
-                Color = _color,
-                SortKey = _sortKey,
-
-                // ВАЖНО: сохраняем уже "итоговый" flip (с учётом Scale)
-                FlipMode = spriteFlip,
-            };
-            
-            _lastWorldVer = ver;
-
-            // Bounds are part of the cached state; compute once here.
-            ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
-            _hasBounds = true;
-
-            _hasCached = true;
-        }
-        
-        if (!_hasBounds)
-        {
-            ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
-            _hasBounds = true;
-        }
+        if (!TryEnsureCached(owner, sprite, worldVer, resources))
+            return;
 
         if (!view.Intersects(in _boundsMinWorld, in _boundsMaxWorld))
             return;
 
         q.TryPush(in _cached);
     }
-    
+
+    private bool TryEnsureCached(Node owner, Sprite sprite, int worldVer, ResourceSystem resources)
+    {
+        var snap = SpriteSnapshot.From(sprite);
+
+        // Пересборка нужна если:
+        // - нет кэша
+        // - изменился трансформ (WorldVersion)
+        // - изменились ключевые поля спрайта (flip/rect/ppu/pivot/texture source)
+        if (_hasCache && worldVer == _lastWorldVersion && snap.Equals(_lastSpriteSnapshot))
+            return true;
+
+        // 1) Texture (с late-load поддержкой через ResourceSystem)
+        var tex = sprite.Texture;
+        if (!tex.IsValid)
+        {
+            var id = sprite.TextureId;
+            if (id is null) return false;
+
+            tex = resources.GetTexture(id);
+            if (!tex.IsValid) return false;
+        }
+
+        // 2) Source rect (если не задан — вся текстура)
+        if (!TryResolveSourceRect(sprite.TextureRect, tex.Width, tex.Height, out var srcRect))
+            return false;
+
+        // 3) PixelsPerUnit
+        var ppu = sprite.PixelsPerUnit;
+        if (!(ppu > 0f) || !float.IsFinite(ppu))
+            ppu = 100f;
+
+        // 4) Базовый размер в world-units (до масштаба)
+        var sizeWorld = new Vector2(srcRect.Width / ppu, srcRect.Height / ppu);
+
+        // 5) Применяем WorldScale (Unity-like) + отрицательный scale -> flip
+        var ws = owner.Transform.WorldScale;
+        if (!float.IsFinite(ws.X) || !float.IsFinite(ws.Y))
+            ws = Vector2.One;
+
+        var flip = sprite.FlipMode;
+
+        if (ws.X < 0f) flip ^= FlipMode.Horizontal;
+        if (ws.Y < 0f) flip ^= FlipMode.Vertical;
+
+        ws = new Vector2(MathF.Abs(ws.X), MathF.Abs(ws.Y));
+        sizeWorld = new Vector2(sizeWorld.X * ws.X, sizeWorld.Y * ws.Y);
+
+        if (!(sizeWorld.X > 0f) || !(sizeWorld.Y > 0f))
+            return false;
+
+        // 6) Pivot нормализованный (0..1) относительно уже отмасштабированного sizeWorld
+        var pivot = sprite.Pivot;
+        if (!float.IsFinite(pivot.X) || !float.IsFinite(pivot.Y))
+            pivot = Vector2.Zero;
+
+        var originWorld = new Vector2(sizeWorld.X * pivot.X, sizeWorld.Y * pivot.Y);
+
+        _cached = new SpriteCommand
+        {
+            Texture = tex,
+            SrcRect = srcRect,
+            PositionWorld = owner.Transform.WorldPosition,
+            SizeWorld = sizeWorld,
+            Rotation = owner.Transform.WorldRotation, // rad
+            OriginWorld = originWorld,
+            Color = _color,
+            SortKey = _sortKey,
+            FlipMode = flip,
+        };
+
+        _lastWorldVersion = worldVer;
+        _lastSpriteSnapshot = snap;
+        _hasCache = true;
+
+        ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+        return true;
+    }
+
+    private void InvalidateCache()
+    {
+        _hasCache = false;
+        // _lastWorldVersion не трогаем: кэш пересоберётся при следующем PrepareRender.
+    }
+
+    private static bool TryResolveSourceRect(in Rect rect, int texW, int texH, out Rect src)
+    {
+        var r = rect;
+
+        // Если не задан — вся текстура
+        if (r.Width <= 0 || r.Height <= 0)
+            r = new Rect(x: 0, y: 0, width: texW, height: texH);
+
+        if (r.Width <= 0 || r.Height <= 0)
+        {
+            src = default;
+            return false;
+        }
+
+        src = new Rect(r.X, r.Y, r.Width, r.Height);
+        return true;
+    }
+
     private static void ComputeWorldBounds(in SpriteCommand cmd, out Vector2 min, out Vector2 max)
     {
         var pos = cmd.PositionWorld;

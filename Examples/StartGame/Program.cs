@@ -11,9 +11,6 @@ internal static class Program
             Window = new WindowConfig
             {
                 Title = "Electron2D: StartGame example",
-                Mode = WindowMode.ExclusiveFullscreen,
-                Width = 1920,
-                Height = 1080
             },
             DebugGridEnabled = true,
             VSync = VSyncMode.Enabled

@@ -6,8 +6,13 @@ namespace StartGame;
 public class MainScene() : Node("MainScene")
 {
     //private CloseConfirmControl _confirm = null!;
-    
-    
+
+    protected override void EnterTree()
+    {
+        SceneTree?.ClearColor = new Color(47, 47, 56);
+    }
+
+
     protected override void Ready()
     {
         //_confirm = new CloseConfirmControl();
