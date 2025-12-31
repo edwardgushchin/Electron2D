@@ -15,6 +15,9 @@ internal sealed class RenderSystem : IDisposable
     private nint _lastTextureThisFrame;
     private readonly nint[] _uniqueTextureTable = new nint[1024]; // open addressing
     private int _uniqueTextureCount;
+    
+    private SDL.Vertex[] _gridGeomVertices = Array.Empty<SDL.Vertex>();
+    private int[] _gridGeomIndices = Array.Empty<int>();
 
     private SceneTree? _scene;
 
@@ -144,7 +147,7 @@ internal sealed class RenderSystem : IDisposable
 
         // Фон: сетка рисуется ДО спрайтов.
         if (_debugGridEnabled)
-            DrawDebugGrid1Unit(in view);
+            DrawDebugGrid(in view);
 
         for (var i = 0; i < cmds.Length; i++)
             DrawSprite(in cmds[i], in view);
@@ -387,8 +390,26 @@ internal sealed class RenderSystem : IDisposable
 
         // таблица переполнена — игнорируем (в 2D это крайне маловероятно)
     }
+    
+    private void EnsureGridGeometryCapacity(int verticesNeeded, int indicesNeeded)
+    {
+        if (_gridGeomVertices.Length < verticesNeeded)
+            _gridGeomVertices = new SDL.Vertex[GrowCapacity(_gridGeomVertices.Length, verticesNeeded)];
 
-    private void DrawDebugGrid1Unit(in ViewState view)
+        if (_gridGeomIndices.Length < indicesNeeded)
+            _gridGeomIndices = new int[GrowCapacity(_gridGeomIndices.Length, indicesNeeded)];
+    }
+
+    private static int GrowCapacity(int current, int needed)
+    {
+        // Не делаем точный Resize каждый раз, чтобы не дрожать аллокациями при зуме.
+        var cap = current > 0 ? current : 256;
+        while (cap < needed)
+            cap <<= 1;
+        return cap;
+    }
+
+    private void DrawDebugGrid(in ViewState view)
     {
         // Половины в world-units
         var viewHalfW = view.HalfW / view.Ppu;
@@ -407,22 +428,112 @@ internal sealed class RenderSystem : IDisposable
         var yi0 = (int)MathF.Floor(yMin);
         var yi1 = (int)MathF.Ceiling(yMax);
 
-        // 1) обычные линии (кроме осей)
-        SetDrawColor(_debugGridLine);
+        // --------------------------------------------------------------------
+        // 1) обычные линии (кроме осей) — RenderGeometry
+        // --------------------------------------------------------------------
 
-        for (var x = xi0; x <= xi1; x++)
+        var vLines = xi1 - xi0 + 1;
+        if (0 >= xi0 && 0 <= xi1) vLines--; // ось X=0 не включаем в геометрию
+
+        var hLines = yi1 - yi0 + 1;
+        if (0 >= yi0 && 0 <= yi1) hLines--; // ось Y=0 не включаем в геометрию
+
+        var totalLines = Math.Max(0, vLines) + Math.Max(0, hLines);
+
+        if (totalLines > 0)
         {
-            if (x == 0) continue;
-            DrawWorldLine(x, yMin, x, yMax, in view);
+            var maxVertices = totalLines * 4;
+            var maxIndices  = totalLines * 6;
+
+            EnsureGridGeometryCapacity(maxVertices, maxIndices);
+
+            // SDL3: Vertex.Color = SDL_FColor (float, [0..1])
+            var c = new SDL.FColor(
+                _debugGridLine.Red   / 255f,
+                _debugGridLine.Green / 255f,
+                _debugGridLine.Blue  / 255f,
+                _debugGridLine.Alpha / 255f
+            );
+
+            // Толщина линии как у RenderLine: 1px => half = 0.5
+            const float halfThickness = 0.5f;
+
+            var v = 0;
+            var i = 0;
+            var emittedLines = 0;
+
+            var state = view;
+
+            void EmitWorldLineQuad(float wx1, float wy1, float wx2, float wy2)
+            {
+                WorldToScreen(wx1, wy1, out var sx1, out var sy1, in state);
+                WorldToScreen(wx2, wy2, out var sx2, out var sy2, in state);
+
+                var dx = sx2 - sx1;
+                var dy = sy2 - sy1;
+
+                var lenSq = dx * dx + dy * dy;
+                if (lenSq <= 1e-6f)
+                    return;
+
+                var invLen = halfThickness / MathF.Sqrt(lenSq);
+
+                // перпендикуляр (нормаль) длиной halfThickness
+                var nx = -dy * invLen;
+                var ny =  dx * invLen;
+
+                _gridGeomVertices[v + 0].Position = new SDL.FPoint { X = sx1 + nx, Y = sy1 + ny };
+                _gridGeomVertices[v + 1].Position = new SDL.FPoint { X = sx2 + nx, Y = sy2 + ny };
+                _gridGeomVertices[v + 2].Position = new SDL.FPoint { X = sx2 - nx, Y = sy2 - ny };
+                _gridGeomVertices[v + 3].Position = new SDL.FPoint { X = sx1 - nx, Y = sy1 - ny };
+
+                _gridGeomVertices[v + 0].Color = c;
+                _gridGeomVertices[v + 1].Color = c;
+                _gridGeomVertices[v + 2].Color = c;
+                _gridGeomVertices[v + 3].Color = c;
+
+                _gridGeomVertices[v + 0].TexCoord = default;
+                _gridGeomVertices[v + 1].TexCoord = default;
+                _gridGeomVertices[v + 2].TexCoord = default;
+                _gridGeomVertices[v + 3].TexCoord = default;
+
+                _gridGeomIndices[i + 0] = v + 0;
+                _gridGeomIndices[i + 1] = v + 1;
+                _gridGeomIndices[i + 2] = v + 2;
+                _gridGeomIndices[i + 3] = v + 2;
+                _gridGeomIndices[i + 4] = v + 3;
+                _gridGeomIndices[i + 5] = v + 0;
+
+                v += 4;
+                i += 6;
+                emittedLines++;
+            }
+
+            for (var x = xi0; x <= xi1; x++)
+            {
+                if (x == 0) continue;
+                EmitWorldLineQuad(x, yMin, x, yMax);
+            }
+
+            for (var y = yi0; y <= yi1; y++)
+            {
+                if (y == 0) continue;
+                EmitWorldLineQuad(xMin, y, xMax, y);
+            }
+
+            if (emittedLines > 0)
+            {
+                Profiler.AddCounter(ProfilerCounterId.RenderDebugLines, emittedLines);
+                Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls, 1);
+
+                // texture = null (IntPtr.Zero): рисуем чисто цветную геометрию
+                SDL.RenderGeometry(_handle, IntPtr.Zero, _gridGeomVertices, v, _gridGeomIndices, i);
+            }
         }
 
-        for (var y = yi0; y <= yi1; y++)
-        {
-            if (y == 0) continue;
-            DrawWorldLine(xMin, y, xMax, y, in view);
-        }
-
-        // 2) оси координат (чуть ярче)
+        // --------------------------------------------------------------------
+        // 2) оси координат (чуть ярче) — RenderLine (как требовалось)
+        // --------------------------------------------------------------------
         SetDrawColor(_debugGridAxis);
 
         if (0 >= xi0 && 0 <= xi1) DrawWorldLine(0f, yMin, 0f, yMax, in view);
