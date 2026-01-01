@@ -56,16 +56,4 @@ public readonly struct ProfilerFrame
 
     public double RenderTotalMs =>
         RenderBeginFrameMs + RenderBuildQueueMs + RenderSortMs + RenderFlushMs + RenderPresentMs;
-
-    public override string ToString()
-    {
-        if (!IsValid) return "<ProfilerFrame: invalid>";
-
-        return
-            $"Frame#{FrameIndex} {FrameMs:F2}ms | alloc={(AllocatedBytes / 1024.0):F1}KB GC(0/1/2)={Gen0Collections}/{Gen1Collections}/{Gen2Collections}\n" +
-            $"Events: pump={EventsPumpMs:F2}ms swap={EventsSwapMs:F2}ms read(e/w/i)={EventsEngineRead}/{EventsWindowRead}/{EventsInputRead} drop(e/w/in)={EventsDroppedEngine}/{EventsDroppedWindow}/{InputDroppedEvents}\n" +
-            $"Sim: fixedSteps={FixedSteps} fixed={FixedStepMs:F2}ms process={ProcessMs:F2}ms\n" +
-            $"Render: {RenderTotalMs:F2}ms (begin={RenderBeginFrameMs:F2} build={RenderBuildQueueMs:F2} sort={RenderSortMs:F2} flush={RenderFlushMs:F2} present={RenderPresentMs:F2})\n" +
-            $"       sprites={RenderSprites} drawCalls={RenderDrawCalls} binds={RenderTextureBinds} uniqTex={RenderUniqueTextures} gridLines={RenderDebugLines} sortTrig={RenderSortTriggered} sortCmds={RenderSortCommands}";
-    }
 }

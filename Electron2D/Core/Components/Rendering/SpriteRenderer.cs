@@ -17,6 +17,11 @@ public sealed class SpriteRenderer : IComponent
     private bool _hasCache;
     private int _lastWorldVersion = -1;
     private SpriteSnapshot _lastSpriteSnapshot;
+    
+    private Vector2 _baseSizeWorld;   // размер в мире при scale=(1,1)
+    private Vector2 _pivot;           // pivot из Sprite
+    private Vector2 _lastAbsScale;    // abs(worldScale)
+    private byte _lastScaleSignMask;  // bit0 = x<0, bit1 = y<0
 
     private SpriteCommand _cached;
     private Vector2 _boundsMinWorld;
@@ -81,101 +86,157 @@ public sealed class SpriteRenderer : IComponent
         _boundsMaxWorld = default;
     }
 
-    internal void PrepareRender(RenderQueue q, ResourceSystem resources, in ViewCullRect view)
+    internal void PrepareRender(RenderQueue queue, ResourceSystem resources, in ViewCullRect view)
     {
         var owner = _owner;
         var sprite = _sprite;
 
-        if (owner is null || sprite is null)
+        if (owner == null || sprite == null)
             return;
 
-        var worldVer = owner.Transform.WorldVersion;
+        owner.Transform.GetWorldTRS(out var wPos, out var wRot, out var wScale, out var worldVer);
 
-        if (!TryEnsureCached(owner, sprite, worldVer, resources))
+        if (!TryEnsureCached(sprite, resources, in wPos, wRot, in wScale, worldVer))
             return;
 
         if (!view.Intersects(in _boundsMinWorld, in _boundsMaxWorld))
             return;
 
-        q.TryPush(in _cached);
+        queue.TryPush(in _cached);
+    }
+    
+    private static byte GetScaleSignMask(in Vector2 s)
+    {
+        byte m = 0;
+        if (s.X < 0) m |= 1;
+        if (s.Y < 0) m |= 2;
+        return m;
     }
 
-    private bool TryEnsureCached(Node owner, Sprite sprite, int worldVer, ResourceSystem resources)
+    private bool TryEnsureCached(
+        Sprite sprite,
+        ResourceSystem resources,
+        in Vector2 wPos,
+        float wRot,
+        in Vector2 wScale,
+        int worldVer)
     {
+        // 1) Проверяем изменения Sprite (как у вас сейчас)
         var snap = SpriteSnapshot.From(sprite);
 
-        // Пересборка нужна если:
-        // - нет кэша
-        // - изменился трансформ (WorldVersion)
-        // - изменились ключевые поля спрайта (flip/rect/ppu/pivot/texture source)
-        if (_hasCache && worldVer == _lastWorldVersion && snap.Equals(_lastSpriteSnapshot))
+        // Быстрый путь: sprite не менялся, текстура валидна
+        if (_hasCache && snap.Equals(_lastSpriteSnapshot) && _cached.Texture.IsValid)
+        {
+            if (worldVer != _lastWorldVersion)
+            {
+                UpdateTransformCache(in wPos, wRot, in wScale);
+                _lastWorldVersion = worldVer;
+            }
             return true;
+        }
 
-        // 1) Texture (с late-load поддержкой через ResourceSystem)
+        // 2) Rebuild статической части (sprite изменился / кэша нет / текстура пока невалидна)
         var tex = sprite.Texture;
         if (!tex.IsValid)
         {
-            var id = sprite.TextureId;
-            if (id is null) return false;
+            if (snap.TextureId == null)
+                return false;
 
-            tex = resources.GetTexture(id);
-            if (!tex.IsValid) return false;
+            // late resolve
+            tex = resources.GetTexture(snap.TextureId);
+            if (!tex.IsValid)
+                return false;
         }
 
-        // 2) Source rect (если не задан — вся текстура)
-        if (!TryResolveSourceRect(sprite.TextureRect, tex.Width, tex.Height, out var srcRect))
-            return false;
+        // Src rect
+        Rect srcRect = snap.TextureRect;
+        if (srcRect.IsEmpty)
+            srcRect = new Rect(0, 0, tex.Width, tex.Height);
 
-        // 3) PixelsPerUnit
-        var ppu = sprite.PixelsPerUnit;
-        if (!(ppu > 0f) || !float.IsFinite(ppu))
-            ppu = 100f;
+        // Сохраняем статические данные
+        _baseSizeWorld = new Vector2(srcRect.Width / snap.PixelsPerUnit, srcRect.Height / snap.PixelsPerUnit);
+        _pivot = snap.Pivot;
 
-        // 4) Базовый размер в world-units (до масштаба)
-        var sizeWorld = new Vector2(srcRect.Width / ppu, srcRect.Height / ppu);
+        var absScale = Abs(in wScale);
+        var sizeWorld = _baseSizeWorld * absScale;
+        var originWorld = sizeWorld * _pivot;
 
-        // 5) Применяем WorldScale (Unity-like) + отрицательный scale -> flip
-        var ws = owner.Transform.WorldScale;
-        if (!float.IsFinite(ws.X) || !float.IsFinite(ws.Y))
-            ws = Vector2.One;
-
-        var flip = sprite.FlipMode;
-
-        if (ws.X < 0f) flip ^= FlipMode.Horizontal;
-        if (ws.Y < 0f) flip ^= FlipMode.Vertical;
-
-        ws = new Vector2(MathF.Abs(ws.X), MathF.Abs(ws.Y));
-        sizeWorld = new Vector2(sizeWorld.X * ws.X, sizeWorld.Y * ws.Y);
-
-        if (!(sizeWorld.X > 0f) || !(sizeWorld.Y > 0f))
-            return false;
-
-        // 6) Pivot нормализованный (0..1) относительно уже отмасштабированного sizeWorld
-        var pivot = sprite.Pivot;
-        if (!float.IsFinite(pivot.X) || !float.IsFinite(pivot.Y))
-            pivot = Vector2.Zero;
-
-        var originWorld = new Vector2(sizeWorld.X * pivot.X, sizeWorld.Y * pivot.Y);
+        var flip = snap.Flip;
+        if (wScale.X < 0) flip ^= FlipMode.Horizontal;
+        if (wScale.Y < 0) flip ^= FlipMode.Vertical;
 
         _cached = new SpriteCommand
         {
             Texture = tex,
             SrcRect = srcRect,
-            PositionWorld = owner.Transform.WorldPosition,
+            PositionWorld = wPos,
+            Rotation = wRot,
             SizeWorld = sizeWorld,
-            Rotation = owner.Transform.WorldRotation, // rad
             OriginWorld = originWorld,
             Color = _color,
             SortKey = _sortKey,
-            FlipMode = flip,
+            FlipMode = flip
         };
 
-        _lastWorldVersion = worldVer;
+        ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+
         _lastSpriteSnapshot = snap;
+        _lastWorldVersion = worldVer;
+        _lastAbsScale = absScale;
+        _lastScaleSignMask = GetScaleSignMask(in wScale);
         _hasCache = true;
 
-        ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
         return true;
+    }
+    
+    private static Vector2 Abs(in Vector2 v) => new(MathF.Abs(v.X), MathF.Abs(v.Y));
+    
+    private void UpdateTransformCache(in Vector2 wPos, float wRot, in Vector2 wScale)
+    {
+        var absScale = Abs(in wScale);
+        var signMask = GetScaleSignMask(in wScale);
+
+        // Если absScale и знак scale не менялись — статическая геометрия та же
+        if (absScale == _lastAbsScale && signMask == _lastScaleSignMask)
+        {
+            var oldPos = _cached.PositionWorld;
+            var oldRot = _cached.Rotation;
+
+            _cached.PositionWorld = wPos;
+            _cached.Rotation = wRot;
+
+            // Самый дешёвый кейс: только перенос (rotation тот же) — просто сдвигаем bounds
+            if (wRot == oldRot)
+            {
+                var delta = wPos - oldPos;
+                _boundsMinWorld += delta;
+                _boundsMaxWorld += delta;
+                return;
+            }
+
+            // Rotation поменялся — bounds нужно пересчитать
+            ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+            return;
+        }
+
+        // Scale (abs) или знак поменялись — пересчитать size/origin/flip и bounds
+        var sizeWorld = _baseSizeWorld * absScale;
+        var originWorld = sizeWorld * _pivot;
+
+        _cached.PositionWorld = wPos;
+        _cached.Rotation = wRot;
+        _cached.SizeWorld = sizeWorld;
+        _cached.OriginWorld = originWorld;
+
+        var flip = _lastSpriteSnapshot.Flip;
+        if (wScale.X < 0) flip ^= FlipMode.Horizontal;
+        if (wScale.Y < 0) flip ^= FlipMode.Vertical;
+        _cached.FlipMode = flip;
+
+        ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+
+        _lastAbsScale = absScale;
+        _lastScaleSignMask = signMask;
     }
 
     private void InvalidateCache()
@@ -184,13 +245,13 @@ public sealed class SpriteRenderer : IComponent
         // _lastWorldVersion не трогаем: кэш пересоберётся при следующем PrepareRender.
     }
 
-    private static bool TryResolveSourceRect(in Rect rect, int texW, int texH, out Rect src)
+    /*private static bool TryResolveSourceRect(in Rect rect, int texW, int texH, out Rect src)
     {
         var r = rect;
 
         // Если не задан — вся текстура
         if (r.Width <= 0 || r.Height <= 0)
-            r = new Rect(x: 0, y: 0, width: texW, height: texH);
+            r = new Rect(0, 0, texW, texH);
 
         if (r.Width <= 0 || r.Height <= 0)
         {
@@ -200,8 +261,8 @@ public sealed class SpriteRenderer : IComponent
 
         src = new Rect(r.X, r.Y, r.Width, r.Height);
         return true;
-    }
-
+    }*/
+    
     private static void ComputeWorldBounds(in SpriteCommand cmd, out Vector2 min, out Vector2 max)
     {
         var pos = cmd.PositionWorld;
@@ -209,37 +270,45 @@ public sealed class SpriteRenderer : IComponent
         var origin = cmd.OriginWorld;
 
         // Local rect relative to pivot (pivot at 0,0)
-        var minRelX = -origin.X;
-        var maxRelX = size.X - origin.X;
-        var minRelY = -origin.Y;
-        var maxRelY = size.Y - origin.Y;
+        var x0 = -origin.X;
+        var x1 = size.X - origin.X;
+        var y0 = -origin.Y;
+        var y1 = size.Y - origin.Y;
 
         var rot = cmd.Rotation;
 
         // Fast path: no rotation
         if (rot == 0f)
         {
-            min = new Vector2(pos.X + minRelX, pos.Y + minRelY);
-            max = new Vector2(pos.X + maxRelX, pos.Y + maxRelY);
+            min = new Vector2(pos.X + x0, pos.Y + y0);
+            max = new Vector2(pos.X + x1, pos.Y + y1);
             return;
         }
 
-        var c = MathF.Cos(rot);
-        var s = MathF.Sin(rot);
+        // Один вызов вместо Cos+Sin по отдельности (если вы на .NET 7+)
+        var (s, c) = MathF.SinCos(rot);
 
-        // Rotate corners, get AABB in local, then translate by pos
-        // (x',y') = (x*c - y*s, x*s + y*c)
-        var x1 = minRelX * c - minRelY * s; var y1 = minRelX * s + minRelY * c;
-        var x2 = maxRelX * c - minRelY * s; var y2 = maxRelX * s + minRelY * c;
-        var x3 = minRelX * c - maxRelY * s; var y3 = minRelX * s + maxRelY * c;
-        var x4 = maxRelX * c - maxRelY * s; var y4 = maxRelX * s + maxRelY * c;
+        // Мы хотим min/max для:
+        // X' = c*x - s*y = a*x + b*y, где a=c, b=-s
+        // Y' = s*x + c*y = a*x + b*y, где a=s, b=c
 
-        var minX = MathF.Min(MathF.Min(x1, x2), MathF.Min(x3, x4));
-        var maxX = MathF.Max(MathF.Max(x1, x2), MathF.Max(x3, x4));
-        var minY = MathF.Min(MathF.Min(y1, y2), MathF.Min(y3, y4));
-        var maxY = MathF.Max(MathF.Max(y1, y2), MathF.Max(y3, y4));
+        // --- X' ---
+        {
+            var a = c;
+            var b = -s;
 
-        min = new Vector2(pos.X + minX, pos.Y + minY);
-        max = new Vector2(pos.X + maxX, pos.Y + maxY);
+            var minX = (a >= 0f ? x0 * a : x1 * a) + (b >= 0f ? y0 * b : y1 * b);
+            var maxX = (a >= 0f ? x1 * a : x0 * a) + (b >= 0f ? y1 * b : y0 * b);
+
+            // --- Y' ---
+            a = s;
+            b = c;
+
+            var minY = (a >= 0f ? x0 * a : x1 * a) + (b >= 0f ? y0 * b : y1 * b);
+            var maxY = (a >= 0f ? x1 * a : x0 * a) + (b >= 0f ? y1 * b : y0 * b);
+
+            min = new Vector2(pos.X + minX, pos.Y + minY);
+            max = new Vector2(pos.X + maxX, pos.Y + maxY);
+        }
     }
 }

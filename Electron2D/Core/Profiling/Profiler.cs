@@ -14,7 +14,7 @@ public static class Profiler
         set
         {
             _enabled = value;
-            if (_sys is not null) _sys.Enabled = value;
+            _sys?.Enabled = value;
         }
     }
 

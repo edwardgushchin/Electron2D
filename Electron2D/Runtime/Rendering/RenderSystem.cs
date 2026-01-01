@@ -16,6 +16,13 @@ internal sealed class RenderSystem : IDisposable
     private readonly nint[] _uniqueTextureTable = new nint[1024]; // open addressing
     private int _uniqueTextureCount;
     
+    private SDL.Vertex[] _spriteBatchVertices = Array.Empty<SDL.Vertex>();
+    private int[] _spriteBatchIndices = Array.Empty<int>();
+    private int _spriteBatchV;
+    private int _spriteBatchI;
+    private int _spriteBatchSpriteCount;
+    private nint _spriteBatchTex; // SDL_Texture*
+    
     private SDL.Vertex[] _gridGeomVertices = Array.Empty<SDL.Vertex>();
     private int[] _gridGeomIndices = Array.Empty<int>();
 
@@ -107,7 +114,7 @@ internal sealed class RenderSystem : IDisposable
 
         // Полезно: заранее гарантировать ёмкость под "все рендереры"
         // чтобы TryPush не триггерил рост/аренду во время кадра.
-        _queue.EnsureCapacity(renderers.Length);
+        //_queue.EnsureCapacity(renderers.Length);
 
         for (var i = 0; i < renderers.Length; i++)
             renderers[i].PrepareRender(_queue, resources, in view.Cull);
@@ -124,15 +131,6 @@ internal sealed class RenderSystem : IDisposable
         // Если нет команд и сетка выключена — нечего делать.
         if (cmds.Length == 0 && !_debugGridEnabled)
             return;
-        
-        // bulk counters (sprites ~= draw calls for sprites in SDL_Renderer path)
-        if (cmds.Length > 0)
-        {
-            Profiler.AddCounter(ProfilerCounterId.RenderSprites, cmds.Length);
-            Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls, cmds.Length);
-            Profiler.AddCounter(ProfilerCounterId.RenderTextureColorMods, cmds.Length);
-            Profiler.AddCounter(ProfilerCounterId.RenderTextureAlphaMods, cmds.Length);
-        }
 
         if (cmds.Length > 1 && _queue.NeedsSort)
         {
@@ -149,9 +147,200 @@ internal sealed class RenderSystem : IDisposable
         if (_debugGridEnabled)
             DrawDebugGrid(in view);
 
+        // 1) если хотите, заранее обеспечить capacity на худший случай:
+        EnsureSpriteBatchCapacity(cmds.Length);
+
+        _spriteBatchTex = 0;
+        _spriteBatchV = 0;
+        _spriteBatchI = 0;
+        _spriteBatchSpriteCount = 0;
+
         for (var i = 0; i < cmds.Length; i++)
-            DrawSprite(in cmds[i], in view);
+        {
+            ref readonly var cmd = ref cmds[i];
+            var tex = cmd.Texture;
+            if (!tex.IsValid) continue;
+
+            var h = tex.Handle;
+
+            if (_spriteBatchTex != 0 && h != _spriteBatchTex)
+                FlushSpriteBatch();
+
+            if (_spriteBatchTex == 0)
+            {
+                _spriteBatchTex = h;
+
+                // уникальные текстуры по кадру
+                TrackUniqueTexture(h);
+
+                // если хотите bind-эвристику — лучше тут, а не внутри Emit
+                // (будет = кол-ву батчей)
+                if (h != _lastTextureThisFrame)
+                {
+                    _lastTextureThisFrame = h;
+                    Profiler.AddCounter(ProfilerCounterId.RenderTextureBinds, 1);
+                }
+            }
+
+            EmitSpriteQuad(in cmd, in view);
+        }
+        FlushSpriteBatch();
     }
+    
+    private void FlushSpriteBatch()
+    {
+        if (_spriteBatchSpriteCount == 0)
+        {
+            _spriteBatchTex = 0;
+            _spriteBatchV = 0;
+            _spriteBatchI = 0;
+            return;
+        }
+
+        // Счётчики: 1 drawcall на батч
+        Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls, 1);
+        Profiler.AddCounter(ProfilerCounterId.RenderSprites, _spriteBatchSpriteCount);
+
+        // Если хотите: texture binds считать как 1 на батч
+        Profiler.AddCounter(ProfilerCounterId.RenderTextureBinds, 1);
+
+        // texture = SDL_Texture* (nint)
+        SDL.RenderGeometry(_handle, _spriteBatchTex, _spriteBatchVertices, _spriteBatchV, _spriteBatchIndices, _spriteBatchI);
+
+        _spriteBatchTex = 0;
+        _spriteBatchV = 0;
+        _spriteBatchI = 0;
+        _spriteBatchSpriteCount = 0;
+    }
+    
+    private void EmitSpriteQuad(in SpriteCommand cmd, in ViewState view)
+    {
+        var tex = cmd.Texture;
+        var size = cmd.SizeWorld;
+        if (size is not { X: > 0f, Y: > 0f }) return;
+
+        // World -> view (camera space)
+        var rel = cmd.PositionWorld - view.CamPos;
+
+        float vx, vy;
+        if (view.HasRot)
+        {
+            vx = rel.X * view.Cos + rel.Y * view.Sin;
+            vy = -rel.X * view.Sin + rel.Y * view.Cos;
+        }
+        else
+        {
+            vx = rel.X;
+            vy = rel.Y;
+        }
+
+        // view -> screen (pivot)
+        var pivotX = view.HalfW + vx * view.Ppu;
+        var pivotY = view.HalfH - vy * view.Ppu;
+
+        var wPx = cmd.SizeWorld.X * view.Ppu;
+        var hPx = cmd.SizeWorld.Y * view.Ppu;
+        if (!(wPx > 0f) || !(hPx > 0f)) return;
+
+        // origin in pixels (как у вас)
+        var originPxX = cmd.OriginWorld.X * view.Ppu;
+        var originPxY = (cmd.SizeWorld.Y - cmd.OriginWorld.Y) * view.Ppu;
+
+        // Локальные углы вокруг pivot (screen space, y вниз)
+        var x0 = -originPxX;          var y0 = -originPxY;          // top-left
+        var x1 = wPx - originPxX;     var y1 = -originPxY;          // top-right
+        var x2 = wPx - originPxX;     var y2 = hPx - originPxY;     // bottom-right
+        var x3 = -originPxX;          var y3 = hPx - originPxY;     // bottom-left
+
+        // Итоговый угол (как в вашем RenderTextureRotated)
+        var rot = view.HasRot ? (cmd.Rotation - view.CamRot) : cmd.Rotation;
+        var angle = -rot; // radians, clockwise in screen-y-down when using standard formula
+
+        float c = 1f, s = 0f;
+        if (angle != 0f)
+        {
+            c = MathF.Cos(angle);
+            s = MathF.Sin(angle);
+        }
+
+        void Rot(float lx, float ly, out float sx, out float sy)
+        {
+            if (angle != 0f)
+            {
+                // standard 2D rotation in y-down coords -> visually clockwise for +angle
+                var rx = lx * c - ly * s;
+                var ry = lx * s + ly * c;
+                sx = pivotX + rx;
+                sy = pivotY + ry;
+            }
+            else
+            {
+                sx = pivotX + lx;
+                sy = pivotY + ly;
+            }
+        }
+
+        Rot(x0, y0, out var p0x, out var p0y);
+        Rot(x1, y1, out var p1x, out var p1y);
+        Rot(x2, y2, out var p2x, out var p2y);
+        Rot(x3, y3, out var p3x, out var p3y);
+
+        // UV (normalized 0..1)
+        // ВАЖНО: tex.Width/Height должны быть доступны без вызовов SDL в кадре.
+        var invW = 1f / tex.Width;
+        var invH = 1f / tex.Height;
+
+        var u0 = cmd.SrcRect.X * invW;
+        var v0 = cmd.SrcRect.Y * invH;
+        var u1 = (cmd.SrcRect.X + cmd.SrcRect.Width) * invW;
+        var v1 = (cmd.SrcRect.Y + cmd.SrcRect.Height) * invH;
+
+        // Flip — просто меняем UV
+        var flip = (SDL.FlipMode)cmd.FlipMode;
+
+        if ((flip & SDL.FlipMode.Horizontal) != 0) (u0, u1) = (u1, u0);
+        if ((flip & SDL.FlipMode.Vertical) != 0)   (v0, v1) = (v1, v0);
+
+        // Цвет per-vertex (SDL_FColor float [0..1])
+        var col = new SDL.FColor(
+            cmd.Color.Red   / 255f,
+            cmd.Color.Green / 255f,
+            cmd.Color.Blue  / 255f,
+            cmd.Color.Alpha / 255f
+        );
+
+        var vBase = _spriteBatchV;
+        var iBase = _spriteBatchI;
+
+        _spriteBatchVertices[vBase + 0].Position = new SDL.FPoint { X = p0x, Y = p0y };
+        _spriteBatchVertices[vBase + 1].Position = new SDL.FPoint { X = p1x, Y = p1y };
+        _spriteBatchVertices[vBase + 2].Position = new SDL.FPoint { X = p2x, Y = p2y };
+        _spriteBatchVertices[vBase + 3].Position = new SDL.FPoint { X = p3x, Y = p3y };
+
+        _spriteBatchVertices[vBase + 0].TexCoord = new SDL.FPoint { X = u0, Y = v0 };
+        _spriteBatchVertices[vBase + 1].TexCoord = new SDL.FPoint { X = u1, Y = v0 };
+        _spriteBatchVertices[vBase + 2].TexCoord = new SDL.FPoint { X = u1, Y = v1 };
+        _spriteBatchVertices[vBase + 3].TexCoord = new SDL.FPoint { X = u0, Y = v1 };
+
+        _spriteBatchVertices[vBase + 0].Color = col;
+        _spriteBatchVertices[vBase + 1].Color = col;
+        _spriteBatchVertices[vBase + 2].Color = col;
+        _spriteBatchVertices[vBase + 3].Color = col;
+
+        // два треугольника
+        _spriteBatchIndices[iBase + 0] = vBase + 0;
+        _spriteBatchIndices[iBase + 1] = vBase + 1;
+        _spriteBatchIndices[iBase + 2] = vBase + 2;
+        _spriteBatchIndices[iBase + 3] = vBase + 2;
+        _spriteBatchIndices[iBase + 4] = vBase + 3;
+        _spriteBatchIndices[iBase + 5] = vBase + 0;
+
+        _spriteBatchV += 4;
+        _spriteBatchI += 6;
+        _spriteBatchSpriteCount++;
+    }
+
+
 
     public void EndFrame()
     {
@@ -272,6 +461,18 @@ internal sealed class RenderSystem : IDisposable
             hasRot: hasRot,
             cull: cull
         );
+    }
+    
+    private void EnsureSpriteBatchCapacity(int spritesNeeded)
+    {
+        var vNeeded = spritesNeeded * 4;
+        var iNeeded = spritesNeeded * 6;
+
+        if (_spriteBatchVertices.Length < vNeeded)
+            _spriteBatchVertices = new SDL.Vertex[GrowCapacity(_spriteBatchVertices.Length, vNeeded)];
+
+        if (_spriteBatchIndices.Length < iNeeded)
+            _spriteBatchIndices = new int[GrowCapacity(_spriteBatchIndices.Length, iNeeded)];
     }
 
     // -----------------------------

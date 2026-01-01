@@ -5,7 +5,7 @@ namespace StartGame;
 
 public class MainScene() : Node("MainScene")
 {
-    private readonly List<Player> players = new();
+    private readonly List<Player> players = [];
 
     protected override void EnterTree()
     {
@@ -17,21 +17,19 @@ public class MainScene() : Node("MainScene")
         AddChild(new DebugCamera());
 
         // Сколько игроков и какие ограничения
-        const int count = 200;             // поменяй как надо
-        const float radius = 20f;          // в пределах 20 юнитов от (0,0)
-        const float minDistance = 2f;      // вокруг себя 2 юнита
+        const int count = 500;             // поменяй как надо
+        const float radius = 20;          // в пределах 20 юнитов от (0,0)
 
-        SpawnPlayers(count, radius, minDistance, seed: 1337);
+        SpawnPlayers(count, radius, seed: 1684);
 
         SceneTree!.Paused = true;
     }
 
-    private void SpawnPlayers(int count, float radius, float minDistance, int seed)
+    private void SpawnPlayers(int count, float radius, int seed)
     {
         players.Clear();
 
         var rnd = new Random(seed);
-        var minDist2 = minDistance * minDistance;
 
         // На таких числах простой rejection работает нормально.
         // Если count слишком большой — будет больше попыток; лимит защитит от вечного цикла.
@@ -41,6 +39,8 @@ public class MainScene() : Node("MainScene")
         while (players.Count < count && attempts < maxAttempts)
         {
             attempts++;
+            
+            //Console.WriteLine($"SpawnPlayers: {players.Count} is {count}");
 
             // Равномерно по площади круга: r = sqrt(u)*R, theta = 2πv
             var u = (float)rnd.NextDouble();
@@ -52,7 +52,7 @@ public class MainScene() : Node("MainScene")
             var pos = new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * r;
 
             // Проверка минимальной дистанции до уже размещённых
-            var ok = true;
+           /* var ok = true;
             for (var i = 0; i < players.Count; i++)
             {
                 var p = players[i];
@@ -62,9 +62,9 @@ public class MainScene() : Node("MainScene")
                     ok = false;
                     break;
                 }
-            }
+            }*/
 
-            if (!ok) continue;
+            //if (!ok) continue;
 
             var player = new Player();
             players.Add(player);
@@ -83,8 +83,8 @@ public class MainScene() : Node("MainScene")
         var f = Profiler.LastFrame;
         if (f.IsValid && (f.FrameIndex % 144) == 0)
         {
-            Console.WriteLine(f);
-            Console.WriteLine();
+            Console.SetCursorPosition(0, 0);
+            Console.Write(f.ToPrettyString());
         }
         
     }

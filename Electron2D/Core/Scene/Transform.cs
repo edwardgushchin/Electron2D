@@ -237,6 +237,15 @@ public sealed class Transform
         _localScale = q;
         MarkLocalDirty();
     }
+    
+    internal void GetWorldTRS(out Vector2 pos, out float rot, out Vector2 scale, out int worldVersion)
+    {
+        UpdateWorldIfNeeded();          // ваш существующий lazy-апдейт
+        pos = _worldPosition;                // подставьте реальные имена полей
+        rot = _worldRotation;
+        scale = _worldScale;
+        worldVersion = _worldVersion;
+    }
 
     internal void SetParent(Transform? parent)
     {
@@ -277,14 +286,20 @@ public sealed class Transform
 
     private void UpdateWorldIfNeeded()
     {
-        _parent?.UpdateWorldIfNeeded();
+        //_parent?.UpdateWorldIfNeeded();
+        var p = _parent;
 
         if (!_worldDirty)
         {
-            var parentVer = _parent?._worldVersion ?? 0;
-            if (_parentWorldVersionAtCompute == parentVer)
-                return;
+            if (p is null) return;
+            if (!p._worldDirty)
+            {
+                var parentVer = p._worldVersion;
+                if (_parentWorldVersionAtCompute == parentVer) return;
+            }
         }
+        
+        p?.UpdateWorldIfNeeded();
 
         if (_parent is null)
         {
@@ -330,6 +345,7 @@ public sealed class Transform
 
         _worldMatrixDirty = false;
     }
+    
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Vector2 Rotate(Vector2 v, float radians)

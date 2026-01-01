@@ -10,7 +10,7 @@ internal readonly struct SpriteSnapshot
     public readonly Vector2 Pivot;
 
     // Для late-load/подмены текстур: учитываем «источник»
-    public readonly object? TextureId; // если у тебя TextureId не object — поменяй тип на фактический
+    public readonly string? TextureId; // если у тебя TextureId не object — поменяй тип на фактический
     public readonly nint TextureHandle; // 0 если невалидна
 
     private SpriteSnapshot(
@@ -18,7 +18,7 @@ internal readonly struct SpriteSnapshot
         Rect textureRect,
         float pixelsPerUnit,
         Vector2 pivot,
-        object? textureId,
+        string? textureId,
         nint textureHandle)
     {
         Flip = flip;
@@ -53,7 +53,7 @@ internal readonly struct SpriteSnapshot
                && TextureRect.Equals(other.TextureRect)
                && PixelsPerUnit.Equals(other.PixelsPerUnit)
                && Pivot.Equals(other.Pivot)
-               && ReferenceEquals(TextureId, other.TextureId)
+               && string.Equals(TextureId, other.TextureId, StringComparison.Ordinal)
                && TextureHandle == other.TextureHandle;
     }
 }
