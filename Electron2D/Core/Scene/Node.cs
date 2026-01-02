@@ -20,6 +20,13 @@ public class Node
     private bool _readyCalled;
     private bool _queuedForFree;
     private int _componentCount;
+
+    private ProcessMode _processMode;
+    private ProcessMode _effectiveProcessMode;
+
+    private bool _processEnabled;
+    private bool _physicsProcessEnabled;
+
     
     private Signal? _onReady;
     private Signal? _onExited;
@@ -35,7 +42,14 @@ public class Node
     {
         _name = name;
         Transform = new Transform(this);
-        ProcessMode = ProcessMode.Inherit;
+
+        _processMode = ProcessMode.Inherit;
+        _effectiveProcessMode = ProcessMode.Always;
+
+        // Godot-like: если метод переопределён — включаем по умолчанию.
+        var flags = ProcessingOverrideCache.Get(GetType());
+        _processEnabled = flags.ProcessOverridden;
+        _physicsProcessEnabled = flags.PhysicsOverridden;
     }
     #endregion
 
@@ -106,7 +120,16 @@ public class Node
 
     public SceneTree? SceneTree => _sceneTree;
 
-    public ProcessMode ProcessMode { get; set; }
+    public ProcessMode ProcessMode
+    {
+        get => _processMode;
+        set
+        {
+            if (_processMode == value) return;
+            _processMode = value;
+            _sceneTree?.MarkProcessingListsDirty();
+        }
+    }
 
     public int ChildCount => _children.Count;
 
@@ -121,6 +144,28 @@ public class Node
     /// Дети узла без аллокаций. Возвращаемый span валиден до изменения списка детей.
     /// </summary>
     public ReadOnlySpan<Node> Children => CollectionsMarshal.AsSpan(_children);
+    
+    public bool IsProcessEnabled => _processEnabled;
+    public bool IsPhysicsProcessEnabled => _physicsProcessEnabled;
+
+    public void SetProcess(bool enabled)
+    {
+        if (_processEnabled == enabled) return;
+        _processEnabled = enabled;
+        _sceneTree?.MarkProcessingListsDirty();
+    }
+
+    public void SetPhysicsProcess(bool enabled)
+    {
+        if (_physicsProcessEnabled == enabled) return;
+        _physicsProcessEnabled = enabled;
+        _sceneTree?.MarkProcessingListsDirty();
+    }
+    
+    internal bool ProcessEnabledInternal => _processEnabled;
+    internal bool PhysicsProcessEnabledInternal => _physicsProcessEnabled;
+    internal bool IsQueuedForFreeInternal => _queuedForFree;
+    internal ProcessMode EffectiveProcessModeInternal => _effectiveProcessMode;
     #endregion
 
     #region Public API: hierarchy
@@ -172,6 +217,8 @@ public class Node
             child.Transform.SetParent(Transform);
 
             _onChildOrderChanged?.Emit();
+            
+            _sceneTree.MarkProcessingListsDirty();
 
             if (!keepWorldTransform)
                 return;
@@ -463,6 +510,7 @@ public class Node
     internal void InternalEnterTree(SceneTree tree)
     {
         _sceneTree = tree;
+        tree.MarkProcessingListsDirty();
 
         // Регистрируем группы этого узла в SceneTree-индексе.
         for (var i = 0; i < _groups.Count; i++)
@@ -583,6 +631,8 @@ public class Node
                 // TreeIndex будет сброшен через callback InternalUpdateGroupIndex(...).
             }
         }
+        
+        tree?.MarkProcessingListsDirty();
 
         _sceneTree = null;
         // _queuedForFree НЕ трогаем: если узел стоял в очереди на free — он должен остаться queued,
@@ -608,6 +658,8 @@ public class Node
             return;
         }
     }
+    
+    internal void SetEffectiveProcessModeInternal(ProcessMode mode) => _effectiveProcessMode = mode;
     #endregion
 
     #region Private helpers

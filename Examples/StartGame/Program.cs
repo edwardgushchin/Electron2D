@@ -7,7 +7,6 @@ internal static class Program
 {
     public static void Main()
     {
-        
         using var engine = new Engine(new EngineConfig
         {
             Window = new WindowConfig

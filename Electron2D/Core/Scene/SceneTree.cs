@@ -11,11 +11,14 @@ public sealed class SceneTree
     #region Instance fields
     private readonly GroupIndex _groupIndex = new();
     private readonly List<SpriteRenderer> _spriteRenderers = new(capacity: 256);
+    private readonly List<Node> _processNodes = new(capacity: 256);
+    private readonly List<Node> _physicsNodes = new(capacity: 256);
     private readonly Node[] _freeQueue;
-
+    
     private int _freeCount;
     private bool _inputHandled;
     private bool _cameraDirty;
+    private bool _processingListsDirty = true;
     #endregion
 
     #region Constructors
@@ -107,9 +110,40 @@ public sealed class SceneTree
         }
     }
 
-    internal void Process(float delta) => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
+    internal void Process(float delta)
+    {
+        EnsureProcessingLists();
 
-    internal void PhysicsProcess(float fixedDelta) => PhysicsProcessNode(Root, parentMode: ProcessMode.Always, fixedDelta);
+        for (var i = 0; i < _processNodes.Count; i++)
+        {
+            var node = _processNodes[i];
+
+            // Нода могла выйти из дерева/очередь на free/disable после rebuild.
+            if (!ReferenceEquals(node.SceneTree, this)) continue;
+            if (node.IsQueuedForFreeInternal) continue;
+            if (!node.ProcessEnabledInternal) continue;
+
+            if (ShouldRun(node.EffectiveProcessModeInternal))
+                node.InternalProcess(delta);
+        }
+    }
+
+    internal void PhysicsProcess(float fixedDelta)
+    {
+        EnsureProcessingLists();
+
+        for (var i = 0; i < _physicsNodes.Count; i++)
+        {
+            var node = _physicsNodes[i];
+
+            if (!ReferenceEquals(node.SceneTree, this)) continue;
+            if (node.IsQueuedForFreeInternal) continue;
+            if (!node.PhysicsProcessEnabledInternal) continue;
+
+            if (ShouldRun(node.EffectiveProcessModeInternal))
+                node.InternalPhysicsProcess(fixedDelta);
+        }
+    }
 
     public void Quit() => QuitRequested = true;
     #endregion
@@ -254,6 +288,8 @@ public sealed class SceneTree
         if (ReferenceEquals(FocusedControl, control))
             FocusedControl = null;
     }
+    
+    internal void MarkProcessingListsDirty() => _processingListsDirty = true;
     #endregion
 
     #region Private helpers
@@ -300,29 +336,37 @@ public sealed class SceneTree
 
         return _inputHandled;
     }
-
-    private void ProcessNode(Node node, ProcessMode parentMode, float delta)
+    
+    private void EnsureProcessingLists()
     {
-        var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
+        if (!_processingListsDirty)
+            return;
 
-        if (ShouldRun(mode))
-            node.InternalProcess(delta);
+        _processingListsDirty = false;
 
-        var count = node.ChildCount;
-        for (var i = 0; i < count; i++)
-            ProcessNode(node.GetChild(i), mode, delta);
+        _processNodes.Clear();
+        _physicsNodes.Clear();
+
+        BuildProcessingLists(Root, ProcessMode.Always);
     }
 
-    private void PhysicsProcessNode(Node node, ProcessMode parentMode, float fixedDelta)
+    private void BuildProcessingLists(Node node, ProcessMode parentMode)
     {
         var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
+        node.SetEffectiveProcessModeInternal(mode);
 
-        if (ShouldRun(mode))
-            node.InternalPhysicsProcess(fixedDelta);
+        if (mode != ProcessMode.Disabled)
+        {
+            if (node.ProcessEnabledInternal)
+                _processNodes.Add(node);
+
+            if (node.PhysicsProcessEnabledInternal)
+                _physicsNodes.Add(node);
+        }
 
         var count = node.ChildCount;
         for (var i = 0; i < count; i++)
-            PhysicsProcessNode(node.GetChild(i), mode, fixedDelta);
+            BuildProcessingLists(node.GetChild(i), mode);
     }
 
     private bool ShouldRun(ProcessMode mode)
