@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Electron2D;
 
@@ -5,7 +7,11 @@ namespace StartGame;
 
 public class MainScene() : Node("MainScene")
 {
-    private readonly List<Player> players = [];
+    private readonly List<Player> _players = [];
+    private readonly List<Box> _boxes = [];
+
+    private Texture _playerTexture;
+    private Texture _boxTexture;
 
     protected override void EnterTree()
     {
@@ -16,66 +22,70 @@ public class MainScene() : Node("MainScene")
     {
         AddChild(new DebugCamera());
 
-        // Сколько игроков и какие ограничения
-        const int count = 500;             // поменяй как надо
-        const float radius = 20;          // в пределах 20 юнитов от (0,0)
+        _playerTexture = Resources.GetTexture("player_idle.png");
+        _boxTexture = Resources.GetTexture("RTS_Crate.png");
 
-        SpawnPlayers(count, radius, seed: 1684);
+        const int playerCount = 500;
+        const float spawnRadius = 20f;
 
-        SceneTree!.Paused = true;
+        SpawnPlayers(playerCount, spawnRadius, seed: 1684);
+
+        // Если нужны коробки — раскомментируй:
+        SpawnBoxes(boxCount: 100, spawnRadius, seed: 777);
+
+        // ВАЖНО: Paused=true “замораживает” Process у большинства нод.
+        // Оставь true только если это намеренно.
+        SceneTree!.Paused = false;
     }
 
     private void SpawnPlayers(int count, float radius, int seed)
     {
-        players.Clear();
+        _players.Clear();
+        if (_players.Capacity < count) _players.Capacity = count;
 
         var rnd = new Random(seed);
 
-        // На таких числах простой rejection работает нормально.
-        // Если count слишком большой — будет больше попыток; лимит защитит от вечного цикла.
-        var maxAttempts = count * 2000;
-
-        var attempts = 0;
-        while (players.Count < count && attempts < maxAttempts)
+        for (var i = 0; i < count; i++)
         {
-            attempts++;
-            
-            //Console.WriteLine($"SpawnPlayers: {players.Count} is {count}");
+            var pos = NextPointInCircle(rnd, radius);
 
-            // Равномерно по площади круга: r = sqrt(u)*R, theta = 2πv
-            var u = (float)rnd.NextDouble();
-            var v = (float)rnd.NextDouble();
-
-            var r = MathF.Sqrt(u) * radius;
-            var theta = v * (MathF.PI * 2f);
-
-            var pos = new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * r;
-
-            // Проверка минимальной дистанции до уже размещённых
-           /* var ok = true;
-            for (var i = 0; i < players.Count; i++)
-            {
-                var p = players[i];
-                var dp = p.Transform.WorldPosition - pos;
-                if (dp.LengthSquared() < minDist2)
-                {
-                    ok = false;
-                    break;
-                }
-            }*/
-
-            //if (!ok) continue;
-
-            var player = new Player();
-            players.Add(player);
+            var player = new Player(_playerTexture);
+            _players.Add(player);
             AddChild(player);
 
-            // Поставить в мир
             player.Transform.WorldPosition = pos;
         }
+    }
 
-        if (players.Count < count)
-            Console.WriteLine($"SpawnPlayers: placed {players.Count}/{count} (attempts={attempts}). Try lower count or minDistance.");
+    private void SpawnBoxes(int boxCount, float radius, int seed)
+    {
+        _boxes.Clear();
+        if (_boxes.Capacity < boxCount) _boxes.Capacity = boxCount;
+
+        var rnd = new Random(seed);
+
+        for (var i = 0; i < boxCount; i++)
+        {
+            var pos = NextPointInCircle(rnd, radius);
+
+            var box = new Box(_boxTexture);
+            _boxes.Add(box);
+            AddChild(box);
+
+            box.Transform.WorldPosition = pos;
+        }
+    }
+
+    private static Vector2 NextPointInCircle(Random rnd, float radius)
+    {
+        // Равномерно по площади: r = sqrt(u)*R, theta = 2πv
+        var u = (float)rnd.NextDouble();
+        var v = (float)rnd.NextDouble();
+
+        var r = MathF.Sqrt(u) * radius;
+        var theta = v * (MathF.PI * 2f);
+
+        return new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * r;
     }
 
     protected override void Process(float delta)
@@ -86,7 +96,6 @@ public class MainScene() : Node("MainScene")
             Console.SetCursorPosition(0, 0);
             Console.Write(f.ToPrettyString());
         }
-        
     }
 
     protected override void HandleUnhandledKeyInput(InputEvent inputEvent)

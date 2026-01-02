@@ -19,4 +19,11 @@
       <None Remove="StartGame.csproj.DotSettings" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Content\RTS_Crate.png" />
+      <Content Include="Content\RTS_Crate.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
