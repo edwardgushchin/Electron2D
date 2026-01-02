@@ -1,6 +1,11 @@
 namespace Electron2D;
 
-public class Keymap
+/// <summary>
+/// Раскладка/маппинг физических клавиш в логические действия (заглушка).
+/// </summary>
+/// <remarks>
+/// Реализация будет добавлена вместе с системой биндингов ввода.
+/// </remarks>
+public sealed class Keymap
 {
-    
 }

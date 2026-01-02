@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -8,22 +11,70 @@ public class Node
 
     private readonly List<Node> _children = [];
     private readonly List<GroupEntry> _groups = [];
+
     private IComponent[] _components = new IComponent[InitialComponentCapacity];
 
     private string _name;
     private Node? _parent;
     private SceneTree? _sceneTree;
+
     private bool _readyCalled;
     private bool _queuedForFree;
     private int _componentCount;
 
+    #region Constructors
     public Node(string name)
     {
         _name = name;
         Transform = new Transform(this);
         ProcessMode = ProcessMode.Inherit;
     }
+    #endregion
 
+    #region Signals
+    /// <summary>
+    /// Генерируется, когда дочерний узел вошёл в дерево сцены (обычно потому, что этот узел вошёл в дерево).
+    /// </summary>
+    public readonly Signal<Node> OnChildEnteredTree = new();
+
+    /// <summary>
+    /// Генерируется, когда дочерний узел собирается покинуть дерево сцены
+    /// (обычно потому, что этот узел выходит из дерева, или потому, что дочерний узел удаляется/освобождается).
+    /// </summary>
+    public readonly Signal<Node> OnChildExitingTree = new();
+
+    /// <summary>
+    /// Генерируется при изменении списка дочерних узлов (добавление/удаление/перемещение).
+    /// </summary>
+    public readonly Signal OnChildOrderChanged = new();
+
+    /// <summary>
+    /// Генерируется после вызова <see cref="EnterTree"/> (узел вошёл в дерево).
+    /// </summary>
+    public readonly Signal OnEntered = new();
+
+    /// <summary>
+    /// Генерируется после вызова <see cref="ExitTree"/> (узел начал выход из дерева).
+    /// </summary>
+    public readonly Signal OnExiting = new();
+
+    /// <summary>
+    /// Генерируется после завершения выхода узла из дерева (после финализации выхода у поддерева).
+    /// </summary>
+    public readonly Signal OnExited = new();
+
+    /// <summary>
+    /// Генерируется, когда узел считается готовым (после вызова <see cref="Ready"/>).
+    /// </summary>
+    public readonly Signal OnReady = new();
+
+    /// <summary>
+    /// Генерируется при изменении имени узла, если узел находится внутри дерева.
+    /// </summary>
+    public readonly Signal OnRenamed = new();
+    #endregion
+
+    #region Properties
     public Transform Transform { get; }
 
     public string Name
@@ -31,9 +82,13 @@ public class Node
         get => _name;
         set
         {
-            if (value == _name) return;
+            if (value == _name)
+                return;
+
             _name = value;
-            if (IsInsideTree) OnRenamed.Emit();
+
+            if (IsInsideTree)
+                OnRenamed.Emit();
         }
     }
 
@@ -44,76 +99,52 @@ public class Node
     public SceneTree? SceneTree => _sceneTree;
 
     public ProcessMode ProcessMode { get; set; }
-    
+
     public int ChildCount => _children.Count;
 
     public int GroupCount => _groups.Count;
 
+    /// <summary>
+    /// Компоненты узла без аллокаций. Возвращаемый span валиден до изменения списка компонентов.
+    /// </summary>
     public ReadOnlySpan<IComponent> Components => _components.AsSpan(0, _componentCount);
 
     /// <summary>
-    /// Этот сигнал генерируется, когда дочерний узел входит в дерево сцены, обычно потому, что этот узел вошел в дерево
+    /// Дети узла без аллокаций. Возвращаемый span валиден до изменения списка детей.
     /// </summary>
-    public readonly Signal<Node> OnChildEnteredTree = new();
+    public ReadOnlySpan<Node> Children => CollectionsMarshal.AsSpan(_children);
+    #endregion
 
-    /// <summary>
-    /// тот сигнал генерируется, когда дочерний узел собирается покинуть дерево сцен, обычно потому, что этот узел выходит из дерева, или потому, что дочерний узел удаляется или освобождается.
-    /// </summary>
-    public readonly Signal<Node> OnChildExitingTree = new();
-
-    /// <summary>
-    /// Сообщения генерируются при изменении списка дочерних узлов. Это происходит при добавлении, перемещении или удалении дочерних узлов.
-    /// </summary>
-    public readonly Signal OnChildOrderChanged = new();
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public readonly Signal OnEntered = new();
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public readonly Signal OnExiting = new();
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public readonly Signal OnExited = new();
-
-    /// <summary>
-    /// Генерируется, когда узел считается готовым, после вызова функции <see cref="Ready"/>.
-    /// </summary>
-    public readonly Signal OnReady = new();
-
-    /// <summary>
-    /// Сообщение генерируется при изменении имени узла, если узел находится внутри дерева.
-    /// </summary>
-    public readonly Signal OnRenamed = new();
-
+    #region Public API: hierarchy
     public void AddChild(Node child) => AddChild(child, keepWorldTransform: false);
 
     public void AddChild(Node child, bool keepWorldTransform)
     {
         ArgumentNullException.ThrowIfNull(child);
-        if (child == this) throw new InvalidOperationException("Cannot add node to itself.");
-        if (IsDescendantOf(child)) throw new InvalidOperationException("Cannot create cycles.");
+
+        if (child == this)
+            throw new InvalidOperationException("Cannot add node to itself.");
+
+        if (IsDescendantOf(child))
+            throw new InvalidOperationException("Cannot create cycles.");
 
         // no-op: уже наш ребёнок
-        if (child._parent == this) return;
+        if (child._parent == this)
+            return;
 
-        // кеш world если нужно
-        var wp = default(System.Numerics.Vector2);
-        var wr = 0f;
-        var ws = default(System.Numerics.Vector2);
+        // Кэшируем world TRS если нужно сохранить мировое положение при репаренте.
+        Vector2 worldPos = default;
+        float worldRot = 0f;
+        Vector2 worldScale = default;
+
         if (keepWorldTransform)
         {
-            wp = child.Transform.WorldPosition;
-            wr = child.Transform.WorldRotation;
-            ws = child.Transform.WorldScale;
+            worldPos = child.Transform.WorldPosition;
+            worldRot = child.Transform.WorldRotation;
+            worldScale = child.Transform.WorldScale;
         }
 
-        // Репарент внутри одного и того же SceneTree: НЕ вызываем Exit/Enter
+        // Репарент внутри одного и того же SceneTree: НЕ вызываем Exit/Enter.
         if (_sceneTree is not null && ReferenceEquals(child._sceneTree, _sceneTree))
         {
             var oldParent = child._parent;
@@ -123,18 +154,23 @@ public class Node
                 var idx = oldParent._children.IndexOf(child);
                 if (idx >= 0)
                     oldParent._children.RemoveAt(idx);
+
                 oldParent.OnChildOrderChanged.Emit();
             }
 
             _children.Add(child);
+
             child._parent = this;
             child.Transform.SetParent(Transform);
+
             OnChildOrderChanged.Emit();
 
-            if (!keepWorldTransform) return;
-            child.Transform.WorldPosition = wp;
-            child.Transform.WorldRotation = wr;
-            child.Transform.WorldScale = ws;
+            if (!keepWorldTransform)
+                return;
+
+            child.Transform.WorldPosition = worldPos;
+            child.Transform.WorldRotation = worldRot;
+            child.Transform.WorldScale = worldScale;
 
             return;
         }
@@ -149,9 +185,9 @@ public class Node
 
         if (keepWorldTransform)
         {
-            child.Transform.WorldPosition = wp;
-            child.Transform.WorldRotation = wr;
-            child.Transform.WorldScale = ws;
+            child.Transform.WorldPosition = worldPos;
+            child.Transform.WorldRotation = worldRot;
+            child.Transform.WorldScale = worldScale;
         }
 
         OnChildOrderChanged.Emit();
@@ -169,7 +205,8 @@ public class Node
         ArgumentNullException.ThrowIfNull(child);
 
         var idx = _children.IndexOf(child);
-        if (idx < 0) return;
+        if (idx < 0)
+            return;
 
         if (child._sceneTree is not null)
         {
@@ -179,114 +216,51 @@ public class Node
         }
 
         _children.RemoveAt(idx);
+
         child._parent = null;
         child.Transform.SetParent(null);
 
         OnChildOrderChanged.Emit();
     }
 
+    public Node GetChild(int index) => _children[index];
+
+    public int GetIndex()
+    {
+        if (_parent is null)
+            return -1;
+
+        return _parent._children.IndexOf(this);
+    }
+    #endregion
+
+    #region Public API: components
     public T AddComponent<T>() where T : class, IComponent, new()
     {
         var component = new T();
         AddComponentInstance(component);
         return component;
     }
+    #endregion
 
-    public Node GetChild(int index) => _children[index];
-    
-    public ReadOnlySpan<Node> Children => CollectionsMarshal.AsSpan(_children);
-
-    public int GetIndex()
-    {
-        if (_parent is null) return -1;
-        return _parent._children.IndexOf(this);
-    }
-
+    #region Public API: node paths
     public Node GetNode(string path)
-    {
-        return GetNodeOrNull(path) ?? throw new InvalidOperationException($"Node path not found: {path}");
-    }
+        => GetNodeOrNull(path) ?? throw new InvalidOperationException($"Node path not found: {path}");
 
     public Node? GetNodeOrNull(string path)
     {
-        if (string.IsNullOrWhiteSpace(path)) return this;
+        if (string.IsNullOrWhiteSpace(path))
+            return this;
+
         return TryGetNodeByPath(path.AsSpan(), out var node) ? node : null;
     }
 
     public bool HasNode(string path)
     {
-        if (string.IsNullOrWhiteSpace(path)) return true;
+        if (string.IsNullOrWhiteSpace(path))
+            return true;
+
         return TryGetNodeByPath(path.AsSpan(), out _);
-    }
-
-    public void AddToGroup(string group, bool persistent = false)
-    {
-        if (string.IsNullOrWhiteSpace(group))
-            throw new ArgumentException("Group name cannot be empty.", nameof(group));
-
-        for (var i = 0; i < _groups.Count; i++)
-        {
-            if (_groups[i].Name != group) continue;
-
-            var e = _groups[i];
-            if (e.Persistent == persistent) return;
-
-            e.Persistent = persistent;
-            _groups[i] = e;
-            return;
-        }
-
-        var entry = new GroupEntry(group, persistent);
-
-        if (_sceneTree is not null)
-            entry.TreeIndex = _sceneTree.RegisterInGroup(group, this);
-
-        _groups.Add(entry);
-    }
-
-    public string GetGroupName(int index) => _groups[index].Name;
-
-    public bool IsGroupPersistent(int index) => _groups[index].Persistent;
-
-    public void RemoveFromGroup(string group)
-    {
-        if (string.IsNullOrWhiteSpace(group)) return;
-
-        for (var i = 0; i < _groups.Count; i++)
-        {
-            if (_groups[i].Name != group) continue;
-
-            var e = _groups[i];
-
-            if (_sceneTree is not null && e.TreeIndex >= 0)
-                _sceneTree.UnregisterFromGroup(group, e.TreeIndex, this);
-
-            _groups.RemoveAt(i);
-            return;
-        }
-    }
-
-    public bool IsInGroup(string group)
-    {
-        if (string.IsNullOrWhiteSpace(group)) return false;
-        for (var i = 0; i < _groups.Count; i++)
-            if (_groups[i].Name == group) return true;
-        return false;
-    }
-
-    public void QueueFree()
-    {
-        if (_queuedForFree) return;
-        _queuedForFree = true;
-
-        if (_sceneTree is null)
-        {
-            // вне дерева — освобождаем сразу
-            InternalFreeImmediate();
-            return;
-        }
-
-        _sceneTree.QueueFree(this);
     }
 
     public bool TryGetNodeByPath(ReadOnlySpan<char> path, out Node? result)
@@ -310,31 +284,38 @@ public class Node
         while (!path.IsEmpty)
         {
             var slash = path.IndexOf('/');
-            ReadOnlySpan<char> seg;
+            ReadOnlySpan<char> segment;
 
             if (slash >= 0)
             {
-                seg = path[..slash];
+                segment = path[..slash];
                 path = path[(slash + 1)..];
-                if (seg.IsEmpty) continue; // '//' => пропускаем
+
+                if (segment.IsEmpty)
+                    continue; // '//' => пропускаем
             }
             else
             {
-                seg = path;
+                segment = path;
                 path = ReadOnlySpan<char>.Empty;
             }
 
-            if (IsDot(seg)) continue;
+            if (IsDot(segment))
+                continue;
 
-            if (IsDotDot(seg))
+            if (IsDotDot(segment))
             {
-                if (node._parent is null) return false;
+                if (node._parent is null)
+                    return false;
+
                 node = node._parent;
                 continue;
             }
 
-            var child = node.FindChildByName(seg);
-            if (child is null) return false;
+            var child = node.FindChildByName(segment);
+            if (child is null)
+                return false;
+
             node = child;
         }
 
@@ -344,7 +325,95 @@ public class Node
         static bool IsDotDot(ReadOnlySpan<char> s) => s.Length == 2 && s[0] == '.' && s[1] == '.';
         static bool IsDot(ReadOnlySpan<char> s) => s.Length == 1 && s[0] == '.';
     }
+    #endregion
 
+    #region Public API: groups
+    public void AddToGroup(string group, bool persistent = false)
+    {
+        if (string.IsNullOrWhiteSpace(group))
+            throw new ArgumentException("Group name cannot be empty.", nameof(group));
+
+        for (var i = 0; i < _groups.Count; i++)
+        {
+            if (_groups[i].Name != group)
+                continue;
+
+            var entry = _groups[i];
+            if (entry.Persistent == persistent)
+                return;
+
+            entry.Persistent = persistent;
+            _groups[i] = entry;
+            return;
+        }
+
+        var newEntry = new GroupEntry(group, persistent);
+
+        if (_sceneTree is not null)
+            newEntry.TreeIndex = _sceneTree.RegisterInGroup(group, this);
+
+        _groups.Add(newEntry);
+    }
+
+    public string GetGroupName(int index) => _groups[index].Name;
+
+    public bool IsGroupPersistent(int index) => _groups[index].Persistent;
+
+    public void RemoveFromGroup(string group)
+    {
+        if (string.IsNullOrWhiteSpace(group))
+            return;
+
+        for (var i = 0; i < _groups.Count; i++)
+        {
+            if (_groups[i].Name != group)
+                continue;
+
+            var entry = _groups[i];
+
+            if (_sceneTree is not null && entry.TreeIndex >= 0)
+                _sceneTree.UnregisterFromGroup(group, entry.TreeIndex, this);
+
+            _groups.RemoveAt(i);
+            return;
+        }
+    }
+
+    public bool IsInGroup(string group)
+    {
+        if (string.IsNullOrWhiteSpace(group))
+            return false;
+
+        for (var i = 0; i < _groups.Count; i++)
+        {
+            if (_groups[i].Name == group)
+                return true;
+        }
+
+        return false;
+    }
+    #endregion
+
+    #region Public API: lifetime
+    public void QueueFree()
+    {
+        if (_queuedForFree)
+            return;
+
+        _queuedForFree = true;
+
+        if (_sceneTree is null)
+        {
+            // Вне дерева — освобождаем сразу.
+            InternalFreeImmediate();
+            return;
+        }
+
+        _sceneTree.QueueFree(this);
+    }
+    #endregion
+
+    #region Protected API: Node lifecycle (override points)
     public virtual void Destroy() { }
 
     protected virtual void EnterTree() { }
@@ -356,50 +425,50 @@ public class Node
     protected virtual void PhysicsProcess(float fixedDelta) { }
 
     protected virtual void ExitTree() { }
+    #endregion
 
+    #region Protected API: input (override points)
     /// <summary>
-    /// Вызывается при возникновении события ввода. Событие ввода распространяется вверх по дереву узлов, пока какой-либо узел его не обработает.
-    /// Вызывается только в том случае, если обработка ввода включена, что происходит автоматически, если этот метод переопределен, и может быть переключено с помощью set_process_input().
-    /// Чтобы обработать событие ввода и предотвратить его дальнейшее распространение на другие узлы, можно вызвать Viewport.set_input_as_handled().
-    /// Для игрового ввода обычно лучше подходят <see cref="HandleUnhandledInput"/> и <see cref="HandleUnhandledKeyInput"/>, поскольку они позволяют графическому интерфейсу пользователя перехватывать события первым.
-    /// Примечание: Этот метод вызывается только в том случае, если узел присутствует в дереве сцены (т.е. если он не является «сиротским»).
+    /// Вызывается при возникновении события ввода.
+    /// Событие распространяется вверх по дереву, пока не будет помечено как обработанное.
     /// </summary>
-    /// <param name="inputEvent"></param>
     protected virtual void HandleInput(InputEvent inputEvent) { }
 
     /// <summary>
-    /// Вызывается, когда событие ввода не было обработано методом <see cref="HandleInput"/> или каким-либо элементом управления графического интерфейса. Вызывается после _shortcut_input() и после _unhandled_key_input(). Событие ввода распространяется вверх по дереву узлов, пока какой-либо узел его не обработает.
-    /// Вызывается только в том случае, если включена обработка необработанного ввода, что происходит автоматически, если этот метод переопределен, и может быть переключено с помощью set_process_unhandled_input().
-    /// Чтобы обработать событие ввода и остановить его дальнейшее распространение на другие узлы, можно вызвать Viewport.set_input_as_handled().
-    /// Для игрового ввода этот метод обычно лучше подходит, чем <see cref="HandleInput"/>, поскольку события графического интерфейса требуют более высокого приоритета. Для сочетаний клавиш рекомендуется использовать _shortcut_input(), поскольку он вызывается перед этим методом. Наконец, для обработки событий клавиатуры рекомендуется использовать _unhandled_key_input() по соображениям производительности.
-    /// Примечание: Этот метод вызывается только в том случае, если узел присутствует в дереве сцены (т.е. если он не является "сиротским" узлом).
+    /// Вызывается для shortcut-ввода (до unhandled), если поддерживается пайплайном ввода.
     /// </summary>
-    /// <param name="inputEvent"></param>
     protected virtual void HandleShortcutInput(InputEvent inputEvent) { }
 
+    /// <summary>
+    /// Вызывается для необработанного ввода (после <see cref="HandleInput"/> и после UI).
+    /// </summary>
     protected virtual void HandleUnhandledInput(InputEvent inputEvent) { }
 
+    /// <summary>
+    /// Вызывается для необработанных событий клавиатуры (опциональный быстрый путь).
+    /// </summary>
     protected virtual void HandleUnhandledKeyInput(InputEvent inputEvent) { }
 
-    protected void SetInputHandled()
-    {
-        _sceneTree?.MarkInputHandled();
-    }
+    protected void SetInputHandled() => _sceneTree?.MarkInputHandled();
+    #endregion
 
+    #region Internal API: SceneTree integration
     internal void InternalEnterTree(SceneTree tree)
     {
         _sceneTree = tree;
 
-        // Регистрируем группы этого узла в SceneTree-индексе
+        // Регистрируем группы этого узла в SceneTree-индексе.
         for (var i = 0; i < _groups.Count; i++)
         {
-            var e = _groups[i];
-            if (e.TreeIndex >= 0) continue;
-            e.TreeIndex = tree.RegisterInGroup(e.Name, this);
-            _groups[i] = e;
+            var entry = _groups[i];
+            if (entry.TreeIndex >= 0)
+                continue;
+
+            entry.TreeIndex = tree.RegisterInGroup(entry.Name, this);
+            _groups[i] = entry;
         }
 
-        // Регистрируем render-компоненты, которые были добавлены ДО входа узла в дерево
+        // Регистрируем render-компоненты, которые были добавлены ДО входа узла в дерево.
         for (var i = 0; i < _componentCount; i++)
         {
             if (_components[i] is SpriteRenderer sr)
@@ -422,13 +491,15 @@ public class Node
 
     internal void InternalReady()
     {
-        if (_readyCalled) return;
+        if (_readyCalled)
+            return;
 
         // ready: post-order (children, then parent)
         for (var i = 0; i < _children.Count; i++)
             _children[i].InternalReady();
 
         Ready();
+
         _readyCalled = true;
         OnReady.Emit();
     }
@@ -462,13 +533,13 @@ public class Node
 
     internal void InternalFreeImmediate()
     {
-        // root нельзя фришить так
+        // Root нельзя освобождать напрямую.
         if (_parent is null && _sceneTree is not null)
             throw new InvalidOperationException("Cannot free the SceneTree root.");
 
         _parent?.RemoveChild(this);
 
-        // после RemoveChild поддерево уже вне дерева: можно уничтожать ресурсы
+        // После RemoveChild поддерево уже вне дерева: можно уничтожать ресурсы.
         DestroySubtreeBottomUp(this);
     }
 
@@ -482,26 +553,27 @@ public class Node
 
         if (tree is not null)
         {
-            // Снять render-компоненты из индекса, пока tree ещё доступен
+            // Снять render-компоненты из индекса, пока tree ещё доступен.
             for (var i = 0; i < _componentCount; i++)
             {
                 if (_components[i] is SpriteRenderer sr)
                     tree.UnregisterSpriteRenderer(sr);
             }
 
-            // Снять группы из индекса пока tree ещё доступен
+            // Снять группы из индекса, пока tree ещё доступен.
             for (var i = 0; i < _groups.Count; i++)
             {
-                var e = _groups[i];
-                if (e.TreeIndex < 0) continue;
-                tree.UnregisterFromGroup(e.Name, e.TreeIndex, this);
-                // TreeIndex будет сброшен через callback InternalUpdateGroupIndex(...)
+                var entry = _groups[i];
+                if (entry.TreeIndex < 0)
+                    continue;
+
+                tree.UnregisterFromGroup(entry.Name, entry.TreeIndex, this);
+                // TreeIndex будет сброшен через callback InternalUpdateGroupIndex(...).
             }
         }
 
         _sceneTree = null;
         _queuedForFree = false;
-
         _readyCalled = false;
 
         for (var i = 0; i < _children.Count; i++)
@@ -514,18 +586,23 @@ public class Node
     {
         for (var i = 0; i < _groups.Count; i++)
         {
-            if (_groups[i].Name != group) continue;
-            var e = _groups[i];
-            e.TreeIndex = newIndex;
-            _groups[i] = e;
+            if (_groups[i].Name != group)
+                continue;
+
+            var entry = _groups[i];
+            entry.TreeIndex = newIndex;
+            _groups[i] = entry;
             return;
         }
     }
+    #endregion
 
+    #region Private helpers
     private void AddComponentInstance(IComponent component)
     {
         if ((uint)_componentCount >= (uint)_components.Length)
             Array.Resize(ref _components, _components.Length * 2); // подготовьте capacity при загрузке сцены
+
         _components[_componentCount++] = component;
         component.OnAttach(this);
 
@@ -533,7 +610,6 @@ public class Node
         if (_sceneTree is not null && component is SpriteRenderer sr)
             _sceneTree.RegisterSpriteRenderer(sr);
     }
-
 
     private static void DestroySubtreeBottomUp(Node node)
     {
@@ -552,13 +628,18 @@ public class Node
             _components[i].OnDetach();
             _components[i] = null!;
         }
+
         _componentCount = 0;
     }
 
     private bool IsDescendantOf(Node possibleAncestor)
     {
         for (var p = _parent; p is not null; p = p._parent)
-            if (p == possibleAncestor) return true;
+        {
+            if (p == possibleAncestor)
+                return true;
+        }
+
         return false;
     }
 
@@ -570,6 +651,8 @@ public class Node
             if (name.SequenceEqual(child._name))
                 return child;
         }
+
         return null;
     }
+    #endregion
 }

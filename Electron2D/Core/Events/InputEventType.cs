@@ -1,7 +1,11 @@
 namespace Electron2D;
 
+/// <summary>
+/// Тип события ввода (клавиатура/мышь/геймпад и т.п.).
+/// </summary>
 public enum InputEventType
 {
+    // Keyboard / text
     KeyDown,
     KeyUp,
     TextEditing,
@@ -12,14 +16,16 @@ public enum InputEventType
     TextEditingCandidates,
     ScreenKeyboardShown,
     ScreenKeyboardHidden,
-    
+
+    // Mouse
     MouseMotion,
     MouseButtonDown,
     MouseButtonUp,
     MouseWheel,
     MouseAdded,
     MouseRemoved,
-    
+
+    // Gamepad
     GamepadAxisMotion,
     GamepadButtonDown,
     GamepadButtonUp,
@@ -31,5 +37,5 @@ public enum InputEventType
     GamepadTouchpadUp,
     GamepadSensorUpdate,
     GamepadUpdateComplete,
-    GamepadSteamHandleUpdated,
+    GamepadSteamHandleUpdated
 }

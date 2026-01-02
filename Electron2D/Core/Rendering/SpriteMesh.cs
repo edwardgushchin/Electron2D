@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 
 namespace Electron2D;
@@ -5,6 +6,10 @@ namespace Electron2D;
 /// <summary>
 /// Геометрия спрайта (опционально). Для FullRect можно не задавать.
 /// </summary>
+/// <remarks>
+/// Массивы хранятся как есть (без копирования) для минимизации аллокаций.
+/// Это означает, что вызывающий код не должен модифицировать их после передачи в <see cref="SpriteMesh"/>.
+/// </remarks>
 public sealed class SpriteMesh(Vector2[] vertices, Vector2[] uv, ushort[] triangles)
 {
     private readonly Vector2[] _vertices = vertices ?? throw new ArgumentNullException(nameof(vertices));

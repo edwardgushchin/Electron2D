@@ -1,66 +1,95 @@
+using System;
+
 using SDL3;
 
 namespace Electron2D;
 
+#region EventSystem
+
+/// <summary>
+/// Система сбора событий SDL и раскладки их по внутренним каналам движка.
+/// </summary>
+/// <remarks>
+/// Инвариант: методы предполагают, что <see cref="Initialize"/> был вызван до <see cref="BeginFrame"/>/<see cref="EndFrame"/>.
+/// </remarks>
 internal sealed class EventSystem
 {
-    private EventQueue _events = null!;
+    #region Constants
 
     private const int BatchSize = 64;
-    private int _maxBatchesPerFrame;
 
+    #endregion
+
+    #region Instance fields
+
+    private EventQueue _eventQueue = null!;
+
+    private int _maxBatchesPerFrame;
     private bool _quitRequested;
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>True, если в текущем кадре получен запрос завершения.</summary>
     public bool QuitRequested => _quitRequested;
 
-    public EventQueue Events => _events;
-    
+    /// <summary>Очереди событий, заполненные за текущий кадр (после <see cref="EndFrame"/> — в read-буфере).</summary>
+    public EventQueue Events => _eventQueue;
+
+    /// <summary>Сколько событий движка было отброшено из-за переполнения канала.</summary>
     public int DroppedEngineEvents { get; private set; }
-    
+
+    /// <summary>Сколько событий окна было отброшено из-за переполнения канала.</summary>
     public int DroppedWindowEvents { get; private set; }
-    
+
+    /// <summary>Сколько событий ввода было отброшено из-за переполнения канала.</summary>
     public int DroppedInputEvents { get; private set; }
 
+    #endregion
 
-    public void Initialize(EngineConfig cfg)
+    #region Public API
+
+    public void Initialize(EngineConfig config)
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Events))
             throw new InvalidOperationException($"SDL.InitSubSystem(Events) failed. {SDL.GetError()}");
 
-        _events = new EventQueue(
-            cfg.EngineEventsPerFrame,
-            cfg.WindowEventsPerFrame,
-            cfg.InputEventsPerFrame);
+        _eventQueue = new EventQueue(
+            config.EngineEventsPerFrame,
+            config.WindowEventsPerFrame,
+            config.InputEventsPerFrame);
 
-        // Сколько максимум SDL событий будем вычерпывать за кадр.
-        // Берём сумму capacity каналов (реально принять мы больше всё равно не сможем).
-        var maxEventsThisFrame = cfg.EngineEventsPerFrame + cfg.WindowEventsPerFrame + cfg.InputEventsPerFrame;
+        // Сколько максимум SDL-событий вычерпываем за кадр.
+        // Берём сумму capacity каналов: больше всё равно принять не сможем (TryPublish начнёт возвращать false).
+        var maxEventsThisFrame = config.EngineEventsPerFrame + config.WindowEventsPerFrame + config.InputEventsPerFrame;
         _maxBatchesPerFrame = Math.Max(1, (maxEventsThisFrame + BatchSize - 1) / BatchSize);
 
         _quitRequested = false;
-        _events.ClearAll();
+        _eventQueue.ClearAll();
     }
 
     public void Shutdown()
     {
         SDL.QuitSubSystem(SDL.InitFlags.Events);
-        _events.ClearAll();
+        _eventQueue.ClearAll();
     }
 
     public unsafe void BeginFrame()
     {
-        _quitRequested = false; // P0: quit должен быть "в этом кадре", а не "навсегда"
+        // P0: quit должен быть "в этом кадре", а не "навсегда".
+        _quitRequested = false;
 
         SDL.PumpEvents();
-        
+
         DroppedEngineEvents = 0;
         DroppedWindowEvents = 0;
         DroppedInputEvents = 0;
 
-
         var buffer = stackalloc SDL.Event[BatchSize];
         var bufferPtr = (IntPtr)buffer;
 
-        for (var batch = 0; batch < _maxBatchesPerFrame; batch++)
+        for (var batchIndex = 0; batchIndex < _maxBatchesPerFrame; batchIndex++)
         {
             var got = SDL.PeepEvents(
                 events: bufferPtr,
@@ -69,126 +98,105 @@ internal sealed class EventSystem
                 minType: (uint)SDL.EventType.First,
                 maxType: (uint)SDL.EventType.Last);
 
-            if (got <= 0) break;
+            if (got <= 0)
+                break;
 
             for (var i = 0; i < got; i++)
             {
-                ref readonly var e = ref buffer[i];
-                var type = (SDL.EventType)e.Type;
+                ref readonly var sdlEvent = ref buffer[i];
+                var type = (SDL.EventType)sdlEvent.Type;
 
                 switch (type)
                 {
                     case SDL.EventType.Quit:
                         _quitRequested = true;
-                        if (!_events.Engine.TryPublish(new EngineEvent(EngineEventType.QuitRequested)))
-                            DroppedEngineEvents++;
+                        TryPublishEngineQuitRequested();
                         break;
 
                     case SDL.EventType.WindowShown:
-                    {
-                        var timestamp = e.Window.Timestamp;
-                        var windowId = e.Window.WindowID;
-                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.Shown, timestamp, windowId)))
-                            DroppedWindowEvents++;
+                        TryPublishWindowEvent(WindowEventType.Shown, sdlEvent.Window.Timestamp, sdlEvent.Window.WindowID);
                         break;
-                    }
 
                     case SDL.EventType.WindowCloseRequested:
-                    {
-                        var timestamp = e.Window.Timestamp;
-                        var windowId = e.Window.WindowID;
-                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.CloseRequested, timestamp, windowId)))
-                            DroppedWindowEvents++;
+                        TryPublishWindowEvent(WindowEventType.CloseRequested, sdlEvent.Window.Timestamp, sdlEvent.Window.WindowID);
                         break;
-                    }
 
                     case SDL.EventType.WindowResized:
-                    {
-                        var timestamp = e.Window.Timestamp;
-                        var windowId = e.Window.WindowID;
-                        var w = e.Window.Data1;
-                        var h = e.Window.Data2;
-                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.Resized, timestamp, windowId, w, h)))
-                            DroppedWindowEvents++;
+                        TryPublishWindowEvent(
+                            WindowEventType.Resized,
+                            sdlEvent.Window.Timestamp,
+                            sdlEvent.Window.WindowID,
+                            sdlEvent.Window.Data1,
+                            sdlEvent.Window.Data2);
                         break;
-                    }
+
                     case SDL.EventType.WindowPixelSizeChanged:
-                    {
-                        var timestamp = e.Window.Timestamp;
-                        var windowId = e.Window.WindowID;
-                        var w = e.Window.Data1;
-                        var h = e.Window.Data2;
-                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.PixelSizeChanged, timestamp, windowId, w, h)))
-                            DroppedWindowEvents++;
+                        TryPublishWindowEvent(
+                            WindowEventType.PixelSizeChanged,
+                            sdlEvent.Window.Timestamp,
+                            sdlEvent.Window.WindowID,
+                            sdlEvent.Window.Data1,
+                            sdlEvent.Window.Data2);
                         break;
-                    }
 
                     case SDL.EventType.WindowFocusGained:
-                    {
-                        var timestamp = e.Window.Timestamp;
-                        var windowId = e.Window.WindowID;
-                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.FocusGained, timestamp, windowId)))
-                            DroppedWindowEvents++;
+                        TryPublishWindowEvent(WindowEventType.FocusGained, sdlEvent.Window.Timestamp, sdlEvent.Window.WindowID);
                         break;
-                    }
 
                     case SDL.EventType.WindowFocusLost:
-                    {
-                        var timestamp = e.Window.Timestamp;
-                        var windowId = e.Window.WindowID;
-                        if (!_events.Window.TryPublish(new WindowEvent(WindowEventType.FocusLost, timestamp, windowId)))
-                            DroppedWindowEvents++;
+                        TryPublishWindowEvent(WindowEventType.FocusLost, sdlEvent.Window.Timestamp, sdlEvent.Window.WindowID);
                         break;
-                    }
-                    case SDL.EventType.KeyDown:
-                    {
-                        if (!_events.Input.TryPublish(new InputEvent(InputEventType.KeyDown, code: e.Key.Scancode)))
-                            DroppedInputEvents++;
-                        break;
-                    }
-                    
-                    case SDL.EventType.KeyUp:
-                    {
-                        if (!_events.Input.TryPublish(new InputEvent(InputEventType.KeyUp, code: e.Key.Scancode)))
-                            DroppedInputEvents++;
-                        break;
-                    }
 
-                    // TODO: сюда же маппинг input событий в _events.Input.TryPublish(...)
-                    /*Shown,
-                    Hidden,
-                    Exposed,
-                    Moved,
-                    Resized,
-                    PixelSizeChanged,
-                    MetalViewResized,
-                    Minimized,
-                    Maximized,
-                    Restored,
-                    MouseEnter,
-                    MouseLeave,
-                    FocusGained,
-                    FocusLost,
-                    CloseRequested,
-                    HitTest,
-                    ICCProfChanged,
-                    DisplayChanged,
-                    DisplayScaleChanged,
-                    SafeAreaChanged,
-                    Occluded,
-                    EnterFullscreen,
-                    LeaveFullscreen,
-                    Destroyed,
-                    HDRStateChanged,*/
+                    case SDL.EventType.KeyDown:
+                        TryPublishInputEvent(InputEventType.KeyDown, sdlEvent.Key.Timestamp, sdlEvent.Key.Scancode);
+                        break;
+
+                    case SDL.EventType.KeyUp:
+                        TryPublishInputEvent(InputEventType.KeyUp, sdlEvent.Key.Timestamp, sdlEvent.Key.Scancode);
+                        break;
+
+                    // TODO: добавить маппинг остальных SDL input-событий в _eventQueue.Input.TryPublish(...)
                 }
             }
 
-            if (got < BatchSize) break;
+            if (got < BatchSize)
+                break;
         }
     }
-    
+
     public void EndFrame()
     {
-        _events.SwapAll();
+        _eventQueue.SwapAll();
     }
+
+    #endregion
+
+    #region Private helpers
+
+    private void TryPublishEngineQuitRequested()
+    {
+        if (!_eventQueue.Engine.TryPublish(new EngineEvent(EngineEventType.QuitRequested)))
+            DroppedEngineEvents++;
+    }
+
+    private void TryPublishWindowEvent(
+        WindowEventType type,
+        ulong timestamp,
+        uint windowId,
+        int data1 = 0,
+        int data2 = 0)
+    {
+        if (!_eventQueue.Window.TryPublish(new WindowEvent(type, timestamp, windowId, data1, data2)))
+            DroppedWindowEvents++;
+    }
+
+    private void TryPublishInputEvent(InputEventType type, ulong timestamp, SDL.Scancode scancode)
+    {
+        if (!_eventQueue.Input.TryPublish(new InputEvent(type, timestamp, code: scancode)))
+            DroppedInputEvents++;
+    }
+
+    #endregion
 }
+
+#endregion

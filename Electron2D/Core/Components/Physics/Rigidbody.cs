@@ -4,9 +4,12 @@ namespace Electron2D;
 
 public sealed class Rigidbody : IComponent
 {
+    #region Instance fields
     private Node? _owner;
-    private int _lastWorldVer = -1;
+    private int _lastWorldVersion = -1;
+    #endregion
 
+    #region Properties
     /// <summary>
     /// Масса тела.
     /// </summary>
@@ -18,14 +21,16 @@ public sealed class Rigidbody : IComponent
         get;
         set
         {
-            // PROD: предсказуемый контракт. Ошибку лучше ловить в момент установки.
-            if (!(value > 0f) || float.IsNaN(value) || float.IsInfinity(value))
+            // Предсказуемый контракт: ошибку лучше ловить в момент установки.
+            if (!IsValidMass(value))
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Mass must be finite and > 0.");
 
             field = value;
         }
     } = 1f;
+    #endregion
 
+    #region Public API
     /// <summary>
     /// Добавляет силу к телу.
     /// </summary>
@@ -49,7 +54,7 @@ public sealed class Rigidbody : IComponent
         ArgumentNullException.ThrowIfNull(owner);
 
         _owner = owner;
-        _lastWorldVer = -1; // Гарантируем синхронизацию после attach.
+        _lastWorldVersion = -1; // Гарантируем синхронизацию после attach.
     }
 
     /// <summary>
@@ -58,9 +63,11 @@ public sealed class Rigidbody : IComponent
     public void OnDetach()
     {
         _owner = null;
-        _lastWorldVer = -1;
+        _lastWorldVersion = -1;
     }
+    #endregion
 
+    #region Internal helpers
     internal void SyncToPhysicsWorldIfNeeded()
     {
         var owner = _owner;
@@ -68,7 +75,14 @@ public sealed class Rigidbody : IComponent
             return;
 
         // Пока нет реальной синхронизации с физическим backend'ом:
-        // фиксируем последнюю "виденную" версию мира, чтобы в будущем добавить guard (owner.Transform.WorldVersion != _lastWorldVer).
-        _lastWorldVer = owner.Transform.WorldVersion;
+        // фиксируем последнюю "виденную" версию мира, чтобы в будущем добавить guard
+        // (например: owner.Transform.WorldVersion != _lastWorldVersion).
+        _lastWorldVersion = owner.Transform.WorldVersion;
     }
+    #endregion
+
+    #region Private helpers
+    private static bool IsValidMass(float mass) =>
+        mass > 0f && !float.IsNaN(mass) && !float.IsInfinity(mass);
+    #endregion
 }

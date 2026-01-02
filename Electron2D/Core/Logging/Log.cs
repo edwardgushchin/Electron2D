@@ -1,29 +1,36 @@
 namespace Electron2D;
 
+/// <summary>
+/// Глобальный фасад логирования. По умолчанию использует no-op реализацию.
+/// </summary>
+/// <remarks>
+/// Реальная реализация должна быть привязана движком через <c>Bind</c>.
+/// </remarks>
 public static class Log
 {
-    private sealed class NullLogger : ILogger
-    {
-        public static readonly NullLogger Instance = new();
-        public bool IsEnabled(LogLevel level) => false;
-        public void Write(LogLevel level, string messageTemplate) { }
-        public void Write<T0>(LogLevel level, string messageTemplate, T0 arg0) { }
-        public void Write<T0, T1>(LogLevel level, string messageTemplate, T0 arg0, T1 arg1) { }
-    }
+    private static ILogger _logger = NullLogger.Instance;
 
-    private static ILogger _impl = NullLogger.Instance;
+    #region Internal API
+    internal static void Bind(ILogger? logger) => _logger = logger ?? NullLogger.Instance;
 
-    internal static void Bind(ILogger impl) => _impl = impl ?? NullLogger.Instance;
-    internal static void Unbind() => _impl = NullLogger.Instance;
+    internal static void Unbind() => _logger = NullLogger.Instance;
+    #endregion
 
-    public static bool IsEnabled(LogLevel level) => _impl.IsEnabled(level);
+    #region Public API
+    public static bool IsEnabled(LogLevel level) => _logger.IsEnabled(level);
 
-    public static void Debug(string t) => _impl.Write(LogLevel.Debug, t);
-    public static void Debug<T0>(string t, T0 a0) => _impl.Write(LogLevel.Debug, t, a0);
+    public static void Debug(string messageTemplate) => _logger.Write(LogLevel.Debug, messageTemplate);
 
-    public static void Info(string t) => _impl.Write(LogLevel.Information, t);
-    public static void Info<T0>(string t, T0 a0) => _impl.Write(LogLevel.Information, t, a0);
+    public static void Debug<T0>(string messageTemplate, T0 arg0) =>
+        _logger.Write(LogLevel.Debug, messageTemplate, arg0);
 
-    public static void Warn(string t) => _impl.Write(LogLevel.Warning, t);
-    public static void Error(string t) => _impl.Write(LogLevel.Error, t);
+    public static void Info(string messageTemplate) => _logger.Write(LogLevel.Information, messageTemplate);
+
+    public static void Info<T0>(string messageTemplate, T0 arg0) =>
+        _logger.Write(LogLevel.Information, messageTemplate, arg0);
+
+    public static void Warn(string messageTemplate) => _logger.Write(LogLevel.Warning, messageTemplate);
+
+    public static void Error(string messageTemplate) => _logger.Write(LogLevel.Error, messageTemplate);
+    #endregion
 }

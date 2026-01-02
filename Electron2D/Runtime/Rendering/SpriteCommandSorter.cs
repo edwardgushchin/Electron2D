@@ -1,42 +1,72 @@
 namespace Electron2D;
 
+/// <summary>
+/// Сортировка команд спрайтов по стабильному ключу (<see cref="SpriteCommand.StableKey"/>).
+/// </summary>
 internal static class SpriteCommandSorter
 {
-    public static void Sort(Span<SpriteCommand> span)
+    #region Public API
+
+    /// <summary>
+    /// Сортирует команды по <see cref="SpriteCommand.StableKey"/> по возрастанию.
+    /// </summary>
+    /// <param name="commands">Срез команд для сортировки (in-place, без аллокаций).</param>
+    public static void Sort(Span<SpriteCommand> commands)
     {
-        // Небольшой, без-аллоцирующий quicksort по StableKey.
-        // Для типичных 2D очередей это достаточно. При желании — заменить на introsort.
-        QuickSort(span, 0, span.Length - 1);
+        // Быстрая in-place сортировка по 64-битному ключу.
+        // Для типичных 2D очередей этого достаточно. При желании можно заменить на introsort,
+        // но текущая реализация минимальна и без аллокаций.
+        if (commands.Length <= 1)
+            return;
+
+        QuickSort(commands, 0, commands.Length - 1);
     }
 
-    private static void QuickSort(Span<SpriteCommand> a, int lo, int hi)
+    #endregion
+
+    #region Private helpers
+
+    private static void QuickSort(Span<SpriteCommand> commands, int lo, int hi)
     {
+        // Итеративная форма с элиминацией хвостовой рекурсии:
+        // рекурсивно сортируем только меньший поддиапазон, чтобы ограничить глубину стека.
         while (lo < hi)
         {
-            int i = lo, j = hi;
-            var pivot = a[lo + ((hi - lo) >> 1)].StableKey;
+            var i = lo;
+            var j = hi;
+            var pivotKey = commands[lo + ((hi - lo) >> 1)].StableKey;
 
             while (i <= j)
             {
-                while (a[i].StableKey < pivot) i++;
-                while (a[j].StableKey > pivot) j--;
+                while (commands[i].StableKey < pivotKey) i++;
+                while (commands[j].StableKey > pivotKey) j--;
 
-                if (i > j) continue;
-                (a[i], a[j]) = (a[j], a[i]);
-                i++; j--;
+                if (i > j)
+                    continue;
+
+                // Swap без аллокаций (ValueTuple-свап JIT обычно оптимизирует хорошо).
+                (commands[i], commands[j]) = (commands[j], commands[i]);
+                i++;
+                j--;
             }
 
-            // Tail recursion elimination: сортируем меньший диапазон рекурсивно.
-            if (j - lo < hi - i)
+            // Сортируем меньший диапазон рекурсивно, больший — продолжаем в цикле.
+            if ((j - lo) < (hi - i))
             {
-                if (lo < j) QuickSort(a, lo, j);
+                if (lo < j)
+                    QuickSort(commands, lo, j);
+
                 lo = i;
             }
             else
             {
-                if (i < hi) QuickSort(a, i, hi);
+                if (i < hi)
+                    QuickSort(commands, i, hi);
+
                 hi = j;
             }
         }
     }
+
+    #endregion
 }

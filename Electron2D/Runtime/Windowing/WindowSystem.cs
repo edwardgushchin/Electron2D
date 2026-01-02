@@ -1,15 +1,21 @@
-using System;
 using SDL3;
 
 namespace Electron2D;
 
+/// <summary>
+/// Управляет жизненным циклом SDL окна и применяет режим/состояние окна на основе <see cref="WindowConfig"/>.
+/// </summary>
 internal sealed class WindowSystem
 {
-    #region Internal properties
+    #region Properties
+
+    /// <summary>SDL_Window* (handle). 0 означает “не инициализировано”.</summary>
     internal nint Handle { get; private set; }
+
     #endregion
 
-    #region Internal methods
+    #region Internal API
+
     internal void Initialize(WindowConfig config)
     {
         if (Handle != 0)
@@ -18,12 +24,16 @@ internal sealed class WindowSystem
         if (!SDL.InitSubSystem(SDL.InitFlags.Video))
             throw new InvalidOperationException($"SDL.InitSubSystem(Video) failed. {SDL.GetError()}");
 
-        var windowHandle = SDL.CreateWindow(config.Title, config.Width, config.Height, SDL.WindowFlags.Resizable);
+        var windowHandle = SDL.CreateWindow(
+            title: config.Title,
+            w: config.Width,
+            h: config.Height,
+            flags: SDL.WindowFlags.Resizable);
+
         if (windowHandle == 0)
         {
-            var error = SDL.GetError();
             SDL.QuitSubSystem(SDL.InitFlags.Video);
-            throw new InvalidOperationException($"SDL.CreateWindow failed. {error}");
+            throw new InvalidOperationException($"SDL.CreateWindow failed. {SDL.GetError()}");
         }
 
         Handle = windowHandle;
@@ -35,8 +45,8 @@ internal sealed class WindowSystem
         }
         catch
         {
-            // Best-effort cleanup: these calls are not expected to throw today,
-            // but this guarantees no leaked window/subsystem on exceptional paths.
+            // Best-effort cleanup: эти вызовы сегодня не ожидаются бросающими исключения,
+            // но так гарантируется отсутствие утечек окна/подсистемы на исключительных путях.
             SDL.DestroyWindow(windowHandle);
             Handle = 0;
             SDL.QuitSubSystem(SDL.InitFlags.Video);
@@ -55,10 +65,12 @@ internal sealed class WindowSystem
 
         SDL.QuitSubSystem(SDL.InitFlags.Video);
     }
+
     #endregion
 
-    #region Private methods
-    private static void ApplyWindowMode(nint windowHandle, WindowConfig config)
+    #region Private helpers
+
+    private static void ApplyWindowMode(nint windowHandle, in WindowConfig config)
     {
         switch (config.Mode)
         {
@@ -73,12 +85,14 @@ internal sealed class WindowSystem
             case WindowMode.ExclusiveFullscreen:
                 ApplyExclusiveFullscreen(windowHandle, config);
                 break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    private static void ApplyWindowState(nint windowHandle, WindowConfig config)
+    private static void ApplyWindowState(nint windowHandle, in WindowConfig config)
     {
-        // In fullscreen modes, maximize/minimize may be ignored by the window manager.
+        // В fullscreen режимах maximize/minimize могут игнорироваться WM/драйвером.
         switch (config.State)
         {
             case WindowState.Normal:
@@ -92,10 +106,12 @@ internal sealed class WindowSystem
             case WindowState.Maximized:
                 SDL.MaximizeWindow(windowHandle);
                 break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    private static void ApplyWindowed(nint windowHandle, WindowConfig config)
+    private static void ApplyWindowed(nint windowHandle, in WindowConfig config)
     {
         SDL.SetWindowFullscreen(windowHandle, false);
         SDL.SetWindowBordered(windowHandle, true);
@@ -104,19 +120,19 @@ internal sealed class WindowSystem
 
     private static void ApplyBorderlessFullscreenDesktop(nint windowHandle)
     {
-        // "Desktop fullscreen": borderless + fullscreen with no explicit display mode change.
+        // "Desktop fullscreen": borderless + fullscreen без явной смены display mode.
         SDL.SetWindowBordered(windowHandle, false);
         SDL.SetWindowFullscreenMode(windowHandle, IntPtr.Zero);
         SDL.SetWindowFullscreen(windowHandle, true);
     }
 
-    private static void ApplyExclusiveFullscreen(nint windowHandle, WindowConfig config)
+    private static void ApplyExclusiveFullscreen(nint windowHandle, in WindowConfig config)
     {
         SDL.SetWindowBordered(windowHandle, false);
 
         var displayId = SDL.GetDisplayForWindow(windowHandle);
 
-        // refreshRate=0.0f => "desktop refresh rate" per SDL docs.
+        // refreshRate=0.0f => "desktop refresh rate" (по документации SDL).
         if (SDL.GetClosestFullscreenDisplayMode(
                 displayID: displayId,
                 w: config.Width,
@@ -130,9 +146,10 @@ internal sealed class WindowSystem
             return;
         }
 
-        // If the WM/driver refuses the requested exclusive mode (or no suitable mode exists),
-        // fall back to desktop (borderless) fullscreen.
+        // Если WM/драйвер отказался от requested exclusive mode (или подходящего режима нет),
+        // откатываемся на desktop (borderless) fullscreen.
         ApplyBorderlessFullscreenDesktop(windowHandle);
     }
+
     #endregion
 }

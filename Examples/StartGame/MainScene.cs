@@ -20,7 +20,7 @@ public class MainScene() : Node("MainScene")
 
     protected override void Ready()
     {
-        AddChild(new DebugCamera());
+        //AddChild(new DebugCamera());
 
         _playerTexture = Resources.GetTexture("player_idle.png");
         _boxTexture = Resources.GetTexture("RTS_Crate.png");

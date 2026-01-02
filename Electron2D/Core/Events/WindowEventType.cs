@@ -1,5 +1,8 @@
 namespace Electron2D;
 
+/// <summary>
+/// Тип события окна (канал Window).
+/// </summary>
 public enum WindowEventType
 {
     Shown,
@@ -26,5 +29,5 @@ public enum WindowEventType
     EnterFullscreen,
     LeaveFullscreen,
     Destroyed,
-    HDRStateChanged,
+    HDRStateChanged
 }

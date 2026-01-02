@@ -4,8 +4,13 @@ namespace Electron2D;
 
 public sealed class SpriteRenderer : IComponent
 {
+    #region Constants
+    private const int UnregisteredSceneIndex = -1;
+    #endregion
+
+    #region Fields
     // Индекс в SceneTree render-индексе. -1 => не зарегистрирован.
-    internal int SceneIndex = -1;
+    internal int SceneIndex = UnregisteredSceneIndex;
 
     private Node? _owner;
     private Sprite? _sprite;
@@ -14,27 +19,31 @@ public sealed class SpriteRenderer : IComponent
     private uint _sortKey;
 
     // Кэш команды рендера (пересобирается только при необходимости)
-    private bool _hasCache;
+    private bool _hasValidCache;
     private int _lastWorldVersion = -1;
     private SpriteSnapshot _lastSpriteSnapshot;
-    
-    private Vector2 _baseSizeWorld;   // размер в мире при scale=(1,1)
-    private Vector2 _pivot;           // pivot из Sprite
-    private Vector2 _lastAbsScale;    // abs(worldScale)
-    private byte _lastScaleSignMask;  // bit0 = x<0, bit1 = y<0
 
-    private SpriteCommand _cached;
-    private Vector2 _boundsMinWorld;
-    private Vector2 _boundsMaxWorld;
+    private Vector2 _baseSizeWorldUnscaled; // размер в мире при scale=(1,1)
+    private Vector2 _pivot;                 // pivot из Sprite
+    private Vector2 _lastAbsScale;          // abs(worldScale)
+    private byte _lastScaleSignMask;        // bit0 = x<0, bit1 = y<0
 
+    private SpriteCommand _cachedCommand;
+    private Vector2 _worldBoundsMin;
+    private Vector2 _worldBoundsMax;
+    #endregion
+
+    #region Properties
     public Color Color
     {
         get => _color;
         set
         {
-            if (_color.Equals(value)) return;
+            if (_color.Equals(value))
+                return;
+
             _color = value;
-            InvalidateCache();
+            InvalidateRenderCache();
         }
     }
 
@@ -43,12 +52,16 @@ public sealed class SpriteRenderer : IComponent
         get => _sortKey;
         set
         {
-            if (_sortKey == value) return;
+            if (_sortKey == value)
+                return;
+
             _sortKey = value;
-            InvalidateCache();
+            InvalidateRenderCache();
         }
     }
+    #endregion
 
+    #region Public API
     public void SetSprite(Sprite sprite)
     {
         ArgumentNullException.ThrowIfNull(sprite);
@@ -57,7 +70,7 @@ public sealed class SpriteRenderer : IComponent
             return;
 
         _sprite = sprite;
-        InvalidateCache();
+        InvalidateRenderCache();
     }
 
     public void OnAttach(Node owner)
@@ -65,10 +78,9 @@ public sealed class SpriteRenderer : IComponent
         ArgumentNullException.ThrowIfNull(owner);
 
         _owner = owner;
-        SceneIndex = -1;
+        SceneIndex = UnregisteredSceneIndex;
 
-        _lastWorldVersion = -1;
-        InvalidateCache();
+        ResetCacheState();
     }
 
     public void OnDetach()
@@ -76,101 +88,101 @@ public sealed class SpriteRenderer : IComponent
         _owner = null;
         _sprite = null;
 
-        SceneIndex = -1;
-        _lastWorldVersion = -1;
+        SceneIndex = UnregisteredSceneIndex;
 
-        _hasCache = false;
-        _lastSpriteSnapshot = default;
-        _cached = default;
-        _boundsMinWorld = default;
-        _boundsMaxWorld = default;
+        ResetCacheState();
     }
+    #endregion
 
+    #region Internal API
     internal void PrepareRender(RenderQueue queue, ResourceSystem resources, in ViewCullRect view)
     {
         var owner = _owner;
         var sprite = _sprite;
 
-        if (owner == null || sprite == null)
+        if (owner is null || sprite is null)
             return;
 
-        owner.Transform.GetWorldTRS(out var wPos, out var wRot, out var wScale, out var worldVer);
+        owner.Transform.GetWorldTRS(out var worldPosition, out var worldRotation, out var worldScale, out var worldVersion);
 
-        if (!TryEnsureCached(sprite, resources, in wPos, wRot, in wScale, worldVer))
+        if (!TryEnsureCached(sprite, resources, in worldPosition, worldRotation, in worldScale, worldVersion))
             return;
 
-        if (!view.Intersects(in _boundsMinWorld, in _boundsMaxWorld))
+        if (!view.Intersects(in _worldBoundsMin, in _worldBoundsMax))
             return;
 
-        queue.TryPush(in _cached);
+        queue.TryPush(in _cachedCommand);
     }
-    
-    private static byte GetScaleSignMask(in Vector2 s)
+    #endregion
+
+    #region Private helpers
+    private static byte GetScaleSignMask(in Vector2 scale)
     {
-        byte m = 0;
-        if (s.X < 0) m |= 1;
-        if (s.Y < 0) m |= 2;
-        return m;
+        byte mask = 0;
+        if (scale.X < 0) mask |= 1;
+        if (scale.Y < 0) mask |= 2;
+        return mask;
     }
 
     private bool TryEnsureCached(
         Sprite sprite,
         ResourceSystem resources,
-        in Vector2 wPos,
-        float wRot,
-        in Vector2 wScale,
-        int worldVer)
+        in Vector2 worldPosition,
+        float worldRotation,
+        in Vector2 worldScale,
+        int worldVersion)
     {
-        // 1) Проверяем изменения Sprite (как у вас сейчас)
-        var snap = SpriteSnapshot.From(sprite);
+        // 1) Проверяем изменения Sprite
+        var snapshot = SpriteSnapshot.From(sprite);
 
         // Быстрый путь: sprite не менялся, текстура валидна
-        if (_hasCache && snap.Equals(_lastSpriteSnapshot) && _cached.Texture.IsValid)
+        if (_hasValidCache && snapshot.Equals(_lastSpriteSnapshot) && _cachedCommand.Texture.IsValid)
         {
-            if (worldVer != _lastWorldVersion)
+            if (worldVersion != _lastWorldVersion)
             {
-                UpdateTransformCache(in wPos, wRot, in wScale);
-                _lastWorldVersion = worldVer;
+                UpdateTransformCache(in worldPosition, worldRotation, in worldScale);
+                _lastWorldVersion = worldVersion;
             }
+
             return true;
         }
 
         // 2) Rebuild статической части (sprite изменился / кэша нет / текстура пока невалидна)
-        var tex = sprite.Texture;
-        if (!tex.IsValid)
+        var texture = sprite.Texture;
+        if (!texture.IsValid)
         {
-            if (snap.TextureId == null)
+            if (snapshot.TextureId is null)
                 return false;
 
             // late resolve
-            tex = resources.GetTexture(snap.TextureId);
-            if (!tex.IsValid)
+            texture = resources.GetTexture(snapshot.TextureId);
+            if (!texture.IsValid)
                 return false;
         }
 
         // Src rect
-        Rect srcRect = snap.TextureRect;
-        if (srcRect.IsEmpty)
-            srcRect = new Rect(0, 0, tex.Width, tex.Height);
+        var sourceRect = snapshot.TextureRect;
+        if (sourceRect.IsEmpty)
+            sourceRect = new Rect(0, 0, texture.Width, texture.Height);
 
         // Сохраняем статические данные
-        _baseSizeWorld = new Vector2(srcRect.Width / snap.PixelsPerUnit, srcRect.Height / snap.PixelsPerUnit);
-        _pivot = snap.Pivot;
+        _baseSizeWorldUnscaled = new Vector2(sourceRect.Width / snapshot.PixelsPerUnit, sourceRect.Height / snapshot.PixelsPerUnit);
+        _pivot = snapshot.Pivot;
 
-        var absScale = Abs(in wScale);
-        var sizeWorld = _baseSizeWorld * absScale;
+        var absScale = AbsVector2(in worldScale);
+        var sizeWorld = _baseSizeWorldUnscaled * absScale;
         var originWorld = sizeWorld * _pivot;
 
-        var flip = snap.Flip;
-        if (wScale.X < 0) flip ^= FlipMode.Horizontal;
-        if (wScale.Y < 0) flip ^= FlipMode.Vertical;
+        var flip = snapshot.Flip;
+        if (worldScale.X < 0) flip ^= FlipMode.Horizontal;
+        if (worldScale.Y < 0) flip ^= FlipMode.Vertical;
 
-        _cached = new SpriteCommand
+        _cachedCommand = new SpriteCommand
         {
-            Texture = tex,
-            SrcRect = srcRect,
-            PositionWorld = wPos,
-            Rotation = wRot,
+            Texture = texture,
+            SrcRect = sourceRect,
+            PositionWorld = worldPosition,
+            Rotation = worldRotation,
             SizeWorld = sizeWorld,
             OriginWorld = originWorld,
             Color = _color,
@@ -178,91 +190,89 @@ public sealed class SpriteRenderer : IComponent
             FlipMode = flip
         };
 
-        ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+        ComputeWorldBounds(in _cachedCommand, out _worldBoundsMin, out _worldBoundsMax);
 
-        _lastSpriteSnapshot = snap;
-        _lastWorldVersion = worldVer;
+        _lastSpriteSnapshot = snapshot;
+        _lastWorldVersion = worldVersion;
         _lastAbsScale = absScale;
-        _lastScaleSignMask = GetScaleSignMask(in wScale);
-        _hasCache = true;
+        _lastScaleSignMask = GetScaleSignMask(in worldScale);
+        _hasValidCache = true;
 
         return true;
     }
-    
-    private static Vector2 Abs(in Vector2 v) => new(MathF.Abs(v.X), MathF.Abs(v.Y));
-    
-    private void UpdateTransformCache(in Vector2 wPos, float wRot, in Vector2 wScale)
+
+    private static Vector2 AbsVector2(in Vector2 v) => new(MathF.Abs(v.X), MathF.Abs(v.Y));
+
+    private void UpdateTransformCache(in Vector2 worldPosition, float worldRotation, in Vector2 worldScale)
     {
-        var absScale = Abs(in wScale);
-        var signMask = GetScaleSignMask(in wScale);
+        var absScale = AbsVector2(in worldScale);
+        var signMask = GetScaleSignMask(in worldScale);
 
         // Если absScale и знак scale не менялись — статическая геометрия та же
         if (absScale == _lastAbsScale && signMask == _lastScaleSignMask)
         {
-            var oldPos = _cached.PositionWorld;
-            var oldRot = _cached.Rotation;
+            var previousPosition = _cachedCommand.PositionWorld;
+            var previousRotation = _cachedCommand.Rotation;
 
-            _cached.PositionWorld = wPos;
-            _cached.Rotation = wRot;
+            _cachedCommand.PositionWorld = worldPosition;
+            _cachedCommand.Rotation = worldRotation;
 
             // Самый дешёвый кейс: только перенос (rotation тот же) — просто сдвигаем bounds
-            if (wRot == oldRot)
+            if (worldRotation == previousRotation)
             {
-                var delta = wPos - oldPos;
-                _boundsMinWorld += delta;
-                _boundsMaxWorld += delta;
+                var delta = worldPosition - previousPosition;
+                _worldBoundsMin += delta;
+                _worldBoundsMax += delta;
                 return;
             }
 
             // Rotation поменялся — bounds нужно пересчитать
-            ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+            ComputeWorldBounds(in _cachedCommand, out _worldBoundsMin, out _worldBoundsMax);
             return;
         }
 
         // Scale (abs) или знак поменялись — пересчитать size/origin/flip и bounds
-        var sizeWorld = _baseSizeWorld * absScale;
+        var sizeWorld = _baseSizeWorldUnscaled * absScale;
         var originWorld = sizeWorld * _pivot;
 
-        _cached.PositionWorld = wPos;
-        _cached.Rotation = wRot;
-        _cached.SizeWorld = sizeWorld;
-        _cached.OriginWorld = originWorld;
+        _cachedCommand.PositionWorld = worldPosition;
+        _cachedCommand.Rotation = worldRotation;
+        _cachedCommand.SizeWorld = sizeWorld;
+        _cachedCommand.OriginWorld = originWorld;
 
         var flip = _lastSpriteSnapshot.Flip;
-        if (wScale.X < 0) flip ^= FlipMode.Horizontal;
-        if (wScale.Y < 0) flip ^= FlipMode.Vertical;
-        _cached.FlipMode = flip;
+        if (worldScale.X < 0) flip ^= FlipMode.Horizontal;
+        if (worldScale.Y < 0) flip ^= FlipMode.Vertical;
+        _cachedCommand.FlipMode = flip;
 
-        ComputeWorldBounds(in _cached, out _boundsMinWorld, out _boundsMaxWorld);
+        ComputeWorldBounds(in _cachedCommand, out _worldBoundsMin, out _worldBoundsMax);
 
         _lastAbsScale = absScale;
         _lastScaleSignMask = signMask;
     }
 
-    private void InvalidateCache()
+    private void InvalidateRenderCache()
     {
-        _hasCache = false;
+        _hasValidCache = false;
         // _lastWorldVersion не трогаем: кэш пересоберётся при следующем PrepareRender.
     }
 
-    /*private static bool TryResolveSourceRect(in Rect rect, int texW, int texH, out Rect src)
+    private void ResetCacheState()
     {
-        var r = rect;
+        _hasValidCache = false;
+        _lastWorldVersion = -1;
 
-        // Если не задан — вся текстура
-        if (r.Width <= 0 || r.Height <= 0)
-            r = new Rect(0, 0, texW, texH);
+        _lastSpriteSnapshot = default;
+        _baseSizeWorldUnscaled = default;
+        _pivot = default;
+        _lastAbsScale = default;
+        _lastScaleSignMask = 0;
 
-        if (r.Width <= 0 || r.Height <= 0)
-        {
-            src = default;
-            return false;
-        }
+        _cachedCommand = default;
+        _worldBoundsMin = default;
+        _worldBoundsMax = default;
+    }
 
-        src = new Rect(r.X, r.Y, r.Width, r.Height);
-        return true;
-    }*/
-    
     private static void ComputeWorldBounds(in SpriteCommand cmd, out Vector2 min, out Vector2 max)
     {
         var pos = cmd.PositionWorld;
@@ -285,30 +295,25 @@ public sealed class SpriteRenderer : IComponent
             return;
         }
 
-        // Один вызов вместо Cos+Sin по отдельности (если вы на .NET 7+)
+        // Один вызов вместо Sin+Cos по отдельности (если вы на .NET 7+)
         var (s, c) = MathF.SinCos(rot);
 
-        // Мы хотим min/max для:
-        // X' = c*x - s*y = a*x + b*y, где a=c, b=-s
-        // Y' = s*x + c*y = a*x + b*y, где a=s, b=c
+        // X' = c*x - s*y
+        // Y' = s*x + c*y
+        var ax = c;
+        var bx = -s;
 
-        // --- X' ---
-        {
-            var a = c;
-            var b = -s;
+        var minX = (ax >= 0f ? x0 * ax : x1 * ax) + (bx >= 0f ? y0 * bx : y1 * bx);
+        var maxX = (ax >= 0f ? x1 * ax : x0 * ax) + (bx >= 0f ? y1 * bx : y0 * bx);
 
-            var minX = (a >= 0f ? x0 * a : x1 * a) + (b >= 0f ? y0 * b : y1 * b);
-            var maxX = (a >= 0f ? x1 * a : x0 * a) + (b >= 0f ? y1 * b : y0 * b);
+        var ay = s;
+        var by = c;
 
-            // --- Y' ---
-            a = s;
-            b = c;
+        var minY = (ay >= 0f ? x0 * ay : x1 * ay) + (by >= 0f ? y0 * by : y1 * by);
+        var maxY = (ay >= 0f ? x1 * ay : x0 * ay) + (by >= 0f ? y1 * by : y0 * by);
 
-            var minY = (a >= 0f ? x0 * a : x1 * a) + (b >= 0f ? y0 * b : y1 * b);
-            var maxY = (a >= 0f ? x1 * a : x0 * a) + (b >= 0f ? y1 * b : y0 * b);
-
-            min = new Vector2(pos.X + minX, pos.Y + minY);
-            max = new Vector2(pos.X + maxX, pos.Y + maxY);
-        }
+        min = new Vector2(pos.X + minX, pos.Y + minY);
+        max = new Vector2(pos.X + maxX, pos.Y + maxY);
     }
+    #endregion
 }

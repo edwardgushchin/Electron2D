@@ -5,18 +5,21 @@ namespace Electron2D;
 /// </summary>
 public readonly struct ProfilerFrame
 {
+    #region Core
     public bool IsValid { get; init; }
 
     public long FrameIndex { get; init; }
     public double FrameMs { get; init; }
+    #endregion
 
-    // allocations / GC deltas for the frame (main thread)
+    #region GC / allocations (main thread)
     public long AllocatedBytes { get; init; }
     public int Gen0Collections { get; init; }
     public int Gen1Collections { get; init; }
     public int Gen2Collections { get; init; }
+    #endregion
 
-    // timings (ms)
+    #region Timings (ms)
     public double EventsPumpMs { get; init; }
     public double InputPollMs { get; init; }
     public double EventsSwapMs { get; init; }
@@ -32,7 +35,15 @@ public readonly struct ProfilerFrame
     public double RenderFlushMs { get; init; }
     public double RenderPresentMs { get; init; }
 
-    // counters
+    /// <summary>
+    /// Суммарное время рендера (Begin + Build + Sort + Flush + Present).
+    /// </summary>
+    public double RenderTotalMs =>
+        RenderBeginFrameMs + RenderBuildQueueMs + RenderSortMs + RenderFlushMs + RenderPresentMs;
+    #endregion
+
+    #region Counters
+    // Events / Input
     public int EventsEngineRead { get; init; }
     public int EventsWindowRead { get; init; }
     public int EventsInputRead { get; init; }
@@ -40,8 +51,10 @@ public readonly struct ProfilerFrame
     public int EventsDroppedWindow { get; init; }
     public int InputDroppedEvents { get; init; }
 
+    // Simulation
     public int FixedSteps { get; init; }
 
+    // Render (frame-local)
     public int RenderSprites { get; init; }
     public int RenderDrawCalls { get; init; }
     public int RenderDebugLines { get; init; }
@@ -53,7 +66,5 @@ public readonly struct ProfilerFrame
     public int RenderTextureAlphaMods { get; init; }
     public int RenderClears { get; init; }
     public int RenderPresents { get; init; }
-
-    public double RenderTotalMs =>
-        RenderBeginFrameMs + RenderBuildQueueMs + RenderSortMs + RenderFlushMs + RenderPresentMs;
+    #endregion
 }

@@ -1,5 +1,8 @@
 namespace Electron2D;
 
+/// <summary>
+/// Тип события движка (канал Engine).
+/// </summary>
 public enum EngineEventType
 {
     QuitRequested,

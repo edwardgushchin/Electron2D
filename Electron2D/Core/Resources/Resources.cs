@@ -1,18 +1,40 @@
+using System;
+
 namespace Electron2D;
 
+/// <summary>
+/// Глобальный фасад доступа к ресурсам (как Input/Profiler).
+/// Доступен только пока <see cref="Engine"/> привязал <see cref="ResourceSystem"/>.
+/// </summary>
 public static class Resources
 {
-    private static ResourceSystem? _sys;
+    private static ResourceSystem? _system;
 
-    internal static void Bind(ResourceSystem sys) => _sys = sys;
-    internal static void Unbind() => _sys = null;
+    #region Internal API
+    internal static void Bind(ResourceSystem system) => _system = system;
 
-    private static ResourceSystem Sys =>
-        _sys ?? throw new InvalidOperationException("Resources are not available (Engine is not running or already disposed).");
+    internal static void Unbind() => _system = null;
+    #endregion
 
-    public static Texture GetTexture(string id) => Sys.GetTexture(id);
+    #region Public API
+    /// <summary>
+    /// Возвращает текстуру по идентификатору. Бросает исключение, если ресурсы не доступны
+    /// или текстура не найдена/не загружена (в зависимости от поведения <see cref="ResourceSystem"/>).
+    /// </summary>
+    public static Texture GetTexture(string path) => System.GetTexture(path);
 
-    public static bool TryGetTexture(string id, out Texture texture) => Sys.TryGetTexture(id, out texture);
+    /// <summary>
+    /// Пытается получить текстуру по идентификатору.
+    /// </summary>
+    public static bool TryGetTexture(string path, out Texture texture) => System.TryGetTexture(path, out texture);
 
-    public static void UnloadTexture(string id) => Sys.UnloadTexture(id);
+    /// <summary>
+    /// Выгружает текстуру по идентификатору (если поддерживается системой ресурсов).
+    /// </summary>
+    public static void UnloadTexture(string path) => System.UnloadTexture(path);
+    #endregion
+
+    private static ResourceSystem System =>
+        _system ?? throw new InvalidOperationException(
+            "Resources are not available (Engine is not running or already disposed).");
 }

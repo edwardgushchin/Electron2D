@@ -1,18 +1,23 @@
+using System;
+
 namespace Electron2D;
 
+/// <summary>
+/// Scope-объект для замера CPU-сэмпла профайлера (используется через <c>using</c>).
+/// </summary>
 public readonly struct ProfilerScope : IDisposable
 {
-    private readonly ProfilerSystem? _sys;
-    private readonly ProfilerSampleId _id;
+    private readonly ProfilerSystem? _system;
+    private readonly ProfilerSampleId _sampleId;
 
-    internal ProfilerScope(ProfilerSystem sys, ProfilerSampleId id)
+    internal ProfilerScope(ProfilerSystem system, ProfilerSampleId sampleId)
     {
-        _sys = sys;
-        _id = id;
+        _system = system;
+        _sampleId = sampleId;
     }
 
     public void Dispose()
     {
-        _sys?.EndSample(_id);
+        _system?.EndSample(_sampleId);
     }
 }

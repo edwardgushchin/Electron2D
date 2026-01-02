@@ -2,60 +2,94 @@ using System.Diagnostics;
 
 namespace Electron2D;
 
+/// <summary>
+/// Система времени движка: вычисляет delta-time, поддерживает fixed-step и (опционально) cap FPS при отключённом VSync.
+/// </summary>
 internal sealed class TimeSystem
 {
-    // Stopwatch
-    private readonly double _invFreq = 1.0 / Stopwatch.Frequency;
-    private long _lastTs;
-    private long _frameStartTs;
+    #region Static fields
+
+    private static readonly double InvStopwatchFrequency = 1.0 / Stopwatch.Frequency;
+
+    // --- Wait policy ---
+    // Безопасные дефолты: ~2ms sleep, ~1ms yield (остальное — spin).
+    private static readonly long SleepThresholdTicks = Stopwatch.Frequency / 500;  // ~2ms
+    private static readonly long YieldThresholdTicks = Stopwatch.Frequency / 1000; // ~1ms
+
+    #endregion
+
+    #region Instance fields
+
+    // Stopwatch timestamps (ticks)
+    private long _lastTimestamp;
+    private long _frameStartTimestamp;
 
     // Delta
     private float _timeScale = 1f;
-    private float _delta;         // scaled
-    private float _unscaledDelta; // raw
+    private float _deltaTimeScaled;
+    private float _deltaTimeUnscaled;
 
     // Fixed-step
     private bool _useFixedStep = true;
-    private float _fixedDelta = 1f / 60f;
+    private float _fixedDeltaSeconds = 1f / 60f;
     private int _maxFixedStepsPerFrame = 8;
-    private double _accumulator;
-    private int _fixedStepsThisFrame;
-    
 
-    // Frame cap (only when vsync disabled)
-    private VSyncMode _vsync = VSyncMode.Enabled;
+    private double _fixedAccumulatorSeconds;
+    private int _fixedStepsThisFrame;
+
+    // Frame cap (только когда VSync выключен)
+    private VSyncMode _vsyncMode = VSyncMode.Enabled;
     private int _maxFps; // 0 => off
 
-    private long _nextFrameTs;
+    private long _nextFrameTimestamp;
     private long _lastTargetFrameTicks;
     private long _targetFrameTicksThisFrame;
 
-    // Public read API
-    public float DeltaTime => _delta;
-    public float UnscaledDeltaTime => _unscaledDelta;
+    #endregion
+
+    #region Properties
+
+    /// <summary>DeltaTime, масштабированное <see cref="_timeScale"/>.</summary>
+    public float DeltaTime => _deltaTimeScaled;
+
+    /// <summary>DeltaTime без масштабирования.</summary>
+    public float UnscaledDeltaTime => _deltaTimeUnscaled;
+
     public bool UseFixedStep => _useFixedStep;
-    public float FixedDelta => _fixedDelta;
 
-    public void Initialize(EngineConfig opt)
+    public float FixedDelta => _fixedDeltaSeconds;
+
+    #endregion
+
+    #region Public API
+
+    public void Initialize(EngineConfig config)
     {
-        _timeScale = opt.TimeScale;
+        _timeScale = config.TimeScale;
 
-        _useFixedStep = opt.UseFixedStep;
-        _fixedDelta = opt.Physics.FixedDelta;
-        _maxFixedStepsPerFrame = opt.MaxFixedStepsPerFrame;
+        _useFixedStep = config.UseFixedStep;
+        _fixedDeltaSeconds = config.Physics.FixedDelta;
+        _maxFixedStepsPerFrame = config.MaxFixedStepsPerFrame;
 
-        _vsync = opt.VSync;
-        _maxFps = opt.MaxFps;
+        _vsyncMode = config.VSync;
+        _maxFps = config.MaxFps;
 
-        _lastTs = Stopwatch.GetTimestamp();
-        _nextFrameTs = _lastTs;
+        ValidateFixedStepSettings();
+
+        _lastTimestamp = Stopwatch.GetTimestamp();
+        _nextFrameTimestamp = _lastTimestamp;
         _lastTargetFrameTicks = 0;
 
-        _accumulator = 0.0;
+        _fixedAccumulatorSeconds = 0.0;
         _fixedStepsThisFrame = 0;
+
+        _deltaTimeUnscaled = 0f;
+        _deltaTimeScaled = 0f;
     }
 
-    // Вызывай при live-изменениях (engine runtime settings)
+    /// <summary>
+    /// Применяет настройки во время работы (runtime/live settings).
+    /// </summary>
     public void Apply(
         bool useFixedStep,
         float fixedDeltaSeconds,
@@ -65,70 +99,78 @@ internal sealed class TimeSystem
         int maxFps)
     {
         _useFixedStep = useFixedStep;
-        _fixedDelta = fixedDeltaSeconds;
+        _fixedDeltaSeconds = fixedDeltaSeconds;
         _maxFixedStepsPerFrame = maxFixedStepsPerFrame;
 
         _timeScale = timeScale;
 
-        _vsync = vsync;
+        _vsyncMode = vsync;
         _maxFps = maxFps;
 
+        ValidateFixedStepSettings();
+
         if (!_useFixedStep)
-            _accumulator = 0.0;
+            _fixedAccumulatorSeconds = 0.0;
     }
 
     public void BeginFrame()
     {
-        _frameStartTs = Stopwatch.GetTimestamp();
+        _frameStartTimestamp = Stopwatch.GetTimestamp();
 
-        // dt
-        var dt = (_frameStartTs - _lastTs) * _invFreq;
-        _lastTs = _frameStartTs;
+        // dt (в секундах)
+        var dtSeconds = (_frameStartTimestamp - _lastTimestamp) * InvStopwatchFrequency;
+        _lastTimestamp = _frameStartTimestamp;
 
-        if (dt < 0) dt = 0;
+        if (dtSeconds < 0.0)
+            dtSeconds = 0.0;
 
-        _unscaledDelta = (float)dt;
-        _delta = _unscaledDelta * _timeScale;
+        _deltaTimeUnscaled = (float)dtSeconds;
+        _deltaTimeScaled = _deltaTimeUnscaled * _timeScale;
 
-        // fixed-step accumulator
+        // Fixed-step accumulator.
+        // Важно: аккумулятор заполняется scaled delta (timeScale влияет на симуляцию) — сохраняем исходную семантику.
         _fixedStepsThisFrame = 0;
+
         if (_useFixedStep)
         {
-            _accumulator += _delta;
+            _fixedAccumulatorSeconds += _deltaTimeScaled;
 
-            // optional: общий лимит backlog, чтобы не расти бесконечно
-            var maxBacklog = (double)_fixedDelta * _maxFixedStepsPerFrame;
-            if (_accumulator > maxBacklog)
-                _accumulator = _accumulator % _fixedDelta; // сохраняем дробный остаток
+            // Лимит backlog, чтобы не расти бесконечно (например, при лаге/паузе):
+            // ограничиваем максимумом "на кадр" и сохраняем дробный остаток.
+            double maxBacklogSeconds = (double)_fixedDeltaSeconds * _maxFixedStepsPerFrame;
+            if (_fixedAccumulatorSeconds > maxBacklogSeconds)
+                _fixedAccumulatorSeconds %= _fixedDeltaSeconds;
         }
         else
         {
-            _accumulator = 0.0;
+            _fixedAccumulatorSeconds = 0.0;
         }
 
-        // plan frame cap for EndFrame()
+        // Планируем frame cap для EndFrame().
         _targetFrameTicksThisFrame =
-            (_vsync == VSyncMode.Disabled && _maxFps > 0)
+            (_vsyncMode == VSyncMode.Disabled && _maxFps > 0)
                 ? (long)(Stopwatch.Frequency / (double)_maxFps)
                 : 0;
 
         if (_targetFrameTicksThisFrame <= 0)
         {
             _lastTargetFrameTicks = 0;
-            _nextFrameTs = _frameStartTs; // база = начало кадра
+            _nextFrameTimestamp = _frameStartTimestamp; // база = начало кадра
             return;
         }
 
         if (_targetFrameTicksThisFrame != _lastTargetFrameTicks)
         {
             _lastTargetFrameTicks = _targetFrameTicksThisFrame;
-            _nextFrameTs = _frameStartTs; // ВАЖНО: база = начало кадра, не "после работы"
+            _nextFrameTimestamp = _frameStartTimestamp; // ВАЖНО: база = начало кадра, не "после работы"
         }
 
-        _nextFrameTs += _targetFrameTicksThisFrame;
+        _nextFrameTimestamp += _targetFrameTicksThisFrame;
     }
 
-    // Engine вызывает это в fixed-step цикле:
+    /// <summary>
+    /// Пытается “съесть” один fixed-step. Должно вызываться движком в fixed-step цикле.
+    /// </summary>
     public bool TryConsumeFixedStep(out float fixedDt)
     {
         fixedDt = 0f;
@@ -136,63 +178,79 @@ internal sealed class TimeSystem
         if (!_useFixedStep)
             return false;
 
-        if (_accumulator < _fixedDelta)
+        if (_fixedAccumulatorSeconds < _fixedDeltaSeconds)
             return false;
 
         if (_fixedStepsThisFrame >= _maxFixedStepsPerFrame)
         {
             // backlog больше, чем разрешено обработать за кадр:
-            // выбрасываем хвост, но оставляем дробный остаток
-            _accumulator = _accumulator % _fixedDelta;
+            // выбрасываем хвост, но оставляем дробный остаток.
+            _fixedAccumulatorSeconds %= _fixedDeltaSeconds;
             return false;
         }
 
-        _accumulator -= _fixedDelta;
+        _fixedAccumulatorSeconds -= _fixedDeltaSeconds;
         _fixedStepsThisFrame++;
-        fixedDt = _fixedDelta;
+        fixedDt = _fixedDeltaSeconds;
         return true;
     }
 
-    // Engine вызывает в конце кадра (если не requested stop)
+    /// <summary>
+    /// Должно вызываться в конце кадра (если не запрошена остановка) для применения FPS cap при VSync Disabled.
+    /// </summary>
     public void EndFrame()
     {
-        var target = _targetFrameTicksThisFrame;
-        if (target <= 0)
+        var targetTicks = _targetFrameTicksThisFrame;
+        if (targetTicks <= 0)
             return;
 
         var afterWork = Stopwatch.GetTimestamp();
-        if (afterWork > _nextFrameTs)
+        if (afterWork > _nextFrameTimestamp)
         {
-            var behind = afterWork - _nextFrameTs;
-            var skip = behind / target + 1; // +1 гарантирует, что уйдём в будущее
-            _nextFrameTs += skip * target;
+            var behindTicks = afterWork - _nextFrameTimestamp;
+            var skip = behindTicks / targetTicks + 1; // +1 гарантирует, что уйдём в будущее
+            _nextFrameTimestamp += skip * targetTicks;
         }
 
-        WaitUntil(_nextFrameTs);
+        WaitUntil(_nextFrameTimestamp);
     }
 
-    // --- Wait policy ---
-    // Подбери под себя; ниже — безопасные дефолты (~2ms sleep, ~1ms yield)
-    private static readonly long SleepThresholdTicks = Stopwatch.Frequency / 500; // ~2ms
-    private static readonly long YieldThresholdTicks  = Stopwatch.Frequency / 1000; // ~1ms
+    #endregion
+
+    #region Private helpers
+
+    private void ValidateFixedStepSettings()
+    {
+        // Эти проверки не меняют поведение для валидных конфигов и предотвращают
+        // недетерминированные ошибки (деление на 0/бесконечные циклы) при некорректных настройках.
+        if (!_useFixedStep) return;
+        if (_fixedDeltaSeconds <= 0f)
+            throw new ArgumentOutOfRangeException(nameof(_fixedDeltaSeconds), _fixedDeltaSeconds, "FixedDelta must be > 0.");
+
+        if (_maxFixedStepsPerFrame <= 0)
+            throw new ArgumentOutOfRangeException(nameof(_maxFixedStepsPerFrame), _maxFixedStepsPerFrame, "MaxFixedStepsPerFrame must be > 0.");
+    }
 
     private static void WaitUntil(long targetTimestamp)
     {
         while (true)
         {
             var now = Stopwatch.GetTimestamp();
-            var remaining = targetTimestamp - now;
-            if (remaining <= 0) return;
+            var remainingTicks = targetTimestamp - now;
+            if (remainingTicks <= 0)
+                return;
 
-            if (remaining > SleepThresholdTicks)
+            if (remainingTicks > SleepThresholdTicks)
             {
-                var sleepTicks = remaining - YieldThresholdTicks; // запас ~1ms
+                var sleepTicks = remainingTicks - YieldThresholdTicks; // запас ~1ms
                 var sleepMs = (int)(sleepTicks * 1000 / Stopwatch.Frequency);
-                if (sleepMs > 0) Thread.Sleep(sleepMs);
+                if (sleepMs > 0)
+                    Thread.Sleep(sleepMs);
+
                 continue;
             }
 
-            if (remaining > YieldThresholdTicks)
+            if (remainingTicks > YieldThresholdTicks)
             {
                 Thread.Yield();
                 continue;
@@ -201,4 +259,6 @@ internal sealed class TimeSystem
             Thread.SpinWait(64);
         }
     }
+
+    #endregion
 }

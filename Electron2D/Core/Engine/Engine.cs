@@ -1,8 +1,8 @@
-// FILE: Electron2D/Core/Engine/Engine.cs
 namespace Electron2D;
 
 public sealed class Engine : IDisposable
 {
+    #region Instance fields
     private readonly TimeSystem _time = new();
     private readonly EventSystem _events;
     private readonly InputSystem _input = new();
@@ -12,10 +12,10 @@ public sealed class Engine : IDisposable
     private readonly ProfilerSystem _prof = new();
     private readonly WindowSystem _window = new();
 
-    public SceneTree SceneTree { get; }
-
     private bool _running;
+    #endregion
 
+    #region Constructors
     public Engine(EngineConfig cfg)
     {
         SceneTree = new SceneTree(new Node("Root"), cfg.DeferredFreeQueueCapacity);
@@ -29,7 +29,7 @@ public sealed class Engine : IDisposable
         _input.Initialize();
         _physics.Initialize(cfg.Physics);
         _time.Initialize(cfg);
-        
+
         // Применяем фактический VSync (RenderSystem мог отключить его из-за неподдержки).
         var effectiveVsync = _render.EffectiveVSync;
         var effectiveMaxFps = cfg.MaxFps;
@@ -50,7 +50,13 @@ public sealed class Engine : IDisposable
         Input.Bind(_input);
         Profiler.Bind(_prof);
     }
+    #endregion
 
+    #region Properties
+    public SceneTree SceneTree { get; }
+    #endregion
+
+    #region Public API
     public void Run()
     {
         _running = true;
@@ -58,7 +64,7 @@ public sealed class Engine : IDisposable
         while (_running)
         {
             _prof.BeginFrame();
-            using var _frame = Profiler.Sample(ProfilerSampleId.Frame);
+            using var frameSample = Profiler.Sample(ProfilerSampleId.Frame);
 
             _time.BeginFrame();
 
@@ -118,17 +124,34 @@ public sealed class Engine : IDisposable
         }
     }
 
+    public void Dispose()
+    {
+        Resources.Unbind();
+        Input.Unbind();
+        Profiler.Unbind();
 
+        _resources.Shutdown();
+        _render.Shutdown();
+        _physics.Shutdown();
+        _input.Shutdown();
+        _events.Shutdown();
+        _window.Shutdown();
+    }
+    #endregion
+
+    #region Private helpers
     private void HandleQuitAndCloseRequests()
     {
-        var win = _events.Events.Window.Read;
-        for (var i = 0; i < win.Length; i++)
+        // 1) window close
+        var windowEvents = _events.Events.Window.Read;
+        for (var i = 0; i < windowEvents.Length; i++)
         {
-            if (win[i].Type != WindowEventType.CloseRequested) continue;
+            if (windowEvents[i].Type != WindowEventType.CloseRequested)
+                continue;
 
             if (SceneTree.OnWindowCloseRequested.HasSubscribers)
             {
-                SceneTree.OnWindowCloseRequested.Emit(win[i].WindowId);
+                SceneTree.OnWindowCloseRequested.Emit(windowEvents[i].WindowId);
             }
             else if (SceneTree.OnQuitRequested.HasSubscribers)
             {
@@ -144,26 +167,13 @@ public sealed class Engine : IDisposable
         }
 
         // 2) global quit
-        if (!_events.QuitRequested) return;
+        if (!_events.QuitRequested)
+            return;
 
         if (SceneTree.OnQuitRequested.HasSubscribers)
             SceneTree.OnQuitRequested.Emit();
         else
             SceneTree.Quit();
     }
-    
-
-    public void Dispose()
-    {
-        Resources.Unbind();
-        Input.Unbind();
-        Profiler.Unbind();
-
-        _resources.Shutdown();
-        _render.Shutdown();
-        _physics.Shutdown();
-        _input.Shutdown();
-        _events.Shutdown();
-        _window.Shutdown();
-    }
+    #endregion
 }

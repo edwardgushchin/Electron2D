@@ -4,55 +4,97 @@ using System.Diagnostics;
 
 namespace Electron2D;
 
+#region ProfilerSystem
+
+/// <summary>
+/// Система профилирования кадра: замер времени по сэмплам (nested scopes), счётчики, аллокации и GC.
+/// Данные складываются в кольцевую историю фиксированной длины.
+/// </summary>
+/// <remarks>
+/// Важный инвариант: при <see cref="EndFrame"/> все незакрытые скоупы принудительно закрываются,
+/// чтобы не повредить следующий кадр (в релизе не падаем).
+/// </remarks>
 internal sealed class ProfilerSystem
 {
+    #region Constants
+
     private const int DefaultHistoryLength = 240;
 
-    public bool Enabled { get; set; } = true;
+    #endregion
+
+    #region Static fields
+
+    // Частота Stopwatch стабильна в рамках процесса; вычисляем коэффициент один раз.
+    private static readonly double TicksToMilliseconds = 1000.0 / Stopwatch.Frequency;
+
+    #endregion
+
+    #region Instance fields
 
     // frame clock
     private long _frameIndex;
-    private long _frameStartTs;
+    private long _frameStartTimestamp;
 
     // allocations / GC (main thread)
-    private long _allocStart;
-    private int _gc0Start, _gc1Start, _gc2Start;
+    private long _allocatedBytesStart;
+    private int _gen0CollectionsStart;
+    private int _gen1CollectionsStart;
+    private int _gen2CollectionsStart;
 
     // accumulators for current frame
-    private readonly long[] _sampleTicks = new long[(int)ProfilerSampleId.Count];
-    private readonly long[] _counters = new long[(int)ProfilerCounterId.Count];
+    private readonly long[] _sampleTicksById = new long[(int)ProfilerSampleId.Count];
+    private readonly long[] _countersById = new long[(int)ProfilerCounterId.Count];
 
     // sample stack (nested scopes supported)
     private readonly ProfilerSampleId[] _stackIds = new ProfilerSampleId[64];
-    private readonly long[] _stackStartTs = new long[64];
+    private readonly long[] _stackStartTimestamps = new long[64];
     private int _stackDepth;
 
     // history ring buffer
     private readonly ProfilerFrame[] _history = new ProfilerFrame[DefaultHistoryLength];
-    private int _historyCursor;
+    private int _historyWriteIndex;
 
-    public ProfilerFrame LastFrame { get; private set; }
-    public ReadOnlySpan<ProfilerFrame> HistoryRaw => _history;
-    public int HistoryCursor => _historyCursor;
+    #endregion
 
-    public void BeginFrame()
+    #region Properties
+
+    /// <summary>
+    /// Включено ли профилирование. Если выключено, <see cref="BeginFrame"/>/<see cref="EndFrame"/> не накапливают данные.
+    /// </summary>
+    internal bool Enabled { get; set; } = true;
+
+    /// <summary>Последний завершённый кадр (или default, если профилирование выключено).</summary>
+    internal ProfilerFrame LastFrame { get; private set; }
+
+    /// <summary>Сырой доступ к кольцевой истории (включает невалидные элементы, см. <see cref="ProfilerFrame.IsValid"/>).</summary>
+    internal ReadOnlySpan<ProfilerFrame> HistoryRaw => _history;
+
+    /// <summary>Текущая позиция записи в кольцевой истории.</summary>
+    internal int HistoryCursor => _historyWriteIndex;
+
+    #endregion
+
+    #region Public API
+
+    internal void BeginFrame()
     {
-        if (!Enabled) return;
+        if (!Enabled)
+            return;
 
         _frameIndex++;
-        _frameStartTs = Stopwatch.GetTimestamp();
+        _frameStartTimestamp = Stopwatch.GetTimestamp();
 
-        _allocStart = GC.GetAllocatedBytesForCurrentThread();
-        _gc0Start = GC.CollectionCount(0);
-        _gc1Start = GC.CollectionCount(1);
-        _gc2Start = GC.CollectionCount(2);
+        _allocatedBytesStart = GC.GetAllocatedBytesForCurrentThread();
+        _gen0CollectionsStart = GC.CollectionCount(0);
+        _gen1CollectionsStart = GC.CollectionCount(1);
+        _gen2CollectionsStart = GC.CollectionCount(2);
 
-        Array.Clear(_sampleTicks, 0, _sampleTicks.Length);
-        Array.Clear(_counters, 0, _counters.Length);
+        Array.Clear(_sampleTicksById, 0, _sampleTicksById.Length);
+        Array.Clear(_countersById, 0, _countersById.Length);
         _stackDepth = 0;
     }
 
-    public void EndFrame()
+    internal void EndFrame()
     {
         if (!Enabled)
         {
@@ -60,25 +102,23 @@ internal sealed class ProfilerSystem
             return;
         }
 
-        // если кто-то забыл Dispose() scope — закрываем всё, чтобы не повредить следующий кадр
         var now = Stopwatch.GetTimestamp();
+
+        // Если кто-то забыл Dispose() scope — закрываем всё, чтобы не повредить следующий кадр.
         while (_stackDepth > 0)
         {
             _stackDepth--;
             var id = _stackIds[_stackDepth];
-            var dt = now - _stackStartTs[_stackDepth];
-            _sampleTicks[(int)id] += dt;
+            var dt = now - _stackStartTimestamps[_stackDepth];
+            _sampleTicksById[(int)id] += dt;
         }
 
-        var endTs = now;
-        var frameTicks = endTs - _frameStartTs;
+        var frameTicks = now - _frameStartTimestamp;
 
-        var alloc = GC.GetAllocatedBytesForCurrentThread() - _allocStart;
-        var gc0 = GC.CollectionCount(0) - _gc0Start;
-        var gc1 = GC.CollectionCount(1) - _gc1Start;
-        var gc2 = GC.CollectionCount(2) - _gc2Start;
-
-        static double ToMs(long ticks) => ticks * 1000.0 / Stopwatch.Frequency;
+        var allocatedBytes = GC.GetAllocatedBytesForCurrentThread() - _allocatedBytesStart;
+        var gen0Collections = GC.CollectionCount(0) - _gen0CollectionsStart;
+        var gen1Collections = GC.CollectionCount(1) - _gen1CollectionsStart;
+        var gen2Collections = GC.CollectionCount(2) - _gen2CollectionsStart;
 
         var frame = new ProfilerFrame
         {
@@ -86,69 +126,80 @@ internal sealed class ProfilerSystem
             FrameIndex = _frameIndex,
             FrameMs = ToMs(frameTicks),
 
-            AllocatedBytes = alloc,
-            Gen0Collections = gc0,
-            Gen1Collections = gc1,
-            Gen2Collections = gc2,
+            AllocatedBytes = allocatedBytes,
+            Gen0Collections = gen0Collections,
+            Gen1Collections = gen1Collections,
+            Gen2Collections = gen2Collections,
 
-            EventsPumpMs = ToMs(_sampleTicks[(int)ProfilerSampleId.EventsPump]),
-            InputPollMs = ToMs(_sampleTicks[(int)ProfilerSampleId.InputPoll]),
-            EventsSwapMs = ToMs(_sampleTicks[(int)ProfilerSampleId.EventsSwap]),
-            HandleQuitCloseMs = ToMs(_sampleTicks[(int)ProfilerSampleId.HandleQuitClose]),
-            DispatchInputMs = ToMs(_sampleTicks[(int)ProfilerSampleId.SceneDispatchInput]),
-            FixedStepMs = ToMs(_sampleTicks[(int)ProfilerSampleId.SceneFixedStep]),
-            ProcessMs = ToMs(_sampleTicks[(int)ProfilerSampleId.SceneProcess]),
-            FlushFreeQueueMs = ToMs(_sampleTicks[(int)ProfilerSampleId.SceneFlushFreeQueue]),
+            EventsPumpMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.EventsPump]),
+            InputPollMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.InputPoll]),
+            EventsSwapMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.EventsSwap]),
+            HandleQuitCloseMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.HandleQuitClose]),
+            DispatchInputMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.SceneDispatchInput]),
+            FixedStepMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.SceneFixedStep]),
+            ProcessMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.SceneProcess]),
+            FlushFreeQueueMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.SceneFlushFreeQueue]),
 
-            RenderBeginFrameMs = ToMs(_sampleTicks[(int)ProfilerSampleId.RenderBeginFrame]),
-            RenderBuildQueueMs = ToMs(_sampleTicks[(int)ProfilerSampleId.RenderBuildQueue]),
-            RenderSortMs = ToMs(_sampleTicks[(int)ProfilerSampleId.RenderSort]),
-            RenderFlushMs = ToMs(_sampleTicks[(int)ProfilerSampleId.RenderFlush]),
-            RenderPresentMs = ToMs(_sampleTicks[(int)ProfilerSampleId.RenderPresent]),
+            RenderBeginFrameMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.RenderBeginFrame]),
+            RenderBuildQueueMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.RenderBuildQueue]),
+            RenderSortMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.RenderSort]),
+            RenderFlushMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.RenderFlush]),
+            RenderPresentMs = ToMs(_sampleTicksById[(int)ProfilerSampleId.RenderPresent]),
 
-            EventsEngineRead = (int)_counters[(int)ProfilerCounterId.EventsEngineRead],
-            EventsWindowRead = (int)_counters[(int)ProfilerCounterId.EventsWindowRead],
-            EventsInputRead = (int)_counters[(int)ProfilerCounterId.EventsInputRead],
-            EventsDroppedEngine = (int)_counters[(int)ProfilerCounterId.EventsDroppedEngine],
-            EventsDroppedWindow = (int)_counters[(int)ProfilerCounterId.EventsDroppedWindow],
-            InputDroppedEvents = (int)_counters[(int)ProfilerCounterId.InputDroppedEvents],
+            EventsEngineRead = (int)_countersById[(int)ProfilerCounterId.EventsEngineRead],
+            EventsWindowRead = (int)_countersById[(int)ProfilerCounterId.EventsWindowRead],
+            EventsInputRead = (int)_countersById[(int)ProfilerCounterId.EventsInputRead],
+            EventsDroppedEngine = (int)_countersById[(int)ProfilerCounterId.EventsDroppedEngine],
+            EventsDroppedWindow = (int)_countersById[(int)ProfilerCounterId.EventsDroppedWindow],
+            InputDroppedEvents = (int)_countersById[(int)ProfilerCounterId.InputDroppedEvents],
 
-            FixedSteps = (int)_counters[(int)ProfilerCounterId.FixedSteps],
+            FixedSteps = (int)_countersById[(int)ProfilerCounterId.FixedSteps],
 
-            RenderSprites = (int)_counters[(int)ProfilerCounterId.RenderSprites],
-            RenderDrawCalls = (int)_counters[(int)ProfilerCounterId.RenderDrawCalls],
-            RenderDebugLines = (int)_counters[(int)ProfilerCounterId.RenderDebugLines],
-            RenderTextureBinds = (int)_counters[(int)ProfilerCounterId.RenderTextureBinds],
-            RenderUniqueTextures = (int)_counters[(int)ProfilerCounterId.RenderUniqueTextures],
-            RenderSortTriggered = (int)_counters[(int)ProfilerCounterId.RenderSortTriggered],
-            RenderSortCommands = (int)_counters[(int)ProfilerCounterId.RenderSortCommands],
-            RenderTextureColorMods = (int)_counters[(int)ProfilerCounterId.RenderTextureColorMods],
-            RenderTextureAlphaMods = (int)_counters[(int)ProfilerCounterId.RenderTextureAlphaMods],
-            RenderClears = (int)_counters[(int)ProfilerCounterId.RenderClears],
-            RenderPresents = (int)_counters[(int)ProfilerCounterId.RenderPresents],
+            RenderSprites = (int)_countersById[(int)ProfilerCounterId.RenderSprites],
+            RenderDrawCalls = (int)_countersById[(int)ProfilerCounterId.RenderDrawCalls],
+            RenderDebugLines = (int)_countersById[(int)ProfilerCounterId.RenderDebugLines],
+            RenderTextureBinds = (int)_countersById[(int)ProfilerCounterId.RenderTextureBinds],
+            RenderUniqueTextures = (int)_countersById[(int)ProfilerCounterId.RenderUniqueTextures],
+            RenderSortTriggered = (int)_countersById[(int)ProfilerCounterId.RenderSortTriggered],
+            RenderSortCommands = (int)_countersById[(int)ProfilerCounterId.RenderSortCommands],
+            RenderTextureColorMods = (int)_countersById[(int)ProfilerCounterId.RenderTextureColorMods],
+            RenderTextureAlphaMods = (int)_countersById[(int)ProfilerCounterId.RenderTextureAlphaMods],
+            RenderClears = (int)_countersById[(int)ProfilerCounterId.RenderClears],
+            RenderPresents = (int)_countersById[(int)ProfilerCounterId.RenderPresents],
         };
 
         LastFrame = frame;
 
-        _history[_historyCursor] = frame;
-        _historyCursor++;
-        if (_historyCursor >= _history.Length) _historyCursor = 0;
+        _history[_historyWriteIndex] = frame;
+        _historyWriteIndex++;
+        if (_historyWriteIndex >= _history.Length)
+            _historyWriteIndex = 0;
     }
+
+    #endregion
+
+    #region Internal helpers
 
     internal void BeginSample(ProfilerSampleId id)
     {
-        if (!Enabled) return;
-        if (_stackDepth >= _stackIds.Length) return;
+        if (!Enabled)
+            return;
+
+        if (_stackDepth >= _stackIds.Length)
+            return;
 
         _stackIds[_stackDepth] = id;
-        _stackStartTs[_stackDepth] = Stopwatch.GetTimestamp();
+        _stackStartTimestamps[_stackDepth] = Stopwatch.GetTimestamp();
         _stackDepth++;
     }
 
     internal void EndSample(ProfilerSampleId id)
     {
-        if (!Enabled) return;
-        if (_stackDepth <= 0) return;
+        if (!Enabled)
+            return;
+
+        if (_stackDepth <= 0)
+            return;
 
         _stackDepth--;
         var expected = _stackIds[_stackDepth];
@@ -160,19 +211,33 @@ internal sealed class ProfilerSystem
             return;
         }
 
-        var dt = Stopwatch.GetTimestamp() - _stackStartTs[_stackDepth];
-        _sampleTicks[(int)id] += dt;
+        var dt = Stopwatch.GetTimestamp() - _stackStartTimestamps[_stackDepth];
+        _sampleTicksById[(int)id] += dt;
     }
 
     internal void AddCounter(ProfilerCounterId id, long delta)
     {
-        if (!Enabled) return;
-        _counters[(int)id] += delta;
+        if (!Enabled)
+            return;
+
+        _countersById[(int)id] += delta;
     }
 
     internal void SetCounter(ProfilerCounterId id, long value)
     {
-        if (!Enabled) return;
-        _counters[(int)id] = value;
+        if (!Enabled)
+            return;
+
+        _countersById[(int)id] = value;
     }
+
+    #endregion
+
+    #region Private helpers
+
+    private static double ToMs(long ticks) => ticks * TicksToMilliseconds;
+
+    #endregion
 }
+
+#endregion

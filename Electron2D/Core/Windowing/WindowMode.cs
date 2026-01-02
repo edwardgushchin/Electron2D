@@ -1,5 +1,7 @@
 ﻿namespace Electron2D;
 
+#region WindowMode
+
 /// <summary>
 /// <para>Режим отображения окна.</para>
 /// <para>
@@ -24,16 +26,18 @@ public enum WindowMode
     /// <para>Окно располагается на рабочем столе, может иметь рамку и стандартные системные элементы управления.</para>
     /// </summary>
     Windowed = 0,
-    
+
     /// <summary>
     /// <para>Полноэкранный режим без смены видеорежима (borderless fullscreen).</para>
     /// <para>Как правило, это окно без рамки, развернутое на весь экран текущего дисплея.</para>
     /// </summary>
     BorderlessFullscreen = 1,
-    
+
     /// <summary>
     /// <para>Эксклюзивный полноэкранный режим (exclusive fullscreen).</para>
     /// <para>Обычно использует «настоящий» fullscreen и может переключать видеорежим дисплея.</para>
     /// </summary>
     ExclusiveFullscreen = 2,
 }
+
+#endregion

@@ -4,19 +4,25 @@ namespace Electron2D;
 
 public sealed class SceneTree
 {
-    private readonly GroupIndex _groups = new();
-    private readonly List<SpriteRenderer> _spriteRenderers = new(capacity: 256);
+    #region Constants
+    private const int DefaultDeferredFreeQueueCapacity = 1024;
+    #endregion
 
-    private Node[] _freeQueue;
+    #region Instance fields
+    private readonly GroupIndex _groupIndex = new();
+    private readonly List<SpriteRenderer> _spriteRenderers = new(capacity: 256);
+    private readonly Node[] _freeQueue;
+
     private int _freeCount;
     private bool _inputHandled;
     private bool _cameraDirty;
+    #endregion
 
-    internal ReadOnlySpan<SpriteRenderer> SpriteRenderers => CollectionsMarshal.AsSpan(_spriteRenderers);
-
-    public SceneTree(Node root, int deferredFreeQueueCapacity = 1024)
+    #region Constructors
+    public SceneTree(Node root, int deferredFreeQueueCapacity = DefaultDeferredFreeQueueCapacity)
     {
         Root = root ?? throw new ArgumentNullException(nameof(root));
+
         if (deferredFreeQueueCapacity <= 0)
             throw new ArgumentOutOfRangeException(nameof(deferredFreeQueueCapacity));
 
@@ -25,7 +31,14 @@ public sealed class SceneTree
         Root.InternalEnterTree(this);
         Root.InternalReady();
     }
+    #endregion
 
+    #region Events
+    public readonly Signal OnQuitRequested = new();
+    public readonly Signal<uint> OnWindowCloseRequested = new();
+    #endregion
+
+    #region Properties
     public Node Root { get; }
 
     public bool Paused { get; set; }
@@ -33,25 +46,26 @@ public sealed class SceneTree
     public Camera? CurrentCamera { get; private set; }
 
     public bool QuitRequested { get; private set; }
-    
+
     public Control? FocusedControl { get; private set; }
-    
+
     public Color ClearColor { get; set; } = new(0x000000FF);
 
-    public readonly Signal OnQuitRequested = new();
+    internal ReadOnlySpan<SpriteRenderer> SpriteRenderers => CollectionsMarshal.AsSpan(_spriteRenderers);
+    #endregion
 
-    public readonly Signal<uint> OnWindowCloseRequested = new();
-
-    public ReadOnlySpan<Node> GetNodesInGroup(string group) => _groups.GetNodes(group);
+    #region Public API
+    public ReadOnlySpan<Node> GetNodesInGroup(string group) => _groupIndex.GetNodes(group);
 
     public void FlushFreeQueue()
     {
         for (var i = 0; i < _freeCount; i++)
         {
-            var n = _freeQueue[i];
+            var node = _freeQueue[i];
             _freeQueue[i] = null!;
-            n.InternalFreeImmediate();
+            node.InternalFreeImmediate();
         }
+
         _freeCount = 0;
     }
 
@@ -64,24 +78,28 @@ public sealed class SceneTree
 
             // 1) Node._input()
             DispatchInputRecursive(Root, ev, InputDispatchPhase.Input, parentMode: ProcessMode.Always);
-            if (_inputHandled) continue;
+            if (_inputHandled)
+                continue;
 
             // 2) GUI phase (пока: всё в FocusedControl)
-            DispatchGUI(ev);
-            if (_inputHandled) continue;
+            DispatchGuiInput(ev);
+            if (_inputHandled)
+                continue;
 
             // 3) Node._shortcut_input() (только “shortcut eligible”)
             if (IsShortcutEligible(ev.Type))
             {
                 DispatchInputRecursive(Root, ev, InputDispatchPhase.ShortcutInput, parentMode: ProcessMode.Always);
-                if (_inputHandled) continue;
+                if (_inputHandled)
+                    continue;
             }
 
             // 4) Node._unhandled_key_input() (только key)
             if (IsKeyEvent(ev.Type))
             {
                 DispatchInputRecursive(Root, ev, InputDispatchPhase.UnhandledKeyInput, parentMode: ProcessMode.Always);
-                if (_inputHandled) continue;
+                if (_inputHandled)
+                    continue;
             }
 
             // 5) Node._unhandled_input()
@@ -89,25 +107,18 @@ public sealed class SceneTree
         }
     }
 
-    private static bool IsKeyEvent(InputEventType t)
-        => t is InputEventType.KeyDown or InputEventType.KeyUp;
+    public void Process(float delta) => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
 
-    private static bool IsShortcutEligible(InputEventType t)
-        => t is InputEventType.KeyDown or InputEventType.KeyUp
-            or InputEventType.GamepadButtonDown or InputEventType.GamepadButtonUp;
-    
-    public void Process(float delta)
-        => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
-
-    public void PhysicsProcess(float fixedDelta)
-        => PhysicsProcessNode(Root, parentMode: ProcessMode.Always, fixedDelta);
+    public void PhysicsProcess(float fixedDelta) => PhysicsProcessNode(Root, parentMode: ProcessMode.Always, fixedDelta);
 
     public void Quit() => QuitRequested = true;
+    #endregion
 
-    internal int RegisterInGroup(string group, Node node) => _groups.Add(group, node);
+    #region Internal helpers
+    internal int RegisterInGroup(string group, Node node) => _groupIndex.Add(group, node);
 
     internal void UnregisterFromGroup(string group, int index, Node removedNode)
-        => _groups.Remove(group, index, removedNode);
+        => _groupIndex.Remove(group, index, removedNode);
 
     internal void RegisterSpriteRenderer(SpriteRenderer renderer)
     {
@@ -128,7 +139,7 @@ public sealed class SceneTree
         if (idx < 0)
             return;
 
-        // Защита от рассинхронизации индекса (не hot-path)
+        // Защита от рассинхронизации индекса (не hot-path).
         if ((uint)idx >= (uint)_spriteRenderers.Count || !ReferenceEquals(_spriteRenderers[idx], renderer))
         {
             idx = _spriteRenderers.IndexOf(renderer);
@@ -168,21 +179,23 @@ public sealed class SceneTree
             SetCurrentCamera(cam);
     }
 
-
     internal void UnregisterCamera(Camera cam)
     {
         // Камера уходит из дерева — не может оставаться current.
         cam.SetCurrentFromTree(false);
 
-        if (CurrentCamera != cam) return;
+        if (!ReferenceEquals(CurrentCamera, cam))
+            return;
+
         CurrentCamera = null;
         _cameraDirty = true; // выберем другую камеру позже
     }
 
     internal void SetCurrentCamera(Camera cam)
     {
-        // Защита от “чужой” камеры
-        if (!ReferenceEquals(cam.SceneTree, this)) return;
+        // Защита от “чужой” камеры.
+        if (!ReferenceEquals(cam.SceneTree, this))
+            return;
 
         if (ReferenceEquals(CurrentCamera, cam))
         {
@@ -199,25 +212,28 @@ public sealed class SceneTree
         _cameraDirty = false;
     }
 
-
     internal Camera? EnsureCurrentCamera()
     {
-        if (CurrentCamera is not null) return CurrentCamera;
-        if (!_cameraDirty) return null;
+        if (CurrentCamera is not null)
+            return CurrentCamera;
+
+        if (!_cameraDirty)
+            return null;
 
         // Редкий случай: текущая камера удалена. Ищем первую доступную.
         var found = FindFirstCamera(Root);
         _cameraDirty = false;
 
-        if (found is not null) SetCurrentCamera(found);
-        else CurrentCamera = null;
+        if (found is not null)
+            SetCurrentCamera(found);
+        else
+            CurrentCamera = null;
 
         return CurrentCamera;
-
     }
 
     internal void MarkInputHandled() => _inputHandled = true;
-    
+
     internal void SetFocusedControl(Control? control)
     {
         if (control is null)
@@ -226,8 +242,9 @@ public sealed class SceneTree
             return;
         }
 
-        // Фокусить можно только контрол, который реально в этом дереве
-        if (!ReferenceEquals(control.SceneTree, this)) return;
+        // Фокусить можно только контрол, который реально в этом дереве.
+        if (!ReferenceEquals(control.SceneTree, this))
+            return;
 
         FocusedControl = control;
     }
@@ -237,13 +254,15 @@ public sealed class SceneTree
         if (ReferenceEquals(FocusedControl, control))
             FocusedControl = null;
     }
+    #endregion
 
+    #region Private helpers
     private bool DispatchInputRecursive(Node node, InputEvent ev, InputDispatchPhase phase, ProcessMode parentMode)
     {
-        // effective mode
+        // Effective mode.
         var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
 
-        // reverse depth-first: сначала дети (с конца), потом узел
+        // Reverse depth-first: сначала дети (с конца), потом узел.
         var count = node.ChildCount;
         for (var i = count - 1; i >= 0; i--)
         {
@@ -251,7 +270,8 @@ public sealed class SceneTree
                 return true;
         }
 
-        if (_inputHandled) return true;
+        if (_inputHandled)
+            return true;
 
         if (!ShouldRun(mode))
             return false;
@@ -261,15 +281,19 @@ public sealed class SceneTree
             case InputDispatchPhase.Input:
                 node.InternalInput(ev);
                 break;
+
             case InputDispatchPhase.ShortcutInput:
                 node.InternalShortcutInput(ev);
                 break;
+
             case InputDispatchPhase.UnhandledKeyInput:
                 node.InternalUnhandledKeyInput(ev);
                 break;
+
             case InputDispatchPhase.UnhandledInput:
                 node.InternalUnhandledInput(ev);
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(phase), phase, "Unknown input dispatch phase.");
         }
@@ -280,6 +304,7 @@ public sealed class SceneTree
     private void ProcessNode(Node node, ProcessMode parentMode, float delta)
     {
         var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
+
         if (ShouldRun(mode))
             node.InternalProcess(delta);
 
@@ -291,6 +316,7 @@ public sealed class SceneTree
     private void PhysicsProcessNode(Node node, ProcessMode parentMode, float fixedDelta)
     {
         var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
+
         if (ShouldRun(mode))
             node.InternalPhysicsProcess(fixedDelta);
 
@@ -301,44 +327,51 @@ public sealed class SceneTree
 
     private bool ShouldRun(ProcessMode mode)
     {
-        if (mode == ProcessMode.Disable) return false;
-        if (mode == ProcessMode.Always) return true;
-        if (mode == ProcessMode.Pausable) return !Paused;
-        if (mode == ProcessMode.WhenPaused) return Paused;
-        return true;
+        return mode switch
+        {
+            ProcessMode.Disabled => false,
+            ProcessMode.Always => true,
+            ProcessMode.Pausable => !Paused,
+            ProcessMode.WhenPaused => Paused,
+            _ => true
+        };
     }
 
     private static Camera? FindFirstCamera(Node node)
     {
-        if (node is Camera c) return c;
+        if (node is Camera c)
+            return c;
 
         var count = node.ChildCount;
         for (var i = 0; i < count; i++)
         {
             var found = FindFirstCamera(node.GetChild(i));
-            if (found is not null) return found;
+            if (found is not null)
+                return found;
         }
 
         return null;
     }
-    
-    private void DispatchGUI(InputEvent ev)
-    {
-        var fc = FocusedControl;
-        if (fc is null) return;
 
-        // Если фокус “протух” (контрол ушёл из дерева) — сбрасываем
-        if (!ReferenceEquals(fc.SceneTree, this))
+    private void DispatchGuiInput(InputEvent ev)
+    {
+        var focused = FocusedControl;
+        if (focused is null)
+            return;
+
+        // Если фокус “протух” (контрол ушёл из дерева) — сбрасываем.
+        if (!ReferenceEquals(focused.SceneTree, this))
         {
             FocusedControl = null;
             return;
         }
 
-        // Уважаем паузу/ProcessMode так же, как и для обычных узлов
-        var mode = GetEffectiveProcessMode(fc);
-        if (!ShouldRun(mode)) return;
+        // Уважаем паузу/ProcessMode так же, как и для обычных узлов.
+        var mode = GetEffectiveProcessMode(focused);
+        if (!ShouldRun(mode))
+            return;
 
-        fc.InternalGUIInput(ev);
+        focused.InternalGUIInput(ev);
     }
 
     private static ProcessMode GetEffectiveProcessMode(Node node)
@@ -346,11 +379,22 @@ public sealed class SceneTree
         var mode = node.ProcessMode;
         while (mode == ProcessMode.Inherit)
         {
-            var p = node.Parent;
-            if (p is null) return ProcessMode.Always;
-            node = p;
+            var parent = node.Parent;
+            if (parent is null)
+                return ProcessMode.Always;
+
+            node = parent;
             mode = node.ProcessMode;
         }
+
         return mode;
     }
+
+    private static bool IsKeyEvent(InputEventType type)
+        => type is InputEventType.KeyDown or InputEventType.KeyUp;
+
+    private static bool IsShortcutEligible(InputEventType type)
+        => type is InputEventType.KeyDown or InputEventType.KeyUp
+            or InputEventType.GamepadButtonDown or InputEventType.GamepadButtonUp;
+    #endregion
 }

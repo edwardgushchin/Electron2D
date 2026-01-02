@@ -1,6 +1,11 @@
 namespace Electron2D;
 
-public class Gamepad
+/// <summary>
+/// Представление геймпада (заглушка).
+/// </summary>
+/// <remarks>
+/// Реализация будет добавлена при подключении полноценной подсистемы ввода/геймпадов.
+/// </remarks>
+public sealed class Gamepad
 {
-    
 }

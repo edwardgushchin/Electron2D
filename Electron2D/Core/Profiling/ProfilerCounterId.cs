@@ -29,5 +29,8 @@ public enum ProfilerCounterId : int
     RenderClears,
     RenderPresents,
 
+    /// <summary>
+    /// Служебный маркер: количество элементов enum (не является реальным счётчиком).
+    /// </summary>
     Count
 }

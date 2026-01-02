@@ -1,15 +1,26 @@
 namespace Electron2D;
 
-struct GroupEntry
+/// <summary>
+/// Описание группы объектов/узлов.
+/// </summary>
+internal struct GroupEntry(string name, bool persistent)
 {
-    public string Name;
-    public bool Persistent;
-    public int TreeIndex; // -1 если не зарегистрирован в SceneTree-индексе
+    #region Constants
 
-    public GroupEntry(string name, bool persistent)
-    {
-        Name = name;
-        Persistent = persistent;
-        TreeIndex = -1;
-    }
+    private const int UnregisteredTreeIndex = -1;
+
+    #endregion
+
+    #region Instance fields
+
+    /// <summary>Имя группы.</summary>
+    public string Name = name;
+
+    /// <summary>Признак того, что группа должна сохраняться между сценами/перезагрузками.</summary>
+    public bool Persistent = persistent;
+
+    /// <summary>Индекс в SceneTree-индексе; <see cref="UnregisteredTreeIndex"/> если не зарегистрирован.</summary>
+    public int TreeIndex = UnregisteredTreeIndex;
+
+    #endregion
 }

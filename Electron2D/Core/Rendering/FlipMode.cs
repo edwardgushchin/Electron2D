@@ -1,12 +1,16 @@
+using System;
 using SDL3;
 
 namespace Electron2D;
 
+/// <summary>
+/// Режим отражения спрайта (флаги). Значения совместимы с <see cref="SDL.FlipMode"/>.
+/// </summary>
 [Flags]
-public enum FlipMode
+public enum FlipMode : int
 {
-    None = SDL.FlipMode.None,
-    Horizontal = SDL.FlipMode.Horizontal,
-    Vertical = SDL.FlipMode.Vertical,
-    HorizontalAndVertical = SDL.FlipMode.HorizontalAndVertical
+    None = (int)SDL.FlipMode.None,
+    Horizontal = (int)SDL.FlipMode.Horizontal,
+    Vertical = (int)SDL.FlipMode.Vertical,
+    HorizontalAndVertical = (int)SDL.FlipMode.HorizontalAndVertical
 }

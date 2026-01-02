@@ -28,15 +28,34 @@ public sealed class Sprite
     /// </summary>
     public Vector2 Pivot { get; set; }
 
+    /// <summary>
+    /// Количество пикселей на один мировой юнит. Должно быть конечным и строго больше 0.
+    /// </summary>
     public float PixelsPerUnit { get; set; }
+
     public Vector4 Border { get; set; }
+
+    /// <summary>
+    /// Rect спрайта (пиксели). Если не задан (Width/Height &lt;= 0), рендерер может трактовать как “вся текстура”.
+    /// </summary>
     public Rect Rect { get; set; }
+
+    /// <summary>
+    /// Область в текстуре (пиксели), из которой берётся изображение.
+    /// Если не задана (Width/Height &lt;= 0), рендерер использует “всю текстуру”.
+    /// </summary>
     public Rect TextureRect { get; set; }
+
     public Vector2 TextureRectOffset { get; set; }
+
     public string? AssociatedAlphaTextureId { get; set; }
+
     public PackingMode PackingMode { get; set; }
+
     public FlipMode FlipMode { get; set; }
+
     public float AtlasTextureScale { get; set; }
+
     public SpriteMesh? Mesh { get; set; }
 
     /// <summary>
@@ -57,7 +76,8 @@ public sealed class Sprite
         SpriteMesh? mesh = null)
     {
         ArgumentNullException.ThrowIfNull(textureId);
-        Init(
+
+        Initialize(
             textureId: textureId,
             texture: default,
             pixelsPerUnit: pixelsPerUnit,
@@ -68,7 +88,7 @@ public sealed class Sprite
             textureRectOffset: textureRectOffset,
             associatedAlphaTextureId: associatedAlphaTextureId,
             packingMode: packingMode,
-            packingRotation: packingRotation,
+            flipMode: packingRotation,
             atlasTextureScale: atlasTextureScale,
             mesh: mesh);
     }
@@ -93,7 +113,7 @@ public sealed class Sprite
         if (!texture.IsValid)
             throw new ArgumentOutOfRangeException(nameof(texture), "Texture must be valid.");
 
-        Init(
+        Initialize(
             textureId: null,
             texture: texture,
             pixelsPerUnit: pixelsPerUnit,
@@ -104,12 +124,12 @@ public sealed class Sprite
             textureRectOffset: textureRectOffset,
             associatedAlphaTextureId: associatedAlphaTextureId,
             packingMode: packingMode,
-            packingRotation: packingRotation,
+            flipMode: packingRotation,
             atlasTextureScale: atlasTextureScale,
             mesh: mesh);
     }
 
-    private void Init(
+    private void Initialize(
         string? textureId,
         Texture texture,
         float pixelsPerUnit,
@@ -120,10 +140,11 @@ public sealed class Sprite
         Vector2 textureRectOffset,
         string? associatedAlphaTextureId,
         PackingMode packingMode,
-        FlipMode packingRotation,
+        FlipMode flipMode,
         float atlasTextureScale,
         SpriteMesh? mesh)
     {
+        // PROD: предсказуемый контракт. Ошибки лучше ловить при создании/конфигурировании ассета.
         if (!(pixelsPerUnit > 0f) || float.IsNaN(pixelsPerUnit) || float.IsInfinity(pixelsPerUnit))
             throw new ArgumentOutOfRangeException(nameof(pixelsPerUnit), pixelsPerUnit, "PixelsPerUnit must be finite and > 0.");
 
@@ -148,10 +169,9 @@ public sealed class Sprite
 
         AssociatedAlphaTextureId = associatedAlphaTextureId;
         PackingMode = packingMode;
-        FlipMode = packingRotation;
+        FlipMode = flipMode;
         AtlasTextureScale = atlasTextureScale;
 
         Mesh = mesh;
     }
-
 }

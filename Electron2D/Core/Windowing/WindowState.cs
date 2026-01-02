@@ -1,9 +1,11 @@
 ﻿namespace Electron2D;
 
+#region WindowState
+
 /// <summary>
 /// <para>Состояние окна (оконная оболочка / window manager state).</para>
 /// <para>
-/// Используется для чтения и установки текущего состояния через <see cref="Window.State"/>.
+/// Используется для чтения и установки текущего состояния через <see cref="WindowState"/>.
 /// Состояние влияет на видимость и поведение окна, но не гарантирует конкретную геометрию:
 /// фактический результат зависит от платформы и текущего режима (<see cref="WindowMode"/>).
 /// </para>
@@ -14,7 +16,7 @@ public enum WindowState
     /// <para>Обычное состояние (не свернуто и не развернуто).</para>
     /// </summary>
     Normal = 0,
-    
+
     /// <summary>
     /// <para>Окно свернуто.</para>
     /// <para>
@@ -23,7 +25,7 @@ public enum WindowState
     /// </para>
     /// </summary>
     Minimized = 1,
-    
+
     /// <summary>
     /// <para>Окно развернуто (максимизировано) в пределах рабочего пространства.</para>
     /// <para>
@@ -33,3 +35,5 @@ public enum WindowState
     /// </summary>
     Maximized = 2,
 }
+
+#endregion

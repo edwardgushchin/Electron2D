@@ -1,13 +1,35 @@
+using System;
+
 namespace Electron2D;
 
+#region PhysicsSystem
+
+/// <summary>
+/// Система физики (на текущем этапе — заглушка).
+/// </summary>
 internal sealed class PhysicsSystem
 {
-    public void Initialize(PhysicsConfig cfg) { }
-    public void Shutdown() { }
+    #region Public API
 
-    public void Step(float fixedDt, SceneTree scene)
+    public void Initialize(PhysicsConfig config)
     {
-        // TODO: Box2D интеграция.
-        // Сейчас оставлено как заглушка: компонент Rigidbody уже готов к versioned-sync.
+        ArgumentNullException.ThrowIfNull(config);
     }
+
+    public void Shutdown()
+    {
+    }
+
+    public void Step(float fixedDeltaTime, SceneTree sceneTree)
+    {
+        ArgumentNullException.ThrowIfNull(sceneTree);
+
+        // TODO: Интеграция Box2D.
+        // Сейчас оставлено как заглушка: компонент Rigidbody уже готов к versioned-sync.
+        _ = fixedDeltaTime; // подавляем предупреждение о неиспользуемом параметре, пока Step не реализован
+    }
+
+    #endregion
 }
+
+#endregion

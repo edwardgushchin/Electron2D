@@ -3,34 +3,55 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
+/// <summary>
+/// Трансформация узла (2D TRS: position/rotation/scale) с ленивым пересчётом world-состояния и квантованием.
+/// </summary>
 public sealed class Transform
 {
+    #region Constants
+    // Quantization:
+    // Pos: 1e-4..1e-3 (0.1–1 мм), Rot: 1e-6..1e-5 рад, Scale: 1e-6
+    private const float PosQuantum = 1e-4f;
+    private const float RotQuantum = 1e-6f;
+    private const float ScaleQuantum = 1e-6f;
+
+    private const float InvPosQuantum = 1f / PosQuantum;
+    private const float InvRotQuantum = 1f / RotQuantum;
+    private const float InvScaleQuantum = 1f / ScaleQuantum;
+    #endregion
+
+    #region Instance fields
     private readonly Node _owner;
+
     private Transform? _parent;
 
     private Vector2 _localPosition;
-    private float   _localRotation;
+    private float _localRotation;
     private Vector2 _localScale = Vector2.One;
 
     private bool _localMatrixDirty = true;
+    private Matrix3x2 _localMatrix;
 
     // World TRS
-    private bool   _worldDirty = true;
+    private bool _worldDirty = true;
     private Vector2 _worldPosition;
-    private float   _worldRotation;
+    private float _worldRotation;
     private Vector2 _worldScale = Vector2.One;
 
     // World matrix computed only when requested
     private bool _worldMatrixDirty = true;
-    private Matrix3x2 _localMatrix;
     private Matrix3x2 _worldMatrix;
 
     private int _localVersion;
     private int _worldVersion;
     private int _parentWorldVersionAtCompute;
+    #endregion
 
+    #region Constructors
     internal Transform(Node owner) => _owner = owner;
+    #endregion
 
+    #region Properties
     internal Transform? Parent => _parent;
 
     public int LocalVersion => _localVersion;
@@ -41,7 +62,11 @@ public sealed class Transform
     /// </summary>
     public int WorldVersion
     {
-        get { UpdateWorldIfNeeded(); return _worldVersion; }
+        get
+        {
+            UpdateWorldIfNeeded();
+            return _worldVersion;
+        }
     }
 
     public Vector2 LocalPosition
@@ -50,7 +75,9 @@ public sealed class Transform
         set
         {
             var q = Quantize(value, InvPosQuantum, PosQuantum);
-            if (_localPosition == q) return;
+            if (_localPosition == q)
+                return;
+
             _localPosition = q;
             MarkLocalDirty();
         }
@@ -62,7 +89,9 @@ public sealed class Transform
         set
         {
             var q = QuantizeAngle(value);
-            if (_localRotation == q) return;
+            if (_localRotation == q)
+                return;
+
             _localRotation = q;
             MarkLocalDirty();
         }
@@ -74,7 +103,9 @@ public sealed class Transform
         set
         {
             var q = Quantize(value, InvScaleQuantum, ScaleQuantum);
-            if (_localScale == q) return;
+            if (_localScale == q)
+                return;
+
             _localScale = q;
             MarkLocalDirty();
         }
@@ -82,75 +113,95 @@ public sealed class Transform
 
     public Vector2 WorldPosition
     {
-        get { UpdateWorldIfNeeded(); return _worldPosition; }
+        get
+        {
+            UpdateWorldIfNeeded();
+            return _worldPosition;
+        }
         set
         {
-            if (_parent is null)
+            var parent = _parent;
+            if (parent is null)
             {
                 LocalPosition = value;
                 return;
             }
 
-            _parent.UpdateWorldIfNeeded();
+            parent.UpdateWorldIfNeeded();
 
             // inverse TRS: local = inv(parent) * world
             // inv translate
-            var v = value - _parent._worldPosition;
+            var v = value - parent._worldPosition;
 
             // inv rotate
-            var pr = _parent._worldRotation;
-            if (pr != 0f) v = Rotate(v, -pr);
+            var parentRot = parent._worldRotation;
+            if (parentRot != 0f)
+                v = Rotate(v, -parentRot);
 
             // inv scale (guard)
-            var ps = _parent._worldScale;
-            if (ps.X == 0f || ps.Y == 0f)
+            var parentScale = parent._worldScale;
+            if (parentScale.X == 0f || parentScale.Y == 0f)
                 throw new InvalidOperationException("Cannot set WorldPosition when parent WorldScale has zero component.");
 
-            v = new Vector2(v.X / ps.X, v.Y / ps.Y);
+            v = new Vector2(v.X / parentScale.X, v.Y / parentScale.Y);
             LocalPosition = v;
         }
     }
 
     public float WorldRotation
     {
-        get { UpdateWorldIfNeeded(); return _worldRotation; }
+        get
+        {
+            UpdateWorldIfNeeded();
+            return _worldRotation;
+        }
         set
         {
-            if (_parent is null)
+            var parent = _parent;
+            if (parent is null)
             {
                 LocalRotation = value;
                 return;
             }
 
-            _parent.UpdateWorldIfNeeded();
-            LocalRotation = value - _parent._worldRotation;
+            parent.UpdateWorldIfNeeded();
+            LocalRotation = value - parent._worldRotation;
         }
     }
 
     public Vector2 WorldScale
     {
-        get { UpdateWorldIfNeeded(); return _worldScale; }
+        get
+        {
+            UpdateWorldIfNeeded();
+            return _worldScale;
+        }
         set
         {
-            if (_parent is null)
+            var parent = _parent;
+            if (parent is null)
             {
                 LocalScale = value;
                 return;
             }
 
-            _parent.UpdateWorldIfNeeded();
+            parent.UpdateWorldIfNeeded();
 
-            var ps = _parent._worldScale;
-            if (ps.X == 0f || ps.Y == 0f)
+            var parentScale = parent._worldScale;
+            if (parentScale.X == 0f || parentScale.Y == 0f)
                 throw new InvalidOperationException("Cannot set WorldScale when parent WorldScale has zero component.");
 
-            LocalScale = new Vector2(value.X / ps.X, value.Y / ps.Y);
+            LocalScale = new Vector2(value.X / parentScale.X, value.Y / parentScale.Y);
         }
     }
 
     public Matrix3x2 LocalMatrix
     {
-        get { UpdateLocalMatrixIfNeeded(); return _localMatrix; }
+        get
+        {
+            UpdateLocalMatrixIfNeeded();
+            return _localMatrix;
+        }
     }
 
     public Matrix3x2 WorldMatrix
@@ -162,86 +213,85 @@ public sealed class Transform
             return _worldMatrix;
         }
     }
+    #endregion
 
+    #region Public API
     public void Translate(Vector2 delta)
     {
-        if (delta == Vector2.Zero) return;
+        if (delta == Vector2.Zero)
+            return;
+
         var q = Quantize(_localPosition + delta, InvPosQuantum, PosQuantum);
-        if (_localPosition == q) return;
+        if (_localPosition == q)
+            return;
+
         _localPosition = q;
         MarkLocalDirty();
     }
-    
-    public void Translate(float x = 0, float y = 0)
-    {
-        Translate(new Vector2(x, y));
-    }
-    
-    public void TranslateX(float x)
-    {
-        Translate(new Vector2(x, 0));
-    }
-    
-    public void TranslateY(float y)
-    {
-        Translate(new Vector2(0, y));
-    }
-    
+
+    public void Translate(float x = 0f, float y = 0f) => Translate(new Vector2(x, y));
+
+    public void TranslateX(float x) => Translate(new Vector2(x, 0f));
+
+    public void TranslateY(float y) => Translate(new Vector2(0f, y));
+
     public void TranslateSelf(Vector2 delta)
     {
-        if (delta == Vector2.Zero) return;
+        if (delta == Vector2.Zero)
+            return;
 
         // Обновим world TRS один раз, чтобы не дергать свойства несколько раз.
         UpdateWorldIfNeeded();
 
         // Переводим локальный сдвиг (в осях объекта) в world-сдвиг.
-        // Оси "себя" в мире задаются WorldRotation.
         var a = _worldRotation;
         var worldDelta = a == 0f ? delta : Rotate(delta, a);
 
         WorldPosition = _worldPosition + worldDelta;
     }
 
-    public void TranslateSelf(float x = 0f, float y = 0f)
-    {
-        TranslateSelf(new Vector2(x, y));
-    }
-    
-    public void TranslateSelfX(float x)
-    {
-        TranslateSelf(new Vector2(x, 0));
-    }
-    
-    public void TranslateSelfY(float y)
-    {
-        TranslateSelf(new Vector2(0, y));
-    }
+    public void TranslateSelf(float x = 0f, float y = 0f) => TranslateSelf(new Vector2(x, y));
+
+    public void TranslateSelfX(float x) => TranslateSelf(new Vector2(x, 0f));
+
+    public void TranslateSelfY(float y) => TranslateSelf(new Vector2(0f, y));
 
     public void Rotate(float radians)
     {
-        if (radians == 0f) return;
+        if (radians == 0f)
+            return;
+
         var q = QuantizeAngle(_localRotation + radians);
-        if (_localRotation == q) return;
+        if (_localRotation == q)
+            return;
+
         _localRotation = q;
         MarkLocalDirty();
     }
-    
+
     public void RotateRight(float radians) => Rotate(-radians);
-    public void RotateLeft (float radians) => Rotate(+radians);
+
+    public void RotateLeft(float radians) => Rotate(+radians);
 
     public void Scale(Vector2 scale)
     {
-        if (scale == Vector2.One) return;
+        if (scale == Vector2.One)
+            return;
+
         var q = Quantize(_localScale * scale, InvScaleQuantum, ScaleQuantum);
-        if (_localScale == q) return;
+        if (_localScale == q)
+            return;
+
         _localScale = q;
         MarkLocalDirty();
     }
-    
+    #endregion
+
+    #region Internal helpers
     internal void GetWorldTRS(out Vector2 pos, out float rot, out Vector2 scale, out int worldVersion)
     {
-        UpdateWorldIfNeeded();          // ваш существующий lazy-апдейт
-        pos = _worldPosition;                // подставьте реальные имена полей
+        UpdateWorldIfNeeded();
+        pos = _worldPosition;
         rot = _worldRotation;
         scale = _worldScale;
         worldVersion = _worldVersion;
@@ -249,15 +299,19 @@ public sealed class Transform
 
     internal void SetParent(Transform? parent)
     {
-        if (_parent == parent) return;
+        if (_parent == parent)
+            return;
+
         _parent = parent;
 
-        // world зависит от родителя: пересчёт по demand
+        // World зависит от родителя: пересчёт по demand.
         _worldDirty = true;
         _worldMatrixDirty = true;
         _parentWorldVersionAtCompute = -1;
     }
+    #endregion
 
+    #region Private helpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void MarkLocalDirty()
     {
@@ -269,16 +323,17 @@ public sealed class Transform
 
     private void UpdateLocalMatrixIfNeeded()
     {
-        if (!_localMatrixDirty) return;
+        if (!_localMatrixDirty)
+            return;
 
         var sx = _localScale.X;
         var sy = _localScale.Y;
-        var c  = MathF.Cos(_localRotation);
-        var s  = MathF.Sin(_localRotation);
+
+        var (s, c) = MathF.SinCos(_localRotation);
 
         _localMatrix = new Matrix3x2(
-            c * sx,  s * sx,
-           -s * sy,  c * sy,
+            c * sx, s * sx,
+            -s * sy, c * sy,
             _localPosition.X, _localPosition.Y);
 
         _localMatrixDirty = false;
@@ -286,84 +341,73 @@ public sealed class Transform
 
     private void UpdateWorldIfNeeded()
     {
-        //_parent?.UpdateWorldIfNeeded();
-        var p = _parent;
+        var parent = _parent;
 
         if (!_worldDirty)
         {
-            if (p is null) return;
-            if (!p._worldDirty)
-            {
-                var parentVer = p._worldVersion;
-                if (_parentWorldVersionAtCompute == parentVer) return;
-            }
-        }
-        
-        p?.UpdateWorldIfNeeded();
+            if (parent is null)
+                return;
 
-        if (_parent is null)
+            // Быстрый guard: если parent world не менялся с момента последнего вычисления.
+            if (!parent._worldDirty && _parentWorldVersionAtCompute == parent._worldVersion)
+                return;
+        }
+
+        parent?.UpdateWorldIfNeeded();
+
+        if (parent is null)
         {
             _worldPosition = _localPosition;
             _worldRotation = _localRotation;
-            _worldScale    = _localScale;
+            _worldScale = _localScale;
         }
         else
         {
             // TRS-composition без матричного умножения (быстро; подходит для 2D).
             // Важно: предполагаем TRS-модель без намеренного shear.
-            var ps = _parent._worldScale;
+            var parentScale = parent._worldScale;
 
-            var v = new Vector2(_localPosition.X * ps.X, _localPosition.Y * ps.Y);
+            var v = new Vector2(_localPosition.X * parentScale.X, _localPosition.Y * parentScale.Y);
 
-            var pr = _parent._worldRotation;
-            if (pr != 0f) v = Rotate(v, pr);
+            var parentRot = parent._worldRotation;
+            if (parentRot != 0f)
+                v = Rotate(v, parentRot);
 
-            _worldPosition = _parent._worldPosition + v;
-            _worldRotation = _localRotation + _parent._worldRotation;
-            _worldScale    = _localScale * ps;
+            _worldPosition = parent._worldPosition + v;
+            _worldRotation = _localRotation + parent._worldRotation;
+            _worldScale = _localScale * parentScale;
         }
 
         _worldDirty = false;
         _worldMatrixDirty = true;
-        _parentWorldVersionAtCompute = _parent?._worldVersion ?? 0;
+        _parentWorldVersionAtCompute = parent?._worldVersion ?? 0;
         _worldVersion++;
     }
 
     private void UpdateWorldMatrixIfNeeded()
     {
-        if (!_worldMatrixDirty) return;
+        if (!_worldMatrixDirty)
+            return;
 
         var sx = _worldScale.X;
         var sy = _worldScale.Y;
-        var c  = MathF.Cos(_worldRotation);
-        var s  = MathF.Sin(_worldRotation);
+
+        var (s, c) = MathF.SinCos(_worldRotation);
 
         _worldMatrix = new Matrix3x2(
-            c * sx,  s * sx,
-           -s * sy,  c * sy,
+            c * sx, s * sx,
+            -s * sy, c * sy,
             _worldPosition.X, _worldPosition.Y);
 
         _worldMatrixDirty = false;
     }
-    
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Vector2 Rotate(Vector2 v, float radians)
     {
-        var c = MathF.Cos(radians);
-        var s = MathF.Sin(radians);
+        var (s, c) = MathF.SinCos(radians);
         return new Vector2(v.X * c - v.Y * s, v.X * s + v.Y * c);
     }
-    
-    // Подберите под себя. Для 1 Unit = 1 метр типично:
-    // Pos: 1e-4..1e-3 (0.1–1 мм), Rot: 1e-6..1e-5 рад, Scale: 1e-6
-    private const float PosQuantum   = 1e-4f;
-    private const float RotQuantum   = 1e-6f;
-    private const float ScaleQuantum = 1e-6f;
-
-    private const float InvPosQuantum   = 1f / PosQuantum;
-    private const float InvRotQuantum   = 1f / RotQuantum;
-    private const float InvScaleQuantum = 1f / ScaleQuantum;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static float Quantize(float v, float invQ, float q)
@@ -379,9 +423,14 @@ public sealed class Transform
     private static float WrapAngle(float a)
     {
         const float TwoPi = MathF.PI * 2f;
+
         a %= TwoPi;
-        if (a <= -MathF.PI) a += TwoPi;
-        else if (a > MathF.PI) a -= TwoPi;
+
+        if (a <= -MathF.PI)
+            a += TwoPi;
+        else if (a > MathF.PI)
+            a -= TwoPi;
+
         return a;
     }
 
@@ -391,4 +440,5 @@ public sealed class Transform
         radians = WrapAngle(radians);
         return Quantize(radians, InvRotQuantum, RotQuantum);
     }
+    #endregion
 }
