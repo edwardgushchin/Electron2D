@@ -170,7 +170,7 @@ internal sealed class RenderSystem : IDisposable
         using (Profiler.Sample(ProfilerSampleId.RenderPresent))
         {
             SDL.RenderPresent(_rendererHandle);
-            Profiler.AddCounter(ProfilerCounterId.RenderPresents, 1);
+            Profiler.AddCounter(ProfilerCounterId.RenderPresents);
         }
     }
 
@@ -379,10 +379,8 @@ internal sealed class RenderSystem : IDisposable
         var v1 = (cmd.SrcRect.Y + cmd.SrcRect.Height) * invH;
 
         // Flip: меняем UV местами.
-        var flip = (SDL.FlipMode)cmd.FlipMode;
-
-        if ((flip & SDL.FlipMode.Horizontal) != 0) (u0, u1) = (u1, u0);
-        if ((flip & SDL.FlipMode.Vertical) != 0) (v0, v1) = (v1, v0);
+        if ((cmd.FlipMode & FlipMode.Horizontal) != 0) (u0, u1) = (u1, u0);
+        if ((cmd.FlipMode & FlipMode.Vertical) != 0) (v0, v1) = (v1, v0);
 
         // Цвет вершины (SDL_FColor float [0..1]).
         var col = new SDL.FColor(

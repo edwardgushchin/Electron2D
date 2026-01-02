@@ -54,13 +54,13 @@ public sealed class Transform
     #region Properties
     internal Transform? Parent => _parent;
 
-    public int LocalVersion => _localVersion;
+    internal int LocalVersion => _localVersion;
 
     /// <summary>
     /// Версия world TRS. Инкрементится, когда world (pos/rot/scale) реально пересчитан.
     /// Это и есть "dirt" для рендера/физики: потребители кешируют lastWorldVer.
     /// </summary>
-    public int WorldVersion
+    internal int WorldVersion
     {
         get
         {

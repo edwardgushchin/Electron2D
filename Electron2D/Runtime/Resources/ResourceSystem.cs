@@ -60,56 +60,65 @@ internal sealed class ResourceSystem
     /// <summary>
     /// Возвращает текстуру по идентификатору, загружая её при необходимости.
     /// </summary>
-    /// <param name="id">Идентификатор текстуры (без расширения или с расширением; по умолчанию .png).</param>
-    /// <exception cref="ArgumentException">Если <paramref name="id"/> пустой/пробельный.</exception>
+    /// <param name="path">Идентификатор текстуры (без расширения или с расширением; по умолчанию .png).</param>
+    /// <exception cref="ArgumentException">Если <paramref name="path"/> пустой/пробельный.</exception>
     /// <exception cref="InvalidOperationException">Если система не инициализирована или загрузка/запрос размера не удались.</exception>
-    public Texture GetTexture(string id)
+    public Texture GetTexture(string path)
     {
-        if (string.IsNullOrWhiteSpace(id))
-            throw new ArgumentException("Texture id is empty.", nameof(id));
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentException("Texture id is empty.", nameof(path));
 
         ThrowIfNotInitialized();
 
-        if (_texturesById.TryGetValue(id, out var cached) && cached.IsValid)
+        if (_texturesById.TryGetValue(path, out var cached) && cached.IsValid)
             return cached;
 
-        var loaded = LoadTextureHandleAndSize(id);
+        var loaded = LoadTextureHandleAndSize(path);
+
+        if (_texturesById.TryGetValue(path, out cached))
+        {
+            // hot-reload semantics: сохраняем объект, обновляем handle/size
+            if (cached.IsValid)
+                SDL.DestroyTexture(cached.Handle);
+
+            cached.Reset(loaded.Handle, loaded.W, loaded.H);
+            return cached;
+        }
+
         var texture = new Texture(loaded.Handle, loaded.W, loaded.H);
-
-        // ВАЖНО: Texture — struct, поэтому при обновлении нужно перезаписать значение в словаре.
-        _texturesById[id] = texture;
-
+        _texturesById[path] = texture;
         return texture;
     }
 
     /// <summary>
     /// Пытается получить ранее загруженную и валидную текстуру.
     /// </summary>
-    public bool TryGetTexture(string id, out Texture texture)
+    public bool TryGetTexture(string path, out Texture texture)
     {
         texture = default;
 
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(path))
             return false;
 
-        return _texturesById.TryGetValue(id, out texture) && texture.IsValid;
+        return _texturesById.TryGetValue(path, out texture) && texture.IsValid;
     }
 
     /// <summary>
     /// Опасная операция без refcount: вызывайте только если уверены, что текстура больше нигде не используется.
     /// </summary>
-    public void UnloadTexture(string id)
+    public void UnloadTexture(string path)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(path))
             return;
 
-        if (!_texturesById.TryGetValue(id, out var texture) || !texture.IsValid)
+        if (!_texturesById.TryGetValue(path, out var texture) || !texture.IsValid)
             return;
 
         SDL.DestroyTexture(texture.Handle);
+        texture.Invalidate();
 
-        // Оставляем ключ, но инвалидируем значение (TryGetTexture вернёт false).
-        _texturesById[id] = default;
+        // либо удалить ключ:
+        // _texturesById.Remove(path);
     }
 
     #endregion
@@ -124,21 +133,21 @@ internal sealed class ResourceSystem
             throw new InvalidOperationException("ResourceSystem is not initialized. Call Initialize() first.");
     }
 
-    private string ResolveTexturePath(string id)
+    private string ResolveTexturePath(string path)
     {
-        var fileName = Path.HasExtension(id) ? id : id + ".png";
+        var fileName = Path.HasExtension(path) ? path : path + ".png";
         return Path.IsPathRooted(fileName) ? fileName : Path.Combine(_contentRootPath, fileName);
     }
 
-    private (nint Handle, int W, int H) LoadTextureHandleAndSize(string id)
+    private (nint Handle, int W, int H) LoadTextureHandleAndSize(string path)
     {
-        var path = ResolveTexturePath(id);
+        var resolveTexturePath = ResolveTexturePath(path);
 
-        var handle = Image.LoadTexture(_rendererHandle, path);
+        var handle = Image.LoadTexture(_rendererHandle, resolveTexturePath);
         if (handle == 0)
-            throw new InvalidOperationException($"LoadTexture failed for '{id}'. Path='{path}'. {SDL.GetError()}");
+            throw new InvalidOperationException($"LoadTexture failed for '{path}'. Path='{resolveTexturePath}'. {SDL.GetError()}");
 
-        return !SDL.GetTextureSize(handle, out var w, out var h) ? throw new InvalidOperationException($"SDL.GetTextureSize failed for '{id}'. {SDL.GetError()}") : (handle, (int)w, (int)h);
+        return !SDL.GetTextureSize(handle, out var w, out var h) ? throw new InvalidOperationException($"SDL.GetTextureSize failed for '{path}'. {SDL.GetError()}") : (handle, (int)w, (int)h);
     }
 
     #endregion

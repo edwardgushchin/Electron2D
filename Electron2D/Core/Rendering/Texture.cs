@@ -1,10 +1,8 @@
+using System.Runtime.CompilerServices;
+
 namespace Electron2D;
 
-/// <summary>
-/// Лёгкий фасад текстуры. Не владеет ресурсом.
-/// Владение и уничтожение SDL_Texture выполняет <c>ResourceSystem</c>.
-/// </summary>
-public readonly struct Texture : IEquatable<Texture>
+public sealed class Texture : IEquatable<Texture>
 {
     internal Texture(nint handle, int width, int height)
     {
@@ -13,26 +11,22 @@ public readonly struct Texture : IEquatable<Texture>
         Height = height;
     }
 
-    /// <summary>
-    /// Нативный handle текстуры (SDL_Texture*).
-    /// </summary>
-    internal nint Handle { get; }
+    internal nint Handle { get; private set; }
 
-    /// <summary>
-    /// Возвращает <see langword="true"/>, если текстура указывает на валидный нативный ресурс.
-    /// </summary>
     public bool IsValid => Handle != 0;
+    public int Width { get; private set; }
+    public int Height { get; private set; }
 
-    public int Width { get; }
-    public int Height { get; }
+    internal void Reset(nint handle, int width, int height)
+    {
+        Handle = handle;
+        Width = width;
+        Height = height;
+    }
 
-    public bool Equals(Texture other) => Handle == other.Handle;
+    internal void Invalidate() => Reset(0, 0, 0);
 
-    public override bool Equals(object? obj) => obj is Texture other && Equals(other);
-
-    public override int GetHashCode() => Handle.GetHashCode();
-
-    public static bool operator ==(Texture left, Texture right) => left.Equals(right);
-
-    public static bool operator !=(Texture left, Texture right) => !left.Equals(right);
+    public bool Equals(Texture? other) => ReferenceEquals(this, other);
+    public override bool Equals(object? obj) => ReferenceEquals(this, obj);
+    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 }

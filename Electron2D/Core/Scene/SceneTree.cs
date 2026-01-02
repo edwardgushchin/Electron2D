@@ -57,7 +57,7 @@ public sealed class SceneTree
     #region Public API
     public ReadOnlySpan<Node> GetNodesInGroup(string group) => _groupIndex.GetNodes(group);
 
-    public void FlushFreeQueue()
+    internal void FlushFreeQueue()
     {
         for (var i = 0; i < _freeCount; i++)
         {
@@ -69,7 +69,7 @@ public sealed class SceneTree
         _freeCount = 0;
     }
 
-    public void DispatchInputEvents(ReadOnlySpan<InputEvent> events)
+    internal void DispatchInputEvents(ReadOnlySpan<InputEvent> events)
     {
         for (var i = 0; i < events.Length; i++)
         {
@@ -107,9 +107,9 @@ public sealed class SceneTree
         }
     }
 
-    public void Process(float delta) => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
+    internal void Process(float delta) => ProcessNode(Root, parentMode: ProcessMode.Always, delta);
 
-    public void PhysicsProcess(float fixedDelta) => PhysicsProcessNode(Root, parentMode: ProcessMode.Always, fixedDelta);
+    internal void PhysicsProcess(float fixedDelta) => PhysicsProcessNode(Root, parentMode: ProcessMode.Always, fixedDelta);
 
     public void Quit() => QuitRequested = true;
     #endregion

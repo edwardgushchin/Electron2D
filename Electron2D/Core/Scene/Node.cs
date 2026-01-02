@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -22,6 +20,15 @@ public class Node
     private bool _readyCalled;
     private bool _queuedForFree;
     private int _componentCount;
+    
+    private Signal? _onReady;
+    private Signal? _onExited;
+    private Signal? _onExiting;
+    private Signal? _onEntered;
+    private Signal? _onChildOrderChanged;
+    private Signal<Node>? _onChildExitingTree;
+    private Signal<Node>? _onChildEnteredTree;
+    private Signal? _onRenamed;
 
     #region Constructors
     public Node(string name)
@@ -36,43 +43,43 @@ public class Node
     /// <summary>
     /// Генерируется, когда дочерний узел вошёл в дерево сцены (обычно потому, что этот узел вошёл в дерево).
     /// </summary>
-    public readonly Signal<Node> OnChildEnteredTree = new();
+    public Signal<Node> OnChildEnteredTree => _onChildEnteredTree ??= new Signal<Node>();
 
     /// <summary>
     /// Генерируется, когда дочерний узел собирается покинуть дерево сцены
     /// (обычно потому, что этот узел выходит из дерева, или потому, что дочерний узел удаляется/освобождается).
     /// </summary>
-    public readonly Signal<Node> OnChildExitingTree = new();
+    public Signal<Node> OnChildExitingTree => _onChildExitingTree ??= new Signal<Node>();
 
     /// <summary>
     /// Генерируется при изменении списка дочерних узлов (добавление/удаление/перемещение).
     /// </summary>
-    public readonly Signal OnChildOrderChanged = new();
+    public Signal OnChildOrderChanged => _onChildOrderChanged ??= new Signal();
 
     /// <summary>
     /// Генерируется после вызова <see cref="EnterTree"/> (узел вошёл в дерево).
     /// </summary>
-    public readonly Signal OnEntered = new();
+    public Signal OnEntered => _onEntered ??= new Signal();
 
     /// <summary>
     /// Генерируется после вызова <see cref="ExitTree"/> (узел начал выход из дерева).
     /// </summary>
-    public readonly Signal OnExiting = new();
+    public Signal OnExiting => _onExiting ??= new Signal();
 
     /// <summary>
     /// Генерируется после завершения выхода узла из дерева (после финализации выхода у поддерева).
     /// </summary>
-    public readonly Signal OnExited = new();
+    public Signal OnExited => _onExited ??= new Signal();
 
     /// <summary>
     /// Генерируется, когда узел считается готовым (после вызова <see cref="Ready"/>).
     /// </summary>
-    public readonly Signal OnReady = new();
+    public Signal OnReady => _onReady ??= new Signal();
 
     /// <summary>
     /// Генерируется при изменении имени узла, если узел находится внутри дерева.
     /// </summary>
-    public readonly Signal OnRenamed = new();
+    public Signal OnRenamed => _onRenamed ??= new Signal();
     #endregion
 
     #region Properties
@@ -89,7 +96,7 @@ public class Node
             _name = value;
 
             if (IsInsideTree)
-                OnRenamed.Emit();
+                _onRenamed?.Emit();
         }
     }
 
@@ -156,7 +163,7 @@ public class Node
                 if (idx >= 0)
                     oldParent._children.RemoveAt(idx);
 
-                oldParent.OnChildOrderChanged.Emit();
+                oldParent._onChildOrderChanged?.Emit();
             }
 
             _children.Add(child);
@@ -164,7 +171,7 @@ public class Node
             child._parent = this;
             child.Transform.SetParent(Transform);
 
-            OnChildOrderChanged.Emit();
+            _onChildOrderChanged?.Emit();
 
             if (!keepWorldTransform)
                 return;
@@ -191,13 +198,13 @@ public class Node
             child.Transform.WorldScale = worldScale;
         }
 
-        OnChildOrderChanged.Emit();
+        _onChildOrderChanged?.Emit();
 
         if (_sceneTree is null)
             return;
 
         child.InternalEnterTree(_sceneTree);
-        OnChildEnteredTree.Emit(child);
+        _onChildEnteredTree?.Emit(child);
         child.InternalReady();
     }
 
@@ -211,7 +218,7 @@ public class Node
 
         if (child._sceneTree is not null)
         {
-            OnChildExitingTree.Emit(child);
+            _onChildExitingTree?.Emit(child);
             child.InternalExitTree();
             child.InternalFinalizeExit();
         }
@@ -221,7 +228,7 @@ public class Node
         child._parent = null;
         child.Transform.SetParent(null);
 
-        OnChildOrderChanged.Emit();
+        _onChildOrderChanged?.Emit();
     }
 
     public Node GetChild(int index) => _children[index];
@@ -398,24 +405,23 @@ public class Node
     #region Public API: lifetime
     public void QueueFree()
     {
-        if (_destroyed) return;
-        if (_queuedForFree) return;
+        if (_sceneTree is not null && _parent is null)
+            throw new InvalidOperationException("Cannot QueueFree the SceneTree root.");
+
+        if (_queuedForFree)
+            return;
 
         _queuedForFree = true;
 
-        if (_sceneTree is null)
-        {
-            // Вне дерева — освобождаем сразу.
+        if (_sceneTree is not null)
+            _sceneTree.QueueFree(this);
+        else
             InternalFreeImmediate();
-            return;
-        }
-        
-        _sceneTree.QueueFree(this);
     }
     #endregion
 
     #region Protected API: Node lifecycle (override points)
-    public virtual void Destroy() { }
+    protected virtual void Destroy() { }
 
     protected virtual void EnterTree() { }
 
@@ -477,7 +483,7 @@ public class Node
         }
 
         EnterTree();
-        OnEntered.Emit();
+        _onEntered?.Emit();
 
         // enter_tree: top-to-bottom
         for (var i = 0; i < _children.Count; i++)
@@ -486,23 +492,26 @@ public class Node
             child.InternalEnterTree(tree);
 
             // parent signal after child реально вошёл
-            OnChildEnteredTree.Emit(child);
+            _onChildEnteredTree?.Emit(child);
         }
     }
 
     internal void InternalReady()
     {
-        if (_readyCalled)
-            return;
+        if (_readyCalled) return;
 
-        // ready: post-order (children, then parent)
         for (var i = 0; i < _children.Count; i++)
             _children[i].InternalReady();
 
         Ready();
 
         _readyCalled = true;
-        OnReady.Emit();
+        // emit only if signal created (см. Patch Set 5)
+        _onReady?.Emit();
+
+        // ВАЖНО: дети, добавленные во время Ready(), тоже должны получить Ready().
+        for (var i = 0; i < _children.Count; i++)
+            _children[i].InternalReady();
     }
 
     internal void InternalProcess(float delta) => Process(delta);
@@ -516,12 +525,12 @@ public class Node
         {
             var child = _children[i];
 
-            OnChildExitingTree.Emit(child);
+            _onChildExitingTree?.Emit(child);
             child.InternalExitTree();
         }
 
         ExitTree();
-        OnExiting.Emit();
+        _onExiting?.Emit();
     }
 
     internal void InternalInput(InputEvent inputEvent) => HandleInput(inputEvent);
@@ -583,7 +592,7 @@ public class Node
         for (var i = 0; i < _children.Count; i++)
             _children[i].InternalFinalizeExit();
 
-        OnExited.Emit();
+        _onExited?.Emit();
     }
 
     internal void InternalUpdateGroupIndex(string group, int newIndex)
