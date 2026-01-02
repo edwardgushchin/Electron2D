@@ -192,7 +192,7 @@ internal sealed class EventSystem
 
     private void TryPublishInputEvent(InputEventType type, ulong timestamp, SDL.Scancode scancode)
     {
-        if (!_eventQueue.Input.TryPublish(new InputEvent(type, timestamp, code: scancode)))
+        if (!_eventQueue.Input.TryPublish(new InputEvent(type, timestamp, code: (KeyCode)scancode)))
             DroppedInputEvents++;
     }
 

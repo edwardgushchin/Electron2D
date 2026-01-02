@@ -23,12 +23,14 @@ internal sealed class RenderQueue : IDisposable
 
     public RenderQueue(int initialCapacity = 1024)
     {
-        if (initialCapacity < 0)
-            throw new ArgumentOutOfRangeException(nameof(initialCapacity));
+        initialCapacity = initialCapacity switch
+        {
+            < 0 => throw new ArgumentOutOfRangeException(nameof(initialCapacity)),
+            0 => 256,
+            _ => initialCapacity
+        };
 
-        _buffer = initialCapacity == 0
-            ? Array.Empty<SpriteCommand>()
-            : ArrayPool<SpriteCommand>.Shared.Rent(initialCapacity);
+        _buffer = ArrayPool<SpriteCommand>.Shared.Rent(initialCapacity);
     }
 
     #endregion
@@ -70,12 +72,16 @@ internal sealed class RenderQueue : IDisposable
     /// Добавить команду в очередь.
     /// </summary>
     /// <param name="command">Команда (копируется в буфер).</param>
-    /// <returns>Всегда true (буфер расширяется при необходимости).</returns>
+    /// <returns>True если команда добавлена. False если очередь переполнена (команда отброшена).</returns>
     public bool TryPush(in SpriteCommand command)
     {
-        EnsureCapacity(_count + 1);
+        if (_count >= _buffer.Length)
+        {
+            Profiler.AddCounter(ProfilerCounterId.RenderQueueOverflow);
+            Profiler.AddCounter(ProfilerCounterId.RenderQueueDropped);
+            return false;
+        }
 
-        // Стабильность сортировки: присваиваем sequence на вставке.
         var cmd = command;
         cmd.SetSequence(_sequence++);
 
@@ -85,6 +91,8 @@ internal sealed class RenderQueue : IDisposable
         _buffer[_count++] = cmd;
         return true;
     }
+
+
 
     public void Dispose()
     {

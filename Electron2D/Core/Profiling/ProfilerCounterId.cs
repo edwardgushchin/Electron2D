@@ -28,6 +28,8 @@ public enum ProfilerCounterId : int
     RenderTextureAlphaMods,
     RenderClears,
     RenderPresents,
+    RenderQueueOverflow,
+    RenderQueueDropped,
 
     /// <summary>
     /// Служебный маркер: количество элементов enum (не является реальным счётчиком).

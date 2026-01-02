@@ -17,6 +17,7 @@ public class Node
     private string _name;
     private Node? _parent;
     private SceneTree? _sceneTree;
+    private bool _destroyed;
 
     private bool _readyCalled;
     private bool _queuedForFree;
@@ -397,8 +398,8 @@ public class Node
     #region Public API: lifetime
     public void QueueFree()
     {
-        if (_queuedForFree)
-            return;
+        if (_destroyed) return;
+        if (_queuedForFree) return;
 
         _queuedForFree = true;
 
@@ -408,7 +409,7 @@ public class Node
             InternalFreeImmediate();
             return;
         }
-
+        
         _sceneTree.QueueFree(this);
     }
     #endregion
@@ -533,6 +534,8 @@ public class Node
 
     internal void InternalFreeImmediate()
     {
+        if (_destroyed) return;
+        
         // Root нельзя освобождать напрямую.
         if (_parent is null && _sceneTree is not null)
             throw new InvalidOperationException("Cannot free the SceneTree root.");
@@ -573,7 +576,8 @@ public class Node
         }
 
         _sceneTree = null;
-        _queuedForFree = false;
+        // _queuedForFree НЕ трогаем: если узел стоял в очереди на free — он должен остаться queued,
+        // иначе возможен повторный QueueFree и double free.
         _readyCalled = false;
 
         for (var i = 0; i < _children.Count; i++)
@@ -613,13 +617,28 @@ public class Node
 
     private static void DestroySubtreeBottomUp(Node node)
     {
+        if (node._destroyed) return;
+        node._destroyed = true;
+
         var list = node._children;
+
+        // Разрываем иерархию у детей, чтобы внешние ссылки на ноды не видели “мертвого родителя”.
         for (var i = 0; i < list.Count; i++)
-            DestroySubtreeBottomUp(list[i]);
+        {
+            var child = list[i];
+            child._parent = null;
+            child.Transform.SetParent(null);
+            DestroySubtreeBottomUp(child);
+        }
 
         node.DetachAllComponents();
         node.Destroy();
+
+        node._queuedForFree = false;
+        list.Clear();
+        node._groups.Clear();
     }
+
 
     private void DetachAllComponents()
     {

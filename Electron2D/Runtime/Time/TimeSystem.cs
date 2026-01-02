@@ -137,9 +137,12 @@ internal sealed class TimeSystem
 
             // Лимит backlog, чтобы не расти бесконечно (например, при лаге/паузе):
             // ограничиваем максимумом "на кадр" и сохраняем дробный остаток.
-            double maxBacklogSeconds = (double)_fixedDeltaSeconds * _maxFixedStepsPerFrame;
+            var maxBacklogSeconds = (double)_fixedDeltaSeconds * _maxFixedStepsPerFrame;
+
+            // Clamp backlog: сохраняем возможность “съесть” до maxFixedStepsPerFrame шагов,
+            // а лишнее время отбрасываем (иначе spiral of death).
             if (_fixedAccumulatorSeconds > maxBacklogSeconds)
-                _fixedAccumulatorSeconds %= _fixedDeltaSeconds;
+                _fixedAccumulatorSeconds = maxBacklogSeconds;
         }
         else
         {
@@ -183,8 +186,8 @@ internal sealed class TimeSystem
 
         if (_fixedStepsThisFrame >= _maxFixedStepsPerFrame)
         {
-            // backlog больше, чем разрешено обработать за кадр:
-            // выбрасываем хвост, но оставляем дробный остаток.
+            // Сохраняем только дробную часть (< fixedDelta) для стабильности,
+            // остальное отбрасываем.
             _fixedAccumulatorSeconds %= _fixedDeltaSeconds;
             return false;
         }
