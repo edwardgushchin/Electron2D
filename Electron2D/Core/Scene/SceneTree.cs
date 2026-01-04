@@ -11,6 +11,7 @@ public sealed class SceneTree
     #region Instance fields
     private readonly GroupIndex _groupIndex = new();
     private readonly List<SpriteRenderer> _spriteRenderers = new(capacity: 256);
+    private readonly List<SpriteAnimator> _spriteAnimators = new(capacity: 256);
     private readonly List<Node> _processNodes = new(capacity: 256);
     private readonly List<Node> _physicsNodes = new(capacity: 256);
     private readonly Node[] _freeQueue;
@@ -55,6 +56,8 @@ public sealed class SceneTree
     public Color ClearColor { get; set; } = new(0x000000FF);
 
     internal ReadOnlySpan<SpriteRenderer> SpriteRenderers => CollectionsMarshal.AsSpan(_spriteRenderers);
+    
+    internal ReadOnlySpan<SpriteAnimator> SpriteAnimators => CollectionsMarshal.AsSpan(_spriteAnimators);
     #endregion
 
     #region Public API
@@ -195,6 +198,37 @@ public sealed class SceneTree
 
         _spriteRenderers.RemoveAt(lastIndex);
         renderer.SceneIndex = -1;
+    }
+    
+    internal void RegisterSpriteAnimator(SpriteAnimator animator)
+    {
+        ArgumentNullException.ThrowIfNull(animator);
+
+        if (animator.SceneIndex >= 0)
+            return;
+
+        animator.SceneIndex = _spriteAnimators.Count;
+        _spriteAnimators.Add(animator);
+    }
+
+    internal void UnregisterSpriteAnimator(SpriteAnimator animator)
+    {
+        ArgumentNullException.ThrowIfNull(animator);
+
+        var idx = animator.SceneIndex;
+        if (idx < 0)
+            return;
+
+        var lastIndex = _spriteAnimators.Count - 1;
+        if (idx != lastIndex)
+        {
+            var moved = _spriteAnimators[lastIndex];
+            _spriteAnimators[idx] = moved;
+            moved.SceneIndex = idx;
+        }
+
+        _spriteAnimators.RemoveAt(lastIndex);
+        animator.SceneIndex = -1;
     }
 
     internal void QueueFree(Node node)

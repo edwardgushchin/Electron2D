@@ -25,6 +25,8 @@ public sealed class Texture : IEquatable<Texture>
     }
 
     internal void Invalidate() => Reset(0, 0, 0);
+    
+    public FilterMode FilterMode { get; set; } = FilterMode.Inherit;
 
     public bool Equals(Texture? other) => ReferenceEquals(this, other);
     public override bool Equals(object? obj) => ReferenceEquals(this, obj);

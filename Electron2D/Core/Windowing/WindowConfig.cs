@@ -23,6 +23,8 @@ public sealed class WindowConfig
 
     /// <summary>Состояние окна (нормальное/свернутое/развернутое и т. п.).</summary>
     public WindowState State { get; set; } = WindowState.Normal;
+    
+    public bool Resizable { get; set; } = false;
 
     #endregion
 }

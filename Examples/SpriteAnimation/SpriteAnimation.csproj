@@ -1,0 +1,93 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Content\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="SpriteAnimation.csproj.DotSettings" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Electron2D\Electron2D.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Content\background\background_layer_1.png" />
+      <Content Include="Content\background\background_layer_1.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\background\background_layer_2.png" />
+      <Content Include="Content\background\background_layer_2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\background\background_layer_3.png" />
+      <Content Include="Content\background\background_layer_3.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\fence_1.png" />
+      <Content Include="Content\decorations\fence_1.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\fence_2.png" />
+      <Content Include="Content\decorations\fence_2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\grass_1.png" />
+      <Content Include="Content\decorations\grass_1.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\grass_2.png" />
+      <Content Include="Content\decorations\grass_2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\grass_3.png" />
+      <Content Include="Content\decorations\grass_3.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\lamp.png" />
+      <Content Include="Content\decorations\lamp.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\rock_1.png" />
+      <Content Include="Content\decorations\rock_1.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\rock_2.png" />
+      <Content Include="Content\decorations\rock_2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\rock_3.png" />
+      <Content Include="Content\decorations\rock_3.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\shop.png" />
+      <Content Include="Content\decorations\shop.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\shop_anim.png" />
+      <Content Include="Content\decorations\shop_anim.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\decorations\sign.png" />
+      <Content Include="Content\decorations\sign.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\oak_woods_tileset.png" />
+      <Content Include="Content\oak_woods_tileset.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\character\char_blue.png" />
+      <Content Include="Content\character\char_blue.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>

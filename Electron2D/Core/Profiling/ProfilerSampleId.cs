@@ -23,6 +23,8 @@ public enum ProfilerSampleId : int
     RenderSort,
     RenderFlush,
     RenderPresent,
+    
+    Animation,
 
     /// <summary>
     /// Служебный маркер: количество элементов enum (не является реальным сэмплом).

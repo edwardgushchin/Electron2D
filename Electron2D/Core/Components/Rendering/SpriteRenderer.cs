@@ -17,6 +17,8 @@ public sealed class SpriteRenderer : IComponent
 
     private Color _color = new(0xFFFFFFFF);
     private uint _sortKey;
+    private ushort _layer;
+    private ushort _order;
 
     // Кэш команды рендера (пересобирается только при необходимости)
     private bool _hasValidCache;
@@ -47,7 +49,7 @@ public sealed class SpriteRenderer : IComponent
         }
     }
 
-    public uint SortKey
+    internal uint SortKey
     {
         get => _sortKey;
         set
@@ -56,6 +58,34 @@ public sealed class SpriteRenderer : IComponent
                 return;
 
             _sortKey = value;
+            InvalidateRenderCache();
+        }
+    }
+    
+    /// <summary>Слой отрисовки. Чем больше — тем позже рисуется (поверх).</summary>
+    public int Layer
+    {
+        get => _layer;
+        set
+        {
+            var v = (ushort)Math.Clamp(value, 0, ushort.MaxValue);
+            if (_layer == v) return;
+            _layer = v;
+            _sortKey = DrawOrder.Pack(_layer, _order);
+            InvalidateRenderCache();
+        }
+    }
+
+    /// <summary>Порядок внутри слоя. Чем больше — тем позже рисуется.</summary>
+    public int Order
+    {
+        get => _order;
+        set
+        {
+            var v = (ushort)Math.Clamp(value, 0, ushort.MaxValue);
+            if (_order == v) return;
+            _order = v;
+            _sortKey = DrawOrder.Pack(_layer, _order);
             InvalidateRenderCache();
         }
     }
@@ -187,7 +217,8 @@ public sealed class SpriteRenderer : IComponent
             OriginWorld = originWorld,
             Color = _color,
             SortKey = _sortKey,
-            FlipMode = flip
+            FlipMode = flip,
+            FilterMode = snapshot.FilterMode
         };
 
         ComputeWorldBounds(in _cachedCommand, out _worldBoundsMin, out _worldBoundsMax);

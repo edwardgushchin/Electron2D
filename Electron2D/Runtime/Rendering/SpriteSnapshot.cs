@@ -39,6 +39,7 @@ internal readonly struct SpriteSnapshot : IEquatable<SpriteSnapshot>
         Rect textureRect,
         float pixelsPerUnit,
         Vector2 pivot,
+        FilterMode filterMode,
         string? textureId,
         nint textureHandle)
     {
@@ -46,6 +47,7 @@ internal readonly struct SpriteSnapshot : IEquatable<SpriteSnapshot>
         TextureRect = textureRect;
         PixelsPerUnit = pixelsPerUnit;
         Pivot = pivot;
+        FilterMode = filterMode;
         TextureId = textureId;
         TextureHandle = textureHandle;
     }
@@ -72,11 +74,14 @@ internal readonly struct SpriteSnapshot : IEquatable<SpriteSnapshot>
             textureRect: sprite.TextureRect,
             pixelsPerUnit: sprite.PixelsPerUnit,
             pivot: sprite.Pivot,
+            filterMode: sprite.FilterMode,
             textureId: sprite.TextureId,
             textureHandle: handle);
     }
 
     #endregion
+    
+    public readonly FilterMode FilterMode;
 
     #region Equality
 

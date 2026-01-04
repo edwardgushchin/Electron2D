@@ -11,6 +11,7 @@ public sealed class Engine : IDisposable
     private readonly ResourceSystem _resources = new();
     private readonly ProfilerSystem _prof = new();
     private readonly WindowSystem _window = new();
+    private readonly AnimationSystem _animation = new();
 
     private bool _running;
     #endregion
@@ -105,6 +106,9 @@ public sealed class Engine : IDisposable
 
             using (Profiler.Sample(ProfilerSampleId.SceneProcess))
                 SceneTree.Process(_time.DeltaTime);
+            
+            using (Profiler.Sample(ProfilerSampleId.Animation))
+                _animation.Process(SceneTree, _time.DeltaTime);
 
             // RenderSystem сам пометит свои фазы (Begin/Build/Sort/Flush/Present)
             _render.BeginFrame(SceneTree);

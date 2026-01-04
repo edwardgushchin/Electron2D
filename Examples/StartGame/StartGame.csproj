@@ -17,6 +17,10 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="StartGame.csproj.DotSettings" />
+      <None Remove="Content\drone.png" />
+      <Content Include="Content\drone.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,0 +1,165 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Electron2D\Electron2D.csproj" />
+  </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Content\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Content\audio\die.ogg" />
+      <Content Include="Content\audio\die.ogg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\die.wav" />
+      <Content Include="Content\audio\die.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\hit.ogg" />
+      <Content Include="Content\audio\hit.ogg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\hit.wav" />
+      <Content Include="Content\audio\hit.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\point.ogg" />
+      <Content Include="Content\audio\point.ogg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\point.wav" />
+      <Content Include="Content\audio\point.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\swoosh.ogg" />
+      <Content Include="Content\audio\swoosh.ogg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\swoosh.wav" />
+      <Content Include="Content\audio\swoosh.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\wing.ogg" />
+      <Content Include="Content\audio\wing.ogg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\audio\wing.wav" />
+      <Content Include="Content\audio\wing.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\0.png" />
+      <Content Include="Content\sprites\0.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\1.png" />
+      <Content Include="Content\sprites\1.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\2.png" />
+      <Content Include="Content\sprites\2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\3.png" />
+      <Content Include="Content\sprites\3.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\4.png" />
+      <Content Include="Content\sprites\4.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\5.png" />
+      <Content Include="Content\sprites\5.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\6.png" />
+      <Content Include="Content\sprites\6.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\7.png" />
+      <Content Include="Content\sprites\7.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\8.png" />
+      <Content Include="Content\sprites\8.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\9.png" />
+      <Content Include="Content\sprites\9.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\background-day.png" />
+      <Content Include="Content\sprites\background-day.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\background-night.png" />
+      <Content Include="Content\sprites\background-night.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\base.png" />
+      <Content Include="Content\sprites\base.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\bluebird-downflap.png" />
+      <Content Include="Content\sprites\bluebird-downflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\bluebird-midflap.png" />
+      <Content Include="Content\sprites\bluebird-midflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\bluebird-upflap.png" />
+      <Content Include="Content\sprites\bluebird-upflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\gameover.png" />
+      <Content Include="Content\sprites\gameover.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\message.png" />
+      <Content Include="Content\sprites\message.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\pipe-green.png" />
+      <Content Include="Content\sprites\pipe-green.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\pipe-red.png" />
+      <Content Include="Content\sprites\pipe-red.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\redbird-downflap.png" />
+      <Content Include="Content\sprites\redbird-downflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\redbird-midflap.png" />
+      <Content Include="Content\sprites\redbird-midflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\redbird-upflap.png" />
+      <Content Include="Content\sprites\redbird-upflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\yellowbird-downflap.png" />
+      <Content Include="Content\sprites\yellowbird-downflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\yellowbird-midflap.png" />
+      <Content Include="Content\sprites\yellowbird-midflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\sprites\yellowbird-upflap.png" />
+      <Content Include="Content\sprites\yellowbird-upflap.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>

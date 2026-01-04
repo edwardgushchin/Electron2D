@@ -57,41 +57,15 @@ public sealed class Sprite
     public float AtlasTextureScale { get; set; }
 
     public SpriteMesh? Mesh { get; set; }
-
+    
     /// <summary>
-    /// Создаёт спрайт по идентификатору текстуры. По умолчанию — вся текстура.
+    /// Режим фильтрации (сглаживания) при отрисовке именно этого спрайта.
     /// </summary>
-    public Sprite(
-        string textureId,
-        float pixelsPerUnit = DefaultPixelsPerUnit,
-        Vector2? pivot = null,
-        Vector4 border = default,
-        Rect? rect = null,
-        Rect? textureRect = null,
-        Vector2 textureRectOffset = default,
-        string? associatedAlphaTextureId = null,
-        PackingMode packingMode = PackingMode.None,
-        FlipMode packingRotation = FlipMode.None,
-        float atlasTextureScale = 1f,
-        SpriteMesh? mesh = null)
-    {
-        ArgumentNullException.ThrowIfNull(textureId);
-
-        Initialize(
-            textureId: textureId,
-            texture: default,
-            pixelsPerUnit: pixelsPerUnit,
-            pivot: pivot,
-            border: border,
-            rect: rect,
-            textureRect: textureRect,
-            textureRectOffset: textureRectOffset,
-            associatedAlphaTextureId: associatedAlphaTextureId,
-            packingMode: packingMode,
-            flipMode: packingRotation,
-            atlasTextureScale: atlasTextureScale,
-            mesh: mesh);
-    }
+    /// <remarks>
+    /// Inherit: Sprite -> Texture -> EngineConfig.DefaultTextureFilter.
+    /// Типичный кейс: world/pixel-art = Nearest, UI = Linear.
+    /// </remarks>
+    public FilterMode FilterMode { get; set; } = FilterMode.Inherit;
 
     /// <summary>
     /// Создаёт спрайт напрямую из текстуры. По умолчанию — вся текстура.
@@ -104,29 +78,43 @@ public sealed class Sprite
         Rect? rect = null,
         Rect? textureRect = null,
         Vector2 textureRectOffset = default,
-        string? associatedAlphaTextureId = null,
         PackingMode packingMode = PackingMode.None,
-        FlipMode packingRotation = FlipMode.None,
+        FlipMode flipMode = FlipMode.None,
+        FilterMode filterMode = FilterMode.Inherit,
         float atlasTextureScale = 1f,
         SpriteMesh? mesh = null)
     {
+        ArgumentNullException.ThrowIfNull(texture);
+
         if (!texture.IsValid)
             throw new ArgumentOutOfRangeException(nameof(texture), "Texture must be valid.");
 
-        Initialize(
-            textureId: null,
-            texture: texture,
-            pixelsPerUnit: pixelsPerUnit,
-            pivot: pivot,
-            border: border,
-            rect: rect,
-            textureRect: textureRect,
-            textureRectOffset: textureRectOffset,
-            associatedAlphaTextureId: associatedAlphaTextureId,
-            packingMode: packingMode,
-            flipMode: packingRotation,
-            atlasTextureScale: atlasTextureScale,
-            mesh: mesh);
+        if (!(pixelsPerUnit > 0f) || float.IsNaN(pixelsPerUnit) || float.IsInfinity(pixelsPerUnit))
+            throw new ArgumentOutOfRangeException(nameof(pixelsPerUnit), pixelsPerUnit, "PixelsPerUnit must be finite and > 0.");
+
+        if (float.IsNaN(atlasTextureScale) || float.IsInfinity(atlasTextureScale))
+            throw new ArgumentOutOfRangeException(nameof(atlasTextureScale), atlasTextureScale, "AtlasTextureScale must be finite.");
+
+        var pv = pivot ?? new Vector2(0.5f, 0.5f);
+        if (float.IsNaN(pv.X) || float.IsNaN(pv.Y) || float.IsInfinity(pv.X) || float.IsInfinity(pv.Y))
+            throw new ArgumentOutOfRangeException(nameof(pivot), pivot, "Pivot must be finite.");
+
+        Texture = texture;
+
+        Rect = rect ?? default;
+        TextureRect = textureRect ?? Rect;
+        TextureRectOffset = textureRectOffset;
+
+        Pivot = pv;
+        Border = border;
+        PixelsPerUnit = pixelsPerUnit;
+
+        PackingMode = packingMode;
+        FlipMode = flipMode;
+        FilterMode = filterMode;
+        AtlasTextureScale = atlasTextureScale;
+
+        Mesh = mesh;
     }
 
     private void Initialize(

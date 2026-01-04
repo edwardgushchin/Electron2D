@@ -67,6 +67,9 @@ internal sealed class RenderSystem : IDisposable
     private Color _debugGridBackground;
     private Color _debugGridLine;
     private Color _debugGridAxis;
+    
+    private FilterMode _defaultTextureFilter = FilterMode.Linear;
+    private SDL.ScaleMode _spriteBatchScaleMode = SDL.ScaleMode.Linear;
 
     #endregion
 
@@ -108,6 +111,10 @@ internal sealed class RenderSystem : IDisposable
         _ownsRendererHandle = true;
 
         _queue.Preallocate(config.RenderQueueCapacity);
+        
+        _defaultTextureFilter = config.DefaultTextureFilter;
+        if (_defaultTextureFilter == FilterMode.Inherit)
+            _defaultTextureFilter = FilterMode.Linear;
 
         ConfigureDebugGrid(config);
         ApplyVSync(config);
@@ -222,10 +229,10 @@ internal sealed class RenderSystem : IDisposable
         if (_debugGridEnabled)
             DrawDebugGrid(in view);
 
-        // Ёмкость под худший случай: один спрайт на одну команду.
         EnsureSpriteBatchCapacity(commands.Length);
 
         _spriteBatchTexture = 0;
+        _spriteBatchScaleMode = SDL.ScaleMode.Linear;
         _spriteBatchVertexCount = 0;
         _spriteBatchIndexCount = 0;
         _spriteBatchSpriteCount = 0;
@@ -233,31 +240,47 @@ internal sealed class RenderSystem : IDisposable
         for (var i = 0; i < commands.Length; i++)
         {
             ref readonly var cmd = ref commands[i];
+
             var tex = cmd.Texture;
             if (!tex.IsValid)
                 continue;
 
             var textureHandle = tex.Handle;
 
-            if (_spriteBatchTexture != 0 && textureHandle != _spriteBatchTexture)
-                FlushSpriteBatch();
+            // 1) Разрешаем режим фильтрации для команды
+            var resolvedFilter = ResolveFilter(cmd.FilterMode, tex.FilterMode);
 
+            // 2) Конвертим в реальный SDL scale mode (Pixelart -> Nearest)
+            var sdlScaleMode = ToSdlScaleMode(resolvedFilter);
+
+            // 3) Батч брейк: либо текстура сменилась, либо scale mode сменилась
+            if (_spriteBatchTexture != 0 &&
+                (textureHandle != _spriteBatchTexture || sdlScaleMode != _spriteBatchScaleMode))
+            {
+                FlushSpriteBatch();
+            }
+
+            // 4) Начинаем новый батч
             if (_spriteBatchTexture == 0)
             {
                 _spriteBatchTexture = textureHandle;
+                _spriteBatchScaleMode = sdlScaleMode;
 
-                // Уникальные текстуры за кадр.
+                // Уникальные текстуры за кадр (считаем по handle, не по режиму)
                 TrackUniqueTexture(textureHandle);
 
-                // Эвристика бинд-счётчика: считаем "bind", когда handle меняется в потоке команд.
-                // (Оставлено как есть; см. примечание в FlushSpriteBatch про счётчики.)
+                // Эвристика "bind" по handle (оставляем твою семантику)
                 if (textureHandle != _lastTextureThisFrame)
                 {
                     _lastTextureThisFrame = textureHandle;
                     Profiler.AddCounter(ProfilerCounterId.RenderTextureBinds, 1);
                 }
+
+                // Важно: scale mode задаётся на SDL_Texture*, т.е. это состояние текстуры.
+                SDL.SetTextureScaleMode(_spriteBatchTexture, _spriteBatchScaleMode);
             }
 
+            // Если позже захочешь Pixelart-snap — можно добавить параметр resolvedFilter в EmitSpriteQuad
             EmitSpriteQuad(in cmd, in view);
         }
 
@@ -275,7 +298,7 @@ internal sealed class RenderSystem : IDisposable
         }
 
         // Счётчики: 1 drawcall на батч.
-        Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls, 1);
+        Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls);
         Profiler.AddCounter(ProfilerCounterId.RenderSprites, _spriteBatchSpriteCount);
 
         // ПРИМЕЧАНИЕ: Это добавляет texture-binds на батч, дополнительно к эвристике в Flush().
@@ -418,6 +441,31 @@ internal sealed class RenderSystem : IDisposable
         _spriteBatchVertexCount += 4;
         _spriteBatchIndexCount += 6;
         _spriteBatchSpriteCount++;
+    }
+    
+    private FilterMode ResolveFilter(FilterMode spriteMode, FilterMode textureMode)
+    {
+        // Sprite -> Texture -> Engine default
+        if (spriteMode != FilterMode.Inherit)
+            return spriteMode;
+
+        if (textureMode != FilterMode.Inherit)
+            return textureMode;
+
+        return _defaultTextureFilter;
+    }
+    
+    private static SDL.ScaleMode ToSdlScaleMode(FilterMode mode)
+    {
+        // Pixelart на уровне SDL = Nearest.
+        // Улучшение качества пиксель-арта делается не сэмплингом, а integer-scale + snap.
+        return mode switch
+        {
+            FilterMode.Nearest => SDL.ScaleMode.Nearest,
+            FilterMode.Linear => SDL.ScaleMode.Linear,
+            FilterMode.Pixelart => SDL.ScaleMode.Nearest,
+            _ => SDL.ScaleMode.Linear
+        };
     }
 
     #endregion

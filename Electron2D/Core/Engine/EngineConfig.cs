@@ -61,6 +61,8 @@ public sealed class EngineConfig
     /// Ёмкость очереди deferred-free (сколько Node может быть поставлено в QueueFree за кадр без аллокаций).
     /// </summary>
     public int DeferredFreeQueueCapacity { get; init; } = 4096;
+    
+    public FilterMode DefaultTextureFilter { get; set; } = FilterMode.Linear;
     #endregion
 
     #region Content

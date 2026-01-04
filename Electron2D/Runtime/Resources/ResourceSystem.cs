@@ -150,5 +150,6 @@ internal sealed class ResourceSystem
         return !SDL.GetTextureSize(handle, out var w, out var h) ? throw new InvalidOperationException($"SDL.GetTextureSize failed for '{path}'. {SDL.GetError()}") : (handle, (int)w, (int)h);
     }
 
+
     #endregion
 }

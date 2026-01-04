@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Electron2D;
+﻿using Electron2D;
 
 namespace StartGame;
 
@@ -11,14 +10,16 @@ internal static class Program
         {
             Window = new WindowConfig
             {
-                Title = "Electron2D: StartGame example",
+                Title = "Electron2D: Sprite order demo",
+                Width = 800,
+                Height = 600,
             },
-            //DebugGridEnabled = true,
-            //VSync = VSyncMode.Enabled
+
+            DebugGridEnabled = true,
         });
         
-        engine.SceneTree.Root.AddChild(new MainScene());
-
+        engine.SceneTree.Root.AddChild(new SpriteOrderScene());
+        
         engine.Run();
     }
 }

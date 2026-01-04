@@ -24,11 +24,13 @@ internal sealed class WindowSystem
         if (!SDL.InitSubSystem(SDL.InitFlags.Video))
             throw new InvalidOperationException($"SDL.InitSubSystem(Video) failed. {SDL.GetError()}");
 
+        var resizable = config.Resizable ? SDL.WindowFlags.Resizable : 0;
+        
         var windowHandle = SDL.CreateWindow(
             title: config.Title,
             w: config.Width,
             h: config.Height,
-            flags: SDL.WindowFlags.Resizable);
+            flags: resizable);
 
         if (windowHandle == 0)
         {

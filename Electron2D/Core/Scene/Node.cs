@@ -43,7 +43,7 @@ public class Node
         _name = name;
         Transform = new Transform(this);
 
-        _processMode = ProcessMode.Inherit;
+        _processMode = ProcessMode.Pausable;
         _effectiveProcessMode = ProcessMode.Always;
 
         // Godot-like: если метод переопределён — включаем по умолчанию.
@@ -296,6 +296,30 @@ public class Node
         AddComponentInstance(component);
         return component;
     }
+    
+    public bool TryGetComponent<T>(out T? component) where T : class, IComponent
+    {
+        for (var i = 0; i < _componentCount; i++)
+        {
+            if (_components[i] is T c)
+            {
+                component = c;
+                return true;
+            }
+        }
+
+        component = null;
+        return false;
+    }
+
+    public T? GetComponentOrNull<T>() where T : class, IComponent
+        => TryGetComponent<T>(out var c) ? c : null;
+
+    public T GetComponent<T>() where T : class, IComponent
+        => GetComponentOrNull<T>() ?? throw new InvalidOperationException($"Component not found: {typeof(T).Name}");
+
+    public bool HasComponent<T>() where T : class, IComponent
+        => TryGetComponent<T>(out _);
     #endregion
 
     #region Public API: node paths
@@ -528,6 +552,9 @@ public class Node
         {
             if (_components[i] is SpriteRenderer sr)
                 tree.RegisterSpriteRenderer(sr);
+            
+            if (_components[i] is SpriteAnimator sa)
+                tree.RegisterSpriteAnimator(sa);
         }
 
         EnterTree();
@@ -618,6 +645,9 @@ public class Node
             {
                 if (_components[i] is SpriteRenderer sr)
                     tree.UnregisterSpriteRenderer(sr);
+                
+                if (_components[i] is SpriteAnimator sa)
+                    tree.UnregisterSpriteAnimator(sa);
             }
 
             // Снять группы из индекса, пока tree ещё доступен.
@@ -674,6 +704,23 @@ public class Node
         // Если узел уже в дереве — регистрируем renderable сразу.
         if (_sceneTree is not null && component is SpriteRenderer sr)
             _sceneTree.RegisterSpriteRenderer(sr);
+        
+        // Автосвязка SpriteAnimator <-> SpriteRenderer на том же Node.
+        // Порядок AddComponent не важен: кто добавлен позже — тот “подхватит” пару.
+        if (component is SpriteAnimator sa)
+        {
+            if (TryGetComponent<SpriteRenderer>(out var srExisting))
+                sa.InternalBindIfEmpty(srExisting!);
+        }
+        else if (component is SpriteRenderer srAdded)
+        {
+            // Пробегаемся по уже добавленным аниматорам и привязываем тем, у кого ещё нет рендера.
+            for (var i = 0; i < _componentCount; i++)
+            {
+                if (_components[i] is SpriteAnimator sa2)
+                    sa2.InternalBindIfEmpty(srAdded);
+            }
+        }
     }
 
     private static void DestroySubtreeBottomUp(Node node)

@@ -6,6 +6,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartGame", "Examples\StartGame\StartGame.csproj", "{D34ED837-3749-417F-AB02-60FC886A96B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlappyBird", "Examples\FlappyBird\FlappyBird.csproj", "{87C4D7F7-BACF-4C1A-96C1-5123255B3E5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteAnimation", "Examples\SpriteAnimation\SpriteAnimation.csproj", "{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,18 @@ Global
 		{D34ED837-3749-417F-AB02-60FC886A96B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D34ED837-3749-417F-AB02-60FC886A96B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D34ED837-3749-417F-AB02-60FC886A96B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87C4D7F7-BACF-4C1A-96C1-5123255B3E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87C4D7F7-BACF-4C1A-96C1-5123255B3E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87C4D7F7-BACF-4C1A-96C1-5123255B3E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87C4D7F7-BACF-4C1A-96C1-5123255B3E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D34ED837-3749-417F-AB02-60FC886A96B6} = {F9A787B5-7F45-4678-9416-78553985B9F7}
+		{87C4D7F7-BACF-4C1A-96C1-5123255B3E5B} = {F9A787B5-7F45-4678-9416-78553985B9F7}
+		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C} = {F9A787B5-7F45-4678-9416-78553985B9F7}
 	EndGlobalSection
 EndGlobal
