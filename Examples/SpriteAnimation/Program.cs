@@ -4,6 +4,10 @@ namespace SpriteAnimation;
 
 internal static class Program
 {
+    private const int VirtualW = 320;
+    private const int VirtualH = 180;
+    private const int WindowScale = 3;
+
     public static void Main()
     {
         using var engine = new Engine(new EngineConfig
@@ -11,15 +15,27 @@ internal static class Program
             Window = new WindowConfig
             {
                 Title = "Electron2D: Sprite Animation Demo",
-                Width = 320 * 3,
-                Height = 180 * 3,
+                Mode = WindowMode.Windowed, // или ExclusiveFullscreen
+                Resizable = false,
+                Width = VirtualW * WindowScale,
+                Height = VirtualH * WindowScale
             },
-            DefaultTextureFilter = FilterMode.Pixelart,
+            Presentation = new RenderPresentationConfig
+            {
+                VirtualWidth = VirtualW,
+                VirtualHeight = VirtualH,
+                Mode = PresentationMode.IntegerScale
+            },
+
+            // Рекомендую включить VSync для стабильного ощущения и чтобы не гонять GPU/CPU зря.
+            VSync = VSyncMode.Enabled,
+            VSyncInterval = 1,
+
+            TextureFilter = FilterMode.Pixelart,
             DebugGridEnabled = true,
         });
-        
+
         engine.SceneTree.Root.AddChild(new MainScene());
-        
         engine.Run();
     }
 }

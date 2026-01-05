@@ -71,7 +71,7 @@ public class TextureAtlas
     public SpriteAnimationClip CreateClip(
         string clipName,
         string[] regionNames,
-        float frameDurationSeconds,
+        float fps,
         bool loop = true,
         float pixelsPerUnit = 100f,
         Vector2? pivot = null,
@@ -83,19 +83,16 @@ public class TextureAtlas
         if (regionNames is null || regionNames.Length == 0)
             throw new ArgumentException("regionNames must be non-empty.", nameof(regionNames));
 
-        if (!(frameDurationSeconds > 0f) || float.IsNaN(frameDurationSeconds) || float.IsInfinity(frameDurationSeconds))
-            throw new ArgumentOutOfRangeException(nameof(frameDurationSeconds), frameDurationSeconds,
-                "Frame duration must be finite and > 0.");
+        if (!(fps > 0f) || float.IsNaN(fps) || float.IsInfinity(fps))
+            throw new ArgumentOutOfRangeException(nameof(fps), fps, "Fps must be finite and > 0.");
 
-        var frames = new SpriteAnimationFrame[regionNames.Length];
+        var sprites = new Sprite[regionNames.Length];
         for (var i = 0; i < regionNames.Length; i++)
-        {
-            var sprite = CreateSprite(regionNames[i], pixelsPerUnit, pivot, flipMode: flipMode);
-            frames[i] = new SpriteAnimationFrame(sprite, frameDurationSeconds);
-        }
+            sprites[i] = CreateSprite(regionNames[i], pixelsPerUnit, pivot, flipMode: flipMode);
 
-        return new SpriteAnimationClip(clipName, frames, loop);
+        return new SpriteAnimationClip(clipName, sprites, fps, loop);
     }
+
 
     /// <summary>
     /// Создаёт клип по числовой последовательности: prefix + index (например run_0..run_5).
@@ -105,7 +102,7 @@ public class TextureAtlas
         string prefix,
         int firstIndex,
         int count,
-        float frameDurationSeconds,
+        float fps,
         bool loop = true,
         float pixelsPerUnit = 100f,
         Vector2? pivot = null,
@@ -118,6 +115,7 @@ public class TextureAtlas
         for (var i = 0; i < count; i++)
             names[i] = prefix + (firstIndex + i);
 
-        return CreateClip(clipName, names, frameDurationSeconds, loop, pixelsPerUnit, pivot, flipMode);
+        return CreateClip(clipName, names, fps, loop, pixelsPerUnit, pivot, flipMode);
     }
+
 }

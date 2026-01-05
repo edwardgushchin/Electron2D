@@ -15,14 +15,15 @@ internal readonly struct ViewState(
     float cos,
     float sin,
     bool hasRot,
+    bool pixelSnap,
     ViewCullRect cull)
 {
     #region Instance fields
 
-    /// <summary>Половина ширины view в мировых координатах.</summary>
+    /// <summary>Половина ширины view в пикселях (render space).</summary>
     public readonly float HalfW = halfW;
 
-    /// <summary>Половина высоты view в мировых координатах.</summary>
+    /// <summary>Половина высоты view в пикселях (render space).</summary>
     public readonly float HalfH = halfH;
 
     /// <summary>Pixels-per-unit (PPU) для перевода между пикселями и миром.</summary>
@@ -42,6 +43,12 @@ internal readonly struct ViewState(
 
     /// <summary>Есть ли вращение камеры (позволяет пропускать математику поворота).</summary>
     public readonly bool HasRot = hasRot;
+
+    /// <summary>
+    /// Если true — рендер может снапать вершины к целым пикселям, чтобы исключить sub-pixel jitter.
+    /// Обычно включается вместе с <see cref="PixelPerfectCamera"/>.
+    /// </summary>
+    public readonly bool PixelSnap = pixelSnap;
 
     /// <summary>Прямоугольник отсечения (culling) в мировых координатах.</summary>
     public readonly ViewCullRect Cull = cull;

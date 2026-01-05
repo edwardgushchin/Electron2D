@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>
 /// Набор каналов событий движка с единым управлением стадиями (Swap/Clear) для всех очередей.
 /// </summary>
-internal sealed class EventQueue(int engineCapacity, int windowCapacity, int inputCapacity)
+internal sealed class EventQueue(int engineCapacity, int windowCapacity, int keyboardCapacity, int mouseCapacity)
 {
     #region Properties
 
@@ -16,7 +16,11 @@ internal sealed class EventQueue(int engineCapacity, int windowCapacity, int inp
     public EventChannel<WindowEvent> Window { get; } = new(windowCapacity);
 
     /// <summary>Канал событий ввода.</summary>
-    public EventChannel<InputEvent> Input { get; } = new(inputCapacity);
+    //public EventChannel<InputEvent> Input { get; } = new(inputCapacity);
+    
+    public EventChannel<MouseEvent> Mouse { get; } = new(mouseCapacity);
+    
+    public EventChannel<KeyboardEvent> Keyboard { get; } = new(keyboardCapacity);
 
     #endregion
 
@@ -29,7 +33,8 @@ internal sealed class EventQueue(int engineCapacity, int windowCapacity, int inp
     {
         Engine.Swap();
         Window.Swap();
-        Input.Swap();
+        Mouse.Swap();
+        Keyboard.Swap();
     }
 
     /// <summary>
@@ -39,7 +44,8 @@ internal sealed class EventQueue(int engineCapacity, int windowCapacity, int inp
     {
         Engine.Clear();
         Window.Clear();
-        Input.Clear();
+        Mouse.Clear();
+        Keyboard.Clear();
     }
 
     #endregion

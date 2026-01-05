@@ -6,11 +6,9 @@ namespace Electron2D;
 /// <remarks>
 /// Code использует движковый KeyCode; маппинг с платформы выполняется в Runtime.
 /// </remarks>
-public readonly struct InputEvent(InputEventType type, ulong timestamp, KeyCode code, float x = 0f, float y = 0f)
+public readonly struct KeyboardEvent(KeyboardEventType type, ulong timestamp, KeyCode code)
 {
-    public InputEventType Type { get; } = type;
+    public KeyboardEventType Type { get; } = type;
     public KeyCode Code { get; } = code;
-    public float X { get; } = x;
-    public float Y { get; } = y;
     public ulong Timestamp { get; } = timestamp;
 }

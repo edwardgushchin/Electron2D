@@ -75,7 +75,7 @@ public sealed class SceneTree
         _freeCount = 0;
     }
 
-    internal void DispatchInputEvents(ReadOnlySpan<InputEvent> events)
+    /*internal void DispatchInputEvents(ReadOnlySpan<InputEvent> events)
     {
         for (var i = 0; i < events.Length; i++)
         {
@@ -111,7 +111,7 @@ public sealed class SceneTree
             // 5) Node._unhandled_input()
             DispatchInputRecursive(Root, ev, InputDispatchPhase.UnhandledInput, parentMode: ProcessMode.Always);
         }
-    }
+    }*/
 
     internal void Process(float delta)
     {
@@ -327,7 +327,7 @@ public sealed class SceneTree
     #endregion
 
     #region Private helpers
-    private bool DispatchInputRecursive(Node node, InputEvent ev, InputDispatchPhase phase, ProcessMode parentMode)
+    /*private bool DispatchInputRecursive(Node node, InputEvent ev, InputDispatchPhase phase, ProcessMode parentMode)
     {
         // Effective mode.
         var mode = node.ProcessMode == ProcessMode.Inherit ? parentMode : node.ProcessMode;
@@ -369,7 +369,7 @@ public sealed class SceneTree
         }
 
         return _inputHandled;
-    }
+    }*/
     
     private void EnsureProcessingLists()
     {
@@ -431,7 +431,7 @@ public sealed class SceneTree
         return null;
     }
 
-    private void DispatchGuiInput(InputEvent ev)
+    /*private void DispatchGuiInput(InputEvent ev)
     {
         var focused = FocusedControl;
         if (focused is null)
@@ -450,7 +450,7 @@ public sealed class SceneTree
             return;
 
         focused.InternalGUIInput(ev);
-    }
+    }*/
 
     private static ProcessMode GetEffectiveProcessMode(Node node)
     {
@@ -468,11 +468,11 @@ public sealed class SceneTree
         return mode;
     }
 
-    private static bool IsKeyEvent(InputEventType type)
+    /*private static bool IsKeyEvent(InputEventType type)
         => type is InputEventType.KeyDown or InputEventType.KeyUp;
 
     private static bool IsShortcutEligible(InputEventType type)
         => type is InputEventType.KeyDown or InputEventType.KeyUp
-            or InputEventType.GamepadButtonDown or InputEventType.GamepadButtonUp;
+            or InputEventType.GamepadButtonDown or InputEventType.GamepadButtonUp;*/
     #endregion
 }

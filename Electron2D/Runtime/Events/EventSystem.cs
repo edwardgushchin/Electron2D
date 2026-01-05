@@ -26,6 +26,7 @@ internal sealed class EventSystem
 
     private int _maxBatchesPerFrame;
     private bool _quitRequested;
+    private nint _rendererHandleForCoordinates;
 
     #endregion
 
@@ -44,25 +45,28 @@ internal sealed class EventSystem
     public int DroppedWindowEvents { get; private set; }
 
     /// <summary>Сколько событий ввода было отброшено из-за переполнения канала.</summary>
-    public int DroppedInputEvents { get; private set; }
+    public int DroppedKeyboardEvents { get; private set; }
+    
+    public int DroppedMouseEvents { get; private set; }
 
     #endregion
 
     #region Public API
 
-    public void Initialize(EngineConfig config)
+    public void Initialize(EngineConfig config, nint rendererHandleForCoordinates)
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Events))
             throw new InvalidOperationException($"SDL.InitSubSystem(Events) failed. {SDL.GetError()}");
 
+        _rendererHandleForCoordinates = rendererHandleForCoordinates;
+
         _eventQueue = new EventQueue(
             config.EngineEventsPerFrame,
             config.WindowEventsPerFrame,
-            config.InputEventsPerFrame);
+            config.KeyboardEventsPerFrame,
+            config.MouseEventsPerFrame);
 
-        // Сколько максимум SDL-событий вычерпываем за кадр.
-        // Берём сумму capacity каналов: больше всё равно принять не сможем (TryPublish начнёт возвращать false).
-        var maxEventsThisFrame = config.EngineEventsPerFrame + config.WindowEventsPerFrame + config.InputEventsPerFrame;
+        var maxEventsThisFrame = config.EngineEventsPerFrame + config.WindowEventsPerFrame + config.KeyboardEventsPerFrame;
         _maxBatchesPerFrame = Math.Max(1, (maxEventsThisFrame + BatchSize - 1) / BatchSize);
 
         _quitRequested = false;
@@ -84,7 +88,7 @@ internal sealed class EventSystem
 
         DroppedEngineEvents = 0;
         DroppedWindowEvents = 0;
-        DroppedInputEvents = 0;
+        DroppedKeyboardEvents = 0;
 
         var buffer = stackalloc SDL.Event[BatchSize];
         var bufferPtr = (IntPtr)buffer;
@@ -103,8 +107,16 @@ internal sealed class EventSystem
 
             for (var i = 0; i < got; i++)
             {
-                ref readonly var sdlEvent = ref buffer[i];
+                // ВАЖНО: делаем копию, чтобы можно было модифицировать через ConvertEventToRenderCoordinates
+                var sdlEvent = buffer[i];
                 var type = (SDL.EventType)sdlEvent.Type;
+
+                if (_rendererHandleForCoordinates != 0 && NeedsCoordinateConversion(type))
+                {
+                    // Конвертирует mouse/touch/etc в координаты рендера (логические), учитывая viewport/letterbox/integer-scale.
+                    // Возвращает false при ошибке, тогда оставляем исходные координаты.
+                    SDL.ConvertEventToRenderCoordinates(_rendererHandleForCoordinates, ref sdlEvent);
+                }
 
                 switch (type)
                 {
@@ -148,16 +160,43 @@ internal sealed class EventSystem
                         break;
 
                     case SDL.EventType.KeyDown:
-                        TryPublishInputEvent(InputEventType.KeyDown, sdlEvent.Key.Timestamp, sdlEvent.Key.Scancode);
+                        TryPublishKeyboardEvent(KeyboardEventType.KeyDown, sdlEvent.Key.Timestamp, (KeyCode)sdlEvent.Key.Scancode);
                         break;
 
                     case SDL.EventType.KeyUp:
-                        TryPublishInputEvent(InputEventType.KeyUp, sdlEvent.Key.Timestamp, sdlEvent.Key.Scancode);
+                        TryPublishKeyboardEvent(KeyboardEventType.KeyUp, sdlEvent.Key.Timestamp, (KeyCode)sdlEvent.Key.Scancode);
                         break;
 
-                    // TODO: добавить маппинг остальных SDL input-событий в _eventQueue.Input.TryPublish(...)
+                    // ---- Mouse (уже в render coordinates, если logical presentation включена)
+                    case SDL.EventType.MouseMotion:
+                        TryPublishMouseMotion(sdlEvent.Motion.Timestamp, sdlEvent.Motion.X, sdlEvent.Motion.Y);
+                        break;
+
+                    case SDL.EventType.MouseButtonDown:
+                        TryPublishMouseButton(MouseEventType.MouseButtonDown,
+                            sdlEvent.Button.Timestamp,
+                            (MouseButton)sdlEvent.Button.Button,
+                            sdlEvent.Button.X,
+                            sdlEvent.Button.Y);
+                        break;
+
+                    case SDL.EventType.MouseButtonUp:
+                        TryPublishMouseButton(MouseEventType.MouseButtonUp,
+                            sdlEvent.Button.Timestamp,
+                            (MouseButton)sdlEvent.Button.Button,
+                            sdlEvent.Button.X,
+                            sdlEvent.Button.Y);
+                        break;
+
+                    case SDL.EventType.MouseWheel:
+                        // Wheel обычно не “координаты курсора”, но это тоже событие ввода; храним scroll delta в X/Y.
+                        TryPublishMouseWheel(sdlEvent.Wheel.Timestamp, sdlEvent.Wheel.X, sdlEvent.Wheel.Y);
+                        break;
+
+                    // TODO: остальной input маппинг
                 }
             }
+
 
             if (got < BatchSize)
                 break;
@@ -172,6 +211,55 @@ internal sealed class EventSystem
     #endregion
 
     #region Private helpers
+    
+    private static bool NeedsCoordinateConversion(SDL.EventType type)
+    {
+        // Сюда добавляйте все event types, у которых есть позиция в окне (mouse/touch/pen/drop...).
+        return type is SDL.EventType.MouseMotion
+            or SDL.EventType.MouseButtonDown
+            or SDL.EventType.MouseButtonUp;
+        // MouseWheel обычно не нуждается, т.к. X/Y — это scroll delta, но если у вас wheel хранит mouseX/mouseY — добавьте.
+    }
+
+    private void TryPublishMouseMotion(ulong timestamp, float x, float y)
+    { 
+        if (!_eventQueue.Mouse.TryPublish(new MouseEvent(MouseEventType.MouseMotion, timestamp, 0, x, y)))
+            DroppedMouseEvents++;
+    }
+
+    private void TryPublishMouseButton(MouseEventType type, ulong timestamp, MouseButton button, float x, float y)
+    {
+        //var code = ToMouseButtonKeyCode(button);
+        //TryPublishInputEvent(type, timestamp, 0, x, y);
+        if (!_eventQueue.Mouse.TryPublish(new MouseEvent(type, timestamp, button, x, y)))
+            DroppedMouseEvents++;
+    }
+
+    private void TryPublishMouseWheel(ulong timestamp, float scrollX, float scrollY)
+    {
+        if (!_eventQueue.Mouse.TryPublish(new MouseEvent(MouseEventType.MouseWheel, timestamp, 0, scrollX, scrollY)))
+            DroppedMouseEvents++;
+    }
+
+    private void TryPublishKeyboardEvent(KeyboardEventType type, ulong timestamp, KeyCode code)
+    {
+        if (!_eventQueue.Keyboard.TryPublish(new KeyboardEvent(type, timestamp, code)))
+            DroppedKeyboardEvents++;
+    }
+
+    /*private static KeyCode ToMouseButtonKeyCode(uint button)
+    {
+        // SDL обычно: 1=left, 2=middle, 3=right, 4=x1, 5=x2
+        return button switch
+        {
+            1 => KeyCode.MouseLeft,
+            2 => KeyCode.MouseMiddle,
+            3 => KeyCode.MouseRight,
+            4 => KeyCode.MouseX1,
+            5 => KeyCode.MouseX2,
+            _ => KeyCode.Unknown
+        };
+    }*/
 
     private void TryPublishEngineQuitRequested()
     {
@@ -188,12 +276,6 @@ internal sealed class EventSystem
     {
         if (!_eventQueue.Window.TryPublish(new WindowEvent(type, timestamp, windowId, data1, data2)))
             DroppedWindowEvents++;
-    }
-
-    private void TryPublishInputEvent(InputEventType type, ulong timestamp, SDL.Scancode scancode)
-    {
-        if (!_eventQueue.Input.TryPublish(new InputEvent(type, timestamp, code: (KeyCode)scancode)))
-            DroppedInputEvents++;
     }
 
     #endregion

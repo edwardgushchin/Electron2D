@@ -1,4 +1,3 @@
-using System;
 using System.Numerics;
 
 using SDL3;
@@ -70,6 +69,10 @@ internal sealed class RenderSystem : IDisposable
     
     private FilterMode _defaultTextureFilter = FilterMode.Linear;
     private SDL.ScaleMode _spriteBatchScaleMode = SDL.ScaleMode.Linear;
+    
+    private bool _logicalPresentationEnabled;
+    private int _logicalW;
+    private int _logicalH;
 
     #endregion
 
@@ -112,12 +115,13 @@ internal sealed class RenderSystem : IDisposable
 
         _queue.Preallocate(config.RenderQueueCapacity);
         
-        _defaultTextureFilter = config.DefaultTextureFilter;
+        _defaultTextureFilter = config.TextureFilter;
         if (_defaultTextureFilter == FilterMode.Inherit)
             _defaultTextureFilter = FilterMode.Linear;
 
         ConfigureDebugGrid(config);
         ApplyVSync(config);
+        ApplyPresentation(config); // новый метод
 
         _fallbackOrthoSize = 5f;
     }
@@ -142,7 +146,7 @@ internal sealed class RenderSystem : IDisposable
         var bg = _debugGridEnabled ? _debugGridBackground : scene.ClearColor;
         SDL.SetRenderDrawColor(_rendererHandle, bg.Red, bg.Green, bg.Blue, bg.Alpha);
         SDL.RenderClear(_rendererHandle);
-        Profiler.AddCounter(ProfilerCounterId.RenderClears, 1);
+        Profiler.AddCounter(ProfilerCounterId.RenderClears);
     }
 
     public void BuildRenderQueue(SceneTree sceneTree, ResourceSystem resources)
@@ -216,7 +220,7 @@ internal sealed class RenderSystem : IDisposable
 
         if (commands.Length > 1 && _queue.NeedsSort)
         {
-            Profiler.AddCounter(ProfilerCounterId.RenderSortTriggered, 1);
+            Profiler.AddCounter(ProfilerCounterId.RenderSortTriggered);
             Profiler.SetCounter(ProfilerCounterId.RenderSortCommands, commands.Length);
 
             using (Profiler.Sample(ProfilerSampleId.RenderSort))
@@ -273,15 +277,18 @@ internal sealed class RenderSystem : IDisposable
                 if (textureHandle != _lastTextureThisFrame)
                 {
                     _lastTextureThisFrame = textureHandle;
-                    Profiler.AddCounter(ProfilerCounterId.RenderTextureBinds, 1);
+                    Profiler.AddCounter(ProfilerCounterId.RenderTextureBinds);
                 }
 
                 // Важно: scale mode задаётся на SDL_Texture*, т.е. это состояние текстуры.
                 SDL.SetTextureScaleMode(_spriteBatchTexture, _spriteBatchScaleMode);
             }
 
-            // Если позже захочешь Pixelart-snap — можно добавить параметр resolvedFilter в EmitSpriteQuad
-            EmitSpriteQuad(in cmd, in view);
+            // Pixel snap (только для Nearest/Pixelart и только без rotation):
+            // избавляет от sub-pixel jitter при движении.
+            var snapToPixel = view.PixelSnap && sdlScaleMode == SDL.ScaleMode.Nearest && cmd.Rotation == 0f;
+
+            EmitSpriteQuad(in cmd, in view, snapToPixel);
         }
 
         FlushSpriteBatch();
@@ -319,7 +326,7 @@ internal sealed class RenderSystem : IDisposable
         _spriteBatchSpriteCount = 0;
     }
 
-    private void EmitSpriteQuad(in SpriteCommand cmd, in ViewState view)
+    private void EmitSpriteQuad(in SpriteCommand cmd, in ViewState view, bool snapToPixel)
     {
         var tex = cmd.Texture;
 
@@ -356,6 +363,20 @@ internal sealed class RenderSystem : IDisposable
         // Origin в пикселях (в текущей конвенции).
         var originPxX = cmd.OriginWorld.X * view.Ppu;
         var originPxY = (sizeWorld.Y - cmd.OriginWorld.Y) * view.Ppu;
+
+        // Pixel snap: снапаем pivot + origin (и, на всякий случай, размеры) к целым пикселям.
+        // Это делает квад всегда выровненным по пиксельной сетке.
+        if (snapToPixel)
+        {
+            pivotX = MathF.Round(pivotX);
+            pivotY = MathF.Round(pivotY);
+
+            originPxX = MathF.Round(originPxX);
+            originPxY = MathF.Round(originPxY);
+
+            wPx = MathF.Round(wPx);
+            hPx = MathF.Round(hPx);
+        }
 
         // Локальные углы вокруг pivot (screen space, y-down).
         var x0 = -originPxX;      var y0 = -originPxY;      // top-left
@@ -443,29 +464,51 @@ internal sealed class RenderSystem : IDisposable
         _spriteBatchSpriteCount++;
     }
     
-    private FilterMode ResolveFilter(FilterMode spriteMode, FilterMode textureMode)
-    {
-        // Sprite -> Texture -> Engine default
-        if (spriteMode != FilterMode.Inherit)
-            return spriteMode;
-
-        if (textureMode != FilterMode.Inherit)
-            return textureMode;
-
-        return _defaultTextureFilter;
-    }
     
-    private static SDL.ScaleMode ToSdlScaleMode(FilterMode mode)
+    private void ApplyPresentation(EngineConfig config)
     {
-        // Pixelart на уровне SDL = Nearest.
-        // Улучшение качества пиксель-арта делается не сэмплингом, а integer-scale + snap.
-        return mode switch
+        var p = config.Presentation;
+
+        var mode = p.Mode switch
         {
-            FilterMode.Nearest => SDL.ScaleMode.Nearest,
-            FilterMode.Linear => SDL.ScaleMode.Linear,
-            FilterMode.Pixelart => SDL.ScaleMode.Nearest,
-            _ => SDL.ScaleMode.Linear
+            PresentationMode.Disabled     => SDL.RendererLogicalPresentation.Disabled,
+            PresentationMode.Stretch      => SDL.RendererLogicalPresentation.Stretch,
+            PresentationMode.Letterbox    => SDL.RendererLogicalPresentation.Letterbox,
+            PresentationMode.Overscan     => SDL.RendererLogicalPresentation.Overscan,
+            PresentationMode.IntegerScale => SDL.RendererLogicalPresentation.IntegerScale,
+            _ => SDL.RendererLogicalPresentation.Disabled
         };
+
+        if (mode == SDL.RendererLogicalPresentation.Disabled)
+        {
+            // Важно: корректно “сбрасываем” logical presentation.
+            SDL.SetRenderLogicalPresentation(_rendererHandle, 0, 0, SDL.RendererLogicalPresentation.Disabled);
+
+            _logicalPresentationEnabled = false;
+            _logicalW = 0;
+            _logicalH = 0;
+            return;
+        }
+
+        var vw = p.VirtualWidth;
+        var vh = p.VirtualHeight;
+
+        // Если virtual size не задан — берём текущий размер вывода на момент инициализации.
+        if (vw <= 0 || vh <= 0)
+        {
+            SDL.GetRenderOutputSize(_rendererHandle, out var outW, out var outH);
+            if (outW <= 0) outW = 1;
+            if (outH <= 0) outH = 1;
+
+            vw = outW;
+            vh = outH;
+        }
+
+        SDL.SetRenderLogicalPresentation(_rendererHandle, vw, vh, mode);
+
+        _logicalPresentationEnabled = true;
+        _logicalW = vw;
+        _logicalH = vh;
     }
 
     #endregion
@@ -484,7 +527,22 @@ internal sealed class RenderSystem : IDisposable
 
     private ViewState BuildViewState()
     {
-        SDL.GetRenderOutputSize(_rendererHandle, out var outW, out var outH);
+        int outW, outH;
+
+        if (_logicalPresentationEnabled && _logicalW > 0 && _logicalH > 0)
+        {
+            // В logical presentation все координаты рендера должны быть в virtual space.
+            outW = _logicalW;
+            outH = _logicalH;
+        }
+        else
+        {
+            SDL.GetRenderOutputSize(_rendererHandle, out outW, out outH);
+
+            // Safety (например, свёрнутое окно / транзит ресайза).
+            if (outW <= 0) outW = 1;
+            if (outH <= 0) outH = 1;
+        }
 
         // Safety (например, свёрнутое окно / транзит ресайза).
         if (outW <= 0) outW = 1;
@@ -509,20 +567,49 @@ internal sealed class RenderSystem : IDisposable
             camRot = cam.Transform.WorldRotation;
         }
 
+        // Pixel-perfect override (фиксируем PPU и, опционально, запрещаем rotation)
+        // + опциональный render-time pixel snapping (для pixel-art).
+        float orthoSize;
+        float ppu;
+        var pixelSnap = false;
+
+        if (cam is PixelPerfectCamera ppcam)
+        {
+            if (ppcam.EnforceNoRotation)
+                camRot = 0f;
+
+            ppu = MathF.Max(1f, ppcam.PixelsPerUnit);
+            orthoSize = ppcam.ResolveOrthoSize(outH);
+
+            camPos = ppcam.SnapWorldPosition(camPos, ppu);
+
+            // Если камера сама работает в pixel-perfect режиме —
+            // дополнительно разрешаем снап рендеринга к целым пикселям.
+            // (При наличии вращения снап намеренно отключаем ниже на hot-path.)
+            pixelSnap = ppcam.SnapPosition;
+        }
+        else
+        {
+            orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
+            if (!(orthoSize > 0f))
+                orthoSize = MinPositiveFloat;
+
+            // Pixels per 1 world-unit (vertical).
+            ppu = outH / (2f * orthoSize);
+            if (!(ppu > 0f))
+                ppu = MinPositiveFloat;
+        }
+
         var hasRot = camRot != 0f;
+
+        // При вращении камеры снап вершин к целым пикселям даёт артефакты,
+        // поэтому отключаем его жёстко.
+        if (hasRot)
+            pixelSnap = false;
 
         // Сохраняем cos/sin(camRot), применяем поворот на -camRot матрицей [c s; -s c].
         var c = hasRot ? MathF.Cos(camRot) : 1f;
         var s = hasRot ? MathF.Sin(camRot) : 0f;
-
-        var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
-        if (!(orthoSize > 0f))
-            orthoSize = MinPositiveFloat;
-
-        // Pixels per 1 world-unit (vertical).
-        var ppu = outH / (2f * orthoSize);
-        if (!(ppu > 0f))
-            ppu = MinPositiveFloat;
 
         // Cull rect (world units).
         var invPpu = 1f / ppu;
@@ -553,8 +640,10 @@ internal sealed class RenderSystem : IDisposable
             cos: c,
             sin: s,
             hasRot: hasRot,
+            pixelSnap: pixelSnap,
             cull: cull);
     }
+
 
     private void EnsureSpriteBatchCapacity(int spritesNeeded)
     {
@@ -847,6 +936,31 @@ internal sealed class RenderSystem : IDisposable
 
     private void SetDrawColor(in Color c)
         => SDL.SetRenderDrawColor(_rendererHandle, c.Red, c.Green, c.Blue, c.Alpha);
+    
+    private FilterMode ResolveFilter(FilterMode spriteMode, FilterMode textureMode)
+    {
+        // Sprite -> Texture -> Engine default
+        if (spriteMode != FilterMode.Inherit)
+            return spriteMode;
+
+        if (textureMode != FilterMode.Inherit)
+            return textureMode;
+
+        return _defaultTextureFilter;
+    }
+    
+    private static SDL.ScaleMode ToSdlScaleMode(FilterMode mode)
+    {
+        // Pixelart на уровне SDL = Nearest.
+        // Улучшение качества пиксель-арта делается не сэмплингом, а integer-scale + snap.
+        return mode switch
+        {
+            FilterMode.Nearest => SDL.ScaleMode.Nearest,
+            FilterMode.Linear => SDL.ScaleMode.Linear,
+            FilterMode.Pixelart => SDL.ScaleMode.Nearest,
+            _ => SDL.ScaleMode.Linear
+        };
+    }
 
     #endregion
 }

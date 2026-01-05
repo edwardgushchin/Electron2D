@@ -1,3 +1,4 @@
+using System.Numerics;
 using Electron2D;
 
 namespace SpriteAnimation;
@@ -5,37 +6,36 @@ namespace SpriteAnimation;
 public class MainScene() : Node("MainScene")
 {
     private Background _background = null!;
-    private Camera _camera = null!;
-    
+    private PixelPerfectCamera _camera = null!;
+    private Player _player = null!;
+    private const float _groundY = -0.1f;
+
     protected override void EnterTree()
     {
         _background = new Background("Background");
-        _camera = new Camera("Main Camera")
+
+        _camera = new PixelPerfectCamera("Main Camera")
         {
-            OrthoSize = 0.9f
+            Current = true,
+            PixelsPerUnit = 100,
+            SnapPosition = true,
+            EnforceNoRotation = true
         };
-        
+
         AddChild(_background);
+        AddChild(_player = new Player("Player"));
         AddChild(_camera);
-    }
-    
-    protected override void Ready()
-    {
-        base.Ready();
-    }
-    
-    protected override void Process(float delta)
-    {
-        base.Process(delta);
-    }
-    
-    protected override void ExitTree()
-    {
-        base.ExitTree();
+
+        // Дефолтная позиция персонажа: нижняя часть экрана.
+        // При Pivot = (0.5, 1.0) координата Y воспринимается как "пол".
+        _player.Transform.WorldPosition = new Vector2(-0.7f, _groundY);
     }
 
-    protected override void Destroy()
+    protected override void Process(float delta)
     {
-        base.Destroy();
+        // Минимальный follow (без сглаживания) — камера центрируется по игроку.
+        // PixelPerfectCamera сама снапает позицию на сетку 1/PPU.
+        var p = _player.Transform.WorldPosition;
+        _camera.Transform.WorldPosition = p with { Y = 0f };
     }
 }

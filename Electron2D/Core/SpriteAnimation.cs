@@ -96,12 +96,8 @@ public sealed class SpriteAnimation
         for (var i = 0; i < frames.Length; i++)
         {
             var f = frames[i];
-            if (f.Sprite is null)
+            if (f is null)
                 throw new ArgumentException($"Clip frame {i}: Sprite is null.", nameof(clip));
-
-            var d = f.DurationSeconds;
-            if (!(d > 0f) || float.IsNaN(d) || float.IsInfinity(d))
-                throw new ArgumentException($"Clip frame {i}: DurationSeconds must be finite and > 0.", nameof(clip));
         }
     }
 }

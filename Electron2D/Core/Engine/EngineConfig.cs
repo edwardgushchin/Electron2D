@@ -11,6 +11,8 @@ public sealed class EngineConfig
     #region Core systems
     public WindowConfig Window { get; init; } = new();
     public PhysicsConfig Physics { get; init; } = new();
+    
+    public RenderPresentationConfig Presentation { get; init; } = new();
     #endregion
 
     #region Timing
@@ -51,7 +53,8 @@ public sealed class EngineConfig
     #region Events
     public int EngineEventsPerFrame { get; init; } = 16;
     public int WindowEventsPerFrame { get; init; } = 256;
-    public int InputEventsPerFrame { get; init; } = 512;
+    public int KeyboardEventsPerFrame { get; init; } = 512;
+    public int MouseEventsPerFrame { get; init; } = 512;
     #endregion
 
     #region Rendering
@@ -62,7 +65,7 @@ public sealed class EngineConfig
     /// </summary>
     public int DeferredFreeQueueCapacity { get; init; } = 4096;
     
-    public FilterMode DefaultTextureFilter { get; set; } = FilterMode.Linear;
+    public FilterMode TextureFilter { get; set; } = FilterMode.Linear;
     #endregion
 
     #region Content

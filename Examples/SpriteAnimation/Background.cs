@@ -14,9 +14,10 @@ public class Background(string name) : Node(name)
         var _layer2 = Resources.GetTexture(Path.Combine("background", "background_layer_2.png"));
         var _layer3 = Resources.GetTexture(Path.Combine("background", "background_layer_3.png"));
 
-        _bottomBackground = new BackgroundPartial(new Sprite(_layer1), "layer1");
-        _midlleBackground = new BackgroundPartial(new Sprite(_layer2), "layer2");
-        _topBackground = new BackgroundPartial(new Sprite(_layer3), "layer3");
+        _bottomBackground = new BackgroundPartial(new Sprite(_layer1), "layer1", layer: 0);
+        _midlleBackground = new BackgroundPartial(new Sprite(_layer2), "layer2", layer: 1);
+        _topBackground    = new BackgroundPartial(new Sprite(_layer3), "layer3", layer: 2);
+
         
         AddChild(_bottomBackground);
         AddChild(_midlleBackground);

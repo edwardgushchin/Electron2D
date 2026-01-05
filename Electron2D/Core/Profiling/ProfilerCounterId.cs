@@ -9,6 +9,7 @@ public enum ProfilerCounterId : int
     EventsEngineRead = 0,
     EventsWindowRead,
     EventsInputRead,
+    EventsMouseRead,
     EventsDroppedEngine,
     EventsDroppedWindow,
     InputDroppedEvents,

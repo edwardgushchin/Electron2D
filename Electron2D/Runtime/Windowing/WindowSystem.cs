@@ -132,9 +132,16 @@ internal sealed class WindowSystem
     {
         SDL.SetWindowBordered(windowHandle, false);
 
+        // Если пользователь не задавал размеры явно — не пытаться “эксклюзивиться” в 800×600.
+        // Вместо этого используем desktop fullscreen (без смены display mode).
+        if (config is { Width: 800, Height: 600 }) // текущие дефолты WindowConfig
+        {
+            ApplyBorderlessFullscreenDesktop(windowHandle);
+            return;
+        }
+
         var displayId = SDL.GetDisplayForWindow(windowHandle);
 
-        // refreshRate=0.0f => "desktop refresh rate" (по документации SDL).
         if (SDL.GetClosestFullscreenDisplayMode(
                 displayID: displayId,
                 w: config.Width,
@@ -148,8 +155,6 @@ internal sealed class WindowSystem
             return;
         }
 
-        // Если WM/драйвер отказался от requested exclusive mode (или подходящего режима нет),
-        // откатываемся на desktop (borderless) fullscreen.
         ApplyBorderlessFullscreenDesktop(windowHandle);
     }
 

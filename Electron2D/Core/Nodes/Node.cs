@@ -510,22 +510,22 @@ public class Node
     /// Вызывается при возникновении события ввода.
     /// Событие распространяется вверх по дереву, пока не будет помечено как обработанное.
     /// </summary>
-    protected virtual void HandleInput(InputEvent inputEvent) { }
+    //protected virtual void HandleInput(InputEvent inputEvent) { }
 
     /// <summary>
     /// Вызывается для shortcut-ввода (до unhandled), если поддерживается пайплайном ввода.
     /// </summary>
-    protected virtual void HandleShortcutInput(InputEvent inputEvent) { }
+    //protected virtual void HandleShortcutInput(InputEvent inputEvent) { }
 
     /// <summary>
     /// Вызывается для необработанного ввода (после <see cref="HandleInput"/> и после UI).
     /// </summary>
-    protected virtual void HandleUnhandledInput(InputEvent inputEvent) { }
+    //protected virtual void HandleUnhandledInput(InputEvent inputEvent) { }
 
     /// <summary>
     /// Вызывается для необработанных событий клавиатуры (опциональный быстрый путь).
     /// </summary>
-    protected virtual void HandleUnhandledKeyInput(InputEvent inputEvent) { }
+    //protected virtual void HandleUnhandledKeyInput(InputEvent inputEvent) { }
 
     protected void SetInputHandled() => _sceneTree?.MarkInputHandled();
     #endregion
@@ -564,6 +564,17 @@ public class Node
         for (var i = 0; i < _children.Count; i++)
         {
             var child = _children[i];
+
+            // Ребёнок мог быть добавлен во время EnterTree() этого узла.
+            // AddChild() уже вызвал child.InternalEnterTree(tree), поэтому здесь второй раз не входим.
+            if (child._sceneTree is not null)
+            {
+                // Если вдруг это другое дерево — это логическая ошибка.
+                if (!ReferenceEquals(child._sceneTree, tree))
+                    throw new InvalidOperationException("Child is already inside another SceneTree.");
+                continue;
+            }
+
             child.InternalEnterTree(tree);
 
             // parent signal after child реально вошёл
@@ -608,13 +619,13 @@ public class Node
         _onExiting?.Emit();
     }
 
-    internal void InternalInput(InputEvent inputEvent) => HandleInput(inputEvent);
+    //internal void InternalInput(InputEvent inputEvent) => HandleInput(inputEvent);
 
-    internal void InternalShortcutInput(InputEvent inputEvent) => HandleShortcutInput(inputEvent);
+    //internal void InternalShortcutInput(InputEvent inputEvent) => HandleShortcutInput(inputEvent);
 
-    internal void InternalUnhandledInput(InputEvent inputEvent) => HandleUnhandledInput(inputEvent);
+    //internal void InternalUnhandledInput(InputEvent inputEvent) => HandleUnhandledInput(inputEvent);
 
-    internal void InternalUnhandledKeyInput(InputEvent inputEvent) => HandleUnhandledKeyInput(inputEvent);
+    //internal void InternalUnhandledKeyInput(InputEvent inputEvent) => HandleUnhandledKeyInput(inputEvent);
 
     internal void InternalFreeImmediate()
     {
@@ -704,11 +715,10 @@ public class Node
         // Если узел уже в дереве — регистрируем renderable сразу.
         if (_sceneTree is not null && component is SpriteRenderer sr)
             _sceneTree.RegisterSpriteRenderer(sr);
-        
-        // Автосвязка SpriteAnimator <-> SpriteRenderer на том же Node.
-        // Порядок AddComponent не важен: кто добавлен позже — тот “подхватит” пару.
-        if (component is SpriteAnimator sa)
+
+        if (_sceneTree is not null && component is SpriteAnimator sa)
         {
+            _sceneTree.RegisterSpriteAnimator(sa);
             if (TryGetComponent<SpriteRenderer>(out var srExisting))
                 sa.InternalBindIfEmpty(srExisting!);
         }

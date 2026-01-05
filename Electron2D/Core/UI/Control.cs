@@ -59,15 +59,15 @@ public class Control(string name) : Node(name)
     /// Аналог _gui_input(event) в Godot.
     /// </summary>
     /// <param name="inputEvent">Входное событие.</param>
-    protected virtual void HandleGUIInput(InputEvent inputEvent)
+    /*protected virtual void HandleGUIInput(InputEvent inputEvent)
     {
-    }
+    }*/
 
     #endregion
 
     #region Internal helpers
 
-    internal void InternalGUIInput(InputEvent inputEvent) => HandleGUIInput(inputEvent);
+    //internal void InternalGUIInput(InputEvent inputEvent) => HandleGUIInput(inputEvent);
 
     #endregion
 }

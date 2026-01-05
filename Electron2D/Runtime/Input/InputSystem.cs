@@ -14,6 +14,14 @@ internal sealed class InputSystem
     private bool[] _currentKeys = [];
     private bool[] _previousKeys = [];
 
+    private MouseButton _currentState;
+    private MouseButton _previousState;
+    
+    private float _currentMouseX;
+    private float _currentMouseY;
+    private float _previousMouseX;
+    private float _previousMouseY;
+
     #endregion
 
     #region Public API
@@ -31,15 +39,18 @@ internal sealed class InputSystem
         ArgumentNullException.ThrowIfNull(eventSystem);
 
         // SDL_GetKeyboardState требует PumpEvents; он уже сделан в EventSystem.BeginFrame().
-        var state = SDL.GetKeyboardState(out var numKeys);
+        var keyboardState = SDL.GetKeyboardState(out var numKeys);
+        var mouseState = SDL.GetMouseState(out var mouseX,  out var mouseY);
 
         EnsureKeyBuffers(numKeys);
 
         for (var scancode = 0; scancode < numKeys; scancode++)
         {
-            var isDownNow = state[scancode];
+            var isDownNow = keyboardState[scancode];
             _currentKeys[scancode] = isDownNow;
         }
+        
+        
     }
 
     /// <summary>Клавиша сейчас удерживается (down).</summary>
@@ -52,6 +63,14 @@ internal sealed class InputSystem
     /// <summary>Клавиша отпущена в этом кадре (edge: down -> up).</summary>
     public bool IsKeyUp(int scancode)
         => IsValidScancode(scancode) && !_currentKeys[scancode] && _previousKeys[scancode];
+
+    public MouseButton GetMouseButton(out float x, out float y)
+    {
+        x = 0;
+        y = 0;
+        return MouseButton.None;
+    }
+        //=> IsValidScancode(scancode) && !_currentKeys[scancode] && _previousKeys[scancode];
 
     #endregion
 

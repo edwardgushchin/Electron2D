@@ -1,13 +1,8 @@
 namespace Electron2D;
 
-/// <summary>
-/// Проигрыватель flipbook-анимаций. По умолчанию автоматически управляет SpriteRenderer на том же Node.
-/// </summary>
 public sealed class SpriteAnimator : IComponent
 {
     private const int UnregisteredSceneIndex = -1;
-
-    // если будешь индексировать в SceneTree (как SpriteRenderer)
     internal int SceneIndex = UnregisteredSceneIndex;
 
     private Node? _owner;
@@ -45,10 +40,7 @@ public sealed class SpriteAnimator : IComponent
         _owner = owner;
         SceneIndex = UnregisteredSceneIndex;
 
-        // Автопривязка, если SpriteRenderer уже есть (порядок AddComponent не важен).
         owner.TryGetComponent<SpriteRenderer>(out _renderer);
-
-        // Если клип уже назначен (редкий кейс) — применим кадр.
         ApplyFrameIfPossible();
     }
 
@@ -65,9 +57,6 @@ public sealed class SpriteAnimator : IComponent
         SceneIndex = UnregisteredSceneIndex;
     }
 
-    /// <summary>
-    /// Явно задать рендерер (не обязательно для стандартного кейса “на том же Node”).
-    /// </summary>
     public void SetTarget(SpriteRenderer renderer)
     {
         ArgumentNullException.ThrowIfNull(renderer);
@@ -75,15 +64,24 @@ public sealed class SpriteAnimator : IComponent
         ApplyFrameIfPossible();
     }
 
-    public void Play(SpriteAnimationClip clip, bool restart = true)
+    // ВАЖНО: restartIfSame, а не restart.
+    // При смене клипа — всегда стартуем сначала.
+    public void Play(SpriteAnimationClip clip, bool restartIfSame = false)
     {
         ArgumentNullException.ThrowIfNull(clip);
 
+        if (ReferenceEquals(_clip, clip))
+        {
+            if (restartIfSame)
+                ResetToStartFrame();
+
+            _playing = true;
+            ApplyFrameIfPossible();
+            return;
+        }
+
         _clip = clip;
-
-        if (restart)
-            ResetToStartFrame();
-
+        ResetToStartFrame();
         _playing = true;
         ApplyFrameIfPossible();
     }
@@ -102,10 +100,6 @@ public sealed class SpriteAnimator : IComponent
             return;
 
         var renderer = _renderer;
-
-        // Если рендерера ещё нет (например, SpriteAnimator добавили раньше SpriteRenderer),
-        // то он будет подхвачен через Node.AddComponentInstance (Patch 3). Здесь не сканируем каждый кадр.
-
         if (renderer is null)
             return;
 
@@ -116,11 +110,12 @@ public sealed class SpriteAnimator : IComponent
         if (speed == 0f)
             return;
 
-        var frames = clip.Frames;
+        var dt = deltaSeconds * MathF.Abs(speed);
+
         if (speed > 0f)
-            TickForward(frames, deltaSeconds * speed, clip.Loop);
+            TickForward(clip, dt);
         else
-            TickReverse(frames, deltaSeconds * -speed, clip.Loop);
+            TickReverse(clip, dt);
     }
 
     internal void InternalBindIfEmpty(SpriteRenderer renderer)
@@ -138,29 +133,37 @@ public sealed class SpriteAnimator : IComponent
         var frames = clip.Frames;
 
         _frameIndex = _speed < 0f ? frames.Length - 1 : 0;
-        _timeLeft = frames[_frameIndex].DurationSeconds;
+        _timeLeft = clip.FrameDurationSeconds;
     }
 
-    private void TickForward(SpriteAnimationFrame[] frames, float dt, bool loop)
+    private void TickForward(SpriteAnimationClip clip, float dt)
     {
+        var frames = clip.Frames;
+        var frameTime = clip.FrameDurationSeconds;
+
         var idx = _frameIndex;
-        var timeLeft = _timeLeft;
+        var timeLeft = _timeLeft > 0f ? _timeLeft : frameTime;
 
-        if (!(timeLeft > 0f) || float.IsNaN(timeLeft) || float.IsInfinity(timeLeft))
-            timeLeft = frames[idx].DurationSeconds;
+        timeLeft -= dt;
 
-        while (dt >= timeLeft)
+        if (timeLeft > 0f)
         {
-            dt -= timeLeft;
+            _timeLeft = timeLeft;
+            return;
+        }
 
+        // продвигаемся по кадрам, учитывая, что dt мог "съесть" несколько кадров
+        while (timeLeft <= 0f)
+        {
             idx++;
+
             if (idx >= frames.Length)
             {
-                if (!loop)
+                if (!clip.Loop)
                 {
                     idx = frames.Length - 1;
                     _frameIndex = idx;
-                    _timeLeft = frames[idx].DurationSeconds;
+                    _timeLeft = frameTime;
                     _playing = false;
                     ApplyFrameIfPossible();
                     _onFinished?.Emit();
@@ -170,36 +173,41 @@ public sealed class SpriteAnimator : IComponent
                 idx = 0;
             }
 
-            timeLeft = frames[idx].DurationSeconds;
-            _frameIndex = idx;
-            _timeLeft = timeLeft;
-            ApplyFrameIfPossible();
+            timeLeft += frameTime;
         }
 
         _frameIndex = idx;
-        _timeLeft = timeLeft - dt;
+        _timeLeft = timeLeft;
+        ApplyFrameIfPossible();
     }
 
-    private void TickReverse(SpriteAnimationFrame[] frames, float dt, bool loop)
+    private void TickReverse(SpriteAnimationClip clip, float dt)
     {
+        var frames = clip.Frames;
+        var frameTime = clip.FrameDurationSeconds;
+
         var idx = _frameIndex;
-        var timeLeft = _timeLeft;
+        var timeLeft = _timeLeft > 0f ? _timeLeft : frameTime;
 
-        if (!(timeLeft > 0f) || float.IsNaN(timeLeft) || float.IsInfinity(timeLeft))
-            timeLeft = frames[idx].DurationSeconds;
+        timeLeft -= dt;
 
-        while (dt >= timeLeft)
+        if (timeLeft > 0f)
         {
-            dt -= timeLeft;
+            _timeLeft = timeLeft;
+            return;
+        }
 
+        while (timeLeft <= 0f)
+        {
             idx--;
+
             if (idx < 0)
             {
-                if (!loop)
+                if (!clip.Loop)
                 {
                     idx = 0;
                     _frameIndex = idx;
-                    _timeLeft = frames[idx].DurationSeconds;
+                    _timeLeft = frameTime;
                     _playing = false;
                     ApplyFrameIfPossible();
                     _onFinished?.Emit();
@@ -209,14 +217,12 @@ public sealed class SpriteAnimator : IComponent
                 idx = frames.Length - 1;
             }
 
-            timeLeft = frames[idx].DurationSeconds;
-            _frameIndex = idx;
-            _timeLeft = timeLeft;
-            ApplyFrameIfPossible();
+            timeLeft += frameTime;
         }
 
         _frameIndex = idx;
-        _timeLeft = timeLeft - dt;
+        _timeLeft = timeLeft;
+        ApplyFrameIfPossible();
     }
 
     private void ApplyFrameIfPossible()
@@ -231,6 +237,10 @@ public sealed class SpriteAnimator : IComponent
         if (frames.Length == 0)
             return;
 
-        renderer.SetSprite(frames[_frameIndex].Sprite);
+        var idx = _frameIndex;
+        if ((uint)idx >= (uint)frames.Length)
+            idx = _frameIndex = Math.Clamp(idx, 0, frames.Length - 1);
+
+        renderer.SetSprite(frames[idx]);
     }
 }

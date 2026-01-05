@@ -26,7 +26,7 @@ public sealed class Engine : IDisposable
         _window.Initialize(cfg.Window);
         _render.Initialize(_window.Handle, cfg);
         _resources.Initialize(_render, cfg);
-        _events.Initialize(cfg);
+        _events.Initialize(cfg, _render.Handle);
         _input.Initialize();
         _physics.Initialize(cfg.Physics);
         _time.Initialize(cfg);
@@ -81,16 +81,17 @@ public sealed class Engine : IDisposable
             // Event counters (после SwapAll() уже есть ReadCount у каналов)
             Profiler.SetCounter(ProfilerCounterId.EventsEngineRead, _events.Events.Engine.ReadCount);
             Profiler.SetCounter(ProfilerCounterId.EventsWindowRead, _events.Events.Window.ReadCount);
-            Profiler.SetCounter(ProfilerCounterId.EventsInputRead, _events.Events.Input.ReadCount);
+            Profiler.SetCounter(ProfilerCounterId.EventsInputRead, _events.Events.Keyboard.ReadCount);
+            Profiler.SetCounter(ProfilerCounterId.EventsMouseRead, _events.Events.Mouse.ReadCount);
             Profiler.SetCounter(ProfilerCounterId.EventsDroppedEngine, _events.DroppedEngineEvents);
             Profiler.SetCounter(ProfilerCounterId.EventsDroppedWindow, _events.DroppedWindowEvents);
-            Profiler.SetCounter(ProfilerCounterId.InputDroppedEvents, _events.DroppedInputEvents);
+            Profiler.SetCounter(ProfilerCounterId.InputDroppedEvents, _events.DroppedKeyboardEvents);
 
             using (Profiler.Sample(ProfilerSampleId.HandleQuitClose))
                 HandleQuitAndCloseRequests();
 
-            using (Profiler.Sample(ProfilerSampleId.SceneDispatchInput))
-                SceneTree.DispatchInputEvents(_events.Events.Input.Read);
+            //using (Profiler.Sample(ProfilerSampleId.SceneDispatchInput))
+            //    SceneTree.DispatchInputEvents(_events.Events.Input.Read);
 
             var fixedSteps = 0;
             using (Profiler.Sample(ProfilerSampleId.SceneFixedStep))

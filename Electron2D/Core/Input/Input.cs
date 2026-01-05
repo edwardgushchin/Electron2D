@@ -29,4 +29,6 @@ public static class Input
     /// Возвращает <see langword="true"/>, если клавиша отпущена на текущем кадре.
     /// </summary>
     public static bool IsKeyUp(KeyCode keyCode) => _system is not null && _system.IsKeyUp((int)keyCode);
+    
+    public static MouseButton GetMouseButton(out float x, out float y) => _system!.GetMouseButton(out x, out y);
 }
