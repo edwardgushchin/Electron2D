@@ -1,12 +1,12 @@
 namespace Electron2D;
 
 [Flags]
-public enum MouseButton
+public enum MouseButton : uint
 {
-    None = 0,
-    Left = 1,
-    Middle = 2,
-    Right = 3,
-    X1 = 4,
-    X2 = 5
+    None   = 0,
+    Left   = 1u << 0,
+    Middle = 1u << 1,
+    Right  = 1u << 2,
+    X1     = 1u << 3,
+    X2     = 1u << 4,
 }

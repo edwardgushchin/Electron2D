@@ -1,5 +1,5 @@
 using System;
-
+using System.Numerics;
 using SDL3;
 
 namespace Electron2D;
@@ -27,6 +27,9 @@ internal sealed class EventSystem
     private int _maxBatchesPerFrame;
     private bool _quitRequested;
     private nint _rendererHandleForCoordinates;
+    
+    private float _wheelX;
+    private float _wheelY;
 
     #endregion
 
@@ -37,6 +40,8 @@ internal sealed class EventSystem
 
     /// <summary>Очереди событий, заполненные за текущий кадр (после <see cref="EndFrame"/> — в read-буфере).</summary>
     public EventQueue Events => _eventQueue;
+    
+    public Vector2 MouseWheelDelta => new(_wheelX, _wheelY);
 
     /// <summary>Сколько событий движка было отброшено из-за переполнения канала.</summary>
     public int DroppedEngineEvents { get; private set; }
@@ -83,12 +88,17 @@ internal sealed class EventSystem
     {
         // P0: quit должен быть "в этом кадре", а не "навсегда".
         _quitRequested = false;
+        
+        _wheelX = 0;
+        _wheelY = 0;
 
         SDL.PumpEvents();
 
         DroppedEngineEvents = 0;
         DroppedWindowEvents = 0;
         DroppedKeyboardEvents = 0;
+        DroppedMouseEvents = 0;
+
 
         var buffer = stackalloc SDL.Event[BatchSize];
         var bufferPtr = (IntPtr)buffer;
@@ -175,7 +185,7 @@ internal sealed class EventSystem
                     case SDL.EventType.MouseButtonDown:
                         TryPublishMouseButton(MouseEventType.MouseButtonDown,
                             sdlEvent.Button.Timestamp,
-                            (MouseButton)sdlEvent.Button.Button,
+                            ToMouseButtonMask(sdlEvent.Button.Button),
                             sdlEvent.Button.X,
                             sdlEvent.Button.Y);
                         break;
@@ -183,16 +193,28 @@ internal sealed class EventSystem
                     case SDL.EventType.MouseButtonUp:
                         TryPublishMouseButton(MouseEventType.MouseButtonUp,
                             sdlEvent.Button.Timestamp,
-                            (MouseButton)sdlEvent.Button.Button,
+                            ToMouseButtonMask(sdlEvent.Button.Button),
                             sdlEvent.Button.X,
                             sdlEvent.Button.Y);
                         break;
 
                     case SDL.EventType.MouseWheel:
-                        // Wheel обычно не “координаты курсора”, но это тоже событие ввода; храним scroll delta в X/Y.
-                        TryPublishMouseWheel(sdlEvent.Wheel.Timestamp, sdlEvent.Wheel.X, sdlEvent.Wheel.Y);
-                        break;
+                    {
+                        var x = sdlEvent.Wheel.X;
+                        var y = sdlEvent.Wheel.Y;
 
+                        if (sdlEvent.Wheel.Direction == SDL.MouseWheelDirection.Flipped)
+                        {
+                            x = -x;
+                            y = -y;
+                        }
+
+                        _wheelX += x;
+                        _wheelY += y;
+
+                        TryPublishMouseWheel(sdlEvent.Wheel.Timestamp, x, y);
+                        break;
+                    }
                     // TODO: остальной input маппинг
                 }
             }
@@ -247,19 +269,15 @@ internal sealed class EventSystem
             DroppedKeyboardEvents++;
     }
 
-    /*private static KeyCode ToMouseButtonKeyCode(uint button)
+    private static MouseButton ToMouseButtonMask(byte sdlButton) => sdlButton switch
     {
-        // SDL обычно: 1=left, 2=middle, 3=right, 4=x1, 5=x2
-        return button switch
-        {
-            1 => KeyCode.MouseLeft,
-            2 => KeyCode.MouseMiddle,
-            3 => KeyCode.MouseRight,
-            4 => KeyCode.MouseX1,
-            5 => KeyCode.MouseX2,
-            _ => KeyCode.Unknown
-        };
-    }*/
+        1 => MouseButton.Left,
+        2 => MouseButton.Middle,
+        3 => MouseButton.Right,
+        4 => MouseButton.X1,
+        5 => MouseButton.X2,
+        _ => MouseButton.None
+    };
 
     private void TryPublishEngineQuitRequested()
     {

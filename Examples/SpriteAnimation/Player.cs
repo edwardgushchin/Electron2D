@@ -8,7 +8,7 @@ namespace SpriteAnimation;
 /// Минимальный controllable персонаж для демо:
 /// - движение влево/вправо (A/D или стрелки)
 /// - прыжок (Space)
-/// - атака (J)
+/// - атака (LKM)
 /// - смерть (K), респавн (R)
 /// </summary>
 public sealed class Player(string name) : Node(name)
@@ -84,8 +84,6 @@ public sealed class Player(string name) : Node(name)
 
         // FSM + анимации.
         UpdateStateAndAnimation();
-
-        base.Process(delta);
     }
 
     private void ReadInput()
@@ -93,15 +91,19 @@ public sealed class Player(string name) : Node(name)
         var left = Input.IsKeyDown(KeyCode.A) || Input.IsKeyDown(KeyCode.Left);
         var right = Input.IsKeyDown(KeyCode.D) || Input.IsKeyDown(KeyCode.Right);
 
-        float x = 0f;
+        var x = 0f;
         if (left) x -= 1f;
         if (right) x += 1f;
 
-        if (x < 0f) _dir = PlayerDirection.Left;
-        else if (x > 0f) _dir = PlayerDirection.Right;
+        _dir = x switch
+        {
+            < 0f => PlayerDirection.Left,
+            > 0f => PlayerDirection.Right,
+            _ => _dir
+        };
 
         // Атака (one-shot)
-        if (Input.IsKeyPressed(KeyCode.J))
+        if (Input.IsMouseButtonPressed(MouseButton.Left))
             _attackRequested = true;
 
         // Смерть/респавн для теста.

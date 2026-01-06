@@ -35,7 +35,7 @@ public class MainScene() : Node("MainScene")
     {
         // Минимальный follow (без сглаживания) — камера центрируется по игроку.
         // PixelPerfectCamera сама снапает позицию на сетку 1/PPU.
-        var p = _player.Transform.WorldPosition;
-        _camera.Transform.WorldPosition = p with { Y = 0f };
+        //var p = _player.Transform.WorldPosition;
+        //_camera.Transform.WorldPosition = p with { Y = 0f };
     }
 }

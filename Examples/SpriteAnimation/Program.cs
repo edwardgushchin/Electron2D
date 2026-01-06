@@ -15,7 +15,7 @@ internal static class Program
             Window = new WindowConfig
             {
                 Title = "Electron2D: Sprite Animation Demo",
-                Mode = WindowMode.Windowed, // или ExclusiveFullscreen
+                Mode = WindowMode.BorderlessFullscreen, // или ExclusiveFullscreen
                 Resizable = false,
                 Width = VirtualW * WindowScale,
                 Height = VirtualH * WindowScale
