@@ -210,7 +210,7 @@ public sealed class Player(string name) : Node(name)
         }
     }
 
-    private void EnsureClip(SpriteAnimationClip clip, bool restart = false)
+    private void EnsureClip(AnimationClip clip, bool restart = false)
         => _animator.Play(clip, restart);
 
     private void OnAnimationFinished()

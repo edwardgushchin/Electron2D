@@ -8,12 +8,12 @@ internal static class CharacterAnimations
 
     internal sealed class AnimationSet
     {
-        public required SpriteAnimationClip Idle { get; init; }
-        public required SpriteAnimationClip Run { get; init; }
-        public required SpriteAnimationClip Jump { get; init; }
-        public required SpriteAnimationClip Fall { get; init; }
-        public required SpriteAnimationClip Attack { get; init; }
-        public required SpriteAnimationClip Death { get; init; }
+        public required AnimationClip Idle { get; init; }
+        public required AnimationClip Run { get; init; }
+        public required AnimationClip Jump { get; init; }
+        public required AnimationClip Fall { get; init; }
+        public required AnimationClip Attack { get; init; }
+        public required AnimationClip Death { get; init; }
     }
 
     public static AnimationSet GetOrCreate()

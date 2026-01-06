@@ -76,13 +76,13 @@ public sealed class SpriteSheet
 
     public SpriteSheetRow Row(int row) => new(this, row);
 
-    public SpriteAnimationClip ClipCell(string name, int row, int col, float fps = 1f, bool loop = true)
+    public AnimationClip ClipCell(string name, int row, int col, float fps = 1f, bool loop = true)
         => new(name, new[] { Cell(row, col) }, fps, loop);
 
-    public SpriteAnimationClip ClipRow(string name, int row, int startCol, int count, float fps, bool loop = true)
+    public AnimationClip ClipRow(string name, int row, int startCol, int count, float fps, bool loop = true)
         => Clip(name, fps, loop, new SpriteSheetSpan(row, startCol, count));
 
-    public SpriteAnimationClip Clip(string name, float fps, bool loop, params SpriteSheetSpan[] spans)
+    public AnimationClip Clip(string name, float fps, bool loop, params SpriteSheetSpan[] spans)
     {
         ArgumentNullException.ThrowIfNull(spans);
         if (spans.Length == 0)
@@ -108,7 +108,7 @@ public sealed class SpriteSheet
                 frames[k++] = Cell(s.Row, s.StartCol + c);
         }
 
-        return new SpriteAnimationClip(name, frames, fps, loop);
+        return new AnimationClip(name, frames, fps, loop);
     }
 
     /// <summary>
@@ -116,7 +116,7 @@ public sealed class SpriteSheet
     /// Примеры:
     /// "0:0-5"; "2:0-7"; "5:2-7;6:0-3"; "3:6".
     /// </summary>
-    public SpriteAnimationClip Clip(string name, float fps, bool loop, string framesSpec)
+    public AnimationClip Clip(string name, float fps, bool loop, string framesSpec)
         => Clip(name, fps, loop, SpriteSheetFrames.Parse(framesSpec));
 }
 

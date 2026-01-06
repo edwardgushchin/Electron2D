@@ -8,7 +8,7 @@ public sealed class SpriteAnimator : IComponent
     private Node? _owner;
     private SpriteRenderer? _renderer;
 
-    private SpriteAnimationClip? _clip;
+    private AnimationClip? _clip;
     private int _frameIndex;
     private float _timeLeft;
 
@@ -31,7 +31,7 @@ public sealed class SpriteAnimator : IComponent
     private Signal? _onFinished;
     public Signal OnFinished => _onFinished ??= new Signal();
 
-    public SpriteAnimationClip? CurrentClip => _clip;
+    public AnimationClip? CurrentClip => _clip;
 
     public void OnAttach(Node owner)
     {
@@ -66,7 +66,7 @@ public sealed class SpriteAnimator : IComponent
 
     // ВАЖНО: restartIfSame, а не restart.
     // При смене клипа — всегда стартуем сначала.
-    public void Play(SpriteAnimationClip clip, bool restartIfSame = false)
+    public void Play(AnimationClip clip, bool restartIfSame = false)
     {
         ArgumentNullException.ThrowIfNull(clip);
 
@@ -136,7 +136,7 @@ public sealed class SpriteAnimator : IComponent
         _timeLeft = clip.FrameDurationSeconds;
     }
 
-    private void TickForward(SpriteAnimationClip clip, float dt)
+    private void TickForward(AnimationClip clip, float dt)
     {
         var frames = clip.Frames;
         var frameTime = clip.FrameDurationSeconds;
@@ -181,7 +181,7 @@ public sealed class SpriteAnimator : IComponent
         ApplyFrameIfPossible();
     }
 
-    private void TickReverse(SpriteAnimationClip clip, float dt)
+    private void TickReverse(AnimationClip clip, float dt)
     {
         var frames = clip.Frames;
         var frameTime = clip.FrameDurationSeconds;

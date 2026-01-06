@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public sealed class SpriteAnimationClip
+public sealed class AnimationClip
 {
     public string Name { get; }
     public Sprite[] Frames { get; }
@@ -9,7 +9,7 @@ public sealed class SpriteAnimationClip
 
     public float FrameDurationSeconds => 1f / Fps;
 
-    public SpriteAnimationClip(string name, Sprite[] frames, float fps = 12f, bool loop = true)
+    public AnimationClip(string name, Sprite[] frames, float fps = 12f, bool loop = true)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Clip name must be non-empty.", nameof(name));

@@ -42,14 +42,14 @@ public static class Resources
     /// <summary>
     /// Возвращает набор клипов спрайт-анимации, описанный в *.animset (JSON).
     /// </summary>
-    public static SpriteAnimation GetSpriteAnimation(string path) => System.GetSpriteAnimation(path);
+    public static Animation GetSpriteAnimation(string path) => System.GetSpriteAnimation(path);
 
     /// <summary>
     /// Перезагружает *.animset и обновляет уже загруженный объект (если он был в кеше).
     /// </summary>
-    public static SpriteAnimation ReloadSpriteAnimation(string path) => System.ReloadSpriteAnimation(path);
+    public static Animation ReloadSpriteAnimation(string path) => System.ReloadSpriteAnimation(path);
 
-    public static bool TryGetSpriteAnimation(string path, out SpriteAnimation anim)
+    public static bool TryGetSpriteAnimation(string path, out Animation anim)
         => System.TryGetSpriteAnimation(path, out anim);
 
     public static void UnloadSpriteAnimation(string path) => System.UnloadSpriteAnimation(path);

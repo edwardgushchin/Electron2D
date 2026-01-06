@@ -68,7 +68,7 @@ public class TextureAtlas
     /// <summary>
     /// Создаёт клип из списка регионов атласа (фиксированная длительность кадра).
     /// </summary>
-    public SpriteAnimationClip CreateClip(
+    public AnimationClip CreateClip(
         string clipName,
         string[] regionNames,
         float fps,
@@ -90,14 +90,14 @@ public class TextureAtlas
         for (var i = 0; i < regionNames.Length; i++)
             sprites[i] = CreateSprite(regionNames[i], pixelsPerUnit, pivot, flipMode: flipMode);
 
-        return new SpriteAnimationClip(clipName, sprites, fps, loop);
+        return new AnimationClip(clipName, sprites, fps, loop);
     }
 
 
     /// <summary>
     /// Создаёт клип по числовой последовательности: prefix + index (например run_0..run_5).
     /// </summary>
-    public SpriteAnimationClip CreateClip(
+    public AnimationClip CreateClip(
         string clipName,
         string prefix,
         int firstIndex,

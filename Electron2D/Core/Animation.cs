@@ -6,15 +6,15 @@ namespace Electron2D;
 /// Контейнер клипов (аналог Godot SpriteFrames): имя -> clip.
 /// Все аллокации происходят при конфигурации, в кадре — только чтение.
 /// </summary>
-public sealed class SpriteAnimation
+public sealed class Animation
 {
     private readonly Dictionary<string, int> _clipIds = new(StringComparer.Ordinal);
-    private SpriteAnimationClip[] _clips = [];
+    private AnimationClip[] _clips = [];
     private int _count;
 
     public int ClipCount => _count;
 
-    public bool TryGetClip(string name, out SpriteAnimationClip clip)
+    public bool TryGetClip(string name, out AnimationClip clip)
     {
         if (_clipIds.TryGetValue(name, out var id))
         {
@@ -26,13 +26,13 @@ public sealed class SpriteAnimation
         return false;
     }
 
-    public SpriteAnimationClip GetClip(string name)
+    public AnimationClip GetClip(string name)
         => TryGetClip(name, out var clip) ? clip : throw new KeyNotFoundException($"Clip not found: {name}");
 
     public int GetClipId(string name)
         => _clipIds.TryGetValue(name, out var id) ? id : throw new KeyNotFoundException($"Clip not found: {name}");
 
-    public SpriteAnimationClip GetClip(int id)
+    public AnimationClip GetClip(int id)
     {
         if ((uint)id >= (uint)_count)
             throw new ArgumentOutOfRangeException(nameof(id), id, "Invalid clip id.");
@@ -40,7 +40,7 @@ public sealed class SpriteAnimation
         return _clips[id];
     }
 
-    public void AddClip(SpriteAnimationClip clip)
+    public void AddClip(AnimationClip clip)
     {
         ArgumentNullException.ThrowIfNull(clip);
 
@@ -55,7 +55,7 @@ public sealed class SpriteAnimation
         _count++;
     }
 
-    public void AddOrReplaceClip(SpriteAnimationClip clip)
+    public void AddOrReplaceClip(AnimationClip clip)
     {
         ArgumentNullException.ThrowIfNull(clip);
 
@@ -101,7 +101,7 @@ public sealed class SpriteAnimation
         Array.Resize(ref _clips, newCap);
     }
 
-    private static void ValidateClip(SpriteAnimationClip clip)
+    private static void ValidateClip(AnimationClip clip)
     {
         if (string.IsNullOrWhiteSpace(clip.Name))
             throw new ArgumentException("Clip.Name must be non-empty.", nameof(clip));

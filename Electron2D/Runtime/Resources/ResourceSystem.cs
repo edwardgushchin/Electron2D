@@ -33,7 +33,7 @@ internal sealed class ResourceSystem
     private readonly Dictionary<string, SpriteImportDefaults> _spriteDefaultsByTextureId = new(StringComparer.Ordinal);
 
     // string id -> SpriteAnimation
-    private readonly Dictionary<string, SpriteAnimation> _spriteAnimationsById = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Animation> _spriteAnimationsById = new(StringComparer.Ordinal);
 
     #endregion
 
@@ -187,7 +187,7 @@ internal sealed class ResourceSystem
     /// <summary>
     /// Возвращает набор клипов спрайт-анимации из "*.animset" (JSON), загружая при необходимости.
     /// </summary>
-    public SpriteAnimation GetSpriteAnimation(string path)
+    public Animation GetSpriteAnimation(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
             throw new ArgumentException("Animation id is empty.", nameof(path));
@@ -199,7 +199,7 @@ internal sealed class ResourceSystem
         if (_spriteAnimationsById.TryGetValue(id, out var cached))
             return cached;
 
-        var anim = new SpriteAnimation();
+        var anim = new Animation();
         LoadAnimSetInto(id, anim);
         _spriteAnimationsById[id] = anim;
         return anim;
@@ -208,7 +208,7 @@ internal sealed class ResourceSystem
     /// <summary>
     /// Принудительно перечитывает *.animset и обновляет существующий объект (если он уже был загружен).
     /// </summary>
-    public SpriteAnimation ReloadSpriteAnimation(string path)
+    public Animation ReloadSpriteAnimation(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
             throw new ArgumentException("Animation id is empty.", nameof(path));
@@ -219,7 +219,7 @@ internal sealed class ResourceSystem
 
         if (!_spriteAnimationsById.TryGetValue(id, out var anim))
         {
-            anim = new SpriteAnimation();
+            anim = new Animation();
             _spriteAnimationsById[id] = anim;
         }
 
@@ -227,7 +227,7 @@ internal sealed class ResourceSystem
         return anim;
     }
 
-    public bool TryGetSpriteAnimation(string path, out SpriteAnimation anim)
+    public bool TryGetSpriteAnimation(string path, out Animation anim)
     {
         anim = null!;
         if (string.IsNullOrWhiteSpace(path))
@@ -340,7 +340,7 @@ internal sealed class ResourceSystem
         }
     }
 
-    private void LoadAnimSetInto(string animSetId, SpriteAnimation target)
+    private void LoadAnimSetInto(string animSetId, Animation target)
     {
         var animPath = ResolveAnimSetPath(animSetId);
         if (!File.Exists(animPath))
