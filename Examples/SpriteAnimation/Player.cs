@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using Electron2D;
+using SDL3;
 
 namespace SpriteAnimation;
 
@@ -23,7 +24,7 @@ public sealed class Player(string name) : Node(name)
         Death
     }
 
-    private enum PlayerDirection
+    public enum PlayerDirection
     {
         Left = -1,
         Right = 1
@@ -31,7 +32,7 @@ public sealed class Player(string name) : Node(name)
 
     // Параметры движения (world-units). При PPU=100:
     // 1.0 unit = 100px, видимая высота = 1.8 units.
-    public float MoveSpeed { get; set; } = 1.55f;
+    public float MoveSpeed { get; set; } = 1;
     public float JumpVelocity { get; set; } = 3.25f;
     public float Gravity { get; set; } = 9.5f;
     public float GroundY { get; set; } = -0.78f;
@@ -48,6 +49,8 @@ public sealed class Player(string name) : Node(name)
     private bool _attackRequested;
 
     private Signal.Subscription _onAnimFinishedSub;
+    
+    public PlayerDirection Direction => _dir;
 
     protected override void EnterTree()
     {

@@ -162,14 +162,15 @@ internal sealed class RenderSystem : IDisposable
         if (_sceneTargetThisFrame)
         {
             // Размер виртуального экрана (render-space).
-            var outW = (int)MathF.Round(view.HalfW * 2f);
-            var outH = (int)MathF.Round(view.HalfH * 2f);
+            
+            var outW = SnapPixel(view.HalfW * 2f, PixelSnapMode.Round);
+            var outH = SnapPixel(view.HalfH * 2f, PixelSnapMode.Round);
 
             // Если logical presentation включён — не используем gutter (иначе рискуем попасть в неожиданный scale/viewport в SDL).
             // В этом режиме сглаживание будет работать, но по краям возможен лёгкий border при сильных subpixel.
             var gutter = _logicalPresentationEnabled ? 0 : SceneTargetGutterPx;
 
-            EnsureSceneTarget(outW + gutter * 2, outH + gutter * 2);
+            EnsureSceneTarget((int)outW + gutter * 2, (int)outH + gutter * 2);
 
             _rtOffsetX = gutter;
             _rtOffsetY = gutter;
@@ -227,41 +228,38 @@ internal sealed class RenderSystem : IDisposable
 
         using (Profiler.Sample(ProfilerSampleId.RenderPresent))
         {
+            // Нужен один раз — и для композита, и для crosshair.
+            ref readonly var view = ref EnsureView();
+
             if (_sceneTargetThisFrame)
             {
                 // Возвращаемся в backbuffer
                 if (!SDL.SetRenderTarget(_rendererHandle, 0))
                     throw new InvalidOperationException($"SDL.SetRenderTarget(reset) failed. {SDL.GetError()}");
 
-                // Очищаем backbuffer (иначе на uncovered краях при dst-shift могут оставаться хвосты)
+                // Очищаем backbuffer
                 var bg = _debugGridEnabled ? _debugGridBackground : _scene!.ClearColor;
                 SDL.SetRenderDrawColor(_rendererHandle, bg.Red, bg.Green, bg.Blue, bg.Alpha);
                 SDL.RenderClear(_rendererHandle);
 
-                ref readonly var view = ref EnsureView();
-
                 var outW = (int)MathF.Round(view.HalfW * 2f);
                 var outH = (int)MathF.Round(view.HalfH * 2f);
 
-                // subpixel части камеры (в pixel-space)
                 var camPxX = view.CamPos.X * view.Ppu;
                 var camPxY = view.CamPos.Y * view.Ppu;
 
                 var snappedX = view.CamPosPxSnapped.X;
                 var snappedY = view.CamPosPxSnapped.Y;
 
-                var fracX = camPxX - snappedX;          // camera right  => world should go left
-                var fracYInv = snappedY - camPxY;       // camera up     => world should go down (инверсия нужна для src-метода)
+                var fracX = camPxX - snappedX;
+                var fracYInv = snappedY - camPxY;
 
-                // Если gutter выключен (logical presentation), используем dst-shift (иначе src может стать отрицательным).
                 var gutter = (_logicalPresentationEnabled ? 0 : SceneTargetGutterPx);
 
-                // На этапе композита используем Linear (иначе subpixel не будет плавным).
                 SDL.SetTextureScaleMode(_sceneTarget, SDL.ScaleMode.PixelArt);
 
                 if (gutter > 0)
                 {
-                    // src-rect метод (без бордеров при subpixel): берем окно из target со смещением.
                     var src = new SDL.FRect
                     {
                         X = gutter + fracX,
@@ -282,11 +280,10 @@ internal sealed class RenderSystem : IDisposable
                 }
                 else
                 {
-                    // dst-shift метод (может дать тонкий border на противоположной стороне при frac != 0)
                     var dst = new SDL.FRect
                     {
                         X = -fracX,
-                        Y = + (camPxY - snappedY), // здесь уже screen-space знак (camera up => image down)
+                        Y = + (camPxY - snappedY),
                         W = outW,
                         H = outH
                     };
@@ -295,9 +292,13 @@ internal sealed class RenderSystem : IDisposable
                 }
             }
 
+            // Рисуем линии поверх ВСЕГО (и поверх композита тоже)
+            //DrawCenterCrosshair(in view);
+
             SDL.RenderPresent(_rendererHandle);
             Profiler.AddCounter(ProfilerCounterId.RenderPresents);
         }
+
     }
 
 
@@ -1032,6 +1033,31 @@ internal sealed class RenderSystem : IDisposable
 
         SDL.RenderLine(_rendererHandle, sx1, sy1, sx2, sy2);
     }
+    
+    private void DrawCenterCrosshair(in ViewState view)
+    {
+        // Рисуем в текущем render-space (logical или output).
+        var w = view.HalfW * 2f;
+        var h = view.HalfH * 2f;
+
+        // Чтобы линия была максимально "пиксельно" стабильной, снапнем центр.
+        // Если размеры нечётные — неизбежно будет выбор между x=...5 и x=...0, тут берём ближайший.
+        var cx = SnapPixel(view.HalfW, PixelSnapMode.Round);
+        var cy = SnapPixel(view.HalfH, PixelSnapMode.Round);
+
+        // Вертикальная красная: сверху вниз
+        SDL.SetRenderDrawColor(_rendererHandle, 255, 0, 0, 255);
+        SDL.RenderLine(_rendererHandle, cx, 0f, cx, h);
+
+        // Горизонтальная синяя: слева направо
+        SDL.SetRenderDrawColor(_rendererHandle, 0, 0, 255, 255);
+        SDL.RenderLine(_rendererHandle, 0f, cy, w, cy);
+
+        // Профайлер (по аналогии с DrawWorldLine)
+        Profiler.AddCounter(ProfilerCounterId.RenderDebugLines, 2);
+        Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls, 2);
+    }
+
 
     private static void WorldToScreen(float wx, float wy, out float sx, out float sy, in ViewState view)
     {

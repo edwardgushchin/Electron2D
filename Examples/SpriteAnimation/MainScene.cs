@@ -37,5 +37,7 @@ public class MainScene() : Node("MainScene")
         // PixelPerfectCamera сама снапает позицию на сетку 1/PPU.
         var p = _player.Transform.WorldPosition;
         _camera.Transform.WorldPosition = p with { Y = 0f };
+        
+        //_camera.Transform.WorldPosition = Vector2.Lerp(_camera.Transform.WorldPosition, _player.Transform.WorldPosition, delta);
     }
 }
