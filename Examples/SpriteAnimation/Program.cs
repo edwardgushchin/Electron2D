@@ -31,7 +31,7 @@ internal static class Program
             VSync = VSyncMode.Enabled,
             VSyncInterval = 1,
 
-            TextureFilter = FilterMode.Pixelart,
+            TextureFilter = FilterMode.Nearest,
             DebugGridEnabled = true,
         });
 

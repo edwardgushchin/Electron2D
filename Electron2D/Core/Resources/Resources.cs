@@ -32,6 +32,27 @@ public static class Resources
     /// Выгружает текстуру по идентификатору (если поддерживается системой ресурсов).
     /// </summary>
     public static void UnloadTexture(string path) => System.UnloadTexture(path);
+
+    /// <summary>
+    /// Возвращает дефолтные импорт-настройки спрайта, привязанные к текстуре (берутся из *.png.meta).
+    /// </summary>
+    public static SpriteImportDefaults GetSpriteImportDefaults(string texturePath)
+        => System.GetSpriteImportDefaults(texturePath);
+
+    /// <summary>
+    /// Возвращает набор клипов спрайт-анимации, описанный в *.animset (JSON).
+    /// </summary>
+    public static SpriteAnimation GetSpriteAnimation(string path) => System.GetSpriteAnimation(path);
+
+    /// <summary>
+    /// Перезагружает *.animset и обновляет уже загруженный объект (если он был в кеше).
+    /// </summary>
+    public static SpriteAnimation ReloadSpriteAnimation(string path) => System.ReloadSpriteAnimation(path);
+
+    public static bool TryGetSpriteAnimation(string path, out SpriteAnimation anim)
+        => System.TryGetSpriteAnimation(path, out anim);
+
+    public static void UnloadSpriteAnimation(string path) => System.UnloadSpriteAnimation(path);
     #endregion
 
     private static ResourceSystem System =>

@@ -1,0 +1,13 @@
+{
+  "texture": "char_blue.png",
+  "grid": { "cellW": 56, "cellH": 56, "margin": 0, "spacing": 0 },
+  "defaults": { "ppu": 100, "pivot": [0.5, 0.0] },
+  "clips": {
+    "idle":   { "fps": 8,  "loop": true,  "frames": "0:0-5" },
+    "attack": { "fps": 16, "loop": false, "frames": "1:0-5" },
+    "run":    { "fps": 12, "loop": true,  "frames": "2:0-7" },
+    "jump":   { "fps": 1,  "loop": true,  "frames": "3:6" },
+    "fall":   { "fps": 1,  "loop": true,  "frames": "3:7" },
+    "death":  { "fps": 12, "loop": false, "frames": "5:2-7;6:0-3" }
+  }
+}

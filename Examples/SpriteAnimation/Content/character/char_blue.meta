@@ -1,0 +1,4 @@
+{
+  "texture": { "filter": "pixelart" },
+  "sprite":  { "ppu": 100, "pivot": [0.5, 0.0] }
+}

@@ -73,6 +73,23 @@ public sealed class SpriteAnimation
         _count++;
     }
 
+    /// <summary>
+    /// Очищает контейнер клипов.
+    /// </summary>
+    /// <remarks>
+    /// Internal: используется системой ресурсов для hot-reload семантики (объект остаётся тем же,
+    /// но содержимое обновляется).
+    /// </remarks>
+    internal void Clear()
+    {
+        _clipIds.Clear();
+
+        if (_count > 0)
+            Array.Clear(_clips, 0, _count);
+
+        _count = 0;
+    }
+
     private void EnsureCapacity(int desired)
     {
         if (_clips.Length >= desired)

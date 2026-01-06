@@ -69,7 +69,7 @@ public sealed class Player(string name) : Node(name)
 
     protected override void ExitTree()
     {
-        _animator?.OnFinished.Disconnect(_onAnimFinishedSub);
+        _animator.OnFinished.Disconnect(_onAnimFinishedSub);
         base.ExitTree();
     }
 

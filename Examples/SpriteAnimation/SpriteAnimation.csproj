@@ -88,6 +88,14 @@
       <Content Include="Content\character\char_blue.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="Content\character\char_blue.animset" />
+      <Content Include="Content\character\char_blue.animset">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Content\character\char_blue.meta" />
+      <Content Include="Content\character\char_blue.meta">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
