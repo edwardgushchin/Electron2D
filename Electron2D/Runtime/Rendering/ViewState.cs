@@ -2,10 +2,6 @@ using System.Numerics;
 
 namespace Electron2D;
 
-/// <summary>
-/// Предрассчитанное состояние вида/камеры для рендера и отсечения.
-/// Держит только «плоские» значения, чтобы минимизировать вычисления на горячем пути.
-/// </summary>
 internal readonly struct ViewState(
     float halfW,
     float halfH,
@@ -16,6 +12,8 @@ internal readonly struct ViewState(
     float sin,
     bool hasRot,
     bool pixelSnap,
+    PixelSnapMode snapMode,
+    Vector2 camPosPxSnapped,
     ViewCullRect cull)
 {
     #region Instance fields
@@ -49,8 +47,11 @@ internal readonly struct ViewState(
     /// Обычно включается вместе с <see cref="PixelPerfectCamera"/>.
     /// </summary>
     public readonly bool PixelSnap = pixelSnap;
+    public readonly PixelSnapMode SnapMode = snapMode;
 
-    /// <summary>Прямоугольник отсечения (culling) в мировых координатах.</summary>
+    // Камера в pixel-space, уже snapped (только для PixelSnap && !HasRot).
+    public readonly Vector2 CamPosPxSnapped = camPosPxSnapped;
+
     public readonly ViewCullRect Cull = cull;
 
     #endregion

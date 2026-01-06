@@ -1,5 +1,5 @@
 using System.Numerics;
-
+using System.Runtime.CompilerServices;
 using SDL3;
 
 namespace Electron2D;
@@ -15,8 +15,6 @@ namespace Electron2D;
 internal sealed class RenderSystem : IDisposable
 {
     #region Constants
-
-    private const float RadToDeg = 180f / MathF.PI;
 
     // Безопасная нижняя граница для OrthoSize/PPU, чтобы избежать деления на ноль и неустойчивых состояний.
     private const float MinPositiveFloat = 0.0001f;
@@ -73,6 +71,16 @@ internal sealed class RenderSystem : IDisposable
     private bool _logicalPresentationEnabled;
     private int _logicalW;
     private int _logicalH;
+    
+    private const int SceneTargetGutterPx = 2; // padding для subpixel composite (используем только если logical presentation выключен)
+
+    private nint _sceneTarget;     // SDL_Texture*
+    private int _sceneTargetW;
+    private int _sceneTargetH;
+
+    private bool _sceneTargetThisFrame;
+    private float _rtOffsetX;      // смещение всех screen-space координат при рендере в target (gutter)
+    private float _rtOffsetY;
 
     #endregion
 
@@ -143,11 +151,50 @@ internal sealed class RenderSystem : IDisposable
         Array.Clear(_uniqueTextureTable, 0, _uniqueTextureTable.Length);
         _uniqueTextureCount = 0;
 
+        // --- Patch B: решаем, будем ли рендерить в offscreen target ---
+        // Важно: EnsureView() зовём ДО Clear, чтобы понимать режим камеры и размеры.
+        ref readonly var view = ref EnsureView();
+
+        _sceneTargetThisFrame = ShouldUseSceneTarget(in view);
+
         var bg = _debugGridEnabled ? _debugGridBackground : scene.ClearColor;
+
+        if (_sceneTargetThisFrame)
+        {
+            // Размер виртуального экрана (render-space).
+            var outW = (int)MathF.Round(view.HalfW * 2f);
+            var outH = (int)MathF.Round(view.HalfH * 2f);
+
+            // Если logical presentation включён — не используем gutter (иначе рискуем попасть в неожиданный scale/viewport в SDL).
+            // В этом режиме сглаживание будет работать, но по краям возможен лёгкий border при сильных subpixel.
+            var gutter = _logicalPresentationEnabled ? 0 : SceneTargetGutterPx;
+
+            EnsureSceneTarget(outW + gutter * 2, outH + gutter * 2);
+
+            _rtOffsetX = gutter;
+            _rtOffsetY = gutter;
+
+            if (!SDL.SetRenderTarget(_rendererHandle, _sceneTarget))
+                throw new InvalidOperationException($"SDL.SetRenderTarget failed. {SDL.GetError()}");
+
+            SDL.SetRenderDrawColor(_rendererHandle, bg.Red, bg.Green, bg.Blue, bg.Alpha);
+            SDL.RenderClear(_rendererHandle);
+            Profiler.AddCounter(ProfilerCounterId.RenderClears);
+            return;
+        }
+
+        // Обычный путь: рендер в backbuffer
+        _rtOffsetX = 0f;
+        _rtOffsetY = 0f;
+
+        if (!SDL.SetRenderTarget(_rendererHandle, 0))
+            throw new InvalidOperationException($"SDL.SetRenderTarget(reset) failed. {SDL.GetError()}");
+
         SDL.SetRenderDrawColor(_rendererHandle, bg.Red, bg.Green, bg.Blue, bg.Alpha);
         SDL.RenderClear(_rendererHandle);
         Profiler.AddCounter(ProfilerCounterId.RenderClears);
     }
+
 
     public void BuildRenderQueue(SceneTree sceneTree, ResourceSystem resources)
     {
@@ -180,16 +227,87 @@ internal sealed class RenderSystem : IDisposable
 
         using (Profiler.Sample(ProfilerSampleId.RenderPresent))
         {
+            if (_sceneTargetThisFrame)
+            {
+                // Возвращаемся в backbuffer
+                if (!SDL.SetRenderTarget(_rendererHandle, 0))
+                    throw new InvalidOperationException($"SDL.SetRenderTarget(reset) failed. {SDL.GetError()}");
+
+                // Очищаем backbuffer (иначе на uncovered краях при dst-shift могут оставаться хвосты)
+                var bg = _debugGridEnabled ? _debugGridBackground : _scene!.ClearColor;
+                SDL.SetRenderDrawColor(_rendererHandle, bg.Red, bg.Green, bg.Blue, bg.Alpha);
+                SDL.RenderClear(_rendererHandle);
+
+                ref readonly var view = ref EnsureView();
+
+                var outW = (int)MathF.Round(view.HalfW * 2f);
+                var outH = (int)MathF.Round(view.HalfH * 2f);
+
+                // subpixel части камеры (в pixel-space)
+                var camPxX = view.CamPos.X * view.Ppu;
+                var camPxY = view.CamPos.Y * view.Ppu;
+
+                var snappedX = view.CamPosPxSnapped.X;
+                var snappedY = view.CamPosPxSnapped.Y;
+
+                var fracX = camPxX - snappedX;          // camera right  => world should go left
+                var fracYInv = snappedY - camPxY;       // camera up     => world should go down (инверсия нужна для src-метода)
+
+                // Если gutter выключен (logical presentation), используем dst-shift (иначе src может стать отрицательным).
+                var gutter = (_logicalPresentationEnabled ? 0 : SceneTargetGutterPx);
+
+                // На этапе композита используем Linear (иначе subpixel не будет плавным).
+                SDL.SetTextureScaleMode(_sceneTarget, SDL.ScaleMode.PixelArt);
+
+                if (gutter > 0)
+                {
+                    // src-rect метод (без бордеров при subpixel): берем окно из target со смещением.
+                    var src = new SDL.FRect
+                    {
+                        X = gutter + fracX,
+                        Y = gutter + fracYInv,
+                        W = outW,
+                        H = outH
+                    };
+
+                    var dst = new SDL.FRect
+                    {
+                        X = 0f,
+                        Y = 0f,
+                        W = outW,
+                        H = outH
+                    };
+
+                    SDL.RenderTexture(_rendererHandle, _sceneTarget, src, dst);
+                }
+                else
+                {
+                    // dst-shift метод (может дать тонкий border на противоположной стороне при frac != 0)
+                    var dst = new SDL.FRect
+                    {
+                        X = -fracX,
+                        Y = + (camPxY - snappedY), // здесь уже screen-space знак (camera up => image down)
+                        W = outW,
+                        H = outH
+                    };
+
+                    SDL.RenderTexture(_rendererHandle, _sceneTarget, IntPtr.Zero, dst);
+                }
+            }
+
             SDL.RenderPresent(_rendererHandle);
             Profiler.AddCounter(ProfilerCounterId.RenderPresents);
         }
     }
+
 
     public void Shutdown() => Dispose();
 
     public void Dispose()
     {
         _queue.Dispose();
+
+        DestroySceneTarget();
 
         if (_ownsRendererHandle && _rendererHandle != 0)
             SDL.DestroyRenderer(_rendererHandle);
@@ -286,7 +404,13 @@ internal sealed class RenderSystem : IDisposable
 
             // Pixel snap (только для Nearest/Pixelart и только без rotation):
             // избавляет от sub-pixel jitter при движении.
-            var snapToPixel = view.PixelSnap && sdlScaleMode == SDL.ScaleMode.Nearest && cmd.Rotation == 0f;
+            var snapScaleModeOk =
+                sdlScaleMode is SDL.ScaleMode.Nearest or SDL.ScaleMode.PixelArt;
+
+            var snapToPixel =
+                view.PixelSnap &&
+                snapScaleModeOk &&
+                MathF.Abs(cmd.Rotation) < 1e-6f;
 
             EmitSpriteQuad(in cmd, in view, snapToPixel);
         }
@@ -331,52 +455,66 @@ internal sealed class RenderSystem : IDisposable
         var tex = cmd.Texture;
 
         var sizeWorld = cmd.SizeWorld;
-        if (sizeWorld is not { X: > 0f, Y: > 0f })
-            return;
-
-        // World -> view (camera space).
-        var rel = cmd.PositionWorld - view.CamPos;
-
-        float vx, vy;
-        if (view.HasRot)
-        {
-            vx = rel.X * view.Cos + rel.Y * view.Sin;
-            vy = -rel.X * view.Sin + rel.Y * view.Cos;
-        }
-        else
-        {
-            vx = rel.X;
-            vy = rel.Y;
-        }
-
-        // View -> screen (pivot).
-        var pivotX = view.HalfW + vx * view.Ppu;
-        var pivotY = view.HalfH - vy * view.Ppu;
+        if (sizeWorld is not { X: > 0f, Y: > 0f }) return;
 
         var wPx = sizeWorld.X * view.Ppu;
         var hPx = sizeWorld.Y * view.Ppu;
+        if (!(wPx > 0f) || !(hPx > 0f)) return;
 
-        // Важно: условие в форме !(x > 0) корректно отсекает NaN (x <= 0 не отсекает NaN).
-        if (!(wPx > 0f) || !(hPx > 0f))
-            return;
-
-        // Origin в пикселях (в текущей конвенции).
         var originPxX = cmd.OriginWorld.X * view.Ppu;
         var originPxY = (sizeWorld.Y - cmd.OriginWorld.Y) * view.Ppu;
 
-        // Pixel snap: снапаем pivot + origin (и, на всякий случай, размеры) к целым пикселям.
-        // Это делает квад всегда выровненным по пиксельной сетке.
+        float pivotX, pivotY;
+
+        // --- Patch B: стабильный pixel-space путь для snapped камеры без rotation ---
+        if (view is { PixelSnap: true, HasRot: false })
+        {
+            var posPxX = cmd.PositionWorld.X * view.Ppu;
+            var posPxY = cmd.PositionWorld.Y * view.Ppu;
+
+            var relPxX = posPxX - view.CamPosPxSnapped.X;
+            var relPxY = posPxY - view.CamPosPxSnapped.Y;
+
+            pivotX = view.HalfW + relPxX;
+            pivotY = view.HalfH - relPxY;
+        }
+        else
+        {
+            // World -> view (camera space).
+            var rel = cmd.PositionWorld - view.CamPos;
+
+            float vx, vy;
+            if (view.HasRot)
+            {
+                vx = rel.X * view.Cos + rel.Y * view.Sin;
+                vy = -rel.X * view.Sin + rel.Y * view.Cos;
+            }
+            else
+            {
+                vx = rel.X;
+                vy = rel.Y;
+            }
+
+            // View -> screen (pivot).
+            pivotX = view.HalfW + vx * view.Ppu;
+            pivotY = view.HalfH - vy * view.Ppu;
+        }
+
         if (snapToPixel)
         {
-            pivotX = MathF.Round(pivotX);
-            pivotY = MathF.Round(pivotY);
+            pivotX = SnapPixel(pivotX, view.SnapMode);
+            pivotY = SnapPixel(pivotY, view.SnapMode);
 
-            originPxX = MathF.Round(originPxX);
-            originPxY = MathF.Round(originPxY);
+            originPxX = SnapPixel(originPxX, view.SnapMode);
+            originPxY = SnapPixel(originPxY, view.SnapMode);
 
-            wPx = MathF.Round(wPx);
-            hPx = MathF.Round(hPx);
+            wPx = SnapPixel(wPx, view.SnapMode);
+            hPx = SnapPixel(hPx, view.SnapMode);
         }
+
+        // --- Patch B: оффсет при рендере в render target (gutter) ---
+        pivotX += _rtOffsetX;
+        pivotY += _rtOffsetY;
 
         // Локальные углы вокруг pivot (screen space, y-down).
         var x0 = -originPxX;      var y0 = -originPxY;      // top-left
@@ -384,9 +522,8 @@ internal sealed class RenderSystem : IDisposable
         var x2 = wPx - originPxX; var y2 = hPx - originPxY; // bottom-right
         var x3 = -originPxX;      var y3 = hPx - originPxY; // bottom-left
 
-        // Итоговый угол (как в текущей логике RenderTextureRotated).
         var rot = view.HasRot ? (cmd.Rotation - view.CamRot) : cmd.Rotation;
-        var angle = -rot; // радианы, clockwise в screen-y-down при стандартной формуле
+        var angle = -rot;
 
         float p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y;
 
@@ -413,7 +550,6 @@ internal sealed class RenderSystem : IDisposable
             p3x = pivotX + x3; p3y = pivotY + y3;
         }
 
-        // UV (нормализованные 0..1). Предположение: tex.Width/Height — кэшированы (без SDL-вызовов по кадру).
         var invW = 1f / tex.Width;
         var invH = 1f / tex.Height;
 
@@ -422,11 +558,9 @@ internal sealed class RenderSystem : IDisposable
         var u1 = (cmd.SrcRect.X + cmd.SrcRect.Width) * invW;
         var v1 = (cmd.SrcRect.Y + cmd.SrcRect.Height) * invH;
 
-        // Flip: меняем UV местами.
         if ((cmd.FlipMode & FlipMode.Horizontal) != 0) (u0, u1) = (u1, u0);
         if ((cmd.FlipMode & FlipMode.Vertical) != 0) (v0, v1) = (v1, v0);
 
-        // Цвет вершины (SDL_FColor float [0..1]).
         var col = new SDL.FColor(
             cmd.Color.Red / 255f,
             cmd.Color.Green / 255f,
@@ -451,7 +585,6 @@ internal sealed class RenderSystem : IDisposable
         _spriteBatchVertices[vBase + 2].Color = col;
         _spriteBatchVertices[vBase + 3].Color = col;
 
-        // Два треугольника.
         _spriteBatchIndices[iBase + 0] = vBase + 0;
         _spriteBatchIndices[iBase + 1] = vBase + 1;
         _spriteBatchIndices[iBase + 2] = vBase + 2;
@@ -463,6 +596,7 @@ internal sealed class RenderSystem : IDisposable
         _spriteBatchIndexCount += 6;
         _spriteBatchSpriteCount++;
     }
+
     
     
     private void ApplyPresentation(EngineConfig config)
@@ -544,10 +678,6 @@ internal sealed class RenderSystem : IDisposable
             if (outH <= 0) outH = 1;
         }
 
-        // Safety (например, свёрнутое окно / транзит ресайза).
-        if (outW <= 0) outW = 1;
-        if (outH <= 0) outH = 1;
-
         var halfW = outW * 0.5f;
         var halfH = outH * 0.5f;
 
@@ -572,6 +702,8 @@ internal sealed class RenderSystem : IDisposable
         // стало:
         float ppu;
         var pixelSnap = false;
+        var snapMode = PixelSnapMode.Round;
+        var camPosPxSnapped = Vector2.Zero;
 
         if (cam is PixelPerfectCamera ppcam)
         {
@@ -583,10 +715,11 @@ internal sealed class RenderSystem : IDisposable
             // обновляем “что получилось”
             ppcam.UpdateEffectiveOrthoSize(outH);
 
-            camPos = ppcam.SnapWorldPosition(camPos, ppu);
             pixelSnap = ppcam.SnapPosition;
-        }
+            snapMode = ppcam.SnapMode;
 
+            // ВАЖНО: camPos НЕ снапаем в world-space.
+        }
         else
         {
             var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
@@ -622,6 +755,13 @@ internal sealed class RenderSystem : IDisposable
             halfWWorld = r;
             halfHWorld = r;
         }
+        
+        if (pixelSnap)
+        {
+            camPosPxSnapped = new Vector2(
+                SnapPixel(camPos.X * ppu, snapMode),
+                SnapPixel(camPos.Y * ppu, snapMode));
+        }
 
         var cull = new ViewCullRect(
             camPos.X - halfWWorld - pad,
@@ -639,6 +779,8 @@ internal sealed class RenderSystem : IDisposable
             sin: s,
             hasRot: hasRot,
             pixelSnap: pixelSnap,
+            snapMode: snapMode,
+            camPosPxSnapped: camPosPxSnapped,
             cull: cull);
     }
 
@@ -703,9 +845,6 @@ internal sealed class RenderSystem : IDisposable
                 _debugGridLine.Blue / 255f,
                 _debugGridLine.Alpha / 255f);
 
-            // Толщина линии как в RenderLine: 1px => half = 0.5.
-            const float halfThickness = 0.5f;
-
             var v = 0;
             var i = 0;
             var emittedLines = 0;
@@ -717,6 +856,89 @@ internal sealed class RenderSystem : IDisposable
                 WorldToScreen(wx1, wy1, out var sx1, out var sy1, in state);
                 WorldToScreen(wx2, wy2, out var sx2, out var sy2, in state);
 
+                // Patch B: gutter-offset при рендере в target
+                sx1 += _rtOffsetX; sy1 += _rtOffsetY;
+                sx2 += _rtOffsetX; sy2 += _rtOffsetY;
+
+                // В pixel-snap режиме сетка должна быть строго пиксельная.
+                if (state is { PixelSnap: true, HasRot: false })
+                {
+                    sx1 = SnapPixel(sx1, state.SnapMode);
+                    sy1 = SnapPixel(sy1, state.SnapMode);
+                    sx2 = SnapPixel(sx2, state.SnapMode);
+                    sy2 = SnapPixel(sy2, state.SnapMode);
+
+                    // Вертикальная линия
+                    if (MathF.Abs(sx2 - sx1) < 1e-4f)
+                    {
+                        var x = sx1;
+                        var yTop = MathF.Min(sy1, sy2);
+                        var yBot = MathF.Max(sy1, sy2);
+
+                        _gridGeomVertices[v + 0].Position = new SDL.FPoint { X = x,     Y = yTop };
+                        _gridGeomVertices[v + 1].Position = new SDL.FPoint { X = x + 1, Y = yTop };
+                        _gridGeomVertices[v + 2].Position = new SDL.FPoint { X = x + 1, Y = yBot };
+                        _gridGeomVertices[v + 3].Position = new SDL.FPoint { X = x,     Y = yBot };
+
+                        _gridGeomVertices[v + 0].Color = c;
+                        _gridGeomVertices[v + 1].Color = c;
+                        _gridGeomVertices[v + 2].Color = c;
+                        _gridGeomVertices[v + 3].Color = c;
+
+                        _gridGeomVertices[v + 0].TexCoord = default;
+                        _gridGeomVertices[v + 1].TexCoord = default;
+                        _gridGeomVertices[v + 2].TexCoord = default;
+                        _gridGeomVertices[v + 3].TexCoord = default;
+
+                        _gridGeomIndices[i + 0] = v + 0;
+                        _gridGeomIndices[i + 1] = v + 1;
+                        _gridGeomIndices[i + 2] = v + 2;
+                        _gridGeomIndices[i + 3] = v + 2;
+                        _gridGeomIndices[i + 4] = v + 3;
+                        _gridGeomIndices[i + 5] = v + 0;
+
+                        v += 4; i += 6; emittedLines++;
+                        return;
+                    }
+
+                    // Горизонтальная линия
+                    if (MathF.Abs(sy2 - sy1) < 1e-4f)
+                    {
+                        var y = sy1;
+                        var xLeft = MathF.Min(sx1, sx2);
+                        var xRight = MathF.Max(sx1, sx2);
+
+                        _gridGeomVertices[v + 0].Position = new SDL.FPoint { X = xLeft,  Y = y };
+                        _gridGeomVertices[v + 1].Position = new SDL.FPoint { X = xRight, Y = y };
+                        _gridGeomVertices[v + 2].Position = new SDL.FPoint { X = xRight, Y = y + 1 };
+                        _gridGeomVertices[v + 3].Position = new SDL.FPoint { X = xLeft,  Y = y + 1 };
+
+                        _gridGeomVertices[v + 0].Color = c;
+                        _gridGeomVertices[v + 1].Color = c;
+                        _gridGeomVertices[v + 2].Color = c;
+                        _gridGeomVertices[v + 3].Color = c;
+
+                        _gridGeomVertices[v + 0].TexCoord = default;
+                        _gridGeomVertices[v + 1].TexCoord = default;
+                        _gridGeomVertices[v + 2].TexCoord = default;
+                        _gridGeomVertices[v + 3].TexCoord = default;
+
+                        _gridGeomIndices[i + 0] = v + 0;
+                        _gridGeomIndices[i + 1] = v + 1;
+                        _gridGeomIndices[i + 2] = v + 2;
+                        _gridGeomIndices[i + 3] = v + 2;
+                        _gridGeomIndices[i + 4] = v + 3;
+                        _gridGeomIndices[i + 5] = v + 0;
+
+                        v += 4; i += 6; emittedLines++;
+                        return;
+                    }
+
+                    // на всякий случай, если попадёт не axis-aligned
+                    // (в вашей сетке это не должно случаться)
+                }
+
+                // Старый normal-based путь (оставляем для non-snap или rotated камеры)
                 var dx = sx2 - sx1;
                 var dy = sy2 - sy1;
 
@@ -724,9 +946,9 @@ internal sealed class RenderSystem : IDisposable
                 if (lenSq <= 1e-6f)
                     return;
 
+                const float halfThickness = 0.5f;
                 var invLen = halfThickness / MathF.Sqrt(lenSq);
 
-                // Перпендикуляр (нормаль) длиной halfThickness.
                 var nx = -dy * invLen;
                 var ny = dx * invLen;
 
@@ -793,6 +1015,18 @@ internal sealed class RenderSystem : IDisposable
         WorldToScreen(x1, y1, out var sx1, out var sy1, in view);
         WorldToScreen(x2, y2, out var sx2, out var sy2, in view);
 
+        // Patch B: gutter-offset при рендере в target
+        sx1 += _rtOffsetX; sy1 += _rtOffsetY;
+        sx2 += _rtOffsetX; sy2 += _rtOffsetY;
+
+        if (view is { PixelSnap: true, HasRot: false })
+        {
+            sx1 = SnapPixel(sx1, view.SnapMode);
+            sy1 = SnapPixel(sy1, view.SnapMode);
+            sx2 = SnapPixel(sx2, view.SnapMode);
+            sy2 = SnapPixel(sy2, view.SnapMode);
+        }
+
         Profiler.AddCounter(ProfilerCounterId.RenderDebugLines);
         Profiler.AddCounter(ProfilerCounterId.RenderDrawCalls);
 
@@ -801,16 +1035,34 @@ internal sealed class RenderSystem : IDisposable
 
     private static void WorldToScreen(float wx, float wy, out float sx, out float sy, in ViewState view)
     {
-        var rx = wx - view.CamPos.X;
-        var ry = wy - view.CamPos.Y;
+        // Быстрый и стабильный путь для pixel-snap камеры без rotation:
+        // работаем прямо в pixel-space относительно snapped camera px.
+        if (view is { PixelSnap: true, HasRot: false })
+        {
+            var px = wx * view.Ppu - view.CamPosPxSnapped.X;
+            var py = wy * view.Ppu - view.CamPosPxSnapped.Y;
 
-        // Поворот на -camRot: [c s; -s c].
-        var vx = rx * view.Cos + ry * view.Sin;
-        var vy = -rx * view.Sin + ry * view.Cos;
+            sx = view.HalfW + px;
+            sy = view.HalfH - py;
+        }
+        else
+        {
+            var rx = wx - view.CamPos.X;
+            var ry = wy - view.CamPos.Y;
 
-        sx = view.HalfW + vx * view.Ppu;
-        sy = view.HalfH - vy * view.Ppu;
+            var vx = rx * view.Cos + ry * view.Sin;
+            var vy = -rx * view.Sin + ry * view.Cos;
+
+            sx = view.HalfW + vx * view.Ppu;
+            sy = view.HalfH - vy * view.Ppu;
+        }
+
+        // Patch B: смещение в render target (gutter).
+        // NOTE: RenderSystem._rtOffsetX/Y недоступны в static методе.
+        // Поэтому этот оффсет добавляется в вызывающих местах (DrawWorldLine / EmitWorldLineQuad),
+        // либо делай WorldToScreen НЕ static и используй поля напрямую.
     }
+
 
     #endregion
 
@@ -841,6 +1093,23 @@ internal sealed class RenderSystem : IDisposable
         }
 
         // Переполнение таблицы: игнорируем (на практике для типичных 2D-нагрузок крайне маловероятно).
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float SnapPixel(float v, PixelSnapMode mode)
+    {
+        const float eps = 1e-4f;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static float RoundAwayFromZeroEps(float x)
+            => x >= 0f ? MathF.Floor(x + 0.5f + eps) : MathF.Ceiling(x - 0.5f - eps);
+
+        return mode switch
+        {
+            PixelSnapMode.Floor => MathF.Floor(v + eps),
+            PixelSnapMode.Ceil  => MathF.Ceiling(v - eps),
+            _                   => RoundAwayFromZeroEps(v),
+        };
     }
 
     private void EnsureGridGeometryCapacity(int verticesNeeded, int indicesNeeded)
@@ -957,6 +1226,51 @@ internal sealed class RenderSystem : IDisposable
             FilterMode.Pixelart => SDL.ScaleMode.PixelArt,
             _ => SDL.ScaleMode.Linear
         };
+    }
+    
+    private static bool ShouldUseSceneTarget(in ViewState view)
+    {
+        // Patch B применяется только для pixel-snap камеры без rotation.
+        return view is { PixelSnap: true, HasRot: false };
+    }
+
+    private void EnsureSceneTarget(int w, int h)
+    {
+        if (w <= 0) w = 1;
+        if (h <= 0) h = 1;
+
+        if (_sceneTarget != 0 && _sceneTargetW == w && _sceneTargetH == h)
+            return;
+
+        DestroySceneTarget();
+
+        // NOTE: точные enum’ы PixelFormat/TextureAccess зависят от твоего SDL3 биндинга.
+        // Смысл: создать SDL_Texture* с доступом Target.
+        _sceneTarget = SDL.CreateTexture(
+            _rendererHandle,
+            SDL.PixelFormat.ABGR8888,
+            SDL.TextureAccess.Target,
+            w, h);
+
+        if (_sceneTarget == 0)
+            throw new InvalidOperationException($"SDL.CreateTexture(Target) failed. {SDL.GetError()}");
+
+        _sceneTargetW = w;
+        _sceneTargetH = h;
+
+        // Обычно полезно для корректного композита (если target содержит альфу).
+        // Если у тебя нет BlendMode в биндинге — можно удалить.
+        SDL.SetTextureBlendMode(_sceneTarget, SDL.BlendMode.Blend);
+    }
+
+    private void DestroySceneTarget()
+    {
+        if (_sceneTarget != 0)
+            SDL.DestroyTexture(_sceneTarget);
+
+        _sceneTarget = 0;
+        _sceneTargetW = 0;
+        _sceneTargetH = 0;
     }
 
     #endregion

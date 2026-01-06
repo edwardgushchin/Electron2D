@@ -37,7 +37,5 @@ public class MainScene() : Node("MainScene")
         // PixelPerfectCamera сама снапает позицию на сетку 1/PPU.
         var p = _player.Transform.WorldPosition;
         _camera.Transform.WorldPosition = p with { Y = 0f };
-        
-        Console.WriteLine("Player position: " + p);
     }
 }
