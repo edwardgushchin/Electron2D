@@ -19,20 +19,23 @@ internal sealed class InputSystem
     private MouseButton _currentMouseButtons;
     private MouseButton _previousMouseButtons;
 
-    private float _currentMouseX;
-    private float _currentMouseY;
-    private float _previousMouseX;
-    private float _previousMouseY;
-
-    private bool _mousePresent;
+    private Vector2 _currentMouse;
+    private Vector2 _previousMouse;
+    
+    private Vector2 _mouseDelta;
     private Vector2 _mouseScrollDelta;
+    
+    private bool _mousePresent;
 
     #endregion
 
-    #region Unity-style public API (mouse)
+    #region public API (mouse)
 
     /// <summary>Текущее положение мыши в пикселях, относительно top-left фокусного окна.</summary>
-    public Vector2 MousePosition => new(_currentMouseX, _currentMouseY);
+    public Vector2 MousePosition => _currentMouse;
+    
+    /// <summary>Относительное движение мыши за кадр (dx/dy), накопленное SDL с прошлого вызова.</summary>
+    public Vector2 MouseDelta => _mouseDelta;
 
     /// <summary>Есть ли подключенная мышь.</summary>
     public bool MousePresent => _mousePresent; // SDL_HasMouse :contentReference[oaicite:3]{index=3}
@@ -84,8 +87,7 @@ internal sealed class InputSystem
 
         // Mouse: переносим current -> previous
         _previousMouseButtons = _currentMouseButtons;
-        _previousMouseX = _currentMouseX;
-        _previousMouseY = _currentMouseY;
+        _previousMouse = _currentMouse;
 
         // MousePresent (SDL_HasMouse) :contentReference[oaicite:4]{index=4}
         _mousePresent = SDL.HasMouse();
@@ -95,9 +97,10 @@ internal sealed class InputSystem
 
         // Mouse buttons + position (cached state after PumpEvents) :contentReference[oaicite:5]{index=5}
         var sdlButtons = SDL.GetMouseState(out var mouseX, out var mouseY);
+        SDL.GetRelativeMouseState(out var dx, out var dy);
+        _mouseDelta = new Vector2(dx, dy);
         _currentMouseButtons = (MouseButton)(uint)sdlButtons;
-        _currentMouseX = mouseX;
-        _currentMouseY = mouseY;
+        _currentMouse = new(mouseX, mouseY);
     }
 
     /// <summary>Клавиша сейчас удерживается (down).</summary>

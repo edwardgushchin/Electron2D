@@ -37,6 +37,8 @@ public static class Input
     public static Vector2 MousePosition => _system?.MousePosition ?? default;
     public static bool MousePresent => _system?.MousePresent ?? false;
     public static Vector2 MouseScrollDelta => _system?.MouseScrollDelta ?? default;
+    
+    public static Vector2 MouseDelta => _system?.MouseDelta ?? default;
 
     /// <summary>Кнопка мыши удерживается (down/held).</summary>
     public static bool IsMouseButtonDown(MouseButton button)

@@ -8,8 +8,6 @@ namespace Electron2D;
 /// </summary>
 public sealed class PixelPerfectCamera(string name) : Camera(name)
 {
-    /// <summary>Сколько экранных пикселей приходится на 1 world-unit по вертикали.</summary>
-    public int PixelsPerUnit { get; set; } = 16;
 
     /// <summary>Снапать позицию камеры к шагу 1/PPU.</summary>
     public bool SnapPosition { get; set; } = true;
@@ -19,10 +17,17 @@ public sealed class PixelPerfectCamera(string name) : Camera(name)
 
     public PixelSnapMode SnapMode { get; set; } = PixelSnapMode.Round;
 
-    internal float ResolveOrthoSize(int renderHeight)
+    /// <summary>
+    /// Эквивалентный orthographic size (половина высоты мира в units),
+    /// вычисленный из текущего renderHeight и PixelsPerUnit.
+    /// Только для диагностики/инспектора.
+    /// </summary>
+    public float EffectiveOrthoSize { get; private set; }
+
+    internal void UpdateEffectiveOrthoSize(int renderHeight)
     {
         var ppu = Math.Max(1, PixelsPerUnit);
-        return renderHeight / (2f * ppu);
+        EffectiveOrthoSize = renderHeight / (2f * ppu);
     }
 
     internal Vector2 SnapWorldPosition(Vector2 pos, float ppu)

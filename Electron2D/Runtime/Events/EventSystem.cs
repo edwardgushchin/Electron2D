@@ -200,19 +200,7 @@ internal sealed class EventSystem
 
                     case SDL.EventType.MouseWheel:
                     {
-                        var x = sdlEvent.Wheel.X;
-                        var y = sdlEvent.Wheel.Y;
-
-                        if (sdlEvent.Wheel.Direction == SDL.MouseWheelDirection.Flipped)
-                        {
-                            x = -x;
-                            y = -y;
-                        }
-
-                        _wheelX += x;
-                        _wheelY += y;
-
-                        TryPublishMouseWheel(sdlEvent.Wheel.Timestamp, x, y);
+                        TryPublishMouseWheel(sdlEvent.Wheel.Timestamp, sdlEvent.Wheel.Direction, sdlEvent.Wheel.X, sdlEvent.Wheel.Y);
                         break;
                     }
                     // TODO: остальной input маппинг
@@ -257,8 +245,17 @@ internal sealed class EventSystem
             DroppedMouseEvents++;
     }
 
-    private void TryPublishMouseWheel(ulong timestamp, float scrollX, float scrollY)
+    private void TryPublishMouseWheel(ulong timestamp, SDL.MouseWheelDirection direction, float scrollX, float scrollY)
     {
+        if (direction == SDL.MouseWheelDirection.Flipped)
+        {
+            scrollX = -scrollX;
+            scrollY = -scrollY;
+        }
+
+        _wheelX += scrollX;
+        _wheelY += scrollY;
+        
         if (!_eventQueue.Mouse.TryPublish(new MouseEvent(MouseEventType.MouseWheel, timestamp, 0, scrollX, scrollY)))
             DroppedMouseEvents++;
     }

@@ -8,6 +8,9 @@ public class Camera(string name) : Node(name)
     private const float MinOrthoSize = 0.0001f;
 
     private bool _isCurrent;
+    
+    /// <summary>Сколько экранных пикселей приходится на 1 world-unit по вертикали.</summary>
+    public int PixelsPerUnit { get; set; } = 16;
 
     /// <summary>
     /// Unity-like orthographic size: половина высоты видимого мира в world-units.

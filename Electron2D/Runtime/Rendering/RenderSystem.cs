@@ -255,7 +255,7 @@ internal sealed class RenderSystem : IDisposable
             var resolvedFilter = ResolveFilter(cmd.FilterMode, tex.FilterMode);
 
             // 2) Конвертим в реальный SDL scale mode (Pixelart -> Nearest)
-            var sdlScaleMode = ToSdlScaleMode(resolvedFilter);
+            var sdlScaleMode = ToSDLScaleMode(resolvedFilter);
 
             // 3) Батч брейк: либо текстура сменилась, либо scale mode сменилась
             if (_spriteBatchTexture != 0 &&
@@ -569,7 +569,7 @@ internal sealed class RenderSystem : IDisposable
 
         // Pixel-perfect override (фиксируем PPU и, опционально, запрещаем rotation)
         // + опциональный render-time pixel snapping (для pixel-art).
-        float orthoSize;
+        // стало:
         float ppu;
         var pixelSnap = false;
 
@@ -579,22 +579,20 @@ internal sealed class RenderSystem : IDisposable
                 camRot = 0f;
 
             ppu = MathF.Max(1f, ppcam.PixelsPerUnit);
-            orthoSize = ppcam.ResolveOrthoSize(outH);
+
+            // обновляем “что получилось”
+            ppcam.UpdateEffectiveOrthoSize(outH);
 
             camPos = ppcam.SnapWorldPosition(camPos, ppu);
-
-            // Если камера сама работает в pixel-perfect режиме —
-            // дополнительно разрешаем снап рендеринга к целым пикселям.
-            // (При наличии вращения снап намеренно отключаем ниже на hot-path.)
             pixelSnap = ppcam.SnapPosition;
         }
+
         else
         {
-            orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
+            var orthoSize = cam?.OrthoSize ?? _fallbackOrthoSize;
             if (!(orthoSize > 0f))
                 orthoSize = MinPositiveFloat;
 
-            // Pixels per 1 world-unit (vertical).
             ppu = outH / (2f * orthoSize);
             if (!(ppu > 0f))
                 ppu = MinPositiveFloat;
@@ -949,15 +947,14 @@ internal sealed class RenderSystem : IDisposable
         return _defaultTextureFilter;
     }
     
-    private static SDL.ScaleMode ToSdlScaleMode(FilterMode mode)
+    private static SDL.ScaleMode ToSDLScaleMode(FilterMode mode)
     {
-        // Pixelart на уровне SDL = Nearest.
         // Улучшение качества пиксель-арта делается не сэмплингом, а integer-scale + snap.
         return mode switch
         {
             FilterMode.Nearest => SDL.ScaleMode.Nearest,
             FilterMode.Linear => SDL.ScaleMode.Linear,
-            FilterMode.Pixelart => SDL.ScaleMode.Nearest,
+            FilterMode.Pixelart => SDL.ScaleMode.PixelArt,
             _ => SDL.ScaleMode.Linear
         };
     }
