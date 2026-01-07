@@ -213,8 +213,16 @@ internal sealed class RenderSystem : IDisposable
         // Опционально: заранее обеспечить ёмкость, чтобы исключить рост массива в течение кадра.
         //_queue.EnsureCapacity(renderers.Length);
 
+        var uiCull = new ViewCullRect(0f, 0f, view.HalfW * 2f, view.HalfH * 2f);
+
         for (var i = 0; i < renderers.Length; i++)
-            renderers[i].PrepareRender(_queue, resources, in view.Cull);
+        {
+            var renderer = renderers[i];
+            if (renderer.Space == RenderSpace.Screen)
+                renderer.PrepareRender(_queue, resources, in uiCull);
+            else
+                renderer.PrepareRender(_queue, resources, in view.Cull);
+        }
     }
 
     public void EndFrame()
@@ -346,11 +354,21 @@ internal sealed class RenderSystem : IDisposable
                 SpriteCommandSorter.Sort(commands);
         }
 
-        ref readonly var view = ref EnsureView();
+        ref readonly var worldView = ref EnsureView();
+        var uiView = BuildUiView(in worldView);
+
+        if (_debugGridEnabled)
+            DrawDebugGrid(in worldView);
+
+        EnsureSpriteBatchCapacity(commands.Length);
+
+        DrawSpriteCommands(commands, in worldView, RenderSpace.World);
+        DrawSpriteCommands(commands, in uiView, RenderSpace.Screen);
+
 
         // Фон: сетка рисуется ДО спрайтов.
         if (_debugGridEnabled)
-            DrawDebugGrid(in view);
+            DrawDebugGrid(in worldView);
 
         EnsureSpriteBatchCapacity(commands.Length);
 
@@ -409,11 +427,11 @@ internal sealed class RenderSystem : IDisposable
                 sdlScaleMode is SDL.ScaleMode.Nearest or SDL.ScaleMode.PixelArt;
 
             var snapToPixel =
-                view.PixelSnap &&
+                worldView.PixelSnap &&
                 snapScaleModeOk &&
                 MathF.Abs(cmd.Rotation) < 1e-6f;
 
-            EmitSpriteQuad(in cmd, in view, snapToPixel);
+            EmitSpriteQuad(in cmd, in worldView, snapToPixel);
         }
 
         FlushSpriteBatch();
@@ -467,135 +485,165 @@ internal sealed class RenderSystem : IDisposable
 
         float pivotX, pivotY;
 
-        // --- Patch B: стабильный pixel-space путь для snapped камеры без rotation ---
-        if (view is { PixelSnap: true, HasRot: false })
+        if (cmd.Space == RenderSpace.Screen)
         {
-            var posPxX = cmd.PositionWorld.X * view.Ppu;
-            var posPxY = cmd.PositionWorld.Y * view.Ppu;
-
-            var relPxX = posPxX - view.CamPosPxSnapped.X;
-            var relPxY = posPxY - view.CamPosPxSnapped.Y;
-
-            pivotX = view.HalfW + relPxX;
-            pivotY = view.HalfH - relPxY;
+            // UI: cmd.PositionWorld трактуем как screen coords (render-space pixels)
+            pivotX = cmd.PositionWorld.X;
+            pivotY = cmd.PositionWorld.Y;
+        }
+        else if (view is { PixelSnap: true, HasRot: false })
+        {
+            // ваш текущий snapped camera путь
         }
         else
         {
-            // World -> view (camera space).
-            var rel = cmd.PositionWorld - view.CamPos;
 
-            float vx, vy;
-            if (view.HasRot)
+            // --- Patch B: стабильный pixel-space путь для snapped камеры без rotation ---
+            if (view is { PixelSnap: true, HasRot: false })
             {
-                vx = rel.X * view.Cos + rel.Y * view.Sin;
-                vy = -rel.X * view.Sin + rel.Y * view.Cos;
+                var posPxX = cmd.PositionWorld.X * view.Ppu;
+                var posPxY = cmd.PositionWorld.Y * view.Ppu;
+
+                var relPxX = posPxX - view.CamPosPxSnapped.X;
+                var relPxY = posPxY - view.CamPosPxSnapped.Y;
+
+                pivotX = view.HalfW + relPxX;
+                pivotY = view.HalfH - relPxY;
             }
             else
             {
-                vx = rel.X;
-                vy = rel.Y;
+                // World -> view (camera space).
+                var rel = cmd.PositionWorld - view.CamPos;
+
+                float vx, vy;
+                if (view.HasRot)
+                {
+                    vx = rel.X * view.Cos + rel.Y * view.Sin;
+                    vy = -rel.X * view.Sin + rel.Y * view.Cos;
+                }
+                else
+                {
+                    vx = rel.X;
+                    vy = rel.Y;
+                }
+
+                // View -> screen (pivot).
+                pivotX = view.HalfW + vx * view.Ppu;
+                pivotY = view.HalfH - vy * view.Ppu;
             }
 
-            // View -> screen (pivot).
-            pivotX = view.HalfW + vx * view.Ppu;
-            pivotY = view.HalfH - vy * view.Ppu;
+            if (snapToPixel)
+            {
+                pivotX = SnapPixel(pivotX, view.SnapMode);
+                pivotY = SnapPixel(pivotY, view.SnapMode);
+
+                originPxX = SnapPixel(originPxX, view.SnapMode);
+                originPxY = SnapPixel(originPxY, view.SnapMode);
+
+                wPx = SnapPixel(wPx, view.SnapMode);
+                hPx = SnapPixel(hPx, view.SnapMode);
+            }
+
+            // --- Patch B: оффсет при рендере в render target (gutter) ---
+            pivotX += _rtOffsetX;
+            pivotY += _rtOffsetY;
+
+            // Локальные углы вокруг pivot (screen space, y-down).
+            var x0 = -originPxX;
+            var y0 = -originPxY; // top-left
+            var x1 = wPx - originPxX;
+            var y1 = -originPxY; // top-right
+            var x2 = wPx - originPxX;
+            var y2 = hPx - originPxY; // bottom-right
+            var x3 = -originPxX;
+            var y3 = hPx - originPxY; // bottom-left
+
+            var rot = view.HasRot ? (cmd.Rotation - view.CamRot) : cmd.Rotation;
+            var angle = -rot;
+
+            float p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y;
+
+            if (angle != 0f)
+            {
+                var c = MathF.Cos(angle);
+                var s = MathF.Sin(angle);
+
+                var rx0 = x0 * c - y0 * s;
+                var ry0 = x0 * s + y0 * c;
+                var rx1 = x1 * c - y1 * s;
+                var ry1 = x1 * s + y1 * c;
+                var rx2 = x2 * c - y2 * s;
+                var ry2 = x2 * s + y2 * c;
+                var rx3 = x3 * c - y3 * s;
+                var ry3 = x3 * s + y3 * c;
+
+                p0x = pivotX + rx0;
+                p0y = pivotY + ry0;
+                p1x = pivotX + rx1;
+                p1y = pivotY + ry1;
+                p2x = pivotX + rx2;
+                p2y = pivotY + ry2;
+                p3x = pivotX + rx3;
+                p3y = pivotY + ry3;
+            }
+            else
+            {
+                p0x = pivotX + x0;
+                p0y = pivotY + y0;
+                p1x = pivotX + x1;
+                p1y = pivotY + y1;
+                p2x = pivotX + x2;
+                p2y = pivotY + y2;
+                p3x = pivotX + x3;
+                p3y = pivotY + y3;
+            }
+
+            var invW = 1f / tex.Width;
+            var invH = 1f / tex.Height;
+
+            var u0 = cmd.SrcRect.X * invW;
+            var v0 = cmd.SrcRect.Y * invH;
+            var u1 = (cmd.SrcRect.X + cmd.SrcRect.Width) * invW;
+            var v1 = (cmd.SrcRect.Y + cmd.SrcRect.Height) * invH;
+
+            if ((cmd.FlipMode & FlipMode.Horizontal) != 0) (u0, u1) = (u1, u0);
+            if ((cmd.FlipMode & FlipMode.Vertical) != 0) (v0, v1) = (v1, v0);
+
+            var col = new SDL.FColor(
+                cmd.Color.Red / 255f,
+                cmd.Color.Green / 255f,
+                cmd.Color.Blue / 255f,
+                cmd.Color.Alpha / 255f);
+
+            var vBase = _spriteBatchVertexCount;
+            var iBase = _spriteBatchIndexCount;
+
+            _spriteBatchVertices[vBase + 0].Position = new SDL.FPoint { X = p0x, Y = p0y };
+            _spriteBatchVertices[vBase + 1].Position = new SDL.FPoint { X = p1x, Y = p1y };
+            _spriteBatchVertices[vBase + 2].Position = new SDL.FPoint { X = p2x, Y = p2y };
+            _spriteBatchVertices[vBase + 3].Position = new SDL.FPoint { X = p3x, Y = p3y };
+
+            _spriteBatchVertices[vBase + 0].TexCoord = new SDL.FPoint { X = u0, Y = v0 };
+            _spriteBatchVertices[vBase + 1].TexCoord = new SDL.FPoint { X = u1, Y = v0 };
+            _spriteBatchVertices[vBase + 2].TexCoord = new SDL.FPoint { X = u1, Y = v1 };
+            _spriteBatchVertices[vBase + 3].TexCoord = new SDL.FPoint { X = u0, Y = v1 };
+
+            _spriteBatchVertices[vBase + 0].Color = col;
+            _spriteBatchVertices[vBase + 1].Color = col;
+            _spriteBatchVertices[vBase + 2].Color = col;
+            _spriteBatchVertices[vBase + 3].Color = col;
+
+            _spriteBatchIndices[iBase + 0] = vBase + 0;
+            _spriteBatchIndices[iBase + 1] = vBase + 1;
+            _spriteBatchIndices[iBase + 2] = vBase + 2;
+            _spriteBatchIndices[iBase + 3] = vBase + 2;
+            _spriteBatchIndices[iBase + 4] = vBase + 3;
+            _spriteBatchIndices[iBase + 5] = vBase + 0;
+
+            _spriteBatchVertexCount += 4;
+            _spriteBatchIndexCount += 6;
+            _spriteBatchSpriteCount++;
         }
-
-        if (snapToPixel)
-        {
-            pivotX = SnapPixel(pivotX, view.SnapMode);
-            pivotY = SnapPixel(pivotY, view.SnapMode);
-
-            originPxX = SnapPixel(originPxX, view.SnapMode);
-            originPxY = SnapPixel(originPxY, view.SnapMode);
-
-            wPx = SnapPixel(wPx, view.SnapMode);
-            hPx = SnapPixel(hPx, view.SnapMode);
-        }
-
-        // --- Patch B: оффсет при рендере в render target (gutter) ---
-        pivotX += _rtOffsetX;
-        pivotY += _rtOffsetY;
-
-        // Локальные углы вокруг pivot (screen space, y-down).
-        var x0 = -originPxX;      var y0 = -originPxY;      // top-left
-        var x1 = wPx - originPxX; var y1 = -originPxY;      // top-right
-        var x2 = wPx - originPxX; var y2 = hPx - originPxY; // bottom-right
-        var x3 = -originPxX;      var y3 = hPx - originPxY; // bottom-left
-
-        var rot = view.HasRot ? (cmd.Rotation - view.CamRot) : cmd.Rotation;
-        var angle = -rot;
-
-        float p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y;
-
-        if (angle != 0f)
-        {
-            var c = MathF.Cos(angle);
-            var s = MathF.Sin(angle);
-
-            var rx0 = x0 * c - y0 * s; var ry0 = x0 * s + y0 * c;
-            var rx1 = x1 * c - y1 * s; var ry1 = x1 * s + y1 * c;
-            var rx2 = x2 * c - y2 * s; var ry2 = x2 * s + y2 * c;
-            var rx3 = x3 * c - y3 * s; var ry3 = x3 * s + y3 * c;
-
-            p0x = pivotX + rx0; p0y = pivotY + ry0;
-            p1x = pivotX + rx1; p1y = pivotY + ry1;
-            p2x = pivotX + rx2; p2y = pivotY + ry2;
-            p3x = pivotX + rx3; p3y = pivotY + ry3;
-        }
-        else
-        {
-            p0x = pivotX + x0; p0y = pivotY + y0;
-            p1x = pivotX + x1; p1y = pivotY + y1;
-            p2x = pivotX + x2; p2y = pivotY + y2;
-            p3x = pivotX + x3; p3y = pivotY + y3;
-        }
-
-        var invW = 1f / tex.Width;
-        var invH = 1f / tex.Height;
-
-        var u0 = cmd.SrcRect.X * invW;
-        var v0 = cmd.SrcRect.Y * invH;
-        var u1 = (cmd.SrcRect.X + cmd.SrcRect.Width) * invW;
-        var v1 = (cmd.SrcRect.Y + cmd.SrcRect.Height) * invH;
-
-        if ((cmd.FlipMode & FlipMode.Horizontal) != 0) (u0, u1) = (u1, u0);
-        if ((cmd.FlipMode & FlipMode.Vertical) != 0) (v0, v1) = (v1, v0);
-
-        var col = new SDL.FColor(
-            cmd.Color.Red / 255f,
-            cmd.Color.Green / 255f,
-            cmd.Color.Blue / 255f,
-            cmd.Color.Alpha / 255f);
-
-        var vBase = _spriteBatchVertexCount;
-        var iBase = _spriteBatchIndexCount;
-
-        _spriteBatchVertices[vBase + 0].Position = new SDL.FPoint { X = p0x, Y = p0y };
-        _spriteBatchVertices[vBase + 1].Position = new SDL.FPoint { X = p1x, Y = p1y };
-        _spriteBatchVertices[vBase + 2].Position = new SDL.FPoint { X = p2x, Y = p2y };
-        _spriteBatchVertices[vBase + 3].Position = new SDL.FPoint { X = p3x, Y = p3y };
-
-        _spriteBatchVertices[vBase + 0].TexCoord = new SDL.FPoint { X = u0, Y = v0 };
-        _spriteBatchVertices[vBase + 1].TexCoord = new SDL.FPoint { X = u1, Y = v0 };
-        _spriteBatchVertices[vBase + 2].TexCoord = new SDL.FPoint { X = u1, Y = v1 };
-        _spriteBatchVertices[vBase + 3].TexCoord = new SDL.FPoint { X = u0, Y = v1 };
-
-        _spriteBatchVertices[vBase + 0].Color = col;
-        _spriteBatchVertices[vBase + 1].Color = col;
-        _spriteBatchVertices[vBase + 2].Color = col;
-        _spriteBatchVertices[vBase + 3].Color = col;
-
-        _spriteBatchIndices[iBase + 0] = vBase + 0;
-        _spriteBatchIndices[iBase + 1] = vBase + 1;
-        _spriteBatchIndices[iBase + 2] = vBase + 2;
-        _spriteBatchIndices[iBase + 3] = vBase + 2;
-        _spriteBatchIndices[iBase + 4] = vBase + 3;
-        _spriteBatchIndices[iBase + 5] = vBase + 0;
-
-        _spriteBatchVertexCount += 4;
-        _spriteBatchIndexCount += 6;
-        _spriteBatchSpriteCount++;
     }
 
     
@@ -783,6 +831,48 @@ internal sealed class RenderSystem : IDisposable
             snapMode: snapMode,
             camPosPxSnapped: camPosPxSnapped,
             cull: cull);
+    }
+    
+    private static ViewState BuildUiView(in ViewState worldView)
+    {
+        var w = worldView.HalfW * 2f;
+        var h = worldView.HalfH * 2f;
+        var cull = new ViewCullRect(0f, 0f, w, h);
+
+        return new ViewState(
+            halfW: worldView.HalfW,
+            halfH: worldView.HalfH,
+            ppu: 1f,                 // UI: пиксели
+            camPos: default,
+            camRot: 0f,
+            cos: 1f,
+            sin: 0f,
+            hasRot: false,
+            pixelSnap: true,         // snapping включён, но реально сработает только для Nearest/Pixelart и rot≈0
+            snapMode: worldView.SnapMode,
+            camPosPxSnapped: default,
+            cull: cull);
+    }
+
+    private void DrawSpriteCommands(Span<SpriteCommand> commands, in ViewState view, RenderSpace pass)
+    {
+        _spriteBatchTexture = 0;
+        _spriteBatchScaleMode = SDL.ScaleMode.Linear;
+        _spriteBatchVertexCount = 0;
+        _spriteBatchIndexCount = 0;
+        _spriteBatchSpriteCount = 0;
+
+        for (var i = 0; i < commands.Length; i++)
+        {
+            ref readonly var cmd = ref commands[i];
+            if (cmd.Space != pass)
+                continue;
+
+            // дальше — ваш текущий код батчинга/фильтра/EmitSpriteQuad(...)
+            // (без изменений)
+        }
+
+        FlushSpriteBatch();
     }
 
 

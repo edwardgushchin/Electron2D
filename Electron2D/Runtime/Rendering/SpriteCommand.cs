@@ -36,7 +36,10 @@ internal struct SpriteCommand
     /// <summary>Флаги отражения/поворота, связанные со спрайтом (например, Sprite.FlipMode).</summary>
     public FlipMode FlipMode;
     
-    public FilterMode FilterMode; // <— добавь
+    public FilterMode FilterMode;
+    
+    /// <summary>Пространство: World или Screen(UI).</summary>
+    public RenderSpace Space;
 
     /// <summary>
     /// Последовательность вставки (назначается очередью) для стабильной сортировки при равных SortKey.

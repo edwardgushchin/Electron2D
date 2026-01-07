@@ -23,6 +23,6 @@ internal sealed class PhysicsUnitsScene : Node
 
     protected override void Process(float delta)
     {
-        Console.WriteLine(Input.MousePosition);
+       // Console.WriteLine(Input.MousePosition);
     }
 }

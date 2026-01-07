@@ -19,7 +19,8 @@ public class MainScene() : Node("MainScene")
             Current = true,
             PixelsPerUnit = 100,
             SnapPosition = true,
-            EnforceNoRotation = true
+            EnforceNoRotation = true,
+            SnapMode = PixelSnapMode.Round,
         };
 
         AddChild(_background);
@@ -35,9 +36,9 @@ public class MainScene() : Node("MainScene")
     {
         // Минимальный follow (без сглаживания) — камера центрируется по игроку.
         // PixelPerfectCamera сама снапает позицию на сетку 1/PPU.
-        var p = _player.Transform.WorldPosition;
-        _camera.Transform.WorldPosition = p with { Y = 0f };
+        //var p = _player.Transform.WorldPosition;
+        //_camera.Transform.WorldPosition = p with { Y = 0f };
         
-        //_camera.Transform.WorldPosition = Vector2.Lerp(_camera.Transform.WorldPosition, _player.Transform.WorldPosition, delta);
+        _camera.Transform.WorldPosition = Vector2.Lerp(_camera.Transform.WorldPosition, _player.Transform.WorldPosition, delta);
     }
 }

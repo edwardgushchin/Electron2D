@@ -711,6 +711,12 @@ public class Node
 
         _components[_componentCount++] = component;
         component.OnAttach(this);
+        
+        if (this is Control && component is SpriteRenderer srUi)
+            srUi.Space = RenderSpace.Screen;
+        
+        if (this is Control && component is SpriteRenderer sr1)
+            sr1.Space = RenderSpace.Screen;
 
         // Если узел уже в дереве — регистрируем renderable сразу.
         if (_sceneTree is not null && component is SpriteRenderer sr)

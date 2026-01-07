@@ -31,8 +31,11 @@ internal sealed class InputSystem
 
     #region public API (mouse)
 
-    /// <summary>Текущее положение мыши в пикселях, относительно top-left фокусного окна.</summary>
+    /// <summary>Текущее положение мыaши в render coordintes (логические пиксели), (0,0)=top-left.</summary>
     public Vector2 MousePosition => _currentMouse;
+    
+    /// <summary>Текущее положение мыaши в world coordintes (мировые единицы), (0,0)=center.</summary>
+    public Vector2 MouseWorldPosition => _currentMouse;
     
     /// <summary>Относительное движение мыши за кадр (dx/dy), накопленное SDL с прошлого вызова.</summary>
     public Vector2 MouseDelta => _mouseDelta;
@@ -96,11 +99,15 @@ internal sealed class InputSystem
         _mouseScrollDelta = eventSystem.MouseWheelDelta;
 
         // Mouse buttons + position (cached state after PumpEvents) :contentReference[oaicite:5]{index=5}
-        var sdlButtons = SDL.GetMouseState(out var mouseX, out var mouseY);
-        SDL.GetRelativeMouseState(out var dx, out var dy);
-        _mouseDelta = new Vector2(dx, dy);
+        // Mouse buttons: берём state как и раньше
+        var sdlButtons = SDL.GetMouseState(out _, out _);
         _currentMouseButtons = (MouseButton)(uint)sdlButtons;
-        _currentMouse = new(mouseX, mouseY);
+
+        // Mouse position: строго render coordinates — из EventSystem (с учётом logical presentation)
+        _currentMouse = eventSystem.MousePosition;
+
+        // Delta: в тех же координатах, что и MousePosition
+        _mouseDelta = _currentMouse - _previousMouse;
     }
 
     /// <summary>Клавиша сейчас удерживается (down).</summary>

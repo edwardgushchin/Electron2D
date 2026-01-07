@@ -19,6 +19,7 @@ public sealed class SpriteRenderer : IComponent
     private uint _sortKey;
     private ushort _layer;
     private ushort _order;
+    private RenderSpace _space = RenderSpace.World;
 
     // Кэш команды рендера (пересобирается только при необходимости)
     private bool _hasValidCache;
@@ -89,6 +90,23 @@ public sealed class SpriteRenderer : IComponent
             InvalidateRenderCache();
         }
     }
+    
+    /// <summary>
+    /// Где рисовать спрайт: World (через камеру) или Screen (UI, (0,0)=top-left, y-down, единицы = пиксели render-space).
+    /// </summary>
+    public RenderSpace Space
+    {
+        get => _space;
+        set
+        {
+            if (_space == value)
+                return;
+
+            _space = value;
+            InvalidateRenderCache();
+        }
+    }
+
     #endregion
 
     #region Public API
@@ -196,7 +214,9 @@ public sealed class SpriteRenderer : IComponent
             sourceRect = new Rect(0, 0, texture.Width, texture.Height);
 
         // Сохраняем статические данные
-        _baseSizeWorldUnscaled = new Vector2(sourceRect.Width / snapshot.PixelsPerUnit, sourceRect.Height / snapshot.PixelsPerUnit);
+        _baseSizeWorldUnscaled = _space == RenderSpace.Screen
+            ? new Vector2(sourceRect.Width, sourceRect.Height) // UI: единицы = пиксели render-space
+            : new Vector2(sourceRect.Width / snapshot.PixelsPerUnit, sourceRect.Height / snapshot.PixelsPerUnit);
         _pivot = snapshot.Pivot;
 
         var absScale = AbsVector2(in worldScale);
@@ -218,7 +238,8 @@ public sealed class SpriteRenderer : IComponent
             Color = _color,
             SortKey = _sortKey,
             FlipMode = flip,
-            FilterMode = snapshot.FilterMode
+            FilterMode = snapshot.FilterMode,
+            Space = _space
         };
 
         ComputeWorldBounds(in _cachedCommand, out _worldBoundsMin, out _worldBoundsMax);

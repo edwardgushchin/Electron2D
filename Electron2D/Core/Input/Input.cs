@@ -35,6 +35,9 @@ public static class Input
     #region Mouse
 
     public static Vector2 MousePosition => _system?.MousePosition ?? default;
+    
+    public static Vector2 MouseWorldPosition => _system?.MouseWorldPosition ?? default;
+    
     public static bool MousePresent => _system?.MousePresent ?? false;
     public static Vector2 MouseScrollDelta => _system?.MouseScrollDelta ?? default;
     

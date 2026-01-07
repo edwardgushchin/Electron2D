@@ -30,6 +30,9 @@ internal sealed class EventSystem
     
     private float _wheelX;
     private float _wheelY;
+    
+    private float _mouseXRender;
+    private float _mouseYRender;
 
     #endregion
 
@@ -53,6 +56,10 @@ internal sealed class EventSystem
     public int DroppedKeyboardEvents { get; private set; }
     
     public int DroppedMouseEvents { get; private set; }
+    
+    /// <summary>Позиция мыши в render coordinates (логические), (0,0)=top-left.</summary>
+    public Vector2 MousePosition => new(_mouseXRender, _mouseYRender);
+
 
     #endregion
 
@@ -93,6 +100,10 @@ internal sealed class EventSystem
         _wheelY = 0;
 
         SDL.PumpEvents();
+        
+        SDL.GetMouseState(out var wx, out var wy);
+        _mouseXRender = wx;
+        _mouseYRender = wy;
 
         DroppedEngineEvents = 0;
         DroppedWindowEvents = 0;
@@ -233,14 +244,16 @@ internal sealed class EventSystem
 
     private void TryPublishMouseMotion(ulong timestamp, float x, float y)
     { 
+        _mouseXRender = x;
+        _mouseYRender = y;
         if (!_eventQueue.Mouse.TryPublish(new MouseEvent(MouseEventType.MouseMotion, timestamp, 0, x, y)))
             DroppedMouseEvents++;
     }
 
     private void TryPublishMouseButton(MouseEventType type, ulong timestamp, MouseButton button, float x, float y)
     {
-        //var code = ToMouseButtonKeyCode(button);
-        //TryPublishInputEvent(type, timestamp, 0, x, y);
+        _mouseXRender = x;
+        _mouseYRender = y;
         if (!_eventQueue.Mouse.TryPublish(new MouseEvent(type, timestamp, button, x, y)))
             DroppedMouseEvents++;
     }
