@@ -29,6 +29,11 @@ public sealed class Rigidbody : IComponent
             field = value;
         }
     } = 1f;
+    
+    /// <summary>
+    /// Тип физического тела.
+    /// </summary>
+    public PhysicsBodyType BodyType { get; set; } = PhysicsBodyType.Dynamic;
     #endregion
 
     #region Public API

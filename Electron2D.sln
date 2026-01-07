@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlappyBird", "Examples\Flap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteAnimation", "Examples\SpriteAnimation\SpriteAnimation.csproj", "{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicsUnits", "Examples\PhysicsUnits\PhysicsUnits.csproj", "{57F8D5DE-64FD-4D6E-83B3-A36013BB88C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,10 +34,15 @@ Global
 		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F8D5DE-64FD-4D6E-83B3-A36013BB88C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F8D5DE-64FD-4D6E-83B3-A36013BB88C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F8D5DE-64FD-4D6E-83B3-A36013BB88C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F8D5DE-64FD-4D6E-83B3-A36013BB88C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D34ED837-3749-417F-AB02-60FC886A96B6} = {F9A787B5-7F45-4678-9416-78553985B9F7}
 		{87C4D7F7-BACF-4C1A-96C1-5123255B3E5B} = {F9A787B5-7F45-4678-9416-78553985B9F7}
 		{A8D0586B-FA73-4B4C-8E14-E09C817CDD7C} = {F9A787B5-7F45-4678-9416-78553985B9F7}
+		{57F8D5DE-64FD-4D6E-83B3-A36013BB88C0} = {F9A787B5-7F45-4678-9416-78553985B9F7}
 	EndGlobalSection
 EndGlobal

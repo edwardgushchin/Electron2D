@@ -17,6 +17,7 @@ internal sealed class PhysicsSystem
     #region Instance fields
     private readonly Dictionary<Rigidbody, B2BodyId> _bodies = new();
     private readonly List<Rigidbody> _rigidbodyBuffer = new(capacity: 128);
+    private readonly List<Collider> _colliderBuffer = new(capacity: 16);
     private readonly List<Rigidbody> _removeBuffer = new(capacity: 64);
     private B2WorldId _worldId;
     private bool _initialized;
@@ -68,7 +69,7 @@ internal sealed class PhysicsSystem
 
             if (!_bodies.TryGetValue(rigidbody, out var bodyId))
             {
-                bodyId = CreateBody(rigidbody, owner.Transform);
+                bodyId = CreateBody(rigidbody, owner);
                 _bodies[rigidbody] = bodyId;
             }
 
@@ -109,25 +110,42 @@ internal sealed class PhysicsSystem
             value.X / WorldUnitsPerBox2DUnit,
             value.Y / WorldUnitsPerBox2DUnit);
 
-    private B2BodyId CreateBody(Rigidbody rigidbody, Transform transform)
+    private B2BodyId CreateBody(Rigidbody rigidbody, Node owner)
     {
+        var transform = owner.Transform;
         var bodyDef = B2Types.b2DefaultBodyDef();
         bodyDef.position = ToBox2D(transform.WorldPosition);
         bodyDef.rotation = B2MathFunction.b2MakeRot(transform.WorldRotation);
 
         var bodyId = B2Bodies.b2CreateBody(_worldId, in bodyDef);
-        B2Bodies.b2Body_SetType(bodyId, B2BodyType.b2_dynamicBody);
+        B2Bodies.b2Body_SetType(bodyId, ToBox2DBodyType(rigidbody.BodyType));
 
-        var shapeDef = B2Types.b2DefaultShapeDef();
+        _colliderBuffer.Clear();
+        CollectColliders(owner, _colliderBuffer);
 
-        const float defaultSize = 1f;
-        var halfExtent = defaultSize * 0.5f * WorldUnitsPerBox2DUnit;
-        var polygon = B2Geometries.b2MakeBox(halfExtent, halfExtent);
+        if (_colliderBuffer.Count == 0)
+        {
+            _colliderBuffer.Add(new BoxCollider());
+        }
 
-        var area = defaultSize * defaultSize;
-        shapeDef.density = rigidbody.Mass / area;
+        var totalArea = 0f;
+        for (var i = 0; i < _colliderBuffer.Count; i++)
+            totalArea += GetColliderArea(_colliderBuffer[i]);
 
-        _ = B2Shapes.b2CreatePolygonShape(bodyId, in shapeDef, in polygon);
+        if (totalArea <= 0f)
+            totalArea = 1f;
+
+        var density = rigidbody.Mass / totalArea;
+
+        for (var i = 0; i < _colliderBuffer.Count; i++)
+        {
+            var collider = _colliderBuffer[i];
+            var shapeDef = B2Types.b2DefaultShapeDef();
+            shapeDef.isSensor = collider.IsTrigger;
+            shapeDef.density = density;
+
+            CreateShape(bodyId, shapeDef, collider);
+        }
 
         rigidbody.MarkTransformSynced();
         return bodyId;
@@ -147,6 +165,116 @@ internal sealed class PhysicsSystem
             CollectRigidbodies(children[i], rigidbodies);
     }
 
+    private static void CollectColliders(Node node, List<Collider> colliders)
+    {
+        var components = node.Components;
+        for (var i = 0; i < components.Length; i++)
+        {
+            if (components[i] is Collider collider)
+                colliders.Add(collider);
+        }
+    }
+
+    private static float GetColliderArea(Collider collider) => collider switch
+    {
+        BoxCollider box => MathF.Abs(box.Size.X * box.Size.Y),
+        CircleCollider circle => MathF.PI * circle.Radius * circle.Radius,
+        PolygonCollider polygon => MathF.Abs(ComputePolygonArea(polygon.Points)),
+        _ => 0f
+    };
+
+    private static float ComputePolygonArea(Vector2[] points)
+    {
+        if (points.Length < 3)
+            return 0f;
+
+        var area = 0f;
+        for (var i = 0; i < points.Length; i++)
+        {
+            var p1 = points[i];
+            var p2 = points[(i + 1) % points.Length];
+            area += (p1.X * p2.Y) - (p2.X * p1.Y);
+        }
+
+        return 0.5f * area;
+    }
+
+    private static void CreateShape(B2BodyId bodyId, B2ShapeDef shapeDef, Collider collider)
+    {
+        switch (collider)
+        {
+            case BoxCollider box:
+                CreateBoxShape(bodyId, ref shapeDef, box);
+                break;
+            case CircleCollider circle:
+                CreateCircleShape(bodyId, ref shapeDef, circle);
+                break;
+            case PolygonCollider polygon:
+                CreatePolygonShape(bodyId, ref shapeDef, polygon);
+                break;
+        }
+    }
+
+    private static void CreateBoxShape(B2BodyId bodyId, ref B2ShapeDef shapeDef, BoxCollider box)
+    {
+        var halfExtent = box.Size * 0.5f * WorldUnitsPerBox2DUnit;
+        var offset = ToBox2D(box.Offset);
+        var rotation = B2MathFunction.b2MakeRot(0f);
+        var polygon = B2Geometries.b2MakeOffsetBox(halfExtent.X, halfExtent.Y, offset, rotation);
+        _ = B2Shapes.b2CreatePolygonShape(bodyId, in shapeDef, in polygon);
+    }
+
+    private static void CreateCircleShape(B2BodyId bodyId, ref B2ShapeDef shapeDef, CircleCollider circle)
+    {
+        var segments = Math.Max(3, circle.Segments);
+        var points = new B2Vec2[segments];
+        var offset = ToBox2D(circle.Offset);
+        var radius = circle.Radius * WorldUnitsPerBox2DUnit;
+
+        for (var i = 0; i < segments; i++)
+        {
+            var angle = (MathF.Tau / segments) * i;
+            var x = MathF.Cos(angle) * radius + offset.X;
+            var y = MathF.Sin(angle) * radius + offset.Y;
+            points[i] = new B2Vec2 { X = x, Y = y };
+        }
+
+        var hull = B2Hulls.b2ComputeHull(points, points.Length);
+        var polygon = B2Geometries.b2MakePolygon(in hull, 0f);
+        _ = B2Shapes.b2CreatePolygonShape(bodyId, in shapeDef, in polygon);
+    }
+
+    private static void CreatePolygonShape(B2BodyId bodyId, ref B2ShapeDef shapeDef, PolygonCollider polygonCollider)
+    {
+        var points = polygonCollider.Points;
+        if (points.Length < 3)
+            return;
+
+        var vertices = new B2Vec2[points.Length];
+        var offset = ToBox2D(polygonCollider.Offset);
+
+        for (var i = 0; i < points.Length; i++)
+        {
+            var point = points[i];
+            vertices[i] = new B2Vec2
+            {
+                X = point.X * WorldUnitsPerBox2DUnit + offset.X,
+                Y = point.Y * WorldUnitsPerBox2DUnit + offset.Y
+            };
+        }
+
+        var hull = B2Hulls.b2ComputeHull(vertices, vertices.Length);
+        var polygon = B2Geometries.b2MakePolygon(in hull, 0f);
+        _ = B2Shapes.b2CreatePolygonShape(bodyId, in shapeDef, in polygon);
+    }
+
+    private static B2BodyType ToBox2DBodyType(PhysicsBodyType bodyType) => bodyType switch
+    {
+        PhysicsBodyType.Static => B2BodyType.b2_staticBody,
+        PhysicsBodyType.Kinematic => B2BodyType.b2_kinematicBody,
+        _ => B2BodyType.b2_dynamicBody
+    };
+
     private static void ApplyForces(Rigidbody rigidbody, B2BodyId bodyId)
     {
         var force = rigidbody.ConsumePendingForce();
@@ -155,7 +283,7 @@ internal sealed class PhysicsSystem
 
         B2Bodies.b2Body_ApplyForceToCenter(bodyId, ToBox2D(force), true);
     }
-    
+
     private static void SyncTransformToBodyIfNeeded(Rigidbody rigidbody, Transform transform, B2BodyId bodyId)
     {
         if (!rigidbody.NeedsTransformSync)

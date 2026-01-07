@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Box2D.NET" Version="3.1.633" />
+      <PackageReference Include="Box2D.NET" Version="3.1.643" />
       <PackageReference Include="SDL3-CS" Version="3.3.7-preview.20251222-111333" />
       <PackageReference Include="SDL3-CS.Native" Version="3.3.7-preview.20251222-111410" />
       <PackageReference Include="SDL3-CS.Native.Image" Version="3.3.0-preview.20251222-110552" />
