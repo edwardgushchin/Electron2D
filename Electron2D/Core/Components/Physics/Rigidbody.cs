@@ -7,6 +7,7 @@ public sealed class Rigidbody : IComponent
     #region Instance fields
     private Node? _owner;
     private int _lastWorldVersion = -1;
+    private Vector2 _pendingForce;
     #endregion
 
     #region Properties
@@ -36,12 +37,11 @@ public sealed class Rigidbody : IComponent
     /// </summary>
     /// <param name="force">Вектор силы в мировых координатах.</param>
     /// <remarks>
-    /// Текущая реализация является заглушкой: до подключения физического backend'а метод не оказывает эффекта.
+    /// Сила будет применена на ближайшем физическом шаге, когда Rigidbody синхронизирован с физическим миром.
     /// </remarks>
     public void AddForce(Vector2 force)
     {
-        // Заглушка: пока нет backend'а физики, метод ничего не делает.
-        // Важно: не храним накопленные силы здесь, чтобы не вводить ложный контракт.
+        _pendingForce += force;
     }
 
     /// <summary>
@@ -68,16 +68,33 @@ public sealed class Rigidbody : IComponent
     #endregion
 
     #region Internal helpers
-    internal void SyncToPhysicsWorldIfNeeded()
+    internal Node? Owner => _owner;
+
+    internal bool NeedsTransformSync
+    {
+        get
+        {
+            var owner = _owner;
+            if (owner is null)
+                return false;
+
+            return owner.Transform.WorldVersion != _lastWorldVersion;
+        }
+    }
+
+    internal void MarkTransformSynced()
     {
         var owner = _owner;
-        if (owner is null)
-            return;
-
-        // Пока нет реальной синхронизации с физическим backend'ом:
-        // фиксируем последнюю "виденную" версию мира, чтобы в будущем добавить guard
-        // (например: owner.Transform.WorldVersion != _lastWorldVersion).
+        if (owner is null) return;
+        
         _lastWorldVersion = owner.Transform.WorldVersion;
+    }
+    
+    internal Vector2 ConsumePendingForce()
+    {
+        var force = _pendingForce;
+        _pendingForce = Vector2.Zero;
+        return force;
     }
     #endregion
 
