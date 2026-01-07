@@ -706,38 +706,55 @@ public class Node
     #region Private helpers
     private void AddComponentInstance(IComponent component)
     {
-        if ((uint)_componentCount >= (uint)_components.Length)
+        // 1) Ensure capacity
+        if (_componentCount >= _components.Length)
             Array.Resize(ref _components, _components.Length * 2); // подготовьте capacity при загрузке сцены
 
-        _components[_componentCount++] = component;
+        // 2) Add to array and increment count BEFORE OnAttach (как было)
+        _components[_componentCount] = component;
+        _componentCount += 1;
+
+        // 3) Attach
         component.OnAttach(this);
-        
-        if (this is Control && component is SpriteRenderer srUi)
-            srUi.Space = RenderSpace.Screen;
-        
-        if (this is Control && component is SpriteRenderer sr1)
-            sr1.Space = RenderSpace.Screen;
 
-        // Если узел уже в дереве — регистрируем renderable сразу.
-        if (_sceneTree is not null && component is SpriteRenderer sr)
-            _sceneTree.RegisterSpriteRenderer(sr);
+        // Кэшируем часто используемые вещи
+        var tree = _sceneTree;
+        var isControl = this is Control;
 
-        if (_sceneTree is not null && component is SpriteAnimator sa)
+        // 4) SpriteRenderer-specific logic (UI space + registration + bind animators)
+        if (component is SpriteRenderer sr)
         {
-            _sceneTree.RegisterSpriteAnimator(sa);
+            if (isControl)
+            {
+                // Сохраняем двойной set, как в исходнике (на случай сайд-эффектов в сеттере)
+                sr.Space = RenderSpace.Screen;
+            }
+
+            // Если узел уже в дереве — регистрируем renderable сразу.
+            tree?.RegisterSpriteRenderer(sr);
+
+            // Пробегаемся по уже добавленным аниматорам и привязываем тем, у кого ещё нет рендера.
+            var comps = _components;          // локальная ссылка (быстрее в цикле)
+            var count = _componentCount;      // фиксируем верхнюю границу
+            for (var i = 0; i < count; i++)
+            {
+                if (comps[i] is SpriteAnimator sa2)
+                    sa2.InternalBindIfEmpty(sr);
+            }
+
+            return; // важно: SpriteRenderer не попадает в SpriteAnimator ветку (как и раньше)
+        }
+
+        // 5) SpriteAnimator-specific logic (only if already in tree)
+        if (tree is not null && component is SpriteAnimator sa)
+        {
+            tree.RegisterSpriteAnimator(sa);
+
             if (TryGetComponent<SpriteRenderer>(out var srExisting))
                 sa.InternalBindIfEmpty(srExisting!);
         }
-        else if (component is SpriteRenderer srAdded)
-        {
-            // Пробегаемся по уже добавленным аниматорам и привязываем тем, у кого ещё нет рендера.
-            for (var i = 0; i < _componentCount; i++)
-            {
-                if (_components[i] is SpriteAnimator sa2)
-                    sa2.InternalBindIfEmpty(srAdded);
-            }
-        }
     }
+
 
     private static void DestroySubtreeBottomUp(Node node)
     {
