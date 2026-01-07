@@ -8,17 +8,6 @@ namespace Electron2D;
 /// </summary>
 public sealed class Transform
 {
-    #region Constants
-    // Quantization:
-    // Pos: 1e-4..1e-3 (0.1–1 мм), Rot: 1e-6..1e-5 рад, Scale: 1e-6
-    private const float PosQuantum = 1e-4f;
-    private const float RotQuantum = 1e-6f;
-    private const float ScaleQuantum = 1e-6f;
-
-    private const float InvPosQuantum = 1f / PosQuantum;
-    private const float InvRotQuantum = 1f / RotQuantum;
-    private const float InvScaleQuantum = 1f / ScaleQuantum;
-    #endregion
 
     #region Instance fields
     private readonly Node _owner;
@@ -74,11 +63,8 @@ public sealed class Transform
         get => _localPosition;
         set
         {
-            var q = Quantize(value, InvPosQuantum, PosQuantum);
-            if (_localPosition == q)
-                return;
-
-            _localPosition = q;
+            if (_localPosition == value) return;
+            _localPosition = value;
             MarkLocalDirty();
         }
     }
@@ -88,11 +74,8 @@ public sealed class Transform
         get => _localRotation;
         set
         {
-            var q = QuantizeAngle(value);
-            if (_localRotation == q)
-                return;
-
-            _localRotation = q;
+            if (_localRotation == value) return;
+            _localRotation = value;
             MarkLocalDirty();
         }
     }
@@ -102,11 +85,8 @@ public sealed class Transform
         get => _localScale;
         set
         {
-            var q = Quantize(value, InvScaleQuantum, ScaleQuantum);
-            if (_localScale == q)
-                return;
-
-            _localScale = q;
+            if (_localScale == value) return;
+            _localScale = value;
             MarkLocalDirty();
         }
     }
@@ -218,14 +198,9 @@ public sealed class Transform
     #region Public API
     public void Translate(Vector2 delta)
     {
-        if (delta == Vector2.Zero)
-            return;
-
-        var q = Quantize(_localPosition + delta, InvPosQuantum, PosQuantum);
-        if (_localPosition == q)
-            return;
-
-        _localPosition = q;
+        if (delta == Vector2.Zero) return;
+        if (_localPosition == _localPosition + delta) return;
+        _localPosition += delta;
         MarkLocalDirty();
     }
 
@@ -258,14 +233,9 @@ public sealed class Transform
 
     public void Rotate(float radians)
     {
-        if (radians == 0f)
-            return;
-
-        var q = QuantizeAngle(_localRotation + radians);
-        if (_localRotation == q)
-            return;
-
-        _localRotation = q;
+        if (radians == 0f) return;
+        if (_localRotation == _localRotation + radians) return;
+        _localRotation += radians;
         MarkLocalDirty();
     }
 
@@ -275,14 +245,11 @@ public sealed class Transform
 
     public void Scale(Vector2 scale)
     {
-        if (scale == Vector2.One)
-            return;
+        if (scale == Vector2.One) return;
+        
+        if (_localScale == _localScale * scale) return;
 
-        var q = Quantize(_localScale * scale, InvScaleQuantum, ScaleQuantum);
-        if (_localScale == q)
-            return;
-
-        _localScale = q;
+        _localScale *= scale;
         MarkLocalDirty();
     }
     #endregion
@@ -432,13 +399,6 @@ public sealed class Transform
             a -= TwoPi;
 
         return a;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float QuantizeAngle(float radians)
-    {
-        radians = WrapAngle(radians);
-        return Quantize(radians, InvRotQuantum, RotQuantum);
     }
     #endregion
 }
