@@ -51,13 +51,33 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Completed tasks belong in `completed-tasks/` archives, not in the active task list and not as a future-work backlog.
 
 ## Development Diary
-- Every agent session that works in a repository must keep a development diary entry under `dev-diary/`.
-- Use the local date for the file path: `dev-diary/YYYY/MM Month/DD-MM-YYYY.md`. Localize the month directory name to the repository's default human language; Russian is the default when no local rule says otherwise.
-- If the diary structure is missing, create it before or while starting work.
-- Daily diary files are append-only. If a daily file already exists, add the new entry strictly after the last existing entry. Do not reorder, repair, or rewrite older entries unless the user explicitly asks.
-- Add or update the diary when starting work, after important discoveries or file changes, after meaningful checks, after commits or deployments, after blockers or scope changes, and before the final response.
-- Every diary entry must include a chronological actions section with nested `HH:MM` bullets, plus concise context, changes, decisions, checks, and next steps.
-- Before the final response, inspect the tail of the daily diary file and confirm the newest entry you added is the last entry.
+- Every agent session that works in this repository must keep a development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product specifications, and must not be used as a future-work backlog.
+- Use the local date for the file path: `dev-diary/YYYY/MM Месяц/DD-MM-YYYY.md`, for example `dev-diary/2026/06 Июнь/21-06-2026.md`. `YYYY` is the local four-digit year. Month directory names use Russian month names.
+- New daily diary files must start with `# Дневник разработки: DD-MM-YYYY`. If a historical daily file already exists without this heading or in an older format, keep it append-only and add new entries strictly at the tail; do not rewrite old entries only to migrate formatting.
+- Add or update a diary entry when starting work in the repository, after important decisions, discoveries, file changes, checks, commits, pushes, blockers, cleanup, scope changes, and before sending the final response.
+- Every diary entry for repository work must include a `- Действия:` section. Keep it as a chronological action log with nested bullets in the form `  - HH:MM - ...`. Record each meaningful action phase there as it happens; do not rely only on the final `Изменения` or `Проверки` summaries to reconstruct the work after the fact.
+- Existing daily diary files are append-only. If the daily file already exists, add every new entry strictly after the last existing entry in that file. Never insert new entries at the beginning or in the middle of the file, never sort entries, and never rewrite, move, or "repair" older entries unless the user explicitly asks for that cleanup.
+- Before sending the final response, inspect the tail of the daily diary file and confirm that the newest entry you added is the last entry in the file.
+- Use this compact Markdown format. The labels are Russian because diary entries are human-readable Russian notes:
+
+```markdown
+# Дневник разработки: 21-06-2026
+
+## 14:30 +03:00 - Agent: Codex
+
+- Задача: T-0001 / ad-hoc / запрос пользователя
+- Контекст: кратко, что агент собирался сделать.
+- Действия:
+  - 14:30 - изучены `AGENTS.md`, состояние рабочей копии и связанная документация.
+  - 14:40 - изменены конкретные файлы.
+  - 14:50 - выполнены проверки и зафиксированы результаты.
+- Изменения: какие файлы или документы были изменены.
+- Решения: важные решения и почему.
+- Проверки: какие команды проверки запускались и результат.
+- Далее: что осталось сделать или что должен знать следующий агент.
+```
+
+- If the work is not tied to a task from `TASKS.md`, write `Задача: ad-hoc`.
 
 ## Testing And Verification
 - Run the narrowest useful checks first, then broader checks when risk or blast radius justifies them.
