@@ -1,5 +1,38 @@
+# Build output
 bin/
 obj/
+[Bb]in/
+[Oo]bj/
+/artifacts/
+/publish/
 /packages/
+
+# IDEs and local tooling
+.vs/
+.idea/
+.fleet/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 riderModule.iml
 /_ReSharper.Caches/
+.codex/
+
+# Test and coverage output
+TestResults/
+coverage/
+coverage.*
+*.trx
+*.coverage
+*.coveragexml
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+.temp/
+
+# Local goal drafts moved to docs/specifications/
+/GOAL-0.1.0.md
+/GOAL.md

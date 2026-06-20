@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Electron2D\Electron2D.csproj" />
+      <ProjectReference Include="..\..\src\Electron2D\Electron2D.csproj" />
     </ItemGroup>
 
     <ItemGroup>
