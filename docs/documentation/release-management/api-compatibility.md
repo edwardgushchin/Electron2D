@@ -19,6 +19,9 @@ Compatibility table хранится как GitHub Wiki source:
 Новый runtime assembly `Electron2D` экспортирует только начальные типы объектной модели:
 
 - `Electron2D.Object`
+- `Electron2D.Callable`
+- `Electron2D.ConnectFlags`
+- `Electron2D.Error`
 - `Electron2D.RefCounted`
 - `Electron2D.Resource`
 - `Electron2D.Node`

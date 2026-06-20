@@ -18,6 +18,9 @@ public sealed class CleanRuntimeBaselineTests
         Assert.Equal(
             new[]
             {
+                "Electron2D.Callable",
+                "Electron2D.ConnectFlags",
+                "Electron2D.Error",
                 "Electron2D.InputEvent",
                 "Electron2D.Node",
                 "Electron2D.NodePath",

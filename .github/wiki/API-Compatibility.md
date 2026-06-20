@@ -21,6 +21,9 @@ The clean rewrite baseline currently exports only the first object-model types. 
 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
+| `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission. |
+| `Electron2D.ConnectFlags` | `ConnectFlags` | Partial | Godot-like flag names are declared; advanced flag semantics are still planned. |
+| `Electron2D.Error` | `Error` | Partial | Minimal signal/runtime error result values. |
 | `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |
 | `Electron2D.RefCounted` | `RefCounted` | Partial | Manual reference count baseline with `Reference()`, `Unreference()` and `GetReferenceCount()`. |
 | `Electron2D.Resource` | `Resource` | Partial | `ResourceName`, `ResourcePath`, `ResourceLocalToScene`, `ResourceSceneUniqueId` and `TakeOverPath()`. |

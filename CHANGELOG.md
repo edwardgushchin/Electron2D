@@ -12,6 +12,7 @@
 - Hierarchy baseline: `Owner`, `GetParent()`, `GetChild()`, `GetIndex()`, `MoveChild()`, `Reparent()`, `QueueFree()` и `Object.IsQueuedForDeletion()`.
 - Node path baseline: `NodePath`, `GetNode()` и `GetNodeOrNull()` для relative/absolute lookup.
 - Group baseline: `AddToGroup()`, `RemoveFromGroup()`, `IsInGroup()`, `GetGroups()` и `SceneTree` group queries/calls.
+- Signal baseline: `Callable`, `Error`, `ConnectFlags`, `AddUserSignal()`, `Connect()`, `Disconnect()`, `IsConnected()` и `EmitSignal()`.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -28,7 +29,7 @@
 
 ### Ограничения
 
-- Runtime assembly пока экспортирует `7` публичных типов.
+- Runtime assembly пока экспортирует `10` публичных типов.
 - `0.1.0-preview` ещё не является готовым игровым runtime; дальнейшая реализация идёт задачами из `TASKS.md`.
 
 ### Breaking changes policy
