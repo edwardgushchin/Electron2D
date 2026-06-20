@@ -24,6 +24,10 @@
 
 - [Политика лицензирования исходного кода](repository/license-policy.md) - MIT License, source headers и verifier для вручную написанного исходного кода.
 
+## Рендеринг
+
+- [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - серверная граница, `Standard`/`Compatibility` профили и feature flags.
+
 ## Базовые типы
 
 - [2D math baseline](core-types/2d-math-baseline.md) - целевой контракт `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.

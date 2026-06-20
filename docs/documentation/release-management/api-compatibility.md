@@ -33,6 +33,9 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Rect2`
 - `Electron2D.Rect2I`
 - `Electron2D.RefCounted`
+- `Electron2D.RenderingServer`
+- `Electron2D.RenderingServer+RenderingFeature`
+- `Electron2D.RenderingServer+RenderingProfile`
 - `Electron2D.Resource`
 - `Electron2D.Rid`
 - `Electron2D.SceneTree`

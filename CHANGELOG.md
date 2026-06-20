@@ -21,6 +21,7 @@
 - Identity baseline: `StringName` с ordinal equality/hashing и `Rid` с invalid/default semantics, comparison operators и internal allocator для будущих серверов.
 - Variant baseline: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений для `0.1.0 Preview`.
 - Stable Variant serialization baseline: internal canonical JSON round-trip для сериализуемых `Variant` значений и понятные ошибки для runtime-only значений.
+- Rendering server baseline: `RenderingServer`, nested renderer profiles/features и internal backend abstraction для `Compatibility`/`Standard`.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -39,7 +40,7 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `25` публичных типов.
+- Runtime assembly экспортирует `28` публичных типов.
 - `0.1.0-preview` ещё не является готовым игровым runtime; дальнейшая реализация идёт задачами из `TASKS.md`.
 
 ### Breaking changes policy
