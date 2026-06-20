@@ -18,9 +18,12 @@
 
 - `GetInstanceId()`;
 - `Free()`;
+- `IsQueuedForDeletion()`;
 - `Object.IsInstanceValid(Object? instance)`.
 
 `Free()` idempotent. После `Free()` объект считается invalid, но `GetInstanceId()` остаётся стабильным.
+
+`IsQueuedForDeletion()` возвращает флаг отложенного удаления, который сейчас устанавливается `Node.QueueFree()`.
 
 ## `RefCounted`
 

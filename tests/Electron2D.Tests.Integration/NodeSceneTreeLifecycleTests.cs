@@ -16,7 +16,7 @@ public sealed class NodeSceneTreeLifecycleTests
 
         Assert.True(child.IsInsideTree());
         Assert.Same(tree, child.GetTree());
-        Assert.Same(tree.Root, child.Parent);
+        Assert.Same(tree.Root, child.GetParent());
         Assert.Equal(new[] { "Child:_EnterTree", "Child:_Ready" }, events);
     }
 
@@ -88,8 +88,8 @@ public sealed class NodeSceneTreeLifecycleTests
         Assert.False(child.IsInsideTree());
         Assert.Null(parent.GetTree());
         Assert.Null(child.GetTree());
-        Assert.Null(parent.Parent);
-        Assert.Same(parent, child.Parent);
+        Assert.Null(parent.GetParent());
+        Assert.Same(parent, child.GetParent());
         Assert.Equal(new[] { "Child:_ExitTree", "Parent:_ExitTree" }, events);
     }
 

@@ -22,7 +22,7 @@
 
 - наследоваться от `Object`;
 - иметь `Name`;
-- иметь readonly снаружи `Parent`;
+- иметь Godot-like `GetParent()` для чтения parent;
 - поддерживать `AddChild(Node child)` и `RemoveChild(Node child)`;
 - поддерживать `GetChildCount()`;
 - поддерживать `IsInsideTree()`;
@@ -63,7 +63,7 @@
 - добавление node к `SceneTree.Root` вызывает `_EnterTree()` и `_Ready()`;
 - subtree получает enter/ready в указанном порядке;
 - process, physics и input callbacks получают delta/input и идут в tree order;
-- `RemoveChild()` вызывает `_ExitTree()` и очищает `Parent`/`GetTree()`;
+- `RemoveChild()` вызывает `_ExitTree()` и очищает `GetParent()`/`GetTree()`;
 - exception в пользовательском callback сохраняется в diagnostic и не прерывает обход sibling node;
 - baseline smoke test на существование `Electron2D.Node` становится зелёным;
 - compatibility table отражает новые public types.

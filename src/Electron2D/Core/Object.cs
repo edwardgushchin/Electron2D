@@ -8,6 +8,8 @@ public class Object
 
     private readonly ulong _instanceId = (ulong)Interlocked.Increment(ref s_nextInstanceId);
     private bool _freed;
+    private bool _freeing;
+    private bool _queuedForDeletion;
 
     public ulong GetInstanceId()
     {
@@ -16,18 +18,32 @@ public class Object
 
     public void Free()
     {
-        if (_freed)
+        if (_freed || _freeing)
         {
             return;
         }
 
-        _freed = true;
-        OnFree();
+        _freeing = true;
+        try
+        {
+            OnFree();
+        }
+        finally
+        {
+            _freed = true;
+            _freeing = false;
+            _queuedForDeletion = false;
+        }
     }
 
     public static bool IsInstanceValid(Object? instance)
     {
         return instance is not null && !instance._freed;
+    }
+
+    public bool IsQueuedForDeletion()
+    {
+        return _queuedForDeletion;
     }
 
     public override string ToString()
@@ -41,6 +57,22 @@ public class Object
         {
             throw new InvalidOperationException($"{GetType().Name} instance was freed.");
         }
+    }
+
+    protected bool MarkQueuedForDeletion()
+    {
+        if (_queuedForDeletion)
+        {
+            return false;
+        }
+
+        _queuedForDeletion = true;
+        return true;
+    }
+
+    protected void ClearQueuedForDeletion()
+    {
+        _queuedForDeletion = false;
     }
 
     protected virtual void OnFree()

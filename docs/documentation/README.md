@@ -21,3 +21,4 @@
 
 - [Базовые типы Object, RefCounted, Resource](object-model/base-object-lifetime.md) - текущий baseline public API и правила lifetime.
 - [Node и SceneTree lifecycle](object-model/node-scene-tree-lifecycle.md) - текущий baseline lifecycle callbacks и порядок обхода.
+- [Иерархия Node, ownership и безопасное удаление](object-model/node-hierarchy-ownership.md) - текущий parent-child API, `Owner`, `Reparent()` и `QueueFree()`.

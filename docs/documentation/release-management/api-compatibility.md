@@ -21,6 +21,9 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Object`
 - `Electron2D.RefCounted`
 - `Electron2D.Resource`
+- `Electron2D.Node`
+- `Electron2D.SceneTree`
+- `Electron2D.InputEvent`
 
 Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в Godot-like форме.
 
