@@ -25,6 +25,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Node",
                 "Electron2D.NodePath",
                 "Electron2D.Object",
+                "Electron2D.PackedScene",
                 "Electron2D.RefCounted",
                 "Electron2D.Resource",
                 "Electron2D.SceneTree"

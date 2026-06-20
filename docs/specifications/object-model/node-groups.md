@@ -40,13 +40,13 @@
 
 ## Persistent metadata
 
-Persistent flag нужен для будущего `PackedScene`/serialization pipeline. В T-0012 он хранится как internal metadata и проверяется тестами через test assembly friend access.
+Persistent flag используется текущим `PackedScene` baseline для сохранения group membership и остаётся metadata для будущего file-level serialization pipeline.
 
 ## Ограничения текущего baseline
 
 - `CallGroup()` использует reflection и `object?[]`, пока не реализованы `StringName`, `Variant` и script binding.
 - `CallGroupFlags`, deferred/reverse group calls, `NotifyGroup()` и `SetGroup()` остаются будущими задачами.
-- Persistence пока не сериализуется в файлы сцен, потому что `PackedScene` ещё не реализован.
+- Persistence сохраняется в in-memory `PackedScene`; file-level scene serialization ещё не реализована.
 
 ## Acceptance tests
 

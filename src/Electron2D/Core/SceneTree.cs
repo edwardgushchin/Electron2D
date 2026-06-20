@@ -8,6 +8,7 @@ public class SceneTree : Object
     private readonly List<Node> _deleteQueue = new();
     private int _traversalDepth;
     private bool _flushingQueues;
+    private PackedScene? _pendingScene;
 
     public SceneTree()
     {
@@ -16,6 +17,8 @@ public class SceneTree : Object
     }
 
     public Node Root { get; }
+
+    public Node? CurrentScene { get; private set; }
 
     public Node? GetFirstNodeInGroup(string group)
     {
@@ -56,6 +59,30 @@ public class SceneTree : Object
 
             InvokeUserCallback(node, method, () => InvokeMethod(callableMethod, node, callArguments));
         }
+    }
+
+    public Error ChangeSceneToPacked(PackedScene packedScene)
+    {
+        if (packedScene is null || !packedScene.CanInstantiate())
+        {
+            return Error.InvalidParameter;
+        }
+
+        if (CurrentScene is not null)
+        {
+            var currentScene = CurrentScene;
+            CurrentScene = null;
+
+            if (currentScene.GetParent() is not null)
+            {
+                Root.RemoveChild(currentScene);
+            }
+
+            QueueDelete(currentScene);
+        }
+
+        _pendingScene = packedScene;
+        return Error.Ok;
     }
 
     internal IReadOnlyList<SceneTreeDiagnostic> Diagnostics => _diagnostics;
@@ -132,10 +159,11 @@ public class SceneTree : Object
         _flushingQueues = true;
         try
         {
-            while (DeferredCallQueue.HasPendingCalls || _deleteQueue.Count > 0)
+            while (DeferredCallQueue.HasPendingCalls || _deleteQueue.Count > 0 || _pendingScene is not null)
             {
                 DeferredCallQueue.Drain();
                 FlushDeleteQueue();
+                FlushPendingSceneChange();
             }
         }
         finally
@@ -159,6 +187,25 @@ public class SceneTree : Object
                 }
             }
         }
+    }
+
+    private void FlushPendingSceneChange()
+    {
+        var packedScene = _pendingScene;
+        if (packedScene is null)
+        {
+            return;
+        }
+
+        _pendingScene = null;
+        var nextScene = packedScene.Instantiate();
+        if (nextScene is null)
+        {
+            return;
+        }
+
+        Root.AddChild(nextScene);
+        CurrentScene = nextScene;
     }
 
     private static MethodInfo? FindCallableMethod(Node node, string method, object?[] args)

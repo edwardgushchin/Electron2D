@@ -26,6 +26,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Resource`
 - `Electron2D.Node`
 - `Electron2D.NodePath`
+- `Electron2D.PackedScene`
 - `Electron2D.SceneTree`
 - `Electron2D.InputEvent`
 

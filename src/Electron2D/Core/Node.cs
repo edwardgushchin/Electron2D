@@ -523,6 +523,12 @@ public class Node : Object
         return _groups.TryGetValue(groupName, out var persistent) && persistent;
     }
 
+    internal Node[] GetChildrenSnapshot()
+    {
+        ThrowIfFreed();
+        return _children.ToArray();
+    }
+
     internal void CollectNodesInGroup(string group, List<Node> nodes)
     {
         if (_groups.ContainsKey(group))

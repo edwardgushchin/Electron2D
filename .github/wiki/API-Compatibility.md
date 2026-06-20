@@ -29,14 +29,14 @@ The clean rewrite baseline currently exports only the first object-model types. 
 | `Electron2D.Resource` | `Resource` | Partial | `ResourceName`, `ResourcePath`, `ResourceLocalToScene`, `ResourceSceneUniqueId` and `TakeOverPath()`. |
 | `Electron2D.Node` | `Node` | Partial | Lifecycle, hierarchy, `Owner`, groups, reparent/move and `QueueFree()` baseline. |
 | `Electron2D.NodePath` | `NodePath` | Partial | Relative/absolute node path parsing and `GetNode()`/`GetNodeOrNull()` resolution baseline. |
-| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, deterministic lifecycle/test host traversal, group queries/calls, deferred queue flush and queued deletion flush. |
+| `Electron2D.PackedScene` | `PackedScene` | Partial | In-memory pack/instantiate baseline for owned node subtrees. |
+| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic lifecycle/test host traversal, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
 | `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
 
 ## Planned Godot-like 2D Surface
 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
-| `Electron2D.PackedScene` | `PackedScene` | Planned | Save/load/instantiate scene resources. |
 | `Electron2D.Node2D` | `Node2D` | Planned | 2D transform node. |
 | `Electron2D.CanvasItem` | `CanvasItem` | Planned | Visibility, modulate and draw ordering base. |
 | `Electron2D.CanvasLayer` | `CanvasLayer` | Planned | 2D canvas layer support. |

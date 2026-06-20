@@ -28,3 +28,4 @@
 - [Группы Node и group calls](object-model/node-groups.md) - group membership, persistent metadata и `SceneTree` group queries/calls.
 - [Сигналы, Callable и emission semantics](object-model/signals-callable.md) - user signals, `Connect()`, `Disconnect()`, `EmitSignal()` и `Callable`.
 - [Deferred calls и безопасное изменение дерева](object-model/deferred-calls-safe-traversal.md) - `CallDeferred()`, deferred queue и безопасный traversal при изменении дерева.
+- [`PackedScene` и смена активной сцены](object-model/packed-scene.md) - pack/instantiate owned subtree и `SceneTree.ChangeSceneToPacked()` baseline.

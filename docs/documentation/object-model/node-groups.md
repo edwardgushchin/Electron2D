@@ -46,5 +46,5 @@ Group name не может быть `null`, пустым или whitespace.
 ## Ограничения текущего baseline
 
 - `CallGroupFlags`, deferred/reverse group calls, `NotifyGroup()` и `SetGroup()` ещё не реализованы.
-- Persistence пока хранится только как internal metadata до появления `PackedScene`.
+- Persistent groups сохраняются текущим in-memory `PackedScene` baseline; file-level scene serialization ещё не реализована.
 - Нет `StringName`/`Variant` binding; это будет заменено в будущих задачах базовых типов.
