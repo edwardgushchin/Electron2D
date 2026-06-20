@@ -5,7 +5,7 @@ Updated: 2026-06-20.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports `0` public runtime types. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports only the first object-model types. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -21,15 +21,14 @@ The clean rewrite baseline currently exports `0` public runtime types. Planned e
 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
-| No exported public types | N/A | Experimental | Clean baseline after deleting legacy `src/Electron2D/`; verifier reports public type count `0`. |
+| `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()` and `IsInstanceValid()` baseline. |
+| `Electron2D.RefCounted` | `RefCounted` | Partial | Manual reference count baseline with `Reference()`, `Unreference()` and `GetReferenceCount()`. |
+| `Electron2D.Resource` | `Resource` | Partial | `ResourceName`, `ResourcePath`, `ResourceLocalToScene`, `ResourceSceneUniqueId` and `TakeOverPath()`. |
 
 ## Planned Godot-like 2D Surface
 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
-| `Electron2D.Object` | `GodotObject` / `Object` | Planned | Base object contract will be introduced by object model tasks. |
-| `Electron2D.RefCounted` | `RefCounted` | Planned | Resource lifetime subset only; no compatibility shim. |
-| `Electron2D.Resource` | `Resource` | Planned | Godot-like resource base for import/load/save tasks. |
 | `Electron2D.Node` | `Node` | Planned | Required before the runtime baseline test becomes green. |
 | `Electron2D.SceneTree` | `SceneTree` | Planned | Scene ownership, processing and lifecycle root. |
 | `Electron2D.PackedScene` | `PackedScene` | Planned | Save/load/instantiate scene resources. |

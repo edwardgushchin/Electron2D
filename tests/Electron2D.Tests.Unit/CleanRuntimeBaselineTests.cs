@@ -6,15 +6,24 @@ namespace Electron2D.Tests.Unit;
 public sealed class CleanRuntimeBaselineTests
 {
     [Fact]
-    public void RuntimeAssemblyStartsWithoutPublicLegacyTypes()
+    public void RuntimeAssemblyExportsOnlyCurrentGodotLikeBaselineTypes()
     {
         var assembly = Assembly.Load("Electron2D");
         var publicTypeNames = assembly
             .GetExportedTypes()
             .Select(type => type.FullName)
+            .OrderBy(typeName => typeName, StringComparer.Ordinal)
             .ToArray();
 
-        Assert.Empty(publicTypeNames);
+        Assert.Equal(
+            new[]
+            {
+                "Electron2D.Object",
+                "Electron2D.RefCounted",
+                "Electron2D.Resource"
+            },
+            publicTypeNames);
+
         Assert.Null(assembly.GetType("Electron2D.IComponent"));
         Assert.Null(assembly.GetType("Electron2D.SpriteRenderer"));
         Assert.Null(assembly.GetType("Electron2D.SpriteAnimator"));

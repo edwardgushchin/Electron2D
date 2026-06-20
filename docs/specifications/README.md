@@ -18,3 +18,7 @@
 - [Версионирование и release metadata 0.1.0 Preview](release-management/release-metadata.md) - package metadata, changelog и release notes.
 - [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - минимальный project manifest, scene manifest и проверка build/run.
 - [Performance budgets и soak-критерии 0.1.0 Preview](release-management/performance-budgets.md) - целевые устройства, 60 FPS, memory budgets и mobile cycles.
+
+## Объектная модель
+
+- [Базовые типы Object, RefCounted, Resource](object-model/base-object-lifetime.md) - начальный Godot-like runtime API и правила lifetime.

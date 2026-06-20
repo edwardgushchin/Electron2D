@@ -3,6 +3,8 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $repoRoot 'src/Electron2D/Electron2D.csproj'
 $wikiPath = Join-Path $repoRoot '.github/wiki/API-Compatibility.md'
+$inspectorRoot = Join-Path $repoRoot '.temp/api-compatibility-inspector'
+$inspectorProject = Join-Path $inspectorRoot 'ApiCompatibilityInspector.csproj'
 
 if (-not (Test-Path -LiteralPath $projectPath)) {
     throw 'Runtime project src/Electron2D/Electron2D.csproj was not found.'
@@ -12,18 +14,40 @@ if (-not (Test-Path -LiteralPath $wikiPath)) {
     throw 'GitHub Wiki source .github/wiki/API-Compatibility.md was not found.'
 }
 
-dotnet build $projectPath | Out-Host
+Remove-Item -LiteralPath $inspectorRoot -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Force -Path $inspectorRoot | Out-Null
+
+@"
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$projectPath" />
+  </ItemGroup>
+</Project>
+"@ | Set-Content -LiteralPath $inspectorProject -Encoding UTF8
+
+@"
+using System;
+using System.Linq;
+
+var assembly = typeof(Electron2D.Object).Assembly;
+foreach (var typeName in assembly.GetExportedTypes().Select(type => type.FullName).OrderBy(typeName => typeName, StringComparer.Ordinal))
+{
+    Console.WriteLine(typeName);
+}
+"@ | Set-Content -LiteralPath (Join-Path $inspectorRoot 'Program.cs') -Encoding UTF8
+
+$publicTypes = @(dotnet run --project $inspectorProject --no-launch-profile)
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-$assemblyPath = Join-Path $repoRoot 'src/Electron2D/bin/Debug/net10.0/Electron2D.dll'
-if (-not (Test-Path -LiteralPath $assemblyPath)) {
-    throw 'Runtime assembly was not produced.'
-}
-
-$assembly = [System.Reflection.Assembly]::LoadFrom($assemblyPath)
-$publicTypes = $assembly.GetExportedTypes() | ForEach-Object { $_.FullName } | Sort-Object
+$publicTypes = @($publicTypes | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 $wiki = Get-Content -LiteralPath $wikiPath -Raw
 $allowedStatuses = @('Supported', 'Partial', 'Experimental', 'Planned', 'Not planned')
 

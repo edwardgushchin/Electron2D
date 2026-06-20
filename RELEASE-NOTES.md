@@ -7,13 +7,13 @@
 ## Что есть сейчас
 
 - Новый пустой runtime-проект `Electron2D`.
+- Начальный Godot-like public API: `Object`, `RefCounted`, `Resource`.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
 
 ## Чего пока нет
 
-- Runtime ещё не содержит публичных Godot-like типов.
 - `Electron2D.Node` пока отсутствует; это намеренно зафиксировано baseline-тестом `SceneTreeBaselineFailsUntilNodeExists`.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 

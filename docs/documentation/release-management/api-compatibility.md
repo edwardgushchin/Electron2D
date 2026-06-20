@@ -16,7 +16,13 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` пока экспортирует `0` публичных типов. Это осознанное состояние после удаления старого `src/Electron2D/`: публичный API будет появляться только через следующие задачи и только в Godot-like форме.
+Новый runtime assembly `Electron2D` экспортирует только начальные типы объектной модели:
+
+- `Electron2D.Object`
+- `Electron2D.RefCounted`
+- `Electron2D.Resource`
+
+Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в Godot-like форме.
 
 Wiki source содержит:
 
