@@ -10,6 +10,7 @@
 - Начальный Godot-like public API: `Object`, `RefCounted`, `Resource`.
 - Lifecycle baseline: `Node`, `SceneTree`, `InputEvent`, `_EnterTree`, `_Ready`, `_Process`, `_PhysicsProcess`, `_Input`, `_ExitTree`.
 - Hierarchy baseline: `Owner`, `GetParent()`, `GetChild()`, `GetIndex()`, `MoveChild()`, `Reparent()`, `QueueFree()` и `Object.IsQueuedForDeletion()`.
+- Node path baseline: `NodePath`, `GetNode()` и `GetNodeOrNull()` для relative/absolute lookup.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -26,7 +27,7 @@
 
 ### Ограничения
 
-- Runtime assembly пока экспортирует `6` публичных типов.
+- Runtime assembly пока экспортирует `7` публичных типов.
 - `0.1.0-preview` ещё не является готовым игровым runtime; дальнейшая реализация идёт задачами из `TASKS.md`.
 
 ### Breaking changes policy

@@ -20,6 +20,7 @@ public sealed class CleanRuntimeBaselineTests
             {
                 "Electron2D.InputEvent",
                 "Electron2D.Node",
+                "Electron2D.NodePath",
                 "Electron2D.Object",
                 "Electron2D.RefCounted",
                 "Electron2D.Resource",

@@ -7,7 +7,7 @@ public class SceneTree : Object
 
     public SceneTree()
     {
-        Root = new Node { Name = "Root" };
+        Root = new Node { Name = "root" };
         AttachSubtree(Root);
     }
 

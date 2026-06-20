@@ -208,6 +208,66 @@ public class Node : Object
         return _tree;
     }
 
+    public Node GetNode(NodePath path)
+    {
+        var node = GetNodeOrNull(path);
+        if (node is null)
+        {
+            throw new InvalidOperationException($"Node path '{path}' was not found.");
+        }
+
+        return node;
+    }
+
+    public Node? GetNodeOrNull(NodePath path)
+    {
+        ThrowIfFreed();
+        if (path.IsEmpty())
+        {
+            return null;
+        }
+
+        var current = path.IsAbsolute() ? _tree?.Root : this;
+        if (current is null)
+        {
+            return null;
+        }
+
+        var names = path.GetNodeNames();
+        for (var index = 0; index < names.Length; index++)
+        {
+            var name = names[index];
+            if (path.IsAbsolute() && index == 0 && string.Equals(name, current._name, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (name == ".")
+            {
+                continue;
+            }
+
+            if (name == "..")
+            {
+                current = current._parent;
+                if (current is null)
+                {
+                    return null;
+                }
+
+                continue;
+            }
+
+            current = current.GetDirectChildByName(name);
+            if (current is null)
+            {
+                return null;
+            }
+        }
+
+        return current;
+    }
+
     public virtual void _EnterTree()
     {
     }
@@ -412,5 +472,18 @@ public class Node : Object
         }
 
         child._name = candidate;
+    }
+
+    private Node? GetDirectChildByName(string name)
+    {
+        foreach (var child in _children)
+        {
+            if (string.Equals(child._name, name, StringComparison.Ordinal))
+            {
+                return child;
+            }
+        }
+
+        return null;
     }
 }

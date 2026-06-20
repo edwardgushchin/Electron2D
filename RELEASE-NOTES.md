@@ -10,13 +10,14 @@
 - Начальный Godot-like public API: `Object`, `RefCounted`, `Resource`.
 - Начальный lifecycle API: `Node`, `SceneTree`, `InputEvent`.
 - Начальная иерархия `Node`: `Owner`, `GetParent()`, `GetChild()`, `MoveChild()`, `Reparent()` и `QueueFree()`.
+- Начальное разрешение путей: `NodePath`, `GetNode()` и `GetNodeOrNull()`.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
 
 ## Чего пока нет
 
-- `NodePath`, deferred calls, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
+- `GetPath()`, `GetPathTo()`, deferred calls, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API
