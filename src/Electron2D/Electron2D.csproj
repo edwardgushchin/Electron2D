@@ -7,6 +7,24 @@
     <LangVersion>preview</LangVersion>
     <AssemblyName>Electron2D</AssemblyName>
     <RootNamespace>Electron2D</RootNamespace>
+    <Version>0.1.0-preview</Version>
+    <PackageVersion>0.1.0-preview</PackageVersion>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <InformationalVersion>0.1.0-preview</InformationalVersion>
+    <PackageId>Electron2D</PackageId>
+    <Title>Electron2D</Title>
+    <Authors>Electron2D Team</Authors>
+    <Company>Electron2D</Company>
+    <Description>Godot-like 2D game engine runtime for .NET, currently at the 0.1.0 Preview clean rewrite baseline.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>game-engine;2d;godot-like;dotnet</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>
