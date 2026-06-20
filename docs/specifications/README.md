@@ -5,6 +5,7 @@
 ## Архитектура
 
 - [Архитектура и платформенный стек Electron2D](architecture/engine-platform-stack.md) - стек SDL3-CS, SDL_GPU, fallback-рендеринга, физики, аудио, текста, geometry и сетевой основы.
+- [AI-friendly workflow Electron2D 0.1](architecture/ai-friendly-workflow.md) - архитектурный контракт CLI/MCP/tooling, текстовых форматов, диагностики, автоматизированного запуска и AI benchmark.
 
 ## Релизы
 
