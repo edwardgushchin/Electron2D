@@ -110,7 +110,10 @@ public sealed class NodeSceneTreeLifecycleTests
         var diagnostic = Assert.Single(tree.Diagnostics);
         Assert.Same(throwing, diagnostic.Node);
         Assert.Equal("_Process", diagnostic.Callback);
+        Assert.Equal(Electron2D.RuntimeUserCodeFailureKind.LifecycleCallback, diagnostic.Kind);
         Assert.IsType<InvalidOperationException>(diagnostic.Exception);
+        Assert.Equal("boom", diagnostic.Message);
+        Assert.Contains(nameof(ThrowingProcessNode._Process), diagnostic.StackTrace);
     }
 
     private sealed class RecordingNode : Electron2D.Node

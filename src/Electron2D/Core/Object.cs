@@ -150,9 +150,13 @@ public class Object
         var signalArguments = args ?? Array.Empty<object?>();
         foreach (var connection in connections.ToArray())
         {
-            if (connection.Callable.TryCall(signalArguments, out _) != Error.Ok)
+            if (connection.Callable.TryCall(signalArguments, out _, out var exception) != Error.Ok)
             {
                 result = Error.Failed;
+                if (exception is not null)
+                {
+                    ReportSignalDiagnostic(signalName, connection.Callable, exception);
+                }
             }
         }
 
@@ -205,6 +209,30 @@ public class Object
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(signal);
         return signal;
+    }
+
+    private void ReportSignalDiagnostic(string signal, Callable callable, Exception exception)
+    {
+        var targetNode = callable.GetObject() as Node;
+        var targetTree = targetNode?.GetTree();
+        if (targetNode is not null && targetTree is not null)
+        {
+            targetTree.ReportUserCodeException(
+                targetNode,
+                signal,
+                exception,
+                RuntimeUserCodeFailureKind.SignalEmission);
+            return;
+        }
+
+        if (this is Node emitterNode && emitterNode.GetTree() is { } emitterTree)
+        {
+            emitterTree.ReportUserCodeException(
+                emitterNode,
+                signal,
+                exception,
+                RuntimeUserCodeFailureKind.SignalEmission);
+        }
     }
 
     private sealed class SignalConnection

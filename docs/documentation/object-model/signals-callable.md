@@ -44,7 +44,7 @@
 
 `EmitSignal()` вызывает callbacks в порядке подключения. Перед обходом создаётся snapshot connections, поэтому `Disconnect()` во время emission не повреждает текущий проход и влияет только на следующие emissions.
 
-Если callback бросает исключение или аргументы не подходят сигнатуре callable, emission продолжает обход остальных callbacks, но возвращает `Error.Failed`.
+Если callback бросает исключение или аргументы не подходят сигнатуре callable, emission продолжает обход остальных callbacks, но возвращает `Error.Failed`. User-code exception из signal callback дополнительно записывается в internal `SceneTree` diagnostics, если для target или emitter известен tree context.
 
 ## Ограничения текущего baseline
 

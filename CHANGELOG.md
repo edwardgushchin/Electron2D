@@ -15,6 +15,7 @@
 - Signal baseline: `Callable`, `Error`, `ConnectFlags`, `AddUserSignal()`, `Connect()`, `Disconnect()`, `IsConnected()` и `EmitSignal()`.
 - Deferred-call baseline: `Object.CallDeferred()`, `Callable.CallDeferred()`, deterministic deferred queue и безопасное изменение дерева во время traversal.
 - Scene resource baseline: `PackedScene`, `Pack()`, `CanInstantiate()`, `Instantiate()`, `SceneTree.CurrentScene` и `ChangeSceneToPacked()`.
+- Internal runtime diagnostics baseline: lifecycle, group call, deferred call и signal callback exceptions сохраняют node/callback/kind/message/stack trace и продолжают recover policy.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.

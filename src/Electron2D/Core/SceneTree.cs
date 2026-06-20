@@ -5,6 +5,7 @@ namespace Electron2D;
 public class SceneTree : Object
 {
     private readonly List<SceneTreeDiagnostic> _diagnostics = new();
+    private readonly Queue<DeferredCallQueue.DeferredCall> _deferredCalls = new();
     private readonly List<Node> _deleteQueue = new();
     private int _traversalDepth;
     private bool _flushingQueues;
@@ -57,7 +58,11 @@ public class SceneTree : Object
                 continue;
             }
 
-            InvokeUserCallback(node, method, () => InvokeMethod(callableMethod, node, callArguments));
+            InvokeUserCallback(
+                node,
+                method,
+                () => InvokeMethod(callableMethod, node, callArguments),
+                RuntimeUserCodeFailureKind.GroupCall);
         }
     }
 
@@ -120,7 +125,16 @@ public class SceneTree : Object
         }
     }
 
-    internal void InvokeUserCallback(Node node, string callback, Action action)
+    internal void QueueDeferredCall(Callable callable, object?[] args)
+    {
+        _deferredCalls.Enqueue(new DeferredCallQueue.DeferredCall(callable, args));
+    }
+
+    internal void InvokeUserCallback(
+        Node node,
+        string callback,
+        Action action,
+        RuntimeUserCodeFailureKind kind = RuntimeUserCodeFailureKind.LifecycleCallback)
     {
         try
         {
@@ -128,8 +142,17 @@ public class SceneTree : Object
         }
         catch (Exception exception)
         {
-            _diagnostics.Add(new SceneTreeDiagnostic(node, callback, exception));
+            ReportUserCodeException(node, callback, exception, kind);
         }
+    }
+
+    internal void ReportUserCodeException(
+        Node? node,
+        string callback,
+        Exception exception,
+        RuntimeUserCodeFailureKind kind)
+    {
+        _diagnostics.Add(new SceneTreeDiagnostic(node, callback, kind, exception));
     }
 
     private void RunTraversal(Action action)
@@ -137,7 +160,10 @@ public class SceneTree : Object
         _traversalDepth++;
         try
         {
-            action();
+            using (DeferredCallQueue.EnterTree(this))
+            {
+                action();
+            }
         }
         finally
         {
@@ -159,16 +185,32 @@ public class SceneTree : Object
         _flushingQueues = true;
         try
         {
-            while (DeferredCallQueue.HasPendingCalls || _deleteQueue.Count > 0 || _pendingScene is not null)
+            using (DeferredCallQueue.EnterTree(this))
             {
-                DeferredCallQueue.Drain();
-                FlushDeleteQueue();
-                FlushPendingSceneChange();
+                while (_deferredCalls.Count > 0 ||
+                    DeferredCallQueue.HasGlobalPendingCalls ||
+                    _deleteQueue.Count > 0 ||
+                    _pendingScene is not null)
+                {
+                    DrainDeferredCalls();
+                    DeferredCallQueue.DrainGlobal(this);
+                    FlushDeleteQueue();
+                    FlushPendingSceneChange();
+                }
             }
         }
         finally
         {
             _flushingQueues = false;
+        }
+    }
+
+    private void DrainDeferredCalls()
+    {
+        while (_deferredCalls.Count > 0)
+        {
+            var call = _deferredCalls.Dequeue();
+            DeferredCallQueue.Execute(this, call);
         }
     }
 
@@ -261,4 +303,13 @@ public class SceneTree : Object
     }
 }
 
-internal sealed record SceneTreeDiagnostic(Node Node, string Callback, Exception Exception);
+internal sealed record SceneTreeDiagnostic(
+    Node? Node,
+    string Callback,
+    RuntimeUserCodeFailureKind Kind,
+    Exception Exception)
+{
+    public string Message => Exception.Message;
+
+    public string StackTrace => Exception.StackTrace ?? string.Empty;
+}

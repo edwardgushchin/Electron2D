@@ -56,7 +56,7 @@
 
 Если пользовательский lifecycle callback бросает исключение, `SceneTree` должен поймать его, сохранить diagnostic для host/editor tooling и продолжить обход остальных node в текущем lifecycle pass. Исключение не должно молча теряться и не должно обрывать весь loop.
 
-На этом этапе diagnostic API остаётся internal, потому что публичная runtime diagnostics модель выделена в отдельную задачу.
+Diagnostic API остаётся internal. Централизованная internal runtime diagnostics policy уточняется отдельной спецификацией `runtime-diagnostics.md`.
 
 ## Acceptance tests
 
@@ -72,4 +72,4 @@
 
 - Полная hierarchy/ownership/reparent/delete semantics остаётся в `T-0010`.
 - `Viewport`/`Window` root ещё не реализован; `SceneTree.Root` временно является `Node`.
-- Pause mode, process mode и deferred calls остаются в следующих задачах.
+- Pause mode и process mode остаются в следующих задачах.

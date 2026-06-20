@@ -22,7 +22,7 @@
 - Deferred calls выполняются после текущего lifecycle/process/physics/input traversal.
 - Порядок выполнения соответствует порядку постановки в очередь.
 - Очередь drain'ится до пустого состояния: deferred call, который добавляет новый deferred call, выполняет новый call в той же idle-фазе.
-- Ошибочные deferred call signatures не ломают traversal и не останавливают очередь.
+- Ошибочные deferred call signatures не ломают traversal и не останавливают очередь. User-code exception из deferred callable должен попадать в internal diagnostics.
 
 ## Safe tree changes
 
@@ -35,7 +35,7 @@
 
 - Global idle loop ещё не выделен как отдельный runtime subsystem; очередь drain'ится через текущие `SceneTree` lifecycle/process/physics/input host methods.
 - `SetDeferred()` и property assignment через `Variant` остаются будущими задачами.
-- Infinite deferred recursion guard пока не реализован и будет частью будущего diagnostics/runtime policy.
+- Infinite deferred recursion guard пока не реализован и будет частью будущей runtime policy.
 
 ## Acceptance tests
 

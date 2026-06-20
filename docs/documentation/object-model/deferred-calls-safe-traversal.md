@@ -19,7 +19,7 @@
 
 Очередь выполняется в порядке постановки. Если deferred callback ставит новый deferred callback, новый вызов выполняется в той же idle-фазе, пока очередь не станет пустой.
 
-Ошибочная сигнатура deferred callable не прерывает traversal и не останавливает обработку следующих deferred calls. На текущем этапе публичная diagnostics API ещё не выделена, поэтому такие ошибки остаются частью internal runtime policy.
+Ошибочная сигнатура deferred callable не прерывает traversal и не останавливает обработку следующих deferred calls. Если deferred callable бросает user-code exception, `SceneTree` сохраняет internal diagnostic и продолжает drain очереди.
 
 ## Safe traversal
 

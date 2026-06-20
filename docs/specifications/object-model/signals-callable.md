@@ -40,7 +40,7 @@
 - `Disconnect()` удаляет connection, если она есть; missing connection не должен ломать runtime.
 - `EmitSignal()` вызывает connections в порядке подключения.
 - `EmitSignal()` использует snapshot connections на начало emission: disconnect/connect во время emission не повреждает текущий проход.
-- Ошибка в одном callback не прерывает остальные callbacks; итоговый `EmitSignal()` возвращает `Error.Failed`.
+- Ошибка в одном callback не прерывает остальные callbacks; итоговый `EmitSignal()` возвращает `Error.Failed`, а user-code exception попадает в internal diagnostics, если известен `SceneTree` context.
 - Callable с несовместимыми аргументами не вызывается, а emission возвращает `Error.Failed`.
 
 ## Ограничения текущего baseline

@@ -101,7 +101,13 @@ public readonly struct Callable : IEquatable<Callable>
 
     internal Error TryCall(object?[] args, out object? result)
     {
+        return TryCall(args, out result, out _);
+    }
+
+    internal Error TryCall(object?[] args, out object? result, out Exception? exception)
+    {
         result = null;
+        exception = null;
 
         if (IsNull())
         {
@@ -110,7 +116,7 @@ public readonly struct Callable : IEquatable<Callable>
 
         if (_delegate is not null)
         {
-            return TryCallDelegate(args, out result);
+            return TryCallDelegate(args, out result, out exception);
         }
 
         if (_target is null || !Object.IsInstanceValid(_target) || _method is null)
@@ -129,27 +135,41 @@ public readonly struct Callable : IEquatable<Callable>
             result = method.Invoke(_target, args);
             return Error.Ok;
         }
-        catch (TargetInvocationException)
+        catch (TargetInvocationException targetException) when (targetException.InnerException is not null)
         {
+            exception = targetException.InnerException;
+            return Error.Failed;
+        }
+        catch (Exception invokeException)
+        {
+            exception = invokeException;
             return Error.Failed;
         }
     }
 
-    private Error TryCallDelegate(object?[] args, out object? result)
+    private Error TryCallDelegate(object?[] args, out object? result, out Exception? exception)
     {
         result = null;
+        exception = null;
 
         try
         {
             result = _delegate?.DynamicInvoke(args);
             return Error.Ok;
         }
-        catch (ArgumentException)
+        catch (ArgumentException argumentException)
         {
+            exception = argumentException;
             return Error.Failed;
         }
-        catch (TargetInvocationException)
+        catch (TargetInvocationException targetException) when (targetException.InnerException is not null)
         {
+            exception = targetException.InnerException;
+            return Error.Failed;
+        }
+        catch (Exception invokeException)
+        {
+            exception = invokeException;
             return Error.Failed;
         }
     }
