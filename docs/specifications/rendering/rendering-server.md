@@ -118,5 +118,5 @@ Internal backends `StandardRenderingBackend` и `CompatibilityRenderingBackend` 
 ## Ограничения `T-0022`
 
 - SDL3-CS device creation, GPU smoke test, fallback logging и resource restore не реализуются в этой задаче.
-- `Node2D`, `CanvasItem`, `Sprite2D`, textures, shaders и canvas item commands остаются будущими задачами.
+- Public `Node2D`, `CanvasItem`, `Sprite2D`, textures, shaders и real canvas item draw submission остаются будущими задачами.
 - OpenGL ES backend не добавляется.

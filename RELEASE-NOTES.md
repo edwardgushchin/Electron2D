@@ -23,6 +23,7 @@
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.
 - Начальная серверная граница рендеринга: `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature()` и internal `Compatibility`/`Standard` backend abstraction.
 - Начальный internal SDL_GPU lifecycle: SDL3-CS dependency, SDL device/window claim/command buffer adapter, frame begin/submit state machine и smoke-проверки ошибок/resize/fullscreen/high-DPI.
+- Начальный internal CanvasItem render queue: stable sort, visibility/modulate filtering и contiguous batching для будущих `CanvasItem` submissions.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
@@ -30,7 +31,7 @@
 
 ## Чего пока нет
 
-- Real-window GPU smoke/fallback pipeline, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
+- Public `CanvasItem`/`Node2D`/`Sprite2D`, real-window GPU smoke/fallback pipeline, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API
