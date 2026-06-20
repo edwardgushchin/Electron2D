@@ -34,6 +34,10 @@ jobs:
         shell: pwsh
         run: ./tools/Run-Tests.ps1
 
+      - name: Verify project template
+        shell: pwsh
+        run: ./tools/Verify-ProjectTemplate.ps1
+
   mobile-export-status:
     name: Mobile/export status gap
     runs-on: ubuntu-latest

@@ -1,0 +1,8 @@
+{
+  "type": "Scene",
+  "formatVersion": 1,
+  "root": {
+    "type": "Node",
+    "name": "Main"
+  }
+}

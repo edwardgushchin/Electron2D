@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Electron2D Team",
+  "classifications": [
+    "Electron2D",
+    "Game",
+    "2D"
+  ],
+  "identity": "Electron2D.Templates.Empty",
+  "name": "Electron2D Empty Project",
+  "shortName": "electron2d-empty",
+  "sourceName": "Electron2D.Empty",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  }
+}

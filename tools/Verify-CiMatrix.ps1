@@ -16,6 +16,7 @@ $requiredFragments = @(
     'actions/setup-dotnet',
     '10.0.x',
     'tools/Run-Tests.ps1',
+    'tools/Verify-ProjectTemplate.ps1',
     'mobile-export-status',
     'Android/iOS/export'
 )

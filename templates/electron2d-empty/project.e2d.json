@@ -1,0 +1,6 @@
+{
+  "name": "Electron2D.Empty",
+  "version": "0.1.0",
+  "engineVersion": "0.1.0-preview",
+  "mainScene": "scenes/main.scene.json"
+}

@@ -16,3 +16,4 @@
 - [CI-матрица 0.1.0 Preview](release-management/ci-matrix.md) - desktop matrix, test runner и явная отметка mobile/export gap.
 - [Таблица совместимости Godot-like API](release-management/api-compatibility.md) - GitHub Wiki source и verifier для public API surface.
 - [Версионирование и release metadata 0.1.0 Preview](release-management/release-metadata.md) - package metadata, changelog и release notes.
+- [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - минимальный project manifest, scene manifest и проверка build/run.
