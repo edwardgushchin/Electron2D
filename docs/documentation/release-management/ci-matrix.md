@@ -14,7 +14,7 @@ CI описан в `.github/workflows/ci.yml`.
 - `ubuntu-latest`
 - `macos-latest`
 
-На каждой платформе workflow устанавливает .NET SDK `10.0.x`, восстанавливает `Electron2D.sln` и запускает:
+На каждой платформе workflow устанавливает .NET SDK `10.0.x`, восстанавливает `src/Electron2D.sln` и запускает:
 
 ```powershell
 ./tools/Run-Tests.ps1

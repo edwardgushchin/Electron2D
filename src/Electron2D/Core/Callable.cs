@@ -58,6 +58,16 @@ public readonly struct Callable : IEquatable<Callable>
         return result;
     }
 
+    public void CallDeferred(params object?[] args)
+    {
+        if (IsNull())
+        {
+            return;
+        }
+
+        DeferredCallQueue.Enqueue(this, args ?? Array.Empty<object?>());
+    }
+
     public bool Equals(Callable other)
     {
         if (_delegate is not null || other._delegate is not null)

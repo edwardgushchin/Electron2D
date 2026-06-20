@@ -20,7 +20,7 @@ public sealed class SolutionLayoutTests
 
         while (directory is not null)
         {
-            if (File.Exists(Path.Combine(directory.FullName, "Electron2D.sln")))
+            if (File.Exists(Path.Combine(directory.FullName, "src", "Electron2D.sln")))
             {
                 return directory.FullName;
             }

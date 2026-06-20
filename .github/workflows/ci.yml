@@ -28,7 +28,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore Electron2D.sln
+        run: dotnet restore src/Electron2D.sln
 
       - name: Run tests
         shell: pwsh

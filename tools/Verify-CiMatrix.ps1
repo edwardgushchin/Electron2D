@@ -15,6 +15,7 @@ $requiredFragments = @(
     'actions/checkout',
     'actions/setup-dotnet',
     '10.0.x',
+    'src/Electron2D.sln',
     'tools/Run-Tests.ps1',
     'tools/Verify-ProjectTemplate.ps1',
     'tools/Verify-PerformanceBudgets.ps1',

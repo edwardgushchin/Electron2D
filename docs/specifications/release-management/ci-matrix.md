@@ -18,7 +18,7 @@ CI должен проверять новый clean runtime baseline на Tier 1
 
 - использовать `actions/checkout`;
 - устанавливать .NET SDK `10.0.x`;
-- восстанавливать `Electron2D.sln`;
+- восстанавливать `src/Electron2D.sln`;
 - запускать `tools/Run-Tests.ps1` без `-IncludeBaseline`.
 - запускать `tools/Verify-ProjectTemplate.ps1`.
 - запускать `tools/Verify-PerformanceBudgets.ps1`.

@@ -6,6 +6,8 @@ public class SceneTree : Object
 {
     private readonly List<SceneTreeDiagnostic> _diagnostics = new();
     private readonly List<Node> _deleteQueue = new();
+    private int _traversalDepth;
+    private bool _flushingQueues;
 
     public SceneTree()
     {
@@ -60,27 +62,27 @@ public class SceneTree : Object
 
     internal void AttachSubtree(Node node)
     {
-        node.EnterTreeRecursive(this);
-        node.ReadyRecursive();
+        RunTraversal(() =>
+        {
+            node.EnterTreeRecursive(this);
+            node.ReadyRecursive();
+        });
     }
 
     internal void ProcessFrame(double delta)
     {
-        Root.ProcessRecursive(delta);
-        FlushDeleteQueue();
+        RunTraversal(() => Root.ProcessRecursive(delta));
     }
 
     internal void PhysicsFrame(double delta)
     {
-        Root.PhysicsProcessRecursive(delta);
-        FlushDeleteQueue();
+        RunTraversal(() => Root.PhysicsProcessRecursive(delta));
     }
 
     internal void DispatchInput(InputEvent inputEvent)
     {
         ArgumentNullException.ThrowIfNull(inputEvent);
-        Root.InputRecursive(inputEvent);
-        FlushDeleteQueue();
+        RunTraversal(() => Root.InputRecursive(inputEvent));
     }
 
     internal void QueueDelete(Node node)
@@ -100,6 +102,45 @@ public class SceneTree : Object
         catch (Exception exception)
         {
             _diagnostics.Add(new SceneTreeDiagnostic(node, callback, exception));
+        }
+    }
+
+    private void RunTraversal(Action action)
+    {
+        _traversalDepth++;
+        try
+        {
+            action();
+        }
+        finally
+        {
+            _traversalDepth--;
+            if (_traversalDepth == 0)
+            {
+                FlushQueues();
+            }
+        }
+    }
+
+    private void FlushQueues()
+    {
+        if (_flushingQueues)
+        {
+            return;
+        }
+
+        _flushingQueues = true;
+        try
+        {
+            while (DeferredCallQueue.HasPendingCalls || _deleteQueue.Count > 0)
+            {
+                DeferredCallQueue.Drain();
+                FlushDeleteQueue();
+            }
+        }
+        finally
+        {
+            _flushingQueues = false;
         }
     }
 

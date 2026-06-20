@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D", "src\Electron2D\Electron2D.csproj", "{866C46F5-D6A5-4B66-AA96-489DD22F73DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D", "Electron2D\Electron2D.csproj", "{866C46F5-D6A5-4B66-AA96-489DD22F73DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.Unit", "tests\Electron2D.Tests.Unit\Electron2D.Tests.Unit.csproj", "{E86B2A5D-C3BF-4650-8207-ECAAC7A6766D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.Unit", "..\tests\Electron2D.Tests.Unit\Electron2D.Tests.Unit.csproj", "{E86B2A5D-C3BF-4650-8207-ECAAC7A6766D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.Integration", "tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj", "{3F57FCF2-B74C-40D1-BBDB-6F387749F8FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.Integration", "..\tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj", "{3F57FCF2-B74C-40D1-BBDB-6F387749F8FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.RuntimeSmoke", "tests\Electron2D.Tests.RuntimeSmoke\Electron2D.Tests.RuntimeSmoke.csproj", "{3A8C7727-8223-4998-A4C7-E94EE09825B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.RuntimeSmoke", "..\tests\Electron2D.Tests.RuntimeSmoke\Electron2D.Tests.RuntimeSmoke.csproj", "{3A8C7727-8223-4998-A4C7-E94EE09825B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.GoldenData", "tests\Electron2D.Tests.GoldenData\Electron2D.Tests.GoldenData.csproj", "{6E3F6C65-479F-45FF-9AAA-C06DD49A040C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.GoldenData", "..\tests\Electron2D.Tests.GoldenData\Electron2D.Tests.GoldenData.csproj", "{6E3F6C65-479F-45FF-9AAA-C06DD49A040C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

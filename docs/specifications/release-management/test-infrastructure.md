@@ -19,13 +19,13 @@
 
 ## Baseline-режим
 
-В `RuntimeSmoke` должен существовать отдельный baseline-тест с `Trait("Category", "Baseline")`. Он намеренно падает, пока в новой реализации нет обязательного Godot-like типа `Electron2D.Node`.
+`Run-Tests.ps1` должен сохранять параметр `-IncludeBaseline`, чтобы будущие задачи могли явно запускать baseline-категорию, если она понадобится для документированного red-state.
 
-Обычная команда проверки исключает эту категорию, чтобы инфраструктура оставалась green-check для задач, которые ещё не реализуют объектную модель. Baseline-тест запускается явно и документирует текущий red-state для последующей TDD-работы.
+Обычная команда проверки исключает `Category=Baseline`, чтобы инфраструктура оставалась green-check. После реализации `Node` и `SceneTree` baseline в текущей категории нет обязательного намеренно падающего теста.
 
 ## Инварианты
 
-- Тестовые проекты должны быть добавлены в `Electron2D.sln`.
+- Тестовые проекты должны быть добавлены в `src/Electron2D.sln`.
 - Основной solution на этом этапе не должен собирать старые examples; их миграция выполняется отдельной задачей.
 - Runtime assembly на старте не экспортирует публичных legacy-типов: `IComponent`, `SpriteRenderer`, `SpriteAnimator`, legacy physics components.
 - Все новые тесты должны ссылаться на новый `src/Electron2D/Electron2D.csproj`, а не на восстановленные файлы старого runtime.
@@ -38,10 +38,10 @@ Green-check без baseline:
 powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
 ```
 
-Документированный red-baseline:
+Baseline-режим, если будущая задача добавит tests с `Category=Baseline`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
 ```
 
-Ожидаемая причина red-baseline: `SceneTreeBaselineFailsUntilNodeExists` не находит `Electron2D.Node`.
+Текущий runtime уже содержит `Electron2D.Node`; намеренно падающий baseline больше не требуется для объектной модели.

@@ -13,7 +13,7 @@
   - `tests/Electron2D.Tests.RuntimeSmoke/`
   - `tests/Electron2D.Tests.GoldenData/`
 - Единая команда запуска: `tools/Run-Tests.ps1`.
-- `Electron2D.sln` обновлён: тестовые проекты добавлены, старые examples исключены до отдельной миграции.
+- `src/Electron2D.sln` обновлён: тестовые проекты добавлены, старые examples исключены до отдельной миграции.
 
 ## Как запускать
 
@@ -23,14 +23,14 @@
 powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
 ```
 
-Проверка вместе с намеренно падающим baseline:
+Проверка вместе с baseline-категорией, если в будущих задачах она будет добавлена:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
 ```
 
-Baseline-тест `SceneTreeBaselineFailsUntilNodeExists` должен падать до реализации новой Godot-like объектной модели. Это не regression, а зафиксированная точка старта для следующих задач.
+В текущем состоянии baseline-категория не содержит намеренно падающих тестов: новая Godot-like объектная модель уже включает `Node` и `SceneTree` baseline.
 
 ## Текущее состояние runtime
 
-Runtime assembly `Electron2D` существует и загружается, но пока не содержит публичных типов. Unit-тесты дополнительно проверяют, что в новый baseline не вернулись legacy-типы `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `Rigidbody` и `Collider`.
+Runtime assembly `Electron2D` существует, загружается и экспортирует текущий Godot-like baseline public API. Unit-тесты дополнительно проверяют, что в новый baseline не вернулись legacy-типы `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `Rigidbody` и `Collider`.

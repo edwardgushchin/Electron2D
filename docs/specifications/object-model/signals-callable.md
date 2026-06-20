@@ -46,7 +46,7 @@
 ## Ограничения текущего baseline
 
 - `ConnectFlags.Deferred`, `Persist`, `OneShot` и `AppendSourceObject` объявлены для Godot-like API, но runtime semantics будут реализованы в следующих задачах.
-- `Callable.Bind()`, `Unbind()`, `CallDeferred()` и `Variant` return values остаются будущими задачами.
+- `Callable.Bind()`, `Unbind()` и `Variant` return values остаются будущими задачами.
 - Built-in signals для lifecycle ещё не объявляются автоматически; они будут добавлены отдельной задачей, когда появится полный signal registry.
 
 ## Acceptance tests

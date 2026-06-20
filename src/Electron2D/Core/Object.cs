@@ -159,6 +159,13 @@ public class Object
         return result;
     }
 
+    public object? CallDeferred(string method, params object?[] args)
+    {
+        ThrowIfFreed();
+        new Callable(this, method).CallDeferred(args ?? Array.Empty<object?>());
+        return null;
+    }
+
     public override string ToString()
     {
         return $"{GetType().Name}:{_instanceId}";

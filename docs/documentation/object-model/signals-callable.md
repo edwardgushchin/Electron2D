@@ -24,7 +24,8 @@
 - untyped `Action` через `Callable.From(Action)`;
 - typed `Action<T>` через `Callable.From<T>(Action<T>)`;
 - equality для `Disconnect()` и `IsConnected()`;
-- прямой вызов через `Call(params object?[] args)`.
+- прямой вызов через `Call(params object?[] args)`;
+- deferred вызов через `CallDeferred(params object?[] args)`.
 
 ## Сигналы
 
@@ -49,5 +50,5 @@
 
 - `StringName`, `Variant` и typed signal declarations ещё не реализованы; signal/method names представлены `string`, arguments представлены `object?[]`.
 - `ConnectFlags.Deferred`, `Persist`, `OneShot` и `AppendSourceObject` пока объявлены, но их runtime semantics будут реализованы отдельными задачами.
-- `Callable.Bind()`, `Unbind()`, `CallDeferred()` и `Variant` return values ещё не реализованы.
+- `Callable.Bind()`, `Unbind()` и `Variant` return values ещё не реализованы.
 - Built-in lifecycle signals пока не объявляются автоматически.
