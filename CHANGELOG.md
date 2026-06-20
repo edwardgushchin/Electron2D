@@ -21,11 +21,13 @@
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
 - Verifier-скрипты для тестов, CI, API compatibility и release metadata.
+- MIT License policy: корневой `LICENSE`, MIT source headers для C# и PowerShell файлов, verifier `tools/Verify-SourceLicenseHeaders.ps1` и CI-шаг.
 
 ### Изменено
 
 - `main` возвращён к baseline `4007f36bf6857b33d6fc8cf614732f92e839287d`.
 - Старая реализация `src/Electron2D/` удалена полностью.
+- Корневой `LICENSE` приведён к MIT License, чтобы он совпадал с package metadata `PackageLicenseExpression=MIT`.
 
 ### Удалено
 

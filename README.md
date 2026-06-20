@@ -9,3 +9,11 @@ powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
 ```
 
 Compatibility table готовится как GitHub Wiki source: `.github/wiki/API-Compatibility.md`.
+
+## License
+
+Electron2D распространяется по MIT License. Каждый вручную написанный C# и PowerShell source-файл содержит MIT license header, а проверка выполняется командой:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/Verify-SourceLicenseHeaders.ps1
+```

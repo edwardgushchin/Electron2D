@@ -20,6 +20,7 @@
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
+- MIT License: корневой `LICENSE`, package metadata и source-file headers согласованы и проверяются CI.
 
 ## Чего пока нет
 

@@ -30,6 +30,10 @@ jobs:
       - name: Restore
         run: dotnet restore src/Electron2D.sln
 
+      - name: Verify source license headers
+        shell: pwsh
+        run: ./tools/Verify-SourceLicenseHeaders.ps1
+
       - name: Run tests
         shell: pwsh
         run: ./tools/Run-Tests.ps1
