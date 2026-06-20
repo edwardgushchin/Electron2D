@@ -12,3 +12,4 @@
 
 - [Тестовая инфраструктура 0.1.0 Preview](release-management/test-infrastructure.md) - текущие тестовые проекты, команды запуска и baseline-режим.
 - [CI-матрица 0.1.0 Preview](release-management/ci-matrix.md) - текущий GitHub Actions workflow и локальная проверка его структуры.
+- [Таблица совместимости Godot-like API](release-management/api-compatibility.md) - GitHub Wiki source и verifier текущего public API surface.
