@@ -2,7 +2,7 @@
 
 Статус: реализованный baseline.
 Задача: `T-0008`.
-Обновлено: 2026-06-20.
+Обновлено: 2026-06-21.
 
 ## Public API
 
@@ -50,6 +50,6 @@
 ## Отличия от Godot в текущем baseline
 
 - Реализован только минимальный subset, нужный для старта object model.
-- `Object` пока не содержит metadata API: `StringName` уже есть, но для metadata нужен следующий слой `Variant`.
+- `Object` пока не содержит metadata API: `StringName` и `Variant` уже есть, но сами metadata методы будут вводиться отдельной задачей с тестами.
 - Базовый `Resource` пока не возвращает `Rid`: `Rid` уже есть, но конкретные server-backed ресурсы появятся вместе с rendering/physics/audio/text servers.
 - Public API не реализует `IDisposable`, чтобы не добавлять .NET-specific метод `Dispose()` в Godot-like surface.

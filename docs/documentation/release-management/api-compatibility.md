@@ -2,7 +2,7 @@
 
 Статус: реализованная проверка compatibility baseline.
 Задача: `T-0004`.
-Обновлено: 2026-06-20.
+Обновлено: 2026-06-21.
 
 ## Где находится таблица
 
@@ -16,10 +16,11 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, 2D math и RNG:
+Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, 2D math, RNG, identity и Variant value carrier:
 
-- `Electron2D.Object`
 - `Electron2D.Callable`
+- `Electron2D.Collections.Array`
+- `Electron2D.Collections.Dictionary`
 - `Electron2D.Color`
 - `Electron2D.ConnectFlags`
 - `Electron2D.Error`
@@ -37,6 +38,8 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.SceneTree`
 - `Electron2D.StringName`
 - `Electron2D.Transform2D`
+- `Electron2D.Variant`
+- `Electron2D.Variant+Type`
 - `Electron2D.Vector2`
 - `Electron2D.Vector2I`
 

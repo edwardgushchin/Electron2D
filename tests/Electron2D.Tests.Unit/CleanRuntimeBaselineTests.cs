@@ -43,6 +43,8 @@ public sealed class CleanRuntimeBaselineTests
             new[]
             {
                 "Electron2D.Callable",
+                "Electron2D.Collections.Array",
+                "Electron2D.Collections.Dictionary",
                 "Electron2D.Color",
                 "Electron2D.ConnectFlags",
                 "Electron2D.Error",
@@ -61,6 +63,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.SceneTree",
                 "Electron2D.StringName",
                 "Electron2D.Transform2D",
+                "Electron2D.Variant",
+                "Electron2D.Variant+Type",
                 "Electron2D.Vector2",
                 "Electron2D.Vector2I"
             },
