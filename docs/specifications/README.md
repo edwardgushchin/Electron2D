@@ -22,3 +22,4 @@
 ## Объектная модель
 
 - [Базовые типы Object, RefCounted, Resource](object-model/base-object-lifetime.md) - начальный Godot-like runtime API и правила lifetime.
+- [Node и SceneTree lifecycle](object-model/node-scene-tree-lifecycle.md) - начальный lifecycle baseline и порядок callbacks.

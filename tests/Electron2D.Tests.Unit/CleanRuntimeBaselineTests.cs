@@ -18,9 +18,12 @@ public sealed class CleanRuntimeBaselineTests
         Assert.Equal(
             new[]
             {
+                "Electron2D.InputEvent",
+                "Electron2D.Node",
                 "Electron2D.Object",
                 "Electron2D.RefCounted",
-                "Electron2D.Resource"
+                "Electron2D.Resource",
+                "Electron2D.SceneTree"
             },
             publicTypeNames);
 

@@ -8,13 +8,14 @@
 
 - Новый пустой runtime-проект `Electron2D`.
 - Начальный Godot-like public API: `Object`, `RefCounted`, `Resource`.
+- Начальный lifecycle API: `Node`, `SceneTree`, `InputEvent`.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
 
 ## Чего пока нет
 
-- `Electron2D.Node` пока отсутствует; это намеренно зафиксировано baseline-тестом `SceneTreeBaselineFailsUntilNodeExists`.
+- Ownership, `NodePath`, deferred calls, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

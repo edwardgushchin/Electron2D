@@ -14,8 +14,7 @@ public sealed class RuntimeBaselineTests
     }
 
     [Fact]
-    [Trait("Category", "Baseline")]
-    public void SceneTreeBaselineFailsUntilNodeExists()
+    public void SceneTreeNodeTypeExists()
     {
         var assembly = Assembly.Load("Electron2D");
 

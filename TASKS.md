@@ -7,168 +7,6 @@
 
 Базовые источники backlog: `docs/specifications/releases/0.1.0-preview.md`, `docs/specifications/architecture/engine-platform-stack.md`, `docs/specifications/README.md`, текущий код `src/Electron2D/`, `examples/` и `Electron2D.sln`.
 
-## T-0009 [ ] P0: Довести `Node` и `SceneTree` до полного lifecycle `_EnterTree`, `_Ready`, `_Process`, `_PhysicsProcess`, `_Input`, `_ExitTree`
-
-- Создана: 2026-06-20T16:16:20+03:00
-- Приоритет: P0
-- Зависимости: T-0008
-- Ссылки:
-  - Upstream commit: нет
-  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/scene-tree/`
-  - Документация: `docs/documentation/scene-tree/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`; `src/Electron2D/Core/Nodes/Node.cs`
-
-### Самодостаточное описание
-
-Задача относится к домену «Объектная модель и SceneTree». Цель - Довести `Node` и `SceneTree` до полного lifecycle `_EnterTree`, `_Ready`, `_Process`, `_PhysicsProcess`, `_Input`, `_ExitTree`. Текущее состояние: в коде уже есть базовые `Node`, `SceneTree`, группы и runtime-системы, но контракт Godot-подобной объектной модели для 0.1.0 ещё не доказан тестами и документацией. Нужное поведение: результат должен закрыть релизный контракт `0.1.0 Preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: порядок callback проверен тестами; ошибки пользовательского кода не ломают loop без диагностики.
-
-Важное решение из документации: публичная модель повторяет терминологию Godot, но не должна добавлять пустые классы ради видимости совместимости. Ограничение для агента: не менять публичную модель ради частного примера и не ломать существующие примеры без отдельной задачи миграции. Не менять несвязанные файлы, не расширять scope за пределы `0.1.0 Preview`, не закрывать задачу без проверяемого результата и не подменять обязательные тесты или документацию устным утверждением.
-
-### Критерии приёмки
-
-- [ ] Реализована или подготовлена цель задачи: Довести `Node` и `SceneTree` до полного lifecycle `_EnterTree`, `_Ready`, `_Process`, `_PhysicsProcess`, `_Input`, `_ExitTree`.
-- [ ] порядок callback проверен тестами.
-- [ ] ошибки пользовательского кода не ломают loop без диагностики.
-- [ ] Если задача меняет код, готова или обновлена спецификация в `docs/specifications/<domain>/`, соответствующая фактическому изменению.
-- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.
-- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, готова или обновлена справка в `docs/documentation/<domain>/` по фактическому результату изменения кода.
-- [ ] Команда тестирования или проверки задокументирована.
-
-### Подзадачи
-
-- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.
-  - [ ] Сверить требования `0.1.0 Preview`, архитектурный стек и доменную спецификацию.
-    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.
-- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.
-  - [ ] Добавить или обновить автоматические проверки до изменения production-кода, если задача меняет поведение.
-    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только happy path.
-- [ ] Завершить реализацию, документацию и проверку.
-  - [ ] Обновить `docs/documentation/scene-tree/`, если задача меняет исполняемое поведение или публичный контракт.
-    - [ ] Записать итоговые команды проверки и результат в дневник разработки.
-
-### Заметки агента
-
-Пусто до момента, когда агент возьмёт задачу в работу.
-
-## T-0106 [ ] P0: Ввести SDL3-style XML documentation для всего публичного API
-
-- Создана: 2026-06-20T22:01:23+03:00
-- Приоритет: P0
-- Зависимости: T-0004, T-0008
-- Ссылки:
-  - Upstream commit: нет
-  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
-  - Документация: `docs/documentation/documentation/`
-  - Референс: `https://github.com/libsdl-org/SDL/blob/main/include/SDL3/SDL_asyncio.h`
-  - Исходный код: `src/Electron2D/`; `.github/wiki/API-Compatibility.md`; `tools/`
-
-### Самодостаточное описание
-
-Задача относится к домену «API documentation». Нужно ввести правило: каждый публичный тип, метод, свойство, событие, enum, enum value, delegate и public constructor Electron2D должен иметь C# XML documentation в стиле полноты SDL3 reference comments. Документация должна объяснять назначение API, параметры, возвращаемое значение, ошибки/исключения, thread-safety, версию появления, связанные API и важные ограничения поведения.
-
-Формат должен быть C# XML docs, а не C-комментарии: `<summary>`, `<remarks>`, `<param>`, `<returns>`, `<exception>`, `<threadsafety>` или согласованный эквивалент, `<since>`, `<seealso>`. Для API без параметров или return блоки не добавляются искусственно, но все применимые разделы обязательны.
-
-### Критерии приёмки
-
-- [ ] Создана спецификация формата XML documentation для Electron2D public API.
-- [ ] Все текущие public API имеют XML docs по новому формату.
-- [ ] Включён build/verifier, который падает при недокументированном public API.
-- [ ] Включён verifier качества, который проверяет обязательные разделы для методов с параметрами, возвращаемыми значениями, исключениями, thread-safety, `since` и `seealso`, где применимо.
-- [ ] Legacy/component API не документируется как поддерживаемый API и не возвращается в public surface.
-- [ ] Документация фактического правила обновлена в `docs/documentation/documentation/`.
-- [ ] Команда проверки задокументирована.
-
-### Подзадачи
-
-- [ ] Сформировать XML docs style guide на основе SDL3 documentation completeness.
-- [ ] Добавить XML docs к текущим `Object`, `RefCounted`, `Resource`.
-- [ ] Добавить verifier public XML docs в `tools/`.
-- [ ] Подключить verifier к CI.
-- [ ] Обновить compatibility/wiki pipeline, чтобы он использовал эти XML docs как источник описаний.
-
-### Заметки агента
-
-Создано по запросу пользователя: публичный API должен документироваться так же полно, как SDL3 public API, но в C# XML documentation стиле.
-
-## T-0107 [ ] P0: Генерировать автоматическую документацию публичного API в GitHub Wiki
-
-- Создана: 2026-06-20T22:01:23+03:00
-- Приоритет: P0
-- Зависимости: T-0004, T-0106
-- Ссылки:
-  - Upstream commit: нет
-  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
-  - Документация: `docs/documentation/documentation/`
-  - Референс: `https://github.com/edwardgushchin/SDL3-CS/wiki`
-  - Исходный код: `src/Electron2D/`; `.github/wiki/`; `tools/`
-
-### Самодостаточное описание
-
-Задача относится к домену «GitHub Wiki API reference». Нужно сделать автоматическую генерацию документации публичного API Electron2D в GitHub Wiki source по аналогии с Wiki SDL3-CS. Источником должны быть compiled public surface и XML documentation comments. Результат должен жить в `.github/wiki/` как source для GitHub Wiki, а не как локальный сайт.
-
-### Критерии приёмки
-
-- [ ] Создан generator API reference для GitHub Wiki source.
-- [ ] Generator читает публичные типы из runtime assembly и XML docs из build output.
-- [ ] Для каждого public type создаётся или обновляется Wiki-страница с summary, members, signatures, remarks, exceptions, thread-safety, since и see also, где данные есть в XML docs.
-- [ ] `.github/wiki/API-Compatibility.md` остаётся совместимой страницей и не заменяется локальным сайтом.
-- [ ] Добавлен verifier, который падает, если Wiki API reference не синхронизирован с public API.
-- [ ] CI запускает generator check/verifier.
-- [ ] Документация генератора обновлена в `docs/documentation/documentation/`.
-- [ ] Команда генерации и проверки задокументирована.
-
-### Подзадачи
-
-- [ ] Определить структуру `.github/wiki/` для API pages, index и compatibility pages.
-- [ ] Реализовать generator в `tools/`.
-- [ ] Добавить generated Wiki source для текущих `Object`, `RefCounted`, `Resource`.
-- [ ] Добавить verifier синхронизации Wiki.
-- [ ] Подключить verifier к CI.
-
-### Заметки агента
-
-Создано по запросу пользователя: Wiki должна быть автоматической документацией публичного API в GitHub Wiki, как у SDL3-CS Wiki, без локального сайта.
-
-## T-0108 [ ] P0: Обеспечить 100% test coverage кода движка
-
-- Создана: 2026-06-20T22:03:00+03:00
-- Приоритет: P0
-- Зависимости: T-0002, T-0102, T-0103
-- Ссылки:
-  - Upstream commit: нет
-  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/quality/`
-  - Документация: `docs/documentation/quality/`
-  - Исходный код: `src/Electron2D/`; `tests/`; `tools/`; `.github/workflows/`
-
-### Самодостаточное описание
-
-Задача относится к домену «Quality gate». Код движка в `src/Electron2D/` должен быть покрыт тестами на 100% для line, branch и method coverage. Coverage gate должен быть автоматическим и обязательным для release candidate; новые runtime/API задачи не считаются завершёнными, если снижают coverage ниже 100%.
-
-Исключения не допускаются по умолчанию. Если технически невозможно покрыть конкретный сгенерированный или platform-bound участок, исключение должно быть отдельной явно принятой задачей с обоснованием, документацией и verifier, который не позволяет расширять исключения молча.
-
-### Критерии приёмки
-
-- [ ] Создана спецификация 100% coverage policy для кода движка.
-- [ ] Настроен coverage runner для `src/Electron2D/`.
-- [ ] CI падает, если line, branch или method coverage ниже 100%.
-- [ ] Coverage report сохраняется как проверяемый artifact или локальный report в `.temp/`/CI artifact, не как source-файл репозитория.
-- [ ] Все текущие runtime-типы покрыты тестами на 100%.
-- [ ] Policy исключений описана и по умолчанию запрещает непокрытые участки.
-- [ ] Документация quality gate обновлена.
-- [ ] Команда проверки задокументирована.
-
-### Подзадачи
-
-- [ ] Выбрать coverage toolchain для .NET 10 и xUnit.
-- [ ] Добавить `tools/Verify-Coverage.ps1`.
-- [ ] Подключить coverage gate к CI.
-- [ ] Расширить тесты для полного line/branch/method coverage текущего runtime.
-- [ ] Обновить release candidate gate, чтобы 100% coverage было обязательным.
-
-### Заметки агента
-
-Создано по запросу пользователя: код движка должен быть на 100% покрыт тестами.
-
 ## T-0010 [ ] P0: Реализовать и протестировать иерархию узлов, ownership, reparent, add/remove/move и безопасное удаление
 
 - Создана: 2026-06-20T16:16:20+03:00
@@ -4242,3 +4080,207 @@
 ### Заметки агента
 
 Пусто до момента, когда агент возьмёт задачу в работу.
+
+## T-0106 [ ] P0: Ввести SDL3-style XML documentation для всего публичного API
+
+- Создана: 2026-06-20T22:01:23+03:00
+- Приоритет: P0
+- Зависимости: T-0004, T-0008
+- Ссылки:
+  - Upstream commit: нет
+  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
+  - Документация: `docs/documentation/documentation/`
+  - Референс: `https://github.com/libsdl-org/SDL/blob/main/include/SDL3/SDL_asyncio.h`
+  - Исходный код: `src/Electron2D/`; `.github/wiki/API-Compatibility.md`; `tools/`
+
+### Самодостаточное описание
+
+Задача относится к домену «API documentation». Нужно ввести правило: каждый публичный тип, метод, свойство, событие, enum, enum value, delegate и public constructor Electron2D должен иметь C# XML documentation в стиле полноты SDL3 reference comments. Документация должна объяснять назначение API, параметры, возвращаемое значение, ошибки/исключения, thread-safety, версию появления, связанные API и важные ограничения поведения.
+
+Формат должен быть C# XML docs, а не C-комментарии: `<summary>`, `<remarks>`, `<param>`, `<returns>`, `<exception>`, `<threadsafety>` или согласованный эквивалент, `<since>`, `<seealso>`. Для API без параметров или return блоки не добавляются искусственно, но все применимые разделы обязательны.
+
+### Критерии приёмки
+
+- [ ] Создана спецификация формата XML documentation для Electron2D public API.
+- [ ] Все текущие public API имеют XML docs по новому формату.
+- [ ] Включён build/verifier, который падает при недокументированном public API.
+- [ ] Включён verifier качества, который проверяет обязательные разделы для методов с параметрами, возвращаемыми значениями, исключениями, thread-safety, `since` и `seealso`, где применимо.
+- [ ] Legacy/component API не документируется как поддерживаемый API и не возвращается в public surface.
+- [ ] Документация фактического правила обновлена в `docs/documentation/documentation/`.
+- [ ] Команда проверки задокументирована.
+
+### Подзадачи
+
+- [ ] Сформировать XML docs style guide на основе SDL3 documentation completeness.
+- [ ] Добавить XML docs к текущим `Object`, `RefCounted`, `Resource`.
+- [ ] Добавить verifier public XML docs в `tools/`.
+- [ ] Подключить verifier к CI.
+- [ ] Обновить compatibility/wiki pipeline, чтобы он использовал эти XML docs как источник описаний.
+
+### Заметки агента
+
+Создано по запросу пользователя: публичный API должен документироваться так же полно, как SDL3 public API, но в C# XML documentation стиле.
+
+## T-0107 [ ] P0: Генерировать автоматическую документацию публичного API в GitHub Wiki
+
+- Создана: 2026-06-20T22:01:23+03:00
+- Приоритет: P0
+- Зависимости: T-0004, T-0106
+- Ссылки:
+  - Upstream commit: нет
+  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
+  - Документация: `docs/documentation/documentation/`
+  - Референс: `https://github.com/edwardgushchin/SDL3-CS/wiki`
+  - Исходный код: `src/Electron2D/`; `.github/wiki/`; `tools/`
+
+### Самодостаточное описание
+
+Задача относится к домену «GitHub Wiki API reference». Нужно сделать автоматическую генерацию документации публичного API Electron2D в GitHub Wiki source по аналогии с Wiki SDL3-CS. Источником должны быть compiled public surface и XML documentation comments. Результат должен жить в `.github/wiki/` как source для GitHub Wiki, а не как локальный сайт.
+
+### Критерии приёмки
+
+- [ ] Создан generator API reference для GitHub Wiki source.
+- [ ] Generator читает публичные типы из runtime assembly и XML docs из build output.
+- [ ] Для каждого public type создаётся или обновляется Wiki-страница с summary, members, signatures, remarks, exceptions, thread-safety, since и see also, где данные есть в XML docs.
+- [ ] `.github/wiki/API-Compatibility.md` остаётся совместимой страницей и не заменяется локальным сайтом.
+- [ ] Добавлен verifier, который падает, если Wiki API reference не синхронизирован с public API.
+- [ ] CI запускает generator check/verifier.
+- [ ] Документация генератора обновлена в `docs/documentation/documentation/`.
+- [ ] Команда генерации и проверки задокументирована.
+
+### Подзадачи
+
+- [ ] Определить структуру `.github/wiki/` для API pages, index и compatibility pages.
+- [ ] Реализовать generator в `tools/`.
+- [ ] Добавить generated Wiki source для текущих `Object`, `RefCounted`, `Resource`.
+- [ ] Добавить verifier синхронизации Wiki.
+- [ ] Подключить verifier к CI.
+
+### Заметки агента
+
+Создано по запросу пользователя: Wiki должна быть автоматической документацией публичного API в GitHub Wiki, как у SDL3-CS Wiki, без локального сайта.
+
+## T-0108 [ ] P0: Обеспечить 100% test coverage кода движка
+
+- Создана: 2026-06-20T22:03:00+03:00
+- Приоритет: P0
+- Зависимости: T-0002, T-0102, T-0103
+- Ссылки:
+  - Upstream commit: нет
+  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/quality/`
+  - Документация: `docs/documentation/quality/`
+  - Исходный код: `src/Electron2D/`; `tests/`; `tools/`; `.github/workflows/`
+
+### Самодостаточное описание
+
+Задача относится к домену «Quality gate». Код движка в `src/Electron2D/` должен быть покрыт тестами на 100% для line, branch и method coverage. Coverage gate должен быть автоматическим и обязательным для release candidate; новые runtime/API задачи не считаются завершёнными, если снижают coverage ниже 100%.
+
+Исключения не допускаются по умолчанию. Если технически невозможно покрыть конкретный сгенерированный или platform-bound участок, исключение должно быть отдельной явно принятой задачей с обоснованием, документацией и verifier, который не позволяет расширять исключения молча.
+
+### Критерии приёмки
+
+- [ ] Создана спецификация 100% coverage policy для кода движка.
+- [ ] Настроен coverage runner для `src/Electron2D/`.
+- [ ] CI падает, если line, branch или method coverage ниже 100%.
+- [ ] Coverage report сохраняется как проверяемый artifact или локальный report в `.temp/`/CI artifact, не как source-файл репозитория.
+- [ ] Все текущие runtime-типы покрыты тестами на 100%.
+- [ ] Policy исключений описана и по умолчанию запрещает непокрытые участки.
+- [ ] Документация quality gate обновлена.
+- [ ] Команда проверки задокументирована.
+
+### Подзадачи
+
+- [ ] Выбрать coverage toolchain для .NET 10 и xUnit.
+- [ ] Добавить `tools/Verify-Coverage.ps1`.
+- [ ] Подключить coverage gate к CI.
+- [ ] Расширить тесты для полного line/branch/method coverage текущего runtime.
+- [ ] Обновить release candidate gate, чтобы 100% coverage было обязательным.
+
+### Заметки агента
+
+Создано по запросу пользователя: код движка должен быть на 100% покрыт тестами.
+
+## T-0110 [ ] P0: Подготовить итоговый README на уровне reference-проектов
+
+- Создана: 2026-06-20T22:10:06+03:00
+- Приоритет: P0
+- Зависимости: T-0005, T-0106, T-0107, T-0108, T-0104
+- Ссылки:
+  - Upstream commit: нет
+  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
+  - Документация: `docs/documentation/documentation/`
+  - Референсы:
+    - `https://github.com/EggyStudio/3DEngine`
+    - `https://github.com/godotengine/godot`
+    - `https://github.com/sjoerdev/concrete`
+    - `https://github.com/edwardgushchin/SDL3-CS`
+  - Исходный код: `README.md`; `CHANGELOG.md`; `RELEASE-NOTES.md`; `.github/wiki/`; `CODE_OF_CONDUCT.md`; `LICENSE`
+
+### Самодостаточное описание
+
+Задача относится к домену «Project presentation и release documentation». Итоговый `README.md` проекта должен быть оформлен на уровне reference-проектов: понятный hero/intro, badges, platform/runtime matrix, installation, quick start, документация, examples, roadmap/status, feedback/contributions, contributors и license. Нужно взять лучшие практики из указанных README, но не копировать чужой текст или визуальные ассеты без права использования.
+
+README должен честно отражать фактический статус Electron2D: если runtime ещё preview/clean baseline, это должно быть видно. При финальном `0.1.0 Preview` README должен вести пользователя по пути install -> project -> scene -> C# code -> run -> debug -> export -> play и ссылаться на GitHub Wiki как на источник API docs.
+
+### Критерии приёмки
+
+- [ ] Создана спецификация итоговой структуры README и визуального/информационного baseline.
+- [ ] `README.md` содержит badges/status, краткий pitch, supported platforms, .NET/runtime version, install, quick start, documentation/wiki links, examples, contribution/feedback, contributors и license.
+- [ ] README не обещает неподдержанные возможности и синхронизирован с `RELEASE-NOTES.md`, `.github/wiki/API-Compatibility.md` и текущим release gate.
+- [ ] README ссылается на GitHub Wiki API documentation, а не на локальный сайт.
+- [ ] Добавлен verifier README completeness, который проверяет обязательные разделы, ссылки и отсутствие legacy/API promises.
+- [ ] Документация правила README обновлена в `docs/documentation/documentation/`.
+- [ ] Команда проверки задокументирована.
+
+### Подзадачи
+
+- [ ] Проанализировать reference README и выписать применимые паттерны без копирования чужого protected content.
+- [ ] Сформировать структуру README для Electron2D.
+- [ ] Обновить `README.md`.
+- [ ] Добавить `tools/Verify-Readme.ps1`.
+- [ ] Подключить verifier к CI.
+
+### Заметки агента
+
+Создано по запросу пользователя: итоговый README должен выглядеть как сильные reference-проекты и взять из них лучшие идеи, включая блоки feedback/contributions, contributors и license.
+
+## T-0111 [ ] P0: Оформить production-ready repository и GitHub Release pipeline
+
+- Создана: 2026-06-20T22:13:00+03:00
+- Приоритет: P0
+- Зависимости: T-0003, T-0005, T-0104, T-0110
+- Ссылки:
+  - Upstream commit: нет
+  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/release-management/`
+  - Документация: `docs/documentation/release-management/`
+  - Исходный код: `.github/workflows/`; `src/Electron2D/`; `tools/`; `README.md`; `RELEASE-NOTES.md`; `CHANGELOG.md`
+
+### Самодостаточное описание
+
+Задача относится к домену «Release engineering». К финалу `0.1.0 Preview` репозиторий должен быть production-ready: релиз включает библиотеку, редактор и остальные инструменты разработки, упакованные в архивы под все поддерживаемые настольные платформы и архитектуры. Сборка релиза должна выполняться в GitHub Actions, а под конкретную версию должен формироваться GitHub Release с release notes и загруженными артефактами.
+
+Минимальный desktop target set должен соответствовать текущей платформенной спецификации релиза: Windows, Linux, macOS и согласованные архитектуры для каждой платформы. Mobile export остается отдельным pipeline, если release spec не требует иного для preview artifact.
+
+### Критерии приёмки
+
+- [ ] Создана спецификация production-ready release packaging.
+- [ ] GitHub Actions умеет собирать release artifacts для всех поддерживаемых desktop OS/architecture targets.
+- [ ] Release artifacts включают библиотеку, редактор и developer tools, если они реализованы к моменту release candidate.
+- [ ] Каждый artifact имеет предсказуемое имя с версией, OS, architecture и checksum.
+- [ ] GitHub Actions может создать GitHub Release для tag/version, приложить release notes и загрузить artifacts.
+- [ ] Добавлен dry-run/rehearsal workflow или verifier, который проверяет структуру артефактов без публикации релиза.
+- [ ] Документация release process описывает prerequisites, tag policy, rollback, artifact matrix и ручные проверки.
+- [ ] Команда локальной проверки или CI dry-run задокументирована.
+
+### Подзадачи
+
+- [ ] Определить release artifact matrix для Windows/Linux/macOS и архитектур.
+- [ ] Добавить packaging scripts в `tools/`.
+- [ ] Добавить GitHub Actions workflow для release build и GitHub Release publication.
+- [ ] Добавить checksum generation и artifact manifest.
+- [ ] Добавить release dry-run verifier.
+- [ ] Обновить `RELEASE-NOTES.md`, `CHANGELOG.md`, README и release documentation.
+
+### Заметки агента
+
+Создано по запросу пользователя: финальный релиз должен собираться в GitHub Actions, упаковываться под поддерживаемые desktop платформы/архитектуры и публиковаться как GitHub Release под версию.
