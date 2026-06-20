@@ -19,6 +19,7 @@ CI описан в `.github/workflows/ci.yml`.
 ```powershell
 ./tools/Run-Tests.ps1
 ./tools/Verify-ProjectTemplate.ps1
+./tools/Verify-PerformanceBudgets.ps1
 ```
 
 ## Mobile/export gap

@@ -38,6 +38,10 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-ProjectTemplate.ps1
 
+      - name: Verify performance budgets
+        shell: pwsh
+        run: ./tools/Verify-PerformanceBudgets.ps1
+
   mobile-export-status:
     name: Mobile/export status gap
     runs-on: ubuntu-latest

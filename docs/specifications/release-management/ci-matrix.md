@@ -21,6 +21,7 @@ CI должен проверять новый clean runtime baseline на Tier 1
 - восстанавливать `Electron2D.sln`;
 - запускать `tools/Run-Tests.ps1` без `-IncludeBaseline`.
 - запускать `tools/Verify-ProjectTemplate.ps1`.
+- запускать `tools/Verify-PerformanceBudgets.ps1`.
 
 ## Baseline и gaps
 
