@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  tests:
+    name: Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Electron2D.sln
+
+      - name: Run tests
+        shell: pwsh
+        run: ./tools/Run-Tests.ps1
+
+  mobile-export-status:
+    name: Mobile/export status gap
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Report Android/iOS/export gate status
+        run: |
+          echo "Android/iOS/export smoke checks are not active in the clean runtime baseline yet."
+          echo "They remain explicit release gaps until the export pipeline tasks implement them."
