@@ -22,7 +22,7 @@
 - Deferred calls выполняются после текущего lifecycle/process/physics/input traversal.
 - Порядок выполнения соответствует порядку постановки в очередь.
 - Очередь drain'ится до пустого состояния: deferred call, который добавляет новый deferred call, выполняет новый call в той же idle-фазе.
-- Ошибочные deferred call signatures не ломают traversal и не останавливают очередь. User-code exception из deferred callable должен попадать в internal diagnostics.
+- Ошибочные deferred call signatures не ломают обход и не останавливают очередь. Исключение из пользовательского кода внутри deferred callable должно попадать во внутреннюю диагностику.
 
 ## Safe tree changes
 

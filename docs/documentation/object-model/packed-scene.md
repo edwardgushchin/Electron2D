@@ -46,7 +46,7 @@ Previous packed data заменяется новым успешным `Pack()`.
 
 `ChangeSceneToPacked()` принимает только packed scene, которую можно instantiate. Invalid scene возвращает `Error.InvalidParameter` и не меняет текущую сцену.
 
-При успешном вызове текущая сцена удаляется из `Root` сразу, но освобождается через queued deletion в конце host pass. Новый instance добавляется в `Root` и становится `CurrentScene` в конце host pass. Если смена сцены запрошена вне traversal, она применяется при следующем `ProcessFrame()`, `PhysicsFrame()` или `DispatchInput()`.
+При успешном вызове текущая сцена удаляется из `Root` сразу, но освобождается через queued deletion в конце следующего прохода дерева. Новый instance добавляется в `Root` и становится `CurrentScene` в конце этого же прохода. Если смена сцены запрошена вне обхода, она применяется при следующем `ProcessFrame()`, `PhysicsFrame()` или `DispatchInput()`.
 
 ## Ограничения текущего baseline
 

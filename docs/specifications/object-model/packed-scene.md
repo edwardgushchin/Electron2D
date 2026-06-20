@@ -44,7 +44,7 @@ Editor-only `GenEditState`, inherited scenes и file-level `ResourceSaver`/`Reso
 - `ChangeSceneToPacked()` принимает только packed scene, которую можно instantiate.
 - Текущая сцена удаляется из `Root` сразу и освобождается через queued deletion в конце текущего pass.
 - Новый instance добавляется в `Root` и становится `CurrentScene` в конце текущего pass.
-- Если смена сцены запрошена вне traversal, она применяется при следующем `SceneTree` host pass.
+- Если смена сцены запрошена вне обхода, она применяется при следующем проходе `SceneTree`.
 
 ## Ограничения текущего baseline
 

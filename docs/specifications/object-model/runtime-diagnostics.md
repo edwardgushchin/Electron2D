@@ -6,13 +6,13 @@
 
 ## Цель
 
-Централизовать обработку исключений из пользовательского кода, чтобы lifecycle, group calls, deferred calls и signal callbacks давали единый internal diagnostic record и не обрывали текущий runtime pass.
+Централизовать обработку исключений из пользовательского кода, чтобы lifecycle, group calls, deferred calls и signal callbacks создавали единую внутреннюю запись диагностики и не обрывали текущий проход дерева.
 
-## Public API
+## Публичный API
 
-Новый public API не добавляется. Diagnostics остаётся internal surface для test host, будущего editor output и будущей публичной diagnostics модели.
+Новый публичный API не добавляется. Диагностика остаётся внутренним механизмом: её используют автоматические тесты, а позже будет использовать вывод редактора и будущая публичная модель диагностики.
 
-Internal diagnostic record должен содержать:
+Внутренняя запись диагностики должна содержать:
 
 - node context, если он известен;
 - callback/method/signal context;
@@ -21,18 +21,18 @@ Internal diagnostic record должен содержать:
 - message;
 - stack trace.
 
-## Recover policy
+## Правило восстановления после ошибки
 
-- Lifecycle callback exception сохраняется в diagnostics и traversal продолжается.
+- Исключение из lifecycle callback сохраняется в diagnostics, после чего обход дерева продолжается.
 - `SceneTree.CallGroup()` сохраняет exception в diagnostics и продолжает вызывать следующие nodes.
-- Deferred callable exception сохраняется в diagnostics и deferred queue продолжает drain до пустого состояния.
-- Signal callback exception сохраняется в diagnostics, `EmitSignal()` возвращает `Error.Failed` и продолжает emission остальных callbacks.
-- Signature mismatch без исходного user exception возвращает `Error.Failed`, но не обязан создавать diagnostic с stack trace.
+- Исключение из deferred callable сохраняется в diagnostics, после чего deferred queue разбирается до пустого состояния.
+- Исключение из signal callback сохраняется в diagnostics, `EmitSignal()` возвращает `Error.Failed` и продолжает вызов остальных callbacks.
+- Несовпадение сигнатуры без исходного user exception возвращает `Error.Failed`, но не обязано создавать diagnostic со stack trace.
 
 ## Ограничения текущего baseline
 
-- Diagnostics API остаётся internal, потому что пользовательский editor/output UI ещё не реализован.
-- Fail-fast policy, severity levels, source locations и structured editor output будут выделены отдельными задачами.
+- Диагностический API остаётся внутренним, потому что пользовательское окно вывода редактора ещё не реализовано.
+- Режим немедленной остановки при ошибке, уровни важности сообщений, местоположение ошибки в исходном коде и структурированный вывод в редакторе будут выделены отдельными задачами.
 
 ## Acceptance tests
 

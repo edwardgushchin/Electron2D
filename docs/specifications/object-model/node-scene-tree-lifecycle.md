@@ -42,7 +42,7 @@
 - наследоваться от `Object`;
 - иметь `Root`;
 - вводить `Root` в дерево при создании;
-- позволять runtime/test host выполнять process, physics и input проходы через internal API.
+- позволять тестам и внутреннему runtime-коду выполнять process, physics и input проходы через непубличный API.
 
 ## Порядок lifecycle
 
@@ -54,9 +54,9 @@
 
 ## Ошибки пользовательского кода
 
-Если пользовательский lifecycle callback бросает исключение, `SceneTree` должен поймать его, сохранить diagnostic для host/editor tooling и продолжить обход остальных node в текущем lifecycle pass. Исключение не должно молча теряться и не должно обрывать весь loop.
+Если пользовательский lifecycle callback бросает исключение, `SceneTree` должен поймать его, сохранить диагностику для тестов и будущих инструментов редактора и продолжить обход остальных node в текущем lifecycle pass. Исключение не должно молча теряться и не должно обрывать весь loop.
 
-Diagnostic API остаётся internal. Централизованная internal runtime diagnostics policy уточняется отдельной спецификацией `runtime-diagnostics.md`.
+Diagnostic API остаётся внутренним. Централизованное правило внутренней runtime-диагностики уточняется отдельной спецификацией `runtime-diagnostics.md`.
 
 ## Acceptance tests
 

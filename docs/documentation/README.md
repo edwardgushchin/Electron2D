@@ -27,4 +27,4 @@
 - [Сигналы, Callable и emission semantics](object-model/signals-callable.md) - текущие user signals, `Connect()`, `Disconnect()`, `EmitSignal()` и `Callable`.
 - [Deferred calls и безопасный traversal](object-model/deferred-calls-safe-traversal.md) - текущие `Object.CallDeferred()`, `Callable.CallDeferred()`, deferred queue и безопасное изменение дерева во время обхода.
 - [`PackedScene` и смена активной сцены](object-model/packed-scene.md) - текущие `Pack()`, `Instantiate()`, owned subtree snapshot и `SceneTree.ChangeSceneToPacked()`.
-- [Runtime diagnostics пользовательского кода](object-model/runtime-diagnostics.md) - текущая internal recover policy для lifecycle, group calls, deferred calls и signals.
+- [Runtime diagnostics пользовательского кода](object-model/runtime-diagnostics.md) - внутренняя диагностика и правило продолжения работы после ошибок в lifecycle, group calls, deferred calls и signals.

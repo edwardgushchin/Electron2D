@@ -14,6 +14,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Human-facing Markdown includes documentation, specifications, task files, completed-task archives, development diaries, README files, agent notes, check summaries, acceptance explanations, and prose descriptions of UI labels or workflow states.
 - Keep English for exact technical identifiers, paths, commands, code symbols, API fields, package names, official product names, protocol names, and values that must match source contracts.
 - When editing existing prose, preserve the repository's terminology and language conventions. Avoid mixed Russian-English prose labels when a normal Russian phrase works.
+- In human-facing Markdown, including tasks, completed task archives, specifications, documentation, release notes, changelogs, README files, and diary entries created during the current session, explain internal engineering terms in plain language instead of leaving shorthand such as "internal surface", "test host", "runtime pass", "host context", or similar jargon unexplained. If an English technical term is required because it names a code concept, define it nearby in clear Russian the first time it appears. Prefer concrete descriptions such as "внутренний механизм, доступный только тестам и будущему редактору" over vague hybrid phrases.
 
 ## Repository-First Workflow
 - Inspect the repository before changing it. Start with local instructions, `README` or documentation indexes, `TASKS.md`, and nearby source or tests relevant to the request.

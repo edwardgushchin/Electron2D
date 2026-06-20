@@ -41,7 +41,7 @@ Group name не может быть `null`, пустым или whitespace.
 
 `CallGroup()` вызывает public instance method на каждом node группы в hierarchy order. Nodes без подходящего метода игнорируются.
 
-Пользовательские исключения из вызываемого метода проходят через internal diagnostics механизм `SceneTree` с failure kind `GroupCall`, как и lifecycle callbacks.
+Пользовательские исключения из вызываемого метода проходят через внутренний механизм диагностики `SceneTree` с типом ошибки `GroupCall`, как и lifecycle callbacks.
 
 ## Ограничения текущего baseline
 

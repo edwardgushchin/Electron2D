@@ -15,7 +15,7 @@
 - Начальные сигналы: `Callable`, `Connect()`, `Disconnect()`, `EmitSignal()` и error-return semantics.
 - Начальные deferred calls: `Object.CallDeferred()`, `Callable.CallDeferred()` и безопасный drain deferred queue после traversal.
 - Начальные scene resources: `PackedScene`, in-memory `Pack()`/`Instantiate()` и `SceneTree.ChangeSceneToPacked()`.
-- Начальные internal runtime diagnostics: user-code exceptions сохраняют node context, callback, kind, message и stack trace без остановки traversal/queue/emission.
+- Начальная внутренняя runtime-диагностика: исключения из пользовательского кода сохраняют node context, callback, kind, message и stack trace без остановки обхода дерева, очереди или signal emission.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.

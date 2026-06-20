@@ -1,18 +1,18 @@
 # Runtime diagnostics пользовательского кода
 
-Статус: реализованный internal baseline.
+Статус: реализованная внутренняя основа.
 Задача: `T-0016`.
 Обновлено: 2026-06-20.
 
-## Public API
+## Публичный API
 
-Новый public API не добавлен. Diagnostics остаётся internal surface для test host и будущего editor/output UI.
+Новый публичный API не добавлен. Диагностика пока является внутренним механизмом: её видят автоматические тесты и в будущем будет использовать окно вывода редактора, но пользователям библиотеки эти типы не экспортируются.
 
-Это важно для чистого Godot-like публичного API: временные diagnostic helper-типы не экспортируются из runtime assembly и не становятся compatibility burden для `0.1.0`.
+Это важно для чистого Godot-like публичного API: временные вспомогательные типы диагностики не экспортируются из runtime assembly и не становятся обязательством совместимости для `0.1.0`.
 
-## Diagnostic record
+## Запись диагностики
 
-Internal `SceneTreeDiagnostic` содержит:
+Внутренний `SceneTreeDiagnostic` содержит:
 
 - `Node` - node context, если он известен;
 - `Callback` - lifecycle callback, group method, deferred method или signal name;
@@ -21,29 +21,29 @@ Internal `SceneTreeDiagnostic` содержит:
 - `Message` - `Exception.Message`;
 - `StackTrace` - stack trace исходного exception или пустая строка.
 
-Internal `RuntimeUserCodeFailureKind` различает:
+Внутренний `RuntimeUserCodeFailureKind` различает:
 
 - `LifecycleCallback`;
 - `GroupCall`;
 - `DeferredCall`;
 - `SignalEmission`.
 
-## Recover policy
+## Правило восстановления после ошибки
 
-`SceneTree` не даёт user-code exception оборвать текущий runtime pass:
+`SceneTree` не даёт исключению из пользовательского кода оборвать текущий проход дерева:
 
-- lifecycle callbacks пишут diagnostic и продолжают traversal siblings;
-- `CallGroup()` пишет diagnostic и продолжает вызовы следующих group nodes;
-- deferred calls пишут diagnostic и продолжают drain очереди;
-- signal callbacks пишут diagnostic, `EmitSignal()` возвращает `Error.Failed` и продолжает emission остальных callbacks.
+- lifecycle callbacks записывают диагностику, после чего обход соседних nodes продолжается;
+- `CallGroup()` записывает диагностику и продолжает вызовы следующих nodes из группы;
+- deferred calls записывают диагностику и продолжают разбор очереди до конца;
+- signal callbacks записывают диагностику, `EmitSignal()` возвращает `Error.Failed` и продолжает вызов остальных callbacks.
 
-Signature mismatch без исходного user exception остаётся `Error.Failed`; stack trace diagnostic для такого случая не обязателен.
+Несовпадение сигнатуры без исходного исключения из пользовательского кода остаётся `Error.Failed`; stack trace для такого случая не обязателен.
 
-## Deferred queue isolation
+## Изоляция deferred-очереди
 
-Deferred queue привязана к конкретному `SceneTree`. Вызовы, поставленные из lifecycle/process/physics/input traversal или из deferred callback, попадают в queue текущего tree. Это предотвращает перемешивание deferred calls между несколькими `SceneTree` в тестах и будущих host contexts.
+Deferred queue привязана к конкретному `SceneTree`. Вызовы, поставленные из lifecycle/process/physics/input обхода или из deferred callback, попадают в очередь текущего дерева. Это предотвращает перемешивание deferred calls между несколькими `SceneTree` в тестах и в будущих режимах запуска движка.
 
 ## Ограничения текущего baseline
 
-- Public diagnostics API, severity levels и editor output panel ещё не реализованы.
-- Source location для script/code diagnostics появится после scripting/editor задач.
+- Публичный диагностический API, уровни важности сообщений и панель вывода редактора ещё не реализованы.
+- Местоположение ошибки в исходном коде для диагностических сообщений появится после задач по C# scripting и редактору.
