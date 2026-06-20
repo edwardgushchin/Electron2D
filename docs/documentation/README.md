@@ -23,3 +23,4 @@
 - [Node и SceneTree lifecycle](object-model/node-scene-tree-lifecycle.md) - текущий baseline lifecycle callbacks и порядок обхода.
 - [Иерархия Node, ownership и безопасное удаление](object-model/node-hierarchy-ownership.md) - текущий parent-child API, `Owner`, `Reparent()` и `QueueFree()`.
 - [`NodePath` и разрешение node paths](object-model/node-path-resolution.md) - текущий relative/absolute lookup через `GetNode()` и `GetNodeOrNull()`.
+- [Группы Node и group calls](object-model/node-groups.md) - текущие group membership, persistent metadata и `SceneTree.CallGroup()`.

@@ -24,9 +24,9 @@ The clean rewrite baseline currently exports only the first object-model types. 
 | `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |
 | `Electron2D.RefCounted` | `RefCounted` | Partial | Manual reference count baseline with `Reference()`, `Unreference()` and `GetReferenceCount()`. |
 | `Electron2D.Resource` | `Resource` | Partial | `ResourceName`, `ResourcePath`, `ResourceLocalToScene`, `ResourceSceneUniqueId` and `TakeOverPath()`. |
-| `Electron2D.Node` | `Node` | Partial | Lifecycle, hierarchy, `Owner`, reparent/move and `QueueFree()` baseline. |
+| `Electron2D.Node` | `Node` | Partial | Lifecycle, hierarchy, `Owner`, groups, reparent/move and `QueueFree()` baseline. |
 | `Electron2D.NodePath` | `NodePath` | Partial | Relative/absolute node path parsing and `GetNode()`/`GetNodeOrNull()` resolution baseline. |
-| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, deterministic lifecycle/test host traversal and queued deletion flush. |
+| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, deterministic lifecycle/test host traversal, group queries/calls and queued deletion flush. |
 | `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
 
 ## Planned Godot-like 2D Surface

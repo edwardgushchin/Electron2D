@@ -11,13 +11,14 @@
 - Начальный lifecycle API: `Node`, `SceneTree`, `InputEvent`.
 - Начальная иерархия `Node`: `Owner`, `GetParent()`, `GetChild()`, `MoveChild()`, `Reparent()` и `QueueFree()`.
 - Начальное разрешение путей: `NodePath`, `GetNode()` и `GetNodeOrNull()`.
+- Начальные группы: `AddToGroup()`, `RemoveFromGroup()`, `GetGroups()` и `SceneTree.CallGroup()`.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
 
 ## Чего пока нет
 
-- `GetPath()`, `GetPathTo()`, deferred calls, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
+- `CallGroupFlags`, `GetPath()`, `GetPathTo()`, deferred calls, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

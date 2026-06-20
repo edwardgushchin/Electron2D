@@ -3,6 +3,7 @@ namespace Electron2D;
 public class Node : Object
 {
     private readonly List<Node> _children = new();
+    private readonly Dictionary<string, bool> _groups = new(StringComparer.Ordinal);
     private string _name = string.Empty;
     private Node? _parent;
     private Node? _owner;
@@ -194,6 +195,40 @@ public class Node : Object
         }
 
         Free();
+    }
+
+    public void AddToGroup(string group, bool persistent = false)
+    {
+        ThrowIfFreed();
+        var groupName = ValidateGroupName(group);
+
+        if (_groups.TryGetValue(groupName, out var existingPersistent))
+        {
+            _groups[groupName] = existingPersistent || persistent;
+            return;
+        }
+
+        _groups.Add(groupName, persistent);
+    }
+
+    public void RemoveFromGroup(string group)
+    {
+        ThrowIfFreed();
+        var groupName = ValidateGroupName(group);
+        _groups.Remove(groupName);
+    }
+
+    public bool IsInGroup(string group)
+    {
+        ThrowIfFreed();
+        var groupName = ValidateGroupName(group);
+        return _groups.ContainsKey(groupName);
+    }
+
+    public string[] GetGroups()
+    {
+        ThrowIfFreed();
+        return _groups.Keys.OrderBy(group => group, StringComparer.Ordinal).ToArray();
     }
 
     public bool IsInsideTree()
@@ -402,6 +437,7 @@ public class Node : Object
         }
 
         _children.Clear();
+        _groups.Clear();
         _owner = null;
         ClearQueuedForDeletion();
         base.OnFree();
@@ -472,6 +508,32 @@ public class Node : Object
         }
 
         child._name = candidate;
+    }
+
+    internal static string ValidateGroupName(string group)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(group);
+        return group;
+    }
+
+    internal bool IsGroupPersistent(string group)
+    {
+        ThrowIfFreed();
+        var groupName = ValidateGroupName(group);
+        return _groups.TryGetValue(groupName, out var persistent) && persistent;
+    }
+
+    internal void CollectNodesInGroup(string group, List<Node> nodes)
+    {
+        if (_groups.ContainsKey(group))
+        {
+            nodes.Add(this);
+        }
+
+        foreach (var child in _children)
+        {
+            child.CollectNodesInGroup(group, nodes);
+        }
     }
 
     private Node? GetDirectChildByName(string name)

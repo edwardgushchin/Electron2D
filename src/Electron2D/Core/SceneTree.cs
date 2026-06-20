@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace Electron2D;
 
 public class SceneTree : Object
@@ -12,6 +14,47 @@ public class SceneTree : Object
     }
 
     public Node Root { get; }
+
+    public Node? GetFirstNodeInGroup(string group)
+    {
+        return GetNodesInGroup(group).FirstOrDefault();
+    }
+
+    public int GetNodeCountInGroup(string group)
+    {
+        return GetNodesInGroup(group).Length;
+    }
+
+    public Node[] GetNodesInGroup(string group)
+    {
+        var groupName = Node.ValidateGroupName(group);
+        var nodes = new List<Node>();
+        Root.CollectNodesInGroup(groupName, nodes);
+        return nodes.ToArray();
+    }
+
+    public bool HasGroup(string name)
+    {
+        return GetNodeCountInGroup(name) > 0;
+    }
+
+    public void CallGroup(string group, string method, params object?[] args)
+    {
+        var groupName = Node.ValidateGroupName(group);
+        ArgumentException.ThrowIfNullOrWhiteSpace(method);
+        var callArguments = args ?? Array.Empty<object?>();
+
+        foreach (var node in GetNodesInGroup(groupName))
+        {
+            var callableMethod = FindCallableMethod(node, method, callArguments);
+            if (callableMethod is null)
+            {
+                continue;
+            }
+
+            InvokeUserCallback(node, method, () => InvokeMethod(callableMethod, node, callArguments));
+        }
+    }
 
     internal IReadOnlyList<SceneTreeDiagnostic> Diagnostics => _diagnostics;
 
@@ -74,6 +117,58 @@ public class SceneTree : Object
                     node.Free();
                 }
             }
+        }
+    }
+
+    private static MethodInfo? FindCallableMethod(Node node, string method, object?[] args)
+    {
+        return node
+            .GetType()
+            .GetMethods(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(candidate =>
+                candidate.Name == method &&
+                ParametersMatch(candidate.GetParameters(), args));
+    }
+
+    private static bool ParametersMatch(ParameterInfo[] parameters, object?[] args)
+    {
+        if (parameters.Length != args.Length)
+        {
+            return false;
+        }
+
+        for (var index = 0; index < parameters.Length; index++)
+        {
+            var argument = args[index];
+            var parameterType = parameters[index].ParameterType;
+            if (argument is null)
+            {
+                if (parameterType.IsValueType && Nullable.GetUnderlyingType(parameterType) is null)
+                {
+                    return false;
+                }
+
+                continue;
+            }
+
+            if (!parameterType.IsInstanceOfType(argument))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static void InvokeMethod(MethodInfo method, Node node, object?[] args)
+    {
+        try
+        {
+            method.Invoke(node, args);
+        }
+        catch (TargetInvocationException exception) when (exception.InnerException is not null)
+        {
+            throw exception.InnerException;
         }
     }
 }
