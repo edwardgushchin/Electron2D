@@ -1,11 +1,11 @@
 # API Compatibility
 
 Status: GitHub Wiki source for `Electron2D 0.1.0 Preview`.
-Updated: 2026-06-20.
+Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports only the first object-model types. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model and 2D math types. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -22,16 +22,23 @@ The clean rewrite baseline currently exports only the first object-model types. 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
 | `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission and deferred calls. |
+| `Electron2D.Color` | `Color` | Partial | RGBA value type baseline with arithmetic, interpolation, clamp and HTML conversion. |
 | `Electron2D.ConnectFlags` | `ConnectFlags` | Partial | Godot-like flag names are declared; advanced flag semantics are still planned. |
 | `Electron2D.Error` | `Error` | Partial | Minimal signal/runtime error result values. |
+| `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
+| `Electron2D.Mathf` | `Mathf` | Partial | Basic constants, approximate comparison, clamp, interpolation, angle conversion, modulo and snapping helpers. |
 | `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()`, `CallDeferred()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |
-| `Electron2D.RefCounted` | `RefCounted` | Partial | Manual reference count baseline with `Reference()`, `Unreference()` and `GetReferenceCount()`. |
-| `Electron2D.Resource` | `Resource` | Partial | `ResourceName`, `ResourcePath`, `ResourceLocalToScene`, `ResourceSceneUniqueId` and `TakeOverPath()`. |
 | `Electron2D.Node` | `Node` | Partial | Lifecycle, hierarchy, `Owner`, groups, reparent/move and `QueueFree()` baseline. |
 | `Electron2D.NodePath` | `NodePath` | Partial | Relative/absolute node path parsing and `GetNode()`/`GetNodeOrNull()` resolution baseline. |
 | `Electron2D.PackedScene` | `PackedScene` | Partial | In-memory pack/instantiate baseline for owned node subtrees. |
-| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic lifecycle/test host traversal, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
-| `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
+| `Electron2D.Rect2` | `Rect2` | Partial | Floating-point axis-aligned rectangle baseline with intersection, merge, grow and normalization helpers. |
+| `Electron2D.Rect2I` | `Rect2I` | Partial | Integer axis-aligned rectangle baseline with intersection, merge, grow and normalization helpers. |
+| `Electron2D.RefCounted` | `RefCounted` | Partial | Manual reference count baseline with `Reference()`, `Unreference()` and `GetReferenceCount()`. |
+| `Electron2D.Resource` | `Resource` | Partial | `ResourceName`, `ResourcePath`, `ResourceLocalToScene`, `ResourceSceneUniqueId` and `TakeOverPath()`. |
+| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
+| `Electron2D.Transform2D` | `Transform2D` | Partial | 2D basis/origin transform baseline with point transforms, composition and inverse. |
+| `Electron2D.Vector2` | `Vector2` | Partial | Floating-point 2D vector baseline with arithmetic, length, dot/cross, interpolation and formatting. |
+| `Electron2D.Vector2I` | `Vector2I` | Partial | Integer 2D vector baseline with arithmetic, length, aspect and conversions. |
 
 ## Planned Godot-like 2D Surface
 

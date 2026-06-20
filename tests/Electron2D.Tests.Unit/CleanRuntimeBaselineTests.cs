@@ -19,16 +19,23 @@ public sealed class CleanRuntimeBaselineTests
             new[]
             {
                 "Electron2D.Callable",
+                "Electron2D.Color",
                 "Electron2D.ConnectFlags",
                 "Electron2D.Error",
                 "Electron2D.InputEvent",
+                "Electron2D.Mathf",
                 "Electron2D.Node",
                 "Electron2D.NodePath",
                 "Electron2D.Object",
                 "Electron2D.PackedScene",
+                "Electron2D.Rect2",
+                "Electron2D.Rect2I",
                 "Electron2D.RefCounted",
                 "Electron2D.Resource",
-                "Electron2D.SceneTree"
+                "Electron2D.SceneTree",
+                "Electron2D.Transform2D",
+                "Electron2D.Vector2",
+                "Electron2D.Vector2I"
             },
             publicTypeNames);
 

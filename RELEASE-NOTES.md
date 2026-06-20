@@ -16,13 +16,14 @@
 - Начальные deferred calls: `Object.CallDeferred()`, `Callable.CallDeferred()` и безопасный drain deferred queue после traversal.
 - Начальные scene resources: `PackedScene`, in-memory `Pack()`/`Instantiate()` и `SceneTree.ChangeSceneToPacked()`.
 - Начальная внутренняя runtime-диагностика: исключения из пользовательского кода сохраняют node context, callback, kind, message и stack trace без остановки обхода дерева, очереди или signal emission.
+- Начальный 2D math API: `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
 
 ## Чего пока нет
 
-- File-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
+- `Variant` integration для math-типов, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes и `Viewport` root ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API
