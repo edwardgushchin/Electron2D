@@ -22,7 +22,23 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+internal sealed class TextureResourceEvent
+{
+    public TextureResourceEvent(TextureResourceEventKind kind, Rid texture, string message, string? error = null)
+    {
+        Kind = kind;
+        Texture = texture;
+        Message = message;
+        Error = error;
+    }
+
+    public TextureResourceEventKind Kind { get; }
+
+    public Rid Texture { get; }
+
+    public string Message { get; }
+
+    public string? Error { get; }
+}

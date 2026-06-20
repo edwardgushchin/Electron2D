@@ -22,7 +22,16 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+internal readonly struct TextureResourceHandle
+{
+    public TextureResourceHandle(Rid rid)
+    {
+        Rid = rid;
+    }
+
+    public Rid Rid { get; }
+
+    public bool IsValid => Rid.IsValid();
+}

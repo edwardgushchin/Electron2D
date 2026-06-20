@@ -24,6 +24,7 @@
 - Rendering server baseline: `RenderingServer`, nested renderer profiles/features и internal backend abstraction для `Compatibility`/`Standard`.
 - SDL_GPU lifecycle baseline: pinned SDL3-CS `3.4.10.3`, internal `SdlGpuRenderingBackend`, SDL adapter, window claim/frame state machine и smoke-тесты resize/fullscreen/high-DPI/device errors.
 - CanvasItem render queue baseline: internal stable sort по layer/z/y/tree order, visibility filtering, effective modulate и contiguous batching с измеримым draw-call count.
+- Texture resource baseline: public `Texture2D`/`AtlasTexture`, atlas region transparency behavior, internal upload/reload/release registry, sampling descriptors и no-leak runtime smoke test.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.

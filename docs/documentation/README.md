@@ -26,6 +26,7 @@
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.
 - [SDL_GPU lifecycle baseline](rendering/sdl-gpu-lifecycle.md) - текущий internal lifecycle adapter для SDL_GPU device/window/frame state machine.
 - [CanvasItem render queue baseline](rendering/canvas-item-render-queue.md) - текущая internal сортировка canvas item команд и contiguous batching.
+- [Texture2D resource baseline](rendering/texture-resource-baseline.md) - текущие public `Texture2D`/`AtlasTexture` и internal texture lifetime registry.
 
 ## Базовые типы
 

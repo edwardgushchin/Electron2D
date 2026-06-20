@@ -22,7 +22,44 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+internal readonly struct TextureSamplingOptions : IEquatable<TextureSamplingOptions>
+{
+    public static readonly TextureSamplingOptions Default = new(TextureFilterMode.Linear, TextureRepeatMode.Disabled);
+
+    public TextureSamplingOptions(TextureFilterMode filterMode, TextureRepeatMode repeatMode)
+    {
+        FilterMode = filterMode;
+        RepeatMode = repeatMode;
+    }
+
+    public TextureFilterMode FilterMode { get; }
+
+    public TextureRepeatMode RepeatMode { get; }
+
+    public bool Equals(TextureSamplingOptions other)
+    {
+        return FilterMode == other.FilterMode && RepeatMode == other.RepeatMode;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is TextureSamplingOptions other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(FilterMode, RepeatMode);
+    }
+
+    public static bool operator ==(TextureSamplingOptions left, TextureSamplingOptions right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(TextureSamplingOptions left, TextureSamplingOptions right)
+    {
+        return !left.Equals(right);
+    }
+}

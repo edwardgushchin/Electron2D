@@ -21,6 +21,7 @@ The clean rewrite baseline currently exports the first object-model, 2D math, ra
 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
+| `Electron2D.AtlasTexture` | `AtlasTexture` | Partial | Atlas region resource with atlas, region, margin, filter clip and transparency delegation. |
 | `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission and deferred calls. |
 | `Electron2D.Collections.Array` | `Godot.Collections.Array` | Partial | Mutable reference-like Variant list for the 0.1 closed Variant type set. |
 | `Electron2D.Collections.Dictionary` | `Godot.Collections.Dictionary` | Partial | Mutable reference-like Variant key/value map for the 0.1 closed Variant type set. |
@@ -44,6 +45,7 @@ The clean rewrite baseline currently exports the first object-model, 2D math, ra
 | `Electron2D.Rid` | `RID` | Partial | Opaque resource identifier baseline with invalid ID `0`, equality, hashing and ordering. |
 | `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
 | `Electron2D.StringName` | `StringName` | Partial | Immutable interned-name baseline with ordinal equality, hashing, empty/default semantics and string conversion. |
+| `Electron2D.Texture2D` | `Texture2D` | Partial | Abstract texture resource baseline for size, alpha, mipmaps and pixel opacity queries. |
 | `Electron2D.Transform2D` | `Transform2D` | Partial | 2D basis/origin transform baseline with point transforms, composition and inverse. |
 | `Electron2D.Variant` | `Variant` | Partial | Closed 0.1 value carrier for nil, primitives, enum-as-int, 2D math, identity handles, Object-derived values, Callable and Godot-like collections. |
 | `Electron2D.Variant+Type` | `Variant.Type` | Partial | Closed 0.1 Variant type enum; 3D, Signal and packed arrays are intentionally excluded for now. |

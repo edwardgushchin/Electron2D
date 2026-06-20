@@ -42,6 +42,7 @@ public sealed class CleanRuntimeBaselineTests
         Assert.Equal(
             new[]
             {
+                "Electron2D.AtlasTexture",
                 "Electron2D.Callable",
                 "Electron2D.Collections.Array",
                 "Electron2D.Collections.Dictionary",
@@ -65,6 +66,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Rid",
                 "Electron2D.SceneTree",
                 "Electron2D.StringName",
+                "Electron2D.Texture2D",
                 "Electron2D.Transform2D",
                 "Electron2D.Variant",
                 "Electron2D.Variant+Type",

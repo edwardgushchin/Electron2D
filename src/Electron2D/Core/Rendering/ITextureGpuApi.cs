@@ -22,7 +22,13 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+internal interface ITextureGpuApi
+{
+    bool Upload(Rid texture, TextureUploadDescriptor descriptor, out string? error);
+
+    bool Reload(Rid texture, TextureUploadDescriptor descriptor, out string? error);
+
+    bool Release(Rid texture, out string? error);
+}

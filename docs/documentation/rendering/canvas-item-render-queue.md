@@ -50,7 +50,7 @@ Batch создаётся только для соседних команд с о
 
 - Реальный SDL_GPU draw submission ещё не реализован.
 - Public drawing methods (`DrawLine`, `DrawRect`, `DrawTexture` и другие) остаются будущим `CanvasItem` API.
-- Texture upload/lifetime и material/shader resource management остаются отдельными задачами.
+- Real canvas item draw submission и material/shader resource management остаются отдельными задачами.
 
 ## Проверки
 

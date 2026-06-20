@@ -22,7 +22,13 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+internal enum TextureFilterMode
+{
+    ParentNode = 0,
+    Nearest = 1,
+    Linear = 2,
+    NearestWithMipmaps = 3,
+    LinearWithMipmaps = 4
+}
