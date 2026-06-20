@@ -7,4 +7,21 @@
 - smoke-тесты запуска и жизненного цикла;
 - golden-data и golden-render проверки, когда появится стабильная тестовая инфраструктура.
 
-До добавления тестовых проектов каталог фиксирует целевую структуру репозитория перед крупной работой над `0.1.0 Preview`.
+С `T-0002` каталог содержит реальные тестовые проекты:
+
+- `Electron2D.Tests.Unit`
+- `Electron2D.Tests.Integration`
+- `Electron2D.Tests.RuntimeSmoke`
+- `Electron2D.Tests.GoldenData`
+
+Обычная проверка:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
+```
+
+Baseline-проверка с намеренно падающим тестом:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
+```
