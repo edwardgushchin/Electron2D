@@ -1,6 +1,6 @@
 # Electron2D
 
-`0.1.0 Preview` сейчас находится в clean rewrite baseline: старый runtime удалён, а новый Godot-like 2D API собирается заново по `TASKS.md`. Текущий public API содержит базовые `Object`, `RefCounted`, `Resource`, `PackedScene`, `Node`, `NodePath`, `SceneTree`, `InputEvent`, `Callable`, `Error` и `ConnectFlags`, включая lifecycle, hierarchy, groups, signals, deferred calls, scene instancing, `Owner`, `Reparent()`, `QueueFree()` и `GetNode()` baseline.
+`0.1.0 Preview` сейчас находится в clean rewrite baseline: старый runtime удалён, а новый Godot-like 2D API собирается заново по `TASKS.md`. Текущий public API содержит базовые `Object`, `RefCounted`, `Resource`, `PackedScene`, `Node`, `NodePath`, `SceneTree`, `InputEvent`, `Callable`, `Error`, `ConnectFlags`, 2D math-типы и `RandomNumberGenerator`, включая lifecycle, hierarchy, groups, signals, deferred calls, scene instancing, `Owner`, `Reparent()`, `QueueFree()`, `GetNode()` и deterministic RNG baseline.
 
 Текущая проверка:
 

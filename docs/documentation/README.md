@@ -24,6 +24,7 @@
 ## Базовые типы
 
 - [2D math baseline](core-types/2d-math-baseline.md) - текущие `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.
+- [RandomNumberGenerator](core-types/random-number-generator.md) - текущий Godot-like RNG с `Seed`, `State`, range API и deterministic sequence tests.
 
 ## Объектная модель
 

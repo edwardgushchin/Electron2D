@@ -52,6 +52,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.NodePath",
                 "Electron2D.Object",
                 "Electron2D.PackedScene",
+                "Electron2D.RandomNumberGenerator",
                 "Electron2D.Rect2",
                 "Electron2D.Rect2I",
                 "Electron2D.RefCounted",

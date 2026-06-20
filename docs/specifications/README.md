@@ -27,6 +27,7 @@
 ## Базовые типы
 
 - [2D math baseline](core-types/2d-math-baseline.md) - целевой контракт `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.
+- [RandomNumberGenerator](core-types/random-number-generator.md) - Godot-like RNG с документированным seed, state и воспроизводимой PCG32 последовательностью.
 
 ## Объектная модель
 

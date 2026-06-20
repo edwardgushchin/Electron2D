@@ -16,19 +16,27 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует только начальные типы объектной модели:
+Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, 2D math и RNG:
 
 - `Electron2D.Object`
 - `Electron2D.Callable`
+- `Electron2D.Color`
 - `Electron2D.ConnectFlags`
 - `Electron2D.Error`
-- `Electron2D.RefCounted`
-- `Electron2D.Resource`
+- `Electron2D.InputEvent`
+- `Electron2D.Mathf`
 - `Electron2D.Node`
 - `Electron2D.NodePath`
 - `Electron2D.PackedScene`
+- `Electron2D.RandomNumberGenerator`
+- `Electron2D.Rect2`
+- `Electron2D.Rect2I`
+- `Electron2D.RefCounted`
+- `Electron2D.Resource`
 - `Electron2D.SceneTree`
-- `Electron2D.InputEvent`
+- `Electron2D.Transform2D`
+- `Electron2D.Vector2`
+- `Electron2D.Vector2I`
 
 Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в Godot-like форме.
 
