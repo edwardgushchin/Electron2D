@@ -33,7 +33,9 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Rect2I`
 - `Electron2D.RefCounted`
 - `Electron2D.Resource`
+- `Electron2D.Rid`
 - `Electron2D.SceneTree`
+- `Electron2D.StringName`
 - `Electron2D.Transform2D`
 - `Electron2D.Vector2`
 - `Electron2D.Vector2I`

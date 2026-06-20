@@ -50,6 +50,6 @@
 ## Отличия от Godot в текущем baseline
 
 - Реализован только минимальный subset, нужный для старта object model.
-- `Object` пока не содержит metadata API, потому что `StringName` и `Variant` ещё не реализованы.
-- `Resource` пока не возвращает `Rid`, потому что `Rid` относится к отдельной задаче базовых Variant/math типов.
+- `Object` пока не содержит metadata API: `StringName` уже есть, но для metadata нужен следующий слой `Variant`.
+- Базовый `Resource` пока не возвращает `Rid`: `Rid` уже есть, но конкретные server-backed ресурсы появятся вместе с rendering/physics/audio/text servers.
 - Public API не реализует `IDisposable`, чтобы не добавлять .NET-specific метод `Dispose()` в Godot-like surface.

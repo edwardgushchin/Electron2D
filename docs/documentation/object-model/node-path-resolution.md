@@ -41,6 +41,6 @@ Subnames после `:` парсятся в `NodePath`, но `GetNode()` и `Get
 
 ## Ограничения текущего baseline
 
-- `StringName` ещё не реализован; `NodePath.GetName()` и `GetSubname()` временно возвращают `string`.
+- `StringName` реализован как базовый тип, но `NodePath.GetName()` и `GetSubname()` пока возвращают `string`; перевод этих методов должен идти отдельной задачей с обновлением тестов.
 - `GetPath()` и `GetPathTo()` ещё не реализованы.
 - Property/resource lookup по subnames ещё не реализован.

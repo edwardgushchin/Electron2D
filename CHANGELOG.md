@@ -18,6 +18,7 @@
 - Внутренняя runtime-диагностика: исключения из lifecycle, group call, deferred call и signal callback сохраняют node/callback/kind/message/stack trace, а движок продолжает работу по documented recover policy.
 - 2D math baseline: `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.
 - Random baseline: `RandomNumberGenerator` с `Seed`, `State`, `Randi()`, `RandiRange()`, `Randf()`, `RandfRange()`, `Randfn()` и воспроизводимой PCG32 sequence policy.
+- Identity baseline: `StringName` с ordinal equality/hashing и `Rid` с invalid/default semantics, comparison operators и internal allocator для будущих серверов.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -36,7 +37,7 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `19` публичных типов.
+- Runtime assembly экспортирует `21` публичных типов.
 - `0.1.0-preview` ещё не является готовым игровым runtime; дальнейшая реализация идёт задачами из `TASKS.md`.
 
 ### Breaking changes policy

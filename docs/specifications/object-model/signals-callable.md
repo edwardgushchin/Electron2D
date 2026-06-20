@@ -29,7 +29,7 @@
 - callable из C# typed `Action<T>`;
 - equality для disconnect/is-connected.
 
-До появления `StringName`, `Variant` и typed signal declaration signal/method names представлены `string`, а signal arguments представлены `object?[]`.
+`StringName` уже есть как базовый тип, но текущий signal baseline всё ещё принимает signal/method names как `string`, а signal arguments представлены `object?[]`. Перевод на `StringName`, `Variant` и typed signal declarations должен идти отдельной migration-задачей.
 
 ## Инварианты
 

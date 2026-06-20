@@ -115,7 +115,7 @@
 ## Ограничения
 
 - `Variant` integration не входит в `T-0017`.
-- `StringName` и `Rid` реализуются отдельными задачами.
+- `StringName` и `Rid` реализованы в `T-0019`.
 - 3D math-типы не входят в `0.1.0 Preview` math baseline.
 - Полный XML documentation gate остаётся задачей `T-0106`.
 

@@ -11,7 +11,7 @@
 - `Object.CallDeferred(string method, params object?[] args)`;
 - `Callable.CallDeferred(params object?[] args)`.
 
-До появления `StringName` и `Variant` method names представлены `string`, arguments представлены `object?[]`. `Object.CallDeferred()` возвращает `null`, как текущий compatibility-free baseline для Godot-like deferred вызова без результата.
+`StringName` уже есть как базовый тип, но текущий deferred-call baseline всё ещё принимает method names как `string`, arguments как `object?[]`. `Object.CallDeferred()` возвращает `null`, как текущий compatibility-free baseline для Godot-like deferred вызова без результата. Перевод method names на `StringName` должен идти отдельной migration-задачей вместе с будущим слоем `Variant`.
 
 ## Очередь deferred calls
 

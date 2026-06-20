@@ -58,6 +58,6 @@
 
 ## Отличия от Godot в `T-0008`
 
-- Metadata API откладывается до появления `StringName` и `Variant`.
-- `Rid`-поведение `Resource` откладывается до задачи базовых Variant/math типов.
+- Metadata API откладывается до появления `Variant`; базовый `StringName` уже есть, но без `Variant` metadata не имеет закрытого списка значений.
+- Базовый `Rid` реализуется задачей `T-0019`, но `Resource` получит server-backed `Rid` только вместе с конкретными rendering/physics/audio/text resource types.
 - `IDisposable` не входит в public API.

@@ -21,7 +21,7 @@
 - `HasGroup(string name)`;
 - `CallGroup(string group, string method, params object?[] args)`.
 
-До появления `StringName`, `Variant` и Godot collections group names и method names представлены `string`, а `GetNodesInGroup()` возвращает `Node[]`.
+`StringName` уже есть как базовый тип, но текущий group baseline всё ещё принимает group/method names как `string`, а `GetNodesInGroup()` возвращает `Node[]`. Перевод на `StringName`, `Variant` и Godot collections должен идти отдельной migration-задачей.
 
 ## Membership
 
@@ -47,4 +47,4 @@ Group name не может быть `null`, пустым или whitespace.
 
 - `CallGroupFlags`, deferred/reverse group calls, `NotifyGroup()` и `SetGroup()` ещё не реализованы.
 - Persistent groups сохраняются текущим in-memory `PackedScene` baseline; file-level scene serialization ещё не реализована.
-- Нет `StringName`/`Variant` binding; это будет заменено в будущих задачах базовых типов.
+- Нет `StringName`/`Variant` binding для group API; это будет заменено в будущих migration-задачах.

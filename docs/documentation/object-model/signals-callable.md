@@ -48,7 +48,7 @@
 
 ## Ограничения текущего baseline
 
-- `StringName`, `Variant` и typed signal declarations ещё не реализованы; signal/method names представлены `string`, arguments представлены `object?[]`.
+- `StringName` реализован как базовый тип, но signal/method APIs пока принимают `string`; перевод на `StringName` должен идти вместе с будущим слоем `Variant` и typed signal declarations.
 - `ConnectFlags.Deferred`, `Persist`, `OneShot` и `AppendSourceObject` пока объявлены, но их runtime semantics будут реализованы отдельными задачами.
 - `Callable.Bind()`, `Unbind()` и `Variant` return values ещё не реализованы.
 - Built-in lifecycle signals пока не объявляются автоматически.

@@ -46,7 +46,7 @@
 
 ## Ограничения текущего baseline
 
-- `StringName` ещё не реализован, поэтому `NodePath.GetName()` и `GetSubname()` временно возвращают `string`.
+- `StringName` реализуется отдельной задачей базовых типов, но `NodePath.GetName()` и `GetSubname()` временно возвращают `string` до отдельной migration-задачи.
 - Property/resource resolution для subnames относится к будущим задачам `Variant`/resource pipeline.
 - `GetPath()` и `GetPathTo()` могут быть реализованы отдельной задачей, если они понадобятся release scope.
 
