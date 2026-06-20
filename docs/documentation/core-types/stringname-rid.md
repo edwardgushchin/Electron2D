@@ -58,6 +58,6 @@
 
 ## Ограничения
 
-- `Object` metadata API ещё не переведён на `StringName`, потому что нужен следующий слой `Variant`.
+- `Object` metadata API ещё не переведён на `StringName`/`Variant`; сами metadata методы должны появиться отдельной задачей.
 - `NodePath.GetName()` и `GetSubname()` пока возвращают `string`; перевод на `StringName` должен быть отдельной задачей с обновлением тестов.
 - Базовый `Resource` пока не возвращает `Rid`; конкретные server-backed ресурсы получат `Rid` вместе с rendering/physics/audio/text servers.

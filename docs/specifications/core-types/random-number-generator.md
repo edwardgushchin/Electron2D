@@ -35,7 +35,7 @@ public class RandomNumberGenerator : RefCounted
 
 Запрещено добавлять Unity-like aliases (`Next`, `NextFloat`, `Range`, `Random`) и публичные свойства, которых нет в согласованной Godot-like поверхности.
 
-`RandWeighted()` не входит в `T-0018`: для него нужен будущий слой Godot collections/Variant.
+`RandWeighted()` не входит в `T-0018`: weights API должен вводиться отдельной задачей с тестами.
 
 ## Seed и State
 

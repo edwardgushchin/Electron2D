@@ -27,6 +27,7 @@
 - [RandomNumberGenerator](core-types/random-number-generator.md) - текущий Godot-like RNG с `Seed`, `State`, range API и deterministic sequence tests.
 - [`StringName` и `Rid`](core-types/stringname-rid.md) - текущие identity-типы для имён и низкоуровневых resource handles.
 - [`Variant`](core-types/variant.md) - текущий closed-list value carrier и Godot-like коллекции `Array`/`Dictionary`.
+- [Stable `Variant` serialization](core-types/variant-serialization.md) - текущий internal canonical JSON round-trip для сериализуемого Variant subset.
 
 ## Объектная модель
 

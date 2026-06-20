@@ -115,7 +115,7 @@ Enum значения создаются через `Variant.From<T>()` или `
 
 - `Signal` пока не входит в public API и не поддержан как `Variant.Type`.
 - 3D-типы и packed arrays не входят в `0.1.0 Preview`.
-- Stable serialization round-trip не входит в `T-0020`; он выделен в `T-0021`.
+- Stable text serialization round-trip реализован отдельной задачей `T-0021` как internal runtime contract.
 - Signal/group/deferred/property APIs пока не мигрированы на `Variant`; они будут переводиться отдельными задачами.
 
 ## Проверки

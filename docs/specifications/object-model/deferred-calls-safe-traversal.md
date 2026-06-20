@@ -15,7 +15,7 @@
 - `Object.CallDeferred(string method, params object?[] args)`;
 - `Callable.CallDeferred(params object?[] args)`.
 
-`StringName` уже есть как базовый тип, но текущий deferred-call baseline всё ещё принимает method names как `string`, arguments как `object?[]`, а `Object.CallDeferred()` возвращает `null`. Перевод на `StringName` должен идти отдельной migration-задачей вместе с будущим слоем `Variant`.
+`StringName` и `Variant` уже есть как базовые типы, но текущий deferred-call baseline всё ещё принимает method names как `string`, arguments как `object?[]`, а `Object.CallDeferred()` возвращает `null`. Перевод на `StringName`/`Variant` должен идти отдельной migration-задачей.
 
 ## Deferred queue
 

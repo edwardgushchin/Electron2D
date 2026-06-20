@@ -30,6 +30,7 @@
 - [RandomNumberGenerator](core-types/random-number-generator.md) - Godot-like RNG с документированным seed, state и воспроизводимой PCG32 последовательностью.
 - [`StringName` и `Rid`](core-types/stringname-rid.md) - immutable interned names и opaque resource identifiers для будущих серверных abstractions.
 - [`Variant`](core-types/variant.md) - закрытый список Godot-like Variant-значений для `0.1.0 Preview`.
+- [Stable `Variant` serialization](core-types/variant-serialization.md) - canonical JSON round-trip для сериализуемого Variant subset.
 
 ## Объектная модель
 
