@@ -24,6 +24,7 @@
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.
+- [SDL_GPU lifecycle baseline](rendering/sdl-gpu-lifecycle.md) - текущий internal lifecycle adapter для SDL_GPU device/window/frame state machine.
 
 ## Базовые типы
 

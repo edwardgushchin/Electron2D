@@ -1,6 +1,6 @@
 # Electron2D
 
-`0.1.0 Preview` сейчас находится в clean rewrite baseline: старый runtime удалён, а новый Godot-like 2D API собирается заново по `TASKS.md`. Текущий public API содержит базовые `Object`, `RefCounted`, `Resource`, `PackedScene`, `Node`, `NodePath`, `SceneTree`, `InputEvent`, `Callable`, `Error`, `ConnectFlags`, 2D math-типы, `RandomNumberGenerator`, `StringName`, `Rid`, `Variant`, Godot-like коллекции `Electron2D.Collections.Array`/`Dictionary` и `RenderingServer`, включая lifecycle, hierarchy, groups, signals, deferred calls, scene instancing, `Owner`, `Reparent()`, `QueueFree()`, `GetNode()`, deterministic RNG baseline, identity baseline, closed-list Variant baseline, internal stable Variant serialization и renderer profile/feature baseline.
+`0.1.0 Preview` сейчас находится в clean rewrite baseline: старый runtime удалён, а новый Godot-like 2D API собирается заново по `TASKS.md`. Текущий public API содержит базовые `Object`, `RefCounted`, `Resource`, `PackedScene`, `Node`, `NodePath`, `SceneTree`, `InputEvent`, `Callable`, `Error`, `ConnectFlags`, 2D math-типы, `RandomNumberGenerator`, `StringName`, `Rid`, `Variant`, Godot-like коллекции `Electron2D.Collections.Array`/`Dictionary` и `RenderingServer`, включая lifecycle, hierarchy, groups, signals, deferred calls, scene instancing, `Owner`, `Reparent()`, `QueueFree()`, `GetNode()`, deterministic RNG baseline, identity baseline, closed-list Variant baseline, internal stable Variant serialization, renderer profile/feature baseline и internal SDL_GPU lifecycle baseline.
 
 Текущая проверка:
 

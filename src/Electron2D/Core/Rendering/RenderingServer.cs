@@ -36,9 +36,9 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview does not create an SDL device in this type yet. The
-/// current implementation is the stable boundary that future SDL_GPU and
-/// compatibility backends will plug into.
+/// Electron2D 0.1.0 Preview keeps SDL_GPU device lifecycle behind internal
+/// backend types. This public server remains the stable Godot-like query
+/// boundary for the active renderer profile and feature flags.
 /// </para>
 /// </remarks>
 ///

@@ -27,6 +27,7 @@
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - серверная граница, `Standard`/`Compatibility` профили и feature flags.
+- [SDL_GPU lifecycle baseline](rendering/sdl-gpu-lifecycle.md) - internal SDL3-CS device lifecycle, window claim, command buffer submit и диагностические smoke-тесты.
 
 ## Базовые типы
 
