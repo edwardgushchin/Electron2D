@@ -166,6 +166,28 @@ public class CanvasItem : Node
     internal IReadOnlyList<CanvasItemDrawingCommand> DrawingCommands => drawingCommands;
 
     /// <summary>
+    /// Gets the 2D world associated with this canvas item.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="World2D" /> object whose direct space state can query the
+    /// current <see cref="SceneTree" />, or an empty world when this item is not
+    /// inside a tree.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public World2D GetWorld2D()
+    {
+        ThrowIfFreed();
+        return new World2D(GetTree()?.Root);
+    }
+
+    /// <summary>
     /// Shows this canvas item.
     /// </summary>
     ///

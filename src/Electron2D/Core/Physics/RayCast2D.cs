@@ -42,8 +42,15 @@ namespace Electron2D;
 /// <since>
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
-public class RayCast2D : Node2D
+public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
 {
+    private bool colliding;
+    private Object? collider;
+    private Rid colliderRid;
+    private int colliderShape;
+    private Vector2 collisionPoint;
+    private Vector2 collisionNormal;
+
     /// <summary>
     /// Gets or sets whether this raycast is enabled.
     /// </summary>
@@ -154,6 +161,24 @@ public class RayCast2D : Node2D
     public void ForceRaycastUpdate()
     {
         ThrowIfFreed();
+        if (!Enabled || !IsInsideTree())
+        {
+            ClearResult();
+            return;
+        }
+
+        var query = new PhysicsRayQueryParameters2D
+        {
+            From = GlobalPosition,
+            To = ToGlobal(TargetPosition),
+            CollisionMask = CollisionMask,
+            CollideWithBodies = CollideWithBodies,
+            CollideWithAreas = CollideWithAreas,
+            HitFromInside = HitFromInside,
+            Exclude = CreateExcludeList()
+        };
+
+        ApplyResult(GetWorld2D().DirectSpaceState.IntersectRay(query));
     }
 
     /// <summary>
@@ -171,7 +196,7 @@ public class RayCast2D : Node2D
     public bool IsColliding()
     {
         ThrowIfFreed();
-        return false;
+        return colliding;
     }
 
     /// <summary>
@@ -189,7 +214,7 @@ public class RayCast2D : Node2D
     public Object? GetCollider()
     {
         ThrowIfFreed();
-        return null;
+        return collider;
     }
 
     /// <summary>
@@ -207,7 +232,7 @@ public class RayCast2D : Node2D
     public Rid GetColliderRid()
     {
         ThrowIfFreed();
-        return default;
+        return colliderRid;
     }
 
     /// <summary>
@@ -225,7 +250,7 @@ public class RayCast2D : Node2D
     public int GetColliderShape()
     {
         ThrowIfFreed();
-        return 0;
+        return colliderShape;
     }
 
     /// <summary>
@@ -243,7 +268,7 @@ public class RayCast2D : Node2D
     public Vector2 GetCollisionPoint()
     {
         ThrowIfFreed();
-        return Vector2.Zero;
+        return collisionPoint;
     }
 
     /// <summary>
@@ -261,6 +286,64 @@ public class RayCast2D : Node2D
     public Vector2 GetCollisionNormal()
     {
         ThrowIfFreed();
-        return Vector2.Zero;
+        return collisionNormal;
+    }
+
+    void ISceneTreeLifecycleHandler.OnEnterTree()
+    {
+    }
+
+    void ISceneTreeLifecycleHandler.OnPhysicsProcess(double delta)
+    {
+        _ = delta;
+        if (Enabled)
+        {
+            ForceRaycastUpdate();
+            return;
+        }
+
+        ClearResult();
+    }
+
+    void ISceneTreeLifecycleHandler.OnExitTree()
+    {
+        ClearResult();
+    }
+
+    private Rid[] CreateExcludeList()
+    {
+        if (!ExcludeParent || GetParent() is not CollisionObject2D parent)
+        {
+            return [];
+        }
+
+        var parentRid = parent.GetRid();
+        return parentRid.IsValid() ? [parentRid] : [];
+    }
+
+    private void ApplyResult(Collections.Dictionary result)
+    {
+        if (result.Count == 0)
+        {
+            ClearResult();
+            return;
+        }
+
+        colliding = true;
+        collider = result[Variant.CreateFrom("collider")].Obj as Object;
+        colliderRid = result[Variant.CreateFrom("rid")].Obj is Rid rid ? rid : default;
+        colliderShape = result[Variant.CreateFrom("shape")].Obj is long shapeIndex ? checked((int)shapeIndex) : 0;
+        collisionPoint = result[Variant.CreateFrom("position")].Obj is Vector2 point ? point : Vector2.Zero;
+        collisionNormal = result[Variant.CreateFrom("normal")].Obj is Vector2 normal ? normal : Vector2.Zero;
+    }
+
+    private void ClearResult()
+    {
+        colliding = false;
+        collider = null;
+        colliderRid = default;
+        colliderShape = 0;
+        collisionPoint = Vector2.Zero;
+        collisionNormal = Vector2.Zero;
     }
 }

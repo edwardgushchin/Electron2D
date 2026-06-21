@@ -83,11 +83,15 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Object",
                 "Electron2D.PackedScene",
                 "Electron2D.PhysicsBody2D",
+                "Electron2D.PhysicsDirectSpaceState2D",
                 "Electron2D.PhysicsMaterial",
+                "Electron2D.PhysicsPointQueryParameters2D",
+                "Electron2D.PhysicsRayQueryParameters2D",
                 "Electron2D.PhysicsServer2D",
                 "Electron2D.PhysicsServer2D+ProcessInfo",
                 "Electron2D.PhysicsServer2D+ShapeType",
                 "Electron2D.PhysicsServer2D+SpaceParameter",
+                "Electron2D.PhysicsShapeQueryParameters2D",
                 "Electron2D.RandomNumberGenerator",
                 "Electron2D.RayCast2D",
                 "Electron2D.Rect2",
@@ -122,7 +126,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Vector2I",
                 "Electron2D.VerticalAlignment",
                 "Electron2D.Viewport",
-                "Electron2D.ViewportTexture"
+                "Electron2D.ViewportTexture",
+                "Electron2D.World2D"
             },
             publicTypeNames);
 

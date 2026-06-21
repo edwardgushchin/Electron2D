@@ -20,7 +20,7 @@
 - `Area2D` хранит `Monitoring`, `Monitorable` и `Priority`, регистрирует built-in overlap signals и поддерживает body/area overlap helper methods.
 - `CollisionShape2D` хранит `Shape`, `Disabled`, `OneWayCollision` и `OneWayCollisionMargin`.
 - `CollisionShape2D` проверяет, что `ConcavePolygonShape2D` используется только под `StaticBody2D`.
-- `RayCast2D` хранит настройки query. До реализации raycast backend result methods возвращают пустое состояние: `IsColliding() == false`, `GetCollider() == null`, empty `Rid`, нулевой shape index и `Vector2.Zero` для point/normal.
+- `RayCast2D` хранит настройки query, выполняет AABB query через `PhysicsDirectSpaceState2D` и возвращает cached result через `IsColliding()`, `GetCollider()`, `GetColliderRid()`, `GetColliderShape()`, `GetCollisionPoint()`, `GetCollisionNormal()`.
 - `Shape2D` является abstract `Resource` base для concrete shape resources и лениво создаёт shape `Rid` через `PhysicsServer2D`.
 
 ## Внутренний lifecycle hook
@@ -31,7 +31,7 @@
 
 - запись geometry concrete shapes в production physics backend;
 - collision solver, contacts, shape-level overlap signals и точная narrow-phase проверка;
-- raycast, point query и shape query;
+- точный raycast/point/shape narrow-phase и production backend queries;
 - `CharacterBody2D` и kinematic solver;
 - production backend на Box2D.NET.
 

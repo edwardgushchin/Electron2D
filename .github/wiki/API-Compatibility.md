@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource and `Area2D` overlap signals baseline. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline and direct 2D physics query baseline. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -25,7 +25,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.AtlasTexture` | `AtlasTexture` | Partial | Atlas region resource with atlas, region, margin, filter clip and transparency delegation. |
 | `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission and deferred calls. |
 | `Electron2D.Camera2D` | `Camera2D` | Partial | Current 2D camera selection, target/center/rotation queries, offset, zoom and documented smoothing no-op baseline. |
-| `Electron2D.CanvasItem` | `CanvasItem` | Partial | Visibility, inherited modulate, self-modulate, z-index, y-sort flag and show/hide baseline. |
+| `Electron2D.CanvasItem` | `CanvasItem` | Partial | Visibility, inherited modulate, self-modulate, z-index, y-sort flag, show/hide and `GetWorld2D()` baseline. |
 | `Electron2D.CanvasLayer` | `CanvasLayer` | Partial | Layer, visibility and transform baseline for independent 2D canvas ordering. |
 | `Electron2D.CapsuleShape2D` | `CapsuleShape2D` | Partial | Capsule shape resource with radius/height validation, RID creation and AOT-safe serialization metadata. |
 | `Electron2D.CircleShape2D` | `CircleShape2D` | Partial | Circle shape resource with radius validation, RID creation and AOT-safe serialization metadata. |
@@ -62,13 +62,17 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.NodePath` | `NodePath` | Partial | Relative/absolute node path parsing and `GetNode()`/`GetNodeOrNull()` resolution baseline. |
 | `Electron2D.PackedScene` | `PackedScene` | Partial | In-memory pack/instantiate baseline for owned node subtrees. |
 | `Electron2D.PhysicsBody2D` | `PhysicsBody2D` | Partial | Base class for body nodes; behavior is inherited from `CollisionObject2D`. |
+| `Electron2D.PhysicsDirectSpaceState2D` | `PhysicsDirectSpaceState2D` | Partial | Managed AABB baseline for `IntersectRay`, `IntersectPoint` and `IntersectShape` over active `CollisionShape2D` nodes. |
 | `Electron2D.PhysicsMaterial` | `PhysicsMaterial` | Partial | Body material resource with `Friction`, `Bounce`, `Rough`, `Absorbent`, validation and AOT-safe serialization metadata. |
+| `Electron2D.PhysicsPointQueryParameters2D` | `PhysicsPointQueryParameters2D` | Partial | Point query parameters for direct 2D physics queries, including mask, body/area flags and excluded RIDs. |
+| `Electron2D.PhysicsRayQueryParameters2D` | `PhysicsRayQueryParameters2D` | Partial | Ray query parameters for direct 2D physics queries, including endpoints, mask, body/area flags, hit-from-inside and excluded RIDs. |
 | `Electron2D.PhysicsServer2D` | `PhysicsServer2D` | Partial | Low-level 2D physics server facade for RID allocation, spaces, shape kinds and internal backend swapping; no real simulation yet. |
 | `Electron2D.PhysicsServer2D+ProcessInfo` | `PhysicsServer2D.ProcessInfo` | Partial | Godot-like process statistic enum; values currently report `0` until real simulation is implemented. |
 | `Electron2D.PhysicsServer2D+ShapeType` | `PhysicsServer2D.ShapeType` | Partial | Godot-like shape type enum for physics server shape RID creation. |
 | `Electron2D.PhysicsServer2D+SpaceParameter` | `PhysicsServer2D.SpaceParameter` | Partial | Godot-like space parameter enum with value round-trip through the server boundary. |
+| `Electron2D.PhysicsShapeQueryParameters2D` | `PhysicsShapeQueryParameters2D` | Partial | Shape query parameters for direct 2D physics queries, including shape resource, transform, motion, margin, mask and excluded RIDs. |
 | `Electron2D.RandomNumberGenerator` | `RandomNumberGenerator` | Partial | Godot-like RNG baseline with seed/state replay, integer/float ranges and PCG32 sequence policy for 0.1. |
-| `Electron2D.RayCast2D` | `RayCast2D` | Partial | Ray query settings and empty result state until the raycast backend is implemented. |
+| `Electron2D.RayCast2D` | `RayCast2D` | Partial | Ray query settings, forced update and cached AABB hit result through `PhysicsDirectSpaceState2D`. |
 | `Electron2D.Rect2` | `Rect2` | Partial | Floating-point axis-aligned rectangle baseline with intersection, merge, grow and normalization helpers. |
 | `Electron2D.Rect2I` | `Rect2I` | Partial | Integer axis-aligned rectangle baseline with intersection, merge, grow and normalization helpers. |
 | `Electron2D.RectangleShape2D` | `RectangleShape2D` | Partial | Rectangle shape resource with size validation, RID creation and AOT-safe serialization metadata. |
@@ -102,6 +106,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.VerticalAlignment` | `VerticalAlignment` | Partial | Godot-like vertical alignment values used by text controls. |
 | `Electron2D.Viewport` | `Viewport` | Partial | Runtime 2D viewport subset with current camera, visible rect, canvas transform, pixel snapping and root instance baseline. |
 | `Electron2D.ViewportTexture` | `ViewportTexture` | Partial | Dynamic viewport texture returned by `Viewport.GetTexture()` with scene-local texture metadata. |
+| `Electron2D.World2D` | `World2D` | Partial | 2D world object exposing `DirectSpaceState` for direct physics queries without backend handles. |
 
 ## Planned Godot-like 2D Surface
 

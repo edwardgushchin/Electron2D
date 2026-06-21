@@ -52,6 +52,7 @@
 - [Shape2D resources baseline](physics/shape2d-resources.md) - concrete 2D collision shapes, validation, concave-only-static rule и AOT-safe serialization.
 - [Collision layers, material, gravity и sleeping baseline](physics/collision-material-state.md) - Godot-like collision filter helpers, `PhysicsMaterial`, material override и внутренний body-state snapshot.
 - [Area2D sensors и overlap signals baseline](physics/area2d-overlap-signals.md) - `body_entered`/`body_exited`, `area_entered`/`area_exited`, overlap helpers, filters и deferred removal.
+- [PhysicsDirectSpaceState2D raycast, point query и shape query baseline](physics/direct-space-state-queries.md) - `World2D`, direct state query parameters, `RayCast2D` execution и AABB query results.
 
 ## Рендеринг
 

@@ -36,6 +36,7 @@
 - Начальный shape resources baseline: public Godot-like `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`, validation, shape RID creation, concave-only-static rule и AOT-safe serialization metadata.
 - Начальный collision material state baseline: public Godot-like `PhysicsMaterial`, layer/mask helper methods, `PhysicsBody2D.PhysicsMaterialOverride`, validation, AOT-safe material serialization и internal collision/body-state snapshots.
 - Начальный `Area2D` sensors baseline: overlap helper methods, signals `body_entered`/`body_exited`/`area_entered`/`area_exited`, layer/mask filters, `Monitoring`/`Monitorable` и безопасное `QueueFree()` внутри signal callback.
+- Начальный direct 2D physics query baseline: `World2D`, `PhysicsDirectSpaceState2D`, query parameters, `RayCast2D` execution, ray/point/shape AABB queries, filters, masks и no-hit cases.
 - Начальный Box2D.NET candidate validation baseline: smoke-проект на `Box2D.NET 3.1.654`, Release/JIT и NativeAOT verifier, allocations per tick measurement, desktop CI gate и documented Android/iOS Release/AOT gaps.
 - Начальный Variant API: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений `0.1.0 Preview`.
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.

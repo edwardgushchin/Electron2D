@@ -125,7 +125,7 @@
 - `CollisionObject2D` передаёт `GlobalTransform` в backend во время physics frame.
 - `QueueFree()` во время `_PhysicsProcess()` безопасно освобождает RID после завершения обхода текущего physics frame.
 - `CollisionShape2D` хранит `Shape`, `Disabled`, `OneWayCollision`, `OneWayCollisionMargin`.
-- `RayCast2D` хранит query properties и до реализации query backend возвращает пустой result state.
+- `RayCast2D` хранит query properties; выполнение query и result state закреплены отдельной спецификацией direct space state.
 - Reflection-тест подтверждает отсутствие публичных `Box2D` типов и public signatures.
 - `docs/documentation/physics/physics-nodes-lifecycle.md` описывает фактическую реализацию.
 - Focused tests, `Verify-ApiCompatibility.ps1`, `Verify-SourceLicenseHeaders.ps1` и общий test runner проходят.

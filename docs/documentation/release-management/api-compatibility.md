@@ -16,7 +16,7 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource и `Area2D` overlap signals baseline:
+Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline и direct 2D physics query baseline:
 
 - `Electron2D.Area2D`
 - `Electron2D.AtlasTexture`
@@ -59,11 +59,15 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Object`
 - `Electron2D.PackedScene`
 - `Electron2D.PhysicsBody2D`
+- `Electron2D.PhysicsDirectSpaceState2D`
 - `Electron2D.PhysicsMaterial`
+- `Electron2D.PhysicsPointQueryParameters2D`
+- `Electron2D.PhysicsRayQueryParameters2D`
 - `Electron2D.PhysicsServer2D`
 - `Electron2D.PhysicsServer2D+ProcessInfo`
 - `Electron2D.PhysicsServer2D+ShapeType`
 - `Electron2D.PhysicsServer2D+SpaceParameter`
+- `Electron2D.PhysicsShapeQueryParameters2D`
 - `Electron2D.RandomNumberGenerator`
 - `Electron2D.RayCast2D`
 - `Electron2D.Rect2`
@@ -99,6 +103,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.VerticalAlignment`
 - `Electron2D.Viewport`
 - `Electron2D.ViewportTexture`
+- `Electron2D.World2D`
 
 Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в Godot-like форме.
 
