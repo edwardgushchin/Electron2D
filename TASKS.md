@@ -987,7 +987,7 @@
 - настроить Android SDK/NDK и `adb` в `PATH`, подключить устройство Android arm64 с USB debugging или рабочий emulator;
 - либо явно изменить scope задачи на design-only/package-plan baseline без real-device smoke.
 
-## T-0092 [ ] P0: Реализовать iOS arm64 export: Xcode project generation, Metal, touch, safe area, lifecycle and signing on macOS
+## T-0092 [!] P0: Реализовать iOS arm64 export: Xcode project generation, Metal, touch, safe area, lifecycle and signing on macOS
 
 - Создана: 2026-06-20T16:16:20+03:00
 - Приоритет: P0
@@ -1028,7 +1028,9 @@
 
 ### Заметки агента
 
-Пусто до момента, когда агент возьмёт задачу в работу.
+2026-06-21T20:16:00+03:00 - Blocked по окружению, задача не завершена и не переносится в `completed-tasks/`. Текущий host - Windows; `xcodebuild` и `simctl` недоступны, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы, iOS workload не установлен. Критерии требуют Xcode project generation и device/simulator smoke, поэтому закрывать задачу без macOS/Xcode/iOS simulator или device нельзя.
+
+Для разблокировки нужен macOS host с Xcode, iOS simulator или подключённым iOS device, установленный iOS/.NET workload и user-provided signing setup. App Store Connect automation остаётся out of scope.
 
 ## T-0093 [ ] P0: Настроить Tier 1 platform smoke и 30-минутные soak checks для reference project
 
