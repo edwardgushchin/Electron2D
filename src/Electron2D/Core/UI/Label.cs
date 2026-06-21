@@ -49,6 +49,7 @@ namespace Electron2D;
 public class Label : Control
 {
     private string text = string.Empty;
+    private int observedTranslationVersion = TranslationServer.Version;
 
     /// <summary>
     /// Gets or sets the plain text drawn by this label.
@@ -121,6 +122,37 @@ public class Label : Control
     public bool Uppercase { get; set; }
 
     /// <summary>
+    /// Queues a redraw when the translation state changes.
+    /// </summary>
+    ///
+    /// <param name="delta">The elapsed frame time in seconds.</param>
+    ///
+    /// <remarks>
+    /// Labels draw <see cref="Text" /> through <see cref="Object.Tr(string, string)" />.
+    /// This callback observes locale and translation registry changes so cached
+    /// draw commands are refreshed on the next processed frame.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This callback is invoked on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public override void _Process(double delta)
+    {
+        var currentTranslationVersion = TranslationServer.Version;
+        if (currentTranslationVersion == observedTranslationVersion)
+        {
+            return;
+        }
+
+        observedTranslationVersion = currentTranslationVersion;
+        QueueRedraw();
+    }
+
+    /// <summary>
     /// Draws the label text when the control is redrawn.
     /// </summary>
     ///
@@ -145,7 +177,8 @@ public class Label : Control
         }
 
         var fontSize = GetThemeFontSize("font_size");
-        var drawText = Uppercase ? Text.ToUpperInvariant() : Text;
+        var translatedText = Tr(Text);
+        var drawText = Uppercase ? translatedText.ToUpperInvariant() : translatedText;
         var width = Size.X > 0f ? Size.X : -1f;
         var baseline = new Vector2(0f, GetBaseline(font, fontSize));
         DrawString(font, baseline, drawText, HorizontalAlignment, width, fontSize);

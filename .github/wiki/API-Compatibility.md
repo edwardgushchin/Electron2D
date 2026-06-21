@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D documents the agreed 2D runtime API subset here. This table is a release guard for public types and intentionally excludes removed legacy component APIs.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, translation baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -115,6 +115,8 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Texture2D` | `Texture2D` | Partial | Abstract texture resource baseline for size, alpha, mipmaps and pixel opacity queries. |
 | `Electron2D.ToolAttribute` | `ToolAttribute` / `[Tool]` | Experimental | Marker attribute for editor-time script intent; current metadata marks it experimental and sandboxed. |
 | `Electron2D.Transform2D` | `Transform2D` | Partial | 2D basis/origin transform baseline with point transforms, composition and inverse. |
+| `Electron2D.Translation` | `Translation` | Partial | Locale-bound resource with source message keys, optional contexts and deterministic message listing. |
+| `Electron2D.TranslationServer` | `TranslationServer` | Partial | Process-wide locale selection, translation registry, exact/base/fallback lookup and key fallback. |
 | `Electron2D.Tween` | `Tween` | Partial | Sequential runtime tween with property, interval and callback steps, easing, pause/play/stop, kill, manual stepping and completion signals. |
 | `Electron2D.Tween+EaseType` | `Tween.EaseType` | Partial | Ease mode enum for in, out, in-out and out-in interpolation. |
 | `Electron2D.Tween+TransitionType` | `Tween.TransitionType` | Partial | Transition curve enum for linear and deterministic curved interpolation modes. |

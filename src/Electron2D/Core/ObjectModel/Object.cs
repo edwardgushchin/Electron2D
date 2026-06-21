@@ -194,6 +194,39 @@ public class Object
         return null;
     }
 
+    /// <summary>
+    /// Translates a message through the process-wide translation server.
+    /// </summary>
+    ///
+    /// <param name="message">The source message key to translate.</param>
+    /// <param name="context">The optional message context.</param>
+    /// <returns>
+    /// The translated message, or <paramref name="message" /> when no
+    /// registered translation can resolve it.
+    /// </returns>
+    ///
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="message" /> or <paramref name="context" />
+    /// is <c>null</c>.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread as long as registered
+    /// translation resources are not mutated concurrently.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="TranslationServer" />
+    /// <seealso cref="Translation" />
+    public string Tr(string message, string context = "")
+    {
+        ThrowIfFreed();
+        return TranslationServer.Translate(message, context);
+    }
+
     public override string ToString()
     {
         return $"{GetType().Name}:{_instanceId}";

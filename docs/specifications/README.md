@@ -45,6 +45,10 @@
 
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - keyboard, mouse button, mouse motion, wheel, text input и порядок dispatch через `SceneTree`.
 
+## Локализация и настройки
+
+- [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - resource переводов, общий translation server, locale lookup, fallback и обновление UI после смены локали.
+
 ## Физика 2D
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - public `Rid`-граница, internal swappable backend и запрет публичных physics backend handles.

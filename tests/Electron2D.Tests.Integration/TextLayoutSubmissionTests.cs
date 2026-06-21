@@ -143,6 +143,56 @@ public sealed class TextLayoutSubmissionTests
         }
     }
 
+    [Fact]
+    public void LabelSubmitsTranslatedTextAfterLocaleChange()
+    {
+        var oldLocale = Electron2D.TranslationServer.GetLocale();
+        Electron2D.TranslationServer.Clear();
+
+        try
+        {
+            var english = new Electron2D.Translation
+            {
+                Locale = "en"
+            };
+            english.AddMessage("ui.score", "Score");
+
+            var french = new Electron2D.Translation
+            {
+                Locale = "fr"
+            };
+            french.AddMessage("ui.score", "Score FR");
+
+            Electron2D.TranslationServer.AddTranslation(english);
+            Electron2D.TranslationServer.AddTranslation(french);
+            Electron2D.TranslationServer.SetLocale("en");
+
+            var tree = new Electron2D.SceneTree();
+            var label = new Electron2D.Label
+            {
+                Text = "ui.score"
+            };
+            label.AddThemeFontOverride("font", new SelectiveFont("ui"));
+            tree.Root.AddChild(label);
+
+            tree.ProcessFrame(1.0 / 60.0);
+
+            var command = Assert.Single(new Electron2D.CanvasSubmissionContext().BuildPlan(tree.Root).Commands);
+            Assert.Equal("Score", command.Text);
+
+            Electron2D.TranslationServer.SetLocale("fr-FR");
+            tree.ProcessFrame(1.0 / 60.0);
+
+            command = Assert.Single(new Electron2D.CanvasSubmissionContext().BuildPlan(tree.Root).Commands);
+            Assert.Equal("Score FR", command.Text);
+        }
+        finally
+        {
+            Electron2D.TranslationServer.Clear();
+            Electron2D.TranslationServer.SetLocale(oldLocale);
+        }
+    }
+
     private static bool IsHebrew(Rune rune)
     {
         return rune.Value is >= 0x0590 and <= 0x05FF;

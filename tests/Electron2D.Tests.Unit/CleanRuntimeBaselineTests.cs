@@ -136,6 +136,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Texture2D",
                 "Electron2D.ToolAttribute",
                 "Electron2D.Transform2D",
+                "Electron2D.Translation",
+                "Electron2D.TranslationServer",
                 "Electron2D.Tween",
                 "Electron2D.Tween+EaseType",
                 "Electron2D.Tween+TransitionType",

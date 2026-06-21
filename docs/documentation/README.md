@@ -42,6 +42,10 @@
 
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal platform mapper для keyboard, mouse, wheel, text input и dispatch order.
 
+## Локализация и настройки
+
+- [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - текущие `Translation`, `TranslationServer`, locale fallback и обновление `Label` после смены locale.
+
 ## Физика 2D
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - текущая public `Rid`-граница физики, internal backend boundary и запрет публичных Box2D handles.
