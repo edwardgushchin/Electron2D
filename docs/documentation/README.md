@@ -52,6 +52,7 @@
 - [PhysicsDirectSpaceState2D raycast, point query и shape query baseline](physics/direct-space-state-queries.md) - текущие `World2D`, direct state query parameters, `RayCast2D` execution и AABB query results.
 - [Fixed physics timestep, basic CCD и one-way platform baseline](physics/fixed-physics-step-and-rigid-body-motion.md) - текущий fixed tick `1/60`, базовое движение `RigidBody2D`, AABB sweep, one-way collision и deferred body queue.
 - [CharacterBody2D kinematic movement baseline](physics/character-body-2d-kinematic-solver.md) - текущие `MoveAndCollide()`, `MoveAndSlide()`, floor/wall/ceiling state, floor snap, platform velocity и `KinematicCollision2D`.
+- [Debug collision shapes baseline](physics/debug-collision-shapes.md) - текущие `SceneTree.DebugCollisionsHint`, `CollisionShape2D.DebugColor` и внутренний снимок форм для editor viewport и diagnostics checks.
 
 ## Рендеринг
 

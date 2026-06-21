@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D documents the agreed 2D runtime API subset here. This table is a release guard for public types and intentionally excludes removed legacy component APIs.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement and `CharacterBody2D` kinematic movement baseline. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -35,7 +35,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Collections.Array` | `Array` | Partial | Mutable reference-like Variant list for the 0.1 closed Variant type set. |
 | `Electron2D.Collections.Dictionary` | `Dictionary` | Partial | Mutable reference-like Variant key/value map for the 0.1 closed Variant type set. |
 | `Electron2D.CollisionObject2D` | `CollisionObject2D` | Partial | Base collision object with `GetRid()`, collision layer/mask storage, RID lifecycle and transform sync. |
-| `Electron2D.CollisionShape2D` | `CollisionShape2D` | Partial | Shape reference, disabled/one-way flags and concave-shape static-body validation. |
+| `Electron2D.CollisionShape2D` | `CollisionShape2D` | Partial | Shape reference, disabled/one-way flags, debug visualization color and concave-shape static-body validation. |
 | `Electron2D.Color` | `Color` | Partial | RGBA value type baseline with arithmetic, interpolation, clamp and HTML conversion. |
 | `Electron2D.ConcavePolygonShape2D` | `ConcavePolygonShape2D` | Partial | Concave segment-pair shape resource restricted to `StaticBody2D` through `CollisionShape2D`. |
 | `Electron2D.ConnectFlags` | `ConnectFlags` | Partial | Signal connection flag names are declared; advanced flag semantics are still planned. |
@@ -90,7 +90,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.RigidBody2D` | `RigidBody2D` | Partial | RID lifecycle, stored rigid body properties, transform sync, fixed-step velocity movement and AABB sweep against static bodies. |
 | `Electron2D.RigidBody2D+CenterOfMassModeEnum` | `RigidBody2D.CenterOfMassMode` | Partial | Center-of-mass mode values for `RigidBody2D`. |
 | `Electron2D.RigidBody2D+FreezeModeEnum` | `RigidBody2D.FreezeMode` | Partial | Freeze behavior values for `RigidBody2D`. |
-| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
+| `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, debug collision hint, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
 | `Electron2D.SegmentShape2D` | `SegmentShape2D` | Partial | Segment shape resource with endpoint validation, RID creation and AOT-safe serialization metadata. |
 | `Electron2D.Shader` | `Shader` | Partial | Canvas item shader resource storing source code for import-time compilation. |
 | `Electron2D.Shader+Mode` | `Shader.Mode` | Partial | 0.1 canvas item shader mode subset. |

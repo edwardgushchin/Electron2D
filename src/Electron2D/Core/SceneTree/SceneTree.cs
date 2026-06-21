@@ -45,6 +45,37 @@ public class SceneTree : Object
         AttachSubtree(Root);
     }
 
+    /// <summary>
+    /// Gets or sets whether collision shapes should be exposed to debug visualization.
+    /// </summary>
+    ///
+    /// <value>
+    /// <c>true</c> to enable internal collision shape snapshots for editor and
+    /// diagnostics tools; otherwise, <c>false</c>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This property does not draw anything by itself. It enables the internal
+    /// managed snapshot used by the editor viewport and automated diagnostics.
+    /// </para>
+    /// <para>
+    /// The snapshot intentionally contains scene nodes and geometry data only;
+    /// it does not expose backend handles or native pointers.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="CollisionShape2D.DebugColor"/>
+    public bool DebugCollisionsHint { get; set; }
+
     public Node Root { get; }
 
     public Node? CurrentScene { get; private set; }
@@ -119,6 +150,13 @@ public class SceneTree : Object
     }
 
     internal IReadOnlyList<SceneTreeDiagnostic> Diagnostics => _diagnostics;
+
+    internal IReadOnlyList<PhysicsDebugShape2D> CapturePhysicsDebugShapes()
+    {
+        return DebugCollisionsHint
+            ? PhysicsDebugShape2D.Capture(Root)
+            : Array.Empty<PhysicsDebugShape2D>();
+    }
 
     internal void AttachSubtree(Node node)
     {
