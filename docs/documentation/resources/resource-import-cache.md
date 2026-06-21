@@ -63,6 +63,8 @@ Dependencies отслеживаются по SHA-256 hash. Если source file 
 
 Если source asset удалён, pipeline считает его unused cache и удаляет manifest entry вместе с его cache artifacts.
 
+Если source asset перенесён на новый path с тем же UID, новый manifest entry удерживает cache artifact, а prune старого source path не удаляет этот artifact. Это защищает rename/move workflow от потери cache file между import и prune.
+
 ## Текущие ограничения
 
 - Public `ResourceLoader`/`ResourceSaver` ещё не реализованы.
@@ -71,6 +73,7 @@ Dependencies отслеживаются по SHA-256 hash. Если source file 
 - PNG/JPEG importer уже реализован отдельной задачей `T-0037` и описан в `texture-image-import.md`.
 - TTF/OTF importer уже реализован отдельной задачей `T-0038` и описан в `font-import.md`.
 - Shader source importer уже реализован отдельной задачей `T-0040` и описан в `shader-source-import.md`.
+- Stress data stability gate реализован отдельной задачей `T-0042` и описан в `data-stability-stress.md`.
 - Dependency tracking сейчас работает для файлов, которые можно разрешить через `res://...` внутри `sourceRoot`.
 
 ## Проверки

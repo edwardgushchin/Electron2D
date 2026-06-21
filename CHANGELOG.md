@@ -26,6 +26,7 @@
 - Font import baseline: internal TTF/OTF metadata importer, sidecar `<font>.e2import.json`, fallback font dependencies, SDF/bitmap policy и stable `font.e2font.json` cache artifact.
 - Shader source import baseline: internal `.e2shader` importer, sidecar `<shader>.e2import.json`, platform-specific compiled stages, diagnostics file/line/column и stable `shader.e2shader.json` cache artifact.
 - Scene/resource serialization baseline: internal `SerializedResourceDocument`, `SceneFileDocument`, typed property value model, custom `Resource` round-trip, arrays, dictionaries, enums, nullable и resource reference slots.
+- Data stability stress gate: 100 save/load cycles, rename/move resource UID stability, import cache rebuild, corruption diagnostics и исправление prune cache artifacts при переносе ресурса с тем же UID.
 - Variant baseline: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений для `0.1.0 Preview`.
 - Stable Variant serialization baseline: internal canonical JSON round-trip для сериализуемых `Variant` значений и понятные ошибки для runtime-only значений.
 - Rendering server baseline: `RenderingServer`, nested renderer profiles/features и internal backend abstraction для `Compatibility`/`Standard`.

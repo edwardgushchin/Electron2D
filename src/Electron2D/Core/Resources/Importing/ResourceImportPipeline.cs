@@ -103,6 +103,10 @@ internal sealed class ResourceImportPipeline
             }
         }
 
+        var retainedCacheFiles = nextEntries.Values
+            .SelectMany(entry => entry.CacheFiles)
+            .ToHashSet(StringComparer.Ordinal);
+
         foreach (var entry in manifest.Entries)
         {
             if (discoveredPaths.Contains(entry.SourcePath))
@@ -110,7 +114,7 @@ internal sealed class ResourceImportPipeline
                 continue;
             }
 
-            DeleteCacheFiles(entry);
+            DeleteCacheFiles(entry, retainedCacheFiles);
             prunedReports.Add(new ResourceImportItemReport(
                 entry.SourcePath,
                 ResourceImportItemStatus.Pruned,
@@ -273,10 +277,15 @@ internal sealed class ResourceImportPipeline
         return absolutePath;
     }
 
-    private void DeleteCacheFiles(ResourceImportManifestEntry entry)
+    private void DeleteCacheFiles(ResourceImportManifestEntry entry, ISet<string> retainedCacheFiles)
     {
         foreach (var cacheFile in entry.CacheFiles)
         {
+            if (retainedCacheFiles.Contains(cacheFile))
+            {
+                continue;
+            }
+
             DeleteFileIfExists(ToAbsoluteCacheFile(cacheFile));
         }
     }

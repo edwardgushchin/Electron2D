@@ -81,6 +81,10 @@ Scene document содержит external resource references, internal subresour
 - AOT-safe metadata registry без reflection остаётся отдельной задачей `T-0043`.
 - Unsupported CLR values дают ошибку вместо silent fallback.
 
+## Stress gate
+
+100-cycle stability, rename/move resources, import cache rebuild и corruption diagnostics проверяются отдельным release gate [Stress data stability для scene/resource pipeline](data-stability-stress.md).
+
 ## Проверки
 
 Сфокусированные проверки:

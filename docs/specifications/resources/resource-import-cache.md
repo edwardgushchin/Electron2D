@@ -24,6 +24,7 @@
 - Изменение source file, изменение dependency hash, смена importer или пропавший cache artifact приводят к reimport.
 - Если import source file завершается ошибкой, предыдущий валидный cache artifact и manifest entry остаются неизменными.
 - Если source file удалён, его manifest entry удаляется, а связанные cache artifacts удаляются.
+- Если source file перенесён на новый path с тем же UID, prune старого source path не должен удалять cache artifacts, которые уже удерживаются новым manifest entry.
 
 ## Формат manifest
 
