@@ -22,7 +22,7 @@
 
 ## Внутренний voice lifecycle
 
-Внутренний voice lifecycle нужен будущим `AudioStreamPlayer` и `AudioStreamPlayer2D`.
+Внутренний voice lifecycle используется `AudioStreamPlayer` и `AudioStreamPlayer2D`.
 
 Реализованы internal типы:
 

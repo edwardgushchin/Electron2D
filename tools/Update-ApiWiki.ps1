@@ -353,7 +353,7 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
         "API-Audio.md",
         "Audio",
         "Audio resources, playback nodes and audio server state.",
-        type => Named(type, "AudioServer", "AudioStream")),
+        type => Named(type, "AudioServer", "AudioStream", "AudioStreamPlayer", "AudioStreamPlayer2D")),
     new ApiCategory(
         "API-Physics.md",
         "Physics",

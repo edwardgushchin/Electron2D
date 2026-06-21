@@ -38,8 +38,9 @@ namespace Electron2D;
 ///
 /// <para>
 /// Electron2D 0.1.0 Preview exposes a single default <c>Master</c> bus and
-/// internal voice lifecycle used by future playback nodes. User buses, volume
-/// routing and audio effects are added by later audio tasks.
+/// internal voice lifecycle used by <see cref="AudioStreamPlayer" /> and
+/// <see cref="AudioStreamPlayer2D" />. User buses, volume routing and audio
+/// effects are added by later audio tasks.
 /// </para>
 /// </remarks>
 ///
@@ -54,6 +55,8 @@ namespace Electron2D;
 /// </since>
 ///
 /// <seealso cref="AudioStream" />
+/// <seealso cref="AudioStreamPlayer" />
+/// <seealso cref="AudioStreamPlayer2D" />
 public static class AudioServer
 {
     private static readonly object BackendLock = new();
@@ -496,6 +499,14 @@ public static class AudioServer
         }
     }
 
+    internal static AudioVoicePlayback GetVoicePlayback(AudioVoiceHandle voice)
+    {
+        lock (BackendLock)
+        {
+            return RequireVoice(voice).Playback;
+        }
+    }
+
     internal static void CleanupFinishedVoices()
     {
         lock (BackendLock)
@@ -535,6 +546,16 @@ public static class AudioServer
         if (!float.IsFinite(playback.PitchScale) || playback.PitchScale <= 0f)
         {
             throw new ArgumentException("Audio voice pitch scale must be finite and greater than zero.", nameof(playback));
+        }
+
+        if (!float.IsFinite(playback.StartPosition) || playback.StartPosition < 0f)
+        {
+            throw new ArgumentException("Audio voice start position must be finite and non-negative.", nameof(playback));
+        }
+
+        if (!float.IsFinite(playback.Pan) || playback.Pan < -1f || playback.Pan > 1f)
+        {
+            throw new ArgumentException("Audio voice pan must be finite and between -1 and 1.", nameof(playback));
         }
     }
 

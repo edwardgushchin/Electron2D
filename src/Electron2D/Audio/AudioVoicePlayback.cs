@@ -24,4 +24,33 @@
 */
 namespace Electron2D;
 
-internal readonly record struct AudioVoicePlayback(float VolumeDb, float PitchScale, bool Loop);
+internal readonly record struct AudioVoicePlayback
+{
+    public AudioVoicePlayback(
+        float VolumeDb,
+        float PitchScale,
+        bool Loop,
+        float StartPosition = 0f,
+        float Pan = 0f,
+        StringName Bus = default)
+    {
+        this.VolumeDb = VolumeDb;
+        this.PitchScale = PitchScale;
+        this.Loop = Loop;
+        this.StartPosition = StartPosition;
+        this.Pan = Pan;
+        this.Bus = Bus.IsEmpty() ? new StringName("Master") : Bus;
+    }
+
+    public float VolumeDb { get; }
+
+    public float PitchScale { get; }
+
+    public bool Loop { get; }
+
+    public float StartPosition { get; }
+
+    public float Pan { get; }
+
+    public StringName Bus { get; }
+}

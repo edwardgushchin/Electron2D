@@ -32,13 +32,14 @@ namespace Electron2D;
 /// <para>
 /// `AudioStream` describes reusable sound or music data. Concrete stream
 /// instances are created by the resource import pipeline and are consumed by
-/// future audio playback nodes.
+/// audio playback nodes such as <see cref="AudioStreamPlayer" /> and
+/// <see cref="AudioStreamPlayer2D" />.
 /// </para>
 ///
 /// <para>
 /// Electron2D 0.1.0 Preview exposes stream metadata queries only. Device
-/// playback, bus routing and stream playback handles are separate audio
-/// runtime tasks.
+/// lifecycle, user bus routing and public stream playback handle objects are
+/// separate audio runtime tasks.
 /// </para>
 /// </remarks>
 ///
@@ -54,6 +55,8 @@ namespace Electron2D;
 /// </since>
 ///
 /// <seealso cref="Resource" />
+/// <seealso cref="AudioStreamPlayer" />
+/// <seealso cref="AudioStreamPlayer2D" />
 public abstract class AudioStream : Resource
 {
     /// <summary>

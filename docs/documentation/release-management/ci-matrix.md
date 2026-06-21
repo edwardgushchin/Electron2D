@@ -2,7 +2,7 @@
 
 Статус: реализованная CI-конфигурация.
 Задача: `T-0003`.
-Обновлено: 2026-06-20.
+Обновлено: 2026-06-21.
 
 ## Workflow
 
@@ -29,6 +29,7 @@ CI описан в `.github/workflows/ci.yml`.
 
 `Verify-PublicApiXmlDocs.ps1 -FailOnIssues` является gate публичной XML documentation: недокументированный или неполный public API ломает CI.
 `Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` является объединённым gate для XML documentation, GitHub Wiki API reference и public API documentation wording.
+Этот audit запускает вложенные verifier-скрипты через доступный PowerShell executable, поэтому один и тот же gate работает на Windows, Linux и macOS runners.
 
 Platform-specific export verifiers запускаются только на соответствующих runners:
 

@@ -70,7 +70,23 @@ function Invoke-CheckedScript {
         [string[]]$Arguments = @()
     )
 
-    & powershell -ExecutionPolicy Bypass -File $ScriptPath @Arguments
+    $powerShellCommand = Get-Command pwsh -ErrorAction SilentlyContinue
+    if ($null -eq $powerShellCommand) {
+        $powerShellCommand = Get-Command powershell -ErrorAction SilentlyContinue
+    }
+
+    if ($null -eq $powerShellCommand) {
+        throw 'PowerShell executable was not found.'
+    }
+
+    $powerShellArguments = @('-NoProfile')
+    if (($PSVersionTable.PSEdition -ne 'Core') -or ($IsWindows -eq $true)) {
+        $powerShellArguments += @('-ExecutionPolicy', 'Bypass')
+    }
+
+    $powerShellArguments += @('-File', $ScriptPath)
+
+    & $powerShellCommand.Source @powerShellArguments @Arguments
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
