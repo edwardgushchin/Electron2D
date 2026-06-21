@@ -37,14 +37,13 @@ Report mode нужен для безопасного доменного прох
 
 ## Текущий статус
 
-Аудит от 2026-06-21 показал `366` warnings `CS1591` при генерации XML documentation file. Дополнительный verifier checked `1252` public symbols и нашёл `1013` XML documentation issues.
+Аудит от 2026-06-21 показал `366` warnings `CS1591` при генерации XML documentation file. После заполнения структурной документации strict verifier проверяет `1258` public symbols и показывает `0` XML documentation issues.
 
-CI запускает `tools\Verify-PublicApiXmlDocs.ps1` только в report mode. Strict mode пока не подключается к CI: он будет падать до заполнения документации.
+CI запускает `tools\Verify-PublicApiXmlDocs.ps1 -FailOnIssues`. Это означает, что новый недокументированный public API или неполные обязательные XML-теги ломают CI.
 
 Текущая ближайшая работа по `T-0106`:
 
 1. пройти public API по доменам;
 2. заполнить XML documentation comments;
 3. запустить verifier в strict mode;
-4. подключить strict mode к CI;
-5. закрыть `T-0106` только после зелёного strict gate.
+4. поддерживать `tools\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` как обязательный локальный и CI gate.

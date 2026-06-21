@@ -57,6 +57,12 @@ public sealed class CapsuleShape2D : Shape2D
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CapsuleShape2D" />
+    ///
     public CapsuleShape2D()
         : this(10f, 20.01f)
     {
@@ -85,6 +91,12 @@ public sealed class CapsuleShape2D : Shape2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CapsuleShape2D" />
+    ///
     public float Radius
     {
         get
@@ -116,6 +128,12 @@ public sealed class CapsuleShape2D : Shape2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CapsuleShape2D" />
+    ///
     public float Height
     {
         get

@@ -63,51 +63,145 @@ public static class PhysicsServer2D
     /// <since>
     /// This enum is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
     public enum SpaceParameter
     {
         /// <summary>
         /// Contact recycle radius.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         ContactRecycleRadius = 0,
 
         /// <summary>
         /// Maximum separation still considered for contact persistence.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         ContactMaxSeparation = 1,
 
         /// <summary>
         /// Maximum allowed penetration before solver correction.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         ContactMaxAllowedPenetration = 2,
 
         /// <summary>
         /// Default contact solver bias.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         ContactDefaultBias = 3,
 
         /// <summary>
         /// Linear velocity threshold below which a body can sleep.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         BodyLinearVelocitySleepThreshold = 4,
 
         /// <summary>
         /// Angular velocity threshold below which a body can sleep.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         BodyAngularVelocitySleepThreshold = 5,
 
         /// <summary>
         /// Time a low-activity body must remain below thresholds before sleeping.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         BodyTimeToSleep = 6,
 
         /// <summary>
         /// Default constraint solver bias.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         ConstraintDefaultBias = 7,
 
         /// <summary>
         /// Number of solver iterations used by the space.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept SpaceParameter.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="SpaceParameter" />
+        ///
         SolverIterations = 8
     }
 
@@ -118,51 +212,145 @@ public static class PhysicsServer2D
     /// <since>
     /// This enum is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
     public enum ShapeType
     {
         /// <summary>
         /// Infinite world boundary line shape.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         WorldBoundary = 0,
 
         /// <summary>
         /// Separation ray shape used by character-style controllers.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         SeparationRay = 1,
 
         /// <summary>
         /// Finite segment shape.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         Segment = 2,
 
         /// <summary>
         /// Circle shape.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         Circle = 3,
 
         /// <summary>
         /// Rectangle shape.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         Rectangle = 4,
 
         /// <summary>
         /// Capsule shape.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         Capsule = 5,
 
         /// <summary>
         /// Convex polygon shape.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         ConvexPolygon = 6,
 
         /// <summary>
         /// Concave polygon shape.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         ConcavePolygon = 7,
 
         /// <summary>
         /// Reserved custom shape value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ShapeType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ShapeType" />
+        ///
         Custom = 8
     }
 
@@ -173,21 +361,55 @@ public static class PhysicsServer2D
     /// <since>
     /// This enum is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
     public enum ProcessInfo
     {
         /// <summary>
         /// Number of active physics objects.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ProcessInfo.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ProcessInfo" />
+        ///
         ActiveObjects = 0,
 
         /// <summary>
         /// Number of possible collision pairs.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ProcessInfo.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ProcessInfo" />
+        ///
         CollisionPairs = 1,
 
         /// <summary>
         /// Number of active simulation islands.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ProcessInfo.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ProcessInfo" />
+        ///
         IslandCount = 2
     }
 
@@ -195,6 +417,20 @@ public static class PhysicsServer2D
     /// Activates or deactivates physics processing in the active backend.
     /// </summary>
     /// <param name="active">Whether the physics server should process physics objects.</param>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static void SetActive(bool active)
     {
         lock (BackendLock)
@@ -207,6 +443,20 @@ public static class PhysicsServer2D
     /// Creates a new 2D physics space.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created space.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid SpaceCreate()
     {
         lock (BackendLock)
@@ -220,6 +470,20 @@ public static class PhysicsServer2D
     /// </summary>
     /// <param name="space">The space to update.</param>
     /// <param name="active">Whether the space should be active.</param>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static void SpaceSetActive(Rid space, bool active)
     {
         lock (BackendLock)
@@ -233,6 +497,20 @@ public static class PhysicsServer2D
     /// </summary>
     /// <param name="space">The space to query.</param>
     /// <returns><c>true</c> when the space is active; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static bool SpaceIsActive(Rid space)
     {
         lock (BackendLock)
@@ -247,6 +525,20 @@ public static class PhysicsServer2D
     /// <param name="space">The space to update.</param>
     /// <param name="param">The parameter to update.</param>
     /// <param name="value">The new parameter value.</param>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static void SpaceSetParam(Rid space, SpaceParameter param, float value)
     {
         lock (BackendLock)
@@ -261,6 +553,20 @@ public static class PhysicsServer2D
     /// <param name="space">The space to query.</param>
     /// <param name="param">The parameter to read.</param>
     /// <returns>The stored parameter value.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static float SpaceGetParam(Rid space, SpaceParameter param)
     {
         lock (BackendLock)
@@ -273,6 +579,20 @@ public static class PhysicsServer2D
     /// Creates a new 2D area object.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created area.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid AreaCreate()
     {
         lock (BackendLock)
@@ -285,6 +605,20 @@ public static class PhysicsServer2D
     /// Creates a new 2D body object.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created body.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid BodyCreate()
     {
         return BodyCreate(PhysicsBodyKind.Generic);
@@ -302,6 +636,20 @@ public static class PhysicsServer2D
     /// Creates a new 2D joint object.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created joint.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid JointCreate()
     {
         lock (BackendLock)
@@ -314,6 +662,20 @@ public static class PhysicsServer2D
     /// Creates a world boundary shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid WorldBoundaryShapeCreate()
     {
         return ShapeCreate(ShapeType.WorldBoundary);
@@ -323,6 +685,20 @@ public static class PhysicsServer2D
     /// Creates a separation ray shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid SeparationRayShapeCreate()
     {
         return ShapeCreate(ShapeType.SeparationRay);
@@ -332,6 +708,20 @@ public static class PhysicsServer2D
     /// Creates a segment shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid SegmentShapeCreate()
     {
         return ShapeCreate(ShapeType.Segment);
@@ -341,6 +731,20 @@ public static class PhysicsServer2D
     /// Creates a circle shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid CircleShapeCreate()
     {
         return ShapeCreate(ShapeType.Circle);
@@ -350,6 +754,20 @@ public static class PhysicsServer2D
     /// Creates a rectangle shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid RectangleShapeCreate()
     {
         return ShapeCreate(ShapeType.Rectangle);
@@ -359,6 +777,20 @@ public static class PhysicsServer2D
     /// Creates a capsule shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid CapsuleShapeCreate()
     {
         return ShapeCreate(ShapeType.Capsule);
@@ -368,6 +800,20 @@ public static class PhysicsServer2D
     /// Creates a convex polygon shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid ConvexPolygonShapeCreate()
     {
         return ShapeCreate(ShapeType.ConvexPolygon);
@@ -377,6 +823,20 @@ public static class PhysicsServer2D
     /// Creates a concave polygon shape.
     /// </summary>
     /// <returns>A <see cref="Rid"/> identifying the created shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static Rid ConcavePolygonShapeCreate()
     {
         return ShapeCreate(ShapeType.ConcavePolygon);
@@ -387,6 +847,20 @@ public static class PhysicsServer2D
     /// </summary>
     /// <param name="shape">The shape to query.</param>
     /// <returns>The type of the shape.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static ShapeType ShapeGetType(Rid shape)
     {
         lock (BackendLock)
@@ -399,6 +873,20 @@ public static class PhysicsServer2D
     /// Frees a physics server RID.
     /// </summary>
     /// <param name="rid">The RID to free.</param>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static void FreeRid(Rid rid)
     {
         lock (BackendLock)
@@ -412,6 +900,20 @@ public static class PhysicsServer2D
     /// </summary>
     /// <param name="processInfo">The statistic to read.</param>
     /// <returns>The current statistic value.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsServer2D" />
+    ///
     public static int GetProcessInfo(ProcessInfo processInfo)
     {
         lock (BackendLock)

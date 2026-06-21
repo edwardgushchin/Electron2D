@@ -21,11 +21,11 @@ CI описан в `.github/workflows/ci.yml`.
 ./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
 ./tools/Verify-ProjectTemplate.ps1
 ./tools/Verify-UserDocumentation.ps1
-./tools/Verify-PublicApiXmlDocs.ps1
+./tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues
 ./tools/Verify-PerformanceBudgets.ps1
 ```
 
-`Verify-PublicApiXmlDocs.ps1` пока запускается в report mode: он публикует список gaps публичной XML documentation, но не ломает CI до завершения `T-0106`.
+`Verify-PublicApiXmlDocs.ps1 -FailOnIssues` является gate публичной XML documentation: недокументированный или неполный public API ломает CI.
 
 Platform-specific export verifiers запускаются только на соответствующих runners:
 

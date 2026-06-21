@@ -79,6 +79,8 @@ public class AnimatedSprite2D : Node2D
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="AnimatedSprite2D" />
+    ///
     public AnimatedSprite2D()
     {
     }
@@ -147,6 +149,10 @@ public class AnimatedSprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="Play"/>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public string Autoplay { get; set; } = string.Empty;
 
     /// <summary>
@@ -167,6 +173,10 @@ public class AnimatedSprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="GetRect"/>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public bool Centered { get; set; } = true;
 
     /// <summary>
@@ -184,6 +194,12 @@ public class AnimatedSprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimatedSprite2D" />
+    ///
     public bool FlipH { get; set; }
 
     /// <summary>
@@ -201,6 +217,12 @@ public class AnimatedSprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimatedSprite2D" />
+    ///
     public bool FlipV { get; set; }
 
     /// <summary>
@@ -267,6 +289,10 @@ public class AnimatedSprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="SetFrameAndProgress"/>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public float FrameProgress
     {
         get
@@ -300,6 +326,10 @@ public class AnimatedSprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="GetRect"/>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Vector2 Offset { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -325,6 +355,10 @@ public class AnimatedSprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="GetPlayingSpeed"/>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public float SpeedScale
     {
         get
@@ -389,6 +423,10 @@ public class AnimatedSprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="IsPlaying"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public float GetPlayingSpeed()
     {
         ThrowIfFreed();
@@ -411,6 +449,12 @@ public class AnimatedSprite2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimatedSprite2D" />
+    ///
     public Rect2 GetRect()
     {
         ThrowIfFreed();
@@ -439,6 +483,10 @@ public class AnimatedSprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="GetRect"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public bool IsPixelOpaque(Vector2 position)
     {
         ThrowIfFreed();
@@ -636,6 +684,10 @@ public class AnimatedSprite2D : Node2D
     ///
     /// <seealso cref="Frame"/>
     /// <seealso cref="FrameProgress"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void SetFrameAndProgress(int frame, float progress)
     {
         ThrowIfFreed();

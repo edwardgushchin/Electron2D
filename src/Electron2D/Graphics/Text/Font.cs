@@ -58,6 +58,29 @@ namespace Electron2D;
 /// <seealso cref="CanvasItem.DrawString" />
 public abstract class Font : Resource
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Font type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Font" />
+    ///
+    public Font()
+    {
+    }
+
     private readonly TextLayoutCache layoutCache = new();
 
     /// <summary>
@@ -85,6 +108,12 @@ public abstract class Font : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Font" />
+    ///
     public Vector2 GetStringSize(
         string text,
         HorizontalAlignment alignment = HorizontalAlignment.Left,
@@ -112,6 +141,12 @@ public abstract class Font : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Font" />
+    ///
     public float GetHeight(int fontSize = 16)
     {
         ValidateFontSize(fontSize);
@@ -136,6 +171,12 @@ public abstract class Font : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Font" />
+    ///
     public float GetAscent(int fontSize = 16)
     {
         ValidateFontSize(fontSize);
@@ -160,6 +201,12 @@ public abstract class Font : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Font" />
+    ///
     public float GetDescent(int fontSize = 16)
     {
         ValidateFontSize(fontSize);
@@ -180,6 +227,12 @@ public abstract class Font : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Font" />
+    ///
     public bool HasChar(int charCode)
     {
         return Rune.IsValid(charCode) && HasGlyph(new Rune(charCode));

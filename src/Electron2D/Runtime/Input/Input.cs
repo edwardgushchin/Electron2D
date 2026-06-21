@@ -81,6 +81,10 @@ public static class Input
     /// </since>
     ///
     /// <seealso cref="GetActionStrength(string, bool)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static bool IsActionPressed(string action, bool exactMatch = false)
     {
         _ = exactMatch;
@@ -111,6 +115,10 @@ public static class Input
     /// </since>
     ///
     /// <seealso cref="IsActionPressed(string, bool)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static bool IsActionJustPressed(string action, bool exactMatch = false)
     {
         _ = exactMatch;
@@ -146,6 +154,10 @@ public static class Input
     /// </since>
     ///
     /// <seealso cref="InputMap.ActionGetDeadzone"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static float GetActionStrength(string action, bool exactMatch = false)
     {
         _ = exactMatch;
@@ -188,6 +200,10 @@ public static class Input
     /// </since>
     ///
     /// <seealso cref="GetActionStrength(string, bool)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static Vector2 GetVector(
         string negativeX,
         string positiveX,
@@ -318,6 +334,10 @@ public static class Input
     /// </since>
     ///
     /// <seealso cref="GetConnectedJoypads"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static string GetJoyName(int device)
     {
         lock (SyncRoot)
@@ -461,6 +481,8 @@ public static class Input
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Input" />
+    ///
     public static bool IsJoyKnown(int device)
     {
         lock (SyncRoot)

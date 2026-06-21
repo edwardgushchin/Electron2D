@@ -44,6 +44,29 @@ namespace Electron2D;
 /// </since>
 public class CanvasLayer : Node
 {
+
+    /// <summary>
+    /// Initializes a new instance of the CanvasLayer type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="CanvasLayer" />
+    ///
+    public CanvasLayer()
+    {
+    }
+
     /// <summary>
     /// Gets or sets the numeric draw layer.
     /// </summary>
@@ -60,6 +83,12 @@ public class CanvasLayer : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current layer value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasLayer" />
+    ///
     public int Layer { get; set; } = 1;
 
     /// <summary>
@@ -73,6 +102,16 @@ public class CanvasLayer : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current offset value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasLayer" />
+    ///
     public Vector2 Offset { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -88,6 +127,14 @@ public class CanvasLayer : Node
     /// </since>
     ///
     /// <seealso cref="RotationDegrees" />
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current rotation value.
+    /// </value>
+    ///
     public float Rotation { get; set; }
 
     /// <summary>
@@ -103,6 +150,14 @@ public class CanvasLayer : Node
     /// </since>
     ///
     /// <seealso cref="Rotation" />
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current rotation degrees value.
+    /// </value>
+    ///
     public float RotationDegrees
     {
         get
@@ -128,6 +183,16 @@ public class CanvasLayer : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current scale value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasLayer" />
+    ///
     public Vector2 Scale { get; set; } = Vector2.One;
 
     /// <summary>
@@ -146,6 +211,12 @@ public class CanvasLayer : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current transform value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasLayer" />
+    ///
     public Transform2D Transform
     {
         get
@@ -173,6 +244,16 @@ public class CanvasLayer : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current visible value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasLayer" />
+    ///
     public bool Visible { get; set; } = true;
 
     /// <summary>
@@ -188,6 +269,12 @@ public class CanvasLayer : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasLayer" />
+    ///
     public Transform2D GetFinalTransform()
     {
         ThrowIfFreed();
@@ -207,6 +294,10 @@ public class CanvasLayer : Node
     /// </since>
     ///
     /// <seealso cref="Show" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void Hide()
     {
         ThrowIfFreed();
@@ -226,6 +317,10 @@ public class CanvasLayer : Node
     /// </since>
     ///
     /// <seealso cref="Hide" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void Show()
     {
         ThrowIfFreed();

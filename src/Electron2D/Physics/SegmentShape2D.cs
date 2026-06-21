@@ -43,6 +43,29 @@ namespace Electron2D;
 /// </since>
 public sealed class SegmentShape2D : Shape2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the SegmentShape2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SegmentShape2D" />
+    ///
+    public SegmentShape2D()
+    {
+    }
+
     private Vector2 a = new(-10f, 0f);
     private Vector2 b = new(10f, 0f);
 
@@ -57,6 +80,16 @@ public sealed class SegmentShape2D : Shape2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current a value.
+    /// </value>
+    ///
+    /// <seealso cref="SegmentShape2D" />
+    ///
     public Vector2 A
     {
         get
@@ -83,6 +116,16 @@ public sealed class SegmentShape2D : Shape2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current b value.
+    /// </value>
+    ///
+    /// <seealso cref="SegmentShape2D" />
+    ///
     public Vector2 B
     {
         get

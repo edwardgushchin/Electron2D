@@ -24,10 +24,71 @@
 */
 namespace Electron2D;
 
+/// <summary>
+/// Represents the ref counted type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public class RefCounted : Object
 {
+
+    /// <summary>
+    /// Initializes a new instance of the RefCounted type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RefCounted" />
+    ///
+    public RefCounted()
+    {
+    }
+
     private int _referenceCount = 1;
 
+    /// <summary>
+    /// Executes the reference operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RefCounted" />
+    ///
     public bool Reference()
     {
         if (!IsInstanceValid(this) || _referenceCount <= 0)
@@ -43,6 +104,28 @@ public class RefCounted : Object
         return true;
     }
 
+    /// <summary>
+    /// Executes the unreference operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RefCounted" />
+    ///
     public bool Unreference()
     {
         if (_referenceCount <= 0)
@@ -60,6 +143,28 @@ public class RefCounted : Object
         return false;
     }
 
+    /// <summary>
+    /// Gets the reference count value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current reference count value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RefCounted" />
+    ///
     public int GetReferenceCount()
     {
         return _referenceCount;

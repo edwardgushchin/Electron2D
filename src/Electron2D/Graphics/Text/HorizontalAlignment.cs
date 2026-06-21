@@ -37,25 +37,69 @@ namespace Electron2D;
 /// </since>
 ///
 /// <seealso cref="CanvasItem.DrawString" />
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
 public enum HorizontalAlignment
 {
     /// <summary>
     /// Align text to the left side of the available width.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept HorizontalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="HorizontalAlignment" />
+    ///
     Left = 0,
 
     /// <summary>
     /// Align text to the center of the available width.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept HorizontalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="HorizontalAlignment" />
+    ///
     Center = 1,
 
     /// <summary>
     /// Align text to the right side of the available width.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept HorizontalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="HorizontalAlignment" />
+    ///
     Right = 2,
 
     /// <summary>
     /// Expand text spacing to fill the available width when supported.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept HorizontalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="HorizontalAlignment" />
+    ///
     Fill = 3
 }

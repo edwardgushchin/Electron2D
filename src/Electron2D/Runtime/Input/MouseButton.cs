@@ -42,32 +42,132 @@ namespace Electron2D;
 public enum MouseButton
 {
     /// <summary>No mouse button.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     None = 0,
 
     /// <summary>Primary mouse button.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     Left = 1,
 
     /// <summary>Secondary mouse button.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     Right = 2,
 
     /// <summary>Middle mouse button.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     Middle = 3,
 
     /// <summary>Mouse wheel scrolling up.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     WheelUp = 4,
 
     /// <summary>Mouse wheel scrolling down.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     WheelDown = 5,
 
     /// <summary>Mouse wheel scrolling left.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     WheelLeft = 6,
 
     /// <summary>Mouse wheel scrolling right.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     WheelRight = 7,
 
     /// <summary>Extra mouse button 1.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     Xbutton1 = 8,
 
     /// <summary>Extra mouse button 2.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButton.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButton" />
+    ///
     Xbutton2 = 9
 }

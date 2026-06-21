@@ -48,6 +48,29 @@ namespace Electron2D;
 /// <seealso cref="Font" />
 public class Label : Control
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Label type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Label" />
+    ///
+    public Label()
+    {
+    }
+
     private string text = string.Empty;
     private int observedTranslationVersion = TranslationServer.Version;
 
@@ -66,6 +89,16 @@ public class Label : Control
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current text value.
+    /// </value>
+    ///
+    /// <seealso cref="Label" />
+    ///
     public string Text
     {
         get
@@ -93,6 +126,16 @@ public class Label : Control
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current horizontal alignment value.
+    /// </value>
+    ///
+    /// <seealso cref="Label" />
+    ///
     public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Left;
 
     /// <summary>
@@ -106,6 +149,16 @@ public class Label : Control
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current vertical alignment value.
+    /// </value>
+    ///
+    /// <seealso cref="Label" />
+    ///
     public VerticalAlignment VerticalAlignment { get; set; } = VerticalAlignment.Top;
 
     /// <summary>
@@ -119,6 +172,16 @@ public class Label : Control
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current uppercase value.
+    /// </value>
+    ///
+    /// <seealso cref="Label" />
+    ///
     public bool Uppercase { get; set; }
 
     /// <summary>
@@ -140,6 +203,8 @@ public class Label : Control
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Label" />
+    ///
     public override void _Process(double delta)
     {
         var currentTranslationVersion = TranslationServer.Version;
@@ -168,6 +233,8 @@ public class Label : Control
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Label" />
+    ///
     public override void _Draw()
     {
         var font = GetThemeFont("font");

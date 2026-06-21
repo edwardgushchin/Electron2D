@@ -26,12 +26,54 @@ using System.Reflection;
 
 namespace Electron2D;
 
+/// <summary>
+/// Represents the callable value type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public readonly struct Callable : IEquatable<Callable>
 {
     private readonly Object? _target;
     private readonly string? _method;
     private readonly Delegate? _delegate;
 
+    /// <summary>
+    /// Initializes a new instance of the Callable type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="target">
+    /// The target value.
+    /// </param>
+    ///
+    /// <param name="method">
+    /// The method value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public Callable(Object target, string method)
     {
         ArgumentNullException.ThrowIfNull(target);
@@ -51,37 +93,207 @@ public readonly struct Callable : IEquatable<Callable>
         _delegate = callback;
     }
 
+    /// <summary>
+    /// Executes the from operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="action">
+    /// The action value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public static Callable From(Action action)
     {
         return new Callable(action);
     }
 
+    /// <summary>
+    /// Executes the from operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <typeparam name="T">
+    /// The t type.
+    /// </typeparam>
+    ///
+    /// <param name="action">
+    /// The action value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public static Callable From<T>(Action<T> action)
     {
         return new Callable(action);
     }
 
+    /// <summary>
+    /// Checks whether null is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public bool IsNull()
     {
         return _target is null && _method is null && _delegate is null;
     }
 
+    /// <summary>
+    /// Gets the object value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current object value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public Object? GetObject()
     {
         return _target;
     }
 
+    /// <summary>
+    /// Gets the method value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current method value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public string GetMethod()
     {
         return _method ?? _delegate?.Method.Name ?? string.Empty;
     }
 
+    /// <summary>
+    /// Executes the call operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="args">
+    /// The args value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public object? Call(params object?[] args)
     {
         TryCall(args ?? Array.Empty<object?>(), out var result);
         return result;
     }
 
+    /// <summary>
+    /// Executes the call deferred operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="args">
+    /// The args value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public void CallDeferred(params object?[] args)
     {
         if (IsNull())
@@ -92,6 +304,32 @@ public readonly struct Callable : IEquatable<Callable>
         DeferredCallQueue.Enqueue(this, args ?? Array.Empty<object?>());
     }
 
+    /// <summary>
+    /// Executes the equals operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="other">
+    /// The other value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public bool Equals(Callable other)
     {
         if (_delegate is not null || other._delegate is not null)
@@ -103,21 +341,129 @@ public readonly struct Callable : IEquatable<Callable>
             string.Equals(_method, other._method, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Executes the equals operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="obj">
+    /// The obj value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public override bool Equals(object? obj)
     {
         return obj is Callable other && Equals(other);
     }
 
+    /// <summary>
+    /// Gets the hash code value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current hash code value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public override int GetHashCode()
     {
         return HashCode.Combine(_target, _method, _delegate);
     }
 
+    /// <summary>
+    /// Applies the <c>==</c> operator.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This operator returns a value derived from the supplied operands.
+    /// </remarks>
+    ///
+    /// <param name="left">
+    /// The left value.
+    /// </param>
+    ///
+    /// <param name="right">
+    /// The right value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operator.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public static bool operator ==(Callable left, Callable right)
     {
         return left.Equals(right);
     }
 
+    /// <summary>
+    /// Applies the <c>!=</c> operator.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This operator returns a value derived from the supplied operands.
+    /// </remarks>
+    ///
+    /// <param name="left">
+    /// The left value.
+    /// </param>
+    ///
+    /// <param name="right">
+    /// The right value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operator.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Callable" />
+    ///
     public static bool operator !=(Callable left, Callable right)
     {
         return !left.Equals(right);

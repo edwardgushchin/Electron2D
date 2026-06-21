@@ -48,6 +48,29 @@ namespace Electron2D;
 /// <seealso cref="Label" />
 public class Control : CanvasItem
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Control type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Control" />
+    ///
+    public Control()
+    {
+    }
+
     private readonly Dictionary<string, Font> fontOverrides = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> fontSizeOverrides = new(StringComparer.Ordinal);
 
@@ -62,6 +85,16 @@ public class Control : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current position value.
+    /// </value>
+    ///
+    /// <seealso cref="Control" />
+    ///
     public Vector2 Position { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -75,6 +108,16 @@ public class Control : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current size value.
+    /// </value>
+    ///
+    /// <seealso cref="Control" />
+    ///
     public Vector2 Size { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -99,6 +142,12 @@ public class Control : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Control" />
+    ///
     public void AddThemeFontOverride(string name, Font font)
     {
         ThrowIfFreed();
@@ -127,6 +176,12 @@ public class Control : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Control" />
+    ///
     public Font? GetThemeFont(string name)
     {
         ThrowIfFreed();
@@ -157,6 +212,12 @@ public class Control : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Control" />
+    ///
     public void AddThemeFontSizeOverride(string name, int fontSize)
     {
         ThrowIfFreed();
@@ -188,6 +249,12 @@ public class Control : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Control" />
+    ///
     public int GetThemeFontSize(string name)
     {
         ThrowIfFreed();

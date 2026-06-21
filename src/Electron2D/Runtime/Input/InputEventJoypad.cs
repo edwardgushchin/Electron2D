@@ -55,6 +55,29 @@ namespace Electron2D;
 /// <seealso cref="InputMap"/>
 public class InputEventJoypadButton : InputEvent
 {
+
+    /// <summary>
+    /// Initializes a new instance of the InputEventJoypadButton type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="InputEventJoypadButton" />
+    ///
+    public InputEventJoypadButton()
+    {
+    }
+
     private float pressure;
 
     /// <summary>
@@ -80,6 +103,8 @@ public class InputEventJoypadButton : InputEvent
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="InputEventJoypadButton" />
+    ///
     public JoyButton ButtonIndex { get; set; } = JoyButton.Invalid;
 
     /// <summary>
@@ -100,6 +125,12 @@ public class InputEventJoypadButton : InputEvent
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current pressed value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventJoypadButton" />
+    ///
     public bool Pressed { get; set; }
 
     /// <summary>
@@ -125,6 +156,8 @@ public class InputEventJoypadButton : InputEvent
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="InputEventJoypadButton" />
+    ///
     public float Pressure
     {
         get => pressure;
@@ -163,6 +196,29 @@ public class InputEventJoypadButton : InputEvent
 /// <seealso cref="InputMap"/>
 public class InputEventJoypadMotion : InputEvent
 {
+
+    /// <summary>
+    /// Initializes a new instance of the InputEventJoypadMotion type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="InputEventJoypadMotion" />
+    ///
+    public InputEventJoypadMotion()
+    {
+    }
+
     private float axisValue;
 
     /// <summary>
@@ -188,6 +244,8 @@ public class InputEventJoypadMotion : InputEvent
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="InputEventJoypadMotion" />
+    ///
     public JoyAxis Axis { get; set; } = JoyAxis.Invalid;
 
     /// <summary>
@@ -213,6 +271,8 @@ public class InputEventJoypadMotion : InputEvent
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="InputEventJoypadMotion" />
+    ///
     public float AxisValue
     {
         get => axisValue;

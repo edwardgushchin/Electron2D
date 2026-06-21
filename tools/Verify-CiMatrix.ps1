@@ -68,6 +68,10 @@ if ($workflow.IndexOf('Verify-Box2DPhysicsCandidate.ps1 -NativeAot', [System.Str
     throw 'CI workflow must run Box2D.NET physics candidate validation with -NativeAot.'
 }
 
+if ($workflow.IndexOf('Verify-PublicApiXmlDocs.ps1 -FailOnIssues', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'CI workflow must run public API XML documentation validation with -FailOnIssues.'
+}
+
 if ($workflow.IndexOf("if: matrix.os == 'windows-latest'", [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     throw 'CI workflow must run Windows export verification only on windows-latest.'
 }

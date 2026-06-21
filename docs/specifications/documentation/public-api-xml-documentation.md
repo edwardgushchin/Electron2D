@@ -55,13 +55,13 @@ Internal, private и protected internal implementation members не являют
 - default/report mode: собирает XML documentation file, формирует report и не падает из-за текущих documentation gaps;
 - `-FailOnIssues`: падает, если есть missing XML docs или нарушены обязательные tags/content rules.
 
-До полного заполнения документации CI может запускать только report mode. После устранения gaps `-FailOnIssues` должен стать CI gate.
+CI должен запускать `-FailOnIssues`, чтобы новый недокументированный public API не попадал в green path.
 
 ## Критерии приёмки
 
 - Verifier умеет читать compiled public surface и XML documentation file.
 - Report mode показывает количество и список missing/incomplete documentation issues.
 - Fail mode возвращает non-zero exit code при issues.
-- CI запускает report mode, пока текущие gaps не закрыты.
+- CI запускает strict mode через `-FailOnIssues`.
 - Документация реализации описывает текущий статус и команду проверки.
-- После заполнения всех comments fail mode будет подключён к CI.
+- После заполнения всех comments fail mode подключён к CI.

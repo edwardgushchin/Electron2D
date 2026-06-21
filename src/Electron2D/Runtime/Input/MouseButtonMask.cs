@@ -43,20 +43,80 @@ namespace Electron2D;
 public enum MouseButtonMask
 {
     /// <summary>No mouse buttons are held.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButtonMask.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButtonMask" />
+    ///
     None = 0,
 
     /// <summary>The primary mouse button is held.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButtonMask.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButtonMask" />
+    ///
     Left = 1,
 
     /// <summary>The secondary mouse button is held.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButtonMask.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButtonMask" />
+    ///
     Right = 2,
 
     /// <summary>The middle mouse button is held.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButtonMask.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButtonMask" />
+    ///
     Middle = 4,
 
     /// <summary>Extra mouse button 1 is held.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButtonMask.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButtonMask" />
+    ///
     Xbutton1 = 128,
 
     /// <summary>Extra mouse button 2 is held.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept MouseButtonMask.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="MouseButtonMask" />
+    ///
     Xbutton2 = 256
 }

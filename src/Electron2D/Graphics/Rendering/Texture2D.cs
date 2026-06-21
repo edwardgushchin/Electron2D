@@ -54,6 +54,29 @@ namespace Electron2D;
 /// <seealso cref="AtlasTexture" />
 public abstract class Texture2D : Resource
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Texture2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Texture2D" />
+    ///
+    public Texture2D()
+    {
+    }
+
     /// <summary>
     /// Gets the texture width in pixels.
     /// </summary>
@@ -67,6 +90,12 @@ public abstract class Texture2D : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Texture2D" />
+    ///
     public abstract int GetWidth();
 
     /// <summary>
@@ -82,6 +111,12 @@ public abstract class Texture2D : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Texture2D" />
+    ///
     public abstract int GetHeight();
 
     /// <summary>
@@ -100,6 +135,10 @@ public abstract class Texture2D : Resource
     ///
     /// <seealso cref="GetWidth" />
     /// <seealso cref="GetHeight" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Vector2 GetSize()
     {
         return new Vector2(GetWidth(), GetHeight());
@@ -118,6 +157,12 @@ public abstract class Texture2D : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Texture2D" />
+    ///
     public abstract bool HasAlpha();
 
     /// <summary>
@@ -135,6 +180,10 @@ public abstract class Texture2D : Resource
     /// </since>
     ///
     /// <seealso cref="GetMipmapCount" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public virtual bool HasMipmaps()
     {
         return false;
@@ -155,6 +204,10 @@ public abstract class Texture2D : Resource
     /// </since>
     ///
     /// <seealso cref="HasMipmaps" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public virtual int GetMipmapCount()
     {
         return 0;

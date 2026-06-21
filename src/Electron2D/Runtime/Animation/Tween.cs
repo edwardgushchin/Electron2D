@@ -137,6 +137,12 @@ public class Tween : RefCounted
         /// <remarks>
         /// The interpolated value advances at a constant rate.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Linear = 0,
 
         /// <summary>
@@ -147,6 +153,12 @@ public class Tween : RefCounted
         /// This curve starts or ends smoothly depending on the selected
         /// <see cref="EaseType"/>.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Sine = 1,
 
         /// <summary>
@@ -157,6 +169,12 @@ public class Tween : RefCounted
         /// The curve is steeper than <see cref="Quart"/> and
         /// <see cref="Quad"/>.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Quint = 2,
 
         /// <summary>
@@ -167,6 +185,12 @@ public class Tween : RefCounted
         /// The curve is steeper than <see cref="Cubic"/> and
         /// <see cref="Quad"/>.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Quart = 3,
 
         /// <summary>
@@ -177,6 +201,12 @@ public class Tween : RefCounted
         /// With <see cref="EaseType.In"/>, half of the duration produces
         /// one quarter of the value delta.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Quad = 4,
 
         /// <summary>
@@ -187,6 +217,12 @@ public class Tween : RefCounted
         /// The curve changes slowly near the eased side and quickly near the
         /// opposite side.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Expo = 5,
 
         /// <summary>
@@ -196,6 +232,12 @@ public class Tween : RefCounted
         /// <remarks>
         /// The curve may move past the target range before settling.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Elastic = 6,
 
         /// <summary>
@@ -206,6 +248,12 @@ public class Tween : RefCounted
         /// The curve is a middle ground between <see cref="Quad"/> and
         /// <see cref="Quart"/>.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Cubic = 7,
 
         /// <summary>
@@ -215,6 +263,12 @@ public class Tween : RefCounted
         /// <remarks>
         /// The curve follows a quarter-circle acceleration profile.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Circ = 8,
 
         /// <summary>
@@ -225,6 +279,12 @@ public class Tween : RefCounted
         /// The curve produces deterministic bounce-like rebounds near the
         /// eased side.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Bounce = 9,
 
         /// <summary>
@@ -236,6 +296,12 @@ public class Tween : RefCounted
         /// <see cref="EaseType.In"/> and mirrors that behavior for
         /// <see cref="EaseType.Out"/>.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Back = 10,
 
         /// <summary>
@@ -246,6 +312,12 @@ public class Tween : RefCounted
         /// The current baseline maps this value to a deterministic smoothstep
         /// curve without oscillation.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TransitionType" />
+        ///
         Spring = 11
     }
 
@@ -270,6 +342,12 @@ public class Tween : RefCounted
         /// <remarks>
         /// Values start slowly for accelerating transition curves.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="EaseType" />
+        ///
         In = 0,
 
         /// <summary>
@@ -279,6 +357,12 @@ public class Tween : RefCounted
         /// <remarks>
         /// Values end slowly for accelerating transition curves.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="EaseType" />
+        ///
         Out = 1,
 
         /// <summary>
@@ -288,6 +372,12 @@ public class Tween : RefCounted
         /// <remarks>
         /// Values start and end smoothly for accelerating transition curves.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="EaseType" />
+        ///
         InOut = 2,
 
         /// <summary>
@@ -298,6 +388,12 @@ public class Tween : RefCounted
         /// Values move quickly away from the start, slow near the middle and
         /// accelerate toward the end.
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="EaseType" />
+        ///
         OutIn = 3
     }
 
@@ -583,6 +679,8 @@ public class Tween : RefCounted
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Tween" />
+    ///
     public Tween SetSpeedScale(double speed)
     {
         ValidateFiniteNonNegative(speed, nameof(speed));
@@ -738,6 +836,8 @@ public class Tween : RefCounted
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Tween" />
+    ///
     public bool CustomStep(double delta)
     {
         ThrowIfFreed();
@@ -762,6 +862,12 @@ public class Tween : RefCounted
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Tween" />
+    ///
     public bool IsRunning()
     {
         ThrowIfFreed();
@@ -781,6 +887,12 @@ public class Tween : RefCounted
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Tween" />
+    ///
     public bool IsValid()
     {
         ThrowIfFreed();
@@ -803,6 +915,12 @@ public class Tween : RefCounted
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Tween" />
+    ///
     public bool HasTweeners()
     {
         ThrowIfFreed();
@@ -829,6 +947,8 @@ public class Tween : RefCounted
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Tween" />
+    ///
     public double GetTotalElapsedTime()
     {
         ThrowIfFreed();
@@ -1574,6 +1694,8 @@ public sealed class PropertyTweener : Tweener
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="PropertyTweener" />
+    ///
     public PropertyTweener SetDelay(double delay)
     {
         SetDelayCore(delay);
@@ -1756,6 +1878,8 @@ public sealed class CallbackTweener : Tweener
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="CallbackTweener" />
+    ///
     public CallbackTweener SetDelay(double delay)
     {
         SetDelayCore(delay);

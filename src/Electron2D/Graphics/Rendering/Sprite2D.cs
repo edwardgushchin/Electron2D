@@ -53,6 +53,29 @@ namespace Electron2D;
 /// <seealso cref="AnimatedSprite2D"/>
 public class Sprite2D : Node2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Sprite2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
+    public Sprite2D()
+    {
+    }
+
     /// <summary>
     /// Gets or sets whether the texture is drawn centered on the node origin.
     /// </summary>
@@ -64,6 +87,16 @@ public class Sprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current centered value.
+    /// </value>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public bool Centered { get; set; } = true;
 
     /// <summary>
@@ -77,6 +110,16 @@ public class Sprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current flip h value.
+    /// </value>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public bool FlipH { get; set; }
 
     /// <summary>
@@ -90,6 +133,16 @@ public class Sprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current flip v value.
+    /// </value>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public bool FlipV { get; set; }
 
     /// <summary>
@@ -103,6 +156,16 @@ public class Sprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current offset value.
+    /// </value>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public Vector2 Offset { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -118,6 +181,14 @@ public class Sprite2D : Node2D
     /// </since>
     ///
     /// <seealso cref="RegionRect" />
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current region enabled value.
+    /// </value>
+    ///
     public bool RegionEnabled { get; set; }
 
     /// <summary>
@@ -131,6 +202,16 @@ public class Sprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current region filter clip enabled value.
+    /// </value>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public bool RegionFilterClipEnabled { get; set; }
 
     /// <summary>
@@ -144,6 +225,16 @@ public class Sprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current region rect value.
+    /// </value>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public Rect2 RegionRect { get; set; }
 
     /// <summary>
@@ -162,6 +253,12 @@ public class Sprite2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current texture value.
+    /// </value>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public Texture2D? Texture { get; set; }
 
     /// <summary>
@@ -177,6 +274,12 @@ public class Sprite2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public Rect2 GetRect()
     {
         ThrowIfFreed();
@@ -199,6 +302,12 @@ public class Sprite2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Sprite2D" />
+    ///
     public bool IsPixelOpaque(Vector2 pos)
     {
         ThrowIfFreed();

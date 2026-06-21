@@ -44,6 +44,29 @@ namespace Electron2D;
 /// </since>
 public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
 {
+
+    /// <summary>
+    /// Initializes a new instance of the CollisionObject2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
+    public CollisionObject2D()
+    {
+    }
+
     private Rid rid;
     private uint collisionLayer = 1u;
     private uint collisionMask = 1u;
@@ -59,6 +82,16 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current collision layer value.
+    /// </value>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
     public uint CollisionLayer
     {
         get
@@ -84,6 +117,16 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current collision mask value.
+    /// </value>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
     public uint CollisionMask
     {
         get
@@ -113,6 +156,12 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
     public Rid GetRid()
     {
         ThrowIfFreed();
@@ -132,6 +181,12 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
     public void SetCollisionLayerValue(int layerNumber, bool value)
     {
         CollisionLayer = SetCollisionBit(CollisionLayer, layerNumber, value);
@@ -150,6 +205,12 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
     public bool GetCollisionLayerValue(int layerNumber)
     {
         ThrowIfFreed();
@@ -169,6 +230,12 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
     public void SetCollisionMaskValue(int layerNumber, bool value)
     {
         CollisionMask = SetCollisionBit(CollisionMask, layerNumber, value);
@@ -187,6 +254,12 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CollisionObject2D" />
+    ///
     public bool GetCollisionMaskValue(int layerNumber)
     {
         ThrowIfFreed();

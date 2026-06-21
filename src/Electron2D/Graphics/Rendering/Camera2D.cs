@@ -47,6 +47,29 @@ namespace Electron2D;
 /// <seealso cref="Viewport" />
 public class Camera2D : Node2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Camera2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
+    public Camera2D()
+    {
+    }
+
     private bool enabled = true;
     private Vector2 zoom = Vector2.One;
 
@@ -67,6 +90,12 @@ public class Camera2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current enabled value.
+    /// </value>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public bool Enabled
     {
         get
@@ -111,6 +140,16 @@ public class Camera2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current ignore rotation value.
+    /// </value>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public bool IgnoreRotation { get; set; } = true;
 
     /// <summary>
@@ -124,6 +163,16 @@ public class Camera2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current offset value.
+    /// </value>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public Vector2 Offset { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -141,6 +190,12 @@ public class Camera2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current zoom value.
+    /// </value>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public Vector2 Zoom
     {
         get
@@ -176,6 +231,8 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Camera2D" />
+    ///
     public void Align()
     {
         ThrowIfFreed();
@@ -197,6 +254,12 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public void ClearCurrent(bool enableNext = true)
     {
         ThrowIfFreed();
@@ -219,6 +282,8 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Camera2D" />
+    ///
     public void ForceUpdateScroll()
     {
         ThrowIfFreed();
@@ -239,6 +304,10 @@ public class Camera2D : Node2D
     /// </since>
     ///
     /// <seealso cref="GetTargetPosition" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Vector2 GetScreenCenterPosition()
     {
         ThrowIfFreed();
@@ -258,6 +327,12 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public float GetScreenRotation()
     {
         ThrowIfFreed();
@@ -277,6 +352,12 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public Vector2 GetTargetPosition()
     {
         ThrowIfFreed();
@@ -296,6 +377,12 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public bool IsCurrent()
     {
         ThrowIfFreed();
@@ -317,6 +404,12 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public void MakeCurrent()
     {
         ThrowIfFreed();
@@ -345,12 +438,32 @@ public class Camera2D : Node2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Camera2D" />
+    ///
     public void ResetSmoothing()
     {
         ThrowIfFreed();
     }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Called when this node enters a scene tree.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public override void _EnterTree()
     {
         if (Enabled && FindViewport() is { } viewport && viewport.GetCamera2D() is null)
@@ -360,6 +473,24 @@ public class Camera2D : Node2D
     }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Called when this node exits a scene tree.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Camera2D" />
+    ///
     public override void _ExitTree()
     {
         FindViewport()?.ClearCurrentCamera(this, enableNext: true);

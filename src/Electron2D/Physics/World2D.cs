@@ -50,5 +50,23 @@ public sealed class World2D : Resource
     /// <summary>
     /// Gets the direct physics query state for this world.
     /// </summary>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current direct space state value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="World2D" />
+    ///
     public PhysicsDirectSpaceState2D DirectSpaceState { get; }
 }

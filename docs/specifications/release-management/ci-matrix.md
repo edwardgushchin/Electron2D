@@ -23,7 +23,7 @@ CI должен проверять новый clean runtime baseline на Tier 1
 - запускать `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`.
 - запускать `tools/Verify-ProjectTemplate.ps1`.
 - запускать `tools/Verify-UserDocumentation.ps1`.
-- запускать `tools/Verify-PublicApiXmlDocs.ps1` в report mode до полного закрытия `T-0106`.
+- запускать `tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues`.
 - запускать `tools/Verify-PerformanceBudgets.ps1`.
 
 ## Baseline и gaps

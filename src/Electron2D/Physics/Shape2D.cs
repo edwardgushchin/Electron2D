@@ -44,6 +44,29 @@ namespace Electron2D;
 /// </since>
 public abstract class Shape2D : Resource
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Shape2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Shape2D" />
+    ///
+    public Shape2D()
+    {
+    }
+
     private Rid rid;
 
     /// <summary>
@@ -60,6 +83,12 @@ public abstract class Shape2D : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Shape2D" />
+    ///
     public Rid GetRid()
     {
         ThrowIfFreed();

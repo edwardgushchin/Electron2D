@@ -53,35 +53,105 @@ public enum JoyAxis
     /// <summary>
     /// Represents an invalid or unmapped gamepad axis.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept JoyAxis.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="JoyAxis" />
+    ///
     Invalid = -1,
 
     /// <summary>
     /// Represents the horizontal axis of the left stick.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept JoyAxis.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="JoyAxis" />
+    ///
     LeftX = 0,
 
     /// <summary>
     /// Represents the vertical axis of the left stick.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept JoyAxis.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="JoyAxis" />
+    ///
     LeftY = 1,
 
     /// <summary>
     /// Represents the horizontal axis of the right stick.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept JoyAxis.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="JoyAxis" />
+    ///
     RightX = 2,
 
     /// <summary>
     /// Represents the vertical axis of the right stick.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept JoyAxis.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="JoyAxis" />
+    ///
     RightY = 3,
 
     /// <summary>
     /// Represents the left trigger axis.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept JoyAxis.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="JoyAxis" />
+    ///
     TriggerLeft = 4,
 
     /// <summary>
     /// Represents the right trigger axis.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept JoyAxis.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="JoyAxis" />
+    ///
     TriggerRight = 5
 }

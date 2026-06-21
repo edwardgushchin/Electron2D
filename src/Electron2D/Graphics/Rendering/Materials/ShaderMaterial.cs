@@ -55,6 +55,29 @@ namespace Electron2D;
 /// <seealso cref="Texture2D" />
 public sealed class ShaderMaterial : Material
 {
+
+    /// <summary>
+    /// Initializes a new instance of the ShaderMaterial type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ShaderMaterial" />
+    ///
+    public ShaderMaterial()
+    {
+    }
+
     private readonly Dictionary<StringName, Variant> parameters = new();
     private Shader? shader;
 
@@ -70,6 +93,16 @@ public sealed class ShaderMaterial : Material
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current shader value.
+    /// </value>
+    ///
+    /// <seealso cref="ShaderMaterial" />
+    ///
     public Shader? Shader
     {
         get
@@ -111,6 +144,10 @@ public sealed class ShaderMaterial : Material
     /// </since>
     ///
     /// <seealso cref="SetShaderParameter" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Variant GetShaderParameter(StringName param)
     {
         ThrowIfFreed();

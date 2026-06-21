@@ -43,6 +43,29 @@ namespace Electron2D;
 /// </since>
 public sealed class ConvexPolygonShape2D : Shape2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the ConvexPolygonShape2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ConvexPolygonShape2D" />
+    ///
+    public ConvexPolygonShape2D()
+    {
+    }
+
     private Vector2[] points =
     [
         new(0f, -10f),
@@ -66,6 +89,12 @@ public sealed class ConvexPolygonShape2D : Shape2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ConvexPolygonShape2D" />
+    ///
     public Vector2[] Points
     {
         get

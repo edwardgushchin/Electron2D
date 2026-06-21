@@ -75,6 +75,8 @@ public sealed class Animation : Resource
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Animation" />
+    ///
     public Animation()
     {
     }
@@ -97,12 +99,32 @@ public sealed class Animation : Resource
         /// A track that applies keyframed <see cref="Variant"/> values to a
         /// property path.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept TrackTypeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TrackTypeEnum" />
+        ///
         Value = 0,
 
         /// <summary>
         /// A track that calls methods on a target node when playback crosses a
         /// key time.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept TrackTypeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="TrackTypeEnum" />
+        ///
         Method = 1
     }
 
@@ -123,11 +145,31 @@ public sealed class Animation : Resource
         /// <summary>
         /// Reuses the latest key at or before the requested time.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept InterpolationTypeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="InterpolationTypeEnum" />
+        ///
         Nearest = 0,
 
         /// <summary>
         /// Interpolates supported numeric and 2D value types between keys.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept InterpolationTypeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="InterpolationTypeEnum" />
+        ///
         Linear = 1
     }
 
@@ -148,11 +190,31 @@ public sealed class Animation : Resource
         /// <summary>
         /// Playback stops when it reaches <see cref="Length"/>.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept LoopModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="LoopModeEnum" />
+        ///
         None = 0,
 
         /// <summary>
         /// Playback wraps from <see cref="Length"/> back to the beginning.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept LoopModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="LoopModeEnum" />
+        ///
         Linear = 1
     }
 
@@ -175,6 +237,12 @@ public sealed class Animation : Resource
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Animation" />
+    ///
     public double Length
     {
         get => length;
@@ -200,6 +268,12 @@ public sealed class Animation : Resource
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Animation" />
+    ///
     public LoopModeEnum LoopMode { get; set; } = LoopModeEnum.None;
 
     /// <summary>
@@ -227,6 +301,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="RemoveTrack"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public int AddTrack(TrackTypeEnum type, int atPosition = -1)
     {
         ValidateTrackType(type, nameof(type));
@@ -259,6 +337,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="AddTrack"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void RemoveTrack(int trackIdx)
     {
         tracks.RemoveAt(ValidateTrackIndex(trackIdx));
@@ -277,6 +359,12 @@ public sealed class Animation : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Animation" />
+    ///
     public int GetTrackCount()
     {
         return tracks.Count;
@@ -301,6 +389,12 @@ public sealed class Animation : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Animation" />
+    ///
     public TrackTypeEnum TrackGetType(int trackIdx)
     {
         return GetTrack(trackIdx).Type;
@@ -329,6 +423,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="TrackGetPath"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void TrackSetPath(int trackIdx, NodePath path)
     {
         GetTrack(trackIdx).Path = path;
@@ -355,6 +453,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="TrackSetPath"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public NodePath TrackGetPath(int trackIdx)
     {
         return GetTrack(trackIdx).Path;
@@ -380,6 +482,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="TrackIsEnabled"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void TrackSetEnabled(int trackIdx, bool enabled)
     {
         GetTrack(trackIdx).Enabled = enabled;
@@ -406,6 +512,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="TrackSetEnabled"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public bool TrackIsEnabled(int trackIdx)
     {
         return GetTrack(trackIdx).Enabled;
@@ -436,6 +546,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="TrackGetInterpolationType"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void TrackSetInterpolationType(int trackIdx, InterpolationTypeEnum interpolation)
     {
         ValidateInterpolationType(interpolation, nameof(interpolation));
@@ -469,6 +583,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="TrackSetInterpolationType"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public InterpolationTypeEnum TrackGetInterpolationType(int trackIdx)
     {
         var track = GetTrack(trackIdx);
@@ -502,6 +620,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="ValueTrackInterpolate"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void TrackInsertKey(int trackIdx, double time, Variant value)
     {
         ValidateNonNegativeFinite(time, nameof(time), "Key time");
@@ -538,6 +660,12 @@ public sealed class Animation : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Animation" />
+    ///
     public void MethodTrackInsertKey(int trackIdx, double time, StringName method, Variant[]? arguments = null)
     {
         ValidateNonNegativeFinite(time, nameof(time), "Key time");
@@ -570,6 +698,12 @@ public sealed class Animation : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Animation" />
+    ///
     public int TrackGetKeyCount(int trackIdx)
     {
         var track = GetTrack(trackIdx);
@@ -597,6 +731,12 @@ public sealed class Animation : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Animation" />
+    ///
     public double TrackGetKeyTime(int trackIdx, int keyIdx)
     {
         var track = GetTrack(trackIdx);
@@ -632,6 +772,10 @@ public sealed class Animation : Resource
     /// </since>
     ///
     /// <seealso cref="TrackInsertKey"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Variant TrackGetKeyValue(int trackIdx, int keyIdx)
     {
         var track = GetTrack(trackIdx);
@@ -670,6 +814,10 @@ public sealed class Animation : Resource
     ///
     /// <seealso cref="TrackSetInterpolationType"/>
     /// <seealso cref="TrackInsertKey"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Variant ValueTrackInterpolate(int trackIdx, double time)
     {
         if (!double.IsFinite(time))

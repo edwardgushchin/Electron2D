@@ -42,11 +42,41 @@ namespace Electron2D;
 public enum KeyLocation
 {
     /// <summary>The key location is not specified.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept KeyLocation.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="KeyLocation" />
+    ///
     Unspecified = 0,
 
     /// <summary>The key is on the left side.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept KeyLocation.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="KeyLocation" />
+    ///
     Left = 1,
 
     /// <summary>The key is on the right side.</summary>
+    /// <remarks>
+    /// Use this value with APIs that accept KeyLocation.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="KeyLocation" />
+    ///
     Right = 2
 }

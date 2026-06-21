@@ -88,6 +88,10 @@ public static class TranslationServer
     /// </since>
     ///
     /// <seealso cref="SetLocale" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static string GetLocale()
     {
         lock (SyncRoot)
@@ -167,6 +171,10 @@ public static class TranslationServer
     ///
     /// <seealso cref="RemoveTranslation" />
     /// <seealso cref="Clear" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static void AddTranslation(Translation translation)
     {
         ArgumentNullException.ThrowIfNull(translation);
@@ -201,6 +209,10 @@ public static class TranslationServer
     /// </since>
     ///
     /// <seealso cref="AddTranslation" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static void RemoveTranslation(Translation translation)
     {
         ArgumentNullException.ThrowIfNull(translation);
@@ -230,6 +242,8 @@ public static class TranslationServer
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="TranslationServer" />
+    ///
     public static void Clear()
     {
         lock (SyncRoot)
@@ -259,6 +273,12 @@ public static class TranslationServer
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="TranslationServer" />
+    ///
     public static string[] GetLoadedLocales()
     {
         lock (SyncRoot)

@@ -62,6 +62,20 @@ public sealed class PhysicsDirectSpaceState2D : Object
     /// A dictionary with hit data, or an empty dictionary when the ray hits nothing.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameters" /> is <c>null</c>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsDirectSpaceState2D" />
+    ///
     public VariantDictionary IntersectRay(PhysicsRayQueryParameters2D parameters)
     {
         ThrowIfFreed();
@@ -99,6 +113,20 @@ public sealed class PhysicsDirectSpaceState2D : Object
     /// <returns>An array of dictionaries describing matching objects.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameters" /> is <c>null</c>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maxResults" /> is negative.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsDirectSpaceState2D" />
+    ///
     public VariantArray IntersectPoint(PhysicsPointQueryParameters2D parameters, int maxResults = 32)
     {
         ThrowIfFreed();
@@ -123,6 +151,20 @@ public sealed class PhysicsDirectSpaceState2D : Object
     /// <returns>An array of dictionaries describing matching objects.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameters" /> is <c>null</c>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maxResults" /> is negative.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsDirectSpaceState2D" />
+    ///
     public VariantArray IntersectShape(PhysicsShapeQueryParameters2D parameters, int maxResults = 32)
     {
         ThrowIfFreed();

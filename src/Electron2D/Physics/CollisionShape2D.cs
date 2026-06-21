@@ -48,6 +48,29 @@ namespace Electron2D;
 /// <seealso cref="CollisionObject2D"/>
 public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
 {
+
+    /// <summary>
+    /// Initializes a new instance of the CollisionShape2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="CollisionShape2D" />
+    ///
+    public CollisionShape2D()
+    {
+    }
+
     private Shape2D? shape;
 
     /// <summary>

@@ -46,6 +46,29 @@ namespace Electron2D;
 /// <seealso cref="Camera2D" />
 public class Viewport : Node
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Viewport type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Viewport" />
+    ///
+    public Viewport()
+    {
+    }
+
     private Camera2D? currentCamera;
     private ViewportTexture? viewportTexture;
 
@@ -60,6 +83,16 @@ public class Viewport : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current size value.
+    /// </value>
+    ///
+    /// <seealso cref="Viewport" />
+    ///
     public Vector2I Size { get; set; }
 
     /// <summary>
@@ -78,6 +111,12 @@ public class Viewport : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current canvas transform value.
+    /// </value>
+    ///
+    /// <seealso cref="Viewport" />
+    ///
     public Transform2D CanvasTransform { get; set; } = Transform2D.Identity;
 
     /// <summary>
@@ -96,6 +135,12 @@ public class Viewport : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current snap2 dtransforms to pixel value.
+    /// </value>
+    ///
+    /// <seealso cref="Viewport" />
+    ///
     public bool Snap2DTransformsToPixel { get; set; }
 
     /// <summary>
@@ -113,6 +158,12 @@ public class Viewport : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current snap2 dvertices to pixel value.
+    /// </value>
+    ///
+    /// <seealso cref="Viewport" />
+    ///
     public bool Snap2DVerticesToPixel { get; set; }
 
     /// <summary>
@@ -128,6 +179,12 @@ public class Viewport : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Viewport" />
+    ///
     public Camera2D? GetCamera2D()
     {
         ThrowIfFreed();
@@ -147,6 +204,12 @@ public class Viewport : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Viewport" />
+    ///
     public Rect2 GetVisibleRect()
     {
         ThrowIfFreed();

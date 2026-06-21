@@ -24,6 +24,22 @@
 */
 namespace Electron2D;
 
+/// <summary>
+/// Represents the random number generator type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public class RandomNumberGenerator : RefCounted
 {
     private const ulong Multiplier = 6364136223846793005UL;
@@ -34,11 +50,51 @@ public class RandomNumberGenerator : RefCounted
     private ulong seed;
     private ulong state;
 
+    /// <summary>
+    /// Initializes a new instance of the RandomNumberGenerator type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public RandomNumberGenerator()
     {
         Randomize();
     }
 
+    /// <summary>
+    /// Gets or sets the seed value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current seed value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public ulong Seed
     {
         get
@@ -53,6 +109,28 @@ public class RandomNumberGenerator : RefCounted
         }
     }
 
+    /// <summary>
+    /// Gets or sets the state value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current state value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public ulong State
     {
         get
@@ -67,18 +145,88 @@ public class RandomNumberGenerator : RefCounted
         }
     }
 
+    /// <summary>
+    /// Executes the randomize operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public void Randomize()
     {
         ThrowIfFreed();
         SetSeed(CreateRandomSeed());
     }
 
+    /// <summary>
+    /// Executes the randi operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public uint Randi()
     {
         ThrowIfFreed();
         return NextUInt32();
     }
 
+    /// <summary>
+    /// Executes the randi range operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="from">
+    /// The from value.
+    /// </param>
+    ///
+    /// <param name="to">
+    /// The to value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public int RandiRange(int from, int to)
     {
         ThrowIfFreed();
@@ -95,12 +243,64 @@ public class RandomNumberGenerator : RefCounted
         return (int)(min + (long)offset);
     }
 
+    /// <summary>
+    /// Executes the randf operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public float Randf()
     {
         ThrowIfFreed();
         return Randi() / (float)uint.MaxValue;
     }
 
+    /// <summary>
+    /// Executes the randf range operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="from">
+    /// The from value.
+    /// </param>
+    ///
+    /// <param name="to">
+    /// The to value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public float RandfRange(float from, float to)
     {
         ThrowIfFreed();
@@ -115,6 +315,36 @@ public class RandomNumberGenerator : RefCounted
         return min + ((max - min) * Randf());
     }
 
+    /// <summary>
+    /// Executes the randfn operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="mean">
+    /// The mean value.
+    /// </param>
+    ///
+    /// <param name="deviation">
+    /// The deviation value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RandomNumberGenerator" />
+    ///
     public float Randfn(float mean = 0f, float deviation = 1f)
     {
         ThrowIfFreed();

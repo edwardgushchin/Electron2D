@@ -57,6 +57,29 @@ namespace Electron2D;
 /// <seealso cref="Sprite2D" />
 public class CanvasItem : Node
 {
+
+    /// <summary>
+    /// Initializes a new instance of the CanvasItem type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
+    public CanvasItem()
+    {
+    }
+
     private static long nextCanvasItemId;
     private readonly Rid canvasItemRid = new(Interlocked.Increment(ref nextCanvasItemId));
     private readonly List<CanvasItemDrawingCommand> drawingCommands = new();
@@ -80,6 +103,12 @@ public class CanvasItem : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current visible value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public bool Visible { get; set; } = true;
 
     /// <summary>
@@ -101,6 +130,10 @@ public class CanvasItem : Node
     /// </since>
     ///
     /// <seealso cref="SelfModulate" />
+    /// <value>
+    /// The current modulate value.
+    /// </value>
+    ///
     public Color Modulate { get; set; } = Color.White;
 
     /// <summary>
@@ -121,6 +154,10 @@ public class CanvasItem : Node
     /// </since>
     ///
     /// <seealso cref="Modulate" />
+    /// <value>
+    /// The current self modulate value.
+    /// </value>
+    ///
     public Color SelfModulate { get; set; } = Color.White;
 
     /// <summary>
@@ -140,6 +177,12 @@ public class CanvasItem : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current zindex value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public int ZIndex { get; set; }
 
     /// <summary>
@@ -159,6 +202,12 @@ public class CanvasItem : Node
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current ysort enabled value.
+    /// </value>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public bool YSortEnabled { get; set; }
 
     internal Rid CanvasItemRid => canvasItemRid;
@@ -181,6 +230,12 @@ public class CanvasItem : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public World2D GetWorld2D()
     {
         ThrowIfFreed();
@@ -303,6 +358,12 @@ public class CanvasItem : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)
     {
         AddDrawingCommand(CanvasItemDrawingCommand.CreateLine(from, to, color, width, antialiased));
@@ -326,6 +387,12 @@ public class CanvasItem : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public void DrawRect(Rect2 rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)
     {
         AddDrawingCommand(CanvasItemDrawingCommand.CreateRect(rect, color, filled, width, antialiased));
@@ -354,6 +421,12 @@ public class CanvasItem : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public void DrawCircle(Vector2 position, float radius, Color color, bool filled = true, float width = -1f, bool antialiased = false)
     {
         if (!Mathf.IsFinite(radius) || radius < 0f)
@@ -385,6 +458,12 @@ public class CanvasItem : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public void DrawPolygon(Vector2[] points, Color[] colors, Vector2[]? uvs = null, Texture2D? texture = null)
     {
         ArgumentNullException.ThrowIfNull(points);
@@ -428,6 +507,12 @@ public class CanvasItem : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public void DrawTexture(Texture2D texture, Vector2 position, Color? modulate = null)
     {
         ArgumentNullException.ThrowIfNull(texture);
@@ -460,6 +545,10 @@ public class CanvasItem : Node
     /// </since>
     ///
     /// <seealso cref="Font" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void DrawString(
         Font font,
         Vector2 position,
@@ -495,6 +584,12 @@ public class CanvasItem : Node
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="CanvasItem" />
+    ///
     public bool IsVisibleInTree()
     {
         ThrowIfFreed();

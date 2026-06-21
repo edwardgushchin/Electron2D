@@ -86,6 +86,8 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public AnimationPlayer()
     {
         RootNode = new NodePath(DefaultRootNode);
@@ -112,6 +114,8 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public NodePath RootNode { get; set; }
 
     /// <summary>
@@ -131,6 +135,10 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </since>
     ///
     /// <seealso cref="Play"/>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public StringName Autoplay { get; set; }
 
     /// <summary>
@@ -150,6 +158,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public StringName AssignedAnimation { get; set; }
 
     /// <summary>
@@ -167,6 +181,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public StringName CurrentAnimation { get; private set; }
 
     /// <summary>
@@ -184,6 +204,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public double CurrentAnimationPosition { get; private set; }
 
     /// <summary>
@@ -202,6 +228,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public double CurrentAnimationLength
     {
         get
@@ -231,6 +263,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public float SpeedScale
     {
         get => speedScale;
@@ -270,6 +308,10 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </since>
     ///
     /// <seealso cref="RemoveAnimationLibrary"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Error AddAnimationLibrary(StringName name, AnimationLibrary library)
     {
         ThrowIfFreed();
@@ -307,6 +349,8 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public void RemoveAnimationLibrary(StringName name)
     {
         ThrowIfFreed();
@@ -330,6 +374,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public bool HasAnimationLibrary(StringName name)
     {
         ThrowIfFreed();
@@ -353,6 +403,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public AnimationLibrary? GetAnimationLibrary(StringName name)
     {
         ThrowIfFreed();
@@ -372,6 +428,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public StringName[] GetAnimationLibraryList()
     {
         ThrowIfFreed();
@@ -398,6 +460,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public bool HasAnimation(StringName name)
     {
         ThrowIfFreed();
@@ -515,6 +583,10 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </since>
     ///
     /// <seealso cref="Queue"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public StringName[] GetQueue()
     {
         ThrowIfFreed();
@@ -534,6 +606,10 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </since>
     ///
     /// <seealso cref="Queue"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void ClearQueue()
     {
         ThrowIfFreed();
@@ -554,6 +630,10 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     ///
     /// <seealso cref="Play"/>
     /// <seealso cref="Stop"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void Pause()
     {
         ThrowIfFreed();
@@ -611,6 +691,12 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public bool IsPlaying()
     {
         ThrowIfFreed();
@@ -641,6 +727,8 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public void Advance(double delta)
     {
         ThrowIfFreed();
@@ -691,6 +779,8 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="AnimationPlayer" />
+    ///
     public override void _Ready()
     {
         base._Ready();

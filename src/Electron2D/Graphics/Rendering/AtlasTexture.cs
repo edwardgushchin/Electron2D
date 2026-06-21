@@ -46,6 +46,29 @@ namespace Electron2D;
 /// <seealso cref="Texture2D" />
 public sealed class AtlasTexture : Texture2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the AtlasTexture type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
+    public AtlasTexture()
+    {
+    }
+
     /// <summary>
     /// Gets or sets the texture that contains this atlas region.
     /// </summary>
@@ -63,6 +86,12 @@ public sealed class AtlasTexture : Texture2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current atlas value.
+    /// </value>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public Texture2D? Atlas { get; set; }
 
     /// <summary>
@@ -76,6 +105,16 @@ public sealed class AtlasTexture : Texture2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current filter clip value.
+    /// </value>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public bool FilterClip { get; set; }
 
     /// <summary>
@@ -94,6 +133,12 @@ public sealed class AtlasTexture : Texture2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current margin value.
+    /// </value>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public Rect2 Margin { get; set; }
 
     /// <summary>
@@ -112,39 +157,185 @@ public sealed class AtlasTexture : Texture2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current region value.
+    /// </value>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public Rect2 Region { get; set; }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Gets the width value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current width value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public override int GetWidth()
     {
         return Atlas is null ? 0 : ToPixelSize(Region.Size.X, Atlas.GetWidth());
     }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Gets the height value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current height value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public override int GetHeight()
     {
         return Atlas is null ? 0 : ToPixelSize(Region.Size.Y, Atlas.GetHeight());
     }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Checks whether alpha is available.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public override bool HasAlpha()
     {
         return Atlas?.HasAlpha() == true;
     }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Checks whether mipmaps is available.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public override bool HasMipmaps()
     {
         return Atlas?.HasMipmaps() == true;
     }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Gets the mipmap count value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current mipmap count value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public override int GetMipmapCount()
     {
         return Atlas?.GetMipmapCount() ?? 0;
     }
 
     /// <inheritdoc />
+    /// <summary>
+    /// Checks whether pixel opaque is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="x">
+    /// The X coordinate or component.
+    /// </param>
+    ///
+    /// <param name="y">
+    /// The Y coordinate or component.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AtlasTexture" />
+    ///
     public override bool IsPixelOpaque(int x, int y)
     {
         if (Atlas is null || x < 0 || y < 0 || x >= GetWidth() || y >= GetHeight())

@@ -48,6 +48,29 @@ namespace Electron2D;
 /// <seealso cref="InputEventScreenDrag"/>
 public class InputEventScreenTouch : InputEventFromWindow
 {
+
+    /// <summary>
+    /// Initializes a new instance of the InputEventScreenTouch type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="InputEventScreenTouch" />
+    ///
+    public InputEventScreenTouch()
+    {
+    }
+
     /// <summary>
     /// Gets or sets the touch index.
     /// </summary>
@@ -65,6 +88,12 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current index value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenTouch" />
+    ///
     public int Index { get; set; }
 
     /// <summary>
@@ -84,6 +113,12 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current position value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenTouch" />
+    ///
     public Vector2 Position { get; set; }
 
     /// <summary>
@@ -102,6 +137,12 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current pressed value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenTouch" />
+    ///
     public bool Pressed { get; set; }
 
     /// <summary>
@@ -120,6 +161,12 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current double tap value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenTouch" />
+    ///
     public bool DoubleTap { get; set; }
 
     /// <summary>
@@ -138,6 +185,12 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current canceled value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenTouch" />
+    ///
     public bool Canceled { get; set; }
 }
 
@@ -165,6 +218,29 @@ public class InputEventScreenTouch : InputEventFromWindow
 /// <seealso cref="InputEventScreenTouch"/>
 public class InputEventScreenDrag : InputEventFromWindow
 {
+
+    /// <summary>
+    /// Initializes a new instance of the InputEventScreenDrag type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
+    public InputEventScreenDrag()
+    {
+    }
+
     private float pressure;
 
     /// <summary>
@@ -182,6 +258,12 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current index value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public int Index { get; set; }
 
     /// <summary>
@@ -195,6 +277,16 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current position value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public Vector2 Position { get; set; }
 
     /// <summary>
@@ -208,6 +300,16 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current relative value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public Vector2 Relative { get; set; }
 
     /// <summary>
@@ -221,6 +323,16 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current screen relative value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public Vector2 ScreenRelative { get; set; }
 
     /// <summary>
@@ -234,6 +346,16 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current velocity value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public Vector2 Velocity { get; set; }
 
     /// <summary>
@@ -247,6 +369,16 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current screen velocity value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public Vector2 ScreenVelocity { get; set; }
 
     /// <summary>
@@ -265,6 +397,12 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current pressure value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public float Pressure
     {
         get => pressure;
@@ -282,6 +420,16 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current tilt value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public Vector2 Tilt { get; set; }
 
     /// <summary>
@@ -295,5 +443,15 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current pen inverted value.
+    /// </value>
+    ///
+    /// <seealso cref="InputEventScreenDrag" />
+    ///
     public bool PenInverted { get; set; }
 }

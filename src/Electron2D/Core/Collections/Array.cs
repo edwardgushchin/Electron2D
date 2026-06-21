@@ -56,6 +56,29 @@ namespace Electron2D.Collections;
 /// <seealso cref="Variant"/>
 public sealed class Array : IEnumerable<Variant>
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Array type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Array" />
+    ///
+    public Array()
+    {
+    }
+
     private readonly List<Variant> _values = new();
 
     /// <summary>
@@ -88,6 +111,10 @@ public sealed class Array : IEnumerable<Variant>
     ///
     /// <seealso cref="Add"/>
     /// <seealso cref="RemoveAt"/>
+    /// <value>
+    /// The value at the specified index.
+    /// </value>
+    ///
     public Variant this[int index]
     {
         get => _values[index];
@@ -117,6 +144,8 @@ public sealed class Array : IEnumerable<Variant>
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Array" />
+    ///
     public int Count => _values.Count;
 
     /// <summary>
@@ -289,6 +318,8 @@ public sealed class Array : IEnumerable<Variant>
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Array" />
+    ///
     public override string ToString()
     {
         var builder = new StringBuilder();

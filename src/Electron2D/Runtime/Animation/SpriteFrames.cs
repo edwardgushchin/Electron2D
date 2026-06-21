@@ -77,6 +77,8 @@ public sealed class SpriteFrames : Resource
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="SpriteFrames" />
+    ///
     public SpriteFrames()
     {
         animations.Add(DefaultAnimation, new AnimationData());
@@ -99,18 +101,48 @@ public sealed class SpriteFrames : Resource
         /// <summary>
         /// The animation stops when playback reaches the first or last frame.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept LoopModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="LoopModeEnum" />
+        ///
         None = 0,
 
         /// <summary>
         /// The animation wraps to the opposite end and continues in the same
         /// direction.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept LoopModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="LoopModeEnum" />
+        ///
         Linear = 1,
 
         /// <summary>
         /// The animation changes direction each time playback reaches the
         /// first or last frame.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept LoopModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="LoopModeEnum" />
+        ///
         Pingpong = 2
     }
 
@@ -137,6 +169,10 @@ public sealed class SpriteFrames : Resource
     ///
     /// <seealso cref="HasAnimation"/>
     /// <seealso cref="RemoveAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void AddAnimation(StringName animation)
     {
         var name = ValidateAnimationName(animation, nameof(animation));
@@ -228,6 +264,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="ClearAll"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void Clear(StringName animation)
     {
         GetExistingAnimation(animation, nameof(animation)).Frames.Clear();
@@ -282,6 +322,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="RenameAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void DuplicateAnimation(StringName animationFrom, StringName animationTo)
     {
         var source = GetExistingAnimation(animationFrom, nameof(animationFrom));
@@ -323,6 +367,10 @@ public sealed class SpriteFrames : Resource
     ///
     /// <seealso cref="SetAnimationLoop"/>
     /// <seealso cref="GetAnimationLoopMode"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public bool GetAnimationLoop(StringName animation)
     {
         return GetAnimationLoopMode(animation) == LoopModeEnum.Linear;
@@ -353,6 +401,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="SetAnimationLoopMode"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public LoopModeEnum GetAnimationLoopMode(StringName animation)
     {
         return GetExistingAnimation(animation, nameof(animation)).LoopMode;
@@ -374,6 +426,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="AddAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public StringName[] GetAnimationNames()
     {
         return animations.Keys
@@ -406,6 +462,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="SetAnimationSpeed"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public float GetAnimationSpeed(StringName animation)
     {
         return GetExistingAnimation(animation, nameof(animation)).Speed;
@@ -436,6 +496,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="AddFrame"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public int GetFrameCount(StringName animation)
     {
         return GetExistingAnimation(animation, nameof(animation)).Frames.Count;
@@ -471,6 +535,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="SetFrame"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public float GetFrameDuration(StringName animation, int index)
     {
         return GetFrame(animation, index, nameof(index)).Duration;
@@ -506,6 +574,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="AddFrame"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Texture2D GetFrameTexture(StringName animation, int index)
     {
         return GetFrame(animation, index, nameof(index)).Texture;
@@ -532,6 +604,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="AddAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public bool HasAnimation(StringName animation)
     {
         return !animation.IsEmpty() && animations.ContainsKey(animation);
@@ -602,6 +678,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="AddFrame"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void RemoveFrame(StringName animation, int index)
     {
         var data = GetExistingAnimation(animation, nameof(animation));
@@ -633,6 +713,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="DuplicateAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void RenameAnimation(StringName animation, StringName newName)
     {
         var sourceName = ValidateAnimationName(animation, nameof(animation));
@@ -678,6 +762,10 @@ public sealed class SpriteFrames : Resource
     ///
     /// <seealso cref="GetAnimationLoop"/>
     /// <seealso cref="SetAnimationLoopMode"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void SetAnimationLoop(StringName animation, bool loop)
     {
         SetAnimationLoopMode(animation, loop ? LoopModeEnum.Linear : LoopModeEnum.None);
@@ -706,6 +794,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="GetAnimationLoopMode"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void SetAnimationLoopMode(StringName animation, LoopModeEnum loopMode)
     {
         GetExistingAnimation(animation, nameof(animation)).LoopMode = loopMode;
@@ -738,6 +830,10 @@ public sealed class SpriteFrames : Resource
     /// </since>
     ///
     /// <seealso cref="GetAnimationSpeed"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void SetAnimationSpeed(StringName animation, float fps)
     {
         ValidatePositiveFinite(fps, nameof(fps), "Animation speed");
@@ -778,6 +874,10 @@ public sealed class SpriteFrames : Resource
     ///
     /// <seealso cref="GetFrameTexture"/>
     /// <seealso cref="GetFrameDuration"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void SetFrame(StringName animation, int index, Texture2D texture, float duration = 1f)
     {
         ArgumentNullException.ThrowIfNull(texture);

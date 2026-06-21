@@ -76,36 +76,106 @@ public static class DisplayServer
         /// <summary>
         /// Represents default landscape orientation.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ScreenOrientation.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ScreenOrientation" />
+        ///
         Landscape = 0,
 
         /// <summary>
         /// Represents default portrait orientation.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ScreenOrientation.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ScreenOrientation" />
+        ///
         Portrait = 1,
 
         /// <summary>
         /// Represents reverse landscape orientation.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ScreenOrientation.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ScreenOrientation" />
+        ///
         ReverseLandscape = 2,
 
         /// <summary>
         /// Represents reverse portrait orientation.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ScreenOrientation.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ScreenOrientation" />
+        ///
         ReversePortrait = 3,
 
         /// <summary>
         /// Represents automatic landscape orientation selected by sensors.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ScreenOrientation.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ScreenOrientation" />
+        ///
         SensorLandscape = 4,
 
         /// <summary>
         /// Represents automatic portrait orientation selected by sensors.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ScreenOrientation.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ScreenOrientation" />
+        ///
         SensorPortrait = 5,
 
         /// <summary>
         /// Represents automatic landscape or portrait orientation selected by sensors.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept ScreenOrientation.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="ScreenOrientation" />
+        ///
         Sensor = 6
     }
 
@@ -132,41 +202,121 @@ public static class DisplayServer
         /// <summary>
         /// Represents a default text keyboard.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         Default = 0,
 
         /// <summary>
         /// Represents a multiline text keyboard.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         Multiline = 1,
 
         /// <summary>
         /// Represents a numeric keyboard.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         Number = 2,
 
         /// <summary>
         /// Represents a numeric keyboard that allows decimal separators.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         NumberDecimal = 3,
 
         /// <summary>
         /// Represents a phone-number keyboard.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         Phone = 4,
 
         /// <summary>
         /// Represents an email-address keyboard.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         EmailAddress = 5,
 
         /// <summary>
         /// Represents a password keyboard.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         Password = 6,
 
         /// <summary>
         /// Represents a URL keyboard.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept VirtualKeyboardType.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="VirtualKeyboardType" />
+        ///
         Url = 7
     }
 
@@ -193,6 +343,8 @@ public static class DisplayServer
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="DisplayServer" />
+    ///
     public static Rect2I GetDisplaySafeArea()
     {
         lock (SyncRoot)
@@ -291,6 +443,10 @@ public static class DisplayServer
     ///
     /// <seealso cref="VirtualKeyboardShow"/>
     /// <seealso cref="VirtualKeyboardHide"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static int VirtualKeyboardGetHeight()
     {
         lock (SyncRoot)

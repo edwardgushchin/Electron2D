@@ -24,20 +24,106 @@
 */
 namespace Electron2D;
 
+/// <summary>
+/// Represents the node path value type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public readonly struct NodePath : IEquatable<NodePath>
 {
     private readonly string? _path;
 
+    /// <summary>
+    /// Initializes a new instance of the NodePath type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="path">
+    /// The path value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public NodePath(string path)
     {
         _path = path ?? string.Empty;
     }
 
+    /// <summary>
+    /// Gets the name count value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current name count value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public int GetNameCount()
     {
         return GetNodeNames().Length;
     }
 
+    /// <summary>
+    /// Gets the name value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="index">
+    /// The index value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current name value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public string GetName(int index)
     {
         var names = GetNodeNames();
@@ -49,11 +135,59 @@ public readonly struct NodePath : IEquatable<NodePath>
         return names[index];
     }
 
+    /// <summary>
+    /// Gets the subname count value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current subname count value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public int GetSubnameCount()
     {
         return GetSubnames().Length;
     }
 
+    /// <summary>
+    /// Gets the subname value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="index">
+    /// The index value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current subname value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public string GetSubname(int index)
     {
         var subnames = GetSubnames();
@@ -65,46 +199,272 @@ public readonly struct NodePath : IEquatable<NodePath>
         return subnames[index];
     }
 
+    /// <summary>
+    /// Checks whether absolute is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public bool IsAbsolute()
     {
         return Text.StartsWith("/", StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Checks whether empty is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public bool IsEmpty()
     {
         return Text.Length == 0;
     }
 
+    /// <summary>
+    /// Executes the to string operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public override string ToString()
     {
         return Text;
     }
 
+    /// <summary>
+    /// Executes the equals operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="other">
+    /// The other value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public bool Equals(NodePath other)
     {
         return string.Equals(Text, other.Text, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Executes the equals operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="obj">
+    /// The obj value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public override bool Equals(object? obj)
     {
         return obj is NodePath other && Equals(other);
     }
 
+    /// <summary>
+    /// Gets the hash code value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current hash code value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public override int GetHashCode()
     {
         return StringComparer.Ordinal.GetHashCode(Text);
     }
 
+    /// <summary>
+    /// Applies the <c>==</c> operator.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This operator returns a value derived from the supplied operands.
+    /// </remarks>
+    ///
+    /// <param name="left">
+    /// The left value.
+    /// </param>
+    ///
+    /// <param name="right">
+    /// The right value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operator.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public static bool operator ==(NodePath left, NodePath right)
     {
         return left.Equals(right);
     }
 
+    /// <summary>
+    /// Applies the <c>!=</c> operator.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This operator returns a value derived from the supplied operands.
+    /// </remarks>
+    ///
+    /// <param name="left">
+    /// The left value.
+    /// </param>
+    ///
+    /// <param name="right">
+    /// The right value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operator.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public static bool operator !=(NodePath left, NodePath right)
     {
         return !left.Equals(right);
     }
 
+    /// <summary>
+    /// Converts the supplied value to the target type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="path">
+    /// The path value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="NodePath" />
+    ///
     public static implicit operator NodePath(string path)
     {
         return new NodePath(path);

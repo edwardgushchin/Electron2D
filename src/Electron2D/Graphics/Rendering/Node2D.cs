@@ -47,6 +47,29 @@ namespace Electron2D;
 /// <seealso cref="CanvasItem" />
 public class Node2D : CanvasItem
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Node2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
+    public Node2D()
+    {
+    }
+
     /// <summary>
     /// Gets or sets the local position relative to the direct `Node2D` parent.
     /// </summary>
@@ -58,6 +81,16 @@ public class Node2D : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current position value.
+    /// </value>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public Vector2 Position { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -73,6 +106,14 @@ public class Node2D : CanvasItem
     /// </since>
     ///
     /// <seealso cref="RotationDegrees" />
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current rotation value.
+    /// </value>
+    ///
     public float Rotation { get; set; }
 
     /// <summary>
@@ -88,6 +129,14 @@ public class Node2D : CanvasItem
     /// </since>
     ///
     /// <seealso cref="Rotation" />
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current rotation degrees value.
+    /// </value>
+    ///
     public float RotationDegrees
     {
         get
@@ -113,6 +162,16 @@ public class Node2D : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current scale value.
+    /// </value>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public Vector2 Scale { get; set; } = Vector2.One;
 
     /// <summary>
@@ -131,6 +190,12 @@ public class Node2D : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current transform value.
+    /// </value>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public Transform2D Transform
     {
         get
@@ -156,6 +221,16 @@ public class Node2D : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current global position value.
+    /// </value>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public Vector2 GlobalPosition
     {
         get
@@ -183,6 +258,16 @@ public class Node2D : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current global rotation value.
+    /// </value>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public float GlobalRotation
     {
         get
@@ -210,6 +295,14 @@ public class Node2D : CanvasItem
     /// </since>
     ///
     /// <seealso cref="GlobalRotation" />
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current global rotation degrees value.
+    /// </value>
+    ///
     public float GlobalRotationDegrees
     {
         get
@@ -235,6 +328,16 @@ public class Node2D : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current global scale value.
+    /// </value>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public Vector2 GlobalScale
     {
         get
@@ -262,6 +365,14 @@ public class Node2D : CanvasItem
     /// </since>
     ///
     /// <seealso cref="Transform" />
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current global transform value.
+    /// </value>
+    ///
     public Transform2D GlobalTransform
     {
         get
@@ -290,6 +401,12 @@ public class Node2D : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public void ApplyScale(Vector2 ratio)
     {
         ThrowIfFreed();
@@ -309,6 +426,12 @@ public class Node2D : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public void GlobalTranslate(Vector2 offset)
     {
         ThrowIfFreed();
@@ -328,6 +451,12 @@ public class Node2D : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Node2D" />
+    ///
     public void Rotate(float radians)
     {
         ThrowIfFreed();
@@ -350,6 +479,10 @@ public class Node2D : CanvasItem
     /// </since>
     ///
     /// <seealso cref="ToLocal" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Vector2 ToGlobal(Vector2 localPoint)
     {
         ThrowIfFreed();
@@ -372,6 +505,10 @@ public class Node2D : CanvasItem
     /// </since>
     ///
     /// <seealso cref="ToGlobal" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Vector2 ToLocal(Vector2 globalPoint)
     {
         ThrowIfFreed();
@@ -395,6 +532,8 @@ public class Node2D : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Node2D" />
+    ///
     public void Translate(Vector2 offset)
     {
         ThrowIfFreed();

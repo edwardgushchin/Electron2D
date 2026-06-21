@@ -86,97 +86,295 @@ public readonly struct Variant : IEquatable<Variant>
         /// <summary>
         /// Represents a null-like value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Nil = 0,
 
         /// <summary>
         /// Represents a Boolean value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Bool = 1,
 
         /// <summary>
         /// Represents a signed 64-bit integer value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Int = 2,
 
         /// <summary>
         /// Represents a 64-bit floating-point value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Float = 3,
 
         /// <summary>
         /// Represents a UTF-16 .NET string value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         String = 4,
 
         /// <summary>
         /// Represents a <see cref="Vector2"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Vector2 = 5,
 
         /// <summary>
         /// Represents a <see cref="Vector2I"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Vector2I = 6,
 
         /// <summary>
         /// Represents a <see cref="Rect2"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Rect2 = 7,
 
         /// <summary>
         /// Represents a <see cref="Rect2I"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Rect2I = 8,
 
         /// <summary>
         /// Represents a <see cref="Transform2D"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Transform2D = 9,
 
         /// <summary>
         /// Represents a <see cref="Color"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Color = 10,
 
         /// <summary>
         /// Represents a <see cref="StringName"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         StringName = 11,
 
         /// <summary>
         /// Represents a <see cref="NodePath"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         NodePath = 12,
 
         /// <summary>
         /// Represents a <see cref="Rid"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Rid = 13,
 
         /// <summary>
         /// Represents an <see cref="Electron2D.Object"/> or derived instance.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Object = 14,
 
         /// <summary>
         /// Represents a <see cref="Callable"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Callable = 15,
 
         /// <summary>
         /// Represents an <see cref="VariantDictionary"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Dictionary = 16,
 
         /// <summary>
         /// Represents an <see cref="VariantArray"/> value.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Type.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Type" />
+        ///
         Array = 17
     }
 
     /// <summary>
     /// Gets the type stored in this variant.
     /// </summary>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current variant type value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Type VariantType => _variantType;
 
     /// <summary>
@@ -188,6 +386,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// are boxed as <see cref="long"/> and floating-point values are boxed as
     /// <see cref="double"/>.
     /// </remarks>
+    /// <value>
+    /// The current obj value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public object? Obj => _value;
 
     /// <summary>
@@ -207,6 +419,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// Thrown when an unsigned 64-bit integer cannot be represented by the
     /// signed 64-bit Variant integer type.
     /// </exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static Variant CreateFrom(object? value)
     {
         return value switch
@@ -258,6 +484,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// Thrown when <typeparamref name="T"/> or the runtime value is not part of
     /// the closed Variant type set.
     /// </exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static Variant From<T>(T value)
     {
         return CreateFrom(value);
@@ -268,6 +508,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// </summary>
     ///
     /// <returns><c>true</c> for nil variants; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public bool IsNil()
     {
         return _variantType == Type.Nil;
@@ -288,6 +542,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <exception cref="ArgumentException">
     /// Thrown when <typeparamref name="T"/> is not a supported Variant target type.
     /// </exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public T As<T>()
     {
         var targetType = typeof(T);
@@ -447,6 +715,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored <see cref="bool"/> value.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Bool"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public bool AsBool()
     {
         return Expect<bool>(Type.Bool);
@@ -459,6 +741,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored <see cref="long"/> value.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Int"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public long AsInt64()
     {
         return Expect<long>(Type.Int);
@@ -474,6 +770,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// Thrown when this variant is not <see cref="Type.Int"/> or the value does
     /// not fit in <see cref="int"/>.
     /// </exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public int AsInt32()
     {
         var value = AsInt64();
@@ -492,6 +802,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored <see cref="double"/> value.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Float"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public double AsDouble()
     {
         return Expect<double>(Type.Float);
@@ -504,6 +828,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored string.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.String"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public string AsString()
     {
         return Expect<string>(Type.String);
@@ -516,6 +854,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored vector.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Vector2"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Vector2 AsVector2()
     {
         return Expect<Vector2>(Type.Vector2);
@@ -528,6 +880,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored integer vector.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Vector2I"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Vector2I AsVector2I()
     {
         return Expect<Vector2I>(Type.Vector2I);
@@ -540,6 +906,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored rectangle.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Rect2"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Rect2 AsRect2()
     {
         return Expect<Rect2>(Type.Rect2);
@@ -552,6 +932,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored integer rectangle.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Rect2I"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Rect2I AsRect2I()
     {
         return Expect<Rect2I>(Type.Rect2I);
@@ -564,6 +958,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored transform.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Transform2D"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Transform2D AsTransform2D()
     {
         return Expect<Transform2D>(Type.Transform2D);
@@ -576,6 +984,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored color.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Color"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Color AsColor()
     {
         return Expect<Color>(Type.Color);
@@ -588,6 +1010,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored string name.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.StringName"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public StringName AsStringName()
     {
         return Expect<StringName>(Type.StringName);
@@ -600,6 +1036,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored node path.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.NodePath"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public NodePath AsNodePath()
     {
         return Expect<NodePath>(Type.NodePath);
@@ -612,6 +1062,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored resource identifier.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Rid"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Rid AsRid()
     {
         return Expect<Rid>(Type.Rid);
@@ -624,6 +1088,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored <see cref="Electron2D.Object"/> or derived instance.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Object"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Object? AsObject()
     {
         return Expect<Object>(Type.Object);
@@ -636,6 +1114,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored callable.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Callable"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public Callable AsCallable()
     {
         return Expect<Callable>(Type.Callable);
@@ -648,6 +1140,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored <see cref="VariantArray"/> instance.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Array"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public VariantArray AsArray()
     {
         return Expect<VariantArray>(Type.Array);
@@ -660,6 +1166,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <returns>The stored <see cref="VariantDictionary"/> instance.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Dictionary"/>.</exception>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public VariantDictionary AsDictionary()
     {
         return Expect<VariantDictionary>(Type.Dictionary);
@@ -672,6 +1192,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <param name="other">The variant to compare with this value.</param>
     ///
     /// <returns><c>true</c> if both variants have the same type and value; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public bool Equals(Variant other)
     {
         if (_variantType != other._variantType)
@@ -694,6 +1228,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <param name="obj">The object to compare with this value.</param>
     ///
     /// <returns><c>true</c> when <paramref name="obj"/> is an equal Variant; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public override bool Equals(object? obj)
     {
         return obj is Variant other && Equals(other);
@@ -704,6 +1252,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// </summary>
     ///
     /// <returns>A hash code suitable for dictionary keys.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public override int GetHashCode()
     {
         return _variantType switch
@@ -721,6 +1283,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// </summary>
     ///
     /// <returns>A string representation of this Variant.</returns>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public override string ToString()
     {
         return _variantType == Type.Nil
@@ -736,6 +1312,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <param name="right">The right variant.</param>
     ///
     /// <returns><c>true</c> if both variants are equal; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This operator returns a value derived from the supplied operands.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static bool operator ==(Variant left, Variant right)
     {
         return left.Equals(right);
@@ -749,6 +1339,20 @@ public readonly struct Variant : IEquatable<Variant>
     /// <param name="right">The right variant.</param>
     ///
     /// <returns><c>true</c> if the variants are different; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// This operator returns a value derived from the supplied operands.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static bool operator !=(Variant left, Variant right)
     {
         return !left.Equals(right);
@@ -757,6 +1361,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a Boolean value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(bool value)
     {
         return new Variant(Type.Bool, value);
@@ -765,6 +1391,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts an 8-bit signed integer value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(sbyte value)
     {
         return FromInt64(value);
@@ -773,6 +1421,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts an 8-bit unsigned integer value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(byte value)
     {
         return FromInt64(value);
@@ -781,6 +1451,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a 16-bit signed integer value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(short value)
     {
         return FromInt64(value);
@@ -789,6 +1481,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a 16-bit unsigned integer value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(ushort value)
     {
         return FromInt64(value);
@@ -797,6 +1511,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a 32-bit signed integer value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(int value)
     {
         return FromInt64(value);
@@ -805,6 +1541,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a 32-bit unsigned integer value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(uint value)
     {
         return FromInt64(value);
@@ -813,6 +1571,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a 64-bit signed integer value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(long value)
     {
         return FromInt64(value);
@@ -826,6 +1606,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// Thrown when <paramref name="value"/> cannot be represented by a signed
     /// 64-bit Variant integer.
     /// </exception>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(ulong value)
     {
         return FromUInt64(value);
@@ -834,6 +1636,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a 32-bit floating-point value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(float value)
     {
         return FromDouble(value);
@@ -842,6 +1666,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a 64-bit floating-point value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(double value)
     {
         return FromDouble(value);
@@ -850,6 +1696,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a string value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(string? value)
     {
         return CreateFrom(value);
@@ -858,6 +1726,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Vector2"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Vector2 value)
     {
         return new Variant(Type.Vector2, value);
@@ -866,6 +1756,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Vector2I"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Vector2I value)
     {
         return new Variant(Type.Vector2I, value);
@@ -874,6 +1786,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Rect2"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Rect2 value)
     {
         return new Variant(Type.Rect2, value);
@@ -882,6 +1816,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Rect2I"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Rect2I value)
     {
         return new Variant(Type.Rect2I, value);
@@ -890,6 +1846,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Transform2D"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Transform2D value)
     {
         return new Variant(Type.Transform2D, value);
@@ -898,6 +1876,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Color"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Color value)
     {
         return new Variant(Type.Color, value);
@@ -906,6 +1906,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="StringName"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(StringName value)
     {
         return new Variant(Type.StringName, value);
@@ -914,6 +1936,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="NodePath"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(NodePath value)
     {
         return new Variant(Type.NodePath, value);
@@ -922,6 +1966,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Rid"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Rid value)
     {
         return new Variant(Type.Rid, value);
@@ -930,6 +1996,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts a <see cref="Callable"/> value to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Callable value)
     {
         return new Variant(Type.Callable, value);
@@ -938,6 +2026,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts an object reference to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(Object? value)
     {
         return CreateFrom(value);
@@ -946,6 +2056,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts an Electron2D array reference to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(VariantArray? value)
     {
         return CreateFrom(value);
@@ -954,6 +2086,28 @@ public readonly struct Variant : IEquatable<Variant>
     /// <summary>
     /// Converts an Electron2D dictionary reference to a Variant.
     /// </summary>
+    /// <remarks>
+    /// The conversion follows the validation rules of the source and target types.
+    /// </remarks>
+    ///
+    /// <param name="value">
+    /// The value to use.
+    /// </param>
+    ///
+    /// <returns>
+    /// The converted value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Variant" />
+    ///
     public static implicit operator Variant(VariantDictionary? value)
     {
         return CreateFrom(value);

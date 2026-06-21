@@ -85,6 +85,8 @@ public class CharacterBody2D : PhysicsBody2D
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="CharacterBody2D" />
+    ///
     public CharacterBody2D()
     {
     }
@@ -117,6 +119,12 @@ public class CharacterBody2D : PhysicsBody2D
         /// Use this mode for platformers and other grounded characters.
         /// </para>
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="MotionModeEnum" />
+        ///
         Grounded = 0,
 
         /// <summary>
@@ -129,6 +137,12 @@ public class CharacterBody2D : PhysicsBody2D
         /// classification should be ignored.
         /// </para>
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="MotionModeEnum" />
+        ///
         Floating = 1
     }
 
@@ -160,6 +174,12 @@ public class CharacterBody2D : PhysicsBody2D
         /// This is the default policy.
         /// </para>
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="PlatformOnLeaveEnum" />
+        ///
         AddVelocity = 0,
 
         /// <summary>
@@ -172,6 +192,12 @@ public class CharacterBody2D : PhysicsBody2D
         /// character downward after contact ends.
         /// </para>
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="PlatformOnLeaveEnum" />
+        ///
         AddUpwardVelocity = 1,
 
         /// <summary>
@@ -184,6 +210,12 @@ public class CharacterBody2D : PhysicsBody2D
         /// through <see cref="GetPlatformVelocity"/>.
         /// </para>
         /// </remarks>
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="PlatformOnLeaveEnum" />
+        ///
         DoNothing = 2
     }
 

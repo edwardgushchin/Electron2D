@@ -63,6 +63,12 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public Area2D()
     {
         AddUserSignal(BodyEnteredSignal);
@@ -82,6 +88,16 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current monitoring value.
+    /// </value>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public bool Monitoring { get; set; } = true;
 
     /// <summary>
@@ -95,6 +111,16 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current monitorable value.
+    /// </value>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public bool Monitorable { get; set; } = true;
 
     /// <summary>
@@ -108,6 +134,16 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current priority value.
+    /// </value>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public int Priority { get; set; }
 
     /// <summary>
@@ -130,6 +166,8 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Area2D" />
+    ///
     public Node2D[] GetOverlappingBodies()
     {
         ThrowIfFreed();
@@ -156,6 +194,8 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="Area2D" />
+    ///
     public Area2D[] GetOverlappingAreas()
     {
         ThrowIfFreed();
@@ -175,6 +215,12 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public bool HasOverlappingBodies()
     {
         ThrowIfFreed();
@@ -194,6 +240,12 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public bool HasOverlappingAreas()
     {
         ThrowIfFreed();
@@ -215,6 +267,12 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public bool OverlapsBody(Node2D body)
     {
         ThrowIfFreed();
@@ -237,6 +295,12 @@ public class Area2D : CollisionObject2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Area2D" />
+    ///
     public bool OverlapsArea(Area2D area)
     {
         ThrowIfFreed();

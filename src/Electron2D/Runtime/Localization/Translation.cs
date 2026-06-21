@@ -54,6 +54,29 @@ namespace Electron2D;
 /// <seealso cref="TranslationServer" />
 public sealed class Translation : Resource
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Translation type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Translation" />
+    ///
+    public Translation()
+    {
+    }
+
     private readonly Dictionary<MessageKey, string> messages = new();
     private string locale = string.Empty;
 
@@ -79,6 +102,12 @@ public sealed class Translation : Resource
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current locale value.
+    /// </value>
+    ///
+    /// <seealso cref="Translation" />
+    ///
     public string Locale
     {
         get
@@ -156,6 +185,10 @@ public sealed class Translation : Resource
     /// </since>
     ///
     /// <seealso cref="AddMessage" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void EraseMessage(string srcMessage, string context = "")
     {
         ThrowIfFreed();
@@ -190,6 +223,10 @@ public sealed class Translation : Resource
     /// </since>
     ///
     /// <seealso cref="AddMessage" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public string GetMessage(string srcMessage, string context = "")
     {
         ThrowIfFreed();
@@ -214,6 +251,12 @@ public sealed class Translation : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Translation" />
+    ///
     public string[] GetMessageList()
     {
         ThrowIfFreed();

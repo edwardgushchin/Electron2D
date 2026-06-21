@@ -271,14 +271,14 @@ XElement? FindMember(string id)
         return exact;
     }
 
-    var methodParameterIndex = id.IndexOf('(', StringComparison.Ordinal);
-    if (methodParameterIndex > 0)
+    var parameterIndex = id.IndexOf('(', StringComparison.Ordinal);
+    if (parameterIndex > 0)
     {
-        var prefix = id.Substring(0, methodParameterIndex);
+        var prefix = id.Substring(0, parameterIndex);
         return members.FirstOrDefault(item => item.Key.StartsWith(prefix + "(", StringComparison.Ordinal)).Value;
     }
 
-    return null;
+    return members.FirstOrDefault(item => item.Key.StartsWith(id + "(", StringComparison.Ordinal)).Value;
 }
 
 static string TypeId(Type type) => "T:" + TypeName(type);

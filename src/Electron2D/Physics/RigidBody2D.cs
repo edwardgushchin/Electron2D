@@ -44,6 +44,29 @@ namespace Electron2D;
 /// </since>
 public class RigidBody2D : PhysicsBody2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the RigidBody2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
+    public RigidBody2D()
+    {
+    }
+
     private float gravityScale = 1f;
     private bool sleeping;
     private bool canSleep = true;
@@ -55,16 +78,40 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This enum is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
     public enum FreezeModeEnum
     {
         /// <summary>
         /// Treat the frozen body like a static body.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept FreezeModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="FreezeModeEnum" />
+        ///
         Static = 0,
 
         /// <summary>
         /// Treat the frozen body like a kinematic body.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept FreezeModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="FreezeModeEnum" />
+        ///
         Kinematic = 1
     }
 
@@ -75,16 +122,40 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This enum is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
     public enum CenterOfMassModeEnum
     {
         /// <summary>
         /// Calculate the center of mass from shapes.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept CenterOfMassModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="CenterOfMassModeEnum" />
+        ///
         Auto = 0,
 
         /// <summary>
         /// Use <see cref="RigidBody2D.CenterOfMass" />.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept CenterOfMassModeEnum.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="CenterOfMassModeEnum" />
+        ///
         Custom = 1
     }
 
@@ -99,6 +170,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current mass value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public float Mass { get; set; } = 1f;
 
     /// <summary>
@@ -112,6 +193,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current inertia value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public float Inertia { get; set; }
 
     /// <summary>
@@ -125,6 +216,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current center of mass value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public Vector2 CenterOfMass { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -138,6 +239,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current center of mass mode value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public CenterOfMassModeEnum CenterOfMassMode { get; set; } = CenterOfMassModeEnum.Auto;
 
     /// <summary>
@@ -151,6 +262,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current gravity scale value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public float GravityScale
     {
         get
@@ -181,6 +302,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current linear velocity value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public Vector2 LinearVelocity { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -194,6 +325,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current angular velocity value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public float AngularVelocity { get; set; }
 
     /// <summary>
@@ -207,6 +348,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current freeze value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public bool Freeze { get; set; }
 
     /// <summary>
@@ -220,6 +371,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current freeze mode value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public FreezeModeEnum FreezeMode { get; set; } = FreezeModeEnum.Static;
 
     /// <summary>
@@ -233,6 +394,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current sleeping value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public bool Sleeping
     {
         get
@@ -258,6 +429,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current can sleep value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public bool CanSleep
     {
         get
@@ -283,6 +464,16 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current lock rotation value.
+    /// </value>
+    ///
+    /// <seealso cref="RigidBody2D" />
+    ///
     public bool LockRotation { get; set; }
 
     protected override Rid CreatePhysicsRid()

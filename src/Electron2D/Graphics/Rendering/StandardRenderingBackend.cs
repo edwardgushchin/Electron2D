@@ -52,4 +52,4 @@ internal sealed class StandardRenderingBackend : RenderingBackend
             StandardFeatures)
     {
     }
-}
+    }

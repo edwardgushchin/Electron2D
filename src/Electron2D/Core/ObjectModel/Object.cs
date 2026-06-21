@@ -26,8 +26,47 @@ using System.Threading;
 
 namespace Electron2D;
 
+/// <summary>
+/// Represents the object type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public class Object
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Object type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
+    public Object()
+    {
+    }
+
     private static long s_nextInstanceId;
 
     private readonly Dictionary<string, List<SignalConnection>> _signalConnections = new(StringComparer.Ordinal);
@@ -37,11 +76,51 @@ public class Object
     private bool _freeing;
     private bool _queuedForDeletion;
 
+    /// <summary>
+    /// Gets the instance id value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current instance id value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public ulong GetInstanceId()
     {
         return _instanceId;
     }
 
+    /// <summary>
+    /// Executes the free operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public void Free()
     {
         if (_freed || _freeing)
@@ -62,28 +141,158 @@ public class Object
         }
     }
 
+    /// <summary>
+    /// Checks whether instance valid is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="instance">
+    /// The instance value.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public static bool IsInstanceValid(Object? instance)
     {
         return instance is not null && !instance._freed;
     }
 
+    /// <summary>
+    /// Checks whether queued for deletion is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public bool IsQueuedForDeletion()
     {
         return _queuedForDeletion;
     }
 
+    /// <summary>
+    /// Adds the user signal value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="signal">
+    /// The signal value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public void AddUserSignal(string signal)
     {
         ThrowIfFreed();
         _signals.Add(ValidateSignalName(signal));
     }
 
+    /// <summary>
+    /// Checks whether signal is available.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="signal">
+    /// The signal value.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public bool HasSignal(string signal)
     {
         ThrowIfFreed();
         return _signals.Contains(ValidateSignalName(signal));
     }
 
+    /// <summary>
+    /// Executes the connect operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="signal">
+    /// The signal value.
+    /// </param>
+    ///
+    /// <param name="callable">
+    /// The callable value.
+    /// </param>
+    ///
+    /// <param name="flags">
+    /// The flags value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public Error Connect(string signal, Callable callable, ConnectFlags flags = ConnectFlags.None)
     {
         ThrowIfFreed();
@@ -120,6 +329,32 @@ public class Object
         return Error.Ok;
     }
 
+    /// <summary>
+    /// Executes the disconnect operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="signal">
+    /// The signal value.
+    /// </param>
+    ///
+    /// <param name="callable">
+    /// The callable value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public void Disconnect(string signal, Callable callable)
     {
         ThrowIfFreed();
@@ -148,6 +383,36 @@ public class Object
         }
     }
 
+    /// <summary>
+    /// Checks whether connected is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="signal">
+    /// The signal value.
+    /// </param>
+    ///
+    /// <param name="callable">
+    /// The callable value.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public bool IsConnected(string signal, Callable callable)
     {
         ThrowIfFreed();
@@ -156,6 +421,36 @@ public class Object
             connections.Any(connection => connection.Callable == callable);
     }
 
+    /// <summary>
+    /// Executes the emit signal operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="signal">
+    /// The signal value.
+    /// </param>
+    ///
+    /// <param name="args">
+    /// The args value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public Error EmitSignal(string signal, params object?[] args)
     {
         ThrowIfFreed();
@@ -187,6 +482,36 @@ public class Object
         return result;
     }
 
+    /// <summary>
+    /// Executes the call deferred operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="method">
+    /// The method value.
+    /// </param>
+    ///
+    /// <param name="args">
+    /// The args value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public object? CallDeferred(string method, params object?[] args)
     {
         ThrowIfFreed();
@@ -221,12 +546,38 @@ public class Object
     ///
     /// <seealso cref="TranslationServer" />
     /// <seealso cref="Translation" />
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public string Tr(string message, string context = "")
     {
         ThrowIfFreed();
         return TranslationServer.Translate(message, context);
     }
 
+    /// <summary>
+    /// Executes the to string operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Object" />
+    ///
     public override string ToString()
     {
         return $"{GetType().Name}:{_instanceId}";

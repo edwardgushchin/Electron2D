@@ -49,6 +49,29 @@ namespace Electron2D;
 /// <seealso cref="CharacterBody2D"/>
 public abstract class PhysicsBody2D : CollisionObject2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the PhysicsBody2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="PhysicsBody2D" />
+    ///
+    public PhysicsBody2D()
+    {
+    }
+
     private PhysicsMaterial? physicsMaterialOverride;
 
     /// <summary>

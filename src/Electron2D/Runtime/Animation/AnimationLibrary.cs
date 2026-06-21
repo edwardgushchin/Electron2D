@@ -77,6 +77,8 @@ public sealed class AnimationLibrary : Resource
     /// <since>
     /// This constructor is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="AnimationLibrary" />
+    ///
     public AnimationLibrary()
     {
         AddUserSignal(AnimationAddedSignal);
@@ -107,6 +109,10 @@ public sealed class AnimationLibrary : Resource
     ///
     /// <seealso cref="RemoveAnimation"/>
     /// <seealso cref="HasAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Error AddAnimation(StringName name, Animation animation)
     {
         if (name.IsEmpty() || animation is null)
@@ -180,6 +186,10 @@ public sealed class AnimationLibrary : Resource
     /// </since>
     ///
     /// <seealso cref="GetAnimationList"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public void RenameAnimation(StringName name, StringName newName)
     {
         if (name.IsEmpty())
@@ -224,6 +234,10 @@ public sealed class AnimationLibrary : Resource
     /// </since>
     ///
     /// <seealso cref="GetAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public bool HasAnimation(StringName name)
     {
         return !name.IsEmpty() && animations.ContainsKey(name);
@@ -248,6 +262,10 @@ public sealed class AnimationLibrary : Resource
     /// </since>
     ///
     /// <seealso cref="HasAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public Animation? GetAnimation(StringName name)
     {
         return !name.IsEmpty() && animations.TryGetValue(name, out var animation)
@@ -270,6 +288,10 @@ public sealed class AnimationLibrary : Resource
     /// </since>
     ///
     /// <seealso cref="AddAnimation"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public StringName[] GetAnimationList()
     {
         return animations.Keys

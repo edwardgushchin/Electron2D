@@ -36,8 +36,35 @@ namespace Electron2D;
 /// <since>
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
 public class StaticBody2D : PhysicsBody2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the StaticBody2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="StaticBody2D" />
+    ///
+    public StaticBody2D()
+    {
+    }
+
     /// <summary>
     /// Gets or sets the constant linear velocity applied by this static body.
     /// </summary>
@@ -49,6 +76,16 @@ public class StaticBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current constant linear velocity value.
+    /// </value>
+    ///
+    /// <seealso cref="StaticBody2D" />
+    ///
     public Vector2 ConstantLinearVelocity { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -62,6 +99,16 @@ public class StaticBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current constant angular velocity value.
+    /// </value>
+    ///
+    /// <seealso cref="StaticBody2D" />
+    ///
     public float ConstantAngularVelocity { get; set; }
 
     protected override Rid CreatePhysicsRid()

@@ -44,6 +44,29 @@ namespace Electron2D;
 /// </since>
 public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
 {
+
+    /// <summary>
+    /// Initializes a new instance of the RayCast2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
+    public RayCast2D()
+    {
+    }
+
     private bool colliding;
     private Object? collider;
     private Rid colliderRid;
@@ -62,6 +85,16 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current enabled value.
+    /// </value>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public bool Enabled { get; set; } = true;
 
     /// <summary>
@@ -75,6 +108,16 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current target position value.
+    /// </value>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public Vector2 TargetPosition { get; set; } = new(0f, 50f);
 
     /// <summary>
@@ -88,6 +131,16 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current exclude parent value.
+    /// </value>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public bool ExcludeParent { get; set; } = true;
 
     /// <summary>
@@ -101,6 +154,16 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current hit from inside value.
+    /// </value>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public bool HitFromInside { get; set; }
 
     /// <summary>
@@ -114,6 +177,16 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current collide with areas value.
+    /// </value>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public bool CollideWithAreas { get; set; }
 
     /// <summary>
@@ -127,6 +200,16 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current collide with bodies value.
+    /// </value>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public bool CollideWithBodies { get; set; } = true;
 
     /// <summary>
@@ -140,6 +223,16 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current collision mask value.
+    /// </value>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public uint CollisionMask { get; set; } = 1u;
 
     /// <summary>
@@ -158,6 +251,8 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="RayCast2D" />
+    ///
     public void ForceRaycastUpdate()
     {
         ThrowIfFreed();
@@ -193,6 +288,12 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public bool IsColliding()
     {
         ThrowIfFreed();
@@ -211,6 +312,12 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public Object? GetCollider()
     {
         ThrowIfFreed();
@@ -229,6 +336,12 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public Rid GetColliderRid()
     {
         ThrowIfFreed();
@@ -247,6 +360,12 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public int GetColliderShape()
     {
         ThrowIfFreed();
@@ -265,6 +384,12 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public Vector2 GetCollisionPoint()
     {
         ThrowIfFreed();
@@ -283,6 +408,12 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="RayCast2D" />
+    ///
     public Vector2 GetCollisionNormal()
     {
         ThrowIfFreed();

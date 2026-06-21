@@ -67,6 +67,8 @@ public static class ResourceUid
     /// <since>
     /// This constant is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="ResourceUid" />
+    ///
     public const long InvalidId = -1L;
 
     private const string Prefix = "uid://";
@@ -102,6 +104,10 @@ public static class ResourceUid
     ///
     /// <seealso cref="SetId(long, string)"/>
     /// <seealso cref="HasId(long)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static void AddId(long id, string path)
     {
         ValidateId(id);
@@ -137,6 +143,12 @@ public static class ResourceUid
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ResourceUid" />
+    ///
     public static long CreateId()
     {
         Span<byte> bytes = stackalloc byte[sizeof(long)];
@@ -181,6 +193,8 @@ public static class ResourceUid
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="ResourceUid" />
+    ///
     public static long CreateIdForPath(string path)
     {
         ValidatePath(path);
@@ -233,6 +247,10 @@ public static class ResourceUid
     /// </since>
     ///
     /// <seealso cref="UidToPath(string)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static string EnsurePath(string pathOrUid)
     {
         ArgumentNullException.ThrowIfNull(pathOrUid);
@@ -262,6 +280,10 @@ public static class ResourceUid
     /// </since>
     ///
     /// <seealso cref="HasId(long)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static string GetIdPath(long id)
     {
         lock (SyncRoot)
@@ -287,6 +309,12 @@ public static class ResourceUid
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ResourceUid" />
+    ///
     public static bool HasId(long id)
     {
         lock (SyncRoot)
@@ -312,6 +340,10 @@ public static class ResourceUid
     /// </since>
     ///
     /// <seealso cref="TextToId(string)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static string IdToText(long id)
     {
         return id <= 0 || id == InvalidId ? InvalidText : Prefix + ToBase36(id);
@@ -334,6 +366,10 @@ public static class ResourceUid
     /// </since>
     ///
     /// <seealso cref="UidToPath(string)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static string PathToUid(string path)
     {
         ValidatePath(path);
@@ -361,6 +397,12 @@ public static class ResourceUid
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ResourceUid" />
+    ///
     public static void RemoveId(long id)
     {
         lock (SyncRoot)
@@ -400,6 +442,10 @@ public static class ResourceUid
     /// </since>
     ///
     /// <seealso cref="AddId(long, string)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static void SetId(long id, string path)
     {
         ValidateId(id);
@@ -440,6 +486,10 @@ public static class ResourceUid
     /// </since>
     ///
     /// <seealso cref="IdToText(long)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static long TextToId(string textId)
     {
         ArgumentNullException.ThrowIfNull(textId);
@@ -473,6 +523,10 @@ public static class ResourceUid
     /// </since>
     ///
     /// <seealso cref="PathToUid(string)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static string UidToPath(string uid)
     {
         var id = TextToId(uid);

@@ -24,8 +24,47 @@
 */
 namespace Electron2D;
 
+/// <summary>
+/// Represents the node type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public class Node : Object
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Node type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
+    public Node()
+    {
+    }
+
     private readonly List<Node> _children = new();
     private readonly Dictionary<string, bool> _groups = new(StringComparer.Ordinal);
     private string _name = string.Empty;
@@ -34,6 +73,28 @@ public class Node : Object
     private SceneTree? _tree;
     private bool _readyCalled;
 
+    /// <summary>
+    /// Gets or sets the name value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current name value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public string Name
     {
         get
@@ -49,6 +110,28 @@ public class Node : Object
         }
     }
 
+    /// <summary>
+    /// Gets or sets the owner value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current owner value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public Node? Owner
     {
         get
@@ -63,6 +146,28 @@ public class Node : Object
         }
     }
 
+    /// <summary>
+    /// Adds the child value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="child">
+    /// The child value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public void AddChild(Node child)
     {
         ThrowIfFreed();
@@ -89,6 +194,28 @@ public class Node : Object
         }
     }
 
+    /// <summary>
+    /// Removes the child value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="child">
+    /// The child value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public void RemoveChild(Node child)
     {
         ThrowIfFreed();
@@ -98,12 +225,60 @@ public class Node : Object
         DetachChild(child, clearInvalidOwners: true);
     }
 
+    /// <summary>
+    /// Gets the parent value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current parent value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public Node? GetParent()
     {
         ThrowIfFreed();
         return _parent;
     }
 
+    /// <summary>
+    /// Gets the child value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="index">
+    /// The index value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current child value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public Node? GetChild(int index)
     {
         ThrowIfFreed();
@@ -116,18 +291,88 @@ public class Node : Object
         return _children[childIndex];
     }
 
+    /// <summary>
+    /// Gets the child count value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current child count value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public int GetChildCount()
     {
         ThrowIfFreed();
         return _children.Count;
     }
 
+    /// <summary>
+    /// Gets the index value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current index value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public int GetIndex()
     {
         ThrowIfFreed();
         return _parent is null ? -1 : _parent._children.IndexOf(this);
     }
 
+    /// <summary>
+    /// Checks whether ancestor of is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="node">
+    /// The node value.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public bool IsAncestorOf(Node node)
     {
         ThrowIfFreed();
@@ -148,6 +393,32 @@ public class Node : Object
         return false;
     }
 
+    /// <summary>
+    /// Executes the move child operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="childNode">
+    /// The child node value.
+    /// </param>
+    ///
+    /// <param name="toIndex">
+    /// The to index value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public void MoveChild(Node childNode, int toIndex)
     {
         ThrowIfFreed();
@@ -175,6 +446,32 @@ public class Node : Object
         _children.Insert(childIndex, childNode);
     }
 
+    /// <summary>
+    /// Executes the reparent operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="newParent">
+    /// The new parent value.
+    /// </param>
+    ///
+    /// <param name="keepGlobalTransform">
+    /// The keep global transform value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public void Reparent(Node newParent, bool keepGlobalTransform = true)
     {
         ThrowIfFreed();
@@ -205,6 +502,24 @@ public class Node : Object
         ClearInvalidOwnersRecursive();
     }
 
+    /// <summary>
+    /// Executes the queue free operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public void QueueFree()
     {
         ThrowIfFreed();
@@ -228,6 +543,32 @@ public class Node : Object
         Free();
     }
 
+    /// <summary>
+    /// Adds the to group value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="group">
+    /// The group value.
+    /// </param>
+    ///
+    /// <param name="persistent">
+    /// The persistent value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public void AddToGroup(string group, bool persistent = false)
     {
         ThrowIfFreed();
@@ -242,6 +583,28 @@ public class Node : Object
         _groups.Add(groupName, persistent);
     }
 
+    /// <summary>
+    /// Removes the from group value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="group">
+    /// The group value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public void RemoveFromGroup(string group)
     {
         ThrowIfFreed();
@@ -249,6 +612,32 @@ public class Node : Object
         _groups.Remove(groupName);
     }
 
+    /// <summary>
+    /// Checks whether in group is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="group">
+    /// The group value.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public bool IsInGroup(string group)
     {
         ThrowIfFreed();
@@ -256,18 +645,84 @@ public class Node : Object
         return _groups.ContainsKey(groupName);
     }
 
+    /// <summary>
+    /// Gets the groups value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current groups value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public string[] GetGroups()
     {
         ThrowIfFreed();
         return _groups.Keys.OrderBy(group => group, StringComparer.Ordinal).ToArray();
     }
 
+    /// <summary>
+    /// Checks whether inside tree is true.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public bool IsInsideTree()
     {
         ThrowIfFreed();
         return _tree is not null;
     }
 
+    /// <summary>
+    /// Gets the tree value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <returns>
+    /// The current tree value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public SceneTree? GetTree()
     {
         ThrowIfFreed();
@@ -321,6 +776,32 @@ public class Node : Object
         return _tree.CreateTween().BindNode(this);
     }
 
+    /// <summary>
+    /// Gets the node value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="path">
+    /// The path value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current node value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public Node GetNode(NodePath path)
     {
         var node = GetNodeOrNull(path);
@@ -332,6 +813,32 @@ public class Node : Object
         return node;
     }
 
+    /// <summary>
+    /// Gets the node or null value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="path">
+    /// The path value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current node or null value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public Node? GetNodeOrNull(NodePath path)
     {
         ThrowIfFreed();
@@ -381,26 +888,146 @@ public class Node : Object
         return current;
     }
 
+    /// <summary>
+    /// Called when this node enters a scene tree.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public virtual void _EnterTree()
     {
     }
 
+    /// <summary>
+    /// Called when this node and its children are ready.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public virtual void _Ready()
     {
     }
 
+    /// <summary>
+    /// Called during an idle frame update.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="delta">
+    /// The elapsed time in seconds.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public virtual void _Process(double delta)
     {
     }
 
+    /// <summary>
+    /// Called during a fixed physics update.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="delta">
+    /// The elapsed time in seconds.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public virtual void _PhysicsProcess(double delta)
     {
     }
 
+    /// <summary>
+    /// Called when an input event is delivered to this node.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="inputEvent">
+    /// The input event value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public virtual void _Input(InputEvent inputEvent)
     {
     }
 
+    /// <summary>
+    /// Called when this node exits a scene tree.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node" />
+    ///
     public virtual void _ExitTree()
     {
     }

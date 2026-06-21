@@ -44,6 +44,29 @@ namespace Electron2D;
 /// </since>
 public sealed class ConcavePolygonShape2D : Shape2D
 {
+
+    /// <summary>
+    /// Initializes a new instance of the ConcavePolygonShape2D type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ConcavePolygonShape2D" />
+    ///
+    public ConcavePolygonShape2D()
+    {
+    }
+
     private Vector2[] segments =
     [
         new(0f, 0f),
@@ -65,6 +88,12 @@ public sealed class ConcavePolygonShape2D : Shape2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ConcavePolygonShape2D" />
+    ///
     public Vector2[] Segments
     {
         get

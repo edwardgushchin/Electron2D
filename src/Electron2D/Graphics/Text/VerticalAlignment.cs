@@ -35,25 +35,69 @@ namespace Electron2D;
 /// <since>
 /// This enum is available since Electron2D 0.1.0 Preview.
 /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
 public enum VerticalAlignment
 {
     /// <summary>
     /// Aligns content to the top edge.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept VerticalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="VerticalAlignment" />
+    ///
     Top = 0,
 
     /// <summary>
     /// Centers content vertically.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept VerticalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="VerticalAlignment" />
+    ///
     Center = 1,
 
     /// <summary>
     /// Aligns content to the bottom edge.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept VerticalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="VerticalAlignment" />
+    ///
     Bottom = 2,
 
     /// <summary>
     /// Uses fill alignment. Electron2D 0.1.0 Preview treats this like top alignment for single-line labels.
     /// </summary>
+    /// <remarks>
+    /// Use this value with APIs that accept VerticalAlignment.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="VerticalAlignment" />
+    ///
     Fill = 3
 }

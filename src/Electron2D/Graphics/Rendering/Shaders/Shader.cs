@@ -37,7 +37,7 @@ namespace Electron2D;
 ///
 /// <para>
 /// `ShaderMaterial`, uniforms and sampler assignment are implemented by later
-/// tasks. This type intentionally does not expose SDL_shadercross or SDL_GPU
+/// tasks. This type intentionally does not expose the shader compiler backend or the native GPU backend
 /// handles.
 /// </para>
 /// </remarks>
@@ -52,6 +52,29 @@ namespace Electron2D;
 /// </since>
 public sealed class Shader : Resource
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Shader type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Shader" />
+    ///
+    public Shader()
+    {
+    }
+
     private string code = string.Empty;
 
     /// <summary>
@@ -61,11 +84,25 @@ public sealed class Shader : Resource
     /// <since>
     /// This enum is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// </remarks>
+    ///
     public enum Mode
     {
         /// <summary>
         /// Canvas item shader mode used for 2D drawing.
         /// </summary>
+        /// <remarks>
+        /// Use this value with APIs that accept Mode.
+        /// </remarks>
+        ///
+        /// <since>
+        /// This API is available since Electron2D 0.1.0 Preview.
+        /// </since>
+        ///
+        /// <seealso cref="Mode" />
+        ///
         CanvasItem = 1
     }
 
@@ -76,7 +113,7 @@ public sealed class Shader : Resource
     /// <remarks>
     /// The source is stored as written by the user. Import tooling parses the
     /// `shader_type canvas_item;`, `vertex_entry` and `fragment_entry` header
-    /// directives before sending HLSL to SDL_shadercross.
+    /// directives before sending HLSL to the shader compiler backend.
     /// </remarks>
     ///
     /// <threadsafety>
@@ -87,6 +124,12 @@ public sealed class Shader : Resource
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current code value.
+    /// </value>
+    ///
+    /// <seealso cref="Shader" />
+    ///
     public string Code
     {
         get
@@ -115,6 +158,12 @@ public sealed class Shader : Resource
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="Shader" />
+    ///
     public Mode GetMode()
     {
         ThrowIfFreed();

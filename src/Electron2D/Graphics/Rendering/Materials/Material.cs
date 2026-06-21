@@ -54,6 +54,29 @@ namespace Electron2D;
 /// <seealso cref="ShaderMaterial" />
 public abstract class Material : Resource
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Material type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Material" />
+    ///
+    public Material()
+    {
+    }
+
     private const int MinimumRenderPriority = -128;
     private const int MaximumRenderPriority = 127;
 
@@ -78,6 +101,12 @@ public abstract class Material : Resource
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current next pass value.
+    /// </value>
+    ///
+    /// <seealso cref="Material" />
+    ///
     public Material? NextPass
     {
         get
@@ -115,6 +144,12 @@ public abstract class Material : Resource
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <value>
+    /// The current render priority value.
+    /// </value>
+    ///
+    /// <seealso cref="Material" />
+    ///
     public int RenderPriority
     {
         get

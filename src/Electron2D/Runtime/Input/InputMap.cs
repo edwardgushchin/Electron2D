@@ -82,6 +82,8 @@ public static class InputMap
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="InputMap" />
+    ///
     public static void AddAction(string action, float deadzone = DefaultDeadzone)
     {
         var actionName = ValidateActionName(action);
@@ -115,6 +117,8 @@ public static class InputMap
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <seealso cref="InputMap" />
+    ///
     public static void EraseAction(string action)
     {
         var actionName = ValidateActionName(action);
@@ -147,6 +151,12 @@ public static class InputMap
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="InputMap" />
+    ///
     public static bool HasAction(string action)
     {
         var actionName = ValidateActionName(action);
@@ -172,6 +182,12 @@ public static class InputMap
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="InputMap" />
+    ///
     public static string[] GetActions()
     {
         lock (SyncRoot)
@@ -202,6 +218,10 @@ public static class InputMap
     /// </since>
     ///
     /// <seealso cref="ActionGetDeadzone"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static void ActionSetDeadzone(string action, float deadzone)
     {
         ValidateDeadzone(deadzone);
@@ -240,6 +260,10 @@ public static class InputMap
     /// </since>
     ///
     /// <seealso cref="ActionSetDeadzone"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static float ActionGetDeadzone(string action)
     {
         var actionName = ValidateActionName(action);
@@ -330,6 +354,10 @@ public static class InputMap
     /// </since>
     ///
     /// <seealso cref="ActionAddEvent"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static void ActionEraseEvent(string action, InputEvent inputEvent)
     {
         ArgumentNullException.ThrowIfNull(inputEvent);
@@ -365,6 +393,12 @@ public static class InputMap
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="InputMap" />
+    ///
     public static void ActionEraseEvents(string action)
     {
         var actionName = ValidateActionName(action);
@@ -401,6 +435,12 @@ public static class InputMap
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="InputMap" />
+    ///
     public static InputEvent[] ActionGetEvents(string action)
     {
         var actionName = ValidateActionName(action);
@@ -442,6 +482,10 @@ public static class InputMap
     /// </since>
     ///
     /// <seealso cref="Input.IsActionPressed(string, bool)"/>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
     public static bool EventIsAction(InputEvent inputEvent, string action, bool exactMatch = false)
     {
         _ = exactMatch;

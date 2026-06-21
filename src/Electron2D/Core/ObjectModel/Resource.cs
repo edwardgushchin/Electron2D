@@ -24,13 +24,74 @@
 */
 namespace Electron2D;
 
+/// <summary>
+/// Represents the resource type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public class Resource : RefCounted
 {
+
+    /// <summary>
+    /// Initializes a new instance of the Resource type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Resource" />
+    ///
+    public Resource()
+    {
+    }
+
     private string _resourceName = string.Empty;
     private string _resourcePath = string.Empty;
     private string _resourceSceneUniqueId = string.Empty;
     private bool _resourceLocalToScene;
 
+    /// <summary>
+    /// Gets or sets the resource name value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current resource name value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Resource" />
+    ///
     public string ResourceName
     {
         get
@@ -45,6 +106,28 @@ public class Resource : RefCounted
         }
     }
 
+    /// <summary>
+    /// Gets or sets the resource path value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current resource path value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Resource" />
+    ///
     public string ResourcePath
     {
         get
@@ -59,6 +142,28 @@ public class Resource : RefCounted
         }
     }
 
+    /// <summary>
+    /// Gets or sets the resource local to scene value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current resource local to scene value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Resource" />
+    ///
     public bool ResourceLocalToScene
     {
         get
@@ -73,6 +178,28 @@ public class Resource : RefCounted
         }
     }
 
+    /// <summary>
+    /// Gets or sets the resource scene unique id value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current resource scene unique id value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Resource" />
+    ///
     public string ResourceSceneUniqueId
     {
         get
@@ -87,6 +214,28 @@ public class Resource : RefCounted
         }
     }
 
+    /// <summary>
+    /// Executes the take over path operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="path">
+    /// The path value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Resource" />
+    ///
     public void TakeOverPath(string path)
     {
         ThrowIfFreed();

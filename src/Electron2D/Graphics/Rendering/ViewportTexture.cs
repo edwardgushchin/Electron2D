@@ -78,6 +78,12 @@ public sealed class ViewportTexture : Texture2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ViewportTexture" />
+    ///
     public override int GetWidth()
     {
         return Math.Max(0, viewport.Size.X);
@@ -96,6 +102,12 @@ public sealed class ViewportTexture : Texture2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ViewportTexture" />
+    ///
     public override int GetHeight()
     {
         return Math.Max(0, viewport.Size.Y);
@@ -114,6 +126,12 @@ public sealed class ViewportTexture : Texture2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ViewportTexture" />
+    ///
     public override bool HasAlpha()
     {
         return true;
@@ -134,6 +152,12 @@ public sealed class ViewportTexture : Texture2D
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <seealso cref="ViewportTexture" />
+    ///
     public override bool IsPixelOpaque(int x, int y)
     {
         return false;

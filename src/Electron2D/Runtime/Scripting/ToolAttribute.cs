@@ -48,5 +48,31 @@ namespace Electron2D;
 /// </since>
 /// <seealso cref="ExportAttribute"/>
 /// <seealso cref="SignalAttribute"/>
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class ToolAttribute : Attribute;
+public sealed class ToolAttribute : Attribute
+{
+    /// <summary>
+    /// Initializes a new instance of the ToolAttribute type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ToolAttribute" />
+    public ToolAttribute()
+    {
+    }
+    }

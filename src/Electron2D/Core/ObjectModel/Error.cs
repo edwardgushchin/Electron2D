@@ -24,11 +24,93 @@
 */
 namespace Electron2D;
 
+/// <summary>
+/// Identifies values used by the error API.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public enum Error
 {
+    /// <summary>
+    /// Identifies the ok value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Use this value with APIs that accept Error.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Error" />
+    ///
     Ok = 0,
+    /// <summary>
+    /// Identifies the failed value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Use this value with APIs that accept Error.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Error" />
+    ///
     Failed = 1,
+    /// <summary>
+    /// Identifies the unavailable value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Use this value with APIs that accept Error.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Error" />
+    ///
     Unavailable = 2,
+    /// <summary>
+    /// Identifies the invalid parameter value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Use this value with APIs that accept Error.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Error" />
+    ///
     InvalidParameter = 3,
+    /// <summary>
+    /// Identifies the already exists value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Use this value with APIs that accept Error.
+    /// </remarks>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Error" />
+    ///
     AlreadyExists = 4
 }

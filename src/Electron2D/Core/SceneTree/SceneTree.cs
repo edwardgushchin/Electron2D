@@ -26,6 +26,22 @@ using System.Reflection;
 
 namespace Electron2D;
 
+/// <summary>
+/// Represents the scene tree type.
+/// </summary>
+///
+/// <remarks>
+/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
+/// </threadsafety>
+///
+/// <since>
+/// This API is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
 public class SceneTree : Object
 {
     private const double FixedPhysicsStep = 1d / 60d;
@@ -40,6 +56,24 @@ public class SceneTree : Object
     private double _physicsAccumulator;
     private PackedScene? _pendingScene;
 
+    /// <summary>
+    /// Initializes a new instance of the SceneTree type.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The new instance follows the lifetime and validation rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public SceneTree()
     {
         Root = new Viewport { Name = "root" };
@@ -119,20 +153,142 @@ public class SceneTree : Object
     /// <seealso cref="CollisionShape2D.DebugColor"/>
     public bool DebugCollisionsHint { get; set; }
 
+    /// <summary>
+    /// Gets the root value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current root value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public Node Root { get; }
 
+    /// <summary>
+    /// Gets or sets the current scene value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This property follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <value>
+    /// The current current scene value.
+    /// </value>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public Node? CurrentScene { get; private set; }
 
+    /// <summary>
+    /// Gets the first node in group value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="group">
+    /// The group value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current first node in group value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public Node? GetFirstNodeInGroup(string group)
     {
         return GetNodesInGroup(group).FirstOrDefault();
     }
 
+    /// <summary>
+    /// Gets the node count in group value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="group">
+    /// The group value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current node count in group value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public int GetNodeCountInGroup(string group)
     {
         return GetNodesInGroup(group).Length;
     }
 
+    /// <summary>
+    /// Gets the nodes in group value.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="group">
+    /// The group value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The current nodes in group value.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public Node[] GetNodesInGroup(string group)
     {
         var groupName = Node.ValidateGroupName(group);
@@ -141,11 +297,67 @@ public class SceneTree : Object
         return nodes.ToArray();
     }
 
+    /// <summary>
+    /// Checks whether group is available.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="name">
+    /// The name value.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the condition is met; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public bool HasGroup(string name)
     {
         return GetNodeCountInGroup(name) > 0;
     }
 
+    /// <summary>
+    /// Executes the call group operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="group">
+    /// The group value.
+    /// </param>
+    ///
+    /// <param name="method">
+    /// The method value.
+    /// </param>
+    ///
+    /// <param name="args">
+    /// The args value.
+    /// </param>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public void CallGroup(string group, string method, params object?[] args)
     {
         var groupName = Node.ValidateGroupName(group);
@@ -168,6 +380,32 @@ public class SceneTree : Object
         }
     }
 
+    /// <summary>
+    /// Executes the change scene to packed operation.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This method follows the validation and lifetime rules of its declaring type.
+    /// </remarks>
+    ///
+    /// <param name="packedScene">
+    /// The packed scene value.
+    /// </param>
+    ///
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This member is not synchronized. Call it from the thread that owns the related object unless the declaring type states otherwise.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This API is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree" />
+    ///
     public Error ChangeSceneToPacked(PackedScene packedScene)
     {
         if (packedScene is null || !packedScene.CanInstantiate())
