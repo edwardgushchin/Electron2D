@@ -2,7 +2,7 @@
 
 Статус: реализованная проверка compatibility baseline.
 Задача: `T-0004`.
-Обновлено: 2026-06-21.
+Обновлено: 2026-06-22.
 
 ## Где находится таблица
 
@@ -17,7 +17,7 @@ API-Compatibility.md
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline и debug collision shape hooks:
+Новый runtime assembly `Electron2D` экспортирует текущий baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, tile set and tile map layer runtime baseline, shader material resource layer, immediate drawing surface, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline и debug collision shape hooks:
 
 - `Electron2D.AnimatedSprite2D`
 - `Electron2D.Animation`
@@ -111,6 +111,11 @@ API-Compatibility.md
 - `Electron2D.StaticBody2D`
 - `Electron2D.StringName`
 - `Electron2D.Texture2D`
+- `Electron2D.TileData`
+- `Electron2D.TileMapLayer`
+- `Electron2D.TileSet`
+- `Electron2D.TileSetAtlasSource`
+- `Electron2D.TileSetSource`
 - `Electron2D.ToolAttribute`
 - `Electron2D.Transform2D`
 - `Electron2D.Tween`

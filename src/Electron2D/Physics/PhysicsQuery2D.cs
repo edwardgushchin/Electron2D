@@ -59,6 +59,11 @@ internal static class PhysicsQuery2D
         return (collisionMask & candidate.CollisionLayer) != 0u;
     }
 
+    public static bool CollisionMaskMatches(uint collisionMask, PhysicsQueryShape candidate)
+    {
+        return (collisionMask & candidate.CollisionLayer) != 0u;
+    }
+
     public static bool TryGetObjectBounds(CollisionObject2D collisionObject, out Rect2 bounds)
     {
         bounds = default;
@@ -79,6 +84,32 @@ internal static class PhysicsQuery2D
         return shapes.ToArray();
     }
 
+    public static IEnumerable<PhysicsQueryShape> CollectAllActiveShapeBounds(Node root)
+    {
+        if (root is CollisionObject2D collisionObject && IsValidCollisionObject(collisionObject))
+        {
+            foreach (var shape in CollectActiveShapeBounds(collisionObject))
+            {
+                yield return shape;
+            }
+        }
+        else if (root is TileMapLayer tileMapLayer && IsValidTileMapLayer(tileMapLayer))
+        {
+            foreach (var shape in tileMapLayer.CollectActiveTileShapeBounds())
+            {
+                yield return shape;
+            }
+        }
+
+        foreach (var child in root.GetChildrenSnapshot())
+        {
+            foreach (var nestedShape in CollectAllActiveShapeBounds(child))
+            {
+                yield return nestedShape;
+            }
+        }
+    }
+
     public static bool TryGetShapeBounds(Shape2D shape, Transform2D transform, out Rect2 bounds)
     {
         bounds = default;
@@ -89,6 +120,16 @@ internal static class PhysicsQuery2D
 
         bounds = transform * localBounds;
         return bounds.HasArea();
+    }
+
+    public static VariantDictionary CreateObjectResult(PhysicsQueryShape shape)
+    {
+        var result = new VariantDictionary();
+        result.Add(Variant.CreateFrom("collider"), Variant.CreateFrom(shape.Owner));
+        result.Add(Variant.CreateFrom("collider_id"), Variant.CreateFrom((long)shape.Owner.GetInstanceId()));
+        result.Add(Variant.CreateFrom("rid"), Variant.CreateFrom(shape.OwnerRid));
+        result.Add(Variant.CreateFrom("shape"), Variant.CreateFrom((long)shape.ShapeIndex));
+        return result;
     }
 
     public static VariantDictionary CreateObjectResult(CollisionObject2D owner, int shapeIndex)
@@ -115,7 +156,7 @@ internal static class PhysicsQuery2D
             .OrderBy(static shape => shape.Owner.GetInstanceId())
             .Take(maxResults))
         {
-            results.Add(Variant.CreateFrom(CreateObjectResult(shape.Owner, shape.ShapeIndex)));
+            results.Add(Variant.CreateFrom(CreateObjectResult(shape)));
         }
 
         return results;
@@ -192,7 +233,7 @@ internal static class PhysicsQuery2D
                 TryGetShapeBounds(shape.Shape, shape.GlobalTransform, out var bounds) &&
                 node is CollisionObject2D owner)
             {
-                shapes.Add(new PhysicsQueryShape(owner, shape, shapeIndex, bounds));
+                shapes.Add(PhysicsQueryShape.CreateCollisionObject(owner, shape, shapeIndex, bounds));
                 shapeIndex++;
                 continue;
             }
@@ -223,8 +264,15 @@ internal static class PhysicsQuery2D
                 return TryGetPointBounds(concavePolygon.Segments, out bounds);
             default:
                 bounds = default;
-                return false;
+            return false;
         }
+    }
+
+    private static bool IsValidTileMapLayer(TileMapLayer tileMapLayer)
+    {
+        return Object.IsInstanceValid(tileMapLayer) &&
+            tileMapLayer.IsInsideTree() &&
+            !tileMapLayer.IsQueuedForDeletion();
     }
 
     private static Rect2 CenteredBounds(Vector2 size)
@@ -294,7 +342,75 @@ internal static class PhysicsQuery2D
 }
 
 internal readonly record struct PhysicsQueryShape(
-    CollisionObject2D Owner,
-    CollisionShape2D Shape,
+    Node2D Owner,
+    Rid OwnerRid,
+    uint CollisionLayer,
+    bool IsArea,
+    bool IsBody,
+    bool IsStaticBody,
+    Vector2 ColliderVelocity,
+    Object? ShapeObject,
+    Shape2D? ShapeResource,
+    bool OneWayCollision,
+    float OneWayCollisionMargin,
     int ShapeIndex,
-    Rect2 Bounds);
+    Rect2 Bounds)
+{
+    public static PhysicsQueryShape CreateCollisionObject(
+        CollisionObject2D owner,
+        CollisionShape2D shape,
+        int shapeIndex,
+        Rect2 bounds)
+    {
+        return new PhysicsQueryShape(
+            owner,
+            owner.GetRid(),
+            owner.CollisionLayer,
+            owner is Area2D,
+            owner is PhysicsBody2D,
+            owner is StaticBody2D,
+            GetColliderVelocity(owner),
+            shape,
+            shape.Shape,
+            shape.OneWayCollision,
+            shape.OneWayCollisionMargin,
+            shapeIndex,
+            bounds);
+    }
+
+    public static PhysicsQueryShape CreateTile(
+        TileMapLayer owner,
+        Rid ownerRid,
+        int shapeIndex,
+        Rect2 bounds,
+        TileData tileData,
+        bool oneWayCollision,
+        float oneWayCollisionMargin)
+    {
+        return new PhysicsQueryShape(
+            owner,
+            ownerRid,
+            1u,
+            IsArea: false,
+            IsBody: true,
+            IsStaticBody: true,
+            Vector2.Zero,
+            tileData,
+            ShapeResource: null,
+            oneWayCollision,
+            oneWayCollisionMargin,
+            shapeIndex,
+            bounds);
+    }
+
+    private static Vector2 GetColliderVelocity(CollisionObject2D owner)
+    {
+        return owner switch
+        {
+            StaticBody2D staticBody => staticBody.ConstantLinearVelocity,
+            RigidBody2D rigidBody => rigidBody.LinearVelocity,
+            CharacterBody2D characterBody => characterBody.Velocity,
+            _ => Vector2.Zero
+        };
+    }
+}

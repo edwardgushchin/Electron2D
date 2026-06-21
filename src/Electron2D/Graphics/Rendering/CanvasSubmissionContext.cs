@@ -97,6 +97,10 @@ internal sealed class CanvasSubmissionContext
             {
                 SubmitAnimatedSprite(animatedSprite, currentState, visible, modulate, treeOrder++);
             }
+            else if (canvasItem is TileMapLayer tileMapLayer)
+            {
+                SubmitTileMapLayer(tileMapLayer, currentState, visible, modulate, ref treeOrder);
+            }
 
             foreach (var drawingCommand in canvasItem.DrawingCommands)
             {
@@ -200,6 +204,49 @@ internal sealed class CanvasSubmissionContext
             flipH: sprite.FlipH,
             flipV: sprite.FlipV,
             debugName: sprite.Name));
+    }
+
+    private void SubmitTileMapLayer(
+        TileMapLayer tileMapLayer,
+        SubmissionState state,
+        bool visible,
+        Color modulate,
+        ref long treeOrder)
+    {
+        var transform = state.LayerTransform * tileMapLayer.GlobalTransform;
+        if (state.SnapTransformsToPixel)
+        {
+            transform.Origin = transform.Origin.Round();
+        }
+
+        foreach (var cell in tileMapLayer.EnumerateRenderableCells())
+        {
+            var textureRid = GetTextureRid(cell.Texture);
+            var key = new CanvasItemBatchKey(textureRid, material: default, clip: default, CanvasItemBlendMode.Mix);
+            var destinationRect = cell.DestinationRect;
+            if (state.SnapVerticesToPixel)
+            {
+                destinationRect = SnapRect(destinationRect);
+            }
+
+            queue.Add(new CanvasItemRenderCommand(
+                tileMapLayer.CanvasItemRid,
+                key,
+                state.Layer,
+                tileMapLayer.ZIndex + cell.Data.ZIndex,
+                tileMapLayer.YSortEnabled,
+                cell.YSortPosition,
+                treeOrder++,
+                state.LayerVisible && visible,
+                modulate,
+                tileMapLayer.SelfModulate,
+                commandModulate: cell.Data.Modulate,
+                transform: transform,
+                sourceRect: cell.SourceRect,
+                destinationRect: destinationRect,
+                texture: cell.Texture,
+                debugName: tileMapLayer.Name));
+        }
     }
 
     private void SubmitDrawingCommand(

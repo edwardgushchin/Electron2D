@@ -110,6 +110,7 @@
 - [Compatibility renderer backend baseline](rendering/sdl-renderer-compatibility-backend.md) - текущий internal fallback command plan для sprites/UI/text/primitives/tile-like texture copies и documented limitations.
 - [Immediate drawing baseline](rendering/immediate-drawing-baseline.md) - текущие `_Draw()`, `QueueRedraw()`, `DrawLine()`/`DrawRect()`/`DrawCircle()`/`DrawPolygon()`/`DrawTexture()`/`DrawString()` и internal command capture.
 - [Text backend baseline](rendering/text-backend-baseline.md) - текущие public `Font`/`Control`/`Label`, glyph layout, fallback font resolution, internal cache и text backend boundary.
+- [TileMapLayer runtime API](rendering/tilemap-layer-runtime-api.md) - текущие `TileSet`, `TileSetAtlasSource`, `TileData`, `TileMapLayer`, canvas submission и tile collision baseline.
 
 ## Базовые типы
 

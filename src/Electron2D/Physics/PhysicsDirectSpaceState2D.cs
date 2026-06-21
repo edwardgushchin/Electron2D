@@ -99,7 +99,7 @@ public sealed class PhysicsDirectSpaceState2D : Object
             return new VariantDictionary();
         }
 
-        var result = PhysicsQuery2D.CreateObjectResult(hit.Shape.Owner, hit.Shape.ShapeIndex);
+        var result = PhysicsQuery2D.CreateObjectResult(hit.Shape);
         result.Add(Variant.CreateFrom("position"), Variant.CreateFrom(hit.Point));
         result.Add(Variant.CreateFrom("normal"), Variant.CreateFrom(hit.Normal));
         return result;
@@ -208,20 +208,17 @@ public sealed class PhysicsDirectSpaceState2D : Object
             yield break;
         }
 
-        foreach (var collisionObject in PhysicsQuery2D.CollectCollisionObjects(root))
+        foreach (var shape in PhysicsQuery2D.CollectAllActiveShapeBounds(root))
         {
-            if (!PhysicsQuery2D.CollisionMaskMatches(collisionMask, collisionObject) ||
-                exclude.Contains(collisionObject.GetRid()) ||
-                (collisionObject is Area2D && !collideWithAreas) ||
-                (collisionObject is PhysicsBody2D && !collideWithBodies))
+            if (!PhysicsQuery2D.CollisionMaskMatches(collisionMask, shape) ||
+                exclude.Contains(shape.OwnerRid) ||
+                (shape.IsArea && !collideWithAreas) ||
+                (shape.IsBody && !collideWithBodies))
             {
                 continue;
             }
 
-            foreach (var shape in PhysicsQuery2D.CollectActiveShapeBounds(collisionObject))
-            {
-                yield return shape;
-            }
+            yield return shape;
         }
     }
 

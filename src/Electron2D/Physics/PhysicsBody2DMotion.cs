@@ -88,7 +88,7 @@ internal static class PhysicsBody2DMotion
 
             foreach (var targetShape in CollectStaticTargetShapes(tree.Root, body))
             {
-                if (TrySweepAgainstTarget(movingBounds, movingShape.Shape, motion, targetShape, safeMargin, out var hit) &&
+                if (TrySweepAgainstTarget(movingBounds, movingShape.ShapeObject, motion, targetShape, safeMargin, out var hit) &&
                     hit.Fraction < bestHit.Fraction)
                 {
                     bestHit = hit;
@@ -101,25 +101,22 @@ internal static class PhysicsBody2DMotion
 
     private static IEnumerable<PhysicsQueryShape> CollectStaticTargetShapes(Node root, PhysicsBody2D body)
     {
-        foreach (var target in PhysicsQuery2D.CollectCollisionObjects(root))
+        foreach (var targetShape in PhysicsQuery2D.CollectAllActiveShapeBounds(root))
         {
-            if (ReferenceEquals(target, body) ||
-                target is not StaticBody2D ||
-                !PhysicsQuery2D.CollisionMaskMatches(body.CollisionMask, target))
+            if (ReferenceEquals(targetShape.Owner, body) ||
+                !targetShape.IsStaticBody ||
+                !PhysicsQuery2D.CollisionMaskMatches(body.CollisionMask, targetShape))
             {
                 continue;
             }
 
-            foreach (var targetShape in PhysicsQuery2D.CollectActiveShapeBounds(target))
-            {
-                yield return targetShape;
-            }
+            yield return targetShape;
         }
     }
 
     private static bool TrySweepAgainstTarget(
         Rect2 movingBounds,
-        CollisionShape2D localShape,
+        Object? localShape,
         Vector2 motion,
         PhysicsQueryShape targetShape,
         float safeMargin,
@@ -143,8 +140,8 @@ internal static class PhysicsBody2DMotion
         }
 
         normal = ResolveTargetNormal(targetShape, motion, normal);
-        if (targetShape.Shape.OneWayCollision &&
-            !ShouldCollideWithOneWayShape(movingBounds, targetBounds, motion, normal, targetShape.Shape.OneWayCollisionMargin))
+        if (targetShape.OneWayCollision &&
+            !ShouldCollideWithOneWayShape(movingBounds, targetBounds, motion, normal, targetShape.OneWayCollisionMargin))
         {
             hit = MotionHit.None;
             return false;
@@ -156,13 +153,13 @@ internal static class PhysicsBody2DMotion
 
     private static Vector2 ResolveTargetNormal(PhysicsQueryShape targetShape, Vector2 motion, Vector2 boundsNormal)
     {
-        if (targetShape.Shape.Shape is not SegmentShape2D segment)
+        if (targetShape.ShapeResource is not SegmentShape2D segment || targetShape.ShapeObject is not CollisionShape2D shapeNode)
         {
             return boundsNormal;
         }
 
-        var start = targetShape.Shape.GlobalTransform * segment.A;
-        var end = targetShape.Shape.GlobalTransform * segment.B;
+        var start = shapeNode.GlobalTransform * segment.A;
+        var end = shapeNode.GlobalTransform * segment.B;
         var direction = end - start;
         if (direction.IsZeroApprox())
         {
@@ -201,7 +198,7 @@ internal static class PhysicsBody2DMotion
         float Fraction,
         Vector2 Position,
         Vector2 Normal,
-        CollisionShape2D LocalShape,
+        Object? LocalShape,
         PhysicsQueryShape TargetShape)
     {
         public static MotionHit None { get; } = new(
@@ -222,23 +219,12 @@ internal static class PhysicsBody2DMotion
                 travel,
                 remainder,
                 TargetShape.Owner,
-                TargetShape.Owner.GetRid(),
-                TargetShape.Shape,
+                TargetShape.OwnerRid,
+                TargetShape.ShapeObject,
                 TargetShape.ShapeIndex,
-                GetColliderVelocity(TargetShape.Owner),
+                TargetShape.ColliderVelocity,
                 LocalShape,
                 depth: 0f);
-        }
-
-        private static Vector2 GetColliderVelocity(CollisionObject2D owner)
-        {
-            return owner switch
-            {
-                StaticBody2D staticBody => staticBody.ConstantLinearVelocity,
-                RigidBody2D rigidBody => rigidBody.LinearVelocity,
-                CharacterBody2D characterBody => characterBody.Velocity,
-                _ => Vector2.Zero
-            };
         }
     }
 }

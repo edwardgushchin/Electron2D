@@ -108,6 +108,7 @@
 - [ShaderMaterial, uniforms, samplers и canvas built-ins baseline](rendering/shader-material-baseline.md) - public `Material`/`ShaderMaterial`, serializable uniforms, texture samplers и reserved canvas built-ins.
 - [Compatibility renderer backend baseline](rendering/sdl-renderer-compatibility-backend.md) - внутреннее преобразование `CanvasItemRenderPlan` в compatibility frame plan, supported features, limitations и golden reference scene.
 - [Android mobile GPU smoke и fallback policy baseline](rendering/android-mobile-gpu-fallback-policy.md) - internal mobile graphics create profile, smoke steps, automatic/fail policy и structured startup result.
+- [TileMapLayer runtime API](rendering/tilemap-layer-runtime-api.md) - `TileSet`, atlas source, tile data, cell storage, canvas submission и tile collision для reference platformer.
 
 ## Базовые типы
 

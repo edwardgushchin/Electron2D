@@ -342,8 +342,8 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
     new ApiCategory(
         "API-Rendering.md",
         "Rendering",
-        "2D drawing nodes, textures, viewports, cameras, materials, shaders and rendering server state.",
-        type => Named(type, "AtlasTexture", "Texture2D", "CanvasItem", "CanvasLayer", "Camera2D", "Viewport", "ViewportTexture", "Sprite2D", "RenderingServer", "Material", "Shader", "ShaderMaterial")),
+        "2D drawing nodes, textures, tile maps, viewports, cameras, materials, shaders and rendering server state.",
+        type => Named(type, "AtlasTexture", "Texture2D", "TileData", "TileMapLayer", "TileSet", "TileSetAtlasSource", "TileSetSource", "CanvasItem", "CanvasLayer", "Camera2D", "Viewport", "ViewportTexture", "Sprite2D", "RenderingServer", "Material", "Shader", "ShaderMaterial")),
     new ApiCategory(
         "API-Animation-and-Tweening.md",
         "Animation and Tweening",

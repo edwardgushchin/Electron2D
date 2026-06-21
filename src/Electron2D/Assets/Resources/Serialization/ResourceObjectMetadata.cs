@@ -68,6 +68,23 @@ internal sealed class ResourceObjectPropertyMetadata
             (resource, value) => setter((TResource)resource, SerializedPropertyValueConverter.ToValue<TValue>(value)));
     }
 
+    public static ResourceObjectPropertyMetadata CreateSerialized<TResource>(
+        string name,
+        Func<TResource, SerializedPropertyValue> capture,
+        Action<TResource, SerializedPropertyValue> restore)
+        where TResource : Resource
+    {
+        ArgumentNullException.ThrowIfNull(capture);
+        ArgumentNullException.ThrowIfNull(restore);
+
+        return new ResourceObjectPropertyMetadata(
+            typeof(TResource),
+            typeof(SerializedPropertyValue),
+            name,
+            resource => capture((TResource)resource),
+            (resource, value) => restore((TResource)resource, value));
+    }
+
     public static ResourceObjectPropertyMetadata CreateArray<TResource, TElement>(
         string name,
         Func<TResource, TElement[]> getter,
@@ -218,6 +235,7 @@ internal static class ResourceObjectMetadataRegistry
     {
         PhysicsShapeResourceMetadata.Register();
         PhysicsMaterialResourceMetadata.Register();
+        TileSetResourceMetadata.Register();
     }
 
     public static void Register(ResourceObjectTypeMetadata metadata)
