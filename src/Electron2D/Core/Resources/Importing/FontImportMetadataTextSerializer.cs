@@ -122,7 +122,7 @@ internal static class FontImportMetadataTextSerializer
         var result = new JsonArray();
         foreach (var path in fallbackPaths.OrderBy(path => path, StringComparer.Ordinal))
         {
-            result.Add(path);
+            result.Add((JsonNode?)JsonValue.Create(path));
         }
 
         return result;

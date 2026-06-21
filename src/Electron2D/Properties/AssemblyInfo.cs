@@ -27,3 +27,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
 [assembly: InternalsVisibleTo("Electron2D.Tests.GoldenData")]
 [assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+[assembly: InternalsVisibleTo("Electron2D.Tests.AotSmoke")]

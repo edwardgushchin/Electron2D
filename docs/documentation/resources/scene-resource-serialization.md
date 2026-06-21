@@ -15,7 +15,7 @@
 - `SceneFileDocument` - JSON document для scene file;
 - `SerializedResourceTextSerializer` - stable JSON serializer для resource document;
 - `SceneFileTextSerializer` - stable JSON serializer для scene document;
-- `ResourceObjectSerializer` - internal reflection-based baseline для custom `Resource` round-trip.
+- `ResourceObjectSerializer` - internal serializer для custom `Resource` round-trip поверх registered AOT-safe metadata.
 
 ## Property value model
 
@@ -51,7 +51,7 @@ Top-level поля:
 
 Properties сортируются ordinal-сравнением. External и internal references сортируются по `id`. Dictionary entries сортируются по serialized key, чтобы JSON оставался стабильным.
 
-`ResourceObjectSerializer.Capture()` создаёт resource document из public get/set properties custom `Resource`. `ResourceObjectSerializer.Instantiate()` создаёт новый instance через parameterless constructor и восстанавливает поддержанные свойства.
+`ResourceObjectSerializer.Capture()` создаёт resource document только для custom `Resource`, чей тип зарегистрирован в `ResourceObjectMetadataRegistry`. `ResourceObjectSerializer.Instantiate()` берёт typed factory и property descriptors из той же metadata. Имена свойств в JSON берутся из metadata, а не из CLR property names.
 
 ## Scene document
 
@@ -78,7 +78,7 @@ Scene document содержит external resource references, internal subresour
 - Public `ResourceLoader`/`ResourceSaver` ещё не реализованы.
 - In-memory `PackedScene` ещё не читает и не пишет `SceneFileDocument` напрямую.
 - Resource references сохраняются как slots, но automatic reference resolution при `ResourceObjectSerializer.Instantiate()` не реализован.
-- AOT-safe metadata registry без reflection остаётся отдельной задачей `T-0043`.
+- Source generator для metadata ещё не реализован; текущая регистрация metadata выполняется вручную или тестовым кодом.
 - Unsupported CLR values дают ошибку вместо silent fallback.
 
 ## Stress gate
@@ -92,6 +92,7 @@ Scene document содержит external resource references, internal subresour
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~SceneResourceSerializationTests" --no-restore -m:1
 dotnet test tests\Electron2D.Tests.GoldenData\Electron2D.Tests.GoldenData.csproj --filter "FullyQualifiedName~SerializedResourceGoldenTests" --no-restore -m:1
+powershell -ExecutionPolicy Bypass -File tools\Verify-AotMetadataSafety.ps1 -NativeAot
 ```
 
 Полная проверка проекта:

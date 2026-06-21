@@ -26,6 +26,7 @@
 - Начальный internal TTF/OTF font import baseline: font names metadata, fallback font dependencies, SDF/bitmap policy и stable `font.e2font.json` cache artifact.
 - Начальный internal shader source artifact import baseline: `.e2shader`, sidecar target platforms, diagnostics file/line/column, stable `shader.e2shader.json` cache artifact и iOS artifact без runtime compilation.
 - Начальный internal scene/resource serialization baseline: stable resource/scene JSON documents, custom `Resource` round-trip, arrays, dictionaries, enums, nullable и resource reference slots.
+- Начальный internal AOT-safe metadata baseline: `ResourceObjectMetadataRegistry`, typed descriptors, custom `Resource` serialization без reflection fallback и trimmed/NativeAOT smoke verifier.
 - Начальный data stability stress gate: 100 save/load cycles, rename/move resources, import cache rebuild и corruption diagnostics без silent data loss.
 - Начальный Variant API: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений `0.1.0 Preview`.
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.
@@ -49,7 +50,7 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, Android device/export run, SDL_Renderer window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, Android device/export run, SDL_Renderer window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, metadata source generator, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

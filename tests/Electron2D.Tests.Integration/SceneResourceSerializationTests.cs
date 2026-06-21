@@ -136,6 +136,8 @@ public sealed class SceneResourceSerializationTests
     [Fact]
     public void ResourceObjectSerializerRoundTripsCustomResourceValues()
     {
+        RegisterPlayerStatsMetadata();
+
         var resource = new PlayerStatsResource
         {
             DisplayName = "Player",
@@ -150,6 +152,9 @@ public sealed class SceneResourceSerializationTests
         };
 
         var document = Electron2D.ResourceObjectSerializer.Capture(resource, "res://data/player_stats.e2res");
+        Assert.Contains("display_name", document.Properties.Keys);
+        Assert.DoesNotContain("DisplayName", document.Properties.Keys);
+
         var parsed = Electron2D.SerializedResourceTextSerializer.Deserialize(
             Electron2D.SerializedResourceTextSerializer.Serialize(document));
         var restored = Assert.IsType<PlayerStatsResource>(Electron2D.ResourceObjectSerializer.Instantiate(parsed));
@@ -164,7 +169,66 @@ public sealed class SceneResourceSerializationTests
         restored.OptionalLives = null;
         var restoredDocument = Electron2D.ResourceObjectSerializer.Capture(restored, "res://data/player_stats.e2res");
 
-        Assert.Null(restoredDocument.Properties["OptionalLives"].NullableValue);
+        Assert.Null(restoredDocument.Properties["optional_lives"].NullableValue);
+    }
+
+    [Fact]
+    public void ResourceObjectSerializerFailsClosedWhenMetadataIsMissing()
+    {
+        var resource = new UnregisteredResource
+        {
+            DisplayName = "Should not be discovered"
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(
+            () => Electron2D.ResourceObjectSerializer.Capture(resource, "res://data/unregistered.e2res"));
+
+        Assert.Contains("AOT-safe metadata", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ResourceObjectMetadataRegistryProvidesStableInspectorProperties()
+    {
+        RegisterPlayerStatsMetadata();
+
+        var metadata = Electron2D.ResourceObjectMetadataRegistry.GetByResourceType(typeof(PlayerStatsResource));
+
+        Assert.Equal(typeof(PlayerStatsResource), metadata.ResourceType);
+        Assert.Equal(typeof(PlayerStatsResource).FullName, metadata.SerializedTypeName);
+        Assert.Equal(
+            ["alignment", "display_name", "optional_lives", "scores", "tags"],
+            metadata.Properties.Select(property => property.Name).ToArray());
+        Assert.Equal(typeof(int?), metadata.Properties.Single(property => property.Name == "optional_lives").ValueType);
+    }
+
+    private static void RegisterPlayerStatsMetadata()
+    {
+        Electron2D.ResourceObjectMetadataRegistry.Register(
+            Electron2D.ResourceObjectTypeMetadata.Create(
+                typeof(PlayerStatsResource).FullName!,
+                () => new PlayerStatsResource(),
+                [
+                    Electron2D.ResourceObjectPropertyMetadata.Create<PlayerStatsResource, string>(
+                        "display_name",
+                        resource => resource.DisplayName,
+                        (resource, value) => resource.DisplayName = value),
+                    Electron2D.ResourceObjectPropertyMetadata.Create<PlayerStatsResource, Electron2D.HorizontalAlignment>(
+                        "alignment",
+                        resource => resource.Alignment,
+                        (resource, value) => resource.Alignment = value),
+                    Electron2D.ResourceObjectPropertyMetadata.Create<PlayerStatsResource, int?>(
+                        "optional_lives",
+                        resource => resource.OptionalLives,
+                        (resource, value) => resource.OptionalLives = value),
+                    Electron2D.ResourceObjectPropertyMetadata.CreateArray<PlayerStatsResource, string>(
+                        "tags",
+                        resource => resource.Tags,
+                        (resource, value) => resource.Tags = value),
+                    Electron2D.ResourceObjectPropertyMetadata.CreateDictionary<PlayerStatsResource, string, int>(
+                        "scores",
+                        resource => resource.Scores,
+                        (resource, value) => resource.Scores = value)
+                ]));
     }
 
     private sealed class PlayerStatsResource : Electron2D.Resource
@@ -178,5 +242,10 @@ public sealed class SceneResourceSerializationTests
         public string[] Tags { get; set; } = [];
 
         public Dictionary<string, int> Scores { get; set; } = new(StringComparer.Ordinal);
+    }
+
+    private sealed class UnregisteredResource : Electron2D.Resource
+    {
+        public string DisplayName { get; set; } = string.Empty;
     }
 }

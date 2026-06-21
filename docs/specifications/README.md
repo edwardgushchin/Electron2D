@@ -32,6 +32,7 @@
 - [Импорт TTF/OTF в Font](resources/font-import.md) - internal font importer, fallback font dependencies, SDF/bitmap policy и stable font metadata cache.
 - [Импорт shader source в platform-specific artifacts](resources/shader-source-import.md) - internal shader importer, compiled stages per target, diagnostics file/line/column и iOS/export precompiled artifact policy.
 - [Сериализация сцен, ресурсов и переносимых property values](resources/scene-resource-serialization.md) - internal scene/resource documents, arrays, dictionaries, enums, nullable и resource reference slots.
+- [AOT-safe metadata для Inspector и serialization](resources/aot-safe-metadata.md) - internal metadata registry, typed delegates и NativeAOT smoke для custom `Resource` serialization.
 - [Stress data stability для scene/resource pipeline](resources/data-stability-stress.md) - 100 save/load cycles, rename/move UID stability, import cache rebuild и corruption diagnostics.
 
 ## Рендеринг

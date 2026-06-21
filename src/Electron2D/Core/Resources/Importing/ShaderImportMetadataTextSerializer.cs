@@ -114,7 +114,7 @@ internal static class ShaderImportMetadataTextSerializer
         var result = new JsonArray();
         foreach (var stage in stages)
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["stage"] = stage.Stage.ToString(),
                 ["target"] = stage.TargetPlatform.ToString(),
@@ -147,7 +147,7 @@ internal static class ShaderImportMetadataTextSerializer
         var result = new JsonArray();
         foreach (var diagnostic in diagnostics)
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["severity"] = diagnostic.Severity.ToString(),
                 ["file"] = diagnostic.FilePath,

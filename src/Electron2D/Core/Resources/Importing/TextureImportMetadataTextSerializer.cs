@@ -142,7 +142,7 @@ internal static class TextureImportMetadataTextSerializer
         var result = new JsonArray();
         foreach (var region in atlasRegions.OrderBy(region => region.Name, StringComparer.Ordinal))
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["name"] = region.Name,
                 ["region"] = WriteRect(region.Region),
@@ -175,7 +175,7 @@ internal static class TextureImportMetadataTextSerializer
         var result = new JsonArray();
         foreach (var variant in platformVariants.OrderBy(variant => variant.Name, StringComparer.Ordinal))
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["name"] = variant.Name,
                 ["format"] = variant.Format,

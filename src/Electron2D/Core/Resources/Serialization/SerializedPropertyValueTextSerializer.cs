@@ -126,7 +126,7 @@ internal static class SerializedPropertyValueTextSerializer
         var result = new JsonArray();
         foreach (var item in items)
         {
-            result.Add(Write(item));
+            result.Add((JsonNode)Write(item));
         }
 
         return result;
@@ -137,7 +137,7 @@ internal static class SerializedPropertyValueTextSerializer
         var result = new JsonArray();
         foreach (var entry in entries.OrderBy(entry => Write(entry.Key).ToJsonString(CompactOptions), StringComparer.Ordinal))
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["key"] = Write(entry.Key),
                 ["value"] = Write(entry.Value)

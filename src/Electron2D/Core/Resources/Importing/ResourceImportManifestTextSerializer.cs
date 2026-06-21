@@ -71,7 +71,7 @@ internal static class ResourceImportManifestTextSerializer
         var entries = new JsonArray();
         foreach (var entry in manifest.Entries.OrderBy(entry => entry.SourcePath, StringComparer.Ordinal))
         {
-            entries.Add(WriteEntry(entry));
+            entries.Add((JsonNode)WriteEntry(entry));
         }
 
         return new JsonObject
@@ -101,7 +101,7 @@ internal static class ResourceImportManifestTextSerializer
         var result = new JsonArray();
         foreach (var value in values.OrderBy(value => value, StringComparer.Ordinal))
         {
-            result.Add(value);
+            result.Add((JsonNode?)JsonValue.Create(value));
         }
 
         return result;
@@ -112,7 +112,7 @@ internal static class ResourceImportManifestTextSerializer
         var result = new JsonArray();
         foreach (var dependency in dependencies.OrderBy(dependency => dependency.Path, StringComparer.Ordinal))
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["path"] = dependency.Path,
                 ["hash"] = dependency.ContentHash

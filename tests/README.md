@@ -13,6 +13,7 @@
 - `Electron2D.Tests.Integration`
 - `Electron2D.Tests.RuntimeSmoke`
 - `Electron2D.Tests.GoldenData`
+- `Electron2D.Tests.AotSmoke` - консольный smoke-проект для trimmed/NativeAOT publish через отдельный verifier.
 
 Обычная проверка:
 
@@ -24,4 +25,10 @@ Baseline-проверка с намеренно падающим тестом:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
+```
+
+AOT metadata smoke:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/Verify-AotMetadataSafety.ps1 -NativeAot
 ```

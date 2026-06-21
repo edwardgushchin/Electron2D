@@ -112,7 +112,7 @@ internal static class SerializedResourceTextSerializer
         var result = new JsonArray();
         foreach (var resource in resources.OrderBy(resource => resource.Id))
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["id"] = resource.Id,
                 ["type"] = resource.Type,

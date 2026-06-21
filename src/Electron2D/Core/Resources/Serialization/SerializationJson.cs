@@ -48,7 +48,7 @@ internal static class SerializationJson
         var result = new JsonArray();
         foreach (var reference in references.OrderBy(reference => reference.Id))
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["id"] = reference.Id,
                 ["uid"] = reference.UidText,

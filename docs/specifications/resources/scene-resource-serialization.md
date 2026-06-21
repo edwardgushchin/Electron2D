@@ -63,7 +63,7 @@ Node entry хранит:
 
 ## Custom Resource round-trip
 
-Для пользовательских `Resource` internal serializer должен уметь создать document из public get/set properties, поддержанных property value model, и восстановить новый instance через parameterless constructor. Это baseline для tests и tooling; AOT-safe metadata без reflection остаётся отдельной задачей `T-0043`.
+Для пользовательских `Resource` internal serializer должен уметь создать document из зарегистрированной metadata, поддержанной property value model, и восстановить новый instance через typed factory delegate. Reflection fallback, automatic public property discovery и dynamic type lookup не входят в этот контракт. Подробный metadata contract описан в [`AOT-safe metadata для Inspector и serialization`](aot-safe-metadata.md).
 
 ## Ошибки
 
@@ -78,7 +78,7 @@ Serializer должен fail closed:
 ## Критерии приёмки
 
 - Integration tests проверяют `load -> modify -> save -> load` для scene document: values, arrays, dictionaries, enum, nullable и resource references сохраняются.
-- Integration tests проверяют custom `Resource` round-trip через object serializer.
+- Integration tests проверяют custom `Resource` round-trip через object serializer и registered metadata.
 - Golden-data test фиксирует exact JSON output resource document с enum, nullable, array, dictionary и resource reference.
 - Public API compatibility не меняется.
 - Source license verifier проходит для новых C# files.

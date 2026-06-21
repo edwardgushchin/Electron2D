@@ -223,7 +223,7 @@ internal static class VariantTextSerializer
         var result = new JsonArray();
         foreach (var value in array)
         {
-            result.Add(WriteVariant(value));
+            result.Add((JsonNode)WriteVariant(value));
         }
 
         return result;
@@ -238,7 +238,7 @@ internal static class VariantTextSerializer
         var result = new JsonArray();
         foreach (var entry in entries)
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["key"] = JsonNode.Parse(entry.Key),
                 ["value"] = JsonNode.Parse(entry.Value)

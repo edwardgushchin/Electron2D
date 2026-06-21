@@ -130,7 +130,7 @@ internal static class ResourceFileTextSerializer
             ArgumentException.ThrowIfNullOrWhiteSpace(reference.Path);
             ArgumentException.ThrowIfNullOrWhiteSpace(reference.Type);
 
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["id"] = reference.Id,
                 ["uid"] = reference.UidText,
@@ -150,7 +150,7 @@ internal static class ResourceFileTextSerializer
             ValidateReferenceId(resource.Id, "Internal resource id");
             ArgumentException.ThrowIfNullOrWhiteSpace(resource.Type);
 
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["id"] = resource.Id,
                 ["type"] = resource.Type,

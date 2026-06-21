@@ -97,7 +97,7 @@ internal static class SceneFileTextSerializer
         var result = new JsonArray();
         foreach (var node in nodes.OrderBy(node => node.Id))
         {
-            result.Add(new JsonObject
+            result.Add((JsonNode)new JsonObject
             {
                 ["id"] = node.Id,
                 ["type"] = node.Type,
@@ -138,7 +138,7 @@ internal static class SceneFileTextSerializer
         var result = new JsonArray();
         foreach (var group in groups.OrderBy(group => group, StringComparer.Ordinal))
         {
-            result.Add(group);
+            result.Add((JsonNode?)JsonValue.Create(group));
         }
 
         return result;
