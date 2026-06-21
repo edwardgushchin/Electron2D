@@ -36,6 +36,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.HorizontalAlignment` | `HorizontalAlignment` | Partial | Godot-like horizontal alignment values used by text drawing APIs. |
 | `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
 | `Electron2D.Label` | `Label` | Partial | Single-line plain text control backed by theme font overrides and `CanvasItem.DrawString`. |
+| `Electron2D.Material` | `Material` | Partial | Base visual material resource with `NextPass` and `RenderPriority` storage for future renderer ordering. |
 | `Electron2D.Mathf` | `Mathf` | Partial | Basic constants, approximate comparison, clamp, interpolation, angle conversion, modulo and snapping helpers. |
 | `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()`, `CallDeferred()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |
 | `Electron2D.Node` | `Node` | Partial | Lifecycle, hierarchy, `Owner`, groups, reparent/move and `QueueFree()` baseline. |
@@ -55,6 +56,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
 | `Electron2D.Shader` | `Shader` | Partial | Canvas item shader resource storing source code for import-time compilation. |
 | `Electron2D.Shader+Mode` | `Shader.Mode` | Partial | 0.1 canvas item shader mode subset. |
+| `Electron2D.ShaderMaterial` | `ShaderMaterial` | Partial | Material resource with `Shader`, supported uniform values, `Texture2D` samplers and fail-closed reserved built-in validation. |
 | `Electron2D.Sprite2D` | `Sprite2D` | Partial | Texture, centered/offset drawing rect, region rect, flip flags, pixel opacity and internal submission baseline. |
 | `Electron2D.StringName` | `StringName` | Partial | Immutable interned-name baseline with ordinal equality, hashing, empty/default semantics and string conversion. |
 | `Electron2D.Texture2D` | `Texture2D` | Partial | Abstract texture resource baseline for size, alpha, mipmaps and pixel opacity queries. |

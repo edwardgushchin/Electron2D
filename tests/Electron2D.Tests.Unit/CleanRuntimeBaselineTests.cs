@@ -57,6 +57,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.HorizontalAlignment",
                 "Electron2D.InputEvent",
                 "Electron2D.Label",
+                "Electron2D.Material",
                 "Electron2D.Mathf",
                 "Electron2D.Node",
                 "Electron2D.Node2D",
@@ -76,6 +77,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.SceneTree",
                 "Electron2D.Shader",
                 "Electron2D.Shader+Mode",
+                "Electron2D.ShaderMaterial",
                 "Electron2D.Sprite2D",
                 "Electron2D.StringName",
                 "Electron2D.Texture2D",
@@ -93,7 +95,6 @@ public sealed class CleanRuntimeBaselineTests
         Assert.Null(assembly.GetType("Electron2D.IComponent"));
         Assert.Null(assembly.GetType("Electron2D.SpriteRenderer"));
         Assert.Null(assembly.GetType("Electron2D.SpriteAnimator"));
-        Assert.Null(assembly.GetType("Electron2D.ShaderMaterial"));
         Assert.Null(assembly.GetType("Electron2D.Rigidbody"));
         Assert.Null(assembly.GetType("Electron2D.Collider"));
     }

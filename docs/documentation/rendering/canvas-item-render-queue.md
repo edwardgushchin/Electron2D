@@ -55,7 +55,7 @@ Batch создаётся только для соседних команд с о
 
 - Реальный SDL_GPU draw submission ещё не реализован.
 - Public drawing methods (`DrawLine`, `DrawRect`, `DrawTexture` и другие) остаются будущим `CanvasItem` API.
-- Material/shader resource management остаётся отдельной задачей.
+- Material/shader resource management появился в baseline `T-0032`, но реальные material-aware batches и GPU binding остаются отдельной задачей draw pipeline.
 
 ## Проверки
 

@@ -19,7 +19,7 @@
 
 В `0.1.0 Preview` поддерживается только canvas item shader mode. `Shader.Code` хранит исходный текст как пользователь написал его, а `GetMode()` возвращает `Shader.Mode.CanvasItem`.
 
-`ShaderMaterial`, uniforms, samplers, default texture parameters и native shader inspection не добавлены в T-0031. Эти части относятся к T-0032 и следующим renderer/resource задачам.
+`ShaderMaterial`, uniforms, samplers и reserved canvas built-ins реализованы отдельным baseline [ShaderMaterial, uniforms, samplers и canvas built-ins baseline](shader-material-baseline.md). Default texture parameters, global uniforms и native shader inspection остаются будущими renderer/resource задачами.
 
 ## Source format
 
@@ -87,8 +87,8 @@ res://shaders/bad.e2shader(7,13): error X3000: unexpected token
 
 ## Ограничения
 
-- Public `ShaderMaterial` не реализован.
-- Uniform metadata, samplers и engine-provided built-ins не реализованы.
+- `ShaderMaterial` resource layer реализован отдельно, но не привязан к реальному draw pipeline.
+- Default texture parameters и global uniforms не реализованы.
 - Реальная привязка shader artifact к draw pipeline ещё не реализована.
 - Compatibility backend не обязан поддерживать custom shaders.
 - Visual shader editor не входит в `0.1.0 Preview`.

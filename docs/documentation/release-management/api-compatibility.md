@@ -16,7 +16,7 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, texture/canvas/camera, immediate drawing surface и text/UI baseline:
+Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, texture/canvas/camera, shader material resource layer, immediate drawing surface и text/UI baseline:
 
 - `Electron2D.AtlasTexture`
 - `Electron2D.Callable`
@@ -33,6 +33,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.HorizontalAlignment`
 - `Electron2D.InputEvent`
 - `Electron2D.Label`
+- `Electron2D.Material`
 - `Electron2D.Mathf`
 - `Electron2D.Node`
 - `Electron2D.Node2D`
@@ -52,6 +53,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.SceneTree`
 - `Electron2D.Shader`
 - `Electron2D.Shader+Mode`
+- `Electron2D.ShaderMaterial`
 - `Electron2D.Sprite2D`
 - `Electron2D.StringName`
 - `Electron2D.Texture2D`
