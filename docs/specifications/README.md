@@ -44,6 +44,10 @@
 
 - [SDL input event mapping и Godot-like `InputEvent*`](input/sdl-input-event-mapping.md) - keyboard, mouse button, mouse motion, wheel, text input и порядок dispatch через `SceneTree`.
 
+## Физика 2D
+
+- [PhysicsServer2D boundary](physics/physics-server-2d.md) - Godot-like public `Rid`-граница, internal swappable backend и запрет публичных Box2D handles.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - серверная граница, `Standard`/`Compatibility` профили и feature flags.

@@ -41,6 +41,10 @@
 
 - [SDL input event mapping и Godot-like `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal SDL mapper для keyboard, mouse, wheel, text input и dispatch order.
 
+## Физика 2D
+
+- [PhysicsServer2D boundary](physics/physics-server-2d.md) - текущая public `Rid`-граница физики, internal backend boundary и запрет публичных Box2D handles.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.

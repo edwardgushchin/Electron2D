@@ -31,6 +31,7 @@
 - C# script class baseline: ordinary .NET script classes, inheritance from `Node`, lifecycle callbacks, service access через `GetTree()`/`RenderingServer` и script sample в `electron2d-empty` template.
 - Script metadata baseline: public Godot-like `[Export]`, `[Signal]`, `[Tool]` marker attributes, internal AOT-safe metadata bridge, exported property round-trip, callable signal registration и sandboxed experimental `[Tool]` state.
 - SDL input event mapping baseline: public Godot-like `InputEventKey`, `InputEventMouseButton`, `InputEventMouseMotion`, `Key`, `KeyLocation`, `MouseButton`, `MouseButtonMask`, internal SDL mapper для keyboard, mouse, wheel, text input и dispatch order через `SceneTree`.
+- PhysicsServer2D boundary baseline: public Godot-like `PhysicsServer2D`, `SpaceParameter`, `ShapeType`, `ProcessInfo`, RID creation/free для spaces, areas, bodies, joints, shapes и internal swappable backend без публичных Box2D handles.
 - Variant baseline: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений для `0.1.0 Preview`.
 - Stable Variant serialization baseline: internal canonical JSON round-trip для сериализуемых `Variant` значений и понятные ошибки для runtime-only значений.
 - Rendering server baseline: `RenderingServer`, nested renderer profiles/features и internal backend abstraction для `Compatibility`/`Standard`.
@@ -64,7 +65,7 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `60` публичных типов.
+- Runtime assembly экспортирует `64` публичных типов.
 - `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input и editor script attach workflow ещё не реализованы, а полноценный device run/export остаётся следующими задачами.
 
 ### Breaking changes policy
