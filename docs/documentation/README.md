@@ -50,6 +50,7 @@
 - [Collision layers, material, gravity и sleeping baseline](physics/collision-material-state.md) - текущие layer/mask helpers, `PhysicsMaterial`, material override и внутренний body-state snapshot.
 - [Area2D sensors и overlap signals baseline](physics/area2d-overlap-signals.md) - текущие overlap snapshots, `body_entered`/`body_exited`, `area_entered`/`area_exited`, фильтры и deferred removal.
 - [PhysicsDirectSpaceState2D raycast, point query и shape query baseline](physics/direct-space-state-queries.md) - текущие `World2D`, direct state query parameters, `RayCast2D` execution и AABB query results.
+- [Fixed physics timestep, basic CCD и one-way platform baseline](physics/fixed-physics-step-and-rigid-body-motion.md) - текущий fixed tick `1/60`, базовое движение `RigidBody2D`, AABB sweep, one-way collision и deferred body queue.
 
 ## Рендеринг
 

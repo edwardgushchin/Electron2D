@@ -83,7 +83,7 @@ public sealed class DeferredCallTests
         tree.Root.AddChild(sibling);
         events.Clear();
 
-        tree.PhysicsFrame(0.25d);
+        tree.PhysicsFrame(1d / 60d);
 
         Assert.Equal(
             new[]

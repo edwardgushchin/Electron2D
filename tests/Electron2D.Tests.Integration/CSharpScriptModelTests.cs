@@ -36,7 +36,7 @@ public sealed class CSharpScriptModelTests
 
         tree.Root.AddChild(script);
         tree.ProcessFrame(0.125d);
-        tree.PhysicsFrame(0.25d);
+        tree.PhysicsFrame(1d / 60d);
 
         Assert.Equal(
             ["_EnterTree", "_Ready", "_Process", "_PhysicsProcess"],

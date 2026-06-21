@@ -28,11 +28,15 @@ namespace Electron2D;
 
 public class SceneTree : Object
 {
+    private const double FixedPhysicsStep = 1d / 60d;
+    private const double PhysicsStepEpsilon = 0.000000000001d;
+
     private readonly List<SceneTreeDiagnostic> _diagnostics = new();
     private readonly Queue<DeferredCallQueue.DeferredCall> _deferredCalls = new();
     private readonly List<Node> _deleteQueue = new();
     private int _traversalDepth;
     private bool _flushingQueues;
+    private double _physicsAccumulator;
     private PackedScene? _pendingScene;
 
     public SceneTree()
@@ -136,7 +140,24 @@ public class SceneTree : Object
 
     internal void PhysicsFrame(double delta)
     {
-        RunTraversal(() => Root.PhysicsProcessRecursive(delta));
+        if (delta <= 0d || !double.IsFinite(delta))
+        {
+            return;
+        }
+
+        _physicsAccumulator += delta;
+        RunTraversal(() =>
+        {
+            while (_physicsAccumulator + PhysicsStepEpsilon >= FixedPhysicsStep)
+            {
+                Root.PhysicsProcessRecursive(FixedPhysicsStep);
+                _physicsAccumulator -= FixedPhysicsStep;
+                if (_physicsAccumulator < PhysicsStepEpsilon)
+                {
+                    _physicsAccumulator = 0d;
+                }
+            }
+        });
     }
 
     internal void DispatchInput(InputEvent inputEvent)

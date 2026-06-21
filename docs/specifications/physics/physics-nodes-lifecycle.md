@@ -10,7 +10,7 @@
 - `CollisionShape2D`;
 - `RayCast2D`.
 
-Эти классы нужны сценам и будущему редактору как стабильная публичная форма физического дерева. Они не должны раскрывать Box2D.NET handles и не должны обещать завершённую симуляцию столкновений раньше задач про shapes, areas, collision layers, queries и fixed timestep.
+Эти классы нужны сценам и будущему редактору как стабильная публичная форма физического дерева. Они не должны раскрывать Box2D.NET handles и не должны обещать завершённую симуляцию столкновений раньше задач про shapes, areas, collision layers, queries, fixed timestep и kinematic solver.
 
 ## Область задачи
 
@@ -23,6 +23,7 @@
 - повторный вход в дерево создаёт новый живой RID;
 - `CollisionObject2D.GetRid()` возвращает текущий RID объекта или пустой `Rid`, если узел ещё не внутри дерева;
 - `CollisionObject2D` синхронизирует `GlobalTransform` в physics backend при `_PhysicsProcess()`;
+- fixed timestep и начальное движение `RigidBody2D` закреплены отдельной спецификацией `fixed-physics-step-and-rigid-body-motion.md`;
 - `CollisionShape2D` и `RayCast2D` наследуются от `Node2D` и имеют Godot-like public properties, но не создают physics shape/query RID в этой задаче;
 - `QueueFree()` во время `_PhysicsProcess()` должен быть безопасным: узел остаётся живым до конца обхода, а RID освобождается при flush delete queue.
 
@@ -123,7 +124,7 @@
 - `StaticBody2D`, `RigidBody2D` и `Area2D` создают RID при входе в дерево, освобождают его при выходе и создают новый RID при повторном входе.
 - `CollisionObject2D.GetRid()` не возвращает Box2D.NET handle.
 - `CollisionObject2D` передаёт `GlobalTransform` в backend во время physics frame.
-- `QueueFree()` во время `_PhysicsProcess()` безопасно освобождает RID после завершения обхода текущего physics frame.
+- `QueueFree()` во время `_PhysicsProcess()` безопасно освобождает RID после завершения обхода текущего physics frame; поведение при нескольких fixed ticks описано отдельной спецификацией fixed timestep.
 - `CollisionShape2D` хранит `Shape`, `Disabled`, `OneWayCollision`, `OneWayCollisionMargin`.
 - `RayCast2D` хранит query properties; выполнение query и result state закреплены отдельной спецификацией direct space state.
 - Reflection-тест подтверждает отсутствие публичных `Box2D` типов и public signatures.

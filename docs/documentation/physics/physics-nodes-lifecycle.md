@@ -11,11 +11,13 @@
 - Повторное добавление узла в дерево создаёт новый RID.
 - `CollisionObject2D.GetRid()` возвращает текущий RID или пустой `Rid`, если узел не находится в дереве.
 - Во время `SceneTree.PhysicsFrame()` `CollisionObject2D` передаёт свой `GlobalTransform` во внутренний physics backend.
-- `QueueFree()` внутри `_PhysicsProcess()` безопасен: узел удаляется после завершения текущего обхода дерева, а RID освобождается во время flush delete queue.
-- `CollisionLayer` и `CollisionMask` хранятся на `CollisionObject2D`, но ещё не участвуют в solver.
+- `SceneTree.PhysicsFrame()` запускает fixed ticks по `1/60` секунды; подробнее это описано в `fixed-physics-step-and-rigid-body-motion.md`.
+- `QueueFree()` внутри `_PhysicsProcess()` безопасен: узел удаляется после завершения текущего обхода дерева, а RID освобождается во время flush delete queue. Если в одном `PhysicsFrame()` есть несколько fixed ticks, уже queued node пропускается на следующих ticks.
+- `CollisionLayer` и `CollisionMask` хранятся на `CollisionObject2D` и участвуют в текущих AABB overlap/query/motion checks.
 - `CollisionObject2D` синхронизирует collision filter во внутренний physics backend во время physics frame.
 - `StaticBody2D` хранит `ConstantLinearVelocity` и `ConstantAngularVelocity`.
 - `RigidBody2D` хранит базовые Godot-like свойства: `Mass`, `Inertia`, `CenterOfMass`, `CenterOfMassMode`, `GravityScale`, `LinearVelocity`, `AngularVelocity`, `Freeze`, `FreezeMode`, `Sleeping`, `CanSleep`, `LockRotation`.
+- `RigidBody2D` двигается по `LinearVelocity` на fixed tick и выполняет basic AABB sweep against `StaticBody2D`, включая one-way platform checks через `CollisionShape2D.OneWayCollision`.
 - `PhysicsBody2D` хранит `PhysicsMaterialOverride`, а `RigidBody2D` синхронизирует `GravityScale`, `Sleeping` и `CanSleep` во внутренний body-state snapshot.
 - `Area2D` хранит `Monitoring`, `Monitorable` и `Priority`, регистрирует built-in overlap signals и поддерживает body/area overlap helper methods.
 - `CollisionShape2D` хранит `Shape`, `Disabled`, `OneWayCollision` и `OneWayCollisionMargin`.
@@ -30,8 +32,9 @@
 ## Что ещё не реализовано
 
 - запись geometry concrete shapes в production physics backend;
-- collision solver, contacts, shape-level overlap signals и точная narrow-phase проверка;
+- полноценный collision solver, contacts, rigid-rigid collision, shape-level overlap signals и точная narrow-phase проверка;
 - точный raycast/point/shape narrow-phase и production backend queries;
+- gravity integration для `RigidBody2D`;
 - `CharacterBody2D` и kinematic solver;
 - production backend на Box2D.NET.
 

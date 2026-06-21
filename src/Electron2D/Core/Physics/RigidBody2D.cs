@@ -290,10 +290,53 @@ public class RigidBody2D : PhysicsBody2D
         return PhysicsServer2D.BodyCreate(PhysicsBodyKind.Rigid);
     }
 
+    internal override void PhysicsStep(double delta)
+    {
+        if (Freeze || Sleeping || delta <= 0d || !double.IsFinite(delta))
+        {
+            return;
+        }
+
+        var step = (float)delta;
+        var motion = LinearVelocity * step;
+        if (!motion.IsZeroApprox())
+        {
+            var resolvedMotion = RigidBody2DMotion.ResolveMotion(this, motion, out var collisionNormal);
+            Position += resolvedMotion;
+            LinearVelocity = RemoveVelocityIntoCollision(LinearVelocity, collisionNormal);
+        }
+
+        if (!LockRotation && !Mathf.IsZeroApprox(AngularVelocity))
+        {
+            Rotation += AngularVelocity * step;
+        }
+    }
+
     internal override PhysicsBody2DState CapturePhysicsBodyState()
     {
         return new PhysicsBody2DState(
             PhysicsMaterialState.From(PhysicsMaterialOverride),
             new PhysicsRigidBody2DState(GravityScale, Sleeping, CanSleep));
+    }
+
+    private static Vector2 RemoveVelocityIntoCollision(Vector2 velocity, Vector2 collisionNormal)
+    {
+        if (collisionNormal.IsZeroApprox())
+        {
+            return velocity;
+        }
+
+        var result = velocity;
+        if (!Mathf.IsZeroApprox(collisionNormal.X))
+        {
+            result.X = 0f;
+        }
+
+        if (!Mathf.IsZeroApprox(collisionNormal.Y))
+        {
+            result.Y = 0f;
+        }
+
+        return result;
     }
 }

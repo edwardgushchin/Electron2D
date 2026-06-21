@@ -205,9 +205,9 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
 
     void ISceneTreeLifecycleHandler.OnPhysicsProcess(double delta)
     {
-        _ = delta;
         if (rid.IsValid())
         {
+            PhysicsStep(delta);
             PhysicsServer2D.CollisionObjectSetTransform(rid, GlobalTransform);
             PhysicsServer2D.CollisionObjectSetCollisionFilter(rid, new PhysicsCollisionFilter(CollisionLayer, CollisionMask));
             SynchronizePhysicsState(rid);
@@ -238,6 +238,11 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     protected virtual void SynchronizePhysicsState(Rid rid)
     {
         _ = rid;
+    }
+
+    internal virtual void PhysicsStep(double delta)
+    {
+        _ = delta;
     }
 
     private void FreePhysicsRid()

@@ -79,7 +79,7 @@ public sealed class NodeSceneTreeLifecycleTests
         events.Clear();
 
         tree.ProcessFrame(0.25d);
-        tree.PhysicsFrame(0.5d);
+        tree.PhysicsFrame(1d / 60d);
         tree.DispatchInput(inputEvent);
 
         Assert.Equal(
@@ -87,8 +87,8 @@ public sealed class NodeSceneTreeLifecycleTests
             {
                 "Parent:_Process:0.25",
                 "Child:_Process:0.25",
-                "Parent:_PhysicsProcess:0.50",
-                "Child:_PhysicsProcess:0.50",
+                "Parent:_PhysicsProcess:0.02",
+                "Child:_PhysicsProcess:0.02",
                 "Parent:_Input:True",
                 "Child:_Input:True"
             },

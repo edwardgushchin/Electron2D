@@ -430,13 +430,16 @@ public class Node : Object
 
     internal void PhysicsProcessRecursive(double delta)
     {
-        if (!IsInstanceValid(this) || _tree is null)
+        if (!IsInstanceValid(this) || _tree is null || IsQueuedForDeletion())
         {
             return;
         }
 
         _tree?.InvokeUserCallback(this, nameof(_PhysicsProcess), () => _PhysicsProcess(delta));
-        if (IsInstanceValid(this) && _tree is not null && this is ISceneTreeLifecycleHandler lifecycleHandler)
+        if (IsInstanceValid(this) &&
+            _tree is not null &&
+            !IsQueuedForDeletion() &&
+            this is ISceneTreeLifecycleHandler lifecycleHandler)
         {
             lifecycleHandler.OnPhysicsProcess(delta);
         }
