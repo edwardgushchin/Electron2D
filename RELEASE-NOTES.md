@@ -54,6 +54,7 @@
 - Начальный shader material baseline: public `Material`/`ShaderMaterial`, supported uniforms, `Texture2D` sampler parameters, reserved canvas built-ins и stable internal material parameter JSON snapshot.
 - Начальный compatibility renderer backend baseline: internal frame plan для sprites, UI/text, primitives, tile-like texture copies, documented limitations и golden reference command stream.
 - Начальный Android mobile GPU fallback baseline: internal mobile GPU create profile, smoke steps texture/pipeline/command buffer/first submit, `Automatic`/`FailIfUnavailable` policy и startup result с GPU/driver/backend/reasons.
+- Начальный settings persistence baseline: internal `Electron2D.ProjectSettings` и `Electron2D.UserSettings` JSON documents, `project.e2d.json` template defaults, input actions, display/window defaults, locale user setting и fail-closed diagnostics для повреждённых файлов.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
@@ -61,7 +62,7 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, Android device/export run, compatibility window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input, production physics solver, production Box2D.NET backend, mobile physics AOT proof, contacts, gravity integration, rigid-rigid collision, material combine и запись geometry/material в production solver, editor script attach/external IDE workflow, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, Android device/export run, compatibility window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, metadata source generator, Project Settings UI, Input Map UI, production physics solver, production Box2D.NET backend, mobile physics AOT proof, contacts, gravity integration, rigid-rigid collision, material combine и запись geometry/material в production solver, editor script attach/external IDE workflow, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

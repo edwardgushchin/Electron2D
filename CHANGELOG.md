@@ -54,6 +54,7 @@
 - Shader material baseline: public `Material`/`ShaderMaterial`, supported scalar/vector uniforms, `Texture2D` sampler parameters, fail-closed reserved canvas built-ins и stable internal material parameter JSON snapshot.
 - Compatibility renderer backend baseline: internal fallback frame plan для sprites, UI/text, primitives, tile-like texture copies, documented limitations и golden reference command stream.
 - Android mobile GPU fallback baseline: internal mobile GPU create profile, smoke steps texture/pipeline/command buffer/first submit, `Automatic`/`FailIfUnavailable` policy и startup log с GPU/driver/backend/reasons.
+- Settings persistence baseline: internal `Electron2D.ProjectSettings` и `Electron2D.UserSettings` JSON documents, `project.e2d.json` template defaults, input actions, display/window defaults, locale user setting и fail-closed diagnostics для повреждённых файлов.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -72,8 +73,8 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `86` публичных типов.
-- `0.1.0-preview` ещё не является готовым игровым runtime; compatibility renderer backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, Box2D.NET пока является candidate validation gate без production backend и без mobile AOT proof, physics nodes пока имеют только AABB baseline для queries/overlaps/basic rigid motion без contacts, gravity integration, rigid-rigid collision и записи geometry/material в production solver, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input и editor script attach workflow ещё не реализованы, а полноценный device run/export остаётся следующими задачами.
+- Runtime assembly экспортирует `120` публичных типов.
+- `0.1.0-preview` ещё не является готовым игровым runtime; compatibility renderer backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, Box2D.NET пока является candidate validation gate без production backend и без mobile AOT proof, physics nodes пока имеют только AABB baseline для queries/overlaps/basic rigid motion без contacts, gravity integration, rigid-rigid collision и записи geometry/material в production solver, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, Project Settings UI, Input Map UI и editor script attach workflow ещё не реализованы, а полноценный device run/export остаётся следующими задачами.
 
 ### Breaking changes policy
 

@@ -12,6 +12,8 @@ templates/electron2d-empty/
 
 Шаблон содержит .NET template metadata, минимальный `.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json` и пустую сцену `scenes/main.scene.json`.
 
+`project.e2d.json` уже использует текущий project settings формат: `Electron2D.ProjectSettings`, `formatVersion: 1`, имя проекта, версию проекта, engine version, main scene, renderer profile, physics tick rate, пустой `input.actions` и display/window defaults.
+
 ## Как проверять
 
 ```powershell

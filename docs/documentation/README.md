@@ -48,6 +48,7 @@
 ## Локализация и настройки
 
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - текущие `Translation`, `TranslationServer`, locale fallback и обновление `Label` после смены locale.
+- [Settings persistence baseline](settings-localization/settings-persistence.md) - текущий внутренний JSON-контракт project/user settings, input actions, display/window defaults и fail-closed diagnostics.
 
 ## Физика 2D
 

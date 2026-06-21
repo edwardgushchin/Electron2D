@@ -35,7 +35,7 @@
 ## Ограничения
 
 - File import переводов не реализован.
-- Сохранение выбранной locale в project/user settings относится к следующей задаче.
+- Сохранение выбранной locale доступно во внутреннем user settings файле через settings persistence baseline; UI выбора locale остаётся задачей редактора.
 - Plural forms, pseudolocalization и extraction tooling не реализованы.
 - Locale matching ограничен exact/base-language/`en` fallback.
 

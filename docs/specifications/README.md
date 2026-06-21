@@ -51,6 +51,7 @@
 ## Локализация и настройки
 
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - resource переводов, общий translation server, locale lookup, fallback и обновление UI после смены локали.
+- [Settings persistence baseline](settings-localization/settings-persistence.md) - project/user settings, input actions, display/window defaults и fail-closed diagnostics.
 
 ## Физика 2D
 

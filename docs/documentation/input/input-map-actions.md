@@ -58,7 +58,7 @@ Gamepad axis bindings используют analog strength. Если axis value 
 
 ## Persistence
 
-Публичных file I/O методов на `InputMap` нет. Для будущего project settings layer добавлен internal `InputMapProjectSettings`, который сохраняет deterministic JSON:
+Публичных file I/O методов на `InputMap` нет. Для внутреннего project settings layer, то есть кода движка/редактора вне public API, используется `InputMapProjectSettings`, который сохраняет deterministic JSON:
 
 - format version;
 - action names;
@@ -69,6 +69,8 @@ Gamepad axis bindings используют analog strength. Если axis value 
 - gamepad axis bindings.
 
 Load заменяет action registry только после успешного чтения всего документа. Malformed JSON, unknown event types и invalid enum values приводят к `FormatException`.
+
+Начиная с `T-0076`, общий settings store вкладывает эти actions в `project.e2d.json` под `input.actions` и возвращает диагностику вместо исключения для повреждённых project settings.
 
 ## Ограничения
 

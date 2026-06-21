@@ -28,12 +28,18 @@ templates/electron2d-empty/
 
 ## Минимальный формат проекта
 
-`project.e2d.json` должен указывать:
+`project.e2d.json` должен быть валидным project settings документом `Electron2D.ProjectSettings` и указывать:
 
+- `format`
+- `formatVersion`
 - `name`
 - `version`
 - `engineVersion`
 - `mainScene`
+- `rendererProfile`
+- `physicsTicksPerSecond`
+- `input.actions`
+- `display`
 
 `scenes/main.scene.json` должен описывать пустую сцену без legacy component-полей.
 
