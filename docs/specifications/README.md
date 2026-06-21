@@ -44,6 +44,7 @@
 ## Ввод
 
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - keyboard, mouse button, mouse motion, wheel, text input и порядок dispatch через `SceneTree`.
+- [InputMap, action state и persistence baseline](input/input-map-actions.md) - action registry, bindings, deadzone, action state, `GetVector()` и внутренний serializer input settings.
 
 ## Локализация и настройки
 

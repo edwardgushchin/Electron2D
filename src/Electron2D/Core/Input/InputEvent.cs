@@ -49,11 +49,109 @@ public class InputEvent : Resource
     /// Gets or sets the device index that produced this event.
     /// </summary>
     /// <remarks>
-    /// SDL device identifiers are copied into this value by the internal input
-    /// mapper. The value is informational in 0.1.0 Preview and is not yet tied
-    /// to `InputMap` action state.
+    /// Platform device identifiers are copied into this value by the internal
+    /// input mapper. The value is informational in 0.1.0 Preview and can be
+    /// used by future device-specific action bindings.
     /// </remarks>
     public int Device { get; set; }
+}
+
+/// <summary>
+/// Represents a direct action input event.
+/// </summary>
+///
+/// <remarks>
+/// <para>
+/// Direct action events are useful for tests, tools and future automation
+/// layers that need to submit action-level input without synthesizing a
+/// keyboard or mouse event.
+/// </para>
+/// <para>
+/// The event is resolved through <see cref="InputMap"/> by comparing
+/// <see cref="Action"/> to the requested action name and applying the action's
+/// configured deadzone to <see cref="Strength"/>.
+/// </para>
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances are mutable and are not synchronized; use them from the input
+/// dispatch thread that owns the event.
+/// </threadsafety>
+///
+/// <since>
+/// This class is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
+/// <seealso cref="InputMap"/>
+/// <seealso cref="Input"/>
+public class InputEventAction : InputEvent
+{
+    private string action = string.Empty;
+    private float strength = 1f;
+
+    /// <summary>
+    /// Gets or sets the action name carried by this event.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Assigning <c>null</c> stores an empty action name. Empty action names do
+    /// not match registered actions.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public string Action
+    {
+        get => action;
+        set => action = value ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Gets or sets whether this event presses the action.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// When this property is <c>false</c>, the action strength is treated as
+    /// zero regardless of <see cref="Strength"/>.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public bool Pressed { get; set; }
+
+    /// <summary>
+    /// Gets or sets the action strength.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Values are clamped to the range <c>0.0</c> through <c>1.0</c>.
+    /// <see cref="InputMap.EventIsAction(InputEvent, string, bool)"/> and
+    /// <see cref="Input.GetActionStrength(string, bool)"/> apply the action
+    /// deadzone before treating the action as pressed.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public float Strength
+    {
+        get => strength;
+        set => strength = float.IsFinite(value) ? Mathf.Clamp(value, 0f, 1f) : 0f;
+    }
 }
 
 /// <summary>
@@ -85,9 +183,9 @@ public class InputEventFromWindow : InputEvent
 /// </summary>
 /// <remarks>
 /// <para>
-/// The SDL mapper fills these booleans from the SDL key modifier mask for
-/// keyboard events. Mouse events currently keep the default values until SDL
-/// modifier state is plumbed through the event pump.
+/// The internal platform mapper fills these booleans from the platform key
+/// modifier mask for keyboard events. Mouse events currently keep the default
+/// values until modifier state is plumbed through the event pump.
 /// </para>
 /// <threadsafety>
 /// Instances are mutable and are not synchronized; use them from the input
@@ -125,9 +223,9 @@ public class InputEventWithModifiers : InputEventFromWindow
 /// </summary>
 /// <remarks>
 /// <para>
-/// SDL key down/up events fill <see cref="Keycode"/>, <see cref="PhysicalKeycode"/>,
+/// Platform key down/up events fill <see cref="Keycode"/>, <see cref="PhysicalKeycode"/>,
 /// <see cref="KeyLabel"/>, <see cref="Pressed"/> and <see cref="Echo"/>.
-/// SDL text input events are represented as one or more key events with
+/// Platform text input events are represented as one or more key events with
 /// <see cref="Unicode"/> set and the keycode fields left as <see cref="Key.None"/>.
 /// </para>
 /// <threadsafety>
@@ -171,7 +269,7 @@ public class InputEventKey : InputEventWithModifiers
     public KeyLocation Location { get; set; }
 
     /// <summary>
-    /// Gets or sets the Unicode scalar value produced by SDL text input.
+    /// Gets or sets the Unicode scalar value produced by platform text input.
     /// </summary>
     public int Unicode { get; set; }
 }
@@ -269,7 +367,7 @@ public class InputEventMouseButton : InputEventMouse
 /// </summary>
 /// <remarks>
 /// <para>
-/// SDL relative motion fills <see cref="Relative"/> and <see cref="ScreenRelative"/>.
+/// Platform relative motion fills <see cref="Relative"/> and <see cref="ScreenRelative"/>.
 /// Velocity values remain zero until frame timing is connected to the input pump.
 /// </para>
 /// <threadsafety>

@@ -41,6 +41,7 @@
 ## Ввод
 
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal platform mapper для keyboard, mouse, wheel, text input и dispatch order.
+- [InputMap, action state и persistence baseline](input/input-map-actions.md) - текущие `InputMap`, `Input`, action bindings, deadzone, `GetVector()` и internal serializer input settings.
 
 ## Локализация и настройки
 

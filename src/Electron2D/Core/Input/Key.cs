@@ -30,8 +30,9 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// The 0.1.0 Preview enum contains the printable ASCII keys and the non-printable
-/// keys needed by the SDL keyboard mapping baseline. Printable values use their
-/// Unicode code point. Non-printable values follow Electron2D's reserved special key range.
+/// keys needed by the keyboard mapping baseline. Printable values use their
+/// Unicode code point. Non-printable values follow Electron2D's reserved
+/// special key range.
 /// </para>
 /// <para>
 /// More key constants can be added as the input backlog expands. Unknown platform

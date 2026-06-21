@@ -218,6 +218,7 @@ public class SceneTree : Object
             ProcessTweens(delta);
             Root.DrawRecursive();
         });
+        Input.FlushFrameTransitions();
     }
 
     internal void UnregisterTween(Tween tween)
@@ -245,11 +246,13 @@ public class SceneTree : Object
                 }
             }
         });
+        Input.FlushFrameTransitions();
     }
 
     internal void DispatchInput(InputEvent inputEvent)
     {
         ArgumentNullException.ThrowIfNull(inputEvent);
+        Input.ProcessEvent(inputEvent);
         RunTraversal(() => Root.InputRecursive(inputEvent));
     }
 

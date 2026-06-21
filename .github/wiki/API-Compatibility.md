@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D documents the agreed 2D runtime API subset here. This table is a release guard for public types and intentionally excludes removed legacy component APIs.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, translation baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, action input baseline, texture/viewport/shader, text/UI baseline, translation baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -53,13 +53,16 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.ExportAttribute` | `ExportAttribute` / `[Export]` | Partial | Marker attribute for script fields/properties included in explicit serialization and Inspector metadata. |
 | `Electron2D.Font` | `Font` | Partial | Base font resource with string measurement, glyph availability, fallback layout and internal cache. |
 | `Electron2D.HorizontalAlignment` | `HorizontalAlignment` | Partial | Horizontal alignment values used by text drawing APIs. |
+| `Electron2D.Input` | `Input` | Partial | Process-wide action state queries for pressed, just-pressed, strength and four-action vectors. |
 | `Electron2D.InputEvent` | `InputEvent` | Partial | Base input event resource with device id for lifecycle dispatch. |
+| `Electron2D.InputEventAction` | `InputEventAction` | Partial | Direct action input event with action name, pressed state and strength for tests, tooling and automation. |
 | `Electron2D.InputEventFromWindow` | `InputEventFromWindow` | Partial | Window id layer for platform-backed keyboard and mouse events. |
 | `Electron2D.InputEventKey` | `InputEventKey` | Partial | Keyboard key down/up, echo and native text input Unicode scalar baseline. |
 | `Electron2D.InputEventMouse` | `InputEventMouse` | Partial | Shared mouse position and button mask baseline. |
 | `Electron2D.InputEventMouseButton` | `InputEventMouseButton` | Partial | Mouse button down/up and wheel-as-button baseline. |
 | `Electron2D.InputEventMouseMotion` | `InputEventMouseMotion` | Partial | Mouse position, relative motion and button mask baseline. |
 | `Electron2D.InputEventWithModifiers` | `InputEventWithModifiers` | Partial | Modifier state layer for keyboard and future mouse input events. |
+| `Electron2D.InputMap` | `InputMap` | Partial | Process-wide action registry with deadzones, keyboard/mouse bindings, direct action matching and internal settings serialization. |
 | `Electron2D.IntervalTweener` | `IntervalTweener` | Partial | Tween step that consumes sequence time without writing properties or calling user callbacks. |
 | `Electron2D.Key` | `Key` | Partial | Printable ASCII and core special key constants used by keyboard mapping. |
 | `Electron2D.KeyLocation` | `KeyLocation` | Partial | Left/right modifier key location baseline. |

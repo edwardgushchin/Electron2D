@@ -29,8 +29,8 @@ namespace Electron2D;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The flag values match Electron2D mouse button masks. SDL button flags are
-/// converted to this representation by the internal SDL input mapper.
+/// The flag values match Electron2D mouse button masks. Platform button flags
+/// are converted to this representation by the internal input mapper.
 /// </para>
 /// <threadsafety>
 /// This enum is immutable and is safe to use from any thread.
