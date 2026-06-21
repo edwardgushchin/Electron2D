@@ -6,9 +6,9 @@
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` фиксирует C# script model без runtime compilation: пользовательский script - это обычный C# класс, который наследуется от `Electron2D.Node` или его Godot-like наследников и компилируется вместе с проектом игры.
+Electron2D `0.1.0 Preview` фиксирует C# script model без runtime compilation: пользовательский script - это обычный C# класс, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется вместе с проектом игры.
 
-Текущий runtime уже предоставляет Godot-like lifecycle callbacks на `Node`:
+Текущий runtime уже предоставляет lifecycle callbacks на `Node`:
 
 - `_EnterTree()`;
 - `_Ready()`;

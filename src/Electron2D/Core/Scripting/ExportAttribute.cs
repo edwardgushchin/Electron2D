@@ -31,7 +31,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// Use this attribute on ordinary C# script classes that inherit from
-/// <see cref="Node"/> or one of its Godot-like subclasses. The attribute is a
+/// <see cref="Node"/> or another Electron2D node type. The attribute is a
 /// public marker for user code and source-generated metadata.
 /// </para>
 /// <para>

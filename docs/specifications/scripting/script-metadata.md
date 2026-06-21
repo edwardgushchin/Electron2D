@@ -2,17 +2,17 @@
 
 Статус: целевая спецификация для `T-0045`.
 Обновлено: 2026-06-21.
-Связанные документы: [C# script classes](csharp-script-classes.md), [AOT-safe metadata для Inspector и serialization](../resources/aot-safe-metadata.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [C# script classes](csharp-script-classes.md), [Безопасное editor-time выполнение `[Tool]` scripts](tool-script-execution.md), [AOT-safe metadata для Inspector и serialization](../resources/aot-safe-metadata.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
 
 ## Назначение
 
-`0.1.0 Preview` должен дать C# script classes минимальную Godot-like metadata-модель:
+`0.1.0 Preview` должен дать C# script classes минимальную metadata-модель:
 
 - `[Export]` помечает property или field как сериализуемое и видимое для Inspector значение;
 - `[Signal]` помечает delegate как описание сигнала script class;
 - `[Tool]` помечает script class как editor-time capable.
 
-Эти атрибуты являются публичным Godot-like API для пользовательского кода. Они не являются compatibility layer и не добавляют Unity-like component model.
+Эти атрибуты являются публичным API для пользовательского кода. Они не являются compatibility layer и не добавляют component model из старой реализации.
 
 ## Контракт публичных атрибутов
 
@@ -22,7 +22,7 @@
 - `Electron2D.SignalAttribute`;
 - `Electron2D.ToolAttribute`.
 
-Атрибуты не должны добавлять публичные Electron2D-specific properties, методы или hints сверх Godot-like baseline этой задачи. Подробные Inspector hints, groups, ranges и generated signal name helpers остаются отдельными задачами.
+Атрибуты не должны добавлять публичные Electron2D-specific properties, методы или hints сверх baseline этой задачи. Подробные Inspector hints, groups, ranges и generated signal name helpers остаются отдельными задачами.
 
 ## AOT-safe metadata bridge
 
@@ -51,7 +51,7 @@ Exported properties должны round-trip через переносимую м
 
 ## Signals
 
-`[Signal]` описывает delegate в script class. Registered signal metadata должна уметь добавить signal на экземпляр через существующий Godot-like `Object.AddUserSignal()`.
+`[Signal]` описывает delegate в script class. Registered signal metadata должна уметь добавить signal на экземпляр через существующий `Object.AddUserSignal()`.
 
 После применения metadata signal должен работать через текущие API:
 
@@ -64,9 +64,7 @@ Exported properties должны round-trip через переносимую м
 
 ## `[Tool]`
 
-В `0.1.0 Preview` `[Tool]` помечается как experimental и sandboxed metadata. Эта задача не запускает tool scripts в редакторе и не снимает ограничения на dynamic load.
-
-Editor-time execution, exception isolation и concrete sandbox host реализуются отдельной задачей `T-0047`.
+В `0.1.0 Preview` `[Tool]` помечается как experimental и sandboxed metadata. Safe editor-time execution, exception isolation и запрет dynamic assembly load описаны отдельной спецификацией `tool-script-execution.md`.
 
 ## Проверки
 

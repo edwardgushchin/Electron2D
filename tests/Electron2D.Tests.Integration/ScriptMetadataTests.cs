@@ -90,7 +90,7 @@ public sealed class ScriptMetadataTests
     }
 
     [Fact]
-    public void PublicAttributesExposeOnlyGodotLikeMarkerSurface()
+    public void PublicAttributesExposeOnlyMarkerSurface()
     {
         AssertAttributeUsage<Electron2D.ExportAttribute>(
             AttributeTargets.Property | AttributeTargets.Field,

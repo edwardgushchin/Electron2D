@@ -6,13 +6,13 @@
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` предоставляет три публичных Godot-like marker attributes:
+Electron2D `0.1.0 Preview` предоставляет три публичных marker attributes:
 
 - `ExportAttribute` - `[Export]` для fields/properties, которые должны попасть в serialization/Inspector metadata;
 - `SignalAttribute` - `[Signal]` для delegate declarations, описывающих signal payload;
 - `ToolAttribute` - `[Tool]` для script classes, предназначенных для editor-time workflows.
 
-Атрибуты намеренно не содержат дополнительных публичных properties или Electron2D-specific hints. Расширенные Inspector hints и generated signal name helpers должны добавляться отдельными Godot-like задачами.
+Атрибуты намеренно не содержат дополнительных публичных properties или Electron2D-specific hints. Расширенные Inspector hints и generated signal name helpers должны добавляться отдельными задачами публичного API.
 
 ## Internal metadata bridge
 
@@ -36,7 +36,7 @@ Runtime не сканирует assemblies и не делает automatic public
 
 `ScriptObjectMetadataRegistry.ApplySignals()` добавляет signals из metadata на конкретный script instance через `AddUserSignal()`.
 
-После применения metadata signal работает через уже реализованный Godot-like signal API:
+После применения metadata signal работает через уже реализованный signal API:
 
 ```csharp
 script.Connect("health_changed", Callable.From<int>(value => { }));
@@ -53,7 +53,7 @@ script.EmitSignal("health_changed", 7);
 - `IsToolExperimental`;
 - `IsToolExecutionSandboxed`.
 
-Это означает только классификацию script class для editor tooling. Безопасное editor-time выполнение `[Tool]` scripts остаётся отдельной задачей и не запускается runtime path.
+Это означает классификацию script class для editor tooling. Безопасное editor-time выполнение `[Tool]` scripts реализовано внутренним host и описано в `docs/documentation/scripting/tool-script-execution.md`.
 
 ## Проверки
 

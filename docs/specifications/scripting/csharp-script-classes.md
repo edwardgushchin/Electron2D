@@ -6,7 +6,7 @@
 
 ## Назначение
 
-`0.1.0 Preview` поддерживает только C# script classes. Script class - это обычный C# тип в проекте пользователя, который наследуется от Godot-like `Electron2D.Node` или его наследников и компилируется обычной .NET toolchain вместе с проектом игры.
+`0.1.0 Preview` поддерживает только C# script classes. Script class - это обычный C# тип в проекте пользователя, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется обычной .NET toolchain вместе с проектом игры.
 
 Задача не добавляет GDScript, visual scripting, обязательный Hot Reload, runtime C# compilation, dynamic iOS code load или встроенный полноценный IDE.
 
@@ -14,11 +14,11 @@
 
 Script class должен:
 
-- наследоваться от `Node` или Godot-like node subclass;
+- наследоваться от `Node` или другого Electron2D node type;
 - использовать обычные C# overrides для lifecycle callbacks: `_EnterTree()`, `_Ready()`, `_Process(double)`, `_PhysicsProcess(double)`, `_Input(InputEvent)`, `_ExitTree()`;
 - получать lifecycle через существующий `SceneTree` traversal;
 - обращаться к дереву через `GetTree()`;
-- обращаться к runtime services через публичные Godot-like facades, например `RenderingServer`.
+- обращаться к runtime services через публичные facades, например `RenderingServer`.
 
 ## Template sample
 

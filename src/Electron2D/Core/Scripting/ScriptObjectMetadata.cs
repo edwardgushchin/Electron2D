@@ -264,6 +264,16 @@ internal static class ScriptObjectMetadataRegistry
             $"AOT-safe metadata is not registered for script type '{scriptType.FullName}'.");
     }
 
+    public static bool TryGetByScriptType(Type scriptType, out ScriptObjectTypeMetadata metadata)
+    {
+        ArgumentNullException.ThrowIfNull(scriptType);
+
+        lock (SyncRoot)
+        {
+            return ByScriptType.TryGetValue(scriptType, out metadata!);
+        }
+    }
+
     public static ScriptObjectTypeMetadata GetByScriptName(string scriptName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(scriptName);

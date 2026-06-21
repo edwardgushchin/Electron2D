@@ -25,14 +25,14 @@
 namespace Electron2D;
 
 /// <summary>
-/// Marks a script delegate declaration as a signal that can be registered on a
-/// Godot-like object and emitted through <see cref="Object.EmitSignal(string, object?[])"/>.
+/// Marks a script delegate declaration as a signal that can be registered on an
+/// Electron2D object and emitted through <see cref="Object.EmitSignal(string, object?[])"/>.
 /// </summary>
 /// <remarks>
 /// <para>
 /// Use this attribute on delegate declarations inside C# script classes. The
 /// delegate describes the signal payload for tooling and generated metadata.
-/// Runtime emission still uses the existing Godot-like signal API:
+/// Runtime emission still uses the existing signal API:
 /// <see cref="Object.AddUserSignal(string)"/>, <see cref="Object.Connect(string, Callable, ConnectFlags)"/>
 /// and <see cref="Object.EmitSignal(string, object?[])"/>.
 /// </para>

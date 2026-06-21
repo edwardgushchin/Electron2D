@@ -25,20 +25,19 @@
 namespace Electron2D;
 
 /// <summary>
-/// Marks a C# script class as editor-time capable for Godot-like tool workflows.
+/// Marks a C# script class as capable of explicit editor-time execution.
 /// </summary>
 /// <remarks>
 /// <para>
 /// Apply this attribute to a script class that inherits from <see cref="Node"/>
 /// when the class is intended to run inside editor tooling. In Electron2D 0.1.0
-/// Preview, tool scripts are experimental and are treated as sandboxed editor
-/// metadata only.
+/// Preview, tool scripts are experimental and require explicit sandboxed
+/// metadata before editor-time callbacks can run.
 /// </para>
 /// <para>
-/// Runtime execution, editor/runtime separation, exception isolation and the
-/// concrete sandbox host are implemented by later editor-time scripting tasks.
-/// This attribute only marks intent and allows explicit metadata to classify the
-/// script safely without runtime assembly discovery.
+/// Runtime traversal stays separate from editor-time execution. The internal
+/// tool execution host uses explicit metadata, isolates callback exceptions and
+/// does not discover scripts through runtime assembly scanning.
 /// </para>
 /// <threadsafety>
 /// The attribute is immutable and is safe to read from any thread.
