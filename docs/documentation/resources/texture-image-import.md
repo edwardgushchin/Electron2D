@@ -8,7 +8,7 @@
 
 Добавлен внутренний image importer для import cache. Внутренний означает, что код находится внутри runtime assembly и доступен тестам, будущему редактору и будущим инструментам, но не добавляет новые пользовательские public классы.
 
-Текущие типы находятся в `src/Electron2D/Core/Resources/Importing/`:
+Текущие типы находятся в `src/Electron2D/Assets/Resources/Importing/`:
 
 - `TextureImageImporter` - importer для `.png`, `.jpg`, `.jpeg`;
 - `TextureImageMetadataReader` - читает PNG/JPEG dimensions и alpha metadata без pixel decoding;

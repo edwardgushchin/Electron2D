@@ -34,6 +34,10 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-SourceLicenseHeaders.ps1
 
+      - name: Verify source domain layout
+        shell: pwsh
+        run: ./tools/Verify-SourceDomainLayout.ps1
+
       - name: Run tests
         shell: pwsh
         run: ./tools/Run-Tests.ps1

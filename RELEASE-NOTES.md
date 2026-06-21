@@ -70,6 +70,10 @@
 
 В новый runtime не переносится Unity-like/component history. Публичный API должен появляться только как согласованный 2D-поднабор Electron2D API.
 
+## Source layout
+
+`Core` сохранён как узкий слой ядра: object model, scene tree, identity, math, collections, random и Variant. Верхний уровень `src/Electron2D/` состоит из крупных доменов `Core`, `Runtime`, `Graphics`, `Physics`, `Assets`, `Export`; мелкие подсистемы живут вторым уровнем внутри них. Папки не задают namespace: runtime source продолжает использовать `Electron2D` и `Electron2D.Collections`.
+
 ## Breaking changes policy для 0.x
 
 До стабильной версии `1.0` публичный API может меняться между preview-сборками. Breaking changes допустимы только при явной записи в `CHANGELOG.md`, `RELEASE-NOTES.md` и compatibility table; compatibility layer ради старого API не добавляется.

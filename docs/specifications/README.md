@@ -6,6 +6,7 @@
 
 - [Архитектура и платформенный стек Electron2D](architecture/engine-platform-stack.md) - стек платформенных backend, fallback-рендеринга, физики, аудио, текста, geometry и сетевой основы.
 - [AI-friendly workflow Electron2D 0.1](architecture/ai-friendly-workflow.md) - архитектурный контракт CLI/MCP/tooling, текстовых форматов, диагностики, автоматизированного запуска и AI benchmark.
+- [Source domain layout](architecture/source-domain-layout.md) - правило, какие исходники остаются в `Core`, какие живут отдельными доменами и почему папки не задают namespace.
 
 ## Релизы
 

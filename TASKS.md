@@ -16,7 +16,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/resources/`
   - Документация: `docs/documentation/resources/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -58,7 +58,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/scripting/`
   - Документация: `docs/documentation/scripting/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -100,7 +100,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/input/`
   - Документация: `docs/documentation/input/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -142,7 +142,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/animation/`
   - Документация: `docs/documentation/animation/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -184,7 +184,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/ui/`
   - Документация: `docs/documentation/ui/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`; `src/Electron2D/Core/UI/Control.cs`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`; `src/Electron2D/Graphics/UI/Control.cs`
 
 ### Самодостаточное описание
 
@@ -226,7 +226,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/ui/`
   - Документация: `docs/documentation/ui/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -268,7 +268,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/ui/`
   - Документация: `docs/documentation/ui/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -310,7 +310,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/ui/`
   - Документация: `docs/documentation/ui/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -352,7 +352,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/ui/`
   - Документация: `docs/documentation/ui/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -395,7 +395,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/audio/`
   - Документация: `docs/documentation/audio/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`; `src/Electron2D/Core/Components/Audio`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`; `src/Electron2D/Audio`
 
 ### Самодостаточное описание
 
@@ -438,7 +438,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/audio/`
   - Документация: `docs/documentation/audio/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -480,7 +480,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/audio/`
   - Документация: `docs/documentation/audio/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -523,7 +523,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/settings-localization/`
   - Документация: `docs/documentation/settings-localization/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -566,7 +566,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -608,7 +608,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -650,7 +650,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -693,7 +693,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -735,7 +735,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -778,7 +778,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -821,7 +821,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -864,7 +864,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -906,7 +906,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
   - Документация: `docs/documentation/editor/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -948,7 +948,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/export/`
   - Документация: `docs/documentation/export/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -979,7 +979,7 @@
 
 ### Заметки агента
 
-Пусто до момента, когда агент возьмёт задачу в работу.
+2026-06-21T17:14:00+03:00 - задача была кратко взята после `T-0087`, но остановлена до production-кода по требованию разнести `src/Electron2D/Core` на домены. RED-набросок Windows export будет создан заново после layout-задачи.
 
 ## T-0089 [ ] P0: Реализовать Linux x64 glibc export: debug/release, SDL3 Wayland/X11, Vulkan through SDL_GPU
 
@@ -990,7 +990,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/export/`
   - Документация: `docs/documentation/export/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1033,7 +1033,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/export/`
   - Документация: `docs/documentation/export/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1076,7 +1076,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/export/`
   - Документация: `docs/documentation/export/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1118,7 +1118,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/export/`
   - Документация: `docs/documentation/export/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1161,7 +1161,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/export/`
   - Документация: `docs/documentation/export/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1203,7 +1203,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/examples/`
   - Документация: `docs/documentation/examples/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1245,7 +1245,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/examples/`
   - Документация: `docs/documentation/examples/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1287,7 +1287,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/examples/`
   - Документация: `docs/documentation/examples/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1329,7 +1329,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
   - Документация: `docs/documentation/documentation/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1372,7 +1372,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
   - Документация: `docs/documentation/documentation/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1415,7 +1415,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
   - Документация: `docs/documentation/documentation/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1457,7 +1457,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
   - Документация: `docs/documentation/documentation/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1500,7 +1500,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/documentation/`
   - Документация: `docs/documentation/documentation/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1542,7 +1542,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/quality/`
   - Документация: `docs/documentation/quality/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1584,7 +1584,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/quality/`
   - Документация: `docs/documentation/quality/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1626,7 +1626,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/quality/`
   - Документация: `docs/documentation/quality/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 
@@ -1668,7 +1668,7 @@
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/quality/`
   - Документация: `docs/documentation/quality/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
+  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`
 
 ### Самодостаточное описание
 

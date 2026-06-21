@@ -8,6 +8,10 @@
 
 С 2026-06-20 реализация `0.1.0 Preview` строится заново: старый каталог `src/Electron2D/` удалён, а дальнейшие задачи должны создавать только согласованный публичный API без compatibility layer и без legacy component history.
 
+## Архитектура
+
+- [Source domain layout](architecture/source-domain-layout.md) - текущая раскладка `src/Electron2D`, узкий `Core`, отдельные домены подсистем и namespace policy.
+
 ## Релизное управление
 
 - [Тестовая инфраструктура 0.1.0 Preview](release-management/test-infrastructure.md) - текущие тестовые проекты, команды запуска и baseline-режим.

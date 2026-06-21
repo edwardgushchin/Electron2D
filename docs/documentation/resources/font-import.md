@@ -8,7 +8,7 @@
 
 Добавлен внутренний font importer для import cache. Внутренний означает, что код находится внутри runtime assembly и доступен тестам, будущему редактору и будущим инструментам, но не добавляет новые пользовательские public классы.
 
-Текущие типы находятся в `src/Electron2D/Core/Resources/Importing/`:
+Текущие типы находятся в `src/Electron2D/Assets/Resources/Importing/`:
 
 - `FontImporter` - importer для `.ttf` и `.otf`;
 - `FontMetadataReader` - читает sfnt header и `name` table;

@@ -40,6 +40,7 @@ $requiredFragments = @(
     'actions/setup-dotnet',
     '10.0.x',
     'src/Electron2D.sln',
+    'tools/Verify-SourceDomainLayout.ps1',
     'tools/Run-Tests.ps1',
     'tools/Verify-Box2DPhysicsCandidate.ps1',
     'tools/Verify-ProjectTemplate.ps1',

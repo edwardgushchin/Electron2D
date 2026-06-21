@@ -8,7 +8,7 @@
 
 Добавлен internal metadata registry для custom `Resource` serialization и будущего Inspector. `ResourceObjectSerializer` больше не обходит public get/set properties через reflection и не ищет типы по загруженным сборкам.
 
-Текущие типы находятся в `src/Electron2D/Core/Resources/Serialization/`:
+Текущие типы находятся в `src/Electron2D/Assets/Resources/Serialization/`:
 
 - `ResourceObjectMetadataRegistry` - process-local реестр metadata;
 - `ResourceObjectTypeMetadata` - описание конкретного serializable `Resource` type;

@@ -8,7 +8,7 @@
 
 Добавлен внутренний import cache для ресурсов Electron2D `0.1.0 Preview`. Внутренний означает, что это код runtime assembly для тестов, будущего редактора и инструментов, но не новый пользовательский public API.
 
-Текущие типы находятся в `src/Electron2D/Core/Resources/Importing/`:
+Текущие типы находятся в `src/Electron2D/Assets/Resources/Importing/`:
 
 - `ResourceImportPipeline` - выполняет discovery, import, reimport, dependency checks и prune;
 - `ResourceImportOptions` - задаёт `projectRoot`, `sourceRoot`, `cacheRoot` и список importers;

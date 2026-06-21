@@ -8,7 +8,7 @@
 
 Добавлен внутренний file-level serializer baseline для сцен, ресурсов и переносимых property values. Внутренний означает, что код доступен тестам, будущему редактору, export/import tooling и будущим AI-friendly project operations, но не добавляет public `ResourceLoader`, public `ResourceSaver` или новые пользовательские классы.
 
-Текущие типы находятся в `src/Electron2D/Core/Resources/Serialization/`:
+Текущие типы находятся в `src/Electron2D/Assets/Resources/Serialization/`:
 
 - `SerializedPropertyValue` - переносимая модель значения свойства;
 - `SerializedResourceDocument` - JSON document для одного resource file;

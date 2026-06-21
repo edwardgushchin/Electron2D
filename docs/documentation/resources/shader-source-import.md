@@ -8,7 +8,7 @@
 
 Добавлен внутренний shader source importer для import cache. Внутренний означает, что код находится внутри runtime assembly и доступен тестам, будущему редактору, export pipeline и будущим инструментам, но не добавляет новые пользовательские public классы.
 
-Текущие типы находятся в `src/Electron2D/Core/Resources/Importing/`:
+Текущие типы находятся в `src/Electron2D/Assets/Resources/Importing/`:
 
 - `ShaderSourceImporter` - importer для `.e2shader`;
 - `ShaderImportMetadata` - stable cache metadata model;

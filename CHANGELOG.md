@@ -67,6 +67,7 @@
 - `main` возвращён к baseline `4007f36bf6857b33d6fc8cf614732f92e839287d`.
 - Старая реализация `src/Electron2D/` удалена полностью.
 - Корневой `LICENSE` приведён к MIT License, чтобы он совпадал с package metadata `PackageLicenseExpression=MIT`.
+- Source layout разнесён на крупные root domains `Core`, `Runtime`, `Graphics`, `Physics`, `Assets`, `Export`: `Core` содержит только базовое ядро, а мелкие подсистемы живут вторым уровнем внутри своих доменов.
 
 ### Удалено
 
