@@ -111,10 +111,13 @@ Submission отправляет command только для `Sprite2D` с non-nu
 
 Обычные canvas items вне `CanvasLayer` попадают в layer `0`. Descendants `CanvasLayer` попадают в layer этого `CanvasLayer`; layer order имеет приоритет над `ZIndex`.
 
+## Связанный Camera/Viewport baseline
+
+Начиная с `T-0027`, `CanvasSubmissionContext` учитывает `Viewport.CanvasTransform`, текущую `Camera2D`, `Viewport.Snap2DTransformsToPixel` и `Viewport.Snap2DVerticesToPixel`. Подробности описаны в [Camera2D, Viewport and presentation baseline](camera-viewport-presentation-baseline.md).
+
 ## Ограничения
 
 - Реальный SDL_GPU draw submission ещё не реализован.
-- `Camera2D`, viewport scaling, pixel snapping и presentation modes остаются `T-0027`.
 - `CanvasItem.QueueRedraw()` и immediate drawing API остаются `T-0028`.
 - Sprite sheet frame API (`frame`, `hframes`, `vframes`) пока не реализован.
 - Public texture filter/repeat ещё не вынесены в `CanvasItem`; текущие GPU sampling descriptors остаются internal до настоящего drawing pipeline.

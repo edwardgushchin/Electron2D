@@ -44,6 +44,7 @@ public sealed class CleanRuntimeBaselineTests
             {
                 "Electron2D.AtlasTexture",
                 "Electron2D.Callable",
+                "Electron2D.Camera2D",
                 "Electron2D.CanvasItem",
                 "Electron2D.CanvasLayer",
                 "Electron2D.Collections.Array",
@@ -75,7 +76,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Variant",
                 "Electron2D.Variant+Type",
                 "Electron2D.Vector2",
-                "Electron2D.Vector2I"
+                "Electron2D.Vector2I",
+                "Electron2D.Viewport"
             },
             publicTypeNames);
 

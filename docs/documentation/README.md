@@ -28,6 +28,7 @@
 - [CanvasItem render queue baseline](rendering/canvas-item-render-queue.md) - текущая internal сортировка canvas item команд и contiguous batching.
 - [Texture2D resource baseline](rendering/texture-resource-baseline.md) - текущие public `Texture2D`/`AtlasTexture` и internal texture lifetime registry.
 - [Canvas node submission baseline](rendering/canvas-node-submission-baseline.md) - текущие public `CanvasItem`/`Node2D`/`Sprite2D`/`CanvasLayer` и internal sprite submission model.
+- [Camera2D, Viewport and presentation baseline](rendering/camera-viewport-presentation-baseline.md) - текущие public `Camera2D`/`Viewport`, camera transform, pixel snapping и internal presentation plan.
 
 ## Базовые типы
 

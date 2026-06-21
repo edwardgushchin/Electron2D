@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация.
 Задача: `T-0009`.
-Обновлено: 2026-06-20.
+Обновлено: 2026-06-21.
 
 ## Цель
 
@@ -71,5 +71,6 @@ Diagnostic API остаётся внутренним. Централизован
 ## Отличия от Godot в `T-0009`
 
 - Полная hierarchy/ownership/reparent/delete semantics остаётся в `T-0010`.
-- `Viewport`/`Window` root ещё не реализован; `SceneTree.Root` временно является `Node`.
+- Эта спецификация описывает исходный `T-0009` baseline. Начиная с `T-0027`, `SceneTree.Root` публично остаётся `Node`, но фактический root object является `Viewport`.
+- Public `Window` root ещё не реализован.
 - Pause mode и process mode остаются в следующих задачах.

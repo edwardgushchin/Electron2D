@@ -37,7 +37,7 @@ public class SceneTree : Object
 
     public SceneTree()
     {
-        Root = new Node { Name = "root" };
+        Root = new Viewport { Name = "root" };
         AttachSubtree(Root);
     }
 

@@ -23,6 +23,7 @@ The clean rewrite baseline currently exports the first object-model, 2D math, ra
 | --- | --- | --- | --- |
 | `Electron2D.AtlasTexture` | `AtlasTexture` | Partial | Atlas region resource with atlas, region, margin, filter clip and transparency delegation. |
 | `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission and deferred calls. |
+| `Electron2D.Camera2D` | `Camera2D` | Partial | Current 2D camera selection, target/center/rotation queries, offset, zoom and documented smoothing no-op baseline. |
 | `Electron2D.CanvasItem` | `CanvasItem` | Partial | Visibility, inherited modulate, self-modulate, z-index, y-sort flag and show/hide baseline. |
 | `Electron2D.CanvasLayer` | `CanvasLayer` | Partial | Layer, visibility and transform baseline for independent 2D canvas ordering. |
 | `Electron2D.Collections.Array` | `Godot.Collections.Array` | Partial | Mutable reference-like Variant list for the 0.1 closed Variant type set. |
@@ -55,12 +56,12 @@ The clean rewrite baseline currently exports the first object-model, 2D math, ra
 | `Electron2D.Variant+Type` | `Variant.Type` | Partial | Closed 0.1 Variant type enum; 3D, Signal and packed arrays are intentionally excluded for now. |
 | `Electron2D.Vector2` | `Vector2` | Partial | Floating-point 2D vector baseline with arithmetic, length, dot/cross, interpolation and formatting. |
 | `Electron2D.Vector2I` | `Vector2I` | Partial | Integer 2D vector baseline with arithmetic, length, aspect and conversions. |
+| `Electron2D.Viewport` | `Viewport` | Partial | Runtime 2D viewport subset with current camera, visible rect, canvas transform, pixel snapping and root instance baseline. |
 
 ## Planned Godot-like 2D Surface
 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
-| `Electron2D.Viewport` | `Viewport` | Planned | Runtime viewport subset for 2D projects. |
 | `Electron2D.Timer` | `Timer` | Planned | Godot-like timer node. |
 
 ## Explicitly Not Planned Legacy API

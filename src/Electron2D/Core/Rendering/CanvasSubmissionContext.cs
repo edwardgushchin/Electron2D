@@ -41,7 +41,9 @@ internal sealed class CanvasSubmissionContext
             LayerTransform: Transform2D.Identity,
             ParentCanvasItemActive: false,
             InheritedVisible: true,
-            InheritedModulate: Color.White);
+            InheritedModulate: Color.White,
+            SnapTransformsToPixel: false,
+            SnapVerticesToPixel: false);
         var treeOrder = 0L;
         Traverse(root, state, ref treeOrder);
         return queue.BuildPlan();
@@ -50,7 +52,19 @@ internal sealed class CanvasSubmissionContext
     private void Traverse(Node node, SubmissionState state, ref long treeOrder)
     {
         var currentState = state;
-        if (node is CanvasLayer layer)
+        if (node is Viewport viewport)
+        {
+            currentState = state with
+            {
+                LayerTransform = state.LayerTransform * viewport.GetFinalCanvasTransform(),
+                ParentCanvasItemActive = false,
+                InheritedVisible = state.LayerVisible,
+                InheritedModulate = Color.White,
+                SnapTransformsToPixel = viewport.Snap2DTransformsToPixel,
+                SnapVerticesToPixel = viewport.Snap2DVerticesToPixel
+            };
+        }
+        else if (node is CanvasLayer layer)
         {
             currentState = new SubmissionState(
                 layer.Layer,
@@ -58,7 +72,9 @@ internal sealed class CanvasSubmissionContext
                 state.LayerTransform * layer.GetFinalTransform(),
                 ParentCanvasItemActive: false,
                 InheritedVisible: state.LayerVisible && layer.Visible,
-                InheritedModulate: Color.White);
+                InheritedModulate: Color.White,
+                state.SnapTransformsToPixel,
+                state.SnapVerticesToPixel);
         }
         else if (node is CanvasItem canvasItem)
         {
@@ -103,6 +119,18 @@ internal sealed class CanvasSubmissionContext
 
         var textureRid = GetTextureRid(sprite.Texture);
         var key = new CanvasItemBatchKey(textureRid, material: default, clip: default, CanvasItemBlendMode.Mix);
+        var transform = state.LayerTransform * sprite.GlobalTransform;
+        if (state.SnapTransformsToPixel)
+        {
+            transform.Origin = transform.Origin.Round();
+        }
+
+        var destinationRect = sprite.GetRect();
+        if (state.SnapVerticesToPixel)
+        {
+            destinationRect = SnapRect(destinationRect);
+        }
+
         queue.Add(new CanvasItemRenderCommand(
             sprite.CanvasItemRid,
             key,
@@ -114,9 +142,9 @@ internal sealed class CanvasSubmissionContext
             state.LayerVisible && visible,
             modulate,
             sprite.SelfModulate,
-            state.LayerTransform * sprite.GlobalTransform,
+            transform,
             sprite.GetSourceRect(),
-            sprite.GetRect(),
+            destinationRect,
             sprite.FlipH,
             sprite.FlipV,
             sprite.Name));
@@ -134,11 +162,20 @@ internal sealed class CanvasSubmissionContext
         return rid;
     }
 
+    private static Rect2 SnapRect(Rect2 rect)
+    {
+        var position = rect.Position.Round();
+        var end = rect.End.Round();
+        return new Rect2(position, end - position);
+    }
+
     private readonly record struct SubmissionState(
         int Layer,
         bool LayerVisible,
         Transform2D LayerTransform,
         bool ParentCanvasItemActive,
         bool InheritedVisible,
-        Color InheritedModulate);
+        Color InheritedModulate,
+        bool SnapTransformsToPixel,
+        bool SnapVerticesToPixel);
 }

@@ -413,7 +413,14 @@ public class Node2D : CanvasItem
 
     internal static float DecomposeRotation(Transform2D transform)
     {
-        return transform.X.IsZeroApprox() ? 0f : transform.X.Angle();
+        if (transform.X.IsZeroApprox())
+        {
+            return 0f;
+        }
+
+        var x = Mathf.IsZeroApprox(transform.X.X) ? 0f : transform.X.X;
+        var y = Mathf.IsZeroApprox(transform.X.Y) ? 0f : transform.X.Y;
+        return new Vector2(x, y).Angle();
     }
 
     internal static Vector2 DecomposeScale(Transform2D transform)
