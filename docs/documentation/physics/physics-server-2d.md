@@ -25,7 +25,7 @@
 
 ## Что ещё не реализовано
 
-- данные geometry для shapes;
+- запись geometry из `Shape2D` resources в production backend;
 - physics step, contacts, collision layers, masks, materials, sleeping и CCD;
 - raycast, point query и shape query;
 - `CharacterBody2D` и kinematic solver;

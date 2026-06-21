@@ -25,13 +25,13 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base resource for 2D physics shapes.
+/// Provides a concave polygon 2D physics shape resource backed by line segments.
 /// </summary>
 ///
 /// <remarks>
-/// `Shape2D` owns an opaque physics server <see cref="Rid" /> lazily created
-/// by the concrete resource type. The public API does not expose backend-native
-/// shape handles.
+/// Concave polygon shapes are allowed only under <see cref="StaticBody2D" /> in
+/// the preview physics model. Use <see cref="ConvexPolygonShape2D" /> for
+/// non-static bodies.
 /// </remarks>
 ///
 /// <threadsafety>
@@ -42,51 +42,48 @@ namespace Electron2D;
 /// <since>
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
-public abstract class Shape2D : Resource
+public sealed class ConcavePolygonShape2D : Shape2D
 {
-    private Rid rid;
+    private Vector2[] segments =
+    [
+        new(0f, 0f),
+        new(10f, 0f)
+    ];
 
     /// <summary>
-    /// Gets the physics server RID backing this shape.
+    /// Gets or sets the line segment endpoint pairs that make up the shape.
     /// </summary>
-    /// <returns>
-    /// A valid shape RID created by the concrete shape resource.
-    /// </returns>
+    ///
+    /// <value>
+    /// An even-length array containing one or more finite, non-zero point pairs.
+    /// </value>
     ///
     /// <threadsafety>
-    /// This method is not synchronized. Call it on the main scene thread.
+    /// This property is not synchronized. Mutate it on the main scene thread.
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public Rid GetRid()
+    public Vector2[] Segments
     {
-        ThrowIfFreed();
-        if (!rid.IsValid())
+        get
         {
-            rid = CreatePhysicsRid();
+            ThrowIfFreed();
+            return segments.ToArray();
         }
-
-        return rid;
+        set
+        {
+            ThrowIfFreed();
+            segments = Shape2DValidation.CopyValidConcaveSegments(
+                value,
+                $"{nameof(ConcavePolygonShape2D)}.{nameof(Segments)}");
+        }
     }
 
-    /// <summary>
-    /// Creates the physics server RID for this shape resource.
-    /// </summary>
-    /// <returns>The created physics server RID.</returns>
-    protected abstract Rid CreatePhysicsRid();
-
     /// <inheritdoc />
-    protected override void OnFree()
+    protected override Rid CreatePhysicsRid()
     {
-        if (rid.IsValid())
-        {
-            var ridToFree = rid;
-            rid = default;
-            PhysicsServer2D.FreeRid(ridToFree);
-        }
-
-        base.OnFree();
+        return PhysicsServer2D.ConcavePolygonShapeCreate();
     }
 }

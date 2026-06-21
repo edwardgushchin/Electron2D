@@ -29,9 +29,8 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// Concrete shape resources are implemented by later physics tasks. This node
-/// stores the shape reference and collision flags used by the editor and future
-/// physics backend.
+/// This node stores a shape resource reference and validates Godot-like shape
+/// placement rules when it enters a <see cref="SceneTree" />.
 /// </remarks>
 ///
 /// <threadsafety>
@@ -42,8 +41,10 @@ namespace Electron2D;
 /// <since>
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
-public class CollisionShape2D : Node2D
+public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
 {
+    private Shape2D? shape;
+
     /// <summary>
     /// Gets or sets the shape resource attached by this node.
     /// </summary>
@@ -55,7 +56,20 @@ public class CollisionShape2D : Node2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public Shape2D? Shape { get; set; }
+    public Shape2D? Shape
+    {
+        get
+        {
+            ThrowIfFreed();
+            return shape;
+        }
+        set
+        {
+            ThrowIfFreed();
+            ValidateConcaveOwner(value);
+            shape = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets whether the shape is disabled.
@@ -95,4 +109,52 @@ public class CollisionShape2D : Node2D
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
     public float OneWayCollisionMargin { get; set; } = 1f;
+
+    void ISceneTreeLifecycleHandler.OnEnterTree()
+    {
+        ValidateConcaveOwner(shape);
+    }
+
+    void ISceneTreeLifecycleHandler.OnPhysicsProcess(double delta)
+    {
+        _ = delta;
+    }
+
+    void ISceneTreeLifecycleHandler.OnExitTree()
+    {
+    }
+
+    private void ValidateConcaveOwner(Shape2D? candidate)
+    {
+        if (candidate is not ConcavePolygonShape2D)
+        {
+            return;
+        }
+
+        var owner = FindCollisionObjectOwner();
+        if (owner is null or StaticBody2D)
+        {
+            return;
+        }
+
+        throw new InvalidOperationException(
+            $"{nameof(ConcavePolygonShape2D)} can only be used under {nameof(StaticBody2D)}. " +
+            $"Current collision owner is '{owner.GetType().Name}'.");
+    }
+
+    private CollisionObject2D? FindCollisionObjectOwner()
+    {
+        var current = GetParent();
+        while (current is not null)
+        {
+            if (current is CollisionObject2D collisionObject)
+            {
+                return collisionObject;
+            }
+
+            current = current.GetParent();
+        }
+
+        return null;
+    }
 }

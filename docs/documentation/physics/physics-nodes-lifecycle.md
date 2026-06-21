@@ -17,8 +17,9 @@
 - `RigidBody2D` хранит базовые Godot-like свойства: `Mass`, `Inertia`, `CenterOfMass`, `CenterOfMassMode`, `GravityScale`, `LinearVelocity`, `AngularVelocity`, `Freeze`, `FreezeMode`, `Sleeping`, `CanSleep`, `LockRotation`.
 - `Area2D` хранит `Monitoring`, `Monitorable` и `Priority`.
 - `CollisionShape2D` хранит `Shape`, `Disabled`, `OneWayCollision` и `OneWayCollisionMargin`.
+- `CollisionShape2D` проверяет, что `ConcavePolygonShape2D` используется только под `StaticBody2D`.
 - `RayCast2D` хранит настройки query. До реализации raycast backend result methods возвращают пустое состояние: `IsColliding() == false`, `GetCollider() == null`, empty `Rid`, нулевой shape index и `Vector2.Zero` для point/normal.
-- `Shape2D` является abstract `Resource` base для будущих concrete shape resources.
+- `Shape2D` является abstract `Resource` base для concrete shape resources и лениво создаёт shape `Rid` через `PhysicsServer2D`.
 
 ## Внутренний lifecycle hook
 
@@ -26,8 +27,7 @@
 
 ## Что ещё не реализовано
 
-- concrete shapes `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`;
-- запись geometry shape в physics backend;
+- запись geometry concrete shapes в production physics backend;
 - collision solver, contacts, overlap signals, collision layers/masks в расчёте столкновений;
 - raycast, point query и shape query;
 - `CharacterBody2D` и kinematic solver;

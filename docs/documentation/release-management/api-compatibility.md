@@ -16,7 +16,7 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary и первые 2D physics nodes:
+Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary, первые 2D physics nodes и concrete shape resources:
 
 - `Electron2D.Area2D`
 - `Electron2D.AtlasTexture`
@@ -24,13 +24,17 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Camera2D`
 - `Electron2D.CanvasItem`
 - `Electron2D.CanvasLayer`
+- `Electron2D.CapsuleShape2D`
+- `Electron2D.CircleShape2D`
 - `Electron2D.Collections.Array`
 - `Electron2D.Collections.Dictionary`
 - `Electron2D.CollisionObject2D`
 - `Electron2D.CollisionShape2D`
 - `Electron2D.Color`
+- `Electron2D.ConcavePolygonShape2D`
 - `Electron2D.ConnectFlags`
 - `Electron2D.Control`
+- `Electron2D.ConvexPolygonShape2D`
 - `Electron2D.Error`
 - `Electron2D.ExportAttribute`
 - `Electron2D.Font`
@@ -63,6 +67,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.RayCast2D`
 - `Electron2D.Rect2`
 - `Electron2D.Rect2I`
+- `Electron2D.RectangleShape2D`
 - `Electron2D.RefCounted`
 - `Electron2D.RenderingServer`
 - `Electron2D.RenderingServer+RenderingFeature`
@@ -74,6 +79,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.RigidBody2D+CenterOfMassModeEnum`
 - `Electron2D.RigidBody2D+FreezeModeEnum`
 - `Electron2D.SceneTree`
+- `Electron2D.SegmentShape2D`
 - `Electron2D.Shader`
 - `Electron2D.Shader+Mode`
 - `Electron2D.ShaderMaterial`

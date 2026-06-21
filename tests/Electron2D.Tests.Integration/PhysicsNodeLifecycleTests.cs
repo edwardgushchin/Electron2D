@@ -206,6 +206,10 @@ public sealed class PhysicsNodeLifecycleTests
 
     private sealed class TestShape2D : Electron2D.Shape2D
     {
+        protected override Electron2D.Rid CreatePhysicsRid()
+        {
+            return Electron2D.PhysicsServer2D.RectangleShapeCreate();
+        }
     }
 
     private static void ResetBackend()

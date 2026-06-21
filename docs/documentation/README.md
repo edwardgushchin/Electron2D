@@ -46,6 +46,7 @@
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - текущая public `Rid`-граница физики, internal backend boundary и запрет публичных Box2D handles.
 - [Box2D.NET platform/AOT validation](physics/box2d-net-validation.md) - текущий candidate smoke gate, desktop JIT/NativeAOT проверка, mobile Release/AOT gaps и allocations per tick.
 - [Physics nodes lifecycle baseline](physics/physics-nodes-lifecycle.md) - текущие `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`, RID lifecycle и transform sync.
+- [Shape2D resources baseline](physics/shape2d-resources.md) - текущие `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`, validation, RID creation и serialization metadata.
 
 ## Рендеринг
 

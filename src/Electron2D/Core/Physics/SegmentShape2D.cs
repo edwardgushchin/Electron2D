@@ -25,13 +25,12 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base resource for 2D physics shapes.
+/// Provides a finite line segment 2D physics shape resource.
 /// </summary>
 ///
 /// <remarks>
-/// `Shape2D` owns an opaque physics server <see cref="Rid" /> lazily created
-/// by the concrete resource type. The public API does not expose backend-native
-/// shape handles.
+/// Segment shapes are useful for simple static boundaries. A segment must use
+/// two distinct finite points.
 /// </remarks>
 ///
 /// <threadsafety>
@@ -42,51 +41,66 @@ namespace Electron2D;
 /// <since>
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
-public abstract class Shape2D : Resource
+public sealed class SegmentShape2D : Shape2D
 {
-    private Rid rid;
+    private Vector2 a = new(-10f, 0f);
+    private Vector2 b = new(10f, 0f);
 
     /// <summary>
-    /// Gets the physics server RID backing this shape.
+    /// Gets or sets the first segment endpoint.
     /// </summary>
-    /// <returns>
-    /// A valid shape RID created by the concrete shape resource.
-    /// </returns>
     ///
     /// <threadsafety>
-    /// This method is not synchronized. Call it on the main scene thread.
+    /// This property is not synchronized. Mutate it on the main scene thread.
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public Rid GetRid()
+    public Vector2 A
     {
-        ThrowIfFreed();
-        if (!rid.IsValid())
+        get
         {
-            rid = CreatePhysicsRid();
+            ThrowIfFreed();
+            return a;
         }
-
-        return rid;
+        set
+        {
+            ThrowIfFreed();
+            Shape2DValidation.RequireDistinctSegment(value, b, nameof(SegmentShape2D));
+            a = value;
+        }
     }
 
     /// <summary>
-    /// Creates the physics server RID for this shape resource.
+    /// Gets or sets the second segment endpoint.
     /// </summary>
-    /// <returns>The created physics server RID.</returns>
-    protected abstract Rid CreatePhysicsRid();
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public Vector2 B
+    {
+        get
+        {
+            ThrowIfFreed();
+            return b;
+        }
+        set
+        {
+            ThrowIfFreed();
+            Shape2DValidation.RequireDistinctSegment(a, value, nameof(SegmentShape2D));
+            b = value;
+        }
+    }
 
     /// <inheritdoc />
-    protected override void OnFree()
+    protected override Rid CreatePhysicsRid()
     {
-        if (rid.IsValid())
-        {
-            var ridToFree = rid;
-            rid = default;
-            PhysicsServer2D.FreeRid(ridToFree);
-        }
-
-        base.OnFree();
+        return PhysicsServer2D.SegmentShapeCreate();
     }
 }

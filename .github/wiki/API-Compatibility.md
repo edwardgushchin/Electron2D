@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types and first 2D physics nodes. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes and concrete 2D shape resources. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -27,13 +27,17 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Camera2D` | `Camera2D` | Partial | Current 2D camera selection, target/center/rotation queries, offset, zoom and documented smoothing no-op baseline. |
 | `Electron2D.CanvasItem` | `CanvasItem` | Partial | Visibility, inherited modulate, self-modulate, z-index, y-sort flag and show/hide baseline. |
 | `Electron2D.CanvasLayer` | `CanvasLayer` | Partial | Layer, visibility and transform baseline for independent 2D canvas ordering. |
+| `Electron2D.CapsuleShape2D` | `CapsuleShape2D` | Partial | Capsule shape resource with radius/height validation, RID creation and AOT-safe serialization metadata. |
+| `Electron2D.CircleShape2D` | `CircleShape2D` | Partial | Circle shape resource with radius validation, RID creation and AOT-safe serialization metadata. |
 | `Electron2D.Collections.Array` | `Godot.Collections.Array` | Partial | Mutable reference-like Variant list for the 0.1 closed Variant type set. |
 | `Electron2D.Collections.Dictionary` | `Godot.Collections.Dictionary` | Partial | Mutable reference-like Variant key/value map for the 0.1 closed Variant type set. |
 | `Electron2D.CollisionObject2D` | `CollisionObject2D` | Partial | Base collision object with `GetRid()`, collision layer/mask storage, RID lifecycle and transform sync. |
-| `Electron2D.CollisionShape2D` | `CollisionShape2D` | Partial | Shape reference and disabled/one-way flags; concrete shape resources are planned. |
+| `Electron2D.CollisionShape2D` | `CollisionShape2D` | Partial | Shape reference, disabled/one-way flags and concave-shape static-body validation. |
 | `Electron2D.Color` | `Color` | Partial | RGBA value type baseline with arithmetic, interpolation, clamp and HTML conversion. |
+| `Electron2D.ConcavePolygonShape2D` | `ConcavePolygonShape2D` | Partial | Concave segment-pair shape resource restricted to `StaticBody2D` through `CollisionShape2D`. |
 | `Electron2D.ConnectFlags` | `ConnectFlags` | Partial | Godot-like flag names are declared; advanced flag semantics are still planned. |
 | `Electron2D.Control` | `Control` | Partial | UI base node with position, size and minimal font theme overrides for text baseline. |
+| `Electron2D.ConvexPolygonShape2D` | `ConvexPolygonShape2D` | Partial | Convex polygon shape resource with finite point validation and AOT-safe array serialization. |
 | `Electron2D.Error` | `Error` | Partial | Minimal signal/runtime error result values. |
 | `Electron2D.ExportAttribute` | `ExportAttribute` / `[Export]` | Partial | Marker attribute for script fields/properties included in explicit serialization and Inspector metadata. |
 | `Electron2D.Font` | `Font` | Partial | Base font resource with string measurement, glyph availability, fallback layout and internal cache. |
@@ -66,6 +70,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.RayCast2D` | `RayCast2D` | Partial | Ray query settings and empty result state until the raycast backend is implemented. |
 | `Electron2D.Rect2` | `Rect2` | Partial | Floating-point axis-aligned rectangle baseline with intersection, merge, grow and normalization helpers. |
 | `Electron2D.Rect2I` | `Rect2I` | Partial | Integer axis-aligned rectangle baseline with intersection, merge, grow and normalization helpers. |
+| `Electron2D.RectangleShape2D` | `RectangleShape2D` | Partial | Rectangle shape resource with size validation, RID creation and AOT-safe serialization metadata. |
 | `Electron2D.RefCounted` | `RefCounted` | Partial | Manual reference count baseline with `Reference()`, `Unreference()` and `GetReferenceCount()`. |
 | `Electron2D.RenderingServer` | `RenderingServer` | Partial | Singleton-style facade for active renderer profile and feature flags; concrete backends remain internal. |
 | `Electron2D.RenderingServer+RenderingFeature` | `RenderingServer` feature enum | Partial | 0.1 feature flags for compatibility and standard renderer profiles. |
@@ -77,10 +82,11 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.RigidBody2D+CenterOfMassModeEnum` | `RigidBody2D.CenterOfMassMode` | Partial | Godot-like center-of-mass mode values for `RigidBody2D`. |
 | `Electron2D.RigidBody2D+FreezeModeEnum` | `RigidBody2D.FreezeMode` | Partial | Godot-like freeze behavior values for `RigidBody2D`. |
 | `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
+| `Electron2D.SegmentShape2D` | `SegmentShape2D` | Partial | Segment shape resource with endpoint validation, RID creation and AOT-safe serialization metadata. |
 | `Electron2D.Shader` | `Shader` | Partial | Canvas item shader resource storing source code for import-time compilation. |
 | `Electron2D.Shader+Mode` | `Shader.Mode` | Partial | 0.1 canvas item shader mode subset. |
 | `Electron2D.ShaderMaterial` | `ShaderMaterial` | Partial | Material resource with `Shader`, supported uniform values, `Texture2D` samplers and fail-closed reserved built-in validation. |
-| `Electron2D.Shape2D` | `Shape2D` | Partial | Base shape resource for `CollisionShape2D`; concrete shape resources are planned. |
+| `Electron2D.Shape2D` | `Shape2D` | Partial | Base shape resource for `CollisionShape2D` with lazy physics RID creation and cleanup. |
 | `Electron2D.SignalAttribute` | `SignalAttribute` / `[Signal]` | Partial | Marker attribute for script delegates backed by explicit signal metadata and the existing `Connect()`/`EmitSignal()` API. |
 | `Electron2D.Sprite2D` | `Sprite2D` | Partial | Texture, centered/offset drawing rect, region rect, flip flags, pixel opacity and internal submission baseline. |
 | `Electron2D.StaticBody2D` | `StaticBody2D` | Partial | RID lifecycle, constant velocity storage and transform sync baseline. |

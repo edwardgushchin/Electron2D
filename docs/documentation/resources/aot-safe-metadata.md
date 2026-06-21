@@ -35,6 +35,8 @@ ResourceObjectMetadataRegistry.Register(
 
 Имена свойств берутся из metadata, а не из CLR property names. Это важно для diff-friendly resource files, Inspector labels и будущих source-generated descriptors.
 
+Built-in resources движка регистрируются самим runtime. На 2026-06-21 это относится к `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D` и `ConcavePolygonShape2D`. Игра не должна регистрировать metadata для этих типов вручную.
+
 ## AOT/NativeAOT
 
 Новый serialization metadata path не использует:

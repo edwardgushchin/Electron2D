@@ -214,6 +214,11 @@ internal static class ResourceObjectMetadataRegistry
     private static readonly Dictionary<Type, ResourceObjectTypeMetadata> ByResourceType = [];
     private static readonly Dictionary<string, ResourceObjectTypeMetadata> BySerializedTypeName = new(StringComparer.Ordinal);
 
+    static ResourceObjectMetadataRegistry()
+    {
+        PhysicsShapeResourceMetadata.Register();
+    }
+
     public static void Register(ResourceObjectTypeMetadata metadata)
     {
         ArgumentNullException.ThrowIfNull(metadata);
