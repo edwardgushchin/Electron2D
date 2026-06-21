@@ -1,7 +1,7 @@
 # Texture2D resource baseline
 
 Статус: реализовано.
-Задача: `T-0025`, обновлено в `T-0030`.
+Задача: `T-0025`, обновлено в `T-0030` и `T-0037`.
 Обновлено: 2026-06-21.
 
 ## Public API
@@ -60,7 +60,7 @@ Filter/repeat сейчас представлены internal `TextureSamplingOpt
 
 ## Ограничения
 
-- PNG/JPEG import и public image-backed texture class остаются задачей `T-0037`.
+- PNG/JPEG import metadata реализован в `T-0037` как internal import cache importer. Public image-backed texture class ещё не добавлен.
 - Real SDL_GPU transfer-buffer upload ещё не реализован; T-0025 фиксирует registry contract и backend adapter boundary.
 - `DrawTexture()` реализован в immediate drawing baseline `T-0028`; `DrawTextureRect()` и `DrawTextureRectRegion()` остаются будущими drawing задачами.
 

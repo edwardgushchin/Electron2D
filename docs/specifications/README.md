@@ -28,6 +28,7 @@
 
 - [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - `ResourceUid`, `.e2res`, external/internal references и diff-friendly формат ресурсов.
 - [Import cache ресурсов](resources/resource-import-cache.md) - внутренний pipeline для discovery, reimport on change, dependency tracking, safe cache writes и prune unused cache.
+- [Импорт PNG/JPEG в Texture2D и AtlasTexture](resources/texture-image-import.md) - internal image importer, sidecar настройки, texture metadata, atlas regions и platform variants.
 
 ## Рендеринг
 

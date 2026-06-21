@@ -22,6 +22,7 @@
 - Resource UID baseline: public `ResourceUid` с `uid://` conversion, path mapping и rename/move через `SetId()`.
 - Resource file baseline: internal `.e2res` JSON document model, external/internal references, stable LF output и golden-data проверка exact text.
 - Resource import cache baseline: internal pipeline для `.e2res` discovery, cache artifacts отдельно от source assets, reimport при изменении source/dependency, сохранение старого валидного cache при ошибке и prune удалённых source assets.
+- Texture image import baseline: internal PNG/JPEG metadata importer, sidecar `<image>.e2import.json`, filter/repeat/mipmaps, atlas regions, platform variants и stable `texture.e2tex.json` cache artifact.
 - Variant baseline: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений для `0.1.0 Preview`.
 - Stable Variant serialization baseline: internal canonical JSON round-trip для сериализуемых `Variant` значений и понятные ошибки для runtime-only значений.
 - Rendering server baseline: `RenderingServer`, nested renderer profiles/features и internal backend abstraction для `Compatibility`/`Standard`.
@@ -56,7 +57,7 @@
 ### Ограничения
 
 - Runtime assembly экспортирует `47` публичных типов.
-- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, import cache пока поддерживает только `.e2res`, а полноценный device run/export остаётся следующими задачами.
+- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, а полноценный device run/export остаётся следующими задачами.
 
 ### Breaking changes policy
 

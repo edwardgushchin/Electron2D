@@ -14,6 +14,7 @@
 - `ResourceImportOptions` - задаёт `projectRoot`, `sourceRoot`, `cacheRoot` и список importers;
 - `IResourceImporter` - внутренний контракт importer;
 - `ResourceFileImporter` - baseline importer для `.e2res`;
+- `TextureImageImporter` - importer для PNG/JPEG image metadata;
 - `ResourceImportManifest` и `ResourceImportManifestTextSerializer` - stable JSON manifest.
 
 ## Поведение pipeline
@@ -64,7 +65,8 @@ Dependencies отслеживаются по SHA-256 hash. Если source file 
 
 - Public `ResourceLoader`/`ResourceSaver` ещё не реализованы.
 - File watcher и editor FileSystem dock ещё не реализованы.
-- PNG/JPEG, TTF/OTF, WAV/OGG и shader artifact importers реализуются следующими задачами.
+- TTF/OTF, WAV/OGG и shader artifact importers реализуются следующими задачами.
+- PNG/JPEG importer уже реализован отдельной задачей `T-0037` и описан в `texture-image-import.md`.
 - Dependency tracking сейчас работает для файлов, которые можно разрешить через `res://...` внутри `sourceRoot`.
 
 ## Проверки
