@@ -43,6 +43,12 @@ public sealed class CleanRuntimeBaselineTests
             new[]
             {
                 "Electron2D.AnimatedSprite2D",
+                "Electron2D.Animation",
+                "Electron2D.Animation+InterpolationTypeEnum",
+                "Electron2D.Animation+LoopModeEnum",
+                "Electron2D.Animation+TrackTypeEnum",
+                "Electron2D.AnimationLibrary",
+                "Electron2D.AnimationPlayer",
                 "Electron2D.Area2D",
                 "Electron2D.AtlasTexture",
                 "Electron2D.Callable",

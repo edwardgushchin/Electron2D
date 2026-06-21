@@ -28,6 +28,10 @@ internal interface ISceneTreeLifecycleHandler
 {
     void OnEnterTree();
 
+    void OnProcess(double delta)
+    {
+    }
+
     void OnPhysicsProcess(double delta);
 
     void OnExitTree();

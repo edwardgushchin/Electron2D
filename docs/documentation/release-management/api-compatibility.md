@@ -16,9 +16,15 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, frame-based sprite animation, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline и debug collision shape hooks:
+Новый runtime assembly `Electron2D` экспортирует текущий baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline и debug collision shape hooks:
 
 - `Electron2D.AnimatedSprite2D`
+- `Electron2D.Animation`
+- `Electron2D.Animation+InterpolationTypeEnum`
+- `Electron2D.Animation+LoopModeEnum`
+- `Electron2D.Animation+TrackTypeEnum`
+- `Electron2D.AnimationLibrary`
+- `Electron2D.AnimationPlayer`
 - `Electron2D.Area2D`
 - `Electron2D.AtlasTexture`
 - `Electron2D.Callable`

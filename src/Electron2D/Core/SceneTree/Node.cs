@@ -403,6 +403,16 @@ public class Node : Object
         }
 
         _tree?.InvokeUserCallback(this, nameof(_Process), () => _Process(delta));
+        if (IsInstanceValid(this) &&
+            _tree is not null &&
+            !IsQueuedForDeletion() &&
+            this is ISceneTreeLifecycleHandler lifecycleHandler)
+        {
+            _tree.InvokeUserCallback(
+                this,
+                "process lifecycle handler",
+                () => lifecycleHandler.OnProcess(delta));
+        }
 
         foreach (var child in _children.ToArray())
         {

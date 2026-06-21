@@ -57,6 +57,7 @@
 ## Анимация
 
 - [SpriteFrames и AnimatedSprite2D baseline](animation/spriteframes-animatedsprite2d.md) - текущие `SpriteFrames`, `AnimatedSprite2D`, frame timing, loop modes, autoplay и canvas submission текущего frame.
+- [Animation, AnimationLibrary и AnimationPlayer baseline](animation/animation-player-tracks.md) - текущие value tracks, method call tracks, queue playback, completion signal и применение property values через `NodePath`.
 
 ## Рендеринг
 
