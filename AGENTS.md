@@ -41,7 +41,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 - If user changes overlap with the requested area, read them carefully and work with them. Ask only when the overlap makes the task impossible or ambiguous.
 - Do not run destructive commands such as hard resets, forced checkouts, recursive deletes, database wipes, or volume cleanup without explicit approval for that exact action.
 - Stage, commit, push, tag, or open pull requests only when the user explicitly requests it. Stage only files related to the requested task.
-- Commit messages may use conventional technical prefixes, but the human-readable description should follow the repository's default human language.
+- Commit messages must be written in English. Conventional technical prefixes are allowed, but the human-readable description after the prefix must also be English.
 
 ## Feature Gate
 - Feature or runtime work means adding or changing product behavior, UI/API flows, domain rules, integrations, data flow, configuration behavior, startup behavior, production code paths, or user-facing behavior.
