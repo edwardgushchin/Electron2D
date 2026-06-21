@@ -32,6 +32,7 @@
 - Script metadata baseline: public Godot-like `[Export]`, `[Signal]`, `[Tool]` marker attributes, internal AOT-safe metadata bridge, exported property round-trip, callable signal registration и sandboxed experimental `[Tool]` state.
 - SDL input event mapping baseline: public Godot-like `InputEventKey`, `InputEventMouseButton`, `InputEventMouseMotion`, `Key`, `KeyLocation`, `MouseButton`, `MouseButtonMask`, internal SDL mapper для keyboard, mouse, wheel, text input и dispatch order через `SceneTree`.
 - PhysicsServer2D boundary baseline: public Godot-like `PhysicsServer2D`, `SpaceParameter`, `ShapeType`, `ProcessInfo`, RID creation/free для spaces, areas, bodies, joints, shapes и internal swappable backend без публичных Box2D handles.
+- Box2D.NET candidate validation baseline: отдельный smoke-проект на `Box2D.NET 3.1.654`, verifier `Verify-Box2DPhysicsCandidate.ps1`, desktop JIT/NativeAOT CI gate, local `win-x64` allocation measurement и documented Android/iOS Release/AOT gaps.
 - Variant baseline: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений для `0.1.0 Preview`.
 - Stable Variant serialization baseline: internal canonical JSON round-trip для сериализуемых `Variant` значений и понятные ошибки для runtime-only значений.
 - Rendering server baseline: `RenderingServer`, nested renderer profiles/features и internal backend abstraction для `Compatibility`/`Standard`.
@@ -66,7 +67,7 @@
 ### Ограничения
 
 - Runtime assembly экспортирует `64` публичных типов.
-- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input и editor script attach workflow ещё не реализованы, а полноценный device run/export остаётся следующими задачами.
+- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, Box2D.NET пока является candidate validation gate без production backend и без mobile AOT proof, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input и editor script attach workflow ещё не реализованы, а полноценный device run/export остаётся следующими задачами.
 
 ### Breaking changes policy
 

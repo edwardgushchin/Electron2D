@@ -38,6 +38,10 @@ jobs:
         shell: pwsh
         run: ./tools/Run-Tests.ps1
 
+      - name: Verify Box2D.NET physics candidate
+        shell: pwsh
+        run: ./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
+
       - name: Verify project template
         shell: pwsh
         run: ./tools/Verify-ProjectTemplate.ps1

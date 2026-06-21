@@ -18,6 +18,7 @@ CI описан в `.github/workflows/ci.yml`.
 
 ```powershell
 ./tools/Run-Tests.ps1
+./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
 ./tools/Verify-ProjectTemplate.ps1
 ./tools/Verify-PerformanceBudgets.ps1
 ```
@@ -25,6 +26,8 @@ CI описан в `.github/workflows/ci.yml`.
 ## Mobile/export gap
 
 Job `mobile-export-status` явно фиксирует, что Android/iOS/export smoke checks ещё не входят в активный gate. Это не release-ready статус экспорта, а прозрачная отметка текущего gap до будущих задач.
+
+Box2D.NET physics candidate проверяется только на desktop matrix через `Verify-Box2DPhysicsCandidate.ps1 -NativeAot`. Android arm64 Release/AOT и iOS arm64 Release/AOT для physics backend остаются gap до задач mobile export/toolchain.
 
 ## Локальная проверка CI
 

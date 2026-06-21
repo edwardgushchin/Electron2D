@@ -20,6 +20,7 @@ CI должен проверять новый clean runtime baseline на Tier 1
 - устанавливать .NET SDK `10.0.x`;
 - восстанавливать `src/Electron2D.sln`;
 - запускать `tools/Run-Tests.ps1` без `-IncludeBaseline`.
+- запускать `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`.
 - запускать `tools/Verify-ProjectTemplate.ps1`.
 - запускать `tools/Verify-PerformanceBudgets.ps1`.
 
@@ -35,4 +36,4 @@ CI не запускает `Category=Baseline` по умолчанию, пото
 powershell -ExecutionPolicy Bypass -File tools/Verify-CiMatrix.ps1
 ```
 
-Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1` и явное упоминание mobile/export status gap.
+Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1`, запуск `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot` и явное упоминание mobile/export status gap.

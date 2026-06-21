@@ -44,6 +44,7 @@
 ## Физика 2D
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - текущая public `Rid`-граница физики, internal backend boundary и запрет публичных Box2D handles.
+- [Box2D.NET platform/AOT validation](physics/box2d-net-validation.md) - текущий candidate smoke gate, desktop JIT/NativeAOT проверка, mobile Release/AOT gaps и allocations per tick.
 
 ## Рендеринг
 

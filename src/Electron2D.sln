@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.GoldenData
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.AotSmoke", "..\tests\Electron2D.Tests.AotSmoke\Electron2D.Tests.AotSmoke.csproj", "{CAB4005D-CC35-40D0-99BE-D06ADC3E0D57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Tests.PhysicsBox2DSmoke", "..\tests\Electron2D.Tests.PhysicsBox2DSmoke\Electron2D.Tests.PhysicsBox2DSmoke.csproj", "{52D2232F-361F-4389-91BA-C62B85EAA7AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,18 @@ Global
 		{CAB4005D-CC35-40D0-99BE-D06ADC3E0D57}.Release|x64.Build.0 = Release|Any CPU
 		{CAB4005D-CC35-40D0-99BE-D06ADC3E0D57}.Release|x86.ActiveCfg = Release|Any CPU
 		{CAB4005D-CC35-40D0-99BE-D06ADC3E0D57}.Release|x86.Build.0 = Release|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Debug|x64.Build.0 = Debug|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Debug|x86.Build.0 = Debug|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Release|x64.Build.0 = Release|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Release|x86.ActiveCfg = Release|Any CPU
+		{52D2232F-361F-4389-91BA-C62B85EAA7AF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

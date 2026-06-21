@@ -41,6 +41,7 @@ $requiredFragments = @(
     '10.0.x',
     'src/Electron2D.sln',
     'tools/Run-Tests.ps1',
+    'tools/Verify-Box2DPhysicsCandidate.ps1',
     'tools/Verify-ProjectTemplate.ps1',
     'tools/Verify-PerformanceBudgets.ps1',
     'mobile-export-status',
@@ -55,6 +56,10 @@ foreach ($fragment in $requiredFragments) {
 
 if ($workflow.IndexOf('-IncludeBaseline', [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
     throw 'CI green path must not run -IncludeBaseline by default.'
+}
+
+if ($workflow.IndexOf('Verify-Box2DPhysicsCandidate.ps1 -NativeAot', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'CI workflow must run Box2D.NET physics candidate validation with -NativeAot.'
 }
 
 Write-Host 'CI matrix verification passed.'
