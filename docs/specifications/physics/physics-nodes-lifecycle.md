@@ -10,7 +10,7 @@
 - `CollisionShape2D`;
 - `RayCast2D`.
 
-Эти классы нужны сценам и будущему редактору как стабильная публичная форма физического дерева. Они не должны раскрывать Box2D.NET handles и не должны обещать завершённую симуляцию столкновений раньше задач про shapes, collision layers, queries и fixed timestep.
+Эти классы нужны сценам и будущему редактору как стабильная публичная форма физического дерева. Они не должны раскрывать Box2D.NET handles и не должны обещать завершённую симуляцию столкновений раньше задач про shapes, areas, collision layers, queries и fixed timestep.
 
 ## Область задачи
 
@@ -112,7 +112,7 @@
 - concrete `Shape2D` resources: `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`;
 - запись geometry в `PhysicsServer2D`;
 - collision layers/masks в solver;
-- contacts, signals `body_entered`/`area_entered`;
+- contacts и shape-level overlap signals;
 - raycast query implementation;
 - `CharacterBody2D` и kinematic solver;
 - выбор Box2D.NET как production backend.

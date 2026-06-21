@@ -48,6 +48,7 @@
 - [Physics nodes lifecycle baseline](physics/physics-nodes-lifecycle.md) - текущие `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`, RID lifecycle и transform sync.
 - [Shape2D resources baseline](physics/shape2d-resources.md) - текущие `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`, validation, RID creation и serialization metadata.
 - [Collision layers, material, gravity и sleeping baseline](physics/collision-material-state.md) - текущие layer/mask helpers, `PhysicsMaterial`, material override и внутренний body-state snapshot.
+- [Area2D sensors и overlap signals baseline](physics/area2d-overlap-signals.md) - текущие overlap snapshots, `body_entered`/`body_exited`, `area_entered`/`area_exited`, фильтры и deferred removal.
 
 ## Рендеринг
 

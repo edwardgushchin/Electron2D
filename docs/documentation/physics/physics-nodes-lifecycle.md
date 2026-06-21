@@ -17,7 +17,7 @@
 - `StaticBody2D` хранит `ConstantLinearVelocity` и `ConstantAngularVelocity`.
 - `RigidBody2D` хранит базовые Godot-like свойства: `Mass`, `Inertia`, `CenterOfMass`, `CenterOfMassMode`, `GravityScale`, `LinearVelocity`, `AngularVelocity`, `Freeze`, `FreezeMode`, `Sleeping`, `CanSleep`, `LockRotation`.
 - `PhysicsBody2D` хранит `PhysicsMaterialOverride`, а `RigidBody2D` синхронизирует `GravityScale`, `Sleeping` и `CanSleep` во внутренний body-state snapshot.
-- `Area2D` хранит `Monitoring`, `Monitorable` и `Priority`.
+- `Area2D` хранит `Monitoring`, `Monitorable` и `Priority`, регистрирует built-in overlap signals и поддерживает body/area overlap helper methods.
 - `CollisionShape2D` хранит `Shape`, `Disabled`, `OneWayCollision` и `OneWayCollisionMargin`.
 - `CollisionShape2D` проверяет, что `ConcavePolygonShape2D` используется только под `StaticBody2D`.
 - `RayCast2D` хранит настройки query. До реализации raycast backend result methods возвращают пустое состояние: `IsColliding() == false`, `GetCollider() == null`, empty `Rid`, нулевой shape index и `Vector2.Zero` для point/normal.
@@ -30,7 +30,7 @@
 ## Что ещё не реализовано
 
 - запись geometry concrete shapes в production physics backend;
-- collision solver, contacts, overlap signals, collision layers/masks в расчёте столкновений;
+- collision solver, contacts, shape-level overlap signals и точная narrow-phase проверка;
 - raycast, point query и shape query;
 - `CharacterBody2D` и kinematic solver;
 - production backend на Box2D.NET.

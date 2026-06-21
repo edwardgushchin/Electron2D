@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources and physics material resource. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource and `Area2D` overlap signals baseline. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -21,7 +21,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 
 | API | Godot analogue | Status | Notes |
 | --- | --- | --- | --- |
-| `Electron2D.Area2D` | `Area2D` | Partial | RID lifecycle, monitoring flags, priority and transform sync baseline; overlap signals and queries are planned. |
+| `Electron2D.Area2D` | `Area2D` | Partial | RID lifecycle, monitoring flags, priority, transform sync, AABB overlap snapshots, `body_entered`/`body_exited` and `area_entered`/`area_exited` signals. |
 | `Electron2D.AtlasTexture` | `AtlasTexture` | Partial | Atlas region resource with atlas, region, margin, filter clip and transparency delegation. |
 | `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission and deferred calls. |
 | `Electron2D.Camera2D` | `Camera2D` | Partial | Current 2D camera selection, target/center/rotation queries, offset, zoom and documented smoothing no-op baseline. |
