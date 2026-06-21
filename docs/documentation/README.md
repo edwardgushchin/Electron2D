@@ -37,6 +37,10 @@
 - [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - текущая ordinary .NET модель script classes, template sample и lifecycle/services checks.
 - [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - текущие публичные marker attributes и internal metadata bridge для export properties, signals и tool-state.
 
+## Ввод
+
+- [SDL input event mapping и Godot-like `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal SDL mapper для keyboard, mouse, wheel, text input и dispatch order.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.

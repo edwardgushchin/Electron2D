@@ -22,8 +22,45 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using SDL3;
+
 namespace Electron2D;
 
-public class InputEvent : Resource
+internal interface ISdlEventSource
 {
+    bool PollEvent(out SDL.Event sdlEvent);
+}
+
+internal sealed class SdlEventSource : ISdlEventSource
+{
+    public bool PollEvent(out SDL.Event sdlEvent)
+    {
+        return SDL.PollEvent(out sdlEvent);
+    }
+}
+
+internal static class SdlInputEventDispatcher
+{
+    public static int DispatchPending(SceneTree tree)
+    {
+        return DispatchPending(tree, new SdlEventSource());
+    }
+
+    public static int DispatchPending(SceneTree tree, ISdlEventSource source)
+    {
+        ArgumentNullException.ThrowIfNull(tree);
+        ArgumentNullException.ThrowIfNull(source);
+
+        var dispatched = 0;
+        while (source.PollEvent(out var sdlEvent))
+        {
+            foreach (var inputEvent in SdlInputEventMapper.Map(sdlEvent))
+            {
+                tree.DispatchInput(inputEvent);
+                dispatched++;
+            }
+        }
+
+        return dispatched;
+    }
 }

@@ -40,6 +40,10 @@
 - [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - обычная .NET C# модель script classes, lifecycle callbacks и доступ к сервисам движка.
 - [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - публичные Godot-like marker attributes и internal AOT-safe bridge для serialization/Inspector.
 
+## Ввод
+
+- [SDL input event mapping и Godot-like `InputEvent*`](input/sdl-input-event-mapping.md) - keyboard, mouse button, mouse motion, wheel, text input и порядок dispatch через `SceneTree`.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - серверная граница, `Standard`/`Compatibility` профили и feature flags.
