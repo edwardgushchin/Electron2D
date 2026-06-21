@@ -34,6 +34,12 @@ API-Compatibility.md
 - legacy/component API не существует в public surface;
 - planned Electron2D типы перечислены как `Planned`.
 
+## UI gate before Editor
+
+`Electron2D.Editor` нельзя начинать до отдельного UI public API gate. Этот gate считается закрытым только когда все UI-related public API строки в GitHub Wiki `API-Compatibility.md` переведены в `Supported` на основании фактической реализации, тестов, XML documentation, generated Wiki pages, спецификаций и документации реализации.
+
+Запрещено переводить UI rows из `Partial` в `Supported` только ради разблокировки редактора. Если для редактора, Project Manager, Inspector, dock UI, встроенного редактора кода или AI-friendly terminal panel не хватает публичного UI API, соответствующая задача должна оставаться заблокированной до реализации этого API в runtime.
+
 ## Запрещённый API
 
 Следующие имена не должны появляться в public surface новой реализации:

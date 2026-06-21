@@ -139,6 +139,12 @@ GitHub Wiki содержит:
 - planned 2D surface;
 - текущий public runtime surface.
 
+## UI gate before Editor
+
+Текущий UI public API ещё не является полным `Supported` surface для редактора. До начала реализации `Electron2D.Editor` должен быть закрыт отдельный UI public API gate: все UI-related строки в GitHub Wiki `API-Compatibility.md` должны соответствовать фактическому runtime API, иметь тесты, XML documentation, generated Wiki pages, спецификацию, документацию реализации и статус `Supported`, а не `Partial`.
+
+Если будущая editor-задача требует public UI type, property, method или event, которого ещё нет в runtime, такая editor-задача остаётся заблокированной. Нельзя разблокировать редактор простой заменой статуса в таблице совместимости без реализации и проверок.
+
 ## Локальная проверка
 
 ```powershell

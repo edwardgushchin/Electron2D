@@ -11,7 +11,7 @@
 
 - Создана: 2026-06-20T16:16:20+03:00
 - Приоритет: P0
-- Зависимости: T-0044, T-0081
+- Зависимости: T-0044, T-0081, T-0129
 - Ссылки:
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/scripting/`
@@ -49,6 +49,8 @@
 ### Заметки агента
 
 2026-06-21T17:18:00+03:00 - Уточнение пользователя: внешний IDE больше не нужен как часть задачи. Для написания скриптов нужен встроенный редактор кода в Electron2D Editor.
+
+2026-06-22T02:36:00+03:00 - Уточнение пользователя: задачи, требующие Electron2D Editor, нельзя начинать до полного UI public API gate `T-0129`. Встроенный редактор кода должен опираться на UI API со статусом `Supported`, а не на частичный runtime UI baseline.
 
 ## T-0066 [ ] P1: Подготовить data model для basic AnimationPlayer timeline в редакторе
 
@@ -265,7 +267,7 @@
 
 - Создана: 2026-06-20T16:16:20+03:00
 - Приоритет: P0
-- Зависимости: T-0067, T-0006
+- Зависимости: T-0129, T-0006
 - Ссылки:
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/editor/`
@@ -276,12 +278,15 @@
 
 Задача относится к домену «Electron2D.Editor». Цель - Создать проект `Electron2D.Editor`, который работает на Electron2D. Текущее состояние: проекта `Electron2D.Editor` пока нет, а релизная спецификация требует desktop-редактор, построенный на Electron2D без внешнего UI framework. Нужное поведение: результат должен закрыть релизный контракт `0.1.0 Preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: editor запускается на desktop без внешнего UI framework.
 
+Эта задача заблокирована до `T-0129`: публичный UI API должен быть полностью реализован и отражён в GitHub Wiki `API-Compatibility.md` как `Supported`, без `Partial` строк в UI-related surface. Нельзя начинать editor project, пока editor UI, dock layout, controls, text input, focus, theme/tooltips и editor-internal widgets требуют отсутствующего или частичного runtime UI API.
+
 Важное решение из документации: редактор первой версии обязан быть пригоден для реальной разработки, но не обязан повторять весь интерфейс Godot. Ограничение для агента: не переносить обязательные editor workflows во внешние инструменты, кроме разрешённого открытия C# во внешнем IDE. Не менять несвязанные файлы, не расширять scope за пределы `0.1.0 Preview`, не закрывать задачу без проверяемого результата и не подменять обязательные тесты или документацию устным утверждением.
 
 ### Критерии приёмки
 
 - [ ] Реализована или подготовлена цель задачи: Создать проект `Electron2D.Editor`, который работает на Electron2D.
 - [ ] editor запускается на desktop без внешнего UI framework.
+- [ ] До начала реализации закрыта `T-0129`, а UI public API в GitHub Wiki имеет статус `Supported`, не `Partial`.
 - [ ] Если задача меняет код, готова или обновлена спецификация в `docs/specifications/<domain>/`, соответствующая фактическому изменению.
 - [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.
 - [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, готова или обновлена справка в `docs/documentation/<domain>/` по фактическому результату изменения кода.
@@ -301,7 +306,7 @@
 
 ### Заметки агента
 
-Пусто до момента, когда агент возьмёт задачу в работу.
+2026-06-22T02:36:00+03:00 - Пользователь уточнил порядок: до редактора UI API должен быть реализован на 100% и иметь статус `Supported`, а не `Partial`. Эта задача теперь зависит от `T-0129`; не брать `T-0078` в работу до закрытия UI public API gate.
 
 ## T-0079 [ ] P0: Реализовать Project Manager: create/open project, recent projects, renderer profile и SDK check
 
@@ -1682,3 +1687,44 @@ Wiki остаётся, но одной Wiki недостаточно. Докум
 ### Заметки агента
 
 Создано из AI-friendly архитектурного файла: это отдельный критерий приёмки позиционирования Electron2D 0.1.
+
+## T-0129 [!] P0: Довести UI public API до полного статуса `Supported` перед началом редактора
+
+- Создана: 2026-06-22T02:36:00+03:00
+- Приоритет: P0
+- Зависимости: T-0068, T-0069, T-0070, T-0071, T-0106, T-0107
+- Ссылки:
+  - Спецификация: `docs/specifications/release-management/api-compatibility.md`; `docs/specifications/ui/`; `docs/specifications/releases/0.1.0-preview.md`
+  - Документация: `docs/documentation/release-management/api-compatibility.md`; `docs/documentation/ui/`; `.github/wiki/API-Compatibility.md`
+  - Исходный код: `src/Electron2D/Graphics/UI/`; `src/Electron2D/Graphics/Text/`; `tests/`
+
+### Самодостаточное описание
+
+Пользователь зафиксировал релизный порядок: прежде чем начинать `Electron2D.Editor`, публичный UI API должен быть реализован полностью для `0.1.0 Preview` и отражён в GitHub Wiki как `Supported`, а не `Partial`. Это gate-задача, которая закрывает UI surface после `Control` layout core, containers, basic controls, theme/tooltips и editor-internal controls.
+
+Задача не должна подменяться косметической правкой таблицы совместимости. Нужно сверить фактический public API, XML documentation, generated Wiki pages, tests, спецификации и документацию реализации. Если editor workflow, Project Manager, Inspector, dock UI, встроенный редактор кода или AI-friendly terminal panel требуют отсутствующий UI type/member, сначала нужно добавить этот API в runtime через соответствующую UI-задачу, а editor-задачу оставить заблокированной.
+
+### Критерии приёмки
+
+- [ ] Все UI-related public types, enum values, constructors, methods, properties, fields, events и delegates, нужные для редактора и UI-heavy acceptance game, реализованы в runtime.
+- [ ] Для UI API есть спецификации в `docs/specifications/ui/` и документация реализации в `docs/documentation/ui/`, соответствующие фактическому поведению.
+- [ ] UI API покрыт automated tests, включая layout, containers, focus, mouse/keyboard/gamepad/touch input, disabled/focused states, theme fallback, tooltips, text input и editor-internal controls.
+- [ ] Все UI-related строки в `.github/wiki/API-Compatibility.md` имеют статус `Supported`; в UI surface не осталось строк со статусом `Partial`.
+- [ ] `powershell -ExecutionPolicy Bypass -File tools\Verify-ApiCompatibility.ps1 -WikiPath .github\wiki\API-Compatibility.md` проходит.
+- [ ] `powershell -ExecutionPolicy Bypass -File tools\Update-ApiWiki.ps1 -OutputPath .github\wiki -Check` проходит.
+- [ ] `powershell -ExecutionPolicy Bypass -File tools\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github\wiki` проходит.
+- [ ] `powershell -ExecutionPolicy Bypass -File tools\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` проходит.
+- [ ] `powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1` проходит.
+- [ ] `T-0078` и зависящие от неё editor-задачи остаются заблокированными до закрытия этой задачи.
+
+### Подзадачи
+
+- [ ] Составить точный список UI-related public API rows из `.github/wiki/API-Compatibility.md`.
+- [ ] Сверить список с задачами `T-0068`, `T-0069`, `T-0070`, `T-0071` и добавить недостающие UI-задачи, если editor требует новый public API.
+- [ ] Проверить, что каждый UI public member имеет полноценную XML documentation.
+- [ ] Проверить, что generated GitHub Wiki pages выглядят как страницы API reference, а не как сырой markdown dump.
+- [ ] Перевести UI rows в `Supported` только после реализации, тестов, документации и verifier checks.
+
+### Заметки агента
+
+2026-06-22T02:36:00+03:00 - Создано по уточнению пользователя: UI API должен быть 100% готов до редактора. Не начинать `T-0078`, `T-0079`, `T-0080`, `T-0081`, `T-0082`, `T-0083`, `T-0084`, `T-0085`, `T-0086`, `T-0113` и связанные editor workflows, пока эта задача не закрыта.

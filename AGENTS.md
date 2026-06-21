@@ -62,6 +62,9 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Do not close or archive a task just because implementation is finished. Close/archive only after the user explicitly accepts it.
 - Completed tasks belong in `completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. Do not create one-file-per-task archives such as `completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
 
+## Release Sequencing
+- Do not start `Electron2D.Editor` implementation tasks until the UI public API gate is closed: all UI-related public API rows in GitHub Wiki `API-Compatibility.md` must be implemented, tested, documented, and marked `Supported`, not `Partial`. It is not enough to change compatibility labels; the underlying runtime API, XML comments, generated Wiki pages, specifications, implementation documentation, and automated checks must already match the `Supported` status.
+
 ## Development Diary
 - Every agent session that works in this repository must keep a development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product specifications, and must not be used as a future-work backlog.
 - Use the local date for the file path: `dev-diary/YYYY/MM Месяц/DD-MM-YYYY.md`, for example `dev-diary/2026/06 Июнь/21-06-2026.md`. `YYYY` is the local four-digit year. Month directory names use Russian month names.
