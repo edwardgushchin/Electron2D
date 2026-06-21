@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="SDL3-CS" Version="3.4.10.3" />
+    <PackageReference Include="SDL3-CS.Native.Shadercross" Version="3.0.0" />
     <PackageReference Include="SDL3-CS.Native.TTF" Version="3.3.0" />
   </ItemGroup>
 

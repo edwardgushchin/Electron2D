@@ -50,6 +50,8 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.ResourceUid`
 - `Electron2D.Rid`
 - `Electron2D.SceneTree`
+- `Electron2D.Shader`
+- `Electron2D.Shader+Mode`
 - `Electron2D.Sprite2D`
 - `Electron2D.StringName`
 - `Electron2D.Texture2D`

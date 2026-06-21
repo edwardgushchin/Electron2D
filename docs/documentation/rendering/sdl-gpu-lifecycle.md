@@ -11,6 +11,7 @@ Electron2D использует SDL3-CS как managed binding к SDL3/SDL_GPU. 
 Реализованный baseline закрывает:
 
 - закреплённую managed dependency `SDL3-CS` версии `3.4.10.3`;
+- shader import dependency `SDL3-CS.Native.Shadercross` версии `3.0.0`, добавленную в `T-0031` для import/export host;
 - internal adapter `SdlGpuApi` для `SDL_CreateGPUDevice`, `SDL_ClaimWindowForGPUDevice`, `SDL_AcquireGPUCommandBuffer`, `SDL_SubmitGPUCommandBuffer` и `SDL_DestroyGPUDevice`;
 - internal `SdlGpuRenderingBackend` со state machine device/window/frame/shutdown;
 - диагностический журнал событий lifecycle;

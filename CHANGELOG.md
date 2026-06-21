@@ -32,6 +32,7 @@
 - Immediate drawing baseline: public `CanvasItem._Draw()`, `QueueRedraw()`, `DrawLine()`, `DrawRect()`, `DrawCircle()`, `DrawPolygon()`, `DrawTexture()`, `DrawString()`, public `Font`/`HorizontalAlignment` и internal cached draw command submission.
 - Text backend baseline: public `Font` measurement API, `VerticalAlignment`, `Control`, `Label`, internal glyph layout, fallback font resolution, layout cache и SDL_ttf boundary через SDL3-CS.
 - Offscreen render target recovery baseline: public `ViewportTexture`, `Viewport.GetTexture()`, внутренние render target descriptors для кода движка и восстановление active texture resources после пересоздания device.
+- Canvas shader import baseline: public `Shader`, `Shader.Mode.CanvasItem`, import-time vertex/fragment compilation через SDL_shadercross boundary, diagnostics file/line/column и iOS artifact без runtime compilation.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -50,7 +51,7 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `43` публичных типа.
+- Runtime assembly экспортирует `45` публичных типа.
 - `0.1.0-preview` ещё не является готовым игровым runtime; дальнейшая реализация идёт задачами из `TASKS.md`.
 
 ### Breaking changes policy

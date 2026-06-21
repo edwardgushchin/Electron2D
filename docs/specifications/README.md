@@ -39,6 +39,7 @@
 - [Immediate drawing baseline](rendering/immediate-drawing-baseline.md) - public CanvasItem custom drawing callback, `QueueRedraw()` и immediate `Draw*` command capture.
 - [Text backend baseline через SDL_ttf](rendering/text-backend-baseline.md) - public `Font`/`Control`/`Label`, glyph layout, fallback font resolution и internal text layout cache.
 - [Offscreen render target и восстановление GPU resources](rendering/offscreen-render-target-recovery-baseline.md) - public `ViewportTexture`, internal render target descriptors и восстановление active GPU resources после device recreation.
+- [Canvas shaders import и diagnostics baseline](rendering/canvas-shader-import-baseline.md) - public `Shader`, import-time vertex/fragment stage compilation через SDL_shadercross boundary и diagnostics с file/line/column.
 
 ## Базовые типы
 
