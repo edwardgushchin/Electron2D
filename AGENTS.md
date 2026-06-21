@@ -23,6 +23,13 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Keep edits scoped to the requested behavior. Avoid unrelated refactors, formatting churn, dependency changes, and metadata churn unless they are necessary to complete the task safely.
 - Prefer structured parsers and project APIs over ad hoc text manipulation when the repository or standard toolchain provides them.
 
+## License Policy
+- Electron2D is distributed under the MIT License. Do not replace it with SDL's zlib license text: "SDL-like" for this repository means a full per-file license block at the top of source files, using Electron2D's MIT terms.
+- Every tracked hand-written C# source file (`*.cs`) in `src/`, `tests/`, and `templates/` must start with the project MIT header in `/* ... */` form.
+- Every tracked PowerShell source file (`*.ps1`) in `tools/` must start with the project MIT header in `<# ... #>` form.
+- Preserve existing license headers when editing source files. When creating a new source file, add the header before code or declarations.
+- Run `powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1` before staging or committing source changes.
+
 ## Worktree And Git Hygiene
 - In a Git repository, check worktree status before editing and again before finalizing when files changed.
 - Treat unknown changes as user work. Never revert, overwrite, or reformat unrelated changes unless the user explicitly asks.
