@@ -940,7 +940,7 @@
 
 Пусто до момента, когда агент возьмёт задачу в работу.
 
-## T-0091 [ ] P0: Реализовать Android arm64 export: APK debug, AAB release, signing, touch, lifecycle, orientation, safe area, GPU mobile profile and fallback
+## T-0091 [!] P0: Реализовать Android arm64 export: APK debug, AAB release, signing, touch, lifecycle, orientation, safe area, GPU mobile profile and fallback
 
 - Создана: 2026-06-20T16:16:20+03:00
 - Приоритет: P0
@@ -980,7 +980,12 @@
 
 ### Заметки агента
 
-Пусто до момента, когда агент возьмёт задачу в работу.
+2026-06-21T20:08:00+03:00 - Blocked по окружению, задача не завершена и не переносится в `completed-tasks/`. На текущем host установлен .NET Android workload, но `ANDROID_HOME`/`ANDROID_SDK_ROOT` не заданы, `adb` и `sdkmanager` не доступны в `PATH`, стандартные SDK locations не содержат `adb.exe`, подключённое Android-устройство или emulator не обнаружены. Критерий задачи требует real-device smoke для pause/resume, render, input, audio, resources и filesystem, поэтому закрывать задачу одним planner-слоем нельзя.
+
+Для разблокировки нужен один из вариантов:
+
+- настроить Android SDK/NDK и `adb` в `PATH`, подключить устройство Android arm64 с USB debugging или рабочий emulator;
+- либо явно изменить scope задачи на design-only/package-plan baseline без real-device smoke.
 
 ## T-0092 [ ] P0: Реализовать iOS arm64 export: Xcode project generation, Metal, touch, safe area, lifecycle and signing on macOS
 
