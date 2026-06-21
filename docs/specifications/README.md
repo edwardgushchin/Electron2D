@@ -37,6 +37,7 @@
 - [Canvas node submission baseline](rendering/canvas-node-submission-baseline.md) - public `CanvasItem`/`Node2D`/`Sprite2D`/`CanvasLayer` subset и internal sprite submission model.
 - [Camera2D, Viewport and presentation baseline](rendering/camera-viewport-presentation-baseline.md) - public camera/viewport subset, pixel snapping and internal presentation scaling plan.
 - [Immediate drawing baseline](rendering/immediate-drawing-baseline.md) - public CanvasItem custom drawing callback, `QueueRedraw()` и immediate `Draw*` command capture.
+- [Text backend baseline через SDL_ttf](rendering/text-backend-baseline.md) - public `Font`/`Control`/`Label`, glyph layout, fallback font resolution и internal text layout cache.
 
 ## Базовые типы
 

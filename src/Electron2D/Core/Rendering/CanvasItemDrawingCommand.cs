@@ -36,6 +36,7 @@ internal readonly struct CanvasItemDrawingCommand
         Texture2D? texture,
         Font? font,
         string text,
+        TextLayout? textLayout,
         HorizontalAlignment alignment,
         float textWidth,
         int fontSize,
@@ -54,6 +55,7 @@ internal readonly struct CanvasItemDrawingCommand
         Texture = texture;
         Font = font;
         Text = text;
+        TextLayout = textLayout;
         Alignment = alignment;
         TextWidth = textWidth;
         FontSize = fontSize;
@@ -81,6 +83,8 @@ internal readonly struct CanvasItemDrawingCommand
     public Font? Font { get; }
 
     public string Text { get; }
+
+    public TextLayout? TextLayout { get; }
 
     public HorizontalAlignment Alignment { get; }
 
@@ -115,6 +119,7 @@ internal readonly struct CanvasItemDrawingCommand
             texture: null,
             font: null,
             text: string.Empty,
+            textLayout: null,
             HorizontalAlignment.Left,
             textWidth: -1f,
             fontSize: 16,
@@ -142,6 +147,7 @@ internal readonly struct CanvasItemDrawingCommand
             texture: null,
             font: null,
             text: string.Empty,
+            textLayout: null,
             HorizontalAlignment.Left,
             textWidth: -1f,
             fontSize: 16,
@@ -170,6 +176,7 @@ internal readonly struct CanvasItemDrawingCommand
             texture: null,
             font: null,
             text: string.Empty,
+            textLayout: null,
             HorizontalAlignment.Left,
             textWidth: -1f,
             fontSize: 16,
@@ -196,6 +203,7 @@ internal readonly struct CanvasItemDrawingCommand
             texture,
             font: null,
             text: string.Empty,
+            textLayout: null,
             HorizontalAlignment.Left,
             textWidth: -1f,
             fontSize: 16,
@@ -222,6 +230,7 @@ internal readonly struct CanvasItemDrawingCommand
             texture,
             font: null,
             text: string.Empty,
+            textLayout: null,
             HorizontalAlignment.Left,
             textWidth: -1f,
             fontSize: 16,
@@ -241,16 +250,18 @@ internal readonly struct CanvasItemDrawingCommand
         int fontSize,
         Color modulate)
     {
+        var textLayout = font.GetTextLayout(text, alignment, width, fontSize);
         return new CanvasItemDrawingCommand(
             CanvasItemRenderCommandKind.String,
             position,
-            rect: default,
+            textLayout.GetDestinationRect(position),
             Array.Empty<Vector2>(),
             Array.Empty<Color>(),
             Array.Empty<Vector2>(),
             texture: null,
             font,
             text,
+            textLayout,
             alignment,
             width,
             fontSize,

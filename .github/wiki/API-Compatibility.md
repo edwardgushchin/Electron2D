@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, text/UI baseline and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -30,10 +30,12 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Collections.Dictionary` | `Godot.Collections.Dictionary` | Partial | Mutable reference-like Variant key/value map for the 0.1 closed Variant type set. |
 | `Electron2D.Color` | `Color` | Partial | RGBA value type baseline with arithmetic, interpolation, clamp and HTML conversion. |
 | `Electron2D.ConnectFlags` | `ConnectFlags` | Partial | Godot-like flag names are declared; advanced flag semantics are still planned. |
+| `Electron2D.Control` | `Control` | Partial | UI base node with position, size and minimal font theme overrides for text baseline. |
 | `Electron2D.Error` | `Error` | Partial | Minimal signal/runtime error result values. |
-| `Electron2D.Font` | `Font` | Partial | Base font resource required by `CanvasItem.DrawString`; concrete SDL_ttf loading/layout/cache remains planned. |
+| `Electron2D.Font` | `Font` | Partial | Base font resource with string measurement, glyph availability, fallback layout and internal cache. |
 | `Electron2D.HorizontalAlignment` | `HorizontalAlignment` | Partial | Godot-like horizontal alignment values used by text drawing APIs. |
 | `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
+| `Electron2D.Label` | `Label` | Partial | Single-line plain text control backed by theme font overrides and `CanvasItem.DrawString`. |
 | `Electron2D.Mathf` | `Mathf` | Partial | Basic constants, approximate comparison, clamp, interpolation, angle conversion, modulo and snapping helpers. |
 | `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()`, `CallDeferred()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |
 | `Electron2D.Node` | `Node` | Partial | Lifecycle, hierarchy, `Owner`, groups, reparent/move and `QueueFree()` baseline. |
@@ -59,6 +61,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Variant+Type` | `Variant.Type` | Partial | Closed 0.1 Variant type enum; 3D, Signal and packed arrays are intentionally excluded for now. |
 | `Electron2D.Vector2` | `Vector2` | Partial | Floating-point 2D vector baseline with arithmetic, length, dot/cross, interpolation and formatting. |
 | `Electron2D.Vector2I` | `Vector2I` | Partial | Integer 2D vector baseline with arithmetic, length, aspect and conversions. |
+| `Electron2D.VerticalAlignment` | `VerticalAlignment` | Partial | Godot-like vertical alignment values used by text controls. |
 | `Electron2D.Viewport` | `Viewport` | Partial | Runtime 2D viewport subset with current camera, visible rect, canvas transform, pixel snapping and root instance baseline. |
 
 ## Planned Godot-like 2D Surface

@@ -206,6 +206,7 @@ internal sealed class CanvasSubmissionContext
             texture: drawingCommand.Texture,
             font: drawingCommand.Font,
             text: drawingCommand.Text,
+            textLayout: drawingCommand.TextLayout,
             alignment: drawingCommand.Alignment,
             textWidth: drawingCommand.TextWidth,
             fontSize: drawingCommand.FontSize,
@@ -237,12 +238,22 @@ internal sealed class CanvasSubmissionContext
 
     private static Transform2D GetCanvasItemTransform(CanvasItem canvasItem)
     {
-        return canvasItem is Node2D node2D ? node2D.GlobalTransform : Transform2D.Identity;
+        return canvasItem switch
+        {
+            Node2D node2D => node2D.GlobalTransform,
+            Control control => control.GlobalTransform,
+            _ => Transform2D.Identity
+        };
     }
 
     private static float GetYSortPosition(CanvasItem canvasItem)
     {
-        return canvasItem is Node2D node2D ? node2D.GlobalPosition.Y : 0f;
+        return canvasItem switch
+        {
+            Node2D node2D => node2D.GlobalPosition.Y,
+            Control control => control.GlobalPosition.Y,
+            _ => 0f
+        };
     }
 
     private static Rect2 GetDrawingSourceRect(CanvasItemDrawingCommand drawingCommand)

@@ -98,7 +98,7 @@ Texture-backed commands receive a stable internal texture RID in the batch key. 
 ## Ограничения `T-0028`
 
 - Реальный SDL_GPU primitive renderer, shader/material handling and golden image raster output remain future renderer work.
-- `DrawString()` captures text commands but does not perform glyph layout or SDL_ttf rendering; that belongs to `T-0029`.
+- `DrawString()` text layout, fallback and cache belong to `T-0029`; real raster/GPU text drawing remains future renderer work.
 - `DrawTextureRect()`, `DrawTextureRectRegion()`, `DrawPolyline()`, `DrawMultiline()` and transform stack APIs are intentionally outside this baseline.
 - Public `PackedVector2Array`/`PackedColorArray` types are not introduced in this task; C# arrays are used for this preview signature.
 

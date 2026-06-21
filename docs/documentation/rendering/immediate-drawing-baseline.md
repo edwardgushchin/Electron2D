@@ -22,7 +22,7 @@
 - `Font`;
 - `HorizontalAlignment`.
 
-`Font` является abstract `Resource`. В текущем baseline он нужен для Godot-like signature и command capture; реальный SDL_ttf backend, glyph layout, fallback и cache остаются задачей `T-0029`.
+`Font` является abstract `Resource`. После `T-0029` `DrawString()` не ограничивается строковой заглушкой: он создаёт internal text layout с glyph records, fallback font resolution и cache. Реальный raster/GPU draw call остаётся будущей renderer-задачей.
 
 ## Redraw
 
@@ -53,7 +53,7 @@ Internal command stream поддерживает:
 
 `DrawTexture()` создаёт texture-backed command с source rect по размеру `Texture2D` и destination rect по указанной позиции.
 
-`DrawString()` создаёт text command с `Font`, text, baseline position, alignment, width и font size, но не выполняет glyph layout.
+`DrawString()` создаёт text command с `Font`, text, baseline position, alignment, width, font size и internal `TextLayout`. Layout содержит glyph positions, выбранные fallback fonts, basic RTL direction и measured destination rect.
 
 ## Golden Data
 
@@ -62,7 +62,7 @@ Internal command stream поддерживает:
 ## Ограничения
 
 - Реальный SDL_GPU primitive renderer ещё не реализован.
-- `DrawString()` не раскладывает glyphs и не обращается к SDL_ttf.
+- `DrawString()` создаёт layout, но real raster/GPU text draw call ещё не реализован.
 - `DrawTextureRect()`, `DrawTextureRectRegion()`, polyline/multiline draw methods и draw transform stack пока не реализованы.
 - Public packed arrays не введены; preview signature использует C# arrays для `DrawPolygon()`.
 
@@ -78,6 +78,6 @@ dotnet test tests\Electron2D.Tests.GoldenData\Electron2D.Tests.GoldenData.csproj
 
 Unit tests покрывают public guard вне `_Draw()` и public `Font`/`HorizontalAlignment`.
 
-Integration tests покрывают redraw coalescing, cached commands, draw diagnostics и submission для line/rect/circle/polygon/texture/string.
+Integration tests покрывают redraw coalescing, cached commands, draw diagnostics и submission для line/rect/circle/polygon/texture/string. Text-specific integration tests находятся в `TextLayoutSubmissionTests`.
 
 Golden-data tests покрывают стабильный primitive command stream.

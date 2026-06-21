@@ -51,10 +51,12 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Collections.Dictionary",
                 "Electron2D.Color",
                 "Electron2D.ConnectFlags",
+                "Electron2D.Control",
                 "Electron2D.Error",
                 "Electron2D.Font",
                 "Electron2D.HorizontalAlignment",
                 "Electron2D.InputEvent",
+                "Electron2D.Label",
                 "Electron2D.Mathf",
                 "Electron2D.Node",
                 "Electron2D.Node2D",
@@ -80,6 +82,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Variant+Type",
                 "Electron2D.Vector2",
                 "Electron2D.Vector2I",
+                "Electron2D.VerticalAlignment",
                 "Electron2D.Viewport"
             },
             publicTypeNames);

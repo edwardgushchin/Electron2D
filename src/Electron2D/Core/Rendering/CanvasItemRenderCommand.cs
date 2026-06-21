@@ -49,6 +49,7 @@ internal readonly struct CanvasItemRenderCommand
         Texture2D? texture = null,
         Font? font = null,
         string? text = null,
+        TextLayout? textLayout = null,
         HorizontalAlignment alignment = HorizontalAlignment.Left,
         float textWidth = -1f,
         int fontSize = 16,
@@ -89,6 +90,7 @@ internal readonly struct CanvasItemRenderCommand
         Texture = texture;
         Font = font;
         Text = text ?? string.Empty;
+        TextLayout = textLayout;
         Alignment = alignment;
         TextWidth = textWidth;
         FontSize = fontSize;
@@ -146,6 +148,8 @@ internal readonly struct CanvasItemRenderCommand
     public Font? Font { get; }
 
     public string Text { get; }
+
+    public TextLayout? TextLayout { get; }
 
     public HorizontalAlignment Alignment { get; }
 
