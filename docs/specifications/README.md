@@ -59,6 +59,7 @@
 - [Export preset model and toolchain validation](export/export-preset-model.md) - общий preset JSON, target/configuration model, signing references без секретов и fail-closed diagnostics.
 - [Windows x64 export](export/windows-x64-export.md) - self-contained `win-x64` package plan, локальный publish/run verifier и fail-closed validation.
 - [Linux x64 glibc export](export/linux-x64-export.md) - self-contained `linux-x64` package plan, glibc-only scope, WSL/Linux verifier и fail-closed validation.
+- [macOS arm64 export](export/macos-arm64-export.md) - self-contained `osx-arm64` `.app` bundle plan, x64 policy, user-provided signing plan и macOS verifier.
 
 ## Физика 2D
 

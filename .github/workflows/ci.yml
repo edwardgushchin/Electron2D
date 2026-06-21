@@ -60,6 +60,11 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-LinuxExport.ps1
 
+      - name: Verify macOS export
+        if: matrix.os == 'macos-latest'
+        shell: pwsh
+        run: ./tools/Verify-MacOSExport.ps1
+
       - name: Verify performance budgets
         shell: pwsh
         run: ./tools/Verify-PerformanceBudgets.ps1

@@ -58,6 +58,7 @@
 - Начальный export preset baseline: internal `export_presets.e2export.json`, deterministic preset round-trip, SDK/toolchain/signing reference validation и fail-closed diagnostics без signing, deploy или публикации.
 - Начальный Windows x64 export baseline: internal package plan для `win-x64`, Debug/Release, self-contained publish, window/fullscreen state, renderer profile и локальная проверка запуска exported reference scene.
 - Начальный Linux x64 glibc export baseline: internal package plan для `linux-x64`, Debug/Release, self-contained publish, Wayland/X11 desktop protocols, явный out-of-scope для musl/ARM runtime identifiers и локальная проверка запуска exported reference scene.
+- Начальный macOS arm64 export baseline: internal package plan для `osx-arm64`, Debug/Release, self-contained `.app` bundle, Metal-backed desktop backend, x64 policy, user-provided signing plan и macOS-only verifier exported reference scene.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
@@ -65,7 +66,7 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, macOS/mobile device export runs, Android device/export run, compatibility window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, metadata source generator, Project Settings UI, Input Map UI, production physics solver, production Box2D.NET backend, mobile physics AOT proof, contacts, gravity integration, rigid-rigid collision, material combine и запись geometry/material в production solver, editor script attach/external IDE workflow, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, mobile device export runs, Android device/export run, compatibility window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, metadata source generator, Project Settings UI, Input Map UI, production physics solver, production Box2D.NET backend, mobile physics AOT proof, contacts, gravity integration, rigid-rigid collision, material combine и запись geometry/material в production solver, editor script attach/code editor workflow, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

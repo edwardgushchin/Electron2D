@@ -46,6 +46,7 @@ $requiredFragments = @(
     'tools/Verify-ProjectTemplate.ps1',
     'tools/Verify-WindowsExport.ps1',
     'tools/Verify-LinuxExport.ps1',
+    'tools/Verify-MacOSExport.ps1',
     'tools/Verify-PerformanceBudgets.ps1',
     'mobile-export-status',
     'Android/iOS/mobile export'
@@ -71,6 +72,10 @@ if ($workflow.IndexOf("if: matrix.os == 'windows-latest'", [System.StringCompari
 
 if ($workflow.IndexOf("if: matrix.os == 'ubuntu-latest'", [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     throw 'CI workflow must run Linux export verification only on ubuntu-latest.'
+}
+
+if ($workflow.IndexOf("if: matrix.os == 'macos-latest'", [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'CI workflow must run macOS export verification only on macos-latest.'
 }
 
 Write-Host 'CI matrix verification passed.'
