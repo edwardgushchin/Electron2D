@@ -363,7 +363,7 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
         "API-UI-and-Text.md",
         "UI and Text",
         "UI controls, labels, fonts and text alignment values.",
-        type => Named(type, "Control", "FocusMode", "Label", "Font", "HorizontalAlignment", "MouseFilter", "VerticalAlignment")),
+        type => Named(type, "Control", "FocusMode", "GrowDirection", "Label", "Font", "HorizontalAlignment", "MouseFilter", "VerticalAlignment")),
     new ApiCategory(
         "API-Scripting-Metadata.md",
         "Scripting Metadata",

@@ -62,6 +62,9 @@ public sealed class TextPublicApiTests
         Assert.Equal(0, (int)Electron2D.FocusMode.None);
         Assert.Equal(1, (int)Electron2D.FocusMode.Click);
         Assert.Equal(2, (int)Electron2D.FocusMode.All);
+        Assert.Equal(0, (int)Electron2D.GrowDirection.Begin);
+        Assert.Equal(1, (int)Electron2D.GrowDirection.End);
+        Assert.Equal(2, (int)Electron2D.GrowDirection.Both);
 
         var font = new TestFont();
         var control = new Electron2D.Control
@@ -69,7 +72,17 @@ public sealed class TextPublicApiTests
             Position = new Electron2D.Vector2(4f, 5f),
             Size = new Electron2D.Vector2(120f, 32f),
             MouseFilter = Electron2D.MouseFilter.Pass,
-            FocusMode = Electron2D.FocusMode.Click
+            FocusMode = Electron2D.FocusMode.Click,
+            CustomMinimumSize = new Electron2D.Vector2(8f, 9f),
+            GrowHorizontal = Electron2D.GrowDirection.Begin,
+            GrowVertical = Electron2D.GrowDirection.Both,
+            ClipContents = true,
+            FocusNext = new Electron2D.NodePath("../next"),
+            FocusPrevious = new Electron2D.NodePath("../previous"),
+            FocusNeighborLeft = new Electron2D.NodePath("../left"),
+            FocusNeighborTop = new Electron2D.NodePath("../top"),
+            FocusNeighborRight = new Electron2D.NodePath("../right"),
+            FocusNeighborBottom = new Electron2D.NodePath("../bottom")
         };
 
         control.AddThemeFontOverride("font", font);
@@ -81,8 +94,21 @@ public sealed class TextPublicApiTests
         Assert.Equal(16, control.GetThemeFontSize("missing"));
         Assert.Equal(new Electron2D.Vector2(4f, 5f), control.Position);
         Assert.Equal(new Electron2D.Vector2(120f, 32f), control.Size);
+        Assert.Equal(new Electron2D.Vector2(8f, 9f), control.CustomMinimumSize);
+        Assert.Equal(new Electron2D.Vector2(8f, 9f), control.GetMinimumSize());
+        Assert.Equal(new Electron2D.Vector2(8f, 9f), control.GetCombinedMinimumSize());
+        Assert.Equal(new Electron2D.Rect2(new Electron2D.Vector2(4f, 5f), new Electron2D.Vector2(120f, 32f)), control.GetRect());
         Assert.Equal(Electron2D.MouseFilter.Pass, control.MouseFilter);
         Assert.Equal(Electron2D.FocusMode.Click, control.FocusMode);
+        Assert.Equal(Electron2D.GrowDirection.Begin, control.GrowHorizontal);
+        Assert.Equal(Electron2D.GrowDirection.Both, control.GrowVertical);
+        Assert.True(control.ClipContents);
+        Assert.Equal(new Electron2D.NodePath("../next"), control.FocusNext);
+        Assert.Equal(new Electron2D.NodePath("../previous"), control.FocusPrevious);
+        Assert.Equal(new Electron2D.NodePath("../left"), control.FocusNeighborLeft);
+        Assert.Equal(new Electron2D.NodePath("../top"), control.FocusNeighborTop);
+        Assert.Equal(new Electron2D.NodePath("../right"), control.FocusNeighborRight);
+        Assert.Equal(new Electron2D.NodePath("../bottom"), control.FocusNeighborBottom);
 
         var label = new Electron2D.Label
         {

@@ -82,6 +82,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.ExportAttribute",
                 "Electron2D.FocusMode",
                 "Electron2D.Font",
+                "Electron2D.GrowDirection",
                 "Electron2D.HorizontalAlignment",
                 "Electron2D.Input",
                 "Electron2D.InputEvent",

@@ -58,6 +58,10 @@
 - [Gamepad input baseline](input/gamepad-input.md) - текущие `JoyAxis`, `JoyButton`, `InputEventJoypad*`, connected gamepads, action bindings и vibration API.
 - [Mobile input baseline](input/mobile-input.md) - текущие `InputEventScreenTouch`, `InputEventScreenDrag`, mobile navigation, virtual keyboard, orientation и safe area state.
 
+## UI
+
+- [Control layout core](ui/control-layout-core.md) - текущие anchors/offsets, minimum size, grow direction, clipping hit-test и focus navigation baseline.
+
 ## Локализация и настройки
 
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - текущие `Translation`, `TranslationServer`, locale fallback и обновление `Label` после смены locale.

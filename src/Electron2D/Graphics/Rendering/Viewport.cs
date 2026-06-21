@@ -365,6 +365,11 @@ public class Viewport : Node
         var focusOwner = GetValidFocusOwner();
         if (focusOwner is not null)
         {
+            if (TryNavigateFocus(focusOwner, inputEvent))
+            {
+                return;
+            }
+
             focusOwner.DispatchGuiInput(inputEvent);
         }
     }
@@ -444,6 +449,32 @@ public class Viewport : Node
         return focusedControl;
     }
 
+    private bool TryNavigateFocus(Control focusOwner, InputEvent inputEvent)
+    {
+        if (inputEvent is not InputEventKey { Pressed: true } keyEvent)
+        {
+            return false;
+        }
+
+        var target = keyEvent.Keycode switch
+        {
+            Key.Tab when keyEvent.ShiftPressed => focusOwner.FindPrevValidFocus(),
+            Key.Tab => focusOwner.FindNextValidFocus(),
+            Key.Backtab => focusOwner.FindPrevValidFocus(),
+            Key.Left or Key.Up or Key.Right or Key.Down => focusOwner.FindFocusNeighborForKey(keyEvent.Keycode),
+            _ => null
+        };
+
+        if (target is null || ReferenceEquals(target, focusOwner))
+        {
+            return false;
+        }
+
+        GrabFocus(target);
+        inputHandled = true;
+        return true;
+    }
+
     private static bool IsPressEvent(InputEvent? inputEvent)
     {
         return inputEvent switch
@@ -457,6 +488,12 @@ public class Viewport : Node
     private static Control? FindMouseTarget(Node node, Vector2 position)
     {
         if (node is CanvasItem canvasItem && !canvasItem.IsVisibleInTree())
+        {
+            return null;
+        }
+
+        if (node is Control { ClipContents: true } clippingControl &&
+            !clippingControl.GetGlobalRect().HasPoint(position))
         {
             return null;
         }

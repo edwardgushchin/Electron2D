@@ -58,6 +58,10 @@
 - [Gamepad input baseline](input/gamepad-input.md) - connected devices, `InputEventJoypadButton`, `InputEventJoypadMotion`, action bindings, axis/button state и vibration API.
 - [Mobile input baseline](input/mobile-input.md) - touch events, mobile navigation, virtual keyboard, orientation и display safe area state.
 
+## UI
+
+- [Control layout core](ui/control-layout-core.md) - anchors/offsets, minimum size, grow direction, clipping hit-test и focus navigation baseline.
+
 ## Локализация и настройки
 
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - resource переводов, общий translation server, locale lookup, fallback и обновление UI после смены локали.

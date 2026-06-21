@@ -35,9 +35,9 @@ namespace Electron2D;
 /// focus ownership used by Electron2D UI nodes.
 /// </para>
 /// <para>
-/// Anchors, containers, keyboard navigation graphs and full widgets are later
-/// UI tasks, but the baseline input pipeline can already route mouse and
-/// focused keyboard events to controls.
+/// Anchors, offsets, minimum-size clamping, focus navigation and the baseline
+/// input pipeline are available in this preview. Containers and full widgets
+/// are implemented by later UI tasks.
 /// </para>
 /// </remarks>
 ///
@@ -79,11 +79,279 @@ public class Control : CanvasItem
 
     private readonly Dictionary<string, Font> fontOverrides = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> fontSizeOverrides = new(StringComparer.Ordinal);
+    private float anchorLeft;
+    private float anchorTop;
+    private float anchorRight;
+    private float anchorBottom;
+    private float offsetLeft;
+    private float offsetTop;
+    private float offsetRight;
+    private float offsetBottom;
+    private Vector2 customMinimumSize;
+
+    /// <summary>
+    /// Gets or sets the left anchor of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The left anchor as a fraction of the parent layout size.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The final left edge is calculated as the parent layout width multiplied
+    /// by this value, plus <see cref="OffsetLeft"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="OffsetLeft"/>
+    /// <seealso cref="AnchorRight"/>
+    public float AnchorLeft
+    {
+        get => anchorLeft;
+        set => anchorLeft = ValidateFinite(value, nameof(AnchorLeft));
+    }
+
+    /// <summary>
+    /// Gets or sets the top anchor of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The top anchor as a fraction of the parent layout size.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The final top edge is calculated as the parent layout height multiplied
+    /// by this value, plus <see cref="OffsetTop"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="OffsetTop"/>
+    /// <seealso cref="AnchorBottom"/>
+    public float AnchorTop
+    {
+        get => anchorTop;
+        set => anchorTop = ValidateFinite(value, nameof(AnchorTop));
+    }
+
+    /// <summary>
+    /// Gets or sets the right anchor of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The right anchor as a fraction of the parent layout size.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The final right edge is calculated as the parent layout width multiplied
+    /// by this value, plus <see cref="OffsetRight"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="OffsetRight"/>
+    /// <seealso cref="AnchorLeft"/>
+    public float AnchorRight
+    {
+        get => anchorRight;
+        set => anchorRight = ValidateFinite(value, nameof(AnchorRight));
+    }
+
+    /// <summary>
+    /// Gets or sets the bottom anchor of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The bottom anchor as a fraction of the parent layout size.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The final bottom edge is calculated as the parent layout height
+    /// multiplied by this value, plus <see cref="OffsetBottom"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="OffsetBottom"/>
+    /// <seealso cref="AnchorTop"/>
+    public float AnchorBottom
+    {
+        get => anchorBottom;
+        set => anchorBottom = ValidateFinite(value, nameof(AnchorBottom));
+    }
+
+    /// <summary>
+    /// Gets or sets the left offset of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The pixel offset applied to <see cref="AnchorLeft"/>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Offsets are expressed in the local coordinate space of the parent layout
+    /// rectangle.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AnchorLeft"/>
+    /// <seealso cref="OffsetRight"/>
+    public float OffsetLeft
+    {
+        get => offsetLeft;
+        set => offsetLeft = ValidateFinite(value, nameof(OffsetLeft));
+    }
+
+    /// <summary>
+    /// Gets or sets the top offset of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The pixel offset applied to <see cref="AnchorTop"/>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Offsets are expressed in the local coordinate space of the parent layout
+    /// rectangle.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AnchorTop"/>
+    /// <seealso cref="OffsetBottom"/>
+    public float OffsetTop
+    {
+        get => offsetTop;
+        set => offsetTop = ValidateFinite(value, nameof(OffsetTop));
+    }
+
+    /// <summary>
+    /// Gets or sets the right offset of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The pixel offset applied to <see cref="AnchorRight"/>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The right offset can be negative when the right edge should stay inset
+    /// from the parent layout rectangle.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AnchorRight"/>
+    /// <seealso cref="OffsetLeft"/>
+    public float OffsetRight
+    {
+        get => offsetRight;
+        set => offsetRight = ValidateFinite(value, nameof(OffsetRight));
+    }
+
+    /// <summary>
+    /// Gets or sets the bottom offset of this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The pixel offset applied to <see cref="AnchorBottom"/>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The bottom offset can be negative when the bottom edge should stay inset
+    /// from the parent layout rectangle.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AnchorBottom"/>
+    /// <seealso cref="OffsetTop"/>
+    public float OffsetBottom
+    {
+        get => offsetBottom;
+        set => offsetBottom = ValidateFinite(value, nameof(OffsetBottom));
+    }
 
     /// <summary>
     /// Gets or sets the local position of this control.
     /// </summary>
     ///
+    /// <value>
+    /// The top-left corner of the computed local rectangle.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Setting this property updates offsets while preserving anchors and the
+    /// current computed <see cref="Size"/>.
+    /// </para>
+    /// </remarks>
+    ///
     /// <threadsafety>
     /// This property is not synchronized. Mutate it on the main scene thread.
     /// </threadsafety>
@@ -91,22 +359,30 @@ public class Control : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    /// <remarks>
-    /// This property follows the validation and lifetime rules of its declaring type.
-    /// </remarks>
     ///
-    /// <value>
-    /// The current position value.
-    /// </value>
-    ///
-    /// <seealso cref="Control" />
-    ///
-    public Vector2 Position { get; set; } = Vector2.Zero;
+    /// <seealso cref="GetRect"/>
+    /// <seealso cref="GetGlobalRect"/>
+    public Vector2 Position
+    {
+        get => GetLocalRect().Position;
+        set => SetPositionCore(value, Size);
+    }
 
     /// <summary>
     /// Gets or sets the local size of this control.
     /// </summary>
     ///
+    /// <value>
+    /// The computed local rectangle size.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Setting this property is equivalent to calling
+    /// <see cref="SetSize(Vector2)"/>.
+    /// </para>
+    /// </remarks>
+    ///
     /// <threadsafety>
     /// This property is not synchronized. Mutate it on the main scene thread.
     /// </threadsafety>
@@ -114,17 +390,137 @@ public class Control : CanvasItem
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    /// <remarks>
-    /// This property follows the validation and lifetime rules of its declaring type.
-    /// </remarks>
+    ///
+    /// <seealso cref="SetSize(Vector2)"/>
+    /// <seealso cref="GetCombinedMinimumSize"/>
+    public Vector2 Size
+    {
+        get => GetLocalRect().Size;
+        set => SetSize(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the custom minimum size of this control.
+    /// </summary>
     ///
     /// <value>
-    /// The current size value.
+    /// The user-defined minimum size. Components must be finite and
+    /// non-negative.
     /// </value>
     ///
-    /// <seealso cref="Control" />
+    /// <remarks>
+    /// <para>
+    /// This value is combined with <see cref="_GetMinimumSize"/> by
+    /// <see cref="GetMinimumSize"/>.
+    /// </para>
+    /// </remarks>
     ///
-    public Vector2 Size { get; set; } = Vector2.Zero;
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when a component is negative or not finite.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="_GetMinimumSize"/>
+    /// <seealso cref="GetCombinedMinimumSize"/>
+    public Vector2 CustomMinimumSize
+    {
+        get => customMinimumSize;
+        set => customMinimumSize = ValidateMinimumSize(value, nameof(CustomMinimumSize));
+    }
+
+    /// <summary>
+    /// Gets or sets the horizontal grow direction used when minimum size expands this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The horizontal <see cref="GrowDirection"/>. The default is
+    /// <see cref="GrowDirection.End"/>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This value is used by <see cref="SetSize(Vector2)"/> and
+    /// <see cref="ResetSize"/> when the requested width is smaller than the
+    /// minimum width.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GrowVertical"/>
+    /// <seealso cref="GrowDirection"/>
+    public GrowDirection GrowHorizontal { get; set; } = GrowDirection.End;
+
+    /// <summary>
+    /// Gets or sets the vertical grow direction used when minimum size expands this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The vertical <see cref="GrowDirection"/>. The default is
+    /// <see cref="GrowDirection.End"/>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This value is used by <see cref="SetSize(Vector2)"/> and
+    /// <see cref="ResetSize"/> when the requested height is smaller than the
+    /// minimum height.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GrowHorizontal"/>
+    /// <seealso cref="GrowDirection"/>
+    public GrowDirection GrowVertical { get; set; } = GrowDirection.End;
+
+    /// <summary>
+    /// Gets or sets whether this control clips GUI hit-testing for its descendants.
+    /// </summary>
+    ///
+    /// <value>
+    /// <c>true</c> to prevent descendants from receiving pointer input outside
+    /// this control's global rectangle; otherwise, <c>false</c>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The 0.1.0 Preview baseline applies this flag to mouse and touch
+    /// dispatch. Renderer scissor integration is handled by later rendering
+    /// backend work.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetGlobalRect"/>
+    /// <seealso cref="MouseFilter"/>
+    public bool ClipContents { get; set; }
 
     /// <summary>
     /// Gets or sets how this control receives and consumes mouse input.
@@ -196,6 +592,170 @@ public class Control : CanvasItem
     public FocusMode FocusMode { get; set; } = FocusMode.None;
 
     /// <summary>
+    /// Gets or sets the explicit focus target used when navigating to the next control.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="NodePath"/> resolved from this control. The default value is
+    /// an empty path.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// <see cref="FindNextValidFocus"/> uses this path before falling back to
+    /// viewport tree order.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FocusPrevious"/>
+    /// <seealso cref="FindNextValidFocus"/>
+    public NodePath FocusNext { get; set; }
+
+    /// <summary>
+    /// Gets or sets the explicit focus target used when navigating to the previous control.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="NodePath"/> resolved from this control. The default value is
+    /// an empty path.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// <see cref="FindPrevValidFocus"/> uses this path before falling back to
+    /// viewport tree order.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FocusNext"/>
+    /// <seealso cref="FindPrevValidFocus"/>
+    public NodePath FocusPrevious { get; set; }
+
+    /// <summary>
+    /// Gets or sets the explicit focus target used for left-direction navigation.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="NodePath"/> resolved from this control. The default value is
+    /// an empty path.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Directional focus paths are used by the viewport keyboard navigation
+    /// baseline when arrow-key navigation is requested.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FocusNeighborRight"/>
+    public NodePath FocusNeighborLeft { get; set; }
+
+    /// <summary>
+    /// Gets or sets the explicit focus target used for top-direction navigation.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="NodePath"/> resolved from this control. The default value is
+    /// an empty path.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Directional focus paths are used by the viewport keyboard navigation
+    /// baseline when arrow-key navigation is requested.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FocusNeighborBottom"/>
+    public NodePath FocusNeighborTop { get; set; }
+
+    /// <summary>
+    /// Gets or sets the explicit focus target used for right-direction navigation.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="NodePath"/> resolved from this control. The default value is
+    /// an empty path.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Directional focus paths are used by the viewport keyboard navigation
+    /// baseline when arrow-key navigation is requested.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FocusNeighborLeft"/>
+    public NodePath FocusNeighborRight { get; set; }
+
+    /// <summary>
+    /// Gets or sets the explicit focus target used for bottom-direction navigation.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="NodePath"/> resolved from this control. The default value is
+    /// an empty path.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Directional focus paths are used by the viewport keyboard navigation
+    /// baseline when arrow-key navigation is requested.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FocusNeighborTop"/>
+    public NodePath FocusNeighborBottom { get; set; }
+
+    /// <summary>
     /// Called when a GUI input event is delivered to this control.
     /// </summary>
     ///
@@ -230,6 +790,314 @@ public class Control : CanvasItem
     /// <seealso cref="FocusMode"/>
     public virtual void _GuiInput(InputEvent inputEvent)
     {
+    }
+
+    /// <summary>
+    /// Called to compute the control-specific minimum size.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The minimum size requested by this control implementation.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Derived controls can override this method to reserve space for text,
+    /// textures or other content. Negative or non-finite components returned
+    /// by an override are treated as <c>0</c>.
+    /// </para>
+    /// <para>
+    /// User code should normally call <see cref="GetMinimumSize"/> or
+    /// <see cref="GetCombinedMinimumSize"/> instead of calling this method
+    /// directly.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. It is called on the main scene thread
+    /// during layout calculations.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="CustomMinimumSize"/>
+    /// <seealso cref="GetMinimumSize"/>
+    public virtual Vector2 _GetMinimumSize()
+    {
+        return Vector2.Zero;
+    }
+
+    /// <summary>
+    /// Gets the local rectangle occupied by this control.
+    /// </summary>
+    ///
+    /// <returns>
+    /// A <see cref="Rect2"/> containing <see cref="Position"/> and
+    /// <see cref="Size"/>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The rectangle is computed from anchors and offsets against the current
+    /// parent layout size.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetGlobalRect"/>
+    /// <seealso cref="AnchorLeft"/>
+    public Rect2 GetRect()
+    {
+        ThrowIfFreed();
+        return GetLocalRect();
+    }
+
+    /// <summary>
+    /// Gets the rectangle occupied by this control in root viewport coordinates.
+    /// </summary>
+    ///
+    /// <returns>
+    /// A <see cref="Rect2"/> containing the global position and computed
+    /// <see cref="Size"/>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Parent <see cref="Control"/> positions are accumulated. A
+    /// <see cref="Node2D"/> parent applies its global transform to the local
+    /// position baseline.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetRect"/>
+    /// <seealso cref="Position"/>
+    public Rect2 GetGlobalRect()
+    {
+        ThrowIfFreed();
+        return new Rect2(GlobalPosition, Size);
+    }
+
+    /// <summary>
+    /// Gets the minimum size requested by this control.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The component-wise maximum of <see cref="CustomMinimumSize"/> and
+    /// <see cref="_GetMinimumSize"/>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This method is the minimum-size baseline used before container and theme
+    /// contributions are introduced.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="_GetMinimumSize"/>
+    /// <seealso cref="GetCombinedMinimumSize"/>
+    public Vector2 GetMinimumSize()
+    {
+        ThrowIfFreed();
+        return CustomMinimumSize.Max(SanitizeMinimumSize(_GetMinimumSize()));
+    }
+
+    /// <summary>
+    /// Gets the minimum size used by layout calculations.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The combined minimum size for this control.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// In the 0.1.0 Preview layout baseline this is the same value as
+    /// <see cref="GetMinimumSize"/>. Future container and theme work can add
+    /// style contributions without changing the public call site.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetMinimumSize"/>
+    /// <seealso cref="SetSize(Vector2)"/>
+    public Vector2 GetCombinedMinimumSize()
+    {
+        ThrowIfFreed();
+        return GetMinimumSize();
+    }
+
+    /// <summary>
+    /// Sets the computed size of this control.
+    /// </summary>
+    ///
+    /// <param name="size">
+    /// The requested size in local coordinates.
+    /// </param>
+    ///
+    /// <remarks>
+    /// <para>
+    /// If <paramref name="size"/> is smaller than
+    /// <see cref="GetCombinedMinimumSize"/>, this method grows the final
+    /// rectangle according to <see cref="GrowHorizontal"/> and
+    /// <see cref="GrowVertical"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when a component of <paramref name="size"/> is negative or not
+    /// finite.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Size"/>
+    /// <seealso cref="ResetSize"/>
+    public void SetSize(Vector2 size)
+    {
+        ThrowIfFreed();
+        var requestedSize = ValidateMinimumSize(size, nameof(size));
+        var currentPosition = Position;
+        var minimumSize = GetCombinedMinimumSize();
+        var finalSize = requestedSize.Max(minimumSize);
+        var adjustedPosition = new Vector2(
+            AdjustPositionForGrowth(currentPosition.X, requestedSize.X, finalSize.X, GrowHorizontal),
+            AdjustPositionForGrowth(currentPosition.Y, requestedSize.Y, finalSize.Y, GrowVertical));
+
+        SetPositionCore(adjustedPosition, finalSize);
+    }
+
+    /// <summary>
+    /// Resets this control size to its combined minimum size.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The current <see cref="GrowHorizontal"/> and <see cref="GrowVertical"/>
+    /// values decide whether the beginning side, ending side or both sides move
+    /// while the rectangle changes.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SetSize(Vector2)"/>
+    /// <seealso cref="GetCombinedMinimumSize"/>
+    public void ResetSize()
+    {
+        ThrowIfFreed();
+        SetSize(GetCombinedMinimumSize());
+    }
+
+    /// <summary>
+    /// Finds the next focusable control in this viewport.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The explicit <see cref="FocusNext"/> target when it is valid; otherwise,
+    /// the next focusable control in viewport tree order, or <c>null</c> when no
+    /// valid control exists.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Controls are valid focus targets only when they are inside the same
+    /// <see cref="Viewport"/>, visible in tree and have <see cref="FocusMode"/>
+    /// set to a value other than <see cref="Electron2D.FocusMode.None"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FindPrevValidFocus"/>
+    /// <seealso cref="FocusNext"/>
+    public Control? FindNextValidFocus()
+    {
+        ThrowIfFreed();
+        return FindExplicitFocus(FocusNext) ?? FindFocusByTreeOrder(forward: true);
+    }
+
+    /// <summary>
+    /// Finds the previous focusable control in this viewport.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The explicit <see cref="FocusPrevious"/> target when it is valid;
+    /// otherwise, the previous focusable control in viewport tree order, or
+    /// <c>null</c> when no valid control exists.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Controls are valid focus targets only when they are inside the same
+    /// <see cref="Viewport"/>, visible in tree and have <see cref="FocusMode"/>
+    /// set to a value other than <see cref="Electron2D.FocusMode.None"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="FindNextValidFocus"/>
+    /// <seealso cref="FocusPrevious"/>
+    public Control? FindPrevValidFocus()
+    {
+        ThrowIfFreed();
+        return FindExplicitFocus(FocusPrevious) ?? FindFocusByTreeOrder(forward: false);
     }
 
     /// <summary>
@@ -517,7 +1385,7 @@ public class Control : CanvasItem
             Size.X > 0f &&
             Size.Y > 0f &&
             IsVisibleInTree() &&
-            new Rect2(GlobalPosition, Size).HasPoint(globalPosition);
+            GetGlobalRect().HasPoint(globalPosition);
     }
 
     internal bool CanReceiveFocus(Viewport viewport)
@@ -533,5 +1401,154 @@ public class Control : CanvasItem
     {
         ArgumentNullException.ThrowIfNull(inputEvent);
         GetTree()?.InvokeUserCallback(this, nameof(_GuiInput), () => _GuiInput(inputEvent));
+    }
+
+    internal Control? FindFocusNeighborForKey(Key key)
+    {
+        return key switch
+        {
+            Key.Left => FindExplicitFocus(FocusNeighborLeft),
+            Key.Up => FindExplicitFocus(FocusNeighborTop),
+            Key.Right => FindExplicitFocus(FocusNeighborRight),
+            Key.Down => FindExplicitFocus(FocusNeighborBottom),
+            _ => null
+        };
+    }
+
+    private Rect2 GetLocalRect()
+    {
+        var parentSize = GetParentLayoutSize();
+        var left = (parentSize.X * anchorLeft) + offsetLeft;
+        var top = (parentSize.Y * anchorTop) + offsetTop;
+        var right = (parentSize.X * anchorRight) + offsetRight;
+        var bottom = (parentSize.Y * anchorBottom) + offsetBottom;
+        return new Rect2(new Vector2(left, top), new Vector2(right - left, bottom - top));
+    }
+
+    private Vector2 GetParentLayoutSize()
+    {
+        return GetParent() switch
+        {
+            Control control => control.Size,
+            Viewport viewport => new Vector2(viewport.Size.X, viewport.Size.Y),
+            _ => GetViewport() is { } viewport ? new Vector2(viewport.Size.X, viewport.Size.Y) : Vector2.Zero
+        };
+    }
+
+    private void SetPositionCore(Vector2 position, Vector2 size)
+    {
+        ValidateFinite(position.X, nameof(position));
+        ValidateFinite(position.Y, nameof(position));
+        ValidateMinimumSize(size, nameof(size));
+
+        var parentSize = GetParentLayoutSize();
+        offsetLeft = position.X - (parentSize.X * anchorLeft);
+        offsetTop = position.Y - (parentSize.Y * anchorTop);
+        offsetRight = position.X + size.X - (parentSize.X * anchorRight);
+        offsetBottom = position.Y + size.Y - (parentSize.Y * anchorBottom);
+    }
+
+    private Control? FindExplicitFocus(NodePath path)
+    {
+        if (path.IsEmpty())
+        {
+            return null;
+        }
+
+        var viewport = GetViewport();
+        if (viewport is null)
+        {
+            return null;
+        }
+
+        return GetNodeOrNull(path) is Control control && control.CanReceiveFocus(viewport)
+            ? control
+            : null;
+    }
+
+    private Control? FindFocusByTreeOrder(bool forward)
+    {
+        var viewport = GetViewport();
+        if (viewport is null)
+        {
+            return null;
+        }
+
+        var controls = new List<Control>();
+        CollectFocusableControls(viewport, viewport, controls);
+        if (controls.Count == 0)
+        {
+            return null;
+        }
+
+        var index = controls.FindIndex(control => ReferenceEquals(control, this));
+        if (index < 0)
+        {
+            return controls[0];
+        }
+
+        var nextIndex = forward
+            ? (index + 1) % controls.Count
+            : (index - 1 + controls.Count) % controls.Count;
+        return controls[nextIndex];
+    }
+
+    private static void CollectFocusableControls(Node node, Viewport viewport, List<Control> controls)
+    {
+        if (node is Control control && control.CanReceiveFocus(viewport))
+        {
+            controls.Add(control);
+        }
+
+        foreach (var child in node.GetChildrenSnapshot())
+        {
+            CollectFocusableControls(child, viewport, controls);
+        }
+    }
+
+    private static Vector2 SanitizeMinimumSize(Vector2 size)
+    {
+        return new Vector2(SanitizeMinimumComponent(size.X), SanitizeMinimumComponent(size.Y));
+    }
+
+    private static Vector2 ValidateMinimumSize(Vector2 size, string parameterName)
+    {
+        if (!Mathf.IsFinite(size.X) || size.X < 0f ||
+            !Mathf.IsFinite(size.Y) || size.Y < 0f)
+        {
+            throw new ArgumentOutOfRangeException(parameterName, size, "Size components must be finite and non-negative.");
+        }
+
+        return size;
+    }
+
+    private static float SanitizeMinimumComponent(float value)
+    {
+        return Mathf.IsFinite(value) && value > 0f ? value : 0f;
+    }
+
+    private static float AdjustPositionForGrowth(
+        float position,
+        float requestedSize,
+        float finalSize,
+        GrowDirection growDirection)
+    {
+        var extraSize = finalSize - requestedSize;
+        return growDirection switch
+        {
+            GrowDirection.Begin => position - extraSize,
+            GrowDirection.Both => position - (extraSize / 2f),
+            _ => position
+        };
+    }
+
+    private static float ValidateFinite(float value, string parameterName)
+    {
+        if (!Mathf.IsFinite(value))
+        {
+            throw new ArgumentOutOfRangeException(parameterName, value, "Value must be finite.");
+        }
+
+        return value;
     }
 }
