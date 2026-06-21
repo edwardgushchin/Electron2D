@@ -24,12 +24,8 @@
 */
 namespace Electron2D;
 
-internal enum TextureResourceEventKind
+internal enum TextureResourceUsage
 {
-    Uploaded = 0,
-    Reloaded = 1,
-    Released = 2,
-    Error = 3,
-    RenderTargetCreated = 4,
-    Restored = 5
+    Sampled = 0,
+    RenderTarget = 1
 }

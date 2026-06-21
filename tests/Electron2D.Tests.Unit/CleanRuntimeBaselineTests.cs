@@ -83,7 +83,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Vector2",
                 "Electron2D.Vector2I",
                 "Electron2D.VerticalAlignment",
-                "Electron2D.Viewport"
+                "Electron2D.Viewport",
+                "Electron2D.ViewportTexture"
             },
             publicTypeNames);
 

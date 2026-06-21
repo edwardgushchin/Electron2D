@@ -60,6 +60,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Vector2I`
 - `Electron2D.VerticalAlignment`
 - `Electron2D.Viewport`
+- `Electron2D.ViewportTexture`
 
 Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в Godot-like форме.
 

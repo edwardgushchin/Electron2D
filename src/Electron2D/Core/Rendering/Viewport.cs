@@ -47,6 +47,7 @@ namespace Electron2D;
 public class Viewport : Node
 {
     private Camera2D? currentCamera;
+    private ViewportTexture? viewportTexture;
 
     /// <summary>
     /// Gets or sets the viewport size in pixels.
@@ -150,6 +151,36 @@ public class Viewport : Node
     {
         ThrowIfFreed();
         return new Rect2(0f, 0f, Size.X, Size.Y);
+    }
+
+    /// <summary>
+    /// Gets the dynamic texture that represents this viewport.
+    /// </summary>
+    ///
+    /// <returns>
+    /// A <see cref="ViewportTexture" /> bound to this viewport. The same
+    /// instance is returned on later calls.
+    /// </returns>
+    /// <remarks>
+    /// The returned texture reflects the current <see cref="Size" /> when its
+    /// metadata is queried. Electron2D 0.1.0 Preview exposes the Godot-like
+    /// resource object before exposing public image readback or GPU handles.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ViewportTexture" />
+    public ViewportTexture GetTexture()
+    {
+        ThrowIfFreed();
+        viewportTexture ??= new ViewportTexture(this);
+        return viewportTexture;
     }
 
     internal void SetCurrentCamera(Camera2D camera)

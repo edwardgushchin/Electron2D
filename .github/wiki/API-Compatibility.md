@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, text/UI baseline and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, texture/viewport, text/UI baseline and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -63,6 +63,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Vector2I` | `Vector2I` | Partial | Integer 2D vector baseline with arithmetic, length, aspect and conversions. |
 | `Electron2D.VerticalAlignment` | `VerticalAlignment` | Partial | Godot-like vertical alignment values used by text controls. |
 | `Electron2D.Viewport` | `Viewport` | Partial | Runtime 2D viewport subset with current camera, visible rect, canvas transform, pixel snapping and root instance baseline. |
+| `Electron2D.ViewportTexture` | `ViewportTexture` | Partial | Dynamic viewport texture returned by `Viewport.GetTexture()` with scene-local texture metadata. |
 
 ## Planned Godot-like 2D Surface
 

@@ -1,7 +1,7 @@
 # Camera2D, Viewport and presentation baseline
 
 Статус: реализовано.
-Задача: `T-0027`.
+Задача: `T-0027`, обновлено в `T-0030`.
 Обновлено: 2026-06-21.
 
 ## Public API
@@ -9,7 +9,8 @@
 В runtime добавлены Godot-like public nodes:
 
 - `Camera2D`;
-- `Viewport`.
+- `Viewport`;
+- `ViewportTexture` через `Viewport.GetTexture()`.
 
 `Camera2D` наследуется от `Node2D` и добавляет:
 
@@ -34,7 +35,8 @@
 - `Snap2DTransformsToPixel`;
 - `Snap2DVerticesToPixel`;
 - `GetCamera2D()`;
-- `GetVisibleRect()`.
+- `GetVisibleRect()`;
+- `GetTexture()`.
 
 `SceneTree.Root` остаётся публично типизированным как `Node`, но фактический объект root теперь является `Viewport` с именем `root`.
 
@@ -60,6 +62,8 @@
 ## Viewport
 
 `Viewport.GetVisibleRect()` возвращает `Rect2`, начинающийся в `(0, 0)` и имеющий размер `Viewport.Size`.
+
+`Viewport.GetTexture()` возвращает связанный `ViewportTexture`. Одна и та же texture instance возвращается повторно для одного viewport. `ViewportTexture` наследуется от `Texture2D`, помечается как scene-local resource и отражает текущий `Viewport.Size`.
 
 `Viewport.CanvasTransform` применяется к canvas submission перед camera transform.
 
@@ -128,6 +132,6 @@ dotnet test tests\Electron2D.Tests.Unit\Electron2D.Tests.Unit.csproj --no-restor
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --no-restore
 ```
 
-Unit tests покрывают defaults, screen queries, current-camera lifecycle, `SceneTree.Root` как `Viewport`, visible rect и invalid zoom.
+Unit tests покрывают defaults, screen queries, current-camera lifecycle, `SceneTree.Root` как `Viewport`, visible rect, `ViewportTexture` metadata и invalid zoom.
 
-Integration tests покрывают camera transform в sprite submission, transform/vertex pixel snapping без mutation nodes, fractional canvas-items presentation и integer high-DPI viewport presentation.
+Integration tests покрывают camera transform в sprite submission, transform/vertex pixel snapping без mutation nodes, fractional canvas-items presentation, integer high-DPI viewport presentation и внутреннее восстановление render target resources после пересоздания device.

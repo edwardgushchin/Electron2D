@@ -22,14 +22,34 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-namespace Electron2D;
+using Xunit;
 
-internal enum TextureResourceEventKind
+namespace Electron2D.Tests.Unit;
+
+public sealed class ViewportTexturePublicApiTests
 {
-    Uploaded = 0,
-    Reloaded = 1,
-    Released = 2,
-    Error = 3,
-    RenderTargetCreated = 4,
-    Restored = 5
+    [Fact]
+    public void ViewportGetTextureReturnsSceneLocalViewportTexture()
+    {
+        var viewport = new Electron2D.Viewport { Size = new Electron2D.Vector2I(320, 180) };
+
+        var texture = viewport.GetTexture();
+
+        Assert.IsType<Electron2D.ViewportTexture>(texture);
+        Assert.Same(texture, viewport.GetTexture());
+        Assert.True(typeof(Electron2D.Texture2D).IsAssignableFrom(typeof(Electron2D.ViewportTexture)));
+        Assert.True(texture.ResourceLocalToScene);
+        Assert.Equal(320, texture.GetWidth());
+        Assert.Equal(180, texture.GetHeight());
+        Assert.Equal(new Electron2D.Vector2(320f, 180f), texture.GetSize());
+        Assert.True(texture.HasAlpha());
+        Assert.False(texture.HasMipmaps());
+        Assert.Equal(0, texture.GetMipmapCount());
+        Assert.False(texture.IsPixelOpaque(0, 0));
+
+        viewport.Size = new Electron2D.Vector2I(640, 360);
+
+        Assert.Equal(640, texture.GetWidth());
+        Assert.Equal(360, texture.GetHeight());
+    }
 }

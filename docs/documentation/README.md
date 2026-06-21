@@ -33,6 +33,7 @@
 - [Texture2D resource baseline](rendering/texture-resource-baseline.md) - текущие public `Texture2D`/`AtlasTexture` и internal texture lifetime registry.
 - [Canvas node submission baseline](rendering/canvas-node-submission-baseline.md) - текущие public `CanvasItem`/`Node2D`/`Sprite2D`/`CanvasLayer` и internal sprite submission model.
 - [Camera2D, Viewport and presentation baseline](rendering/camera-viewport-presentation-baseline.md) - текущие public `Camera2D`/`Viewport`, camera transform, pixel snapping и internal presentation plan.
+- [Offscreen render target и восстановление GPU resources](rendering/offscreen-render-target-recovery-baseline.md) - текущие public `ViewportTexture`, `Viewport.GetTexture()` и внутреннее восстановление active texture resources после пересоздания device.
 - [Immediate drawing baseline](rendering/immediate-drawing-baseline.md) - текущие `_Draw()`, `QueueRedraw()`, `DrawLine()`/`DrawRect()`/`DrawCircle()`/`DrawPolygon()`/`DrawTexture()`/`DrawString()` и internal command capture.
 - [Text backend baseline через SDL_ttf](rendering/text-backend-baseline.md) - текущие public `Font`/`Control`/`Label`, glyph layout, fallback font resolution, internal cache и SDL_ttf boundary.
 

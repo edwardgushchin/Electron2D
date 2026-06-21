@@ -1,7 +1,7 @@
 # Texture2D resource baseline
 
 Статус: реализовано.
-Задача: `T-0025`.
+Задача: `T-0025`, обновлено в `T-0030`.
 Обновлено: 2026-06-21.
 
 ## Public API
@@ -9,7 +9,8 @@
 В runtime добавлены Godot-like public ресурсы:
 
 - `Texture2D`;
-- `AtlasTexture`.
+- `AtlasTexture`;
+- `ViewportTexture` через отдельный baseline [Offscreen render target и восстановление GPU resources](offscreen-render-target-recovery-baseline.md).
 
 `Texture2D` является abstract base resource. Он предоставляет:
 
@@ -38,16 +39,20 @@
 
 ## Internal Lifetime Registry
 
-Internal `TextureResourceRegistry` управляет upload/reload/release lifecycle через `ITextureGpuApi`.
+Internal `TextureResourceRegistry` управляет upload/reload/release lifecycle через `ITextureGpuApi`. В этом документе `internal` означает код движка, доступный тестам и будущему runtime/editor host, но не пользовательский public API.
 
 Registry хранит active texture handles, пишет события:
 
 - `Uploaded`;
 - `Reloaded`;
 - `Released`;
+- `RenderTargetCreated`;
+- `Restored`;
 - `Error`.
 
-`LeakCount` равен количеству active handles, которые ещё не были release. Runtime smoke test проверяет цикл upload -> reload -> release и ожидает `LeakCount == 0`.
+`LeakCount` равен количеству active handles, которые ещё не были release. Runtime smoke tests проверяют циклы upload -> reload -> release и upload -> render target -> restore -> release, ожидая `LeakCount == 0`.
+
+Начиная с `T-0030`, registry также создаёт offscreen render targets через `CreateRenderTarget()` и восстанавливает active texture resources после пересоздания device через `RestoreAfterDeviceLoss()`. Подробности описаны в [Offscreen render target и восстановление GPU resources](offscreen-render-target-recovery-baseline.md).
 
 ## Sampling Descriptor
 
@@ -69,4 +74,4 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 dotnet test tests\Electron2D.Tests.RuntimeSmoke\Electron2D.Tests.RuntimeSmoke.csproj --no-restore
 ```
 
-Они проверяют public metadata/atlas behavior, internal upload/reload/release registry, atlas upload descriptor, failed upload cleanup, unknown handle rejection и no-leak smoke cycle.
+Они проверяют public metadata/atlas/viewport texture behavior, internal upload/reload/release registry, atlas upload descriptor, failed upload cleanup, unknown handle rejection, render target descriptor, restore path и no-leak smoke cycles.

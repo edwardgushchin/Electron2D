@@ -35,7 +35,8 @@ internal readonly struct TextureUploadDescriptor
         Rect2 sourceRegion,
         Rect2 margin,
         bool filterClip,
-        TextureSamplingOptions sampling)
+        TextureSamplingOptions sampling,
+        TextureResourceUsage usage = TextureResourceUsage.Sampled)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(width);
         ArgumentOutOfRangeException.ThrowIfNegative(height);
@@ -50,6 +51,7 @@ internal readonly struct TextureUploadDescriptor
         Margin = margin;
         FilterClip = filterClip;
         Sampling = sampling;
+        Usage = usage;
     }
 
     public int Width { get; }
@@ -69,6 +71,8 @@ internal readonly struct TextureUploadDescriptor
     public bool FilterClip { get; }
 
     public TextureSamplingOptions Sampling { get; }
+
+    public TextureResourceUsage Usage { get; }
 
     public static TextureUploadDescriptor FromTexture(Texture2D texture, TextureSamplingOptions sampling)
     {
@@ -96,6 +100,25 @@ internal readonly struct TextureUploadDescriptor
             sourceRegion,
             margin,
             filterClip,
-            sampling);
+            sampling,
+            TextureResourceUsage.Sampled);
+    }
+
+    public static TextureUploadDescriptor ForRenderTarget(
+        Vector2I size,
+        bool hasAlpha,
+        TextureSamplingOptions sampling)
+    {
+        return new TextureUploadDescriptor(
+            size.X,
+            size.Y,
+            hasAlpha,
+            hasMipmaps: false,
+            mipmapCount: 0,
+            new Rect2(0f, 0f, size.X, size.Y),
+            default,
+            filterClip: false,
+            sampling,
+            TextureResourceUsage.RenderTarget);
     }
 }

@@ -26,7 +26,7 @@ namespace Electron2D;
 
 internal sealed class TextureResourceRegistry
 {
-    private readonly ITextureGpuApi api;
+    private ITextureGpuApi api;
     private readonly RidAllocator allocator = new();
     private readonly Dictionary<Rid, TextureUploadDescriptor> activeTextures = new();
     private readonly List<TextureResourceEvent> events = new();
@@ -61,6 +61,26 @@ internal sealed class TextureResourceRegistry
         return new TextureResourceHandle(rid);
     }
 
+    public TextureResourceHandle CreateRenderTarget(Vector2I size, bool hasAlpha, TextureSamplingOptions sampling)
+    {
+        if (size.X <= 0 || size.Y <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(size), "Render target size must be positive.");
+        }
+
+        var rid = allocator.Allocate();
+        var descriptor = TextureUploadDescriptor.ForRenderTarget(size, hasAlpha, sampling);
+        if (!api.Upload(rid, descriptor, out var error))
+        {
+            allocator.Free(rid);
+            Fail(TextureResourceEventKind.Error, rid, error ?? "Render target allocation failed.");
+        }
+
+        activeTextures.Add(rid, descriptor);
+        events.Add(new TextureResourceEvent(TextureResourceEventKind.RenderTargetCreated, rid, "Render target created."));
+        return new TextureResourceHandle(rid);
+    }
+
     public void Reload(TextureResourceHandle handle, Texture2D texture)
     {
         ArgumentNullException.ThrowIfNull(texture);
@@ -79,6 +99,28 @@ internal sealed class TextureResourceRegistry
 
         activeTextures[handle.Rid] = descriptor;
         events.Add(new TextureResourceEvent(TextureResourceEventKind.Reloaded, handle.Rid, "Texture reloaded."));
+    }
+
+    public void RestoreAfterDeviceLoss(ITextureGpuApi newApi)
+    {
+        ArgumentNullException.ThrowIfNull(newApi);
+
+        var restored = new List<Rid>(activeTextures.Count);
+        foreach (var (rid, descriptor) in activeTextures)
+        {
+            if (!newApi.Upload(rid, descriptor, out var error))
+            {
+                Fail(TextureResourceEventKind.Error, rid, error ?? "Texture restore failed.");
+            }
+
+            restored.Add(rid);
+        }
+
+        api = newApi;
+        foreach (var rid in restored)
+        {
+            events.Add(new TextureResourceEvent(TextureResourceEventKind.Restored, rid, "Texture resource restored."));
+        }
     }
 
     public bool Release(TextureResourceHandle handle)
