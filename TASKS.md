@@ -1579,6 +1579,8 @@
 
 Создано по запросу пользователя: публичный API должен документироваться так же полно, как SDL3 public API, но в C# XML documentation стиле.
 
+2026-06-21T20:48:00+03:00 - Audit note: команда `dotnet build src\Electron2D\Electron2D.csproj -p:GenerateDocumentationFile=true -p:DocumentationFile=.temp\Electron2D.xml -warnaserror:1591 --no-restore` собрала проект, но выдала `366` предупреждений `CS1591` по публичному API. Задачу нельзя закрывать одним verifier-скриптом без предварительного заполнения документации: такой verifier сразу сломает CI. Нужен отдельный проход по доменам или generator/report mode до включения fail mode.
+
 ## T-0107 [ ] P0: Генерировать автоматическую документацию публичного API в GitHub Wiki
 
 - Создана: 2026-06-20T22:01:23+03:00
