@@ -90,6 +90,7 @@ internal sealed class ResourceImportOptions
                 new ResourceFileImporter(),
                 new TextureImageImporter(),
                 new FontImporter(),
+                new AudioStreamImporter(),
                 new ShaderSourceImporter(new SdlShaderCrossCompiler())
             ]);
     }

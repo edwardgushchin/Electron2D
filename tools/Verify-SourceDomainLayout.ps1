@@ -50,6 +50,7 @@ $allowedCoreDomains = @(
 
 $requiredRootDomains = @(
     'Assets',
+    'Audio',
     'Core',
     'Export',
     'Graphics',

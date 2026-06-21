@@ -350,6 +350,11 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
         "Frame animation, animation resources, playback nodes and tween sequences.",
         type => Named(type, "AnimatedSprite2D", "Animation", "AnimationLibrary", "AnimationPlayer", "SpriteFrames", "Tween", "Tweener", "CallbackTweener", "IntervalTweener", "PropertyTweener")),
     new ApiCategory(
+        "API-Audio.md",
+        "Audio",
+        "Audio resources, playback nodes and audio server state.",
+        type => Named(type, "AudioStream")),
+    new ApiCategory(
         "API-Physics.md",
         "Physics",
         "2D physics bodies, areas, shapes, query parameters, collisions and physics server boundaries.",
