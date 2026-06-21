@@ -30,6 +30,7 @@
 - [SDL_GPU lifecycle baseline](rendering/sdl-gpu-lifecycle.md) - internal SDL3-CS device lifecycle, window claim, command buffer submit и диагностические smoke-тесты.
 - [CanvasItem render queue baseline](rendering/canvas-item-render-queue.md) - internal stable sort, visibility/modulate и contiguous batching для будущих `CanvasItem` submissions.
 - [Texture2D resource baseline](rendering/texture-resource-baseline.md) - public `Texture2D`/`AtlasTexture`, internal texture upload/reload/release registry и leak tracking.
+- [Canvas node submission baseline](rendering/canvas-node-submission-baseline.md) - public `CanvasItem`/`Node2D`/`Sprite2D`/`CanvasLayer` subset и internal sprite submission model.
 
 ## Базовые типы
 

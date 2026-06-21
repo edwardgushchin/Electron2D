@@ -180,7 +180,9 @@ public class Node : Object
         ThrowIfFreed();
         ArgumentNullException.ThrowIfNull(newParent);
         newParent.ThrowIfFreed();
-        _ = keepGlobalTransform;
+        var globalTransform = keepGlobalTransform && this is Node2D node2D
+            ? node2D.GlobalTransform
+            : (Transform2D?)null;
 
         if (_parent is null)
         {
@@ -195,6 +197,11 @@ public class Node : Object
         var oldParent = _parent;
         oldParent.DetachChild(this, clearInvalidOwners: false);
         newParent.AddChild(this);
+        if (globalTransform is not null && this is Node2D reparentedNode2D)
+        {
+            reparentedNode2D.GlobalTransform = globalTransform.Value;
+        }
+
         ClearInvalidOwnersRecursive();
     }
 

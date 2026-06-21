@@ -6,7 +6,7 @@
 
 ## Назначение
 
-В `0.1.0 Preview` появился internal render queue для будущих `CanvasItem` submissions. Это не публичный `CanvasItem` node API: public `CanvasItem`, `Node2D`, `Sprite2D` и `CanvasLayer` остаются следующими задачами.
+В `0.1.0 Preview` появился internal render queue для `CanvasItem` submissions. Public `CanvasItem`, `Node2D`, `Sprite2D` и `CanvasLayer` реализованы отдельным baseline и используют эту очередь через internal submission context.
 
 Текущий baseline решает две задачи renderer pipeline:
 
@@ -25,8 +25,13 @@
 - tree order;
 - visible flag;
 - modulate и self-modulate.
+- transform;
+- source rect;
+- destination rect;
+- flip flags;
+- debug name для диагностических тестов.
 
-`EffectiveModulate` вычисляется как `Modulate * SelfModulate`. Future public nodes будут передавать в команду уже вычисленную inherited visibility/modulate chain.
+`EffectiveModulate` вычисляется как `Modulate * SelfModulate`. Public nodes передают в команду уже вычисленную inherited visibility/modulate chain.
 
 ## Sort order
 
@@ -50,7 +55,7 @@ Batch создаётся только для соседних команд с о
 
 - Реальный SDL_GPU draw submission ещё не реализован.
 - Public drawing methods (`DrawLine`, `DrawRect`, `DrawTexture` и другие) остаются будущим `CanvasItem` API.
-- Real canvas item draw submission и material/shader resource management остаются отдельными задачами.
+- Material/shader resource management остаётся отдельной задачей.
 
 ## Проверки
 

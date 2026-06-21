@@ -36,7 +36,13 @@ internal readonly struct CanvasItemRenderCommand
         long treeOrder,
         bool visible,
         Color modulate,
-        Color selfModulate)
+        Color selfModulate,
+        Transform2D? transform = null,
+        Rect2? sourceRect = null,
+        Rect2? destinationRect = null,
+        bool flipH = false,
+        bool flipV = false,
+        string? debugName = null)
     {
         if (!canvasItem.IsValid())
         {
@@ -55,6 +61,12 @@ internal readonly struct CanvasItemRenderCommand
         Visible = visible;
         Modulate = modulate;
         SelfModulate = selfModulate;
+        Transform = transform ?? Transform2D.Identity;
+        SourceRect = sourceRect ?? new Rect2();
+        DestinationRect = destinationRect ?? new Rect2();
+        FlipH = flipH;
+        FlipV = flipV;
+        DebugName = debugName ?? string.Empty;
     }
 
     public Rid CanvasItem { get; }
@@ -78,4 +90,16 @@ internal readonly struct CanvasItemRenderCommand
     public Color SelfModulate { get; }
 
     public Color EffectiveModulate => Modulate * SelfModulate;
+
+    public Transform2D Transform { get; }
+
+    public Rect2 SourceRect { get; }
+
+    public Rect2 DestinationRect { get; }
+
+    public bool FlipH { get; }
+
+    public bool FlipV { get; }
+
+    public string DebugName { get; }
 }

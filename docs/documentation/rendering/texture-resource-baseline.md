@@ -51,7 +51,7 @@ Registry хранит active texture handles, пишет события:
 
 ## Sampling Descriptor
 
-Filter/repeat сейчас представлены internal `TextureSamplingOptions`. Это сделано намеренно: в Godot эти настройки принадлежат `CanvasItem`, а public `CanvasItem` появится в `T-0026`.
+Filter/repeat сейчас представлены internal `TextureSamplingOptions`. Public `CanvasItem` уже существует, но GPU sampling ещё не вынесен в public API, потому что настоящий texture drawing pipeline остаётся следующим шагом.
 
 ## Ограничения
 
