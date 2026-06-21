@@ -20,6 +20,7 @@ CI описан в `.github/workflows/ci.yml`.
 ./tools/Run-Tests.ps1
 ./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
 ./tools/Verify-ProjectTemplate.ps1
+./tools/Verify-UserDocumentation.ps1
 ./tools/Verify-PerformanceBudgets.ps1
 ```
 

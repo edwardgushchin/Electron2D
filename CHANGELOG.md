@@ -62,6 +62,7 @@
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
+- Пользовательская документация 0.1.0 Preview: установка, первый проект, первая сцена, scripting, resources, physics, UI, animation, Input Map, export limitations и verifier `tools/Verify-UserDocumentation.ps1`.
 - Verifier-скрипты для тестов, CI, API compatibility и release metadata.
 - MIT License policy: корневой `LICENSE`, MIT source headers для C# и PowerShell файлов, verifier `tools/Verify-SourceLicenseHeaders.ps1` и CI-шаг.
 

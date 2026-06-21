@@ -25,6 +25,10 @@
 
 - [Политика MIT License и source headers](repository/license-policy.md) - текущая проверка корневой лицензии и license header в исходных файлах.
 
+## Документация
+
+- [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.
+
 ## Ресурсы, импорт и сериализация
 
 - [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - текущий public `ResourceUid`, internal `.e2res` document model, external/internal references и golden-data формат.

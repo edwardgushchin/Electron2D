@@ -61,6 +61,7 @@
 - Начальный macOS arm64 export baseline: internal package plan для `osx-arm64`, Debug/Release, self-contained `.app` bundle, Metal-backed desktop backend, x64 policy, user-provided signing plan и macOS-only verifier exported reference scene.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
+- Пользовательская документация 0.1.0 Preview с verifier для обязательных разделов, команд и screenshot links.
 - Package metadata `0.1.0-preview`.
 - MIT License: корневой `LICENSE`, package metadata и source-file headers согласованы и проверяются CI.
 
