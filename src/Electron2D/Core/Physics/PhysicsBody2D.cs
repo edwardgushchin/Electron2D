@@ -24,35 +24,24 @@
 */
 namespace Electron2D;
 
-internal interface IPhysicsServer2DBackend
+/// <summary>
+/// Provides the Godot-like base node for physical 2D bodies.
+/// </summary>
+///
+/// <remarks>
+/// `PhysicsBody2D` is the shared base for `StaticBody2D` and `RigidBody2D`.
+/// It does not add behavior beyond <see cref="CollisionObject2D" /> in the
+/// 0.1.0 Preview baseline.
+/// </remarks>
+///
+/// <threadsafety>
+/// This type is not synchronized. Create and mutate nodes on the main scene
+/// thread.
+/// </threadsafety>
+///
+/// <since>
+/// This type is available since Electron2D 0.1.0 Preview.
+/// </since>
+public abstract class PhysicsBody2D : CollisionObject2D
 {
-    string Name { get; }
-
-    void SetActive(bool active);
-
-    Rid SpaceCreate();
-
-    void SpaceSetActive(Rid space, bool active);
-
-    bool SpaceIsActive(Rid space);
-
-    void SpaceSetParam(Rid space, PhysicsServer2D.SpaceParameter param, float value);
-
-    float SpaceGetParam(Rid space, PhysicsServer2D.SpaceParameter param);
-
-    Rid AreaCreate();
-
-    Rid BodyCreate(PhysicsBodyKind bodyKind);
-
-    Rid JointCreate();
-
-    Rid ShapeCreate(PhysicsServer2D.ShapeType type);
-
-    PhysicsServer2D.ShapeType ShapeGetType(Rid shape);
-
-    void CollisionObjectSetTransform(Rid rid, Transform2D transform);
-
-    void FreeRid(Rid rid);
-
-    int GetProcessInfo(PhysicsServer2D.ProcessInfo processInfo);
 }

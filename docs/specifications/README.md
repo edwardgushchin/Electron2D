@@ -48,6 +48,7 @@
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - Godot-like public `Rid`-граница, internal swappable backend и запрет публичных Box2D handles.
 - [Box2D.NET platform/AOT validation](physics/box2d-net-validation.md) - candidate smoke gate, desktop JIT/NativeAOT matrix, mobile Release/AOT gaps и allocations per tick.
+- [Physics nodes lifecycle baseline](physics/physics-nodes-lifecycle.md) - Godot-like `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`, RID lifecycle и transform sync.
 
 ## Рендеринг
 

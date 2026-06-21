@@ -11,13 +11,13 @@
 - `WorldBoundaryShapeCreate()`, `SeparationRayShapeCreate()`, `SegmentShapeCreate()`, `CircleShapeCreate()`, `RectangleShapeCreate()`, `CapsuleShapeCreate()`, `ConvexPolygonShapeCreate()` и `ConcavePolygonShapeCreate()` создают shape RID.
 - `ShapeGetType()` возвращает `PhysicsServer2D.ShapeType` для shape RID.
 - `FreeRid()` освобождает RID, созданный текущим physics backend.
-- `GetProcessInfo()` пока возвращает `0`, потому что real simulation step ещё не реализован.
+- `GetProcessInfo(ActiveObjects)` возвращает количество живых area/body RID; остальные значения пока возвращают `0`, потому что real simulation step ещё не реализован.
 
 ## Internal backend boundary
 
 Публичный API не содержит Box2D.NET handles и не даёт пользователю выбирать backend. Внутри runtime есть `IPhysicsServer2DBackend`: это внутренний контракт между public facade и будущей реализацией физики. Он нужен тестам и runtime-коду, но не является API для игры.
 
-Текущий default backend `ManagedPhysicsServer2DBackend` хранит только resource registry: какие RID живы, какой у них kind и какой `ShapeType` у shape. Он deliberately не рассчитывает контакты, velocity, gravity и sleeping.
+Текущий default backend `ManagedPhysicsServer2DBackend` хранит только resource registry: какие RID живы, какой у них kind, какой `ShapeType` у shape и последний transform для area/body RID. Он намеренно не рассчитывает контакты, velocity, gravity и sleeping.
 
 ## Ошибки RID
 
@@ -25,7 +25,6 @@
 
 ## Что ещё не реализовано
 
-- `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`;
 - данные geometry для shapes;
 - physics step, contacts, collision layers, masks, materials, sleeping и CCD;
 - raycast, point query и shape query;

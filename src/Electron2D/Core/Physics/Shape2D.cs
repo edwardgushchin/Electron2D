@@ -24,35 +24,44 @@
 */
 namespace Electron2D;
 
-internal interface IPhysicsServer2DBackend
+/// <summary>
+/// Provides the Godot-like base resource for 2D physics shapes.
+/// </summary>
+///
+/// <remarks>
+/// Concrete shape resources are introduced by later physics tasks. The base
+/// class exists now so `CollisionShape2D` can expose the Godot-like `Shape`
+/// property without depending on Box2D.NET or another backend type.
+/// </remarks>
+///
+/// <threadsafety>
+/// This type is not synchronized. Create and mutate resources on the main scene
+/// thread.
+/// </threadsafety>
+///
+/// <since>
+/// This type is available since Electron2D 0.1.0 Preview.
+/// </since>
+public abstract class Shape2D : Resource
 {
-    string Name { get; }
-
-    void SetActive(bool active);
-
-    Rid SpaceCreate();
-
-    void SpaceSetActive(Rid space, bool active);
-
-    bool SpaceIsActive(Rid space);
-
-    void SpaceSetParam(Rid space, PhysicsServer2D.SpaceParameter param, float value);
-
-    float SpaceGetParam(Rid space, PhysicsServer2D.SpaceParameter param);
-
-    Rid AreaCreate();
-
-    Rid BodyCreate(PhysicsBodyKind bodyKind);
-
-    Rid JointCreate();
-
-    Rid ShapeCreate(PhysicsServer2D.ShapeType type);
-
-    PhysicsServer2D.ShapeType ShapeGetType(Rid shape);
-
-    void CollisionObjectSetTransform(Rid rid, Transform2D transform);
-
-    void FreeRid(Rid rid);
-
-    int GetProcessInfo(PhysicsServer2D.ProcessInfo processInfo);
+    /// <summary>
+    /// Gets the physics server RID backing this shape.
+    /// </summary>
+    /// <returns>
+    /// A valid shape RID when a concrete shape has created one; otherwise, the
+    /// default empty <see cref="Rid" />.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public virtual Rid GetRid()
+    {
+        ThrowIfFreed();
+        return default;
+    }
 }

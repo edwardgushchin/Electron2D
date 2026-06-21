@@ -361,6 +361,11 @@ public class Node : Object
     internal void EnterTreeRecursive(SceneTree tree)
     {
         _tree = tree;
+        if (this is ISceneTreeLifecycleHandler lifecycleHandler)
+        {
+            lifecycleHandler.OnEnterTree();
+        }
+
         tree.InvokeUserCallback(this, nameof(_EnterTree), _EnterTree);
 
         foreach (var child in _children.ToArray())
@@ -431,6 +436,10 @@ public class Node : Object
         }
 
         _tree?.InvokeUserCallback(this, nameof(_PhysicsProcess), () => _PhysicsProcess(delta));
+        if (IsInstanceValid(this) && _tree is not null && this is ISceneTreeLifecycleHandler lifecycleHandler)
+        {
+            lifecycleHandler.OnPhysicsProcess(delta);
+        }
 
         foreach (var child in _children.ToArray())
         {
@@ -467,6 +476,11 @@ public class Node : Object
         }
 
         tree?.InvokeUserCallback(this, nameof(_ExitTree), _ExitTree);
+        if (IsInstanceValid(this) && this is ISceneTreeLifecycleHandler lifecycleHandler)
+        {
+            lifecycleHandler.OnExitTree();
+        }
+
         _tree = null;
     }
 

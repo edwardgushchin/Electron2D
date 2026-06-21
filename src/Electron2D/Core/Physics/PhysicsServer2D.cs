@@ -287,9 +287,14 @@ public static class PhysicsServer2D
     /// <returns>A <see cref="Rid"/> identifying the created body.</returns>
     public static Rid BodyCreate()
     {
+        return BodyCreate(PhysicsBodyKind.Generic);
+    }
+
+    internal static Rid BodyCreate(PhysicsBodyKind bodyKind)
+    {
         lock (BackendLock)
         {
-            return backend.BodyCreate();
+            return backend.BodyCreate(bodyKind);
         }
     }
 
@@ -433,6 +438,14 @@ public static class PhysicsServer2D
         lock (BackendLock)
         {
             PhysicsServer2D.backend = backend;
+        }
+    }
+
+    internal static void CollisionObjectSetTransform(Rid rid, Transform2D transform)
+    {
+        lock (BackendLock)
+        {
+            backend.CollisionObjectSetTransform(rid, transform);
         }
     }
 

@@ -16,8 +16,9 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline и `PhysicsServer2D` RID-boundary:
+Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary и первые 2D physics nodes:
 
+- `Electron2D.Area2D`
 - `Electron2D.AtlasTexture`
 - `Electron2D.Callable`
 - `Electron2D.Camera2D`
@@ -25,6 +26,8 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.CanvasLayer`
 - `Electron2D.Collections.Array`
 - `Electron2D.Collections.Dictionary`
+- `Electron2D.CollisionObject2D`
+- `Electron2D.CollisionShape2D`
 - `Electron2D.Color`
 - `Electron2D.ConnectFlags`
 - `Electron2D.Control`
@@ -51,11 +54,13 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.NodePath`
 - `Electron2D.Object`
 - `Electron2D.PackedScene`
+- `Electron2D.PhysicsBody2D`
 - `Electron2D.PhysicsServer2D`
 - `Electron2D.PhysicsServer2D+ProcessInfo`
 - `Electron2D.PhysicsServer2D+ShapeType`
 - `Electron2D.PhysicsServer2D+SpaceParameter`
 - `Electron2D.RandomNumberGenerator`
+- `Electron2D.RayCast2D`
 - `Electron2D.Rect2`
 - `Electron2D.Rect2I`
 - `Electron2D.RefCounted`
@@ -65,12 +70,17 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Resource`
 - `Electron2D.ResourceUid`
 - `Electron2D.Rid`
+- `Electron2D.RigidBody2D`
+- `Electron2D.RigidBody2D+CenterOfMassModeEnum`
+- `Electron2D.RigidBody2D+FreezeModeEnum`
 - `Electron2D.SceneTree`
 - `Electron2D.Shader`
 - `Electron2D.Shader+Mode`
 - `Electron2D.ShaderMaterial`
+- `Electron2D.Shape2D`
 - `Electron2D.SignalAttribute`
 - `Electron2D.Sprite2D`
+- `Electron2D.StaticBody2D`
 - `Electron2D.StringName`
 - `Electron2D.Texture2D`
 - `Electron2D.ToolAttribute`

@@ -24,35 +24,11 @@
 */
 namespace Electron2D;
 
-internal interface IPhysicsServer2DBackend
+internal interface ISceneTreeLifecycleHandler
 {
-    string Name { get; }
+    void OnEnterTree();
 
-    void SetActive(bool active);
+    void OnPhysicsProcess(double delta);
 
-    Rid SpaceCreate();
-
-    void SpaceSetActive(Rid space, bool active);
-
-    bool SpaceIsActive(Rid space);
-
-    void SpaceSetParam(Rid space, PhysicsServer2D.SpaceParameter param, float value);
-
-    float SpaceGetParam(Rid space, PhysicsServer2D.SpaceParameter param);
-
-    Rid AreaCreate();
-
-    Rid BodyCreate(PhysicsBodyKind bodyKind);
-
-    Rid JointCreate();
-
-    Rid ShapeCreate(PhysicsServer2D.ShapeType type);
-
-    PhysicsServer2D.ShapeType ShapeGetType(Rid shape);
-
-    void CollisionObjectSetTransform(Rid rid, Transform2D transform);
-
-    void FreeRid(Rid rid);
-
-    int GetProcessInfo(PhysicsServer2D.ProcessInfo processInfo);
+    void OnExitTree();
 }

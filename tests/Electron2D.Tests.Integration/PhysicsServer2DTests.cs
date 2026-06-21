@@ -27,6 +27,7 @@ using Xunit;
 
 namespace Electron2D.Tests.Integration;
 
+[Collection(PhysicsServer2DCollection.Name)]
 public sealed class PhysicsServer2DTests
 {
     [Fact]
@@ -221,8 +222,9 @@ public sealed class PhysicsServer2DTests
             return NextRid();
         }
 
-        public Electron2D.Rid BodyCreate()
+        public Electron2D.Rid BodyCreate(Electron2D.PhysicsBodyKind bodyKind)
         {
+            _ = bodyKind;
             return NextRid();
         }
 
@@ -241,6 +243,12 @@ public sealed class PhysicsServer2DTests
         public Electron2D.PhysicsServer2D.ShapeType ShapeGetType(Electron2D.Rid shape)
         {
             return shapes[shape];
+        }
+
+        public void CollisionObjectSetTransform(Electron2D.Rid rid, Electron2D.Transform2D transform)
+        {
+            _ = rid;
+            _ = transform;
         }
 
         public void FreeRid(Electron2D.Rid rid)
