@@ -86,7 +86,12 @@ internal sealed class ResourceImportOptions
             fullProjectRoot,
             fullProjectRoot,
             Path.Combine(fullProjectRoot, ".electron2d", "import-cache"),
-            [new ResourceFileImporter(), new TextureImageImporter(), new FontImporter()]);
+            [
+                new ResourceFileImporter(),
+                new TextureImageImporter(),
+                new FontImporter(),
+                new ShaderSourceImporter(new SdlShaderCrossCompiler())
+            ]);
     }
 
     public string ResolveResourcePath(string resourcePath)

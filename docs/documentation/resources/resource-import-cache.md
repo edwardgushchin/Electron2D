@@ -16,6 +16,7 @@
 - `ResourceFileImporter` - baseline importer для `.e2res`;
 - `TextureImageImporter` - importer для PNG/JPEG image metadata;
 - `FontImporter` - importer для TTF/OTF font metadata;
+- `ShaderSourceImporter` - importer для `.e2shader` compiled shader metadata;
 - `ResourceImportManifest` и `ResourceImportManifestTextSerializer` - stable JSON manifest.
 
 ## Поведение pipeline
@@ -66,9 +67,10 @@ Dependencies отслеживаются по SHA-256 hash. Если source file 
 
 - Public `ResourceLoader`/`ResourceSaver` ещё не реализованы.
 - File watcher и editor FileSystem dock ещё не реализованы.
-- WAV/OGG и shader artifact importers реализуются следующими задачами.
+- WAV/OGG importer реализуется следующими задачами.
 - PNG/JPEG importer уже реализован отдельной задачей `T-0037` и описан в `texture-image-import.md`.
 - TTF/OTF importer уже реализован отдельной задачей `T-0038` и описан в `font-import.md`.
+- Shader source importer уже реализован отдельной задачей `T-0040` и описан в `shader-source-import.md`.
 - Dependency tracking сейчас работает для файлов, которые можно разрешить через `res://...` внутри `sourceRoot`.
 
 ## Проверки

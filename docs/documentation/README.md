@@ -27,6 +27,7 @@
 - [Import cache ресурсов](resources/resource-import-cache.md) - текущий internal pipeline для `.e2res` discovery, reimport on source/dependency changes, safe cache writes и prune unused cache.
 - [Импорт PNG/JPEG в Texture2D и AtlasTexture](resources/texture-image-import.md) - текущий internal importer для image metadata, sidecar settings, atlas regions и platform variants.
 - [Импорт TTF/OTF в Font](resources/font-import.md) - текущий internal importer для font metadata, fallback dependencies и SDF/bitmap policy.
+- [Импорт shader source в platform-specific artifacts](resources/shader-source-import.md) - текущий internal importer для `.e2shader`, compiled stages, diagnostics file/line/column и iOS precompiled artifacts.
 
 ## Рендеринг
 

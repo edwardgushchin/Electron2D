@@ -85,6 +85,12 @@ res://shaders/bad.e2shader(7,13): error X3000: unexpected token
 
 Успешный iOS import создаёт compiled vertex/fragment stages заранее и возвращает `RequiresRuntimeCompilation == false`. Игра на iOS не должна запускать SDL_shadercross во время runtime.
 
+## Связь с import cache
+
+`T-0040` подключает canvas shader import к общему resource import cache через `ShaderSourceImporter`. Файлы `.e2shader` импортируются в `shader.e2shader.json`, где сохраняются compiled stages, diagnostics и `requiresRuntimeCompilation`.
+
+Sidecar `<shader>.e2import.json` может ограничить список target platforms. Если sidecar меняется, import cache переимпортирует shader как изменённую dependency. Подробный формат artifact описан в [Импорт shader source в platform-specific artifacts](../resources/shader-source-import.md).
+
 ## Ограничения
 
 - `ShaderMaterial` resource layer реализован отдельно, но не привязан к реальному draw pipeline.

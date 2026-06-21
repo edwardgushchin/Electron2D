@@ -124,6 +124,12 @@ Compiler diagnostics в форме `path(line,column): error ...` должны �
 
 Runtime project может ссылаться на managed `SDL3-CS` shadercross bindings. Native SDL_shadercross package подключается как runtime/import dependency, но platform-specific export packaging остаётся задачами export/tooling.
 
+## Resource import cache integration
+
+Задача `T-0040` должна подключить этот shader import contract к общему resource import cache. `.e2shader` source file становится source asset, optional sidecar `<shader>.e2import.json` задаёт target platforms, а cache artifact `shader.e2shader.json` хранит compiled stages и diagnostics в stable JSON.
+
+Этот слой не должен добавлять новый public API. Он только делает результат `CanvasShaderImportPipeline` доступным будущему editor/export pipeline через cache artifact.
+
 ## Проверки
 
 Минимальный acceptance набор:
