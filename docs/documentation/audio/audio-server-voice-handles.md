@@ -16,9 +16,13 @@
 - `AudioServer.GetBusCount()` возвращает количество buses;
 - `AudioServer.GetBusName(int busIdx)` возвращает имя bus;
 - `AudioServer.GetBusIndex(string busName)` возвращает индекс bus или `-1`;
+- `AudioServer.SetBusCount(int amount)`, `AudioServer.AddBus()`, `AudioServer.RemoveBus()`, `AudioServer.MoveBus()` управляют пользовательскими buses;
+- `AudioServer.SetBusName()`, `AudioServer.SetBusSend()`, `AudioServer.GetBusSend()` управляют именем и routing target;
+- `AudioServer.SetBusVolumeDb()`, `AudioServer.SetBusVolumeLinear()`, `AudioServer.GetBusVolumeDb()`, `AudioServer.GetBusVolumeLinear()` управляют громкостью bus;
+- `AudioServer.SetBusMute()`, `AudioServer.IsBusMute()`, `AudioServer.SetBusSolo()`, `AudioServer.IsBusSolo()` управляют mute и solo;
 - `AudioServer.Lock()` и `AudioServer.Unlock()` группируют audio changes.
 
-В текущем baseline доступен один bus: `Master` с индексом `0`. Пользовательские buses, mute, solo, volume routing и audio effects не входят в `T-0072`.
+`Master` всегда доступен с индексом `0`. Пользовательские buses, mute, solo и volume routing реализованы в `T-0074`. Audio effects не входят в текущий baseline.
 
 ## Внутренний voice lifecycle
 
@@ -28,11 +32,11 @@
 
 - `AudioVoiceHandle` - собственный runtime handle voice instance;
 - `AudioBackendVoiceHandle` - handle concrete backend resource;
-- `AudioVoicePlayback` - volume, pitch и loop параметры запуска;
+- `AudioVoicePlayback` - volume, pitch, loop, start position, panning и выбранный bus для запуска;
 - `IAudioServerBackend` - internal backend boundary;
 - `ManagedAudioServerBackend` - deterministic backend для тестов и headless runtime checks.
 
-`AudioServer.PlayStream()` создаёт собственный `AudioVoiceHandle`, сохраняет связь с backend handle и не раскрывает эту связь в public API. `AudioServer.StopVoice()` останавливает voice и освобождает backend resource. `AudioServer.CleanupFinishedVoices()` освобождает voices, которые backend уже считает завершёнными.
+`AudioServer.PlayStream()` рассчитывает итоговый playback snapshot с учётом bus routing, создаёт собственный `AudioVoiceHandle`, сохраняет связь с backend handle и не раскрывает эту связь в public API. `AudioServer.StopVoice()` останавливает voice и освобождает backend resource. `AudioServer.CleanupFinishedVoices()` освобождает voices, которые backend уже считает завершёнными.
 
 ## Validation
 
@@ -60,3 +64,4 @@ Coverage:
 - public `AudioServer` surface зафиксирован unit test;
 - multiple voices and cleanup проверены integration tests;
 - exported public API не содержит internal backend, backend track или voice handle types.
+- user bus routing, mute и solo дополнительно покрыты `AudioServerBusRoutingTests`.

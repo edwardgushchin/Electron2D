@@ -88,8 +88,9 @@
 
 ## Звук
 
-- [AudioServer и внутренние voice handles](audio/audio-server-voice-handles.md) - текущий public `AudioServer`, default `Master` bus, internal voice lifecycle и backend boundary без раскрытия backend handles.
+- [AudioServer и внутренние voice handles](audio/audio-server-voice-handles.md) - текущий public `AudioServer`, bus queries, internal voice lifecycle и backend boundary без раскрытия backend handles.
 - [AudioStreamPlayer и AudioStreamPlayer2D](audio/audio-stream-player-nodes.md) - текущие playback nodes, pause/resume, polyphony, loop metadata, volume/pitch и 2D attenuation/panning.
+- [Audio bus routing](audio/audio-bus-routing.md) - текущие `Master`, пользовательские buses, volume routing, mute, solo и общая громкость через `Master`.
 
 ## Рендеринг
 

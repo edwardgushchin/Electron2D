@@ -79,7 +79,7 @@ Loop flag берётся из internal metadata импортированного
 - effective gain переводится в decibels и добавляется к `VolumeDb`;
 - `Pan` clamped в диапазон `[-1, 1]` и считается как `(relative.X / MaxDistance) * PanningStrength`; при `MaxDistance == 0` pan равен `0`.
 
-Этот расчёт является deterministic preview behavior. Отдельный listener node и area-based bus routing остаются будущими audio задачами.
+Этот расчёт является deterministic preview behavior. Отдельный listener node и area-based bus routing остаются будущими audio задачами. Пользовательский bus graph закрывается отдельной задачей `T-0074`.
 
 ## Tests
 
@@ -94,7 +94,8 @@ Acceptance tests:
 
 ## Out of scope
 
-- пользовательские buses, mute, solo, effects и global volume settings;
+- пользовательские buses, mute, solo и global volume settings, вынесенные в `T-0074`;
+- audio effects;
 - публичные playback handle types;
 - `AudioStreamPlayback` object API;
 - physical audio device lifecycle;

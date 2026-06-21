@@ -169,9 +169,9 @@ public class AudioStreamPlayer : Node, ISceneTreeLifecycleHandler
     ///
     /// <remarks>
     /// <para>
-    /// Electron2D 0.1.0 Preview exposes only the <c>Master</c> bus. Other names
-    /// are stored so scenes can keep their intent until user buses are added by
-    /// a later audio task.
+    /// <see cref="AudioServer" /> resolves this name when playback starts. If
+    /// the name does not match an existing bus, the voice falls back to
+    /// <c>Master</c>.
     /// </para>
     /// <para>
     /// Assigning an empty <see cref="StringName" /> restores <c>Master</c>.
@@ -187,6 +187,8 @@ public class AudioStreamPlayer : Node, ISceneTreeLifecycleHandler
     /// </since>
     ///
     /// <seealso cref="AudioServer.GetBusName(int)" />
+    /// <seealso cref="AudioServer.SetBusName(int, string)" />
+    /// <seealso cref="AudioServer.SetBusSend(int, StringName)" />
     public StringName Bus
     {
         get

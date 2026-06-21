@@ -222,8 +222,9 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </value>
     ///
     /// <remarks>
-    /// Electron2D 0.1.0 Preview stores this value but routes through the
-    /// default bus until user buses are added by a later audio task.
+    /// <see cref="AudioServer" /> resolves this name when playback starts. If
+    /// the name does not match an existing bus, the voice falls back to
+    /// <c>Master</c>.
     /// </remarks>
     ///
     /// <threadsafety>
@@ -235,6 +236,8 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </since>
     ///
     /// <seealso cref="AudioServer.GetBusName(int)" />
+    /// <seealso cref="AudioServer.SetBusName(int, string)" />
+    /// <seealso cref="AudioServer.SetBusSend(int, StringName)" />
     public StringName Bus
     {
         get

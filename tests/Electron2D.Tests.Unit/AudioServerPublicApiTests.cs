@@ -41,13 +41,28 @@ public sealed class AudioServerPublicApiTests
         Assert.Equal(
             new[]
             {
+                "AddBus",
                 "GetBusCount",
                 "GetBusIndex",
                 "GetBusName",
+                "GetBusSend",
+                "GetBusVolumeDb",
+                "GetBusVolumeLinear",
                 "GetMixRate",
                 "GetOutputLatency",
                 "GetSpeakerMode",
+                "IsBusMute",
+                "IsBusSolo",
                 "Lock",
+                "MoveBus",
+                "RemoveBus",
+                "SetBusCount",
+                "SetBusMute",
+                "SetBusName",
+                "SetBusSend",
+                "SetBusSolo",
+                "SetBusVolumeDb",
+                "SetBusVolumeLinear",
                 "SpeakerMode",
                 "Unlock"
             },
@@ -64,6 +79,11 @@ public sealed class AudioServerPublicApiTests
         Assert.Equal("Master", Electron2D.AudioServer.GetBusName(0));
         Assert.Equal(0, Electron2D.AudioServer.GetBusIndex("Master"));
         Assert.Equal(-1, Electron2D.AudioServer.GetBusIndex("Missing"));
+        Assert.Equal(new Electron2D.StringName(), Electron2D.AudioServer.GetBusSend(0));
+        Assert.Equal(0f, Electron2D.AudioServer.GetBusVolumeDb(0));
+        Assert.Equal(1f, Electron2D.AudioServer.GetBusVolumeLinear(0));
+        Assert.False(Electron2D.AudioServer.IsBusMute(0));
+        Assert.False(Electron2D.AudioServer.IsBusSolo(0));
     }
 
     [Fact]

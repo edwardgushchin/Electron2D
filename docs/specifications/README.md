@@ -88,6 +88,7 @@
 
 - [AudioServer и внутренние voice handles](audio/audio-server-voice-handles.md) - public audio server queries, internal voice lifecycle и backend boundary без раскрытия backend handles.
 - [AudioStreamPlayer и AudioStreamPlayer2D](audio/audio-stream-player-nodes.md) - playback nodes для непозиционного и 2D-звука, play/stop/pause, loop metadata, volume, pitch, attenuation и panning.
+- [Audio bus routing](audio/audio-bus-routing.md) - пользовательские buses, routing path, mute, solo и общая громкость через `Master`.
 
 ## Рендеринг
 

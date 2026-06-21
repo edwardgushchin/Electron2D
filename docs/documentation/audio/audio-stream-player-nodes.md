@@ -58,6 +58,8 @@
 
 Loop flag берётся из internal metadata импортированного `AudioStream`. Пользовательские subclasses `AudioStream` без таких metadata считаются non-looping.
 
+`Bus` выбирает audio bus по имени. Если указанное имя отсутствует в `AudioServer`, playback маршрутизируется через `Master`.
+
 `VolumeDb` передаёт decibel volume offset. `VolumeLinear` конвертируется в `VolumeDb`; `0` maps to quiet floor.
 
 `PitchScale` должен быть finite и больше `0`.
@@ -74,7 +76,7 @@ Loop flag берётся из internal metadata импортированного
 - gain переводится в decibels и добавляется к `VolumeDb`;
 - pan вычисляется по горизонтальному смещению и clamped в диапазон `[-1, 1]`.
 
-Dedicated listener nodes, area routing, user buses, mute, solo и global volume остаются отдельными audio задачами.
+Dedicated listener nodes и area routing остаются отдельными audio задачами. Пользовательские buses, mute, solo и общая громкость через `Master` реализованы в `T-0074`.
 
 ## Проверки
 
@@ -90,3 +92,4 @@ Coverage:
 - public surface, defaults и validation проверены unit tests;
 - play/stop/pause/resume/seek, `Playing`, `MaxPolyphony`, loop metadata, volume, pitch и autoplay проверены integration tests;
 - 2D attenuation и panning проверены через internal voice playback snapshot.
+- bus selection, fallback в `Master`, mute, solo и volume routing проверены `AudioServerBusRoutingTests`.

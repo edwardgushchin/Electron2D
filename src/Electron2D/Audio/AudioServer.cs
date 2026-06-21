@@ -37,10 +37,10 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview exposes a single default <c>Master</c> bus and
-/// internal voice lifecycle used by <see cref="AudioStreamPlayer" /> and
-/// <see cref="AudioStreamPlayer2D" />. User buses, volume routing and audio
-/// effects are added by later audio tasks.
+/// Electron2D 0.1.0 Preview exposes the default <c>Master</c> bus,
+/// user-defined buses, simple volume routing, mute and solo state. Audio
+/// effects and editor-side bus layout editing are not part of this preview
+/// server surface.
 /// </para>
 /// </remarks>
 ///
@@ -59,7 +59,10 @@ namespace Electron2D;
 /// <seealso cref="AudioStreamPlayer2D" />
 public static class AudioServer
 {
+    private const string MasterBusName = "Master";
+    private const float QuietVolumeDb = -80f;
     private static readonly object BackendLock = new();
+    private static readonly List<AudioBus> Buses = new() { AudioBus.CreateMaster() };
     private static readonly Dictionary<AudioVoiceHandle, VoiceState> Voices = new();
     private static IAudioServerBackend backend = new ManagedAudioServerBackend();
     private static long nextVoiceId;
@@ -253,8 +256,9 @@ public static class AudioServer
     ///
     /// <remarks>
     /// <para>
-    /// Electron2D 0.1.0 Preview exposes only the default bus. User-defined
-    /// buses and routing controls are added by the audio bus task.
+    /// The bus count is always at least <c>1</c> because <c>Master</c> cannot
+    /// be removed. User buses are stored in process-wide audio server state and
+    /// are applied to voices started after a bus change.
     /// </para>
     /// </remarks>
     ///
@@ -272,7 +276,7 @@ public static class AudioServer
     {
         lock (BackendLock)
         {
-            return backend.BusCount;
+            return Buses.Count;
         }
     }
 
@@ -292,7 +296,8 @@ public static class AudioServer
     ///
     /// <remarks>
     /// <para>
-    /// The preview server contains only index <c>0</c>, named <c>Master</c>.
+    /// Index <c>0</c> is always named <c>Master</c>. User buses occupy
+    /// positive indices and may be reordered with <see cref="MoveBus(int, int)" />.
     /// </para>
     /// </remarks>
     ///
@@ -310,7 +315,7 @@ public static class AudioServer
     {
         lock (BackendLock)
         {
-            return backend.GetBusName(busIdx);
+            return RequireBus(busIdx).Name;
         }
     }
 
@@ -334,8 +339,8 @@ public static class AudioServer
     ///
     /// <remarks>
     /// <para>
-    /// Bus lookup is case-sensitive. The preview server recognizes
-    /// <c>Master</c> and returns <c>-1</c> for every other valid name.
+    /// Bus lookup is case-sensitive. The method returns <c>-1</c> when no bus
+    /// currently has <paramref name="busName" />.
     /// </para>
     /// </remarks>
     ///
@@ -354,7 +359,718 @@ public static class AudioServer
 
         lock (BackendLock)
         {
-            return backend.GetBusIndex(busName);
+            return FindBusIndex(busName.Trim());
+        }
+    }
+
+    /// <summary>
+    /// Changes the number of audio buses.
+    /// </summary>
+    ///
+    /// <param name="amount">
+    /// The requested bus count, including the <c>Master</c> bus.
+    /// </param>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The value must be at least <c>1</c>. Increasing the count appends
+    /// user buses routed to <c>Master</c>. Decreasing the count removes buses
+    /// from the end and reroutes remaining buses whose send target was removed.
+    /// </para>
+    /// <para>
+    /// The change applies to voices started after the bus layout update.
+    /// Existing voices keep the playback snapshot created when they started.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="amount" /> is less than <c>1</c>.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetBusCount" />
+    /// <seealso cref="AddBus(int)" />
+    /// <seealso cref="RemoveBus(int)" />
+    public static void SetBusCount(int amount)
+    {
+        if (amount < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(amount), amount, "Audio server must keep at least the Master bus.");
+        }
+
+        lock (BackendLock)
+        {
+            if (amount < Buses.Count)
+            {
+                Buses.RemoveRange(amount, Buses.Count - amount);
+                NormalizeInvalidBusSends();
+                return;
+            }
+
+            while (Buses.Count < amount)
+            {
+                Buses.Add(AudioBus.CreateUser(NextDefaultBusName(), new StringName(MasterBusName)));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds a user audio bus.
+    /// </summary>
+    ///
+    /// <param name="atPosition">
+    /// The insertion index, or <c>-1</c> to append the bus at the end.
+    /// </param>
+    ///
+    /// <remarks>
+    /// <para>
+    /// <c>Master</c> is fixed at index <c>0</c>, so explicit insertion
+    /// positions must be from <c>1</c> through <see cref="GetBusCount" />.
+    /// The new bus gets a unique default name and sends to <c>Master</c>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="atPosition" /> is outside the valid range.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SetBusName(int, string)" />
+    /// <seealso cref="SetBusSend(int, StringName)" />
+    public static void AddBus(int atPosition = -1)
+    {
+        lock (BackendLock)
+        {
+            var insertionIndex = atPosition == -1 ? Buses.Count : atPosition;
+            if (insertionIndex < 1 || insertionIndex > Buses.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(atPosition), atPosition, "Audio bus insertion position is out of range.");
+            }
+
+            Buses.Insert(insertionIndex, AudioBus.CreateUser(NextDefaultBusName(), new StringName(MasterBusName)));
+            NormalizeInvalidBusSends();
+        }
+    }
+
+    /// <summary>
+    /// Removes a user audio bus.
+    /// </summary>
+    ///
+    /// <param name="index">
+    /// The bus index to remove.
+    /// </param>
+    ///
+    /// <remarks>
+    /// Removing a bus reroutes remaining buses that sent to it back to
+    /// <c>Master</c>. The <c>Master</c> bus at index <c>0</c> cannot be
+    /// removed.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="index" /> does not identify an existing bus.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when <paramref name="index" /> is <c>0</c>.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AddBus(int)" />
+    /// <seealso cref="SetBusCount(int)" />
+    public static void RemoveBus(int index)
+    {
+        lock (BackendLock)
+        {
+            RequireUserBusIndex(index, nameof(index));
+            var removedName = Buses[index].Name;
+            Buses.RemoveAt(index);
+            foreach (var bus in Buses)
+            {
+                if (StringNameEquals(bus.Send, removedName))
+                {
+                    bus.Send = new StringName(MasterBusName);
+                }
+            }
+
+            NormalizeInvalidBusSends();
+        }
+    }
+
+    /// <summary>
+    /// Moves a user audio bus to a different index.
+    /// </summary>
+    ///
+    /// <param name="index">
+    /// The current bus index.
+    /// </param>
+    /// <param name="toIndex">
+    /// The target bus index.
+    /// </param>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The <c>Master</c> bus remains fixed at index <c>0</c>. If moving a bus
+    /// would leave any user bus sending to itself or to a bus on its right, that
+    /// send target is reset to <c>Master</c>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when either index is outside the valid bus range.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when <paramref name="index" /> or <paramref name="toIndex" /> is
+    /// <c>0</c>.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetBusName(int)" />
+    /// <seealso cref="SetBusSend(int, StringName)" />
+    public static void MoveBus(int index, int toIndex)
+    {
+        lock (BackendLock)
+        {
+            RequireUserBusIndex(index, nameof(index));
+            RequireUserBusIndex(toIndex, nameof(toIndex));
+            if (index == toIndex)
+            {
+                return;
+            }
+
+            var bus = Buses[index];
+            Buses.RemoveAt(index);
+            Buses.Insert(toIndex, bus);
+            NormalizeInvalidBusSends();
+        }
+    }
+
+    /// <summary>
+    /// Changes the name of a user audio bus.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to rename.
+    /// </param>
+    /// <param name="name">
+    /// The new bus name.
+    /// </param>
+    ///
+    /// <remarks>
+    /// Bus names are case-sensitive and must be unique. Renaming a bus updates
+    /// other bus send targets that referenced the old name.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="name" /> is empty, whitespace-only or already
+    /// used by another bus.
+    /// </exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="name" /> is <c>null</c>.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when <paramref name="busIdx" /> is <c>0</c>.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetBusName(int)" />
+    public static void SetBusName(int busIdx, string name)
+    {
+        var normalizedName = NormalizeBusName(name, nameof(name));
+
+        lock (BackendLock)
+        {
+            RequireUserBusIndex(busIdx, nameof(busIdx));
+            var existingIndex = FindBusIndex(normalizedName);
+            if (existingIndex >= 0 && existingIndex != busIdx)
+            {
+                throw new ArgumentException($"Audio bus name '{normalizedName}' is already in use.", nameof(name));
+            }
+
+            var oldName = Buses[busIdx].Name;
+            if (string.Equals(oldName, normalizedName, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            Buses[busIdx].Name = normalizedName;
+            foreach (var bus in Buses)
+            {
+                if (StringNameEquals(bus.Send, oldName))
+                {
+                    bus.Send = new StringName(normalizedName);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Changes the target bus that receives a user bus output.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to route.
+    /// </param>
+    /// <param name="send">
+    /// The target bus name, or an empty value to use <c>Master</c> for user
+    /// buses.
+    /// </param>
+    ///
+    /// <remarks>
+    /// User buses may only send to an existing bus on their left. This keeps the
+    /// routing graph acyclic. <c>Master</c> accepts only an empty send target.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="send" /> names no existing bus.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the requested route would point from <c>Master</c> to another
+    /// bus, to the same bus, or to a bus on the right.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetBusSend(int)" />
+    public static void SetBusSend(int busIdx, StringName send)
+    {
+        lock (BackendLock)
+        {
+            RequireBusIndex(busIdx, nameof(busIdx));
+            if (busIdx == 0)
+            {
+                if (!send.IsEmpty())
+                {
+                    throw new InvalidOperationException("Master bus cannot send to another bus.");
+                }
+
+                Buses[0].Send = default;
+                return;
+            }
+
+            var targetName = send.IsEmpty() ? MasterBusName : NormalizeBusName(send.ToString(), nameof(send));
+            var targetIndex = FindBusIndex(targetName);
+            if (targetIndex < 0)
+            {
+                throw new ArgumentException($"Audio bus send target '{targetName}' does not exist.", nameof(send));
+            }
+
+            if (targetIndex >= busIdx)
+            {
+                throw new InvalidOperationException("Audio bus send target must be to the left of the routed bus.");
+            }
+
+            Buses[busIdx].Send = new StringName(targetName);
+        }
+    }
+
+    /// <summary>
+    /// Gets the target bus that receives a bus output.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to query.
+    /// </param>
+    ///
+    /// <returns>
+    /// The target bus name, or an empty <see cref="StringName" /> for
+    /// <c>Master</c>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// User buses default to sending to <c>Master</c>. <c>Master</c> has no
+    /// send target and returns an empty value.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SetBusSend(int, StringName)" />
+    public static StringName GetBusSend(int busIdx)
+    {
+        lock (BackendLock)
+        {
+            return RequireBus(busIdx).Send;
+        }
+    }
+
+    /// <summary>
+    /// Sets a bus volume offset in decibels.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to change.
+    /// </param>
+    /// <param name="volumeDb">
+    /// The finite decibel offset.
+    /// </param>
+    ///
+    /// <remarks>
+    /// The value is added to the voice volume and to every other bus volume on
+    /// the routing path. Setting volume on <c>Master</c> changes the global
+    /// output level for future voices.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="volumeDb" /> is not finite.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetBusVolumeDb(int)" />
+    /// <seealso cref="SetBusVolumeLinear(int, float)" />
+    public static void SetBusVolumeDb(int busIdx, float volumeDb)
+    {
+        if (!float.IsFinite(volumeDb))
+        {
+            throw new ArgumentException("Audio bus volume must be finite.", nameof(volumeDb));
+        }
+
+        lock (BackendLock)
+        {
+            RequireBus(busIdx).VolumeDb = volumeDb;
+        }
+    }
+
+    /// <summary>
+    /// Gets a bus volume offset in decibels.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to query.
+    /// </param>
+    ///
+    /// <returns>
+    /// The bus decibel volume offset.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// This value is stored on the bus itself. It does not include the volume of
+    /// any other bus on the routing path.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SetBusVolumeDb(int, float)" />
+    /// <seealso cref="GetBusVolumeLinear(int)" />
+    public static float GetBusVolumeDb(int busIdx)
+    {
+        lock (BackendLock)
+        {
+            return RequireBus(busIdx).VolumeDb;
+        }
+    }
+
+    /// <summary>
+    /// Sets a bus volume as linear gain.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to change.
+    /// </param>
+    /// <param name="volumeLinear">
+    /// A finite non-negative linear gain.
+    /// </param>
+    ///
+    /// <remarks>
+    /// A value of <c>1</c> maps to <c>0 dB</c>. A value of <c>0</c> maps to the
+    /// preview quiet floor used for deterministic runtime tests.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="volumeLinear" /> is not finite.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus
+    /// or when <paramref name="volumeLinear" /> is negative.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetBusVolumeLinear(int)" />
+    /// <seealso cref="SetBusVolumeDb(int, float)" />
+    public static void SetBusVolumeLinear(int busIdx, float volumeLinear)
+    {
+        if (!float.IsFinite(volumeLinear))
+        {
+            throw new ArgumentException("Audio bus linear volume must be finite.", nameof(volumeLinear));
+        }
+
+        if (volumeLinear < 0f)
+        {
+            throw new ArgumentOutOfRangeException(nameof(volumeLinear), volumeLinear, "Audio bus linear volume must be non-negative.");
+        }
+
+        SetBusVolumeDb(busIdx, LinearToDb(volumeLinear));
+    }
+
+    /// <summary>
+    /// Gets a bus volume as linear gain.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to query.
+    /// </param>
+    ///
+    /// <returns>
+    /// The bus volume as linear gain.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// The returned value is converted from the bus decibel volume only. It does
+    /// not include any routed parent bus.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SetBusVolumeLinear(int, float)" />
+    /// <seealso cref="GetBusVolumeDb(int)" />
+    public static float GetBusVolumeLinear(int busIdx)
+    {
+        lock (BackendLock)
+        {
+            return DbToLinear(RequireBus(busIdx).VolumeDb);
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables mute for a bus.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to change.
+    /// </param>
+    /// <param name="enable">
+    /// <c>true</c> to mute the bus; otherwise <c>false</c>.
+    /// </param>
+    ///
+    /// <remarks>
+    /// A muted bus silences voices whose routing path contains that bus. The
+    /// change applies to voices started after the state change.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="IsBusMute(int)" />
+    /// <seealso cref="SetBusSolo(int, bool)" />
+    public static void SetBusMute(int busIdx, bool enable)
+    {
+        lock (BackendLock)
+        {
+            RequireBus(busIdx).Mute = enable;
+        }
+    }
+
+    /// <summary>
+    /// Checks whether a bus is muted.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to query.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the bus is muted; otherwise <c>false</c>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// The result describes the bus flag only. It does not inspect parent buses
+    /// on the routing path.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SetBusMute(int, bool)" />
+    public static bool IsBusMute(int busIdx)
+    {
+        lock (BackendLock)
+        {
+            return RequireBus(busIdx).Mute;
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables solo for a bus.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to change.
+    /// </param>
+    /// <param name="enable">
+    /// <c>true</c> to solo the bus; otherwise <c>false</c>.
+    /// </param>
+    ///
+    /// <remarks>
+    /// When any bus is solo, voices are audible only if their routing path
+    /// contains at least one solo bus. The change applies to voices started
+    /// after the state change.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="IsBusSolo(int)" />
+    /// <seealso cref="SetBusMute(int, bool)" />
+    public static void SetBusSolo(int busIdx, bool enable)
+    {
+        lock (BackendLock)
+        {
+            RequireBus(busIdx).Solo = enable;
+        }
+    }
+
+    /// <summary>
+    /// Checks whether a bus is soloed.
+    /// </summary>
+    ///
+    /// <param name="busIdx">
+    /// The bus index to query.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the bus is soloed; otherwise <c>false</c>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// The result describes the bus flag only. It does not inspect other buses.
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="busIdx" /> does not identify an existing bus.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SetBusSolo(int, bool)" />
+    public static bool IsBusSolo(int busIdx)
+    {
+        lock (BackendLock)
+        {
+            return RequireBus(busIdx).Solo;
         }
     }
 
@@ -446,14 +1162,15 @@ public static class AudioServer
 
         lock (BackendLock)
         {
-            var backendHandle = backend.Play(stream, playback);
+            var resolvedPlayback = ResolvePlayback(playback);
+            var backendHandle = backend.Play(stream, resolvedPlayback);
             if (!backendHandle.IsValid())
             {
                 throw new InvalidOperationException("Audio backend returned an invalid voice handle.");
             }
 
             var voice = new AudioVoiceHandle(++nextVoiceId);
-            Voices.Add(voice, new VoiceState(stream, playback, backendHandle));
+            Voices.Add(voice, new VoiceState(stream, resolvedPlayback, backendHandle));
             return voice;
         }
     }
@@ -531,6 +1248,7 @@ public static class AudioServer
         lock (BackendLock)
         {
             ReleaseAllVoices();
+            ResetBusGraph();
             AudioServer.backend = backend;
             nextVoiceId = 0L;
         }
@@ -596,6 +1314,188 @@ public static class AudioServer
         }
 
         Voices.Clear();
+    }
+
+    private static void ResetBusGraph()
+    {
+        Buses.Clear();
+        Buses.Add(AudioBus.CreateMaster());
+    }
+
+    private static AudioVoicePlayback ResolvePlayback(AudioVoicePlayback playback)
+    {
+        var busIndex = FindBusIndex(playback.Bus.IsEmpty() ? MasterBusName : playback.Bus.ToString());
+        if (busIndex < 0)
+        {
+            busIndex = 0;
+        }
+
+        var path = BuildBusPath(busIndex);
+        var volumeDb = playback.VolumeDb;
+        foreach (var bus in path)
+        {
+            volumeDb += bus.VolumeDb;
+        }
+
+        var anySolo = Buses.Any(bus => bus.Solo);
+        if (path.Any(bus => bus.Mute) || (anySolo && !path.Any(bus => bus.Solo)))
+        {
+            volumeDb = QuietVolumeDb;
+        }
+
+        return new AudioVoicePlayback(
+            VolumeDb: volumeDb,
+            PitchScale: playback.PitchScale,
+            Loop: playback.Loop,
+            StartPosition: playback.StartPosition,
+            Pan: playback.Pan,
+            Bus: new StringName(Buses[busIndex].Name));
+    }
+
+    private static IReadOnlyList<AudioBus> BuildBusPath(int busIndex)
+    {
+        var path = new List<AudioBus>();
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        var currentIndex = busIndex;
+
+        while (true)
+        {
+            var bus = Buses[currentIndex];
+            if (!visited.Add(bus.Name))
+            {
+                throw new InvalidOperationException("Audio bus routing cycle detected.");
+            }
+
+            path.Add(bus);
+            if (currentIndex == 0)
+            {
+                return path;
+            }
+
+            var sendIndex = FindBusIndex(bus.Send.IsEmpty() ? MasterBusName : bus.Send.ToString());
+            currentIndex = sendIndex >= 0 && sendIndex < currentIndex ? sendIndex : 0;
+        }
+    }
+
+    private static AudioBus RequireBus(int index)
+    {
+        RequireBusIndex(index, nameof(index));
+        return Buses[index];
+    }
+
+    private static void RequireBusIndex(int index, string parameterName)
+    {
+        if (index < 0 || index >= Buses.Count)
+        {
+            throw new ArgumentOutOfRangeException(parameterName, index, "Audio bus index is out of range.");
+        }
+    }
+
+    private static void RequireUserBusIndex(int index, string parameterName)
+    {
+        RequireBusIndex(index, parameterName);
+        if (index == 0)
+        {
+            throw new InvalidOperationException("Master bus cannot be changed by this operation.");
+        }
+    }
+
+    private static int FindBusIndex(string name)
+    {
+        for (var index = 0; index < Buses.Count; index++)
+        {
+            if (string.Equals(Buses[index].Name, name, StringComparison.Ordinal))
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    private static string NormalizeBusName(string name, string parameterName)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        var normalized = name.Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            throw new ArgumentException("Audio bus name cannot be empty.", parameterName);
+        }
+
+        return normalized;
+    }
+
+    private static string NextDefaultBusName()
+    {
+        var number = 1;
+        while (true)
+        {
+            var name = "Bus " + number.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (FindBusIndex(name) < 0)
+            {
+                return name;
+            }
+
+            number++;
+        }
+    }
+
+    private static void NormalizeInvalidBusSends()
+    {
+        Buses[0].Send = default;
+        for (var index = 1; index < Buses.Count; index++)
+        {
+            var targetName = Buses[index].Send.IsEmpty() ? MasterBusName : Buses[index].Send.ToString();
+            var targetIndex = FindBusIndex(targetName);
+            if (targetIndex < 0 || targetIndex >= index)
+            {
+                Buses[index].Send = new StringName(MasterBusName);
+            }
+        }
+    }
+
+    private static bool StringNameEquals(StringName name, string value)
+    {
+        return string.Equals(name.ToString(), value, StringComparison.Ordinal);
+    }
+
+    private static float DbToLinear(float db)
+    {
+        return db <= QuietVolumeDb ? 0f : MathF.Pow(10f, db / 20f);
+    }
+
+    private static float LinearToDb(float linear)
+    {
+        return linear <= 0f ? QuietVolumeDb : 20f * MathF.Log10(linear);
+    }
+
+    private sealed class AudioBus
+    {
+        private AudioBus(string name, StringName send)
+        {
+            Name = name;
+            Send = send;
+        }
+
+        public string Name { get; set; }
+
+        public StringName Send { get; set; }
+
+        public float VolumeDb { get; set; }
+
+        public bool Mute { get; set; }
+
+        public bool Solo { get; set; }
+
+        public static AudioBus CreateMaster()
+        {
+            return new AudioBus(MasterBusName, default);
+        }
+
+        public static AudioBus CreateUser(string name, StringName send)
+        {
+            return new AudioBus(name, send);
+        }
     }
 
     private sealed class VoiceState
