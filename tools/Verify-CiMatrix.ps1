@@ -45,6 +45,7 @@ $requiredFragments = @(
     'tools/Verify-Box2DPhysicsCandidate.ps1',
     'tools/Verify-ProjectTemplate.ps1',
     'tools/Verify-UserDocumentation.ps1',
+    'tools/Verify-PublicApiXmlDocs.ps1',
     'tools/Verify-WindowsExport.ps1',
     'tools/Verify-LinuxExport.ps1',
     'tools/Verify-MacOSExport.ps1',

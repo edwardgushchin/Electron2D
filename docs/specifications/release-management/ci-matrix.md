@@ -22,6 +22,8 @@ CI должен проверять новый clean runtime baseline на Tier 1
 - запускать `tools/Run-Tests.ps1` без `-IncludeBaseline`.
 - запускать `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`.
 - запускать `tools/Verify-ProjectTemplate.ps1`.
+- запускать `tools/Verify-UserDocumentation.ps1`.
+- запускать `tools/Verify-PublicApiXmlDocs.ps1` в report mode до полного закрытия `T-0106`.
 - запускать `tools/Verify-PerformanceBudgets.ps1`.
 
 ## Baseline и gaps
@@ -36,4 +38,4 @@ CI не запускает `Category=Baseline` по умолчанию, пото
 powershell -ExecutionPolicy Bypass -File tools/Verify-CiMatrix.ps1
 ```
 
-Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1`, запуск `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot` и явное упоминание mobile/export status gap.
+Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1`, запуск `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`, документационные проверки и явное упоминание mobile/export status gap.

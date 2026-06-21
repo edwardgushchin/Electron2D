@@ -24,6 +24,7 @@
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-documentation.md) - обязательные разделы user guide, проверяемые команды и screenshot policy.
+- [XML documentation публичного API](documentation/public-api-xml-documentation.md) - обязательные XML-теги, verifier modes и правила качества public API comments.
 
 ## Репозиторий
 

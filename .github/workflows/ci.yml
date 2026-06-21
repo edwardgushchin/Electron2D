@@ -54,6 +54,10 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-UserDocumentation.ps1
 
+      - name: Report public API XML documentation
+        shell: pwsh
+        run: ./tools/Verify-PublicApiXmlDocs.ps1
+
       - name: Verify Windows export
         if: matrix.os == 'windows-latest'
         shell: pwsh

@@ -1539,7 +1539,7 @@
 - 2026-06-21T01:23:00+03:00 - Задача взята в работу после `T-0019`.
 - Граница scope: `T-0020` фиксирует Electron2D `Variant` и закрытый список поддерживаемых значений; стабильный serialization round-trip остаётся отдельной задачей `T-0021`.
 
-## T-0106 [ ] P0: Ввести SDL3-style XML documentation для всего публичного API
+## T-0106 [~] P0: Ввести SDL3-style XML documentation для всего публичного API
 
 - Создана: 2026-06-20T22:01:23+03:00
 - Приоритет: P0
@@ -1580,6 +1580,10 @@
 Создано по запросу пользователя: публичный API должен документироваться так же полно, как SDL3 public API, но в C# XML documentation стиле.
 
 2026-06-21T20:48:00+03:00 - Audit note: команда `dotnet build src\Electron2D\Electron2D.csproj -p:GenerateDocumentationFile=true -p:DocumentationFile=.temp\Electron2D.xml -warnaserror:1591 --no-restore` собрала проект, но выдала `366` предупреждений `CS1591` по публичному API. Задачу нельзя закрывать одним verifier-скриптом без предварительного заполнения документации: такой verifier сразу сломает CI. Нужен отдельный проход по доменам или generator/report mode до включения fail mode.
+
+2026-06-21T21:00:00+03:00 - В работе. Первый безопасный шаг: formal style guide и verifier с report/fail modes. Fail mode нельзя подключать к CI до устранения текущих `CS1591` gaps, но report mode должен дать воспроизводимый список недостающей документации для доменного прохода.
+
+2026-06-21T21:18:00+03:00 - Добавлен `tools\Verify-PublicApiXmlDocs.ps1`: report mode проверил `1252` public symbols и нашёл `1013` XML documentation issues; `-FailOnIssues` ожидаемо завершился с ошибкой на этих issues. CI подключён только к report mode, strict gate остаётся частью завершения `T-0106`.
 
 ## T-0107 [ ] P0: Генерировать автоматическую документацию публичного API в GitHub Wiki
 

@@ -28,6 +28,7 @@
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.
+- [XML documentation публичного API](documentation/public-api-xml-documentation.md) - текущее правило, команды verifier и статус заполнения XML comments.
 
 ## Ресурсы, импорт и сериализация
 
