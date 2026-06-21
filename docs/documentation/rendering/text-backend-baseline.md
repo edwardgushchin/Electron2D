@@ -1,7 +1,7 @@
 # Text backend baseline через SDL_ttf
 
 Статус: реализовано.
-Задача: `T-0029`.
+Задача: `T-0029`, обновлено в `T-0038`.
 Обновлено: 2026-06-21.
 
 ## Public API
@@ -70,7 +70,7 @@ Unicode обрабатывается через `System.Text.Rune`, поэтом
 
 ## Ограничения
 
-- Нет публичного `FontFile`, `ResourceLoader` или import pipeline для TTF/OTF; это отдельные resource/import задачи.
+- TTF/OTF import metadata реализован в `T-0038` как internal import cache importer. Нет публичного `FontFile`, public `ResourceLoader` или real glyph rasterization pipeline.
 - Нет многострочного layout, wrapping, clipping, overrun policy и bidi shaping.
 - Нет реального raster/GPU draw call для text; Compatibility backend пока получает готовый layout в command stream и сериализует его для golden-data проверки.
 - `Label` поддерживает только одну строку plain text и theme overrides `font`/`font_size`.

@@ -20,7 +20,7 @@ Electron2D `0.1.0 Preview` должен иметь минимальный тек
 - Godot `Control` наследуется от `CanvasItem`, а `Label` наследуется от `Control`.
 - SDL_ttf 3 предоставляет `TTF_OpenFont`, fallback fonts, glyph availability, string size, text objects и GPU text engine API.
 
-Эта задача реализует не полный TextServer Godot и не полноценный shaping engine. Она фиксирует минимальный проверяемый baseline, на который позже можно добавить импорт шрифтов, сложные fallback chains, bidi shaping и реальные backend draw calls.
+Эта задача реализует не полный TextServer Godot и не полноценный shaping engine. Она фиксирует минимальный проверяемый baseline, на который позже можно добавить импорт шрифтов, сложные fallback chains, bidi shaping и реальные backend draw calls. TTF/OTF import metadata реализуется отдельной спецификацией `resources/font-import.md`.
 
 ## Публичный API
 
