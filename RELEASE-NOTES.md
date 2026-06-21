@@ -7,7 +7,7 @@
 ## Что есть сейчас
 
 - Новый пустой runtime-проект `Electron2D`.
-- Начальный Godot-like public API: `Object`, `RefCounted`, `Resource`.
+- Начальный public API: `Object`, `RefCounted`, `Resource`.
 - Начальный lifecycle API: `Node`, `SceneTree`, `InputEvent`.
 - Начальная иерархия `Node`: `Owner`, `GetParent()`, `GetChild()`, `MoveChild()`, `Reparent()` и `QueueFree()`.
 - Начальное разрешение путей: `NodePath`, `GetNode()` и `GetNodeOrNull()`.
@@ -29,12 +29,12 @@
 - Начальный internal AOT-safe metadata baseline: `ResourceObjectMetadataRegistry`, typed descriptors, custom `Resource` serialization без reflection fallback и trimmed/NativeAOT smoke verifier.
 - Начальный data stability stress gate: 100 save/load cycles, rename/move resources, import cache rebuild и corruption diagnostics без silent data loss.
 - Начальный C# script class baseline: обычные .NET classes, inheritance from `Node`, lifecycle callbacks, доступ к `GetTree()`/`RenderingServer` и script sample в `electron2d-empty`.
-- Начальный script metadata baseline: публичные Godot-like `[Export]`, `[Signal]`, `[Tool]`, internal AOT-safe bridge для export properties/signals/tool-state, callable signals и sandboxed experimental `[Tool]`.
-- Начальный SDL input event mapping baseline: public `InputEventKey`, `InputEventMouseButton`, `InputEventMouseMotion`, `Key`, `KeyLocation`, `MouseButton`, `MouseButtonMask`, keyboard/mouse/wheel/text input и dispatch order через `SceneTree`.
-- Начальный `PhysicsServer2D` boundary baseline: public Godot-like RID-граница для spaces, areas, bodies, joints, shapes, `SpaceParameter`, `ShapeType`, `ProcessInfo`, `FreeRid()` и internal backend boundary без публичных Box2D handles.
-- Начальный physics nodes lifecycle baseline: public Godot-like `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`, `Shape2D`, RID lifecycle, transform sync и безопасное удаление через `QueueFree()` во время physics traversal.
-- Начальный shape resources baseline: public Godot-like `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`, validation, shape RID creation, concave-only-static rule и AOT-safe serialization metadata.
-- Начальный collision material state baseline: public Godot-like `PhysicsMaterial`, layer/mask helper methods, `PhysicsBody2D.PhysicsMaterialOverride`, validation, AOT-safe material serialization и internal collision/body-state snapshots.
+- Начальный script metadata baseline: публичные `[Export]`, `[Signal]`, `[Tool]`, internal AOT-safe bridge для export properties/signals/tool-state, callable signals и sandboxed experimental `[Tool]`.
+- Начальный input event mapping baseline: public `InputEventKey`, `InputEventMouseButton`, `InputEventMouseMotion`, `Key`, `KeyLocation`, `MouseButton`, `MouseButtonMask`, keyboard/mouse/wheel/text input и dispatch order через `SceneTree`.
+- Начальный `PhysicsServer2D` boundary baseline: public RID-граница для spaces, areas, bodies, joints, shapes, `SpaceParameter`, `ShapeType`, `ProcessInfo`, `FreeRid()` и internal backend boundary без публичных Box2D handles.
+- Начальный physics nodes lifecycle baseline: public `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`, `Shape2D`, RID lifecycle, transform sync и безопасное удаление через `QueueFree()` во время physics traversal.
+- Начальный shape resources baseline: public `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`, validation, shape RID creation, concave-only-static rule и AOT-safe serialization metadata.
+- Начальный collision material state baseline: public `PhysicsMaterial`, layer/mask helper methods, `PhysicsBody2D.PhysicsMaterialOverride`, validation, AOT-safe material serialization и internal collision/body-state snapshots.
 - Начальный `Area2D` sensors baseline: overlap helper methods, signals `body_entered`/`body_exited`/`area_entered`/`area_exited`, layer/mask filters, `Monitoring`/`Monitorable` и безопасное `QueueFree()` внутри signal callback.
 - Начальный direct 2D physics query baseline: `World2D`, `PhysicsDirectSpaceState2D`, query parameters, `RayCast2D` execution, ray/point/shape AABB queries, filters, masks и no-hit cases.
 - Начальный fixed physics baseline: fixed tick `1/60`, basic `RigidBody2D` motion по `LinearVelocity`, AABB sweep для fast body vs `StaticBody2D`, one-way platform checks и пропуск queued bodies на следующих fixed ticks.
@@ -42,18 +42,18 @@
 - Начальный Variant API: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений `0.1.0 Preview`.
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.
 - Начальная серверная граница рендеринга: `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature()` и internal `Compatibility`/`Standard` backend abstraction.
-- Начальный internal SDL_GPU lifecycle: SDL3-CS dependency, SDL device/window claim/command buffer adapter, frame begin/submit state machine и smoke-проверки ошибок/resize/fullscreen/high-DPI.
+- Начальный internal graphics device lifecycle: native backend dependency, device/window claim/command buffer adapter, frame begin/submit state machine и smoke-проверки ошибок/resize/fullscreen/high-DPI.
 - Начальный internal CanvasItem render queue: stable sort, visibility/modulate filtering и contiguous batching для будущих `CanvasItem` submissions.
 - Начальный texture resource baseline: public `Texture2D`/`AtlasTexture`/`ViewportTexture`, atlas regions, transparency queries, internal upload/reload/release registry и no-leak runtime smoke.
 - Начальный canvas node baseline: public `CanvasItem`, `Node2D`, `Sprite2D`, `CanvasLayer`, transform/visibility/z-order/self-modulate behavior и internal sprite submission.
 - Начальный camera/viewport baseline: public `Camera2D`, `Viewport`, current camera selection, camera transform, pixel snapping, `SceneTree.Root` как `Viewport` instance и internal resize/high-DPI presentation plan.
 - Начальный immediate drawing baseline: `CanvasItem._Draw()`, `QueueRedraw()`, `DrawLine()`, `DrawRect()`, `DrawCircle()`, `DrawPolygon()`, `DrawTexture()`, `DrawString()`, public `Font`/`HorizontalAlignment` и internal command capture.
-- Начальный text backend baseline: public `Font` measurement API, `VerticalAlignment`, `Control`, `Label`, internal glyph layout, fallback font resolution, layout cache и SDL_ttf boundary через SDL3-CS.
+- Начальный text backend baseline: public `Font` measurement API, `VerticalAlignment`, `Control`, `Label`, internal glyph layout, fallback font resolution, layout cache и native text backend boundary.
 - Начальный offscreen render target recovery baseline: `Viewport.GetTexture()`, внутренние render target descriptors для кода движка и восстановление active texture resources после пересоздания device.
-- Начальный canvas shader import baseline: public `Shader`, import-time vertex/fragment compilation через SDL_shadercross boundary, diagnostics file/line/column и iOS artifact без runtime compilation.
+- Начальный canvas shader import baseline: public `Shader`, import-time vertex/fragment compilation через offline shader compiler boundary, diagnostics file/line/column и iOS artifact без runtime compilation.
 - Начальный shader material baseline: public `Material`/`ShaderMaterial`, supported uniforms, `Texture2D` sampler parameters, reserved canvas built-ins и stable internal material parameter JSON snapshot.
-- Начальный SDL_Renderer compatibility backend baseline: internal frame plan для sprites, UI/text, primitives, tile-like texture copies, documented limitations и golden reference command stream.
-- Начальный Android mobile GPU fallback baseline: internal mobile SDL_GPU create profile, smoke steps texture/pipeline/command buffer/first submit, `Automatic`/`FailIfUnavailable` policy и startup result с GPU/driver/backend/reasons.
+- Начальный compatibility renderer backend baseline: internal frame plan для sprites, UI/text, primitives, tile-like texture copies, documented limitations и golden reference command stream.
+- Начальный Android mobile GPU fallback baseline: internal mobile GPU create profile, smoke steps texture/pipeline/command buffer/first submit, `Automatic`/`FailIfUnavailable` policy и startup result с GPU/driver/backend/reasons.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
@@ -61,12 +61,12 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, Android device/export run, SDL_Renderer window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input, production physics solver, production Box2D.NET backend, mobile physics AOT proof, contacts, gravity integration, rigid-rigid collision, material combine и запись geometry/material в production solver, editor script attach/external IDE workflow, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/upload, PNG/JPEG pixel decoding, glyph rasterization/font atlas generation, real-window GPU smoke/fallback pipeline, Android device/export run, compatibility window presentation, public `ResourceLoader`/`ResourceSaver`, audio importers, file-level scene serialization, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input, production physics solver, production Box2D.NET backend, mobile physics AOT proof, contacts, gravity integration, rigid-rigid collision, material combine и запись geometry/material в production solver, editor script attach/external IDE workflow, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API
 
-В новый runtime не переносится Unity-like/component history. Публичный API должен появляться только как согласованный Godot-like 2D-поднабор.
+В новый runtime не переносится Unity-like/component history. Публичный API должен появляться только как согласованный 2D-поднабор Electron2D API.
 
 ## Breaking changes policy для 0.x
 
