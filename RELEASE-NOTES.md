@@ -21,6 +21,7 @@
 - Начальный identity API: `StringName` и `Rid` для будущего `Variant` и server-backed resources.
 - Начальный resource UID API: `ResourceUid`, `uid://` conversion, path mapping и сохранение ссылок при rename/move через `SetId()`.
 - Начальный internal resource file baseline: `.e2res` JSON document model, external/internal references, стабильный LF output и golden-data проверка exact text.
+- Начальный internal import cache baseline: `.e2res` discovery, cache root отдельно от source assets, reimport при изменении source/dependency, сохранение предыдущего валидного cache при ошибке и prune удалённых source assets.
 - Начальный Variant API: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений `0.1.0 Preview`.
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.
 - Начальная серверная граница рендеринга: `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature()` и internal `Compatibility`/`Standard` backend abstraction.
@@ -43,7 +44,7 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, Android device/export run, SDL_Renderer window presentation, public `ResourceLoader`/`ResourceSaver`, import cache, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, Android device/export run, SDL_Renderer window presentation, public `ResourceLoader`/`ResourceSaver`, PNG/JPEG/TTF/audio importers, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

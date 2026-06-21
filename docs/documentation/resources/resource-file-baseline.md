@@ -64,7 +64,7 @@ Top-level поля:
 
 ## Ограничения
 
-T-0035 не добавляет file-level `ResourceLoader`, `ResourceSaver`, импорт, файловое наблюдение, editor FileSystem dock и import cache. Эти части остаются следующими задачами. Текущий результат нужен как стабильный формат данных и UID-контракт для них.
+T-0035 сам по себе не добавлял file-level `ResourceLoader`, `ResourceSaver`, импорт, файловое наблюдение и editor FileSystem dock. Import cache реализован отдельной задачей `T-0036` и описан в `resource-import-cache.md`. Текущий документ остаётся справкой по стабильному `.e2res` формату и UID-контракту, на который import cache опирается.
 
 ## Проверки
 

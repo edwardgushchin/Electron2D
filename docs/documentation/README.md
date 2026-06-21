@@ -24,6 +24,7 @@
 ## Ресурсы, импорт и сериализация
 
 - [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - текущий public `ResourceUid`, internal `.e2res` document model, external/internal references и golden-data формат.
+- [Import cache ресурсов](resources/resource-import-cache.md) - текущий internal pipeline для `.e2res` discovery, reimport on source/dependency changes, safe cache writes и prune unused cache.
 
 ## Рендеринг
 

@@ -27,6 +27,7 @@
 ## Ресурсы, импорт и сериализация
 
 - [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - `ResourceUid`, `.e2res`, external/internal references и diff-friendly формат ресурсов.
+- [Import cache ресурсов](resources/resource-import-cache.md) - внутренний pipeline для discovery, reimport on change, dependency tracking, safe cache writes и prune unused cache.
 
 ## Рендеринг
 
