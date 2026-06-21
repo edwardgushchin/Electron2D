@@ -50,6 +50,7 @@
 - [Box2D.NET platform/AOT validation](physics/box2d-net-validation.md) - candidate smoke gate, desktop JIT/NativeAOT matrix, mobile Release/AOT gaps и allocations per tick.
 - [Physics nodes lifecycle baseline](physics/physics-nodes-lifecycle.md) - Godot-like `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`, RID lifecycle и transform sync.
 - [Shape2D resources baseline](physics/shape2d-resources.md) - concrete 2D collision shapes, validation, concave-only-static rule и AOT-safe serialization.
+- [Collision layers, material, gravity и sleeping baseline](physics/collision-material-state.md) - Godot-like collision filter helpers, `PhysicsMaterial`, material override и внутренний body-state snapshot.
 
 ## Рендеринг
 

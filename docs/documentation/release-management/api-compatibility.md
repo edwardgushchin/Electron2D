@@ -16,7 +16,7 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary, первые 2D physics nodes и concrete shape resources:
+Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources и physics material resource:
 
 - `Electron2D.Area2D`
 - `Electron2D.AtlasTexture`
@@ -59,6 +59,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Object`
 - `Electron2D.PackedScene`
 - `Electron2D.PhysicsBody2D`
+- `Electron2D.PhysicsMaterial`
 - `Electron2D.PhysicsServer2D`
 - `Electron2D.PhysicsServer2D+ProcessInfo`
 - `Electron2D.PhysicsServer2D+ShapeType`

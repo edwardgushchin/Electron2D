@@ -44,4 +44,41 @@ namespace Electron2D;
 /// </since>
 public abstract class PhysicsBody2D : CollisionObject2D
 {
+    private PhysicsMaterial? physicsMaterialOverride;
+
+    /// <summary>
+    /// Gets or sets the physics material overriding this body's default collision material.
+    /// </summary>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public PhysicsMaterial? PhysicsMaterialOverride
+    {
+        get
+        {
+            ThrowIfFreed();
+            return physicsMaterialOverride;
+        }
+        set
+        {
+            ThrowIfFreed();
+            physicsMaterialOverride = value;
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void SynchronizePhysicsState(Rid rid)
+    {
+        PhysicsServer2D.BodySetState(rid, CapturePhysicsBodyState());
+    }
+
+    internal virtual PhysicsBody2DState CapturePhysicsBodyState()
+    {
+        return new PhysicsBody2DState(PhysicsMaterialState.From(PhysicsMaterialOverride), RigidBody: null);
+    }
 }

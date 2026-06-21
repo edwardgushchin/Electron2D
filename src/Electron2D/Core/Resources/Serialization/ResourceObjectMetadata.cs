@@ -217,6 +217,7 @@ internal static class ResourceObjectMetadataRegistry
     static ResourceObjectMetadataRegistry()
     {
         PhysicsShapeResourceMetadata.Register();
+        PhysicsMaterialResourceMetadata.Register();
     }
 
     public static void Register(ResourceObjectTypeMetadata metadata)

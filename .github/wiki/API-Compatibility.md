@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes and concrete 2D shape resources. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources and physics material resource. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -62,6 +62,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.NodePath` | `NodePath` | Partial | Relative/absolute node path parsing and `GetNode()`/`GetNodeOrNull()` resolution baseline. |
 | `Electron2D.PackedScene` | `PackedScene` | Partial | In-memory pack/instantiate baseline for owned node subtrees. |
 | `Electron2D.PhysicsBody2D` | `PhysicsBody2D` | Partial | Base class for body nodes; behavior is inherited from `CollisionObject2D`. |
+| `Electron2D.PhysicsMaterial` | `PhysicsMaterial` | Partial | Body material resource with `Friction`, `Bounce`, `Rough`, `Absorbent`, validation and AOT-safe serialization metadata. |
 | `Electron2D.PhysicsServer2D` | `PhysicsServer2D` | Partial | Low-level 2D physics server facade for RID allocation, spaces, shape kinds and internal backend swapping; no real simulation yet. |
 | `Electron2D.PhysicsServer2D+ProcessInfo` | `PhysicsServer2D.ProcessInfo` | Partial | Godot-like process statistic enum; values currently report `0` until real simulation is implemented. |
 | `Electron2D.PhysicsServer2D+ShapeType` | `PhysicsServer2D.ShapeType` | Partial | Godot-like shape type enum for physics server shape RID creation. |

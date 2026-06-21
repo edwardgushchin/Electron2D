@@ -13,8 +13,10 @@
 - Во время `SceneTree.PhysicsFrame()` `CollisionObject2D` передаёт свой `GlobalTransform` во внутренний physics backend.
 - `QueueFree()` внутри `_PhysicsProcess()` безопасен: узел удаляется после завершения текущего обхода дерева, а RID освобождается во время flush delete queue.
 - `CollisionLayer` и `CollisionMask` хранятся на `CollisionObject2D`, но ещё не участвуют в solver.
+- `CollisionObject2D` синхронизирует collision filter во внутренний physics backend во время physics frame.
 - `StaticBody2D` хранит `ConstantLinearVelocity` и `ConstantAngularVelocity`.
 - `RigidBody2D` хранит базовые Godot-like свойства: `Mass`, `Inertia`, `CenterOfMass`, `CenterOfMassMode`, `GravityScale`, `LinearVelocity`, `AngularVelocity`, `Freeze`, `FreezeMode`, `Sleeping`, `CanSleep`, `LockRotation`.
+- `PhysicsBody2D` хранит `PhysicsMaterialOverride`, а `RigidBody2D` синхронизирует `GravityScale`, `Sleeping` и `CanSleep` во внутренний body-state snapshot.
 - `Area2D` хранит `Monitoring`, `Monitorable` и `Priority`.
 - `CollisionShape2D` хранит `Shape`, `Disabled`, `OneWayCollision` и `OneWayCollisionMargin`.
 - `CollisionShape2D` проверяет, что `ConcavePolygonShape2D` используется только под `StaticBody2D`.

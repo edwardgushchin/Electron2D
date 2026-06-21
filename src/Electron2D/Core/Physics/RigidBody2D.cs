@@ -44,6 +44,10 @@ namespace Electron2D;
 /// </since>
 public class RigidBody2D : PhysicsBody2D
 {
+    private float gravityScale = 1f;
+    private bool sleeping;
+    private bool canSleep = true;
+
     /// <summary>
     /// Identifies how a frozen rigid body should interact with the simulation.
     /// </summary>
@@ -147,7 +151,24 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public float GravityScale { get; set; } = 1f;
+    public float GravityScale
+    {
+        get
+        {
+            ThrowIfFreed();
+            return gravityScale;
+        }
+        set
+        {
+            ThrowIfFreed();
+            if (!float.IsFinite(value))
+            {
+                throw new ArgumentOutOfRangeException(nameof(GravityScale), "GravityScale must be finite.");
+            }
+
+            gravityScale = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the current linear velocity.
@@ -212,7 +233,19 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public bool Sleeping { get; set; }
+    public bool Sleeping
+    {
+        get
+        {
+            ThrowIfFreed();
+            return sleeping;
+        }
+        set
+        {
+            ThrowIfFreed();
+            sleeping = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets whether this body is allowed to sleep.
@@ -225,7 +258,19 @@ public class RigidBody2D : PhysicsBody2D
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public bool CanSleep { get; set; } = true;
+    public bool CanSleep
+    {
+        get
+        {
+            ThrowIfFreed();
+            return canSleep;
+        }
+        set
+        {
+            ThrowIfFreed();
+            canSleep = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets whether rotation is locked.
@@ -243,5 +288,12 @@ public class RigidBody2D : PhysicsBody2D
     protected override Rid CreatePhysicsRid()
     {
         return PhysicsServer2D.BodyCreate(PhysicsBodyKind.Rigid);
+    }
+
+    internal override PhysicsBody2DState CapturePhysicsBodyState()
+    {
+        return new PhysicsBody2DState(
+            PhysicsMaterialState.From(PhysicsMaterialOverride),
+            new PhysicsRigidBody2DState(GravityScale, Sleeping, CanSleep));
     }
 }

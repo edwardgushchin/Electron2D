@@ -34,6 +34,7 @@
 - PhysicsServer2D boundary baseline: public Godot-like `PhysicsServer2D`, `SpaceParameter`, `ShapeType`, `ProcessInfo`, RID creation/free для spaces, areas, bodies, joints, shapes и internal swappable backend без публичных Box2D handles.
 - Physics nodes lifecycle baseline: public Godot-like `CollisionObject2D`, `PhysicsBody2D`, `StaticBody2D`, `RigidBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D`, `Shape2D`, RID lifecycle, transform sync и безопасное `QueueFree()` во время physics traversal.
 - Shape2D resources baseline: public Godot-like `RectangleShape2D`, `CircleShape2D`, `CapsuleShape2D`, `SegmentShape2D`, `ConvexPolygonShape2D`, `ConcavePolygonShape2D`, validation, lazy shape RID creation, concave-only-static rule и AOT-safe serialization metadata.
+- Collision material state baseline: public Godot-like `PhysicsMaterial`, layer/mask helper methods, `PhysicsBody2D.PhysicsMaterialOverride`, validation, AOT-safe material serialization и internal collision/body-state snapshots.
 - Box2D.NET candidate validation baseline: отдельный smoke-проект на `Box2D.NET 3.1.654`, verifier `Verify-Box2DPhysicsCandidate.ps1`, desktop JIT/NativeAOT CI gate, local `win-x64` allocation measurement и documented Android/iOS Release/AOT gaps.
 - Variant baseline: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений для `0.1.0 Preview`.
 - Stable Variant serialization baseline: internal canonical JSON round-trip для сериализуемых `Variant` значений и понятные ошибки для runtime-only значений.
@@ -68,8 +69,8 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `80` публичных типов.
-- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, Box2D.NET пока является candidate validation gate без production backend и без mobile AOT proof, physics nodes пока не выполняют real simulation/contacts/queries и не передают geometry в production solver, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input и editor script attach workflow ещё не реализованы, а полноценный device run/export остаётся следующими задачами.
+- Runtime assembly экспортирует `81` публичный тип.
+- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, Box2D.NET пока является candidate validation gate без production backend и без mobile AOT proof, physics nodes пока не выполняют real simulation/contacts/queries и не передают geometry/material в production solver, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, `InputMap`/actions/gamepad/touch/mobile input и editor script attach workflow ещё не реализованы, а полноценный device run/export остаётся следующими задачами.
 
 ### Breaking changes policy
 

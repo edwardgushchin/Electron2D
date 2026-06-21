@@ -449,6 +449,22 @@ public static class PhysicsServer2D
         }
     }
 
+    internal static void CollisionObjectSetCollisionFilter(Rid rid, PhysicsCollisionFilter filter)
+    {
+        lock (BackendLock)
+        {
+            backend.CollisionObjectSetCollisionFilter(rid, filter);
+        }
+    }
+
+    internal static void BodySetState(Rid rid, PhysicsBody2DState state)
+    {
+        lock (BackendLock)
+        {
+            backend.BodySetState(rid, state);
+        }
+    }
+
     private static Rid ShapeCreate(ShapeType type)
     {
         lock (BackendLock)

@@ -45,6 +45,8 @@ namespace Electron2D;
 public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
 {
     private Rid rid;
+    private uint collisionLayer = 1u;
+    private uint collisionMask = 1u;
 
     /// <summary>
     /// Gets or sets the collision layer bits for this object.
@@ -57,7 +59,19 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public uint CollisionLayer { get; set; } = 1u;
+    public uint CollisionLayer
+    {
+        get
+        {
+            ThrowIfFreed();
+            return collisionLayer;
+        }
+        set
+        {
+            ThrowIfFreed();
+            collisionLayer = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the collision mask bits used by this object.
@@ -70,7 +84,19 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <since>
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
-    public uint CollisionMask { get; set; } = 1u;
+    public uint CollisionMask
+    {
+        get
+        {
+            ThrowIfFreed();
+            return collisionMask;
+        }
+        set
+        {
+            ThrowIfFreed();
+            collisionMask = value;
+        }
+    }
 
     /// <summary>
     /// Gets the physics server RID owned by this collision object.
@@ -93,6 +119,80 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
         return rid;
     }
 
+    /// <summary>
+    /// Enables or disables a Godot-like collision layer number.
+    /// </summary>
+    /// <param name="layerNumber">The layer number in the inclusive range <c>1..32</c>.</param>
+    /// <param name="value">Whether the layer bit should be enabled.</param>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public void SetCollisionLayerValue(int layerNumber, bool value)
+    {
+        CollisionLayer = SetCollisionBit(CollisionLayer, layerNumber, value);
+    }
+
+    /// <summary>
+    /// Checks whether a Godot-like collision layer number is enabled.
+    /// </summary>
+    /// <param name="layerNumber">The layer number in the inclusive range <c>1..32</c>.</param>
+    /// <returns><c>true</c> when the layer bit is enabled; otherwise, <c>false</c>.</returns>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public bool GetCollisionLayerValue(int layerNumber)
+    {
+        ThrowIfFreed();
+        return (CollisionLayer & LayerNumberToBit(layerNumber)) != 0u;
+    }
+
+    /// <summary>
+    /// Enables or disables a Godot-like collision mask number.
+    /// </summary>
+    /// <param name="layerNumber">The mask layer number in the inclusive range <c>1..32</c>.</param>
+    /// <param name="value">Whether the mask bit should be enabled.</param>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public void SetCollisionMaskValue(int layerNumber, bool value)
+    {
+        CollisionMask = SetCollisionBit(CollisionMask, layerNumber, value);
+    }
+
+    /// <summary>
+    /// Checks whether a Godot-like collision mask number is enabled.
+    /// </summary>
+    /// <param name="layerNumber">The mask layer number in the inclusive range <c>1..32</c>.</param>
+    /// <returns><c>true</c> when the mask bit is enabled; otherwise, <c>false</c>.</returns>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public bool GetCollisionMaskValue(int layerNumber)
+    {
+        ThrowIfFreed();
+        return (CollisionMask & LayerNumberToBit(layerNumber)) != 0u;
+    }
+
     internal Rid CurrentRid => rid;
 
     void ISceneTreeLifecycleHandler.OnEnterTree()
@@ -109,6 +209,8 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
         if (rid.IsValid())
         {
             PhysicsServer2D.CollisionObjectSetTransform(rid, GlobalTransform);
+            PhysicsServer2D.CollisionObjectSetCollisionFilter(rid, new PhysicsCollisionFilter(CollisionLayer, CollisionMask));
+            SynchronizePhysicsState(rid);
         }
     }
 
@@ -129,6 +231,15 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     /// <returns>The created physics server RID.</returns>
     protected abstract Rid CreatePhysicsRid();
 
+    /// <summary>
+    /// Synchronizes subclass-specific physics state into the physics server.
+    /// </summary>
+    /// <param name="rid">The physics server RID owned by this object.</param>
+    protected virtual void SynchronizePhysicsState(Rid rid)
+    {
+        _ = rid;
+    }
+
     private void FreePhysicsRid()
     {
         if (!rid.IsValid())
@@ -139,5 +250,24 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
         var ridToFree = rid;
         rid = default;
         PhysicsServer2D.FreeRid(ridToFree);
+    }
+
+    private static uint SetCollisionBit(uint bits, int layerNumber, bool value)
+    {
+        var bit = LayerNumberToBit(layerNumber);
+        return value ? bits | bit : bits & ~bit;
+    }
+
+    private static uint LayerNumberToBit(int layerNumber)
+    {
+        if (layerNumber is < 1 or > 32)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(layerNumber),
+                layerNumber,
+                "Collision layer number must be in range 1..32.");
+        }
+
+        return 1u << (layerNumber - 1);
     }
 }

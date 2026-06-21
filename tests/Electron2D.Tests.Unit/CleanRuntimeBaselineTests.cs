@@ -83,6 +83,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Object",
                 "Electron2D.PackedScene",
                 "Electron2D.PhysicsBody2D",
+                "Electron2D.PhysicsMaterial",
                 "Electron2D.PhysicsServer2D",
                 "Electron2D.PhysicsServer2D+ProcessInfo",
                 "Electron2D.PhysicsServer2D+ShapeType",

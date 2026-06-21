@@ -17,7 +17,7 @@
 
 Публичный API не содержит Box2D.NET handles и не даёт пользователю выбирать backend. Внутри runtime есть `IPhysicsServer2DBackend`: это внутренний контракт между public facade и будущей реализацией физики. Он нужен тестам и runtime-коду, но не является API для игры.
 
-Текущий default backend `ManagedPhysicsServer2DBackend` хранит только resource registry: какие RID живы, какой у них kind, какой `ShapeType` у shape и последний transform для area/body RID. Он намеренно не рассчитывает контакты, velocity, gravity и sleeping.
+Текущий default backend `ManagedPhysicsServer2DBackend` хранит resource registry: какие RID живы, какой у них kind, какой `ShapeType` у shape, последний transform для area/body RID, collision filter и body-state snapshot. Он намеренно не рассчитывает контакты, velocity, gravity и sleeping transitions.
 
 ## Ошибки RID
 
@@ -26,7 +26,7 @@
 ## Что ещё не реализовано
 
 - запись geometry из `Shape2D` resources в production backend;
-- physics step, contacts, collision layers, masks, materials, sleeping и CCD;
+- physics step, contacts, material combine, collision response, sleeping transitions и CCD;
 - raycast, point query и shape query;
 - `CharacterBody2D` и kinematic solver;
 - production backend на Box2D.NET.

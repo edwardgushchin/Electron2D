@@ -304,6 +304,18 @@ public sealed class PhysicsNodeLifecycleTests
             Transforms[rid] = transform;
         }
 
+        public void CollisionObjectSetCollisionFilter(Electron2D.Rid rid, Electron2D.PhysicsCollisionFilter filter)
+        {
+            _ = rid;
+            _ = filter;
+        }
+
+        public void BodySetState(Electron2D.Rid rid, Electron2D.PhysicsBody2DState state)
+        {
+            _ = rid;
+            _ = state;
+        }
+
         public void FreeRid(Electron2D.Rid rid)
         {
             liveRids.Remove(rid);

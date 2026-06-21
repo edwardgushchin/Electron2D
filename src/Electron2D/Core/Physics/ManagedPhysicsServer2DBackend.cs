@@ -99,6 +99,18 @@ internal sealed class ManagedPhysicsServer2DBackend : IPhysicsServer2DBackend
         resource.Transform = transform;
     }
 
+    public void CollisionObjectSetCollisionFilter(Rid rid, PhysicsCollisionFilter filter)
+    {
+        var resource = EnsureCollisionObject(rid);
+        resource.CollisionFilter = filter;
+    }
+
+    public void BodySetState(Rid rid, PhysicsBody2DState state)
+    {
+        var resource = Ensure(rid, PhysicsResourceKind.Body);
+        resource.BodyState = state;
+    }
+
     public void FreeRid(Rid rid)
     {
         if (!resources.Remove(rid))
@@ -181,6 +193,10 @@ internal sealed class ManagedPhysicsServer2DBackend : IPhysicsServer2DBackend
         public PhysicsBodyKind BodyKind { get; }
 
         public Transform2D Transform { get; set; } = Transform2D.Identity;
+
+        public PhysicsCollisionFilter CollisionFilter { get; set; } = new(1u, 1u);
+
+        public PhysicsBody2DState BodyState { get; set; }
 
         public bool Active { get; set; } = true;
 
