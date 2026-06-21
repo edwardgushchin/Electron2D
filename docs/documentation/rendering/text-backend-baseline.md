@@ -62,7 +62,7 @@ Unicode обрабатывается через `System.Text.Rune`, поэтом
 - GPU text engine;
 - text object creation.
 
-Публичный API Electron2D не раскрывает SDL_ttf handles. Реальные GPU/renderer draw calls остаются следующими renderer tasks; текущий результат готовит command data для этого backend path.
+Публичный API Electron2D не раскрывает SDL_ttf handles. Начиная с `T-0033`, Compatibility backend преобразует text commands в `SDL_ttf_RenderText`-совместимые internal frame commands. Реальные SDL_ttf/SDL_Renderer draw calls остаются следующей integration task; текущий результат готовит command data для этого backend path.
 
 ## Профили рендеринга
 
@@ -72,7 +72,7 @@ Unicode обрабатывается через `System.Text.Rune`, поэтом
 
 - Нет публичного `FontFile`, `ResourceLoader` или import pipeline для TTF/OTF; это отдельные resource/import задачи.
 - Нет многострочного layout, wrapping, clipping, overrun policy и bidi shaping.
-- Нет реального raster/GPU draw call для text; renderer пока получает готовый layout в command stream.
+- Нет реального raster/GPU draw call для text; Compatibility backend пока получает готовый layout в command stream и сериализует его для golden-data проверки.
 - `Label` поддерживает только одну строку plain text и theme overrides `font`/`font_size`.
 
 ## Проверки

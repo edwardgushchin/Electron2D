@@ -119,9 +119,14 @@ Submission отправляет command только для `Sprite2D` с non-nu
 
 Начиная с `T-0028`, `CanvasSubmissionContext` также отправляет cached draw commands из `CanvasItem._Draw()`: line, rect, circle, polygon, texture и string. Подробности описаны в [Immediate drawing baseline](immediate-drawing-baseline.md).
 
+## Связанный Compatibility backend baseline
+
+Начиная с `T-0033`, `CompatibilityRenderingBackend` принимает `CanvasItemRenderPlan` и строит internal `SdlRendererFramePlan`. Этот plan покрывает `Sprite2D`, UI text через `Label`, immediate primitives, `DrawTexture()` и tile-like texture copies как SDL_Renderer-compatible command stream. Подробности описаны в [SDL_Renderer Compatibility backend baseline](sdl-renderer-compatibility-backend.md).
+
 ## Ограничения
 
 - Реальный SDL_GPU draw submission ещё не реализован.
+- Compatibility profile уже строит SDL_Renderer-compatible command plan, но real-window SDL_Renderer presentation ещё не реализован.
 - Sprite sheet frame API (`frame`, `hframes`, `vframes`) пока не реализован.
 - Public texture filter/repeat ещё не вынесены в `CanvasItem`; текущие GPU sampling descriptors остаются internal до настоящего drawing pipeline.
 

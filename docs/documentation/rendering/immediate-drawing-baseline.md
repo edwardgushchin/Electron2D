@@ -57,12 +57,13 @@ Internal command stream поддерживает:
 
 ## Golden Data
 
-`tests\Electron2D.Tests.GoldenData\CanvasImmediateDrawingGoldenTests.cs` фиксирует stable text representation для primitive command stream: line, rect и circle. Это не golden image rendering; raster/GPU golden output появится после реального primitive renderer.
+`tests\Electron2D.Tests.GoldenData\CanvasImmediateDrawingGoldenTests.cs` фиксирует stable text representation для primitive command stream: line, rect и circle. Начиная с `T-0033`, `SdlRendererCompatibilityGoldenTests` дополнительно проверяет reference scene как SDL_Renderer-compatible command stream. Это ещё не golden image rendering; pixel/screenshot output появится после реального renderer presentation.
 
 ## Ограничения
 
 - Реальный SDL_GPU primitive renderer ещё не реализован.
-- `DrawString()` создаёт layout, но real raster/GPU text draw call ещё не реализован.
+- Compatibility profile уже создаёт internal SDL_Renderer-compatible command plan для primitive commands, но не вызывает SDL3-CS renderer functions.
+- `DrawString()` создаёт layout и попадает в compatibility text command, но real raster/GPU text draw call ещё не реализован.
 - `DrawTextureRect()`, `DrawTextureRectRegion()`, polyline/multiline draw methods и draw transform stack пока не реализованы.
 - Public packed arrays не введены; preview signature использует C# arrays для `DrawPolygon()`.
 

@@ -39,11 +39,52 @@ internal sealed class CompatibilityRenderingBackend : RenderingBackend
         RenderingServer.RenderingFeature.StandardBlendModes
     };
 
+    private static readonly string[] CompatibilityLimitations =
+    {
+        "custom-shaders-unsupported",
+        "shader-material-unsupported",
+        "post-processing-unsupported",
+        "render-targets-not-guaranteed",
+        "primitive-antialiasing-approximated",
+        "pixel-perfect-standard-parity-not-guaranteed"
+    };
+
     public CompatibilityRenderingBackend()
         : base(
             "Compatibility",
             RenderingServer.RenderingProfile.Compatibility,
             CompatibilityFeatures)
     {
+    }
+
+    internal IReadOnlyList<string> Limitations => CompatibilityLimitations;
+
+    internal SdlRendererFramePlan CreateFramePlan(CanvasItemRenderPlan renderPlan)
+    {
+        ArgumentNullException.ThrowIfNull(renderPlan);
+
+        var commands = renderPlan.Commands
+            .Select(SdlRendererDrawCommand.FromCanvasCommand)
+            .ToArray();
+        var limitations = BuildLimitations(commands);
+
+        return new SdlRendererFramePlan(
+            Name,
+            Profile,
+            CompatibilityFeatures,
+            renderPlan.DrawCallCount,
+            commands,
+            limitations);
+    }
+
+    private static IReadOnlyList<string> BuildLimitations(IReadOnlyList<SdlRendererDrawCommand> commands)
+    {
+        var limitations = CompatibilityLimitations.ToList();
+        if (commands.Any(command => command.Kind == SdlRendererDrawCommandKind.Circle))
+        {
+            limitations.Add("circle-rendered-as-segmented-geometry");
+        }
+
+        return limitations;
     }
 }
