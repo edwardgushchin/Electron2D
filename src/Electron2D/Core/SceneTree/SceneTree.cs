@@ -127,7 +127,11 @@ public class SceneTree : Object
 
     internal void ProcessFrame(double delta)
     {
-        RunTraversal(() => Root.ProcessRecursive(delta));
+        RunTraversal(() =>
+        {
+            Root.ProcessRecursive(delta);
+            Root.DrawRecursive();
+        });
     }
 
     internal void PhysicsFrame(double delta)

@@ -27,6 +27,7 @@
 - Texture resource baseline: public `Texture2D`/`AtlasTexture`, atlas region transparency behavior, internal upload/reload/release registry, sampling descriptors и no-leak runtime smoke test.
 - Canvas node submission baseline: public `CanvasItem`, `Node2D`, `Sprite2D`, `CanvasLayer`, local/global 2D transforms, visibility/modulate inheritance, `Node2D` global-transform reparent и internal sprite submission model.
 - Camera/Viewport presentation baseline: public `Camera2D`, `Viewport`, current camera selection, camera transform, pixel snapping flags, `SceneTree.Root` как `Viewport` instance и internal resize/high-DPI presentation plan.
+- Immediate drawing baseline: public `CanvasItem._Draw()`, `QueueRedraw()`, `DrawLine()`, `DrawRect()`, `DrawCircle()`, `DrawPolygon()`, `DrawTexture()`, `DrawString()`, public `Font`/`HorizontalAlignment` и internal cached draw command submission.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -45,7 +46,7 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `36` публичных типов.
+- Runtime assembly экспортирует `38` публичных типов.
 - `0.1.0-preview` ещё не является готовым игровым runtime; дальнейшая реализация идёт задачами из `TASKS.md`.
 
 ### Breaking changes policy

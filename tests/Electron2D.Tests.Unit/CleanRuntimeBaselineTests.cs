@@ -52,6 +52,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Color",
                 "Electron2D.ConnectFlags",
                 "Electron2D.Error",
+                "Electron2D.Font",
+                "Electron2D.HorizontalAlignment",
                 "Electron2D.InputEvent",
                 "Electron2D.Mathf",
                 "Electron2D.Node",

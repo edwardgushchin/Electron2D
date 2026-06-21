@@ -26,12 +26,18 @@ namespace Electron2D;
 
 internal readonly struct CanvasItemBatchKey : IEquatable<CanvasItemBatchKey>
 {
-    public CanvasItemBatchKey(Rid texture, Rid material, Rid clip, CanvasItemBlendMode blendMode)
+    public CanvasItemBatchKey(
+        Rid texture,
+        Rid material,
+        Rid clip,
+        CanvasItemBlendMode blendMode,
+        CanvasItemRenderCommandKind kind = CanvasItemRenderCommandKind.Texture)
     {
         Texture = texture;
         Material = material;
         Clip = clip;
         BlendMode = blendMode;
+        Kind = kind;
     }
 
     public Rid Texture { get; }
@@ -42,12 +48,15 @@ internal readonly struct CanvasItemBatchKey : IEquatable<CanvasItemBatchKey>
 
     public CanvasItemBlendMode BlendMode { get; }
 
+    public CanvasItemRenderCommandKind Kind { get; }
+
     public bool Equals(CanvasItemBatchKey other)
     {
         return Texture == other.Texture &&
             Material == other.Material &&
             Clip == other.Clip &&
-            BlendMode == other.BlendMode;
+            BlendMode == other.BlendMode &&
+            Kind == other.Kind;
     }
 
     public override bool Equals(object? obj)
@@ -57,7 +66,7 @@ internal readonly struct CanvasItemBatchKey : IEquatable<CanvasItemBatchKey>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Texture, Material, Clip, BlendMode);
+        return HashCode.Combine(Texture, Material, Clip, BlendMode, Kind);
     }
 
     public static bool operator ==(CanvasItemBatchKey left, CanvasItemBatchKey right)

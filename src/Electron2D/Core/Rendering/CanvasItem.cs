@@ -59,6 +59,9 @@ public class CanvasItem : Node
 {
     private static long nextCanvasItemId;
     private readonly Rid canvasItemRid = new(Interlocked.Increment(ref nextCanvasItemId));
+    private readonly List<CanvasItemDrawingCommand> drawingCommands = new();
+    private bool redrawQueued = true;
+    private bool drawing;
 
     /// <summary>
     /// Gets or sets whether this canvas item is visible.
@@ -160,6 +163,8 @@ public class CanvasItem : Node
 
     internal Rid CanvasItemRid => canvasItemRid;
 
+    internal IReadOnlyList<CanvasItemDrawingCommand> DrawingCommands => drawingCommands;
+
     /// <summary>
     /// Shows this canvas item.
     /// </summary>
@@ -211,6 +216,248 @@ public class CanvasItem : Node
     }
 
     /// <summary>
+    /// Called when this canvas item has been requested to redraw.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Override this method and call the `Draw*` methods from inside the
+    /// override. Draw commands are cached and reused until
+    /// <see cref="QueueRedraw" /> requests another draw callback.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This callback is invoked on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="QueueRedraw" />
+    public virtual void _Draw()
+    {
+    }
+
+    /// <summary>
+    /// Queues this canvas item to redraw during the next processed frame.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// Multiple calls before the next frame are coalesced into one
+    /// <see cref="_Draw" /> callback. Cached draw commands remain active until
+    /// the callback runs again.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="_Draw" />
+    public void QueueRedraw()
+    {
+        ThrowIfFreed();
+        redrawQueued = true;
+    }
+
+    /// <summary>
+    /// Draws a line between two local-space points.
+    /// </summary>
+    ///
+    /// <param name="from">The local-space start point.</param>
+    /// <param name="to">The local-space end point.</param>
+    /// <param name="color">The line color.</param>
+    /// <param name="width">The line width. Negative values represent a thin non-scaling primitive line.</param>
+    /// <param name="antialiased">Whether the line should request antialiasing when supported.</param>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it only from <see cref="_Draw" />
+    /// on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)
+    {
+        AddDrawingCommand(CanvasItemDrawingCommand.CreateLine(from, to, color, width, antialiased));
+    }
+
+    /// <summary>
+    /// Draws a filled or stroked rectangle in local space.
+    /// </summary>
+    ///
+    /// <param name="rect">The local-space rectangle.</param>
+    /// <param name="color">The rectangle color.</param>
+    /// <param name="filled">Whether the rectangle should be filled.</param>
+    /// <param name="width">The stroke width used when <paramref name="filled" /> is <c>false</c>.</param>
+    /// <param name="antialiased">Whether the stroke should request antialiasing when supported.</param>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it only from <see cref="_Draw" />
+    /// on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public void DrawRect(Rect2 rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)
+    {
+        AddDrawingCommand(CanvasItemDrawingCommand.CreateRect(rect, color, filled, width, antialiased));
+    }
+
+    /// <summary>
+    /// Draws a filled or stroked circle in local space.
+    /// </summary>
+    ///
+    /// <param name="position">The local-space circle center.</param>
+    /// <param name="radius">The circle radius. It must be finite and non-negative.</param>
+    /// <param name="color">The circle color.</param>
+    /// <param name="filled">Whether the circle should be filled.</param>
+    /// <param name="width">The stroke width used when <paramref name="filled" /> is <c>false</c>.</param>
+    /// <param name="antialiased">Whether the stroke should request antialiasing when supported.</param>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="radius" /> is negative or not finite.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it only from <see cref="_Draw" />
+    /// on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public void DrawCircle(Vector2 position, float radius, Color color, bool filled = true, float width = -1f, bool antialiased = false)
+    {
+        if (!Mathf.IsFinite(radius) || radius < 0f)
+        {
+            throw new ArgumentOutOfRangeException(nameof(radius), radius, "Circle radius must be finite and non-negative.");
+        }
+
+        AddDrawingCommand(CanvasItemDrawingCommand.CreateCircle(position, radius, color, filled, width, antialiased));
+    }
+
+    /// <summary>
+    /// Draws a solid polygon using per-point colors.
+    /// </summary>
+    ///
+    /// <param name="points">The local-space polygon points. At least three points are required.</param>
+    /// <param name="colors">The colors for each point. The array length must match <paramref name="points" />.</param>
+    /// <param name="uvs">Optional texture coordinates. When provided, the array length must match <paramref name="points" />.</param>
+    /// <param name="texture">An optional texture sampled by the polygon.</param>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when the point, color or UV arrays do not describe a valid polygon.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it only from <see cref="_Draw" />
+    /// on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public void DrawPolygon(Vector2[] points, Color[] colors, Vector2[]? uvs = null, Texture2D? texture = null)
+    {
+        ArgumentNullException.ThrowIfNull(points);
+        ArgumentNullException.ThrowIfNull(colors);
+        if (points.Length < 3)
+        {
+            throw new ArgumentException("A polygon requires at least three points.", nameof(points));
+        }
+
+        if (colors.Length != points.Length)
+        {
+            throw new ArgumentException("Polygon colors length must match points length.", nameof(colors));
+        }
+
+        var commandUvs = uvs ?? Array.Empty<Vector2>();
+        if (commandUvs.Length != 0 && commandUvs.Length != points.Length)
+        {
+            throw new ArgumentException("Polygon UV length must match points length when UVs are provided.", nameof(uvs));
+        }
+
+        AddDrawingCommand(CanvasItemDrawingCommand.CreatePolygon(
+            points.ToArray(),
+            colors.ToArray(),
+            commandUvs.ToArray(),
+            texture));
+    }
+
+    /// <summary>
+    /// Draws a texture at a local-space position.
+    /// </summary>
+    ///
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="position">The local-space top-left draw position.</param>
+    /// <param name="modulate">The optional color multiplied into the texture. The default is <see cref="Color.White" />.</param>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it only from <see cref="_Draw" />
+    /// on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public void DrawTexture(Texture2D texture, Vector2 position, Color? modulate = null)
+    {
+        ArgumentNullException.ThrowIfNull(texture);
+        AddDrawingCommand(CanvasItemDrawingCommand.CreateTexture(texture, position, modulate ?? Color.White));
+    }
+
+    /// <summary>
+    /// Draws text using a font at a local-space baseline position.
+    /// </summary>
+    ///
+    /// <param name="font">The font resource used to draw the text.</param>
+    /// <param name="position">The local-space baseline position.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="alignment">The horizontal alignment used when <paramref name="width" /> is non-negative.</param>
+    /// <param name="width">The optional clipping/alignment width. Negative values mean no width limit.</param>
+    /// <param name="fontSize">The requested font size in pixels.</param>
+    /// <param name="modulate">The optional color multiplied into the text. The default is <see cref="Color.White" />.</param>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="fontSize" /> is less than or equal to zero.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it only from <see cref="_Draw" />
+    /// on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Font" />
+    public void DrawString(
+        Font font,
+        Vector2 position,
+        string text,
+        HorizontalAlignment alignment = HorizontalAlignment.Left,
+        float width = -1f,
+        int fontSize = 16,
+        Color? modulate = null)
+    {
+        ArgumentNullException.ThrowIfNull(font);
+        ArgumentNullException.ThrowIfNull(text);
+        if (fontSize <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fontSize), fontSize, "Font size must be greater than zero.");
+        }
+
+        AddDrawingCommand(CanvasItemDrawingCommand.CreateString(font, position, text, alignment, width, fontSize, modulate ?? Color.White));
+    }
+
+    /// <summary>
     /// Checks whether this canvas item is visible after direct canvas ancestors are considered.
     /// </summary>
     ///
@@ -246,5 +493,36 @@ public class CanvasItem : Node
         }
 
         return true;
+    }
+
+    internal void DrawIfNeeded()
+    {
+        if (!redrawQueued || !IsVisibleInTree())
+        {
+            return;
+        }
+
+        redrawQueued = false;
+        drawingCommands.Clear();
+        drawing = true;
+        try
+        {
+            GetTree()?.InvokeUserCallback(this, nameof(_Draw), _Draw);
+        }
+        finally
+        {
+            drawing = false;
+        }
+    }
+
+    private void AddDrawingCommand(CanvasItemDrawingCommand command)
+    {
+        ThrowIfFreed();
+        if (!drawing)
+        {
+            throw new InvalidOperationException("CanvasItem Draw* methods can only be called from _Draw().");
+        }
+
+        drawingCommands.Add(command);
     }
 }

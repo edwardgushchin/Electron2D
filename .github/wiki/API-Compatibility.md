@@ -31,6 +31,8 @@ The clean rewrite baseline currently exports the first object-model, 2D math, ra
 | `Electron2D.Color` | `Color` | Partial | RGBA value type baseline with arithmetic, interpolation, clamp and HTML conversion. |
 | `Electron2D.ConnectFlags` | `ConnectFlags` | Partial | Godot-like flag names are declared; advanced flag semantics are still planned. |
 | `Electron2D.Error` | `Error` | Partial | Minimal signal/runtime error result values. |
+| `Electron2D.Font` | `Font` | Partial | Base font resource required by `CanvasItem.DrawString`; concrete SDL_ttf loading/layout/cache remains planned. |
+| `Electron2D.HorizontalAlignment` | `HorizontalAlignment` | Partial | Godot-like horizontal alignment values used by text drawing APIs. |
 | `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
 | `Electron2D.Mathf` | `Mathf` | Partial | Basic constants, approximate comparison, clamp, interpolation, angle conversion, modulo and snapping helpers. |
 | `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()`, `CallDeferred()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |

@@ -22,8 +22,28 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+using Xunit;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.GoldenData")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+namespace Electron2D.Tests.Unit;
+
+public sealed class CanvasItemDrawingPublicApiTests
+{
+    [Fact]
+    public void DrawMethodsRejectCallsOutsideDrawCallback()
+    {
+        var node = new Electron2D.Node2D();
+
+        Assert.Throws<InvalidOperationException>(() =>
+            node.DrawLine(Electron2D.Vector2.Zero, Electron2D.Vector2.One, Electron2D.Color.White));
+    }
+
+    [Fact]
+    public void FontAndHorizontalAlignmentAreGodotLikePublicTypes()
+    {
+        Assert.True(typeof(Electron2D.Resource).IsAssignableFrom(typeof(Electron2D.Font)));
+        Assert.Equal(0, (int)Electron2D.HorizontalAlignment.Left);
+        Assert.Equal(1, (int)Electron2D.HorizontalAlignment.Center);
+        Assert.Equal(2, (int)Electron2D.HorizontalAlignment.Right);
+        Assert.Equal(3, (int)Electron2D.HorizontalAlignment.Fill);
+    }
+}

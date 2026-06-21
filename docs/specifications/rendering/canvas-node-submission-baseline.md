@@ -154,10 +154,13 @@ Submission-модель остаётся internal. Public API не должен 
 
 `T-0027` добавляет к `CanvasSubmissionContext` учёт `Viewport.CanvasTransform`, текущей `Camera2D`, transform snapping и vertex snapping. Целевой контракт описан в [Camera2D, Viewport and presentation baseline](camera-viewport-presentation-baseline.md).
 
+## Связанный Immediate Drawing baseline
+
+`T-0028` добавляет к `CanvasSubmissionContext` cached draw commands из `CanvasItem._Draw()`: line, rect, circle, polygon, texture и string. Целевой контракт описан в [Immediate drawing baseline](immediate-drawing-baseline.md).
+
 ## Ограничения `T-0026`
 
 - Реальное SDL_GPU drawing, shader/material API и clipping не реализуются здесь.
-- `CanvasItem.QueueRedraw()` и immediate draw methods остаются `T-0028`.
 - `Sprite2D` sprite sheet frames (`frame`, `hframes`, `vframes`) остаются будущим animation/resource step.
 - Public texture filter/repeat policy может быть добавлена отдельным CanvasItem sampling step, если она нужна до настоящего GPU drawing.
 

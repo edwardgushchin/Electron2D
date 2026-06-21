@@ -22,8 +22,28 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.GoldenData")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+/// <summary>
+/// Provides the Godot-like base resource for text drawing.
+/// </summary>
+///
+/// <remarks>
+/// Electron2D 0.1.0 Preview exposes `Font` so <see cref="CanvasItem.DrawString" />
+/// can keep the Godot-like signature. Actual SDL_ttf loading, glyph layout,
+/// fallback and cache behavior are implemented by later text backend tasks.
+/// </remarks>
+///
+/// <threadsafety>
+/// This type is not synchronized. Create and mutate font resources on the main
+/// thread until a concrete text backend defines stronger guarantees.
+/// </threadsafety>
+///
+/// <since>
+/// This type is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
+/// <seealso cref="CanvasItem.DrawString" />
+public abstract class Font : Resource
+{
+}

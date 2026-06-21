@@ -22,8 +22,14 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.GoldenData")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
+internal enum CanvasItemRenderCommandKind
+{
+    Texture = 0,
+    Line = 1,
+    Rect = 2,
+    Circle = 3,
+    Polygon = 4,
+    String = 5
+}

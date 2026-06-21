@@ -110,4 +110,4 @@ Registry пишет события:
 - PNG/JPEG import и public `ImageTexture` остаются `T-0037`.
 - Public `CanvasItem` sampling properties остаются `T-0026`.
 - Реальный SDL_GPU transfer-buffer upload может быть реализован отдельным backend step; T-0025 фиксирует проверяемый registry contract и adapter boundary.
-- Texture draw methods (`Draw`, `DrawRect`, `DrawRectRegion`) остаются future immediate drawing задачами.
+- `DrawTexture()` реализуется immediate drawing baseline `T-0028`; `DrawTextureRect()` и `DrawTextureRectRegion()` остаются future drawing задачами.

@@ -93,6 +93,11 @@ internal sealed class CanvasSubmissionContext
             {
                 SubmitSprite(sprite, currentState, visible, modulate, treeOrder++);
             }
+
+            foreach (var drawingCommand in canvasItem.DrawingCommands)
+            {
+                SubmitDrawingCommand(canvasItem, drawingCommand, currentState, visible, modulate, ref treeOrder);
+            }
         }
         else
         {
@@ -142,12 +147,73 @@ internal sealed class CanvasSubmissionContext
             state.LayerVisible && visible,
             modulate,
             sprite.SelfModulate,
-            transform,
-            sprite.GetSourceRect(),
-            destinationRect,
-            sprite.FlipH,
-            sprite.FlipV,
-            sprite.Name));
+            transform: transform,
+            sourceRect: sprite.GetSourceRect(),
+            destinationRect: destinationRect,
+            texture: sprite.Texture,
+            flipH: sprite.FlipH,
+            flipV: sprite.FlipV,
+            debugName: sprite.Name));
+    }
+
+    private void SubmitDrawingCommand(
+        CanvasItem canvasItem,
+        CanvasItemDrawingCommand drawingCommand,
+        SubmissionState state,
+        bool visible,
+        Color modulate,
+        ref long treeOrder)
+    {
+        var textureRid = drawingCommand.Texture is null ? default : GetTextureRid(drawingCommand.Texture);
+        var key = new CanvasItemBatchKey(
+            textureRid,
+            material: default,
+            clip: default,
+            CanvasItemBlendMode.Mix,
+            drawingCommand.Kind);
+        var transform = state.LayerTransform * GetCanvasItemTransform(canvasItem);
+        if (state.SnapTransformsToPixel)
+        {
+            transform.Origin = transform.Origin.Round();
+        }
+
+        var destinationRect = drawingCommand.Rect;
+        if (state.SnapVerticesToPixel && destinationRect.Size != Vector2.Zero)
+        {
+            destinationRect = SnapRect(destinationRect);
+        }
+
+        queue.Add(new CanvasItemRenderCommand(
+            canvasItem.CanvasItemRid,
+            key,
+            state.Layer,
+            canvasItem.ZIndex,
+            canvasItem.YSortEnabled,
+            GetYSortPosition(canvasItem),
+            treeOrder++,
+            state.LayerVisible && visible,
+            modulate,
+            canvasItem.SelfModulate,
+            commandModulate: drawingCommand.Modulate,
+            kind: drawingCommand.Kind,
+            transform: transform,
+            sourceRect: GetDrawingSourceRect(drawingCommand),
+            destinationRect: destinationRect,
+            position: drawingCommand.Position,
+            points: drawingCommand.Points,
+            colors: drawingCommand.Colors,
+            uvs: drawingCommand.Uvs,
+            texture: drawingCommand.Texture,
+            font: drawingCommand.Font,
+            text: drawingCommand.Text,
+            alignment: drawingCommand.Alignment,
+            textWidth: drawingCommand.TextWidth,
+            fontSize: drawingCommand.FontSize,
+            radius: drawingCommand.Radius,
+            width: drawingCommand.Width,
+            filled: drawingCommand.Filled,
+            antialiased: drawingCommand.Antialiased,
+            debugName: canvasItem.Name));
     }
 
     private Rid GetTextureRid(Texture2D texture)
@@ -167,6 +233,27 @@ internal sealed class CanvasSubmissionContext
         var position = rect.Position.Round();
         var end = rect.End.Round();
         return new Rect2(position, end - position);
+    }
+
+    private static Transform2D GetCanvasItemTransform(CanvasItem canvasItem)
+    {
+        return canvasItem is Node2D node2D ? node2D.GlobalTransform : Transform2D.Identity;
+    }
+
+    private static float GetYSortPosition(CanvasItem canvasItem)
+    {
+        return canvasItem is Node2D node2D ? node2D.GlobalPosition.Y : 0f;
+    }
+
+    private static Rect2 GetDrawingSourceRect(CanvasItemDrawingCommand drawingCommand)
+    {
+        if (drawingCommand.Kind != CanvasItemRenderCommandKind.Texture || drawingCommand.Texture is null)
+        {
+            return default;
+        }
+
+        var size = drawingCommand.Texture.GetSize();
+        return new Rect2(0f, 0f, size.X, size.Y);
     }
 
     private readonly record struct SubmissionState(

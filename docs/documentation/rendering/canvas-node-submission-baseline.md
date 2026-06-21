@@ -115,10 +115,13 @@ Submission отправляет command только для `Sprite2D` с non-nu
 
 Начиная с `T-0027`, `CanvasSubmissionContext` учитывает `Viewport.CanvasTransform`, текущую `Camera2D`, `Viewport.Snap2DTransformsToPixel` и `Viewport.Snap2DVerticesToPixel`. Подробности описаны в [Camera2D, Viewport and presentation baseline](camera-viewport-presentation-baseline.md).
 
+## Связанный Immediate Drawing baseline
+
+Начиная с `T-0028`, `CanvasSubmissionContext` также отправляет cached draw commands из `CanvasItem._Draw()`: line, rect, circle, polygon, texture и string. Подробности описаны в [Immediate drawing baseline](immediate-drawing-baseline.md).
+
 ## Ограничения
 
 - Реальный SDL_GPU draw submission ещё не реализован.
-- `CanvasItem.QueueRedraw()` и immediate drawing API остаются `T-0028`.
 - Sprite sheet frame API (`frame`, `hframes`, `vframes`) пока не реализован.
 - Public texture filter/repeat ещё не вынесены в `CanvasItem`; текущие GPU sampling descriptors остаются internal до настоящего drawing pipeline.
 

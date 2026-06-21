@@ -405,6 +405,24 @@ public class Node : Object
         }
     }
 
+    internal void DrawRecursive()
+    {
+        if (!IsInstanceValid(this) || _tree is null)
+        {
+            return;
+        }
+
+        if (this is CanvasItem canvasItem)
+        {
+            canvasItem.DrawIfNeeded();
+        }
+
+        foreach (var child in _children.ToArray())
+        {
+            child.DrawRecursive();
+        }
+    }
+
     internal void PhysicsProcessRecursive(double delta)
     {
         if (!IsInstanceValid(this) || _tree is null)

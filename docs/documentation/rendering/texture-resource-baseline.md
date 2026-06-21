@@ -57,7 +57,7 @@ Filter/repeat сейчас представлены internal `TextureSamplingOpt
 
 - PNG/JPEG import и public image-backed texture class остаются задачей `T-0037`.
 - Real SDL_GPU transfer-buffer upload ещё не реализован; T-0025 фиксирует registry contract и backend adapter boundary.
-- Public texture drawing methods остаются будущими immediate drawing задачами.
+- `DrawTexture()` реализован в immediate drawing baseline `T-0028`; `DrawTextureRect()` и `DrawTextureRectRegion()` остаются будущими drawing задачами.
 
 ## Проверки
 

@@ -27,6 +27,7 @@
 - Начальный texture resource baseline: public `Texture2D`/`AtlasTexture`, atlas regions, transparency queries, internal upload/reload/release registry и no-leak runtime smoke.
 - Начальный canvas node baseline: public `CanvasItem`, `Node2D`, `Sprite2D`, `CanvasLayer`, transform/visibility/z-order/self-modulate behavior и internal sprite submission.
 - Начальный camera/viewport baseline: public `Camera2D`, `Viewport`, current camera selection, camera transform, pixel snapping, `SceneTree.Root` как `Viewport` instance и internal resize/high-DPI presentation plan.
+- Начальный immediate drawing baseline: `CanvasItem._Draw()`, `QueueRedraw()`, `DrawLine()`, `DrawRect()`, `DrawCircle()`, `DrawPolygon()`, `DrawTexture()`, `DrawString()`, public `Font`/`HorizontalAlignment` и internal command capture.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
@@ -34,7 +35,7 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, immediate drawing API, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, real primitive/GPU rasterization, text glyph layout, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API
