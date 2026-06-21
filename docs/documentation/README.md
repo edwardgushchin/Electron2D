@@ -58,6 +58,7 @@
 ## Локализация и настройки
 
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - текущие `Translation`, `TranslationServer`, locale fallback и обновление `Label` после смены locale.
+- [Unicode, IME и текст справа налево](settings-localization/unicode-ime-rtl-text.md) - текущий support level для Unicode scalar values, committed IME text input и mixed LTR/RTL/emoji UI layout.
 - [Settings persistence baseline](settings-localization/settings-persistence.md) - текущий внутренний JSON-контракт project/user settings, input actions, display/window defaults и fail-closed diagnostics.
 
 ## Export pipeline и платформы

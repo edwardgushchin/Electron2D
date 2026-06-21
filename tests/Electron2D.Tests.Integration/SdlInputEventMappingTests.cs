@@ -112,9 +112,9 @@ public sealed class SdlInputEventMappingTests
     }
 
     [Fact]
-    public void TextInputMapsEachUnicodeScalarToInputEventKeyUnicode()
+    public void TextInputMapsImeCommittedUnicodeScalarsToInputEventKeyUnicode()
     {
-        var sdlEvent = TextInputEvent("AЖ");
+        var sdlEvent = TextInputEvent("AЖあ🙂");
         try
         {
             var mapped = Electron2D.SdlInputEventMapper.Map(sdlEvent);
@@ -134,6 +134,20 @@ public sealed class SdlInputEventMappingTests
                     Assert.True(key.Pressed);
                     Assert.Equal(Electron2D.Key.None, key.Keycode);
                     Assert.Equal(1046, key.Unicode);
+                },
+                third =>
+                {
+                    var key = Assert.IsType<Electron2D.InputEventKey>(third);
+                    Assert.True(key.Pressed);
+                    Assert.Equal(Electron2D.Key.None, key.Keycode);
+                    Assert.Equal(12354, key.Unicode);
+                },
+                fourth =>
+                {
+                    var key = Assert.IsType<Electron2D.InputEventKey>(fourth);
+                    Assert.True(key.Pressed);
+                    Assert.Equal(Electron2D.Key.None, key.Keycode);
+                    Assert.Equal(0x1F642, key.Unicode);
                 });
         }
         finally

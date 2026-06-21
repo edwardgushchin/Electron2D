@@ -1,4 +1,4 @@
-# Text backend baseline через SDL_ttf
+# Text backend baseline
 
 Статус: целевая спецификация для `T-0029`.
 Обновлено: 2026-06-21.
@@ -12,15 +12,11 @@ Electron2D `0.1.0 Preview` должен иметь минимальный тек
 - `CanvasItem.DrawString()` создаёт render command с layout glyphs, fallback font resolution и cache;
 - `Label` рисует простой текст через `Control` и тот же `DrawString()` pipeline;
 - `Compatibility` и `Standard` профили объявляют поддержку текста через `RenderingServer.RenderingFeature.Text`;
-- SDL_ttf используется как внутренняя backend-граница для будущего реального raster/GPU draw path, но SDL handles и SDL-типы не становятся публичным API Electron2D.
+- internal text backend boundary остаётся скрытой от публичного API и готовит будущий real raster/GPU draw path без раскрытия native handles.
 
-## Источники совместимости
+## Граница preview baseline
 
-- Godot `Font` содержит `get_string_size`, `get_height`, `get_ascent`, `get_descent`, `has_char` и fallback fonts.
-- Godot `Control` наследуется от `CanvasItem`, а `Label` наследуется от `Control`.
-- SDL_ttf 3 предоставляет `TTF_OpenFont`, fallback fonts, glyph availability, string size, text objects и GPU text engine API.
-
-Эта задача реализует не полный TextServer Godot и не полноценный shaping engine. Она фиксирует минимальный проверяемый baseline, на который позже можно добавить импорт шрифтов, сложные fallback chains, bidi shaping и реальные backend draw calls. TTF/OTF import metadata реализуется отдельной спецификацией `resources/font-import.md`.
+Эта задача реализует не полный text server и не полноценный shaping engine. Она фиксирует минимальный проверяемый baseline, на который позже можно добавить импорт шрифтов, сложные fallback chains, bidi shaping и реальные backend draw calls. TTF/OTF import metadata реализуется отдельной спецификацией `resources/font-import.md`.
 
 ## Публичный API
 
@@ -50,7 +46,7 @@ Electron2D `0.1.0 Preview` должен иметь минимальный тек
   - `VerticalAlignment`
   - `Uppercase`
 
-Не допускается добавлять публичные SDL_ttf handles, публичный `SpriteRenderer`, `IComponent`, Unity-like wrapper или compatibility layer. Внутренние типы layout/cache/backend могут существовать только как implementation detail.
+Не допускается добавлять публичные native text handles, публичный `SpriteRenderer`, `IComponent`, Unity-like wrapper или compatibility layer. Внутренние типы layout/cache/backend могут существовать только как implementation detail.
 
 ## Layout contract
 
@@ -89,17 +85,17 @@ Text layout выполняется для UTF-8/Unicode текста через 
 
 Повторный `DrawString()` или `Font.GetStringSize()` с тем же ключом должен переиспользовать layout. Cache является внутренним механизмом, доступным тестам через internal API, но не частью public surface.
 
-## SDL_ttf boundary
+## Internal text backend boundary
 
-Внутренняя граница SDL_ttf должна уметь:
+Внутренняя граница text backend должна уметь:
 
-- открыть шрифт из файла через SDL_ttf;
+- открыть шрифт из файла;
 - закрыть font handle;
 - проверить glyph codepoint;
 - измерить строку;
 - добавить fallback font;
-- создать GPU text engine для Standard profile, когда SDL_GPU device доступен;
-- создать SDL_ttf text object.
+- создать text engine для Standard profile, когда graphics device доступен;
+- создать backend text object.
 
 Эта граница не обязана выполнять реальный GPU draw в T-0029. Render commands должны содержать достаточно данных, чтобы следующий backend step мог отрисовать текст без изменения public API.
 

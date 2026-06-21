@@ -58,6 +58,7 @@
 ## Локализация и настройки
 
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - resource переводов, общий translation server, locale lookup, fallback и обновление UI после смены локали.
+- [Unicode, IME и текст справа налево](settings-localization/unicode-ime-rtl-text.md) - preview-level support Unicode scalar values, committed IME text input и mixed LTR/RTL/emoji UI layout.
 - [Settings persistence baseline](settings-localization/settings-persistence.md) - project/user settings, input actions, display/window defaults и fail-closed diagnostics.
 
 ## Export pipeline и платформы

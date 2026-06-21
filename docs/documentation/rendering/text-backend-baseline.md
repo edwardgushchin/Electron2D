@@ -1,4 +1,4 @@
-# Text backend baseline через SDL_ttf
+# Text backend baseline
 
 Статус: реализовано.
 Задача: `T-0029`, обновлено в `T-0038`.
@@ -51,9 +51,9 @@ Unicode обрабатывается через `System.Text.Rune`, поэтом
 
 Каждый `Font` владеет internal layout cache. Повторный layout с тем же text/alignment/width/font size и тем же generation возвращает тот же `TextLayout` instance. Cache доступен тестам через internal API, но не является public surface.
 
-## SDL_ttf boundary
+## Internal text backend boundary
 
-Добавлена внутренняя граница `ISdlTtfApi`/`SdlTtfApi` поверх SDL3-CS:
+Добавлена внутренняя граница text backend:
 
 - open/close font;
 - glyph availability;
@@ -62,11 +62,11 @@ Unicode обрабатывается через `System.Text.Rune`, поэтом
 - GPU text engine;
 - text object creation.
 
-Публичный API Electron2D не раскрывает SDL_ttf handles. Начиная с `T-0033`, Compatibility backend преобразует text commands в `SDL_ttf_RenderText`-совместимые internal frame commands. Реальные SDL_ttf/SDL_Renderer draw calls остаются следующей integration task; текущий результат готовит command data для этого backend path.
+Публичный API Electron2D не раскрывает native text handles. Начиная с `T-0033`, Compatibility backend преобразует text commands во внутренние frame commands. Реальные text draw calls остаются следующей integration task; текущий результат готовит command data для этого backend path.
 
 ## Профили рендеринга
 
-`Compatibility`, `Standard` и internal `SDL_GPU` profiles продолжают объявлять `RenderingServer.RenderingFeature.Text`. Тесты проверяют, что `Label` submit работает в `Compatibility` и `Standard`.
+`Compatibility` и `Standard` profiles продолжают объявлять `RenderingServer.RenderingFeature.Text`. Тесты проверяют, что `Label` submit работает в `Compatibility` и `Standard`.
 
 ## Ограничения
 

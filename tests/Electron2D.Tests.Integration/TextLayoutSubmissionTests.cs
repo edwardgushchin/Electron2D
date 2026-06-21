@@ -97,6 +97,43 @@ public sealed class TextLayoutSubmissionTests
     }
 
     [Fact]
+    public void LabelSubmitsMixedUnicodeRtlTextThroughReferenceUi()
+    {
+        var fallback = new SelectiveFont("fallback", IsHebrew);
+        var primary = new SelectiveFont("primary", rune => !IsHebrew(rune), fallback);
+        var tree = new Electron2D.SceneTree();
+        var label = new Electron2D.Label
+        {
+            Text = "Score אב🙂",
+            Size = new Electron2D.Vector2(160f, 24f),
+            HorizontalAlignment = Electron2D.HorizontalAlignment.Right,
+            VerticalAlignment = Electron2D.VerticalAlignment.Top
+        };
+        label.AddThemeFontOverride("font", primary);
+        label.AddThemeFontSizeOverride("font_size", 20);
+        tree.Root.AddChild(label);
+
+        tree.ProcessFrame(1.0 / 60.0);
+
+        var command = Assert.Single(new Electron2D.CanvasSubmissionContext().BuildPlan(tree.Root).Commands);
+        Assert.Equal("Score אב🙂", command.Text);
+        Assert.NotNull(command.TextLayout);
+        var layout = command.TextLayout!;
+
+        Assert.Equal(Electron2D.TextLayoutDirection.RightToLeft, layout.Direction);
+        Assert.Equal(70f, layout.AlignmentOffset);
+        Assert.Equal(new Electron2D.Vector2(90f, 20f), layout.Size);
+        Assert.Equal(
+            new[] { 0x1F642, (int)'ב', (int)'א', (int)' ', (int)'e', (int)'r', (int)'o', (int)'c', (int)'S' },
+            layout.Glyphs.Select(glyph => glyph.CodePoint).ToArray());
+        Assert.Equal(new[] { 150f, 140f, 130f, 120f, 110f, 100f, 90f, 80f, 70f }, layout.Glyphs.Select(glyph => glyph.Position.X).ToArray());
+        Assert.Same(primary, layout.Glyphs[0].Font);
+        Assert.Same(fallback, layout.Glyphs[1].Font);
+        Assert.Same(fallback, layout.Glyphs[2].Font);
+        Assert.All(layout.Glyphs, glyph => Assert.True(glyph.GlyphAvailable));
+    }
+
+    [Fact]
     public void LabelSubmitsTextInCompatibilityAndStandardProfiles()
     {
         var backends = new Electron2D.RenderingBackend[]
