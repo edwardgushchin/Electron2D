@@ -55,6 +55,11 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-WindowsExport.ps1
 
+      - name: Verify Linux export
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: ./tools/Verify-LinuxExport.ps1
+
       - name: Verify performance budgets
         shell: pwsh
         run: ./tools/Verify-PerformanceBudgets.ps1

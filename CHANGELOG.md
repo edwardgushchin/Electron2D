@@ -57,6 +57,7 @@
 - Settings persistence baseline: internal `Electron2D.ProjectSettings` и `Electron2D.UserSettings` JSON documents, `project.e2d.json` template defaults, input actions, display/window defaults, locale user setting и fail-closed diagnostics для повреждённых файлов.
 - Export preset baseline: internal `export_presets.e2export.json` model, deterministic round-trip, SDK/toolchain/signing reference validation и fail-closed diagnostics без signing, deploy или публикации.
 - Windows x64 export baseline: internal package plan для `win-x64`, Debug/Release, self-contained publish, window/fullscreen state, renderer profile и локальный verifier exported reference scene.
+- Linux x64 glibc export baseline: internal package plan для `linux-x64`, Debug/Release, self-contained publish, Wayland/X11 desktop protocols, явный out-of-scope для musl/ARM runtime identifiers и локальный verifier exported reference scene.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -77,7 +78,7 @@
 ### Ограничения
 
 - Runtime assembly экспортирует `120` публичных типов.
-- `0.1.0-preview` ещё не является готовым игровым runtime; compatibility renderer backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, Box2D.NET пока является candidate validation gate без production backend и без mobile AOT proof, physics nodes пока имеют только AABB baseline для queries/overlaps/basic rigid motion без contacts, gravity integration, rigid-rigid collision и записи geometry/material в production solver, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, Project Settings UI, Input Map UI и editor script attach workflow ещё не реализованы, а Linux/macOS/mobile device run/export остаются следующими задачами.
+- `0.1.0-preview` ещё не является готовым игровым runtime; compatibility renderer backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, Box2D.NET пока является candidate validation gate без production backend и без mobile AOT proof, physics nodes пока имеют только AABB baseline для queries/overlaps/basic rigid motion без contacts, gravity integration, rigid-rigid collision и записи geometry/material в production solver, PNG/JPEG import пока фиксирует metadata без pixel decoding/GPU upload, TTF/OTF import пока фиксирует metadata без glyph rasterization, shader source import пока не привязан к real draw pipeline/export packaging, scene/resource serialization пока не подключена к public `ResourceLoader`/`ResourceSaver`, metadata source generator, Project Settings UI, Input Map UI и editor script attach workflow ещё не реализованы, а macOS/mobile device run/export остаются следующими задачами.
 
 ### Breaking changes policy
 

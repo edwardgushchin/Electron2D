@@ -58,6 +58,7 @@
 
 - [Export preset model и toolchain validation](export/export-preset-model.md) - текущий внутренний JSON-контракт export presets, SDK/toolchain/signing checks и fail-closed diagnostics без запуска сборки или публикации.
 - [Windows x64 export](export/windows-x64-export.md) - текущий internal package plan и локальная проверка `win-x64` self-contained publish/run.
+- [Linux x64 glibc export](export/linux-x64-export.md) - текущий internal package plan и локальная проверка `linux-x64` self-contained publish/run на Linux или через WSL.
 
 ## Физика 2D
 
