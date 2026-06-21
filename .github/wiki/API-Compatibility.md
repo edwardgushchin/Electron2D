@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, texture/viewport/shader, text/UI baseline and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, texture/viewport/shader, text/UI baseline and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -32,6 +32,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.ConnectFlags` | `ConnectFlags` | Partial | Godot-like flag names are declared; advanced flag semantics are still planned. |
 | `Electron2D.Control` | `Control` | Partial | UI base node with position, size and minimal font theme overrides for text baseline. |
 | `Electron2D.Error` | `Error` | Partial | Minimal signal/runtime error result values. |
+| `Electron2D.ExportAttribute` | `ExportAttribute` / `[Export]` | Partial | Marker attribute for script fields/properties included in explicit serialization and Inspector metadata. |
 | `Electron2D.Font` | `Font` | Partial | Base font resource with string measurement, glyph availability, fallback layout and internal cache. |
 | `Electron2D.HorizontalAlignment` | `HorizontalAlignment` | Partial | Godot-like horizontal alignment values used by text drawing APIs. |
 | `Electron2D.InputEvent` | `InputEvent` | Partial | Placeholder base input event type for lifecycle dispatch. |
@@ -57,9 +58,11 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Shader` | `Shader` | Partial | Canvas item shader resource storing source code for import-time compilation. |
 | `Electron2D.Shader+Mode` | `Shader.Mode` | Partial | 0.1 canvas item shader mode subset. |
 | `Electron2D.ShaderMaterial` | `ShaderMaterial` | Partial | Material resource with `Shader`, supported uniform values, `Texture2D` samplers and fail-closed reserved built-in validation. |
+| `Electron2D.SignalAttribute` | `SignalAttribute` / `[Signal]` | Partial | Marker attribute for script delegates backed by explicit signal metadata and the existing `Connect()`/`EmitSignal()` API. |
 | `Electron2D.Sprite2D` | `Sprite2D` | Partial | Texture, centered/offset drawing rect, region rect, flip flags, pixel opacity and internal submission baseline. |
 | `Electron2D.StringName` | `StringName` | Partial | Immutable interned-name baseline with ordinal equality, hashing, empty/default semantics and string conversion. |
 | `Electron2D.Texture2D` | `Texture2D` | Partial | Abstract texture resource baseline for size, alpha, mipmaps and pixel opacity queries. |
+| `Electron2D.ToolAttribute` | `ToolAttribute` / `[Tool]` | Experimental | Marker attribute for editor-time script intent; current metadata marks it experimental and sandboxed. |
 | `Electron2D.Transform2D` | `Transform2D` | Partial | 2D basis/origin transform baseline with point transforms, composition and inverse. |
 | `Electron2D.Variant` | `Variant` | Partial | Closed 0.1 value carrier for nil, primitives, enum-as-int, 2D math, identity handles, Object-derived values, Callable and Godot-like collections. |
 | `Electron2D.Variant+Type` | `Variant.Type` | Partial | Closed 0.1 Variant type enum; 3D, Signal and packed arrays are intentionally excluded for now. |

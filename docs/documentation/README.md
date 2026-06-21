@@ -35,6 +35,7 @@
 ## C# scripting
 
 - [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - текущая ordinary .NET модель script classes, template sample и lifecycle/services checks.
+- [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - текущие публичные marker attributes и internal metadata bridge для export properties, signals и tool-state.
 
 ## Рендеринг
 

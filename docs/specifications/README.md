@@ -38,6 +38,7 @@
 ## C# scripting
 
 - [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - обычная .NET C# модель script classes, lifecycle callbacks и доступ к сервисам движка.
+- [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - публичные Godot-like marker attributes и internal AOT-safe bridge для serialization/Inspector.
 
 ## Рендеринг
 

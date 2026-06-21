@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация для `T-0044`.
 Обновлено: 2026-06-21.
-Связанные документы: [Формат проекта и шаблон `electron2d-empty`](../release-management/project-template.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Формат проекта и шаблон `electron2d-empty`](../release-management/project-template.md), [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](script-metadata.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
 
 ## Назначение
 
@@ -37,7 +37,7 @@ Script class должен:
 
 - Script classes не загружаются динамически на runtime path.
 - iOS не требует runtime compilation или dynamic assembly loading.
-- Export metadata, signals metadata и `[Tool]` остаются задачей `T-0045`.
+- Export metadata, signals metadata и `[Tool]` описаны отдельной спецификацией `script-metadata.md`.
 - Создание/attach script из редактора и открытие внешнего IDE остаются задачей `T-0046`.
 
 ## Проверки

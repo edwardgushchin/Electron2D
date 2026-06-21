@@ -29,6 +29,7 @@
 - Начальный internal AOT-safe metadata baseline: `ResourceObjectMetadataRegistry`, typed descriptors, custom `Resource` serialization без reflection fallback и trimmed/NativeAOT smoke verifier.
 - Начальный data stability stress gate: 100 save/load cycles, rename/move resources, import cache rebuild и corruption diagnostics без silent data loss.
 - Начальный C# script class baseline: обычные .NET classes, inheritance from `Node`, lifecycle callbacks, доступ к `GetTree()`/`RenderingServer` и script sample в `electron2d-empty`.
+- Начальный script metadata baseline: публичные Godot-like `[Export]`, `[Signal]`, `[Tool]`, internal AOT-safe bridge для export properties/signals/tool-state, callable signals и sandboxed experimental `[Tool]`.
 - Начальный Variant API: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений `0.1.0 Preview`.
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.
 - Начальная серверная граница рендеринга: `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature()` и internal `Compatibility`/`Standard` backend abstraction.
