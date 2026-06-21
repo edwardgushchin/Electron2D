@@ -137,6 +137,17 @@ internal static class InputMapProjectSettings
                 ["type"] = "mouse_button",
                 ["button"] = mouse.ButtonIndex.ToString()
             },
+            InputEventJoypadButton joypadButton => new JsonObject
+            {
+                ["type"] = "joy_button",
+                ["button"] = joypadButton.ButtonIndex.ToString()
+            },
+            InputEventJoypadMotion joypadMotion => new JsonObject
+            {
+                ["type"] = "joy_motion",
+                ["axis"] = joypadMotion.Axis.ToString(),
+                ["axis_value"] = joypadMotion.AxisValue
+            },
             _ => throw new InvalidOperationException("Input event type cannot be persisted.")
         };
     }
@@ -156,13 +167,22 @@ internal static class InputMapProjectSettings
             {
                 ButtonIndex = ReadEnum<MouseButton>(inputEvent, "button", "Input map mouse button")
             },
+            "joy_button" => new InputEventJoypadButton
+            {
+                ButtonIndex = ReadEnum<JoyButton>(inputEvent, "button", "Input map gamepad button")
+            },
+            "joy_motion" => new InputEventJoypadMotion
+            {
+                Axis = ReadEnum<JoyAxis>(inputEvent, "axis", "Input map gamepad axis"),
+                AxisValue = ReadSingle(inputEvent, "axis_value", "Input map gamepad axis value")
+            },
             _ => throw new FormatException($"Input map event type '{type}' is not supported.")
         };
     }
 
     private static bool IsPersistable(InputEvent inputEvent)
     {
-        return inputEvent is InputEventKey or InputEventMouseButton;
+        return inputEvent is InputEventKey or InputEventMouseButton or InputEventJoypadButton or InputEventJoypadMotion;
     }
 
     private static JsonObject ExpectObject(JsonNode? node, string context)

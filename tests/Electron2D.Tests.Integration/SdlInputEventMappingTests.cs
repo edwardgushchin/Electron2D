@@ -28,6 +28,7 @@ using Xunit;
 
 namespace Electron2D.Tests.Integration;
 
+[Collection(InputStateCollection.Name)]
 public sealed class SdlInputEventMappingTests
 {
     [Fact]

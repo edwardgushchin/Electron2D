@@ -34,6 +34,8 @@ Electron2D `0.1.0 Preview` получил action-level ввод поверх `In
 
 - `InputEventKey` по `Keycode` или `PhysicalKeycode`;
 - `InputEventMouseButton` по `ButtonIndex`;
+- `InputEventJoypadButton` по `ButtonIndex`;
+- `InputEventJoypadMotion` по `Axis` и знаку `AxisValue`;
 - `InputEventAction` по имени `Action`.
 
 `ActionGetEvents()` возвращает copies, поэтому внешний код не может изменить stored bindings через полученный массив. `GetActions()` возвращает отсортированный список action names.
@@ -43,6 +45,8 @@ Electron2D `0.1.0 Preview` получил action-level ввод поверх `In
 `SceneTree.DispatchInput()` сначала обновляет `Input`, затем вызывает `_Input(InputEvent)` у nodes. Поэтому `_Input()` callbacks видят актуальные значения `Input.IsActionPressed()` и `Input.IsActionJustPressed()`.
 
 Simultaneous bindings отслеживаются отдельно: если action нажата двумя bindings, release одного binding не отпускает action, пока второй binding остаётся active.
+
+Gamepad axis bindings используют analog strength. Если axis value возвращается внутрь deadzone или меняет знак относительно binding, соответствующий action binding отпускается.
 
 `IsActionJustPressed()` очищается после `SceneTree.ProcessFrame()` или `SceneTree.PhysicsFrame()`.
 
@@ -60,13 +64,14 @@ Simultaneous bindings отслеживаются отдельно: если acti
 - action names;
 - deadzone;
 - keyboard bindings;
-- mouse button bindings.
+- mouse button bindings;
+- gamepad button bindings;
+- gamepad axis bindings.
 
 Load заменяет action registry только после успешного чтения всего документа. Malformed JSON, unknown event types и invalid enum values приводят к `FormatException`.
 
 ## Ограничения
 
-- Gamepad axes/buttons и haptics остаются задачей `T-0050`.
 - Touch, virtual keyboard, IME composition и mobile navigation остаются задачей `T-0051`.
 - UI focus/mouse filter pipeline остаётся задачей `T-0052`.
 - Public project settings API и editor UI для Input Map остаются отдельными задачами.

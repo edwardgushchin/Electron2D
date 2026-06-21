@@ -26,6 +26,7 @@ using Xunit;
 
 namespace Electron2D.Tests.Integration;
 
+[Collection(InputStateCollection.Name)]
 public sealed class InputMapActionTests
 {
     [Fact]
@@ -136,6 +137,14 @@ public sealed class InputMapActionTests
             Electron2D.InputMap.AddAction("jump", 0.25f);
             Electron2D.InputMap.ActionAddEvent("jump", new Electron2D.InputEventKey { Keycode = Electron2D.Key.Space });
             Electron2D.InputMap.ActionAddEvent("jump", new Electron2D.InputEventMouseButton { ButtonIndex = Electron2D.MouseButton.Right });
+            Electron2D.InputMap.ActionAddEvent("jump", new Electron2D.InputEventJoypadButton { ButtonIndex = Electron2D.JoyButton.A });
+            Electron2D.InputMap.ActionAddEvent(
+                "jump",
+                new Electron2D.InputEventJoypadMotion
+                {
+                    Axis = Electron2D.JoyAxis.LeftX,
+                    AxisValue = 1f
+                });
             Electron2D.InputMap.AddAction("move_left", 0.1f);
             Electron2D.InputMap.ActionAddEvent("move_left", new Electron2D.InputEventKey { Keycode = Electron2D.Key.A });
 
@@ -150,6 +159,14 @@ public sealed class InputMapActionTests
             Assert.Equal(0.25f, Electron2D.InputMap.ActionGetDeadzone("jump"));
             Assert.True(Electron2D.InputMap.EventIsAction(new Electron2D.InputEventKey { Keycode = Electron2D.Key.Space }, "jump"));
             Assert.True(Electron2D.InputMap.EventIsAction(new Electron2D.InputEventMouseButton { ButtonIndex = Electron2D.MouseButton.Right }, "jump"));
+            Assert.True(Electron2D.InputMap.EventIsAction(new Electron2D.InputEventJoypadButton { ButtonIndex = Electron2D.JoyButton.A }, "jump"));
+            Assert.True(Electron2D.InputMap.EventIsAction(
+                new Electron2D.InputEventJoypadMotion
+                {
+                    Axis = Electron2D.JoyAxis.LeftX,
+                    AxisValue = 0.8f
+                },
+                "jump"));
             Assert.True(Electron2D.InputMap.EventIsAction(new Electron2D.InputEventKey { Keycode = Electron2D.Key.A }, "move_left"));
         }
         finally

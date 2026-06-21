@@ -39,8 +39,23 @@ internal static class SdlInputEventMapper
             SDL.EventType.MouseMotion => [MapMouseMotion(sdlEvent.Motion)],
             SDL.EventType.MouseWheel => MapMouseWheel(sdlEvent.Wheel),
             SDL.EventType.TextInput => MapTextInput(sdlEvent.Text),
+            SDL.EventType.GamepadButtonDown or SDL.EventType.GamepadButtonUp => MapGamepadButton(sdlEvent.GButton),
+            SDL.EventType.GamepadAxisMotion => MapGamepadAxis(sdlEvent.GAxis),
             _ => Array.Empty<InputEvent>()
         };
+    }
+
+    public static void ProcessDeviceState(SDL.Event sdlEvent)
+    {
+        switch ((SDL.EventType)sdlEvent.Type)
+        {
+            case SDL.EventType.GamepadAdded:
+                Input.ConnectJoypad(checked((int)sdlEvent.GDevice.Which));
+                break;
+            case SDL.EventType.GamepadRemoved:
+                Input.DisconnectJoypad(checked((int)sdlEvent.GDevice.Which));
+                break;
+        }
     }
 
     private static InputEventKey MapKeyboard(SDL.KeyboardEvent keyEvent)
@@ -177,6 +192,45 @@ internal static class SdlInputEventMapper
         return events;
     }
 
+    private static IReadOnlyList<InputEvent> MapGamepadButton(SDL.GamepadButtonEvent buttonEvent)
+    {
+        var button = MapGamepadButton(buttonEvent.Button);
+        if (button == JoyButton.Invalid)
+        {
+            return Array.Empty<InputEvent>();
+        }
+
+        return
+        [
+            new InputEventJoypadButton
+            {
+                Device = checked((int)buttonEvent.Which),
+                ButtonIndex = button,
+                Pressed = buttonEvent.Down,
+                Pressure = buttonEvent.Down ? 1f : 0f
+            }
+        ];
+    }
+
+    private static IReadOnlyList<InputEvent> MapGamepadAxis(SDL.GamepadAxisEvent axisEvent)
+    {
+        var axis = MapGamepadAxis(axisEvent.Axis);
+        if (axis == JoyAxis.Invalid)
+        {
+            return Array.Empty<InputEvent>();
+        }
+
+        return
+        [
+            new InputEventJoypadMotion
+            {
+                Device = checked((int)axisEvent.Which),
+                Axis = axis,
+                AxisValue = NormalizeGamepadAxisValue(axisEvent.Value)
+            }
+        ];
+    }
+
     private static Key MapKeycode(SDL.Keycode keycode)
     {
         var value = checked((int)keycode);
@@ -309,6 +363,54 @@ internal static class SdlInputEventMapper
             5 => MouseButton.Xbutton2,
             _ => MouseButton.None
         };
+    }
+
+    private static JoyButton MapGamepadButton(byte button)
+    {
+        return (SDL.GamepadButton)button switch
+        {
+            SDL.GamepadButton.South => JoyButton.A,
+            SDL.GamepadButton.East => JoyButton.B,
+            SDL.GamepadButton.West => JoyButton.X,
+            SDL.GamepadButton.North => JoyButton.Y,
+            SDL.GamepadButton.Back => JoyButton.Back,
+            SDL.GamepadButton.Guide => JoyButton.Guide,
+            SDL.GamepadButton.Start => JoyButton.Start,
+            SDL.GamepadButton.LeftStick => JoyButton.LeftStick,
+            SDL.GamepadButton.RightStick => JoyButton.RightStick,
+            SDL.GamepadButton.LeftShoulder => JoyButton.LeftShoulder,
+            SDL.GamepadButton.RightShoulder => JoyButton.RightShoulder,
+            SDL.GamepadButton.DPadUp => JoyButton.DpadUp,
+            SDL.GamepadButton.DPadDown => JoyButton.DpadDown,
+            SDL.GamepadButton.DPadLeft => JoyButton.DpadLeft,
+            SDL.GamepadButton.DPadRight => JoyButton.DpadRight,
+            SDL.GamepadButton.Misc1 => JoyButton.Misc1,
+            SDL.GamepadButton.RightPaddle1 => JoyButton.Paddle1,
+            SDL.GamepadButton.LeftPaddle1 => JoyButton.Paddle2,
+            SDL.GamepadButton.RightPaddle2 => JoyButton.Paddle3,
+            SDL.GamepadButton.LeftPaddle2 => JoyButton.Paddle4,
+            SDL.GamepadButton.Touchpad => JoyButton.Touchpad,
+            _ => JoyButton.Invalid
+        };
+    }
+
+    private static JoyAxis MapGamepadAxis(byte axis)
+    {
+        return (SDL.GamepadAxis)axis switch
+        {
+            SDL.GamepadAxis.LeftX => JoyAxis.LeftX,
+            SDL.GamepadAxis.LeftY => JoyAxis.LeftY,
+            SDL.GamepadAxis.RightX => JoyAxis.RightX,
+            SDL.GamepadAxis.RightY => JoyAxis.RightY,
+            SDL.GamepadAxis.LeftTrigger => JoyAxis.TriggerLeft,
+            SDL.GamepadAxis.RightTrigger => JoyAxis.TriggerRight,
+            _ => JoyAxis.Invalid
+        };
+    }
+
+    private static float NormalizeGamepadAxisValue(short value)
+    {
+        return value < 0 ? value / 32768f : value / 32767f;
     }
 
     private static MouseButtonMask MapMouseButtonMask(SDL.MouseButtonFlags flags)

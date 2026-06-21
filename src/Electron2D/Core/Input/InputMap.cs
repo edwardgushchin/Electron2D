@@ -471,7 +471,7 @@ public static class InputMap
                         definition.Name,
                         IsPressedEvent(inputEvent) && strength > 0f,
                         strength,
-                        InputEventSignature.From(inputEvent).StateKey);
+                        InputEventSignature.StateKeyFrom(inputEvent));
                 })
                 .ToArray();
         }
@@ -601,6 +601,19 @@ public static class InputMap
                 DoubleClick = mouseButton.DoubleClick,
                 Factor = mouseButton.Factor
             },
+            InputEventJoypadButton joypadButton => new InputEventJoypadButton
+            {
+                Device = joypadButton.Device,
+                ButtonIndex = joypadButton.ButtonIndex,
+                Pressed = joypadButton.Pressed,
+                Pressure = joypadButton.Pressure
+            },
+            InputEventJoypadMotion joypadMotion => new InputEventJoypadMotion
+            {
+                Device = joypadMotion.Device,
+                Axis = joypadMotion.Axis,
+                AxisValue = joypadMotion.AxisValue
+            },
             _ => throw new ArgumentException("Input event type cannot be used as an action binding.", nameof(inputEvent))
         };
     }
@@ -619,18 +632,21 @@ public static class InputMap
             return true;
         }
 
-        if (!definition.Events.Any(binding => BindingMatches(binding, inputEvent)))
+        foreach (var binding in definition.Events)
         {
-            return false;
+            if (BindingMatches(binding, inputEvent, definition.Deadzone, out strength))
+            {
+                return true;
+            }
         }
 
-        strength = 1f;
-        return true;
+        return false;
     }
 
-    private static bool BindingMatches(InputEvent binding, InputEvent inputEvent)
+    private static bool BindingMatches(InputEvent binding, InputEvent inputEvent, float deadzone, out float strength)
     {
-        return (binding, inputEvent) switch
+        strength = 0f;
+        var matches = (binding, inputEvent) switch
         {
             (InputEventKey boundKey, InputEventKey keyEvent) =>
                 (boundKey.Keycode != Key.None && boundKey.Keycode == keyEvent.Keycode) ||
@@ -639,8 +655,59 @@ public static class InputMap
                 boundMouse.ButtonIndex != MouseButton.None && boundMouse.ButtonIndex == mouseEvent.ButtonIndex,
             (InputEventAction boundAction, InputEventAction actionEvent) =>
                 string.Equals(boundAction.Action, actionEvent.Action, StringComparison.Ordinal),
+            (InputEventJoypadButton boundButton, InputEventJoypadButton buttonEvent) =>
+                JoypadButtonMatches(boundButton, buttonEvent, out strength),
+            (InputEventJoypadMotion boundMotion, InputEventJoypadMotion motionEvent) =>
+                JoypadMotionMatches(boundMotion, motionEvent, deadzone, out strength),
             _ => false
         };
+
+        if (matches && binding is not InputEventJoypadButton and not InputEventJoypadMotion)
+        {
+            strength = 1f;
+        }
+
+        return matches;
+    }
+
+    private static bool JoypadButtonMatches(
+        InputEventJoypadButton binding,
+        InputEventJoypadButton inputEvent,
+        out float strength)
+    {
+        strength = 0f;
+        if (binding.ButtonIndex == JoyButton.Invalid || binding.ButtonIndex != inputEvent.ButtonIndex)
+        {
+            return false;
+        }
+
+        strength = inputEvent.Pressed && inputEvent.Pressure > 0f ? inputEvent.Pressure : 1f;
+        return true;
+    }
+
+    private static bool JoypadMotionMatches(
+        InputEventJoypadMotion binding,
+        InputEventJoypadMotion inputEvent,
+        float deadzone,
+        out float strength)
+    {
+        strength = 0f;
+        if (binding.Axis == JoyAxis.Invalid || binding.Axis != inputEvent.Axis)
+        {
+            return false;
+        }
+
+        var value = inputEvent.AxisValue;
+        var bindingSign = MathF.Sign(binding.AxisValue);
+        if (bindingSign == 0)
+        {
+            bindingSign = 1;
+        }
+
+        var signMatches = MathF.Sign(value) == bindingSign;
+        var absoluteValue = MathF.Abs(value);
+        strength = signMatches && absoluteValue > deadzone ? absoluteValue : 0f;
+        return true;
     }
 
     private static bool IsPressedEvent(InputEvent inputEvent)
@@ -650,6 +717,8 @@ public static class InputMap
             InputEventAction actionEvent => actionEvent.Pressed,
             InputEventKey keyEvent => keyEvent.Pressed,
             InputEventMouseButton mouseButton => mouseButton.Pressed,
+            InputEventJoypadButton joypadButton => joypadButton.Pressed,
+            InputEventJoypadMotion => true,
             _ => false
         };
     }
@@ -683,6 +752,12 @@ internal readonly record struct InputEventSignature(string Kind, string Primary,
 
     public string StateKey => $"{Kind}:{Primary}:{Secondary}";
 
+    public static string StateKeyFrom(InputEvent inputEvent)
+    {
+        ArgumentNullException.ThrowIfNull(inputEvent);
+        return $"{From(inputEvent).StateKey}:device:{inputEvent.Device}";
+    }
+
     public static InputEventSignature From(InputEvent inputEvent)
     {
         ArgumentNullException.ThrowIfNull(inputEvent);
@@ -691,6 +766,11 @@ internal readonly record struct InputEventSignature(string Kind, string Primary,
             InputEventAction actionEvent => new InputEventSignature("action", actionEvent.Action, string.Empty),
             InputEventKey keyEvent => new InputEventSignature("key", keyEvent.Keycode.ToString(), keyEvent.PhysicalKeycode.ToString()),
             InputEventMouseButton mouseButton => new InputEventSignature("mouse_button", mouseButton.ButtonIndex.ToString(), string.Empty),
+            InputEventJoypadButton joypadButton => new InputEventSignature("joy_button", joypadButton.ButtonIndex.ToString(), string.Empty),
+            InputEventJoypadMotion joypadMotion => new InputEventSignature(
+                "joy_motion",
+                joypadMotion.Axis.ToString(),
+                joypadMotion.AxisValue < 0f ? "negative" : "positive"),
             _ => throw new ArgumentException("Input event type cannot be used as an action binding.", nameof(inputEvent))
         };
     }
