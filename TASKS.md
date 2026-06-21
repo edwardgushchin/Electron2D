@@ -819,11 +819,11 @@
 
 Для разблокировки нужен macOS host с Xcode, iOS simulator или подключённым iOS device, установленный iOS/.NET workload и user-provided signing setup. App Store Connect automation остаётся out of scope.
 
-## T-0093 [ ] P0: Настроить Tier 1 platform smoke и 30-минутные soak checks для reference project
+## T-0093 [!] P0: Настроить Tier 1 platform smoke и 30-минутные soak checks для reference project
 
 - Создана: 2026-06-20T16:16:20+03:00
 - Приоритет: P0
-- Зависимости: T-0088, T-0089, T-0090, T-0091, T-0092
+- Зависимости: T-0088, T-0089, T-0090, T-0091, T-0092, T-0094, T-0095, T-0136
 - Ссылки:
   - Upstream commit: нет
   - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/export/`
@@ -859,7 +859,7 @@
 
 ### Заметки агента
 
-Пусто до момента, когда агент возьмёт задачу в работу.
+2026-06-22T00:49:00+03:00 - Задача заблокирована до готовности законченных reference games и реальных ассетов. Tier 1 smoke/soak должен проверять launch, rendering, input, audio, resources, scene switch, save data, pause/resume и shutdown на полноценном reference project, а не на временном demo или surrogate с placeholder resources.
 
 ## T-0094 [!] P0: Создать законченный reference platformer
 
@@ -901,7 +901,9 @@
 
 ### Заметки агента
 
-2026-06-21T23:58:00+03:00 - Задача заблокирована. Для законченного reference platformer сейчас не хватает обязательного публичного runtime API и ассетов: отдельный публичный `TileMap`/tilemap runtime node ещё отсутствует, а реальный набор игровых ассетов для reference games не подготовлен. Не закрывать задачу data-only workaround-ом, placeholder-спрайтами, синтетическим звуком или тестовой сценой без финальных ассетов. Сначала должны быть реализованы нужные публичные API и добавлены утверждённые ассеты: спрайты/атласы, звуки, шрифты и другие ресурсы, которые входят в законченный пример.
+2026-06-21T23:58:00+03:00 - Задача заблокирована. Для законченного reference platformer не хватало обязательного публичного runtime API и ассетов: отдельный публичный `TileMap`/tilemap runtime node ещё отсутствовал, а реальный набор игровых ассетов для reference games не подготовлен. Не закрывать задачу data-only workaround-ом, placeholder-спрайтами, синтетическим звуком или тестовой сценой без финальных ассетов. Сначала должны быть реализованы нужные публичные API и добавлены утверждённые ассеты: спрайты/атласы, звуки, шрифты и другие ресурсы, которые входят в законченный пример.
+
+2026-06-22T00:49:00+03:00 - После `T-0135` публичный tilemap runtime API готов, но цель остаётся в blocker-е из-за `T-0136`: нет утверждённых реальных visual/audio/UI/font assets для законченного platformer. Эту задачу нельзя брать в реализацию и нельзя закрывать, пока `T-0136` не даст локальные licensed assets и verifier.
 
 ## T-0095 [!] P0: Создать законченный UI-heavy puzzle или карточную игру
 
