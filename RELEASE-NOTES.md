@@ -19,6 +19,8 @@
 - Начальный 2D math API: `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.
 - Начальный RNG API: `RandomNumberGenerator` с документированными `Seed`, `State` и воспроизводимой PCG32 sequence policy.
 - Начальный identity API: `StringName` и `Rid` для будущего `Variant` и server-backed resources.
+- Начальный resource UID API: `ResourceUid`, `uid://` conversion, path mapping и сохранение ссылок при rename/move через `SetId()`.
+- Начальный internal resource file baseline: `.e2res` JSON document model, external/internal references, стабильный LF output и golden-data проверка exact text.
 - Начальный Variant API: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений `0.1.0 Preview`.
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.
 - Начальная серверная граница рендеринга: `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature()` и internal `Compatibility`/`Standard` backend abstraction.
@@ -35,7 +37,7 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, real primitive/GPU rasterization, text glyph layout, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, public `ResourceLoader`/`ResourceSaver`, import cache, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, real primitive/GPU rasterization, text glyph layout, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

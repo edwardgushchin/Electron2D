@@ -69,6 +69,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.RenderingServer+RenderingFeature",
                 "Electron2D.RenderingServer+RenderingProfile",
                 "Electron2D.Resource",
+                "Electron2D.ResourceUid",
                 "Electron2D.Rid",
                 "Electron2D.SceneTree",
                 "Electron2D.Sprite2D",

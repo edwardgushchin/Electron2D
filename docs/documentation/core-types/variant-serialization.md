@@ -53,6 +53,8 @@
 
 `Rid`, `Object` и `Callable` являются допустимыми `Variant`, но не сериализуются этим форматом: они завязаны на текущую runtime-сессию или callback binding. Попытка `Serialize()` для таких значений даёт `InvalidOperationException` с указанием типа.
 
+Ссылки на ресурсы в `.e2res` не записываются как `Variant.Object`: для них используется отдельная internal resource file model с `uid://` и fallback path, описанная в [resource file baseline](../resources/resource-file-baseline.md).
+
 `Deserialize()` даёт `FormatException`, если JSON malformed, не является object, не содержит `type`, содержит неизвестный `type`, содержит runtime-only `type` или если `value` не соответствует ожидаемой форме.
 
 ## Проверки

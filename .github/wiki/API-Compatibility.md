@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D follows Godot architecture, terminology and expected behavior for the agreed 2D subset, but it does not promise source compatibility with Godot projects, GDScript or Godot C#.
 
-The clean rewrite baseline currently exports the first object-model, 2D math, random number generator, identity, Variant value-carrier and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier and rendering server boundary types. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -48,6 +48,7 @@ The clean rewrite baseline currently exports the first object-model, 2D math, ra
 | `Electron2D.RenderingServer+RenderingFeature` | `RenderingServer` feature enum | Partial | 0.1 feature flags for compatibility and standard renderer profiles. |
 | `Electron2D.RenderingServer+RenderingProfile` | `RenderingServer` profile enum | Partial | `Compatibility` and `Standard` renderer profiles. |
 | `Electron2D.Resource` | `Resource` | Partial | `ResourceName`, `ResourcePath`, `ResourceLocalToScene`, `ResourceSceneUniqueId` and `TakeOverPath()`. |
+| `Electron2D.ResourceUid` | `ResourceUID` / `ResourceUid` | Partial | Stable `uid://` conversion and in-memory UID-to-path mapping for resource references. |
 | `Electron2D.Rid` | `RID` | Partial | Opaque resource identifier baseline with invalid ID `0`, equality, hashing and ordering. |
 | `Electron2D.SceneTree` | `SceneTree` | Partial | Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, scene change, group queries/calls, deferred queue flush and queued deletion flush. |
 | `Electron2D.Sprite2D` | `Sprite2D` | Partial | Texture, centered/offset drawing rect, region rect, flip flags, pixel opacity and internal submission baseline. |

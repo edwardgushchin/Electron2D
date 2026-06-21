@@ -21,6 +21,10 @@
 
 - [Политика MIT License и source headers](repository/license-policy.md) - текущая проверка корневой лицензии и license header в исходных файлах.
 
+## Ресурсы, импорт и сериализация
+
+- [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - текущий public `ResourceUid`, internal `.e2res` document model, external/internal references и golden-data формат.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.

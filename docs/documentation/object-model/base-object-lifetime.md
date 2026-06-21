@@ -45,7 +45,7 @@
 - `ResourceSceneUniqueId`;
 - `TakeOverPath(string path)`.
 
-Это минимальный Godot-like baseline. Resource loading/import/saving будет добавлен отдельными задачами.
+Это минимальный Godot-like baseline. `ResourceUid` и внутренний `.e2res` формат уже добавлены в ресурсном домене, но публичные `ResourceLoader`/`ResourceSaver`, импорт и сохранение файлов будут добавлены отдельными задачами.
 
 ## Отличия от Godot в текущем baseline
 

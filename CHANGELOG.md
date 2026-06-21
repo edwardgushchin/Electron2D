@@ -19,6 +19,8 @@
 - 2D math baseline: `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.
 - Random baseline: `RandomNumberGenerator` с `Seed`, `State`, `Randi()`, `RandiRange()`, `Randf()`, `RandfRange()`, `Randfn()` и воспроизводимой PCG32 sequence policy.
 - Identity baseline: `StringName` с ordinal equality/hashing и `Rid` с invalid/default semantics, comparison operators и internal allocator для будущих серверов.
+- Resource UID baseline: public `ResourceUid` с `uid://` conversion, path mapping и rename/move через `SetId()`.
+- Resource file baseline: internal `.e2res` JSON document model, external/internal references, stable LF output и golden-data проверка exact text.
 - Variant baseline: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений для `0.1.0 Preview`.
 - Stable Variant serialization baseline: internal canonical JSON round-trip для сериализуемых `Variant` значений и понятные ошибки для runtime-only значений.
 - Rendering server baseline: `RenderingServer`, nested renderer profiles/features и internal backend abstraction для `Compatibility`/`Standard`.
@@ -46,7 +48,7 @@
 
 ### Ограничения
 
-- Runtime assembly экспортирует `38` публичных типов.
+- Runtime assembly экспортирует `39` публичных типов.
 - `0.1.0-preview` ещё не является готовым игровым runtime; дальнейшая реализация идёт задачами из `TASKS.md`.
 
 ### Breaking changes policy

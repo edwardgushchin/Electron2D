@@ -24,6 +24,10 @@
 
 - [Политика лицензирования исходного кода](repository/license-policy.md) - MIT License, source headers и verifier для вручную написанного исходного кода.
 
+## Ресурсы, импорт и сериализация
+
+- [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - `ResourceUid`, `.e2res`, external/internal references и diff-friendly формат ресурсов.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - серверная граница, `Standard`/`Compatibility` профили и feature flags.
