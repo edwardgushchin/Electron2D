@@ -24,21 +24,36 @@
 */
 namespace Electron2D;
 
-internal interface ISdlGpuApi
+internal readonly struct SdlGpuDeviceInfo
 {
-    SdlGpuDeviceHandle CreateDevice(SdlGpuDeviceCreateInfo createInfo, out string? error);
+    public static readonly SdlGpuDeviceInfo Unknown = new(
+        gpuName: "unknown",
+        driverName: "unknown",
+        driverVersion: "unknown",
+        driverInfo: "unknown");
 
-    bool ClaimWindow(SdlGpuDeviceHandle device, SdlGpuWindowInfo window, out string? error);
+    public SdlGpuDeviceInfo(
+        string gpuName,
+        string driverName,
+        string driverVersion,
+        string driverInfo)
+    {
+        GpuName = Normalize(gpuName);
+        DriverName = Normalize(driverName);
+        DriverVersion = Normalize(driverVersion);
+        DriverInfo = Normalize(driverInfo);
+    }
 
-    SdlGpuDeviceInfo GetDeviceInfo(SdlGpuDeviceHandle device);
+    public string GpuName { get; }
 
-    bool ValidateTextureSmoke(SdlGpuDeviceHandle device, out string? error);
+    public string DriverName { get; }
 
-    bool ValidatePipelineSmoke(SdlGpuDeviceHandle device, out string? error);
+    public string DriverVersion { get; }
 
-    SdlGpuCommandBufferHandle AcquireCommandBuffer(SdlGpuDeviceHandle device, out string? error);
+    public string DriverInfo { get; }
 
-    bool SubmitCommandBuffer(SdlGpuCommandBufferHandle commandBuffer, out string? error);
-
-    void DestroyDevice(SdlGpuDeviceHandle device);
+    private static string Normalize(string value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? "unknown" : value;
+    }
 }

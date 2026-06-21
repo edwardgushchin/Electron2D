@@ -35,6 +35,7 @@
 - Начальный canvas shader import baseline: public `Shader`, import-time vertex/fragment compilation через SDL_shadercross boundary, diagnostics file/line/column и iOS artifact без runtime compilation.
 - Начальный shader material baseline: public `Material`/`ShaderMaterial`, supported uniforms, `Texture2D` sampler parameters, reserved canvas built-ins и stable internal material parameter JSON snapshot.
 - Начальный SDL_Renderer compatibility backend baseline: internal frame plan для sprites, UI/text, primitives, tile-like texture copies, documented limitations и golden reference command stream.
+- Начальный Android mobile GPU fallback baseline: internal mobile SDL_GPU create profile, smoke steps texture/pipeline/command buffer/first submit, `Automatic`/`FailIfUnavailable` policy и startup result с GPU/driver/backend/reasons.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
@@ -42,7 +43,7 @@
 
 ## Чего пока нет
 
-- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, SDL_Renderer window presentation, public `ResourceLoader`/`ResourceSaver`, import cache, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
+- Real texture GPU transfer/import, real-window GPU smoke/fallback pipeline, Android device/export run, SDL_Renderer window presentation, public `ResourceLoader`/`ResourceSaver`, import cache, file-level scene serialization, full `ConnectFlags` semantics, `CallGroupFlags`, `GetPath()`, `GetPathTo()`, `SetDeferred()`, pause/process modes, `CanvasItem.Material`, real shader/material GPU binding, real primitive/GPU rasterization, real render-to-texture draw pass, real text raster/GPU draw call, camera smoothing/limits и public `Window` API ещё реализуются следующими задачами.
 - Экспорт Android/iOS пока отмечен как явный release gap, а не как active CI gate.
 
 ## Правило API

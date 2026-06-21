@@ -42,6 +42,7 @@
 - [Canvas shaders import и diagnostics baseline](rendering/canvas-shader-import-baseline.md) - public `Shader`, import-time vertex/fragment stage compilation через SDL_shadercross boundary и diagnostics с file/line/column.
 - [ShaderMaterial, uniforms, samplers и canvas built-ins baseline](rendering/shader-material-baseline.md) - public `Material`/`ShaderMaterial`, serializable uniforms, texture samplers и reserved canvas built-ins.
 - [SDL_Renderer Compatibility backend baseline](rendering/sdl-renderer-compatibility-backend.md) - внутреннее преобразование `CanvasItemRenderPlan` в SDL_Renderer-compatible frame plan, supported features, limitations и golden reference scene.
+- [Android mobile GPU smoke и fallback policy baseline](rendering/android-mobile-gpu-fallback-policy.md) - internal SDL_GPU mobile create profile, smoke steps, automatic/fail policy и structured startup result.
 
 ## Базовые типы
 

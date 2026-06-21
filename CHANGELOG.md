@@ -35,6 +35,7 @@
 - Canvas shader import baseline: public `Shader`, `Shader.Mode.CanvasItem`, import-time vertex/fragment compilation через SDL_shadercross boundary, diagnostics file/line/column и iOS artifact без runtime compilation.
 - Shader material baseline: public `Material`/`ShaderMaterial`, supported scalar/vector uniforms, `Texture2D` sampler parameters, fail-closed reserved canvas built-ins и stable internal material parameter JSON snapshot.
 - SDL_Renderer compatibility backend baseline: internal `SdlRendererFramePlan` для sprites, UI/text, primitives, tile-like texture copies, documented limitations и golden reference command stream.
+- Android mobile GPU fallback baseline: internal SDL_GPU mobile create profile, smoke steps texture/pipeline/command buffer/first submit, `Automatic`/`FailIfUnavailable` policy и startup log с GPU/driver/backend/reasons.
 - Тестовая инфраструктура: unit, integration, runtime smoke и golden-data проекты.
 - CI-матрица для Windows, Linux и macOS.
 - GitHub Wiki source для таблицы совместимости API.
@@ -54,7 +55,7 @@
 ### Ограничения
 
 - Runtime assembly экспортирует `47` публичных типов.
-- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, но ещё не создаёт реальное SDL window presentation.
+- `0.1.0-preview` ещё не является готовым игровым runtime; SDL_Renderer compatibility backend пока строит deterministic command plan, Android fallback пока проверяется fake adapter в CI, а полноценный device run/export остаётся следующими задачами.
 
 ### Breaking changes policy
 

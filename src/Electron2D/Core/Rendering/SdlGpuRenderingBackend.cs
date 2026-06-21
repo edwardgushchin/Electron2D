@@ -46,19 +46,25 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
     };
 
     private readonly ISdlGpuApi _api;
-    private readonly bool _debugMode;
+    private readonly SdlGpuDeviceCreateInfo _createInfo;
     private readonly List<SdlGpuLifecycleEvent> _events = new();
     private SdlGpuDeviceHandle _device;
     private ulong _nextFrameSequence;
 
     public SdlGpuRenderingBackend(ISdlGpuApi api, bool debugMode)
+        : this(api, SdlGpuDeviceCreateInfo.Standard(debugMode))
+    {
+    }
+
+    public SdlGpuRenderingBackend(ISdlGpuApi api, SdlGpuDeviceCreateInfo createInfo)
         : base("SDL_GPU", RenderingServer.RenderingProfile.Standard, Features)
     {
         ArgumentNullException.ThrowIfNull(api);
 
         _api = api;
-        _debugMode = debugMode;
+        _createInfo = createInfo;
         State = SdlGpuLifecycleState.NotInitialized;
+        DeviceInfo = SdlGpuDeviceInfo.Unknown;
     }
 
     public SdlGpuLifecycleState State { get; private set; }
@@ -66,6 +72,12 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
     public SdlGpuWindowInfo Window { get; private set; }
 
     public IReadOnlyList<SdlGpuLifecycleEvent> Events => _events;
+
+    public SdlGpuDeviceCreateInfo CreateInfo => _createInfo;
+
+    public SdlGpuDeviceInfo DeviceInfo { get; private set; }
+
+    internal SdlGpuDeviceHandle Device => _device;
 
     public void Initialize(SdlGpuWindowInfo window)
     {
@@ -77,13 +89,15 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
         Window = window;
         _events.Clear();
         _nextFrameSequence = 0;
+        DeviceInfo = SdlGpuDeviceInfo.Unknown;
 
-        _device = _api.CreateDevice(_debugMode, out var createError);
+        _device = _api.CreateDevice(_createInfo, out var createError);
         if (!_device.IsValid || createError is not null)
         {
             Fail(createError ?? "SDL_GPU device creation returned an invalid handle.");
         }
 
+        DeviceInfo = _api.GetDeviceInfo(_device);
         State = SdlGpuLifecycleState.DeviceCreated;
         Log(SdlGpuLifecycleEventKind.DeviceCreated, "SDL_GPU device created.");
 

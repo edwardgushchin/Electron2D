@@ -37,11 +37,30 @@ internal sealed class SdlGpuApi : ISdlGpuApi
         | SDL.GPUShaderFormat.MSL
         | SDL.GPUShaderFormat.MetalLib;
 
-    public SdlGpuDeviceHandle CreateDevice(bool debugMode, out string? error)
+    public SdlGpuDeviceHandle CreateDevice(SdlGpuDeviceCreateInfo createInfo, out string? error)
     {
-        var device = SDL.CreateGPUDevice(ShaderFormats, debugMode, name: null!);
-        error = device == 0 ? ReadError("SDL_CreateGPUDevice failed.") : null;
-        return new SdlGpuDeviceHandle(device);
+        var properties = SDL.CreateProperties();
+        if (properties == 0)
+        {
+            error = ReadError("SDL_CreateProperties failed for SDL_GPU device creation.");
+            return default;
+        }
+
+        try
+        {
+            if (!ConfigureDeviceProperties(properties, createInfo, out error))
+            {
+                return default;
+            }
+
+            var device = SDL.CreateGPUDeviceWithProperties(properties);
+            error = device == 0 ? ReadError("SDL_CreateGPUDeviceWithProperties failed.") : null;
+            return new SdlGpuDeviceHandle(device);
+        }
+        finally
+        {
+            SDL.DestroyProperties(properties);
+        }
     }
 
     public bool ClaimWindow(SdlGpuDeviceHandle device, SdlGpuWindowInfo window, out string? error)
@@ -61,6 +80,64 @@ internal sealed class SdlGpuApi : ISdlGpuApi
         var result = SDL.ClaimWindowForGPUDevice(device.Value, window.NativeWindowHandle);
         error = result ? null : ReadError("SDL_ClaimWindowForGPUDevice failed.");
         return result;
+    }
+
+    public SdlGpuDeviceInfo GetDeviceInfo(SdlGpuDeviceHandle device)
+    {
+        if (!device.IsValid)
+        {
+            return SdlGpuDeviceInfo.Unknown;
+        }
+
+        var properties = SDL.GetGPUDeviceProperties(device.Value);
+        var driverName = SDL.GetGPUDeviceDriver(device.Value);
+        if (properties == 0)
+        {
+            return new SdlGpuDeviceInfo(
+                gpuName: "unknown",
+                driverName: string.IsNullOrWhiteSpace(driverName) ? "unknown" : driverName,
+                driverVersion: "unknown",
+                driverInfo: "unknown");
+        }
+
+        return new SdlGpuDeviceInfo(
+            SDL.GetStringProperty(properties, SDL.Props.GPUDeviceNameString, "unknown"),
+            string.IsNullOrWhiteSpace(driverName)
+                ? SDL.GetStringProperty(properties, SDL.Props.GPUDeviceDriverNameString, "unknown")
+                : driverName,
+            SDL.GetStringProperty(properties, SDL.Props.GPUDeviceDriverVersionString, "unknown"),
+            SDL.GetStringProperty(properties, SDL.Props.GPUDeviceDriverInfoString, "unknown"));
+    }
+
+    public bool ValidateTextureSmoke(SdlGpuDeviceHandle device, out string? error)
+    {
+        if (!device.IsValid)
+        {
+            error = "SDL_GPU texture smoke requires a valid device handle.";
+            return false;
+        }
+
+        var supported = SDL.GPUTextureSupportsFormat(
+            device.Value,
+            SDL.GPUTextureFormat.R8G8B8A8Unorm,
+            SDL.GPUTextureType.TextureType2D,
+            SDL.GPUTextureUsageFlags.Sampler | SDL.GPUTextureUsageFlags.ColorTarget);
+        error = supported ? null : ReadError("SDL_GPU RGBA8 texture smoke failed.");
+        return supported;
+    }
+
+    public bool ValidatePipelineSmoke(SdlGpuDeviceHandle device, out string? error)
+    {
+        if (!device.IsValid)
+        {
+            error = "SDL_GPU pipeline smoke requires a valid device handle.";
+            return false;
+        }
+
+        var formats = SDL.GetGPUShaderFormats(device.Value);
+        var supported = (formats & ShaderFormats) != 0;
+        error = supported ? null : "SDL_GPU pipeline smoke found no supported shader format.";
+        return supported;
     }
 
     public SdlGpuCommandBufferHandle AcquireCommandBuffer(SdlGpuDeviceHandle device, out string? error)
@@ -95,6 +172,34 @@ internal sealed class SdlGpuApi : ISdlGpuApi
         {
             SDL.DestroyGPUDevice(device.Value);
         }
+    }
+
+    private static bool ConfigureDeviceProperties(
+        uint properties,
+        SdlGpuDeviceCreateInfo createInfo,
+        out string? error)
+    {
+        return SetBoolean(properties, SDL.Props.GPUDeviceCreateDebugModeBoolean, createInfo.DebugMode, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateShadersSPIRVBoolean, (ShaderFormats & SDL.GPUShaderFormat.SPIRV) != 0, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateShadersDXILBoolean, (ShaderFormats & SDL.GPUShaderFormat.DXIL) != 0, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateShadersMSLBoolean, (ShaderFormats & SDL.GPUShaderFormat.MSL) != 0, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateShadersMetalLibBoolean, (ShaderFormats & SDL.GPUShaderFormat.MetalLib) != 0, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateFeatureClipDistanceBoolean, createInfo.OptionalFeatures.ClipDistance, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateFeatureDepthClampingBoolean, createInfo.OptionalFeatures.DepthClamping, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, createInfo.OptionalFeatures.IndirectDrawFirstInstance, out error) &&
+            SetBoolean(properties, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, createInfo.OptionalFeatures.Anisotropy, out error);
+    }
+
+    private static bool SetBoolean(uint properties, string name, bool value, out string? error)
+    {
+        if (SDL.SetBooleanProperty(properties, name, value))
+        {
+            error = null;
+            return true;
+        }
+
+        error = ReadError($"SDL_SetBooleanProperty failed for {name}.");
+        return false;
     }
 
     private static string ReadError(string fallback)

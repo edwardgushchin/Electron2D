@@ -155,6 +155,8 @@ public sealed class SdlGpuLifecycleTests
 
         public int DestroyDeviceCalls { get; private set; }
 
+        public Electron2D.SdlGpuDeviceCreateInfo? LastCreateInfo { get; private set; }
+
         public string? CreateDeviceError { get; init; }
 
         public string? ClaimWindowError { get; init; }
@@ -163,9 +165,10 @@ public sealed class SdlGpuLifecycleTests
 
         public string? SubmitCommandBufferError { get; init; }
 
-        public Electron2D.SdlGpuDeviceHandle CreateDevice(bool debugMode, out string? error)
+        public Electron2D.SdlGpuDeviceHandle CreateDevice(Electron2D.SdlGpuDeviceCreateInfo createInfo, out string? error)
         {
             CreateDeviceCalls++;
+            LastCreateInfo = createInfo;
             error = CreateDeviceError;
             return error is null ? new Electron2D.SdlGpuDeviceHandle(1) : default;
         }
@@ -175,6 +178,23 @@ public sealed class SdlGpuLifecycleTests
             ClaimWindowCalls++;
             error = ClaimWindowError;
             return error is null;
+        }
+
+        public Electron2D.SdlGpuDeviceInfo GetDeviceInfo(Electron2D.SdlGpuDeviceHandle device)
+        {
+            return new Electron2D.SdlGpuDeviceInfo("Test GPU", "test-driver", "1.0", "test-driver 1.0");
+        }
+
+        public bool ValidateTextureSmoke(Electron2D.SdlGpuDeviceHandle device, out string? error)
+        {
+            error = null;
+            return true;
+        }
+
+        public bool ValidatePipelineSmoke(Electron2D.SdlGpuDeviceHandle device, out string? error)
+        {
+            error = null;
+            return true;
         }
 
         public Electron2D.SdlGpuCommandBufferHandle AcquireCommandBuffer(Electron2D.SdlGpuDeviceHandle device, out string? error)
