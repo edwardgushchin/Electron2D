@@ -2166,7 +2166,7 @@
 
 Создано по запросу пользователя: Wiki должна быть автоматической документацией публичного API в GitHub Wiki, как у SDL3-CS Wiki, без локального сайта.
 
-## T-0129 [ ] P0: Провести полный аудит XML-документации публичного API
+## T-0129 [ ] P0: Проверить всю документацию публичного API на наличие и соответствие правилам
 
 - Создана: 2026-06-21T11:19:09+03:00
 - Приоритет: P0
@@ -2179,24 +2179,25 @@
 
 ### Самодостаточное описание
 
-Нужно пройти по всему экспортируемому публичному API `Electron2D` и проверить, что каждый публичный тип, constructor, method, field, property, event, delegate, enum и enum value имеет полноценную C# XML documentation в SDL-like стиле: `summary` с `para` для развёрнутого описания, `remarks`, `param name`, `typeparam name`, `returns`, `value`, `exception cref`, `threadsafety`, `since`, `seealso cref`, `see cref`, `paramref name` и `c` там, где они применимы.
+Нужно пройти по всему экспортируемому публичному API `Electron2D` и проверить, что каждый публичный тип, constructor, method, field, property, event, delegate, enum и enum value имеет полноценную C# XML documentation по правилам `AGENTS.md`: `summary` с `para` для развёрнутого описания, `remarks`, `param name`, `typeparam name`, `returns`, `value`, `exception cref`, `threadsafety`, `since`, `seealso cref`, `see cref`, `paramref name` и `c` там, где они применимы.
 
 Отдельно нужно проверить, что публичная документация не объясняет Electron2D через запрещённые публичные сравнения вне `README.md` и не называет внутренние backend-библиотеки там, где достаточно описать роль backend обычным языком.
 
 ### Критерии приёмки
 
 - [ ] Создана или обновлена спецификация documentation quality gate.
+- [ ] Для каждого public member проверено, что документация присутствует и соответствует всем правилам `AGENTS.md`; отсутствующие или неполные комментарии исправлены либо приводят verifier к ошибке.
 - [ ] Создан автоматический verifier, который читает compiled public surface и XML documentation, находит отсутствующие или неполные public comments и падает в CI.
 - [ ] Verifier проверяет наличие обязательных тегов для методов, свойств, полей, событий, enum values, delegates и constructors.
 - [ ] Verifier запрещает публичные documentation phrases, нарушающие правила `AGENTS.md`, вне `README.md`.
-- [ ] Весь текущий public API `src/Electron2D/` приведён к SDL-like XML documentation формату.
+- [ ] Весь текущий public API `src/Electron2D/` приведён к полному C# XML documentation формату, закреплённому в `AGENTS.md`.
 - [ ] GitHub Wiki API source и локальная implementation documentation синхронизированы с результатом аудита.
 - [ ] Добавлены tests или script-level checks для verifier.
 - [ ] Документация documentation pipeline обновлена.
 
 ### Заметки агента
 
-Создано по запросу пользователя: после введения SDL-like XML documentation rules нужен отдельный полный аудит всего public API, а не только новых классов текущих задач.
+Создано по запросу пользователя: после введения правил полноты C# XML documentation нужен отдельный полный аудит всего public API, а не только новых классов текущих задач.
 
 ## T-0108 [ ] P0: Обеспечить 100% test coverage кода движка
 
