@@ -53,6 +53,10 @@
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - resource переводов, общий translation server, locale lookup, fallback и обновление UI после смены локали.
 - [Settings persistence baseline](settings-localization/settings-persistence.md) - project/user settings, input actions, display/window defaults и fail-closed diagnostics.
 
+## Export pipeline и платформы
+
+- [Export preset model and toolchain validation](export/export-preset-model.md) - общий preset JSON, target/configuration model, signing references без секретов и fail-closed diagnostics.
+
 ## Физика 2D
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - public `Rid`-граница, internal swappable backend и запрет публичных physics backend handles.

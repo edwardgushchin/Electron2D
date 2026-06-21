@@ -50,6 +50,10 @@
 - [Translation resource, locale switching и `Tr`](settings-localization/translation-runtime.md) - текущие `Translation`, `TranslationServer`, locale fallback и обновление `Label` после смены locale.
 - [Settings persistence baseline](settings-localization/settings-persistence.md) - текущий внутренний JSON-контракт project/user settings, input actions, display/window defaults и fail-closed diagnostics.
 
+## Export pipeline и платформы
+
+- [Export preset model и toolchain validation](export/export-preset-model.md) - текущий внутренний JSON-контракт export presets, SDK/toolchain/signing checks и fail-closed diagnostics без запуска сборки или публикации.
+
 ## Физика 2D
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - текущая public `Rid`-граница физики, internal backend boundary и запрет публичных Box2D handles.

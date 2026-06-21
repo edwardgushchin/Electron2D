@@ -55,6 +55,7 @@
 - Начальный compatibility renderer backend baseline: internal frame plan для sprites, UI/text, primitives, tile-like texture copies, documented limitations и golden reference command stream.
 - Начальный Android mobile GPU fallback baseline: internal mobile GPU create profile, smoke steps texture/pipeline/command buffer/first submit, `Automatic`/`FailIfUnavailable` policy и startup result с GPU/driver/backend/reasons.
 - Начальный settings persistence baseline: internal `Electron2D.ProjectSettings` и `Electron2D.UserSettings` JSON documents, `project.e2d.json` template defaults, input actions, display/window defaults, locale user setting и fail-closed diagnostics для повреждённых файлов.
+- Начальный export preset baseline: internal `export_presets.e2export.json`, deterministic preset round-trip, SDK/toolchain/signing reference validation и fail-closed diagnostics без signing, deploy или публикации.
 - Тестовая инфраструктура и desktop CI matrix.
 - GitHub Wiki source для API compatibility.
 - Package metadata `0.1.0-preview`.
