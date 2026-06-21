@@ -64,7 +64,7 @@ Top-level поля:
 
 ## Ограничения
 
-T-0035 сам по себе не добавлял file-level `ResourceLoader`, `ResourceSaver`, импорт, файловое наблюдение и editor FileSystem dock. Import cache реализован отдельной задачей `T-0036` и описан в `resource-import-cache.md`. Текущий документ остаётся справкой по стабильному `.e2res` формату и UID-контракту, на который import cache опирается.
+T-0035 сам по себе не добавлял file-level `ResourceLoader`, `ResourceSaver`, импорт, файловое наблюдение и editor FileSystem dock. Import cache реализован отдельной задачей `T-0036` и описан в `resource-import-cache.md`. Более широкий internal serializer для сцен, ресурсов, arrays, dictionaries, enums, nullable и resource references реализован в `T-0041` и описан в `scene-resource-serialization.md`. Текущий документ остаётся справкой по стабильному `.e2res` формату и UID-контракту, на который import cache опирается.
 
 ## Проверки
 

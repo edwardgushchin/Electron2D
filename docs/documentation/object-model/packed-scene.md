@@ -15,7 +15,9 @@
 - `SceneTree.CurrentScene`;
 - `SceneTree.ChangeSceneToPacked(PackedScene packedScene)`.
 
-`PackedScene` наследуется от `Resource`, как Godot-like ресурс сцены. File-level `ResourceSaver`/`ResourceLoader` ещё не реализованы, поэтому текущий baseline работает как in-memory scene resource.
+`PackedScene` наследуется от `Resource`, как Godot-like ресурс сцены. File-level `ResourceSaver`/`ResourceLoader` ещё не реализованы, поэтому текущий public baseline работает как in-memory scene resource.
+
+Внутренний scene file document для будущих loader/saver и editor задач уже реализован в ресурсном домене и описан в [Сериализация сцен, ресурсов и переносимых property values](../resources/scene-resource-serialization.md).
 
 ## Pack
 
@@ -50,6 +52,7 @@ Previous packed data заменяется новым успешным `Pack()`.
 
 ## Ограничения текущего baseline
 
-- Сериализация scene resource в файл ещё не реализована.
+- Public загрузка/сохранение `PackedScene` по path ещё не реализована.
+- Внутренний `SceneFileDocument` уже умеет stable JSON round-trip для nodes, persistent groups, owner/parent ids, properties и resource references, но пока не подключён к public `PackedScene`.
 - Inherited scenes и editor-only instantiate modes не реализованы.
 - Custom script state, exported properties и external node references ждут `Variant`/property database/resource pipeline.

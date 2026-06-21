@@ -25,6 +25,7 @@
 - Начальный internal PNG/JPEG texture import baseline: image metadata, sidecar настройки filter/repeat/mipmaps, atlas regions, platform variants и stable `texture.e2tex.json` cache artifact.
 - Начальный internal TTF/OTF font import baseline: font names metadata, fallback font dependencies, SDF/bitmap policy и stable `font.e2font.json` cache artifact.
 - Начальный internal shader source artifact import baseline: `.e2shader`, sidecar target platforms, diagnostics file/line/column, stable `shader.e2shader.json` cache artifact и iOS artifact без runtime compilation.
+- Начальный internal scene/resource serialization baseline: stable resource/scene JSON documents, custom `Resource` round-trip, arrays, dictionaries, enums, nullable и resource reference slots.
 - Начальный Variant API: `Variant`, `Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary` с закрытым списком значений `0.1.0 Preview`.
 - Начальная стабильная сериализация `Variant`: internal canonical JSON round-trip для переносимых базовых значений.
 - Начальная серверная граница рендеринга: `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature()` и internal `Compatibility`/`Standard` backend abstraction.

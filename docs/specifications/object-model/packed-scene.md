@@ -19,7 +19,7 @@
 - `Node? SceneTree.CurrentScene`;
 - `Error SceneTree.ChangeSceneToPacked(PackedScene packedScene)`.
 
-Editor-only `GenEditState`, inherited scenes и file-level `ResourceSaver`/`ResourceLoader` не входят в baseline `T-0015`.
+Editor-only `GenEditState`, inherited scenes и file-level `ResourceSaver`/`ResourceLoader` не входят в baseline `T-0015`. Внутренний file-level scene document реализуется отдельной ресурсной задачей `T-0041`.
 
 ## Packing semantics
 
@@ -48,7 +48,8 @@ Editor-only `GenEditState`, inherited scenes и file-level `ResourceSaver`/`Reso
 
 ## Ограничения текущего baseline
 
-- Сериализация в файл и загрузка по path остаются частью будущего resource pipeline.
+- Public сериализация в файл и загрузка по path остаются частью будущего resource pipeline.
+- Internal `SceneFileDocument` для будущего loader/saver baseline задаётся в ресурсной спецификации `scene-resource-serialization.md`.
 - Custom script state и constructor arguments не сериализуются.
 - Node references/properties за пределами текущего minimal `Node` surface не сериализуются до появления `Variant` и property database.
 

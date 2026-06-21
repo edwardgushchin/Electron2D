@@ -31,6 +31,7 @@
 - [Импорт PNG/JPEG в Texture2D и AtlasTexture](resources/texture-image-import.md) - internal image importer, sidecar настройки, texture metadata, atlas regions и platform variants.
 - [Импорт TTF/OTF в Font](resources/font-import.md) - internal font importer, fallback font dependencies, SDF/bitmap policy и stable font metadata cache.
 - [Импорт shader source в platform-specific artifacts](resources/shader-source-import.md) - internal shader importer, compiled stages per target, diagnostics file/line/column и iOS/export precompiled artifact policy.
+- [Сериализация сцен, ресурсов и переносимых property values](resources/scene-resource-serialization.md) - internal scene/resource documents, arrays, dictionaries, enums, nullable и resource reference slots.
 
 ## Рендеринг
 
