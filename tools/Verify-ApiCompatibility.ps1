@@ -22,20 +22,66 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 #>
+param(
+    [string]$WikiRepositoryUrl = 'https://github.com/edwardgushchin/Electron2D.wiki.git',
+    [string]$WikiPath
+)
+
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $repoRoot 'src/Electron2D/Electron2D.csproj'
-$wikiPath = Join-Path $repoRoot '.github/wiki/API-Compatibility.md'
+$wikiCloneRoot = Join-Path $repoRoot '.github/wiki'
 $inspectorRoot = Join-Path $repoRoot '.temp/api-compatibility-inspector'
 $inspectorProject = Join-Path $inspectorRoot 'ApiCompatibilityInspector.csproj'
+
+function Invoke-Git {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$Arguments
+    )
+
+    $output = & git @Arguments 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host ($output -join [Environment]::NewLine)
+        exit $LASTEXITCODE
+    }
+
+    return $output
+}
+
+if ([string]::IsNullOrWhiteSpace($WikiPath)) {
+    if (-not (Test-Path -LiteralPath (Join-Path $wikiCloneRoot '.git'))) {
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $wikiCloneRoot) | Out-Null
+        Invoke-Git -Arguments @('clone', '--depth', '1', $WikiRepositoryUrl, $wikiCloneRoot) | Out-Null
+    }
+    else {
+        $status = @(Invoke-Git -Arguments @('-C', $wikiCloneRoot, 'status', '--short'))
+        if ($status.Count -eq 0) {
+            Invoke-Git -Arguments @('-C', $wikiCloneRoot, 'pull', '--ff-only') | Out-Null
+        }
+        else {
+            Write-Host "Using existing GitHub Wiki clone with local changes: $wikiCloneRoot"
+        }
+    }
+
+    $wikiPath = Join-Path $wikiCloneRoot 'API-Compatibility.md'
+}
+else {
+    $wikiPath = if ([System.IO.Path]::IsPathRooted($WikiPath)) {
+        [System.IO.Path]::GetFullPath($WikiPath)
+    }
+    else {
+        [System.IO.Path]::GetFullPath((Join-Path $repoRoot $WikiPath))
+    }
+}
 
 if (-not (Test-Path -LiteralPath $projectPath)) {
     throw 'Runtime project src/Electron2D/Electron2D.csproj was not found.'
 }
 
 if (-not (Test-Path -LiteralPath $wikiPath)) {
-    throw 'GitHub Wiki source .github/wiki/API-Compatibility.md was not found.'
+    throw "GitHub Wiki compatibility page was not found: $wikiPath"
 }
 
 Remove-Item -LiteralPath $inspectorRoot -Recurse -Force -ErrorAction SilentlyContinue
@@ -73,7 +119,7 @@ if ($LASTEXITCODE -ne 0) {
 
 $publicTypes = @($publicTypes | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 $wiki = Get-Content -LiteralPath $wikiPath -Raw
-$allowedStatuses = @('Supported', 'Partial', 'Experimental', 'Planned', 'Not planned')
+$requiredStatuses = @('Supported', 'Partial', 'Experimental', 'Planned')
 
 foreach ($typeName in $publicTypes) {
     if ($wiki.IndexOf("| ``$typeName`` |", [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
@@ -81,7 +127,7 @@ foreach ($typeName in $publicTypes) {
     }
 }
 
-foreach ($status in $allowedStatuses) {
+foreach ($status in $requiredStatuses) {
     if ($wiki.IndexOf("| $status |", [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
         throw "Compatibility table does not contain status: $status"
     }

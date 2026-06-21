@@ -6,13 +6,14 @@
 
 ## Где находится таблица
 
-Compatibility table хранится как GitHub Wiki source:
+Compatibility table хранится в GitHub Wiki repository:
 
 ```text
-.github/wiki/API-Compatibility.md
+https://github.com/edwardgushchin/Electron2D.wiki.git
+API-Compatibility.md
 ```
 
-Это не локальный сайт и не generated documentation portal. Файл предназначен для публикации в GitHub Wiki проекта.
+Это не локальный сайт и не generated documentation portal. Основной репозиторий использует `.github/wiki/` только как игнорируемый локальный клон; опубликованный файл находится в GitHub Wiki проекта.
 
 ## Текущий baseline
 
@@ -127,11 +128,11 @@ Compatibility table хранится как GitHub Wiki source:
 
 Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в согласованной форме публичного API.
 
-Wiki source содержит:
+GitHub Wiki содержит:
 
-- легенду статусов `Supported`, `Partial`, `Experimental`, `Planned`, `Not planned`;
+- легенду статусов `Supported`, `Partial`, `Experimental`, `Planned`;
 - planned 2D surface;
-- явно исключённый legacy/component API.
+- текущий public runtime surface.
 
 ## Локальная проверка
 
@@ -139,4 +140,4 @@ Wiki source содержит:
 powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1
 ```
 
-Verifier собирает `src/Electron2D/Electron2D.csproj`, читает exported public types из `Electron2D.dll`, сверяет их с `.github/wiki/API-Compatibility.md` и запрещает возврат legacy/component типов.
+Verifier собирает `src/Electron2D/Electron2D.csproj`, читает exported public types из `Electron2D.dll`, сверяет их с `API-Compatibility.md` в клоне `Electron2D.wiki.git` и запрещает возврат legacy/component типов без публикации отдельного legacy-блока в Wiki.

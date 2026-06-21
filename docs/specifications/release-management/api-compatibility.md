@@ -12,19 +12,19 @@
 - `Partial`
 - `Experimental`
 - `Planned`
-- `Not planned`
 
 ## GitHub Wiki
 
-Compatibility table должна готовиться как source для GitHub Wiki. Репозиторий не должен добавлять локальный сайт, static site generator или отдельный local docs portal ради этой таблицы.
+Compatibility table должна храниться в GitHub Wiki repository проекта. Репозиторий не должен добавлять локальный сайт, static site generator или отдельный local docs portal ради этой таблицы. Каталог `.github/wiki/` допустим только как игнорируемый локальный клон `Electron2D.wiki.git`.
 
-Canonical source для текущей задачи:
+Canonical location для текущей задачи:
 
 ```text
-.github/wiki/API-Compatibility.md
+https://github.com/edwardgushchin/Electron2D.wiki.git
+API-Compatibility.md
 ```
 
-Этот файл предназначен для публикации в GitHub Wiki repo проекта.
+Этот файл предназначен для публикации в GitHub Wiki проекта.
 
 ## Clean baseline
 
@@ -32,8 +32,7 @@ Canonical source для текущей задачи:
 
 - verifier подтверждает `0` exported public types;
 - legacy/component API не существует в public surface;
-- planned Electron2D типы перечислены как `Planned`;
-- legacy Unity-like/component типы перечислены как `Not planned`.
+- planned Electron2D типы перечислены как `Planned`.
 
 ## Запрещённый API
 
@@ -56,4 +55,4 @@ Canonical source для текущей задачи:
 powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1
 ```
 
-Verifier должен собрать runtime, прочитать exported public types и убедиться, что каждый публичный тип отражён в GitHub Wiki source с допустимым статусом.
+Verifier должен собрать runtime, прочитать exported public types и убедиться, что каждый публичный тип отражён в GitHub Wiki clone с допустимым статусом. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki.

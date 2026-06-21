@@ -58,6 +58,16 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues
 
+      - name: Checkout GitHub Wiki
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path .github | Out-Null
+          git clone --depth 1 https://github.com/edwardgushchin/Electron2D.wiki.git .github/wiki
+
+      - name: Verify GitHub Wiki API reference
+        shell: pwsh
+        run: ./tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
+
       - name: Verify Windows export
         if: matrix.os == 'windows-latest'
         shell: pwsh

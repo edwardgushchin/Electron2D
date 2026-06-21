@@ -54,7 +54,7 @@
 - `RefCounted.Unreference()` освобождает объект при счётчике `0`;
 - `Resource.TakeOverPath()` меняет `ResourcePath`;
 - legacy component типы отсутствуют;
-- `.github/wiki/API-Compatibility.md` отражает новые public types.
+- `Electron2D.wiki.git/API-Compatibility.md` отражает новые public types.
 
 ## Отличия от Godot в `T-0008`
 

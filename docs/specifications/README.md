@@ -16,7 +16,7 @@
 
 - [Тестовая инфраструктура 0.1.0 Preview](release-management/test-infrastructure.md) - unit, integration, runtime smoke и golden-data проверки после clean reset.
 - [CI-матрица 0.1.0 Preview](release-management/ci-matrix.md) - desktop matrix, test runner и явная отметка mobile/export gap.
-- [Таблица совместимости API](release-management/api-compatibility.md) - GitHub Wiki source и verifier для public API surface.
+- [Таблица совместимости API](release-management/api-compatibility.md) - GitHub Wiki repository и verifier для public API surface.
 - [Версионирование и release metadata 0.1.0 Preview](release-management/release-metadata.md) - package metadata, changelog и release notes.
 - [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - минимальный project manifest, scene manifest и проверка build/run.
 - [Performance budgets и soak-критерии 0.1.0 Preview](release-management/performance-budgets.md) - целевые устройства, 60 FPS, memory budgets и mobile cycles.
@@ -25,6 +25,7 @@
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-documentation.md) - обязательные разделы user guide, проверяемые команды и screenshot policy.
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - обязательные XML-теги, verifier modes и правила качества public API comments.
+- [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - автоматическая генерация GitHub Wiki из compiled public API и XML documentation.
 
 ## Репозиторий
 

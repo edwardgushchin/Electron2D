@@ -33,6 +33,9 @@ coverage.*
 *.temp
 .temp/
 
+# Local clone of the GitHub Wiki repository.
+/.github/wiki/
+
 # Local goal drafts moved to docs/specifications/
 /GOAL-0.1.0.md
 /GOAL.md
