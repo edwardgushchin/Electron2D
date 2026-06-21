@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D documents the agreed 2D runtime API subset here. This table is a release guard for public types and intentionally excludes removed legacy component APIs.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, frame-based sprite animation, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -21,6 +21,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 
 | API | Reference | Status | Notes |
 | --- | --- | --- | --- |
+| `Electron2D.AnimatedSprite2D` | `AnimatedSprite2D` | Partial | Frame-based 2D animation node with `SpriteFrames`, autoplay, play/pause/stop, frame progress, loop handling and canvas submission of the current frame. |
 | `Electron2D.Area2D` | `Area2D` | Partial | RID lifecycle, monitoring flags, priority, transform sync, AABB overlap snapshots, `body_entered`/`body_exited` and `area_entered`/`area_exited` signals. |
 | `Electron2D.AtlasTexture` | `AtlasTexture` | Partial | Atlas region resource with atlas, region, margin, filter clip and transparency delegation. |
 | `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission and deferred calls. |
@@ -98,6 +99,8 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Shape2D` | `Shape2D` | Partial | Base shape resource for `CollisionShape2D` with lazy physics RID creation and cleanup. |
 | `Electron2D.SignalAttribute` | `SignalAttribute` / `[Signal]` | Partial | Marker attribute for script delegates backed by explicit signal metadata and the existing `Connect()`/`EmitSignal()` API. |
 | `Electron2D.Sprite2D` | `Sprite2D` | Partial | Texture, centered/offset drawing rect, region rect, flip flags, pixel opacity and internal submission baseline. |
+| `Electron2D.SpriteFrames` | `SpriteFrames` | Partial | Resource for named texture-frame animations, frame durations, speed and loop modes consumed by `AnimatedSprite2D`. |
+| `Electron2D.SpriteFrames+LoopModeEnum` | `SpriteFrames.LoopMode` | Partial | Loop mode values for none, linear and pingpong playback. |
 | `Electron2D.StaticBody2D` | `StaticBody2D` | Partial | RID lifecycle, constant velocity storage and transform sync baseline. |
 | `Electron2D.StringName` | `StringName` | Partial | Immutable interned-name baseline with ordinal equality, hashing, empty/default semantics and string conversion. |
 | `Electron2D.Texture2D` | `Texture2D` | Partial | Abstract texture resource baseline for size, alpha, mipmaps and pixel opacity queries. |

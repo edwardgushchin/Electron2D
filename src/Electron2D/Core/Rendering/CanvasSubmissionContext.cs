@@ -93,6 +93,10 @@ internal sealed class CanvasSubmissionContext
             {
                 SubmitSprite(sprite, currentState, visible, modulate, treeOrder++);
             }
+            else if (canvasItem is AnimatedSprite2D animatedSprite)
+            {
+                SubmitAnimatedSprite(animatedSprite, currentState, visible, modulate, treeOrder++);
+            }
 
             foreach (var drawingCommand in canvasItem.DrawingCommands)
             {
@@ -151,6 +155,48 @@ internal sealed class CanvasSubmissionContext
             sourceRect: sprite.GetSourceRect(),
             destinationRect: destinationRect,
             texture: sprite.Texture,
+            flipH: sprite.FlipH,
+            flipV: sprite.FlipV,
+            debugName: sprite.Name));
+    }
+
+    private void SubmitAnimatedSprite(AnimatedSprite2D sprite, SubmissionState state, bool visible, Color modulate, long treeOrder)
+    {
+        var texture = sprite.GetCurrentTexture();
+        if (texture is null)
+        {
+            return;
+        }
+
+        var textureRid = GetTextureRid(texture);
+        var key = new CanvasItemBatchKey(textureRid, material: default, clip: default, CanvasItemBlendMode.Mix);
+        var transform = state.LayerTransform * sprite.GlobalTransform;
+        if (state.SnapTransformsToPixel)
+        {
+            transform.Origin = transform.Origin.Round();
+        }
+
+        var destinationRect = sprite.GetRect();
+        if (state.SnapVerticesToPixel)
+        {
+            destinationRect = SnapRect(destinationRect);
+        }
+
+        queue.Add(new CanvasItemRenderCommand(
+            sprite.CanvasItemRid,
+            key,
+            state.Layer,
+            sprite.ZIndex,
+            sprite.YSortEnabled,
+            sprite.GlobalPosition.Y,
+            treeOrder,
+            state.LayerVisible && visible,
+            modulate,
+            sprite.SelfModulate,
+            transform: transform,
+            sourceRect: sprite.GetSourceRect(),
+            destinationRect: destinationRect,
+            texture: texture,
             flipH: sprite.FlipH,
             flipV: sprite.FlipV,
             debugName: sprite.Name));

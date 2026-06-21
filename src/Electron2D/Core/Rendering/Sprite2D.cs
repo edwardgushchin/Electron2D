@@ -25,13 +25,18 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like node that submits a 2D texture for drawing.
+/// Provides a node that submits a 2D texture for drawing.
 /// </summary>
 ///
 /// <remarks>
-/// `Sprite2D` displays the assigned <see cref="Texture2D" /> or a rectangular
-/// region of that texture. Sprite sheet frame animation is outside the
-/// Electron2D 0.1.0 Preview subset.
+/// <para>
+/// <see cref="Sprite2D"/> displays the assigned <see cref="Texture2D"/> or a
+/// rectangular region of that texture.
+/// </para>
+/// <para>
+/// Use <see cref="AnimatedSprite2D"/> with <see cref="SpriteFrames"/> for
+/// frame-based texture animation.
+/// </para>
 /// </remarks>
 ///
 /// <threadsafety>
@@ -43,8 +48,9 @@ namespace Electron2D;
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
 ///
-/// <seealso cref="Texture2D" />
-/// <seealso cref="Node2D" />
+/// <seealso cref="Texture2D"/>
+/// <seealso cref="Node2D"/>
+/// <seealso cref="AnimatedSprite2D"/>
 public class Sprite2D : Node2D
 {
     /// <summary>

@@ -54,6 +54,10 @@
 - [CharacterBody2D kinematic movement baseline](physics/character-body-2d-kinematic-solver.md) - текущие `MoveAndCollide()`, `MoveAndSlide()`, floor/wall/ceiling state, floor snap, platform velocity и `KinematicCollision2D`.
 - [Debug collision shapes baseline](physics/debug-collision-shapes.md) - текущие `SceneTree.DebugCollisionsHint`, `CollisionShape2D.DebugColor` и внутренний снимок форм для editor viewport и diagnostics checks.
 
+## Анимация
+
+- [SpriteFrames и AnimatedSprite2D baseline](animation/spriteframes-animatedsprite2d.md) - текущие `SpriteFrames`, `AnimatedSprite2D`, frame timing, loop modes, autoplay и canvas submission текущего frame.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.

@@ -42,6 +42,7 @@ public sealed class CleanRuntimeBaselineTests
         Assert.Equal(
             new[]
             {
+                "Electron2D.AnimatedSprite2D",
                 "Electron2D.Area2D",
                 "Electron2D.AtlasTexture",
                 "Electron2D.Callable",
@@ -119,6 +120,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.Shape2D",
                 "Electron2D.SignalAttribute",
                 "Electron2D.Sprite2D",
+                "Electron2D.SpriteFrames",
+                "Electron2D.SpriteFrames+LoopModeEnum",
                 "Electron2D.StaticBody2D",
                 "Electron2D.StringName",
                 "Electron2D.Texture2D",
