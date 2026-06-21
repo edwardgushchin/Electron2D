@@ -1,0 +1,12 @@
+{
+  "locale": "en",
+  "entries": {
+    "game.title": "Orbit Cards",
+    "menu.play": "Play",
+    "menu.options": "Options",
+    "menu.quit": "Quit",
+    "hud.moves": "Moves",
+    "hud.score": "Score",
+    "result.win": "Sequence complete"
+  }
+}

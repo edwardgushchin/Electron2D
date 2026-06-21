@@ -70,6 +70,10 @@
 - [Linux x64 glibc export](export/linux-x64-export.md) - текущий internal package plan и локальная проверка `linux-x64` self-contained publish/run на Linux или через WSL.
 - [macOS arm64 export](export/macos-arm64-export.md) - текущий internal package plan, `.app` bundle и проверка `osx-arm64` self-contained publish/run на macOS arm64.
 
+## Примеры и reference games
+
+- [Ассеты reference games](examples/reference-game-assets.md) - текущий локальный asset pack, license metadata, manifest и verifier для будущих reference games.
+
 ## Физика 2D
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - текущая public `Rid`-граница физики, internal backend boundary и запрет публичных Box2D handles.

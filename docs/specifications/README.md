@@ -70,6 +70,10 @@
 - [Linux x64 glibc export](export/linux-x64-export.md) - self-contained `linux-x64` package plan, glibc-only scope, WSL/Linux verifier и fail-closed validation.
 - [macOS arm64 export](export/macos-arm64-export.md) - self-contained `osx-arm64` `.app` bundle plan, x64 policy, user-provided signing plan и macOS verifier.
 
+## Примеры и reference games
+
+- [Ассеты reference games](examples/reference-game-assets.md) - локальный licensed asset pack, manifest, роли, hash-verification и запрет сетевых download steps во время build.
+
 ## Физика 2D
 
 - [PhysicsServer2D boundary](physics/physics-server-2d.md) - public `Rid`-граница, internal swappable backend и запрет публичных physics backend handles.
