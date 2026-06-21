@@ -193,3 +193,23 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-UserDocumentation.ps1
 ```
 
 Verifier проверяет обязательные разделы, ключевые команды, запрещённые публичные формулировки и image links.
+
+Подробная страница: [Troubleshooting guide и release checklist](troubleshooting-release-checklist.md).
+
+<!-- user-doc:release-checklist -->
+## Release checklist
+
+Перед ручной проверкой preview-кандидата выполните project template check, полный test runner, документационные checks, API/Wiki checks и desktop export checks для поддерживаемых host OS.
+
+Минимальный локальный набор:
+
+- `tools\Verify-ProjectTemplate.ps1`;
+- `tools\Run-Tests.ps1`;
+- `tools\Verify-UserDocumentation.ps1`;
+- `tools\Verify-WindowsExport.ps1`;
+- `tools\Verify-LinuxExport.ps1`;
+- `tools\Verify-MacOSExport.ps1`.
+
+Android/iOS export smoke, reference games performance metrics, leak verification и GitHub Release publication не считаются закрытыми без отдельных задач и явной команды пользователя.
+
+Подробный список: [Troubleshooting guide и release checklist](troubleshooting-release-checklist.md).

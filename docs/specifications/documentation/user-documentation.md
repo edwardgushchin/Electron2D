@@ -1,6 +1,6 @@
 # Пользовательская документация 0.1.0 Preview
 
-Статус: целевая спецификация для `T-0097`.
+Статус: целевая спецификация для `T-0097`, `T-0099` и `T-0101`.
 Обновлено: 2026-06-21.
 
 ## Назначение
@@ -22,7 +22,8 @@
 - Input Map и ввод;
 - renderer profiles, feature flags и fallback policy;
 - export baseline;
-- troubleshooting.
+- troubleshooting;
+- release checklist.
 
 ## Проверяемость
 

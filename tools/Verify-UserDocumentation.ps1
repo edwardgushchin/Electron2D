@@ -27,10 +27,12 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $specPath = Join-Path $repoRoot 'docs/specifications/documentation/user-documentation.md'
 $rendererSpecPath = Join-Path $repoRoot 'docs/specifications/documentation/renderer-profiles-user-documentation.md'
+$troubleshootingSpecPath = Join-Path $repoRoot 'docs/specifications/documentation/troubleshooting-release-checklist.md'
 $guidePath = Join-Path $repoRoot 'docs/documentation/documentation/user-guide.md'
 $rendererGuidePath = Join-Path $repoRoot 'docs/documentation/documentation/renderer-profiles.md'
+$troubleshootingGuidePath = Join-Path $repoRoot 'docs/documentation/documentation/troubleshooting-release-checklist.md'
 
-foreach ($path in @($specPath, $rendererSpecPath, $guidePath, $rendererGuidePath)) {
+foreach ($path in @($specPath, $rendererSpecPath, $troubleshootingSpecPath, $guidePath, $rendererGuidePath, $troubleshootingGuidePath)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Required user documentation file was not found: $path"
     }
@@ -40,6 +42,8 @@ $guide = [System.IO.File]::ReadAllText($guidePath, [System.Text.Encoding]::UTF8)
 $spec = [System.IO.File]::ReadAllText($specPath, [System.Text.Encoding]::UTF8)
 $rendererGuide = [System.IO.File]::ReadAllText($rendererGuidePath, [System.Text.Encoding]::UTF8)
 $rendererSpec = [System.IO.File]::ReadAllText($rendererSpecPath, [System.Text.Encoding]::UTF8)
+$troubleshootingGuide = [System.IO.File]::ReadAllText($troubleshootingGuidePath, [System.Text.Encoding]::UTF8)
+$troubleshootingSpec = [System.IO.File]::ReadAllText($troubleshootingSpecPath, [System.Text.Encoding]::UTF8)
 
 $requiredSectionMarkers = @(
     'user-doc:installation',
@@ -53,7 +57,8 @@ $requiredSectionMarkers = @(
     'user-doc:input-map',
     'user-doc:renderer-profiles',
     'user-doc:export',
-    'user-doc:troubleshooting'
+    'user-doc:troubleshooting',
+    'user-doc:release-checklist'
 )
 
 foreach ($marker in $requiredSectionMarkers) {
@@ -73,9 +78,11 @@ $requiredFragments = @(
     'renderer-profiles.md',
     'RenderingServer.CurrentProfile',
     'RenderingServer.HasFeature',
+    'troubleshooting-release-checklist.md',
     'tools\Verify-WindowsExport.ps1',
     'tools\Verify-LinuxExport.ps1',
-    'tools\Verify-MacOSExport.ps1'
+    'tools\Verify-MacOSExport.ps1',
+    'tools\Run-Tests.ps1'
 )
 
 foreach ($fragment in $requiredFragments) {
@@ -102,7 +109,30 @@ foreach ($fragment in $requiredRendererFragments) {
     }
 }
 
-$combined = $guide + "`n" + $spec + "`n" + $rendererGuide + "`n" + $rendererSpec
+$requiredTroubleshootingFragments = @(
+    'import',
+    'build',
+    'shader',
+    'export',
+    'mobile lifecycle',
+    'runtime diagnostics',
+    'release checklist',
+    'tools\Verify-ProjectTemplate.ps1',
+    'tools\Run-Tests.ps1',
+    'tools\Verify-UserDocumentation.ps1',
+    'tools\Verify-WindowsExport.ps1',
+    'tools\Verify-LinuxExport.ps1',
+    'tools\Verify-MacOSExport.ps1',
+    'GitHub Release'
+)
+
+foreach ($fragment in $requiredTroubleshootingFragments) {
+    if ($troubleshootingGuide.IndexOf($fragment, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+        throw "Troubleshooting documentation is missing required fragment: $fragment"
+    }
+}
+
+$combined = $guide + "`n" + $spec + "`n" + $rendererGuide + "`n" + $rendererSpec + "`n" + $troubleshootingGuide + "`n" + $troubleshootingSpec
 $forbiddenPatterns = @(
     '\bSDL\b',
     'Godot',
@@ -116,8 +146,8 @@ foreach ($pattern in $forbiddenPatterns) {
     }
 }
 
-if ($guide -match '(?i)\b(todo|tbd)\b') {
-    throw 'User guide contains TODO/TBD placeholder text.'
+if ($combined -match '(?i)\b(todo|tbd)\b') {
+    throw 'User documentation contains TODO/TBD placeholder text.'
 }
 
 $imageMatches = [regex]::Matches($guide, '!\[[^\]]*\]\(([^)]+)\)')

@@ -29,6 +29,7 @@
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.
 - [Renderer profiles](documentation/renderer-profiles.md) - пользовательское описание `Compatibility`, `Standard`, feature flags, Android fallback и `fail_if_unavailable`.
+- [Troubleshooting guide и release checklist](documentation/troubleshooting-release-checklist.md) - проверяемые действия для import, build, shader, export, mobile lifecycle, runtime diagnostics и preview release gate.
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - текущее правило, команды verifier и статус заполнения XML comments.
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - текущий генератор GitHub Wiki и проверка синхронизации с публичным API.
 
