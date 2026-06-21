@@ -2,7 +2,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить Godot-like query surface для простых physics checks:
+`0.1.0 Preview` должен предоставить Electron2D query surface для простых physics checks:
 
 - `RayCast2D` должен выполнять запрос и хранить последний result;
 - `PhysicsDirectSpaceState2D.IntersectRay()` должен возвращать ближайший hit;
@@ -13,7 +13,7 @@
 
 ## Публичный API
 
-Добавляются Godot-like public types:
+Добавляются Electron2D public types:
 
 - `World2D`;
 - `PhysicsDirectSpaceState2D`;
@@ -70,7 +70,7 @@
 - `CollideWithAreas: bool`, default `false`;
 - `Exclude: Rid[]`.
 
-`ShapeRid` сохраняется для Godot-like API формы, но текущий managed baseline умеет вычислять geometry только из `Shape`. Если `Shape == null`, `IntersectShape()` возвращает пустой результат.
+`ShapeRid` сохраняется для Electron2D API формы, но текущий managed baseline умеет вычислять geometry только из `Shape`. Если `Shape == null`, `IntersectShape()` возвращает пустой результат.
 
 ## Result dictionaries
 

@@ -5,7 +5,7 @@
 
 ## Публичный тип
 
-`Electron2D.RandomNumberGenerator` - Godot-like генератор псевдослучайных чисел для воспроизводимых gameplay-сценариев, тестов и будущих tools.
+`Electron2D.RandomNumberGenerator` - Electron2D генератор псевдослучайных чисел для воспроизводимых gameplay-сценариев, тестов и будущих tools.
 
 Тип наследуется от `RefCounted` и находится в namespace `Electron2D`.
 

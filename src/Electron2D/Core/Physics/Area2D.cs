@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like 2D area node for overlap and influence queries.
+/// Provides an Electron2D 2D area node for overlap and influence queries.
 /// </summary>
 ///
 /// <remarks>
@@ -53,7 +53,7 @@ public class Area2D : CollisionObject2D
     private readonly HashSet<Area2D> overlappingAreas = new();
 
     /// <summary>
-    /// Creates an area and registers its Godot-like built-in overlap signals.
+    /// Creates an area and registers its Electron2D built-in overlap signals.
     /// </summary>
     ///
     /// <threadsafety>

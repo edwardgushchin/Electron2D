@@ -27,7 +27,7 @@ using System.Threading;
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base node for items that can be drawn on a 2D canvas.
+/// Provides the Electron2D base node for items that can be drawn on a 2D canvas.
 /// </summary>
 ///
 /// <remarks>
@@ -40,7 +40,7 @@ namespace Electron2D;
 /// <para>
 /// Visibility and `Modulate` are inherited only through direct `CanvasItem`
 /// ancestors. A plain <see cref="Node" /> between two canvas items breaks the
-/// inherited canvas chain, matching the Godot behavior used by this preview.
+/// inherited canvas chain, matching the canvas inheritance behavior used by this preview.
 /// </para>
 /// </remarks>
 ///
@@ -148,7 +148,7 @@ public class CanvasItem : Node
     ///
     /// <remarks>
     /// Electron2D 0.1.0 Preview forwards this flag to the internal render
-    /// queue. The full Godot Y-sort container behavior is intentionally
+    /// queue. The full Y-sort container behavior is intentionally
     /// limited to the existing queue ordering rules.
     /// </remarks>
     ///

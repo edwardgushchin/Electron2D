@@ -6,11 +6,11 @@
 
 ## Цель
 
-Довести базовую иерархию `Node` до Godot-like поведения для `0.1.0 Preview`: parent-child дерево, `Owner`, reparent/move операции и безопасное отложенное удаление через `QueueFree()`.
+Довести базовую иерархию `Node` до Electron2D поведения для `0.1.0 Preview`: parent-child дерево, `Owner`, reparent/move операции и безопасное отложенное удаление через `QueueFree()`.
 
 ## Public API
 
-`Node` должен сохранить Godot-like public API и не возвращать legacy/component surface:
+`Node` должен сохранить Electron2D public API и не возвращать legacy/component surface:
 
 - `Owner`;
 - `GetParent()`;
@@ -24,7 +24,7 @@
 - `IsAncestorOf(Node node)`;
 - `QueueFree()`.
 
-`Object` должен иметь Godot-like `IsQueuedForDeletion()`, потому что именно через него проверяется состояние, заданное `QueueFree()`.
+`Object` должен иметь Electron2D `IsQueuedForDeletion()`, потому что именно через него проверяется состояние, заданное `QueueFree()`.
 
 Публичного свойства `Parent` быть не должно: parent читается через `GetParent()`. `Owner` и parent не являются одним и тем же состоянием.
 
@@ -54,7 +54,7 @@
 
 - Node должен уже иметь parent.
 - `newParent` не может быть текущим node или descendant текущего node.
-- `keepGlobalTransform` принимается для соответствия Godot-like API, но в T-0010 не меняет поведение, потому что `Node2D` ещё не реализован.
+- `keepGlobalTransform` принимается для соответствия Electron2D API, но в T-0010 не меняет поведение, потому что `Node2D` ещё не реализован.
 - Если перенос меняет присутствие в `SceneTree`, lifecycle callbacks должны следовать уже реализованным правилам `_ExitTree()`/`_EnterTree()`/`_Ready()`.
 
 ## Safe deletion

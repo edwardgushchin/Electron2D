@@ -6,7 +6,7 @@
 
 ## Цель
 
-Реализовать минимальный Godot-like baseline для `PackedScene`: упаковка node tree в ресурс сцены, instancing сохранённого дерева и смена активной сцены через `SceneTree`.
+Реализовать минимальный Electron2D baseline для `PackedScene`: упаковка node tree в ресурс сцены, instancing сохранённого дерева и смена активной сцены через `SceneTree`.
 
 ## Public API
 

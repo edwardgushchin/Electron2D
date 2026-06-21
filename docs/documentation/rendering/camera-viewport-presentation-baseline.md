@@ -6,7 +6,7 @@
 
 ## Public API
 
-В runtime добавлены Godot-like public nodes:
+В runtime добавлены Electron2D public nodes:
 
 - `Camera2D`;
 - `Viewport`;
@@ -101,7 +101,7 @@ Internal `ViewportPresentationSettings` строит `ViewportPresentationPlan` 
 - canvas offset;
 - final canvas transform.
 
-Internal enums используют Godot multiple-resolution terminology:
+Internal enums используют neutral multiple-resolution terminology:
 
 - `ViewportStretchMode.Disabled`;
 - `ViewportStretchMode.CanvasItems`;

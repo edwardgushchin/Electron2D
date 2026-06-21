@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like node that renders 2D descendants on an independent canvas layer.
+/// Provides an Electron2D node that renders 2D descendants on an independent canvas layer.
 /// </summary>
 ///
 /// <remarks>

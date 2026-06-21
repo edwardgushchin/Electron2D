@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like resource for a canvas shader source.
+/// Provides the Electron2D resource for a canvas shader source.
 /// </summary>
 ///
 /// <remarks>

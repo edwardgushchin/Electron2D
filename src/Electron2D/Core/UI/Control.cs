@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base node for 2D user interface controls.
+/// Provides the Electron2D base node for 2D user interface controls.
 /// </summary>
 ///
 /// <remarks>

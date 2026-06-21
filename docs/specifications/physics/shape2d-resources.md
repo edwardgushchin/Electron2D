@@ -2,7 +2,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить Godot-like resources для основных 2D collision shapes:
+`0.1.0 Preview` должен предоставить Electron2D resources для основных 2D collision shapes:
 
 - `RectangleShape2D`;
 - `CircleShape2D`;

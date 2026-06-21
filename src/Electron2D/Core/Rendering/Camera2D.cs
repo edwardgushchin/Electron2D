@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like 2D camera node for selecting the visible canvas region.
+/// Provides the Electron2D 2D camera node for selecting the visible canvas region.
 /// </summary>
 ///
 /// <remarks>

@@ -5,7 +5,7 @@
 
 ## Назначение
 
-`Compatibility` в этой задаче означает renderer fallback profile поверх `SDL_Renderer`. Это не слой совместимости со старым API Electron2D и не возврат Unity-like/component истории. Публичный API остаётся Godot-like, а concrete backend types остаются внутренними.
+`Compatibility` в этой задаче означает renderer fallback profile поверх `SDL_Renderer`. Это не слой совместимости со старым API Electron2D и не возврат Unity-like/component истории. Публичный API остаётся Electron2D, а concrete backend types остаются внутренними.
 
 `T-0033` должна сделать проверяемый baseline: текущий `CanvasItemRenderPlan` преобразуется во внутренний SDL_Renderer-совместимый frame plan. Такой план можно тестировать без реального окна и GPU, а поздний platform startup сможет передавать эти операции в SDL3-CS.
 

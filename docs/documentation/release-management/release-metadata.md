@@ -22,7 +22,7 @@ Runtime package `src/Electron2D/Electron2D.csproj` использует:
 ## Релизные документы
 
 - `CHANGELOG.md` описывает текущее состояние preview baseline.
-- `RELEASE-NOTES.md` фиксирует ограничения: старый runtime удалён, новый Godot-like runtime ещё строится задачами из `TASKS.md`.
+- `RELEASE-NOTES.md` фиксирует ограничения: старый runtime удалён, новый Electron2D runtime ещё строится задачами из `TASKS.md`.
 - Breaking changes policy для `0.x` описывает, что публичный API может меняться между preview-сборками без compatibility layer, но каждое breaking change должно быть явно записано в changelog и release notes.
 
 ## Проверка

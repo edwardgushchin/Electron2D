@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like control for drawing a single line of plain text.
+/// Provides the Electron2D control for drawing a single line of plain text.
 /// </summary>
 ///
 /// <remarks>

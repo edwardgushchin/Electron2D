@@ -29,7 +29,7 @@ namespace Electron2D.Tests.Integration;
 public sealed class NodeHierarchyOwnershipTests
 {
     [Fact]
-    public void PublicApiUsesGodotLikeParentAccessAndOwner()
+    public void PublicApiUsesElectron2DParentAccessAndOwner()
     {
         var nodeType = typeof(Electron2D.Node);
 

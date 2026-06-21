@@ -29,7 +29,7 @@ namespace Electron2D.Tests.Unit;
 public sealed class CameraViewportPublicApiTests
 {
     [Fact]
-    public void Camera2DDefaultsAndScreenQueriesFollowGodotLikeBaseline()
+    public void Camera2DDefaultsAndScreenQueriesFollowElectron2DBaseline()
     {
         var camera = new Electron2D.Camera2D
         {
@@ -89,7 +89,7 @@ public sealed class CameraViewportPublicApiTests
     }
 
     [Fact]
-    public void ViewportVisibleRectAndPixelSnapDefaultsAreGodotLike()
+    public void ViewportVisibleRectAndPixelSnapDefaultsAreElectron2D()
     {
         var viewport = new Electron2D.Viewport { Size = new Electron2D.Vector2I(640, 360) };
 

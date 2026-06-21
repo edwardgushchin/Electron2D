@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like 2D raycast node.
+/// Provides an Electron2D 2D raycast node.
 /// </summary>
 ///
 /// <remarks>

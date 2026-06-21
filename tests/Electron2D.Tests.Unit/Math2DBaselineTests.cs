@@ -30,7 +30,7 @@ namespace Electron2D.Tests.Unit;
 public sealed class Math2DBaselineTests
 {
     [Fact]
-    public void Vector2SupportsGodotLikeFloatingPointOperations()
+    public void Vector2SupportsElectron2DFloatingPointOperations()
     {
         var value = new Electron2D.Vector2(3f, 4f);
 

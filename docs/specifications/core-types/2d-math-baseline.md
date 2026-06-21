@@ -20,7 +20,7 @@
 
 Все новые типы находятся в namespace `Electron2D`.
 
-Публичный API должен использовать C#-стиль имён Godot-подобного API: `X`, `Y`, `Position`, `Size`, `Origin`, `Length()`, `LengthSquared()`, `Normalized()`, `Dot()`, `Cross()`, `DistanceTo()`, `Lerp()`, `IsEqualApprox()`, `HasPoint()`, `Intersects()`, `Xform()`, `ToHtml()` и аналогичные PascalCase-члены.
+Публичный API должен использовать C#-стиль имён согласованного API: `X`, `Y`, `Position`, `Size`, `Origin`, `Length()`, `LengthSquared()`, `Normalized()`, `Dot()`, `Cross()`, `DistanceTo()`, `Lerp()`, `IsEqualApprox()`, `HasPoint()`, `Intersects()`, `Xform()`, `ToHtml()` и аналогичные PascalCase-члены.
 
 Запрещено добавлять Unity-like имена (`Magnitude`, `SqrMagnitude`, `normalized`, `Bounds`, `Matrix2D`, `Quaternion`) и любые 3D-типы в рамках этой задачи.
 
@@ -106,7 +106,7 @@
 
 ## `Mathf`
 
-`Mathf` - static class для базовых Godot-like math helpers:
+`Mathf` - static class для базовых Electron2D math helpers:
 
 - constants: `Pi`, `Tau`, `E`, `Epsilon`;
 - `IsEqualApprox()`, `IsZeroApprox()`, `IsFinite()`;

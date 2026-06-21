@@ -6,7 +6,7 @@
 
 ## Цель
 
-Реализовать Godot-like baseline для `NodePath`, `Node.GetNode()` и `Node.GetNodeOrNull()` без локального compatibility layer и без legacy shortcuts.
+Реализовать Electron2D baseline для `NodePath`, `Node.GetNode()` и `Node.GetNodeOrNull()` без локального compatibility layer и без legacy shortcuts.
 
 ## Public API
 
@@ -25,7 +25,7 @@
 - `Node.GetNode(NodePath path)`;
 - `Node.GetNodeOrNull(NodePath path)`.
 
-Для C# удобства допускается implicit conversion из `string` в `NodePath`, чтобы Godot-like вызовы `GetNode("Child")` компилировались.
+Для C# удобства допускается implicit conversion из `string` в `NodePath`, чтобы Electron2D вызовы `GetNode("Child")` компилировались.
 
 ## Формат пути
 

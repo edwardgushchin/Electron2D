@@ -2,7 +2,7 @@
 
 ## Назначение
 
-`T-0028` вводит Godot-like custom drawing baseline для `CanvasItem` в `0.1.0 Preview`.
+`T-0028` вводит Electron2D custom drawing baseline для `CanvasItem` в `0.1.0 Preview`.
 
 Задача закрывает:
 
@@ -11,7 +11,7 @@
 - public immediate drawing methods `DrawLine()`, `DrawRect()`, `DrawCircle()`, `DrawPolygon()`, `DrawTexture()` и `DrawString()`;
 - internal cached draw command list, который попадает в `CanvasSubmissionContext`;
 - redraw invalidation: `_Draw()` вызывается не чаще одного раза за frame, даже если `QueueRedraw()` вызван несколько раз;
-- минимальный public `Font` и `HorizontalAlignment`, необходимые для Godot-like `DrawString()` signature.
+- минимальный public `Font` и `HorizontalAlignment`, необходимые для Electron2D `DrawString()` signature.
 
 ## Источники поведения
 

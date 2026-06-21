@@ -29,8 +29,8 @@ powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
 powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
 ```
 
-В текущем состоянии baseline-категория не содержит намеренно падающих тестов: новая Godot-like объектная модель уже включает `Node` и `SceneTree` baseline.
+В текущем состоянии baseline-категория не содержит намеренно падающих тестов: новая Electron2D объектная модель уже включает `Node` и `SceneTree` baseline.
 
 ## Текущее состояние runtime
 
-Runtime assembly `Electron2D` существует, загружается и экспортирует текущий Godot-like baseline public API. Unit-тесты дополнительно проверяют, что в новый baseline не вернулись legacy-типы `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `Rigidbody` и `Collider`.
+Runtime assembly `Electron2D` существует, загружается и экспортирует текущий Electron2D baseline public API. Unit-тесты дополнительно проверяют, что в новый baseline не вернулись legacy-типы `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `Rigidbody` и `Collider`.

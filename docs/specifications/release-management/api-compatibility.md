@@ -1,4 +1,4 @@
-# Таблица совместимости Godot-like API
+# Таблица совместимости Electron2D API
 
 Статус: целевая спецификация.
 Задача: `T-0004`.
@@ -6,7 +6,7 @@
 
 ## Цель
 
-Для `0.1.0 Preview` нужно поддерживать публичный API только в рамках согласованного Godot-like 2D-поднабора. Все публичные типы runtime assembly должны быть отражены в compatibility table с одним из статусов:
+Для `0.1.0 Preview` нужно поддерживать публичный API только в рамках согласованного Electron2D 2D-поднабора. Все публичные типы runtime assembly должны быть отражены в compatibility table с одним из статусов:
 
 - `Supported`
 - `Partial`
@@ -32,7 +32,7 @@ Canonical source для текущей задачи:
 
 - verifier подтверждает `0` exported public types;
 - legacy/component API не существует в public surface;
-- planned Godot-like типы перечислены как `Planned`;
+- planned Electron2D типы перечислены как `Planned`;
 - legacy Unity-like/component типы перечислены как `Not planned`.
 
 ## Запрещённый API

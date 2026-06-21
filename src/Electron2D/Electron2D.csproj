@@ -16,11 +16,11 @@
     <Title>Electron2D</Title>
     <Authors>Electron2D Team</Authors>
     <Company>Electron2D</Company>
-    <Description>Godot-like 2D game engine runtime for .NET, currently at the 0.1.0 Preview clean rewrite baseline.</Description>
+    <Description>C#-first 2D game engine runtime for .NET, currently at the 0.1.0 Preview clean rewrite baseline.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>game-engine;2d;godot-like;dotnet</PackageTags>
+    <PackageTags>game-engine;2d;csharp;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

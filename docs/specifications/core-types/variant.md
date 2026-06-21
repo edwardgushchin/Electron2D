@@ -2,7 +2,7 @@
 
 ## Назначение
 
-`Variant` должен стать Godot-like контейнером значения для динамических runtime API Electron2D `0.1.0 Preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и AI-friendly tooling. В этой версии `Variant` не обязан повторять полный набор Godot 4, но обязан иметь закрытый и проверяемый список поддерживаемых значений.
+`Variant` должен стать Electron2D контейнером значения для динамических runtime API Electron2D `0.1.0 Preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и AI-friendly tooling. В этой версии `Variant` не обязан повторять полный набор Godot 4, но обязан иметь закрытый и проверяемый список поддерживаемых значений.
 
 ## Источники поведения
 
@@ -40,7 +40,7 @@ Godot C# использует `Variant` как `struct`, где `default`/пус
 В `0.1.0 Preview` намеренно не входят:
 
 - 3D-типы (`Vector3`, `Transform3D`, `Basis`, `Projection` и связанные типы);
-- `Signal`, пока в публичном API нет отдельного Godot-like `Signal`;
+- `Signal`, пока в публичном API нет отдельного Electron2D `Signal`;
 - packed arrays;
 - editor-only значения;
 - произвольные CLR-объекты, не наследующиеся от `Electron2D.Object`.
@@ -90,7 +90,7 @@ public readonly struct Variant : IEquatable<Variant>
 
 ## Коллекции
 
-Для соответствия Godot C# коллекции живут не как `System.Array`/`System.Collections.Generic.Dictionary`, а как отдельный Godot-like namespace:
+Для соответствия Godot C# коллекции живут не как `System.Array`/`System.Collections.Generic.Dictionary`, а как отдельный Electron2D namespace:
 
 ```csharp
 namespace Electron2D.Collections;
@@ -115,6 +115,6 @@ public sealed class Dictionary;
 ## Критерии приёмки
 
 - Unit-тесты покрывают `Nil`, primitive values, numeric normalization, enum mapping, 2D math values, identity values, `Object`/`Resource`, `Array`, `Dictionary` и ошибки неподдержанных типов.
-- Public API baseline содержит только Godot-like новые типы `Electron2D.Variant`, `Electron2D.Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary`.
+- Public API baseline содержит только Electron2D новые типы `Electron2D.Variant`, `Electron2D.Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary`.
 - Документация текущего поведения описывает закрытый список и ограничения `0.1.0 Preview`.
 - `Signal`, 3D-типы и stable serialization не реализуются в этой задаче.

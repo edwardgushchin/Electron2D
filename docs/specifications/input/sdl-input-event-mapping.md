@@ -1,4 +1,4 @@
-# SDL input event mapping и Godot-like `InputEvent*`
+# SDL input event mapping и Electron2D `InputEvent*`
 
 Статус: целевая спецификация для `T-0048`.
 Обновлено: 2026-06-21.
@@ -6,7 +6,7 @@
 
 ## Назначение
 
-`0.1.0 Preview` должен принимать базовые SDL3 input events и передавать в `Node._Input(InputEvent)` Godot-like события. SDL types не входят в публичный API Electron2D: они остаются внутренней платформенной границей.
+`0.1.0 Preview` должен принимать базовые SDL3 input events и передавать в `Node._Input(InputEvent)` Electron2D события. SDL types не входят в публичный API Electron2D: они остаются внутренней платформенной границей.
 
 В этой задаче закрывается desktop baseline:
 
@@ -20,7 +20,7 @@ Gamepad, touch, multitouch, IME composition, mobile back/navigation, orientation
 
 ## Public API
 
-Публичный baseline должен использовать только Godot-like типы:
+Публичный baseline должен использовать только Electron2D типы:
 
 - `InputEvent`;
 - `InputEventFromWindow`;
@@ -34,7 +34,7 @@ Gamepad, touch, multitouch, IME composition, mobile back/navigation, orientation
 - `MouseButton`;
 - `MouseButtonMask`.
 
-Отдельный публичный `InputEventText` не добавляется, потому что Godot-like путь для текстового ввода в этом baseline - `InputEventKey.Unicode`.
+Отдельный публичный `InputEventText` не добавляется, потому что Electron2D путь для текстового ввода в этом baseline - `InputEventKey.Unicode`.
 
 ## Keyboard
 
@@ -44,8 +44,8 @@ SDL `KeyDown` и `KeyUp` мапятся в `InputEventKey`.
 
 - `Pressed` соответствует down/up состоянию;
 - `Echo` соответствует SDL repeat;
-- `Keycode` хранит layout key label в Godot-like `Key`;
-- `PhysicalKeycode` хранит US QWERTY physical key в Godot-like `Key`;
+- `Keycode` хранит layout key label в Electron2D `Key`;
+- `PhysicalKeycode` хранит US QWERTY physical key в Electron2D `Key`;
 - `KeyLabel` совпадает с `Keycode` в текущем baseline;
 - `Unicode` для key down/up без SDL text input равен `0`;
 - `ShiftPressed`, `AltPressed`, `CtrlPressed`, `MetaPressed` берутся из SDL key modifiers;
@@ -69,7 +69,7 @@ SDL `MouseButtonDown` и `MouseButtonUp` мапятся в `InputEventMouseButto
 
 Требования:
 
-- `ButtonIndex` использует Godot-like `MouseButton`;
+- `ButtonIndex` использует Electron2D `MouseButton`;
 - `Pressed` соответствует down/up состоянию;
 - `DoubleClick` выставляется, если SDL clicks больше или равен `2`;
 - `Position` и `GlobalPosition` получают SDL mouse coordinates;
@@ -83,12 +83,12 @@ SDL `MouseMotion` мапится в `InputEventMouseMotion`.
 
 - `Position` и `GlobalPosition` получают SDL mouse coordinates;
 - `Relative` и `ScreenRelative` получают SDL relative coordinates;
-- `ButtonMask` конвертируется из SDL button flags в Godot-like `MouseButtonMask`;
+- `ButtonMask` конвертируется из SDL button flags в Electron2D `MouseButtonMask`;
 - `Velocity` и `ScreenVelocity` остаются `Vector2.Zero`, пока runtime frame timing не подключён к input pump.
 
 ## Mouse wheel
 
-SDL `MouseWheel` мапится в `InputEventMouseButton`, как в Godot-like модели wheel button constants.
+SDL `MouseWheel` мапится в `InputEventMouseButton`, как в Electron2D модели wheel button constants.
 
 Требования:
 
@@ -106,7 +106,7 @@ SDL `MouseWheel` мапится в `InputEventMouseButton`, как в Godot-like
 Internal SDL dispatcher должен сохранять порядок SDL event queue:
 
 1. poll next SDL event;
-2. convert it to zero, one or several Godot-like `InputEvent` objects;
+2. convert it to zero, one or several Electron2D `InputEvent` objects;
 3. dispatch each mapped event через `SceneTree.DispatchInput()` before polling the next SDL event.
 
 Если один SDL event создаёт несколько `InputEvent`, их порядок должен соответствовать порядку scalar values или осей wheel mapping внутри этого event.
@@ -117,5 +117,5 @@ Internal SDL dispatcher должен сохранять порядок SDL event
 - Integration tests проверяют mouse button, mouse motion и wheel mapping.
 - Integration tests проверяют SDL text input в `InputEventKey.Unicode`.
 - Integration tests проверяют dispatch order через `SceneTree.DispatchInput()`.
-- API compatibility verifier проверяет все новые public Godot-like types в GitHub Wiki source.
+- API compatibility verifier проверяет все новые public Electron2D types в GitHub Wiki source.
 - Source license verifier проходит для новых C# files.

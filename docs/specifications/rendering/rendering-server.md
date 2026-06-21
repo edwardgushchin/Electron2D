@@ -2,7 +2,7 @@
 
 ## Назначение
 
-`RenderingServer` должен стать Godot-like server boundary для всего, что будет отображаться в Electron2D. В `0.1.0 Preview` задача `T-0022` не создаёт настоящий SDL device и не рисует кадр. Она вводит минимальную проверяемую границу:
+`RenderingServer` должен стать Electron2D server boundary для всего, что будет отображаться в Electron2D. В `0.1.0 Preview` задача `T-0022` не создаёт настоящий SDL device и не рисует кадр. Она вводит минимальную проверяемую границу:
 
 - публичный singleton-style facade `RenderingServer`;
 - два renderer profile: `Compatibility` и `Standard`;
@@ -57,7 +57,7 @@ public static class RenderingServer
 }
 ```
 
-Enums вложены в `RenderingServer`, чтобы не разбрасывать renderer-specific имена по корневому namespace и сохранить Godot-like singleton/server shape.
+Enums вложены в `RenderingServer`, чтобы не разбрасывать renderer-specific имена по корневому namespace и сохранить Electron2D singleton/server shape.
 
 ## Internal backend abstraction
 

@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base node for 2D objects that own a physics server RID.
+/// Provides the Electron2D base node for 2D objects that own a physics server RID.
 /// </summary>
 ///
 /// <remarks>
@@ -120,7 +120,7 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     }
 
     /// <summary>
-    /// Enables or disables a Godot-like collision layer number.
+    /// Enables or disables an Electron2D collision layer number.
     /// </summary>
     /// <param name="layerNumber">The layer number in the inclusive range <c>1..32</c>.</param>
     /// <param name="value">Whether the layer bit should be enabled.</param>
@@ -138,7 +138,7 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     }
 
     /// <summary>
-    /// Checks whether a Godot-like collision layer number is enabled.
+    /// Checks whether an Electron2D collision layer number is enabled.
     /// </summary>
     /// <param name="layerNumber">The layer number in the inclusive range <c>1..32</c>.</param>
     /// <returns><c>true</c> when the layer bit is enabled; otherwise, <c>false</c>.</returns>
@@ -157,7 +157,7 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     }
 
     /// <summary>
-    /// Enables or disables a Godot-like collision mask number.
+    /// Enables or disables an Electron2D collision mask number.
     /// </summary>
     /// <param name="layerNumber">The mask layer number in the inclusive range <c>1..32</c>.</param>
     /// <param name="value">Whether the mask bit should be enabled.</param>
@@ -175,7 +175,7 @@ public abstract class CollisionObject2D : Node2D, ISceneTreeLifecycleHandler
     }
 
     /// <summary>
-    /// Checks whether a Godot-like collision mask number is enabled.
+    /// Checks whether an Electron2D collision mask number is enabled.
     /// </summary>
     /// <param name="layerNumber">The mask layer number in the inclusive range <c>1..32</c>.</param>
     /// <returns><c>true</c> when the mask bit is enabled; otherwise, <c>false</c>.</returns>

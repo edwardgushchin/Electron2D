@@ -12,7 +12,7 @@
 - `Electron2D.RenderingServer.RenderingProfile`;
 - `Electron2D.RenderingServer.RenderingFeature`.
 
-`RenderingServer` - Godot-like singleton-style facade для запроса активного renderer profile и feature flags. Concrete backend classes не являются public API.
+`RenderingServer` - Electron2D singleton-style facade для запроса активного renderer profile и feature flags. Concrete backend classes не являются public API.
 
 ## Профили
 

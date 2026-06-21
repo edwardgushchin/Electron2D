@@ -6,11 +6,11 @@
 
 ## Цель
 
-Ввести Godot-like `RandomNumberGenerator` для `0.1.0 Preview`: отдельный объект генератора псевдослучайных чисел с воспроизводимым `Seed`, сохраняемым `State`, integer/float range API и нормальным распределением.
+Ввести Electron2D `RandomNumberGenerator` для `0.1.0 Preview`: отдельный объект генератора псевдослучайных чисел с воспроизводимым `Seed`, сохраняемым `State`, integer/float range API и нормальным распределением.
 
 Контракт сверяется с официальной документацией Godot `RandomNumberGenerator`: класс имеет `seed`, `state`, `randf()`, `randf_range()`, `randfn()`, `randi()`, `randi_range()` и `randomize()`, а Godot указывает PCG32 как текущий алгоритм, но предупреждает, что сам алгоритм является implementation detail. В Electron2D `0.1.0 Preview` алгоритм фиксируется как часть preview-контракта, потому что release gate требует воспроизводимые deterministic tests.
 
-Источник Godot-like поверхности: [Godot RandomNumberGenerator](https://docs.godotengine.org/en/stable/classes/class_randomnumbergenerator.html).
+Источник Electron2D поверхности: [Godot RandomNumberGenerator](https://docs.godotengine.org/en/stable/classes/class_randomnumbergenerator.html).
 
 ## Публичный API
 
@@ -33,7 +33,7 @@ public class RandomNumberGenerator : RefCounted
 }
 ```
 
-Запрещено добавлять Unity-like aliases (`Next`, `NextFloat`, `Range`, `Random`) и публичные свойства, которых нет в согласованной Godot-like поверхности.
+Запрещено добавлять Unity-like aliases (`Next`, `NextFloat`, `Range`, `Random`) и публичные свойства, которых нет в согласованной Electron2D поверхности.
 
 `RandWeighted()` не входит в `T-0018`: weights API должен вводиться отдельной задачей с тестами.
 

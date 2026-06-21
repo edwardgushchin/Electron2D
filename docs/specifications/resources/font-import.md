@@ -91,7 +91,7 @@ Importer читает sfnt header:
 
 ## Runtime resource factory
 
-Internal `FontImportResourceFactory` должен уметь создать `Font` instance из metadata. Это остаётся внутренним механизмом: публичный `Font` уже существует, а public concrete `FontFile` не добавляется без отдельной Godot-like API задачи.
+Internal `FontImportResourceFactory` должен уметь создать `Font` instance из metadata. Это остаётся внутренним механизмом: публичный `Font` уже существует, а public concrete `FontFile` не добавляется без отдельной Electron2D API задачи.
 
 ## Критерии приёмки
 

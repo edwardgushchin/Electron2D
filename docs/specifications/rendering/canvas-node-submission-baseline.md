@@ -2,7 +2,7 @@
 
 ## Назначение
 
-`T-0026` вводит первый Godot-like слой видимых 2D nodes поверх уже созданных `Node`, `Texture2D` и internal canvas item render queue.
+`T-0026` вводит первый Electron2D слой видимых 2D nodes поверх уже созданных `Node`, `Texture2D` и internal canvas item render queue.
 
 Задача закрывает:
 

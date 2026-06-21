@@ -94,7 +94,7 @@ public sealed class SdlInputEventMappingTests
     }
 
     [Fact]
-    public void MouseWheelMapsToGodotLikeMouseButtonWheelEvent()
+    public void MouseWheelMapsToElectron2DMouseButtonWheelEvent()
     {
         var mapped = Assert.IsType<Electron2D.InputEventMouseButton>(
             Assert.Single(Electron2D.SdlInputEventMapper.Map(MouseWheelEvent(y: -3f, direction: SDL.MouseWheelDirection.Normal))));

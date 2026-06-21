@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Defines horizontal text alignment values used by Godot-like text drawing APIs.
+/// Defines horizontal text alignment values used by Electron2D text drawing APIs.
 /// </summary>
 ///
 /// <threadsafety>

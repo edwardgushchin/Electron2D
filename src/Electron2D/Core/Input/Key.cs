@@ -25,13 +25,13 @@
 namespace Electron2D;
 
 /// <summary>
-/// Identifies a keyboard key in the Godot-like input event model.
+/// Identifies a keyboard key in the Electron2D input event model.
 /// </summary>
 /// <remarks>
 /// <para>
 /// The 0.1.0 Preview enum contains the printable ASCII keys and the non-printable
 /// keys needed by the SDL keyboard mapping baseline. Printable values use their
-/// Unicode code point. Non-printable values follow Godot's special key range.
+/// Unicode code point. Non-printable values follow Electron2D's reserved special key range.
 /// </para>
 /// <para>
 /// More key constants can be added as the input backlog expands. Unknown platform

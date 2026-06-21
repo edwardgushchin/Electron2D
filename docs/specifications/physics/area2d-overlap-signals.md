@@ -2,7 +2,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен иметь Godot-like baseline для `Area2D` sensors: область должна находить пересечения с телами и другими областями, хранить текущие overlap lists и эмитить вход/выход через стандартную систему `Object.Connect()`/`EmitSignal()`.
+`0.1.0 Preview` должен иметь Electron2D baseline для `Area2D` sensors: область должна находить пересечения с телами и другими областями, хранить текущие overlap lists и эмитить вход/выход через стандартную систему `Object.Connect()`/`EmitSignal()`.
 
 Задача не реализует полноценный solver и не раскрывает backend-типы. Текущий результат нужен как проверяемый managed baseline для editor/runtime gameplay logic, пока production physics backend ещё подключается отдельными задачами.
 
@@ -16,7 +16,7 @@
 - `CollisionLayer`;
 - `CollisionMask`.
 
-Добавляются Godot-like methods:
+Добавляются Electron2D methods:
 
 - `GetOverlappingBodies(): Node2D[]`;
 - `GetOverlappingAreas(): Area2D[]`;
@@ -32,7 +32,7 @@
 - `area_entered`, argument: `Area2D area`;
 - `area_exited`, argument: `Area2D area`.
 
-.NET events и backend-specific callbacks не добавляются, чтобы не расширять публичную модель за пределы Godot-like API.
+.NET events и backend-specific callbacks не добавляются, чтобы не расширять публичную модель за пределы Electron2D API.
 
 ## Overlap baseline
 
@@ -43,7 +43,7 @@
 - rectangle, circle, capsule, segment, convex polygon и concave segments сводятся к world-space `Rect2`;
 - объект без активных shapes не участвует в overlap.
 
-Фильтр слоёв применяет Godot-like правило scanning object:
+Фильтр слоёв применяет Electron2D правило scanning object:
 
 - `Area2D.CollisionMask` должен пересекаться с `CollisionLayer` target object;
 - `Monitoring == false` отключает collection и signals текущей области;
@@ -77,7 +77,7 @@
 
 ## Критерии приёмки
 
-- `Area2D` имеет Godot-like signal names и overlap helper methods.
+- `Area2D` имеет Electron2D signal names и overlap helper methods.
 - Enter/exit ordering проверен integration tests.
 - `Monitoring`, `Monitorable`, collision layer/mask filters проверены.
 - `QueueFree()` внутри overlap signal callback не ломает traversal и следующий physics frame.

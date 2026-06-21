@@ -29,7 +29,7 @@ namespace Electron2D.Tests.Unit;
 public sealed class CanvasNodePublicApiTests
 {
     [Fact]
-    public void CanvasItemVisibilityAndModulationDefaultsFollowGodotLikeBaseline()
+    public void CanvasItemVisibilityAndModulationDefaultsFollowElectron2DBaseline()
     {
         var item = new Electron2D.CanvasItem();
 
@@ -146,7 +146,7 @@ public sealed class CanvasNodePublicApiTests
     }
 
     [Fact]
-    public void CanvasLayerDefaultsToGodotLikeLayerAndVisibility()
+    public void CanvasLayerDefaultsToElectron2DLayerAndVisibility()
     {
         var layer = new Electron2D.CanvasLayer();
 

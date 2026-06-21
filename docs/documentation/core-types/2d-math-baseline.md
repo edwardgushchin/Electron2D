@@ -5,7 +5,7 @@
 
 ## Публичные типы
 
-В `Electron2D` добавлен первый Godot-like набор 2D math типов:
+В `Electron2D` добавлен первый Electron2D набор 2D math типов:
 
 - `Vector2`;
 - `Vector2I`;
@@ -103,7 +103,7 @@
 
 ## `Mathf`
 
-`Mathf` содержит базовые Godot-like helpers:
+`Mathf` содержит базовые Electron2D helpers:
 
 - constants `Pi`, `Tau`, `E`, `Epsilon`;
 - `IsEqualApprox()`, `IsZeroApprox()`, `IsFinite()`;

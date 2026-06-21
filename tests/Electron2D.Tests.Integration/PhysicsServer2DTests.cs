@@ -71,7 +71,7 @@ public sealed class PhysicsServer2DTests
     }
 
     [Fact]
-    public void ShapeCreationPreservesGodotLikeShapeType()
+    public void ShapeCreationPreservesElectron2DShapeType()
     {
         ResetBackend();
 

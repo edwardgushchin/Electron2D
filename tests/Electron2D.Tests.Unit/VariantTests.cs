@@ -42,7 +42,7 @@ public sealed class VariantTests
     }
 
     [Fact]
-    public void VariantStoresPrimitiveValuesAndEnumsInGodotLikeTypes()
+    public void VariantStoresPrimitiveValuesAndEnumsInElectron2DTypes()
     {
         Electron2D.Variant boolean = true;
         Electron2D.Variant integer = 42;
@@ -109,7 +109,7 @@ public sealed class VariantTests
     }
 
     [Fact]
-    public void VariantStoresGodotLikeCollectionsByReference()
+    public void VariantStoresElectron2DCollectionsByReference()
     {
         var array = new Electron2D.Collections.Array();
         array.Add(1);

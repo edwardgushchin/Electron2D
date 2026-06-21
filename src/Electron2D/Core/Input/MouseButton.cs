@@ -25,11 +25,11 @@
 namespace Electron2D;
 
 /// <summary>
-/// Identifies a mouse button or mouse wheel direction in the Godot-like input model.
+/// Identifies a mouse button or mouse wheel direction in the Electron2D input model.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Wheel steps are represented as button constants, matching Godot's
+/// Wheel steps are represented as button constants, matching Electron2D's
 /// `InputEventMouseButton` model.
 /// </para>
 /// <threadsafety>

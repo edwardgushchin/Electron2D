@@ -6,14 +6,14 @@
 
 ## Цель
 
-Ввести два базовых Godot-like identity-типа для `0.1.0 Preview`:
+Ввести два базовых Electron2D identity-типа для `0.1.0 Preview`:
 
 - `StringName` - immutable interned name для имён сигналов, групп, свойств, методов и будущего `Variant`;
 - `Rid` - opaque handle низкоуровневого ресурса для будущих rendering/physics/audio/text servers.
 
 В этом документе `Rid` означает Godot-style resource identifier, а не .NET Runtime Identifier. Это разные понятия: .NET RID описывает платформу сборки, а `Electron2D.Rid` описывает handle ресурса текущей runtime-сессии.
 
-Источники Godot-like поведения:
+Источники Electron2D поведения:
 
 - [Godot StringName](https://docs.godotengine.org/en/stable/classes/class_stringname.html);
 - [Godot RID](https://docs.godotengine.org/en/stable/classes/class_rid.html).

@@ -30,7 +30,7 @@ namespace Electron2D.Tests.Integration;
 public sealed class PhysicsMaterialStateTests
 {
     [Fact]
-    public void CollisionLayerAndMaskHelpersUseGodotLikeLayerNumbers()
+    public void CollisionLayerAndMaskHelpersUseElectron2DLayerNumbers()
     {
         var body = new Electron2D.StaticBody2D
         {

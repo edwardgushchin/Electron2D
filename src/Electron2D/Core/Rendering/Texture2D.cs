@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base resource for 2D textures.
+/// Provides the Electron2D base resource for 2D textures.
 /// </summary>
 ///
 /// <remarks>

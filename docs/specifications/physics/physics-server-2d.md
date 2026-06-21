@@ -2,7 +2,7 @@
 
 ## Цель
 
-`PhysicsServer2D` в `0.1.0 Preview` должен стать первой публичной Godot-like границей физики. Пользовательский код работает только с `Electron2D.Rid`, `Vector2`, `Transform2D`, `Variant`, `Callable` и другими типами Electron2D. Типы, handles и структуры backend-кандидата Box2D.NET не должны появляться в public API.
+`PhysicsServer2D` в `0.1.0 Preview` должен стать первой публичной Electron2D границей физики. Пользовательский код работает только с `Electron2D.Rid`, `Vector2`, `Transform2D`, `Variant`, `Callable` и другими типами Electron2D. Типы, handles и структуры backend-кандидата Box2D.NET не должны появляться в public API.
 
 Эта спецификация не реализует физические тела, collision shapes, contacts, queries или kinematic solver полностью. Она фиксирует серверную границу, на которую будут опираться следующие задачи физики.
 
@@ -57,7 +57,7 @@ Default backend для этой задачи:
 Автоматическая проверка public API должна подтверждать:
 
 - public типы и public сигнатуры `Electron2D` не содержат namespace или type name с `Box2D`;
-- `PhysicsServer2D` использует `Rid` и Godot-like value types, а не backend handles;
+- `PhysicsServer2D` использует `Rid` и Electron2D value types, а не backend handles;
 - internal `IPhysicsServer2DBackend` и default backend не экспортируются из assembly.
 
 ## Не входит в задачу

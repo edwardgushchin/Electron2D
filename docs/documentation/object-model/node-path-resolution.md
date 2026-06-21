@@ -21,7 +21,7 @@
 - `Node.GetNode(NodePath path)`;
 - `Node.GetNodeOrNull(NodePath path)`.
 
-`NodePath` поддерживает implicit conversion из `string`, поэтому C# вызовы вида `GetNode("Child")` компилируются как Godot-like shorthand.
+`NodePath` поддерживает implicit conversion из `string`, поэтому C# вызовы вида `GetNode("Child")` компилируются как Electron2D shorthand.
 
 ## Формат пути
 

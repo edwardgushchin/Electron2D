@@ -101,7 +101,7 @@ Internal `TextureImportResourceFactory` должен уметь:
 - создать `Texture2D` instance с width/height/alpha/mipmap metadata;
 - создать `AtlasTexture` instances из atlas regions и привязать их к импортированной atlas texture.
 
-Это остаётся внутренним механизмом, чтобы не добавлять public классы, не закреплённые отдельной Godot-like API задачей.
+Это остаётся внутренним механизмом, чтобы не добавлять public классы, не закреплённые отдельной Electron2D API задачей.
 
 ## Критерии приёмки
 

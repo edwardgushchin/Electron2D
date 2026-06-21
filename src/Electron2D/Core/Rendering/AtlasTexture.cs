@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like texture that draws a region of another <see cref="Texture2D" />.
+/// Provides an Electron2D texture that draws a region of another <see cref="Texture2D" />.
 /// </summary>
 ///
 /// <remarks>

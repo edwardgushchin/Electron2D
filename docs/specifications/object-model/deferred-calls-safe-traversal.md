@@ -6,7 +6,7 @@
 
 ## Цель
 
-Реализовать Godot-like baseline для deferred calls и безопасного изменения `SceneTree` во время lifecycle/process/physics traversal.
+Реализовать Electron2D baseline для deferred calls и безопасного изменения `SceneTree` во время lifecycle/process/physics traversal.
 
 ## Public API
 

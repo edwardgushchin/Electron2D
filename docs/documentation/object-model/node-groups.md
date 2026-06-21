@@ -21,7 +21,7 @@
 - `HasGroup(string name)`;
 - `CallGroup(string group, string method, params object?[] args)`.
 
-`StringName` уже есть как базовый тип, но текущий group baseline всё ещё принимает group/method names как `string`, а `GetNodesInGroup()` возвращает `Node[]`. Перевод на `StringName`, `Variant` и Godot collections должен идти отдельной migration-задачей.
+`StringName` уже есть как базовый тип, но текущий group baseline всё ещё принимает group/method names как `string`, а `GetNodesInGroup()` возвращает `Node[]`. Перевод на `StringName`, `Variant` и Electron2D collections должен идти отдельной migration-задачей.
 
 ## Membership
 

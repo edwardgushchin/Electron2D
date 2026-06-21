@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like rigid 2D physics body.
+/// Provides an Electron2D rigid 2D physics body.
 /// </summary>
 ///
 /// <remarks>

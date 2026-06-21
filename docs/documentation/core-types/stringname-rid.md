@@ -10,9 +10,9 @@
 - `StringName`;
 - `Rid`.
 
-`StringName` - Godot-like immutable interned name. Он нужен для будущего перевода signal, group, method, property и resource APIs с обычных `string` на Godot-like name handles.
+`StringName` - Electron2D immutable interned name. Он нужен для будущего перевода signal, group, method, property и resource APIs с обычных `string` на Electron2D name handles.
 
-`Rid` - Godot-like opaque resource identifier, то есть непрозрачный handle низкоуровневого ресурса. Это не .NET Runtime Identifier для платформ сборки.
+`Rid` - Electron2D opaque resource identifier, то есть непрозрачный handle низкоуровневого ресурса. Это не .NET Runtime Identifier для платформ сборки.
 
 ## `StringName`
 

@@ -6,7 +6,7 @@
 
 ## Цель
 
-Реализовать Godot-like baseline для сигналов `Object`, `Callable`, connect/disconnect и synchronous emission semantics без legacy event bus и без compatibility layer.
+Реализовать Electron2D baseline для сигналов `Object`, `Callable`, connect/disconnect и synchronous emission semantics без legacy event bus и без compatibility layer.
 
 ## Public API
 
@@ -45,7 +45,7 @@
 
 ## Ограничения текущего baseline
 
-- `ConnectFlags.Deferred`, `Persist`, `OneShot` и `AppendSourceObject` объявлены для Godot-like API, но runtime semantics будут реализованы в следующих задачах.
+- `ConnectFlags.Deferred`, `Persist`, `OneShot` и `AppendSourceObject` объявлены для Electron2D API, но runtime semantics будут реализованы в следующих задачах.
 - `Callable.Bind()`, `Unbind()` и `Variant` return values остаются будущими задачами.
 - Built-in signals для lifecycle ещё не объявляются автоматически; они будут добавлены отдельной задачей, когда появится полный signal registry.
 
@@ -55,4 +55,4 @@
 - Typed и untyped `Callable` получают аргументы корректно.
 - `Disconnect()` во время emission не повреждает текущий snapshot, но влияет на следующий emission.
 - Unknown signal, duplicate connection и callback exception возвращают проверяемый `Error`.
-- Public API остаётся Godot-like и не добавляет .NET-only event surface.
+- Public API остаётся Electron2D и не добавляет .NET-only event surface.

@@ -151,7 +151,7 @@ RenderingDeviceFeatures.ClipDistance
 * сложные particles и lighting могут работать в упрощённом режиме;
 * нельзя гарантировать визуальную идентичность SDL_GPU backend.
 
-В настройках проекта это можно представить в Godot-подобном виде:
+В настройках проекта это можно представить в согласованном виде:
 
 ```text
 rendering/renderer/rendering_method:
@@ -265,7 +265,7 @@ internal interface IPhysicsServer2DBackend
 
 Box2D objects хранятся только внутри `Box2DPhysicsServer2D`.
 
-Отдельно: `CharacterBody2D` не стоит реализовывать как обычное динамическое Box2D-тело. Для Godot-подобного поведения нужен собственный kinematic solver:
+Отдельно: `CharacterBody2D` не стоит реализовывать как обычное динамическое Box2D-тело. Для согласованного поведения нужен собственный kinematic solver:
 
 * `MoveAndSlide`;
 * `MoveAndCollide`;
@@ -321,7 +321,7 @@ SDL_mixer 3 уже достаточен как низкоуровневый back
 * playback frequency;
 * effects и post-mix callbacks.
 
-Поверх него Electron2D должен самостоятельно реализовать Godot-подобную модель:
+Поверх него Electron2D должен самостоятельно реализовать согласованную модель:
 
 ```text
 AudioStreamPlayer
@@ -371,7 +371,7 @@ NavigationServer2D
 
 ## Сеть
 
-Базовые Godot-подобные классы рациональнее реализовать на BCL:
+Базовые согласованные классы рациональнее реализовать на BCL:
 
 ```text
 HTTPClient       → HttpClient

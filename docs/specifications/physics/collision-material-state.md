@@ -2,7 +2,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен иметь Godot-like baseline для collision filters и material/body state, который можно передать будущему production physics backend без изменения публичного API.
+`0.1.0 Preview` должен иметь Electron2D baseline для collision filters и material/body state, который можно передать будущему production physics backend без изменения публичного API.
 
 Задача не реализует solver. Она фиксирует public resource/node properties, validation и внутреннюю синхронизацию состояния, чтобы следующие physics задачи могли подключить contacts, areas и queries к уже проверенному контракту.
 
@@ -15,14 +15,14 @@
 - `CollisionLayer: uint`;
 - `CollisionMask: uint`.
 
-Добавляются Godot-like helper methods:
+Добавляются Electron2D helper methods:
 
 - `SetCollisionLayerValue(int layerNumber, bool value)`;
 - `GetCollisionLayerValue(int layerNumber)`;
 - `SetCollisionMaskValue(int layerNumber, bool value)`;
 - `GetCollisionMaskValue(int layerNumber)`.
 
-`layerNumber` использует Godot-like numbering `1..32`. Значение `1` соответствует bit `0`, значение `32` соответствует bit `31`. Значения вне диапазона дают понятный `ArgumentOutOfRangeException`.
+`layerNumber` использует Electron2D numbering `1..32`. Значение `1` соответствует bit `0`, значение `32` соответствует bit `31`. Значения вне диапазона дают понятный `ArgumentOutOfRangeException`.
 
 ### `PhysicsMaterial`
 
@@ -31,11 +31,11 @@
 Properties:
 
 - `Friction: float` - коэффициент трения, конечное значение `>= 0`;
-- `Bounce: float` - Godot-like публичное имя для restitution, конечное значение `>= 0`;
+- `Bounce: float` - Electron2D публичное имя для restitution, конечное значение `>= 0`;
 - `Rough: bool` - marker для будущего правила combined friction;
 - `Absorbent: bool` - marker для будущего правила combined bounce.
 
-Публичное свойство не называется `Restitution`, потому Godot-like API использует `Bounce`.
+Публичное свойство не называется `Restitution`, потому Electron2D API использует `Bounce`.
 
 `PhysicsMaterial` должен иметь AOT-safe metadata для `ResourceObjectSerializer`, чтобы round-trip не зависел от reflection fallback.
 
@@ -45,11 +45,11 @@ Properties:
 
 - `PhysicsMaterialOverride: PhysicsMaterial?`.
 
-Это Godot-like material override для `StaticBody2D`, `RigidBody2D` и будущих body nodes.
+Это Electron2D material override для `StaticBody2D`, `RigidBody2D` и будущих body nodes.
 
 ### `RigidBody2D`
 
-Существующие properties `GravityScale`, `Sleeping` и `CanSleep` остаются public Godot-like state. `GravityScale` должен принимать любое конечное число, включая отрицательное значение для инверсии будущей gravity.
+Существующие properties `GravityScale`, `Sleeping` и `CanSleep` остаются public Electron2D state. `GravityScale` должен принимать любое конечное число, включая отрицательное значение для инверсии будущей gravity.
 
 ## Внутренний backend state
 

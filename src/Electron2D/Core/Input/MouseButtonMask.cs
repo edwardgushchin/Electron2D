@@ -29,7 +29,7 @@ namespace Electron2D;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The flag values match Godot's mouse button masks. SDL button flags are
+/// The flag values match Electron2D mouse button masks. SDL button flags are
 /// converted to this representation by the internal SDL input mapper.
 /// </para>
 /// <threadsafety>

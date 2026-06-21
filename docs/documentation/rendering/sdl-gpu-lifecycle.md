@@ -6,7 +6,7 @@
 
 ## Назначение
 
-Electron2D использует SDL3-CS как managed binding к SDL3/SDL_GPU. В `0.1.0 Preview` lifecycle SDL_GPU остаётся internal runtime surface и не расширяет public Godot-like API.
+Electron2D использует SDL3-CS как managed binding к SDL3/SDL_GPU. В `0.1.0 Preview` lifecycle SDL_GPU остаётся internal runtime surface и не расширяет public Electron2D API.
 
 Реализованный baseline закрывает:
 

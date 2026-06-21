@@ -6,7 +6,7 @@
 
 ## Public API
 
-В runtime добавлены Godot-like public nodes:
+В runtime добавлены Electron2D public nodes:
 
 - `CanvasItem`;
 - `Node2D`;

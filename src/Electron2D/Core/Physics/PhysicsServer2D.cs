@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like server boundary for low-level 2D physics objects.
+/// Provides the Electron2D server boundary for low-level 2D physics objects.
 /// </summary>
 ///
 /// <remarks>
@@ -383,7 +383,7 @@ public static class PhysicsServer2D
     }
 
     /// <summary>
-    /// Gets the Godot-like shape type stored for a physics shape RID.
+    /// Gets the Electron2D shape type stored for a physics shape RID.
     /// </summary>
     /// <param name="shape">The shape to query.</param>
     /// <returns>The type of the shape.</returns>

@@ -2,7 +2,7 @@
 
 ## Назначение
 
-`T-0025` вводит public Godot-like texture resource baseline и internal texture lifetime registry для `0.1.0 Preview`.
+`T-0025` вводит public Electron2D texture resource baseline и internal texture lifetime registry для `0.1.0 Preview`.
 
 Задача закрывает:
 
@@ -107,7 +107,7 @@ Registry пишет события:
 
 ## Ограничения `T-0025`
 
-- PNG/JPEG import metadata реализуется отдельной спецификацией `resources/texture-image-import.md`; public `ImageTexture` остаётся будущей Godot-like API задачей.
+- PNG/JPEG import metadata реализуется отдельной спецификацией `resources/texture-image-import.md`; public `ImageTexture` остаётся будущей Electron2D API задачей.
 - Public `CanvasItem` sampling properties остаются `T-0026`.
 - Реальный SDL_GPU transfer-buffer upload может быть реализован отдельным backend step; T-0025 фиксирует проверяемый registry contract и adapter boundary.
 - `DrawTexture()` реализуется immediate drawing baseline `T-0028`; `DrawTextureRect()` и `DrawTextureRectRegion()` остаются future drawing задачами.

@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Base class for Godot-like input events delivered to <see cref="Node._Input(InputEvent)"/>.
+/// Base class for Electron2D input events delivered to <see cref="Node._Input(InputEvent)"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -61,7 +61,7 @@ public class InputEvent : Resource
 /// </summary>
 /// <remarks>
 /// <para>
-/// This mirrors Godot's `InputEventFromWindow` layer and stores the window
+/// This mirrors Electron2D's window-scoped input layer and stores the window
 /// identifier reported by the platform event source.
 /// </para>
 /// <threadsafety>
@@ -226,7 +226,7 @@ public class InputEventMouse : InputEventWithModifiers
 /// <para>
 /// Wheel events use <see cref="ButtonIndex"/> values such as
 /// <see cref="MouseButton.WheelUp"/> and <see cref="MouseButton.WheelDown"/>,
-/// matching Godot's mouse wheel model.
+/// matching Electron2D's mouse wheel model.
 /// </para>
 /// <threadsafety>
 /// Instances are mutable and are not synchronized; use them from the input

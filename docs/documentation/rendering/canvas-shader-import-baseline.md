@@ -6,7 +6,7 @@
 
 ## Public API
 
-В runtime добавлен Godot-like public resource:
+В runtime добавлен Electron2D public resource:
 
 - `Shader`.
 

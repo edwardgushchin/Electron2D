@@ -28,7 +28,7 @@ using System.Text;
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base resource for text layout and drawing.
+/// Provides the Electron2D base resource for text layout and drawing.
 /// </summary>
 ///
 /// <remarks>
@@ -41,8 +41,8 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// The public surface follows Godot's `Font` shape. SDL_ttf handles and native
-/// text objects stay internal to the renderer backend.
+/// The public surface follows Electron2D's text resource contract. Native text
+/// objects stay internal to the renderer backend.
 /// </para>
 /// </remarks>
 ///

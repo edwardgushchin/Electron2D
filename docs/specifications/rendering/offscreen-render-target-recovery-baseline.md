@@ -8,7 +8,7 @@
 
 Electron2D `0.1.0 Preview` должен иметь минимальный baseline для render-to-texture и восстановления GPU resources после потери или пересоздания устройства:
 
-- `Viewport.GetTexture()` возвращает Godot-like `ViewportTexture`;
+- `Viewport.GetTexture()` возвращает Electron2D `ViewportTexture`;
 - `ViewportTexture` наследуется от `Texture2D` и отражает текущий размер `Viewport`;
 - internal texture registry умеет создавать offscreen render target descriptors;
 - active texture resources и render targets можно восстановить на новом GPU adapter без изменения public API;

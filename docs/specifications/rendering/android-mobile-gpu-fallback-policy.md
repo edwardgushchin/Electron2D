@@ -13,7 +13,7 @@
 4. при ошибке применять `Compatibility` fallback или останавливать запуск по настройке policy;
 5. сохранять structured result/log с GPU, driver, выбранным backend и причинами fallback/failure.
 
-Это не compatibility layer для старого public API. Публичная Godot-like поверхность не расширяется.
+Это не compatibility layer для старого public API. Публичная Electron2D поверхность не расширяется.
 
 ## Источники поведения
 

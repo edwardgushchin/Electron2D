@@ -47,7 +47,7 @@ public sealed class CapsuleShape2D : Shape2D
     private float height;
 
     /// <summary>
-    /// Creates a capsule shape with Godot-like preview defaults.
+    /// Creates a capsule shape with Electron2D preview defaults.
     /// </summary>
     ///
     /// <threadsafety>

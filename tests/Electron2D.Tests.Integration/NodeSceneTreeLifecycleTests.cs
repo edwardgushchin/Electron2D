@@ -45,7 +45,7 @@ public sealed class NodeSceneTreeLifecycleTests
     }
 
     [Fact]
-    public void SubtreeEnterAndReadyUseGodotLikeOrder()
+    public void SubtreeEnterAndReadyUseElectron2DOrder()
     {
         var events = new List<string>();
         var tree = new Electron2D.SceneTree();

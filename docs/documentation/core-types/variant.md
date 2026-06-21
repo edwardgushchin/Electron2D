@@ -13,7 +13,7 @@
 - `Electron2D.Collections.Array`;
 - `Electron2D.Collections.Dictionary`.
 
-`Variant` - Godot-like value carrier для динамических API. Это `readonly struct`; `default(Variant)` и `Variant.CreateFrom(null)` означают `Variant.Type.Nil`.
+`Variant` - Electron2D value carrier для динамических API. Это `readonly struct`; `default(Variant)` и `Variant.CreateFrom(null)` означают `Variant.Type.Nil`.
 
 ## Закрытый список `Variant.Type`
 
@@ -54,7 +54,7 @@
 - `Electron2D.Collections.Array?`;
 - `Electron2D.Collections.Dictionary?`.
 
-Enum значения создаются через `Variant.From<T>()` или `Variant.CreateFrom(object?)`, как в Godot C#.
+Enum значения создаются через `Variant.From<T>()` или `Variant.CreateFrom(object?)`, по правилам текущего C# API.
 
 ## Чтение значений
 

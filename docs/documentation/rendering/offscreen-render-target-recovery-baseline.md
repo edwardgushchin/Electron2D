@@ -6,7 +6,7 @@
 
 ## Public API
 
-В runtime добавлен Godot-like public resource:
+В runtime добавлен Electron2D public resource:
 
 - `ViewportTexture`.
 
@@ -26,7 +26,7 @@
 - `GetMipmapCount()` возвращает `0`;
 - `IsPixelOpaque()` возвращает `false`, потому что публичного чтения пикселей из render target в `0.1.0 Preview` ещё нет.
 
-Public SDL_GPU handles, public render-target handles и другие non-Godot методы не добавлены.
+Public render-target handles и другие backend-specific методы не добавлены.
 
 ## Внутренний render target lifecycle
 

@@ -8,7 +8,7 @@
 
 Electron2D `0.1.0 Preview` должен получить минимальный проверяемый baseline canvas shaders:
 
-- public Godot-like `Shader` resource для canvas shader source;
+- public Electron2D `Shader` resource для canvas shader source;
 - импортный формат source-файла с vertex/fragment entry points;
 - компиляцию shader stages через SDL_shadercross boundary во время import/export, а не во время запуска игры на iOS;
 - structured diagnostics с file/line/column для editor/tooling;

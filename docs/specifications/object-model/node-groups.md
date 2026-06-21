@@ -6,7 +6,7 @@
 
 ## Цель
 
-Реализовать Godot-like baseline для групп node: локальное членство node, persistent group metadata и базовые `SceneTree` group queries/calls.
+Реализовать Electron2D baseline для групп node: локальное членство node, persistent group metadata и базовые `SceneTree` group queries/calls.
 
 ## Public API
 

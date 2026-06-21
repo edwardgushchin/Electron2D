@@ -6,7 +6,7 @@
 
 ## Цель
 
-Реализовать первый Godot-like lifecycle baseline для `Node` и `SceneTree` без component API, compatibility layer и legacy Unity-like callbacks.
+Реализовать первый Electron2D lifecycle baseline для `Node` и `SceneTree` без component API, compatibility layer и legacy Unity-like callbacks.
 
 ## Public API
 
@@ -22,12 +22,12 @@
 
 - наследоваться от `Object`;
 - иметь `Name`;
-- иметь Godot-like `GetParent()` для чтения parent;
+- иметь Electron2D `GetParent()` для чтения parent;
 - поддерживать `AddChild(Node child)` и `RemoveChild(Node child)`;
 - поддерживать `GetChildCount()`;
 - поддерживать `IsInsideTree()`;
 - поддерживать `GetTree()`;
-- иметь Godot-like lifecycle callbacks:
+- иметь Electron2D lifecycle callbacks:
   - `_EnterTree()`;
   - `_Ready()`;
   - `_Process(double delta)`;

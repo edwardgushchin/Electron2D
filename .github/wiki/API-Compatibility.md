@@ -69,7 +69,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Mathf` | `Mathf` | Partial | Basic constants, approximate comparison, clamp, interpolation, angle conversion, modulo and snapping helpers. |
 | `Electron2D.MouseButton` | `MouseButton` | Partial | Left/right/middle, wheel and extra button constants for mouse events. |
 | `Electron2D.MouseButtonMask` | `MouseButtonMask` | Partial | Held mouse button bit flags converted from platform state. |
-| `Electron2D.Object` | `GodotObject` / `Object` | Partial | Instance id, `Free()`, `CallDeferred()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |
+| `Electron2D.Object` | `Object` | Partial | Instance id, `Free()`, `CallDeferred()`, `IsQueuedForDeletion()` and `IsInstanceValid()` baseline. |
 | `Electron2D.Node` | `Node` | Partial | Lifecycle, hierarchy, `Owner`, groups, reparent/move and `QueueFree()` baseline. |
 | `Electron2D.Node2D` | `Node2D` | Partial | Local/global 2D position, rotation, scale, transform conversion and transform-preserving reparent baseline. |
 | `Electron2D.NodePath` | `NodePath` | Partial | Relative/absolute node path parsing and `GetNode()`/`GetNodeOrNull()` resolution baseline. |

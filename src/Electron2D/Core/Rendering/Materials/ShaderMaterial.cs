@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like material resource backed by a custom <see cref="Shader" />.
+/// Provides the Electron2D material resource backed by a custom <see cref="Shader" />.
 /// </summary>
 ///
 /// <remarks>

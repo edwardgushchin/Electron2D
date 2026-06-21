@@ -24,7 +24,7 @@ Electron2D `0.1.0 Preview` должен иметь минимальный тек
 
 ## Публичный API
 
-Новый публичный API должен оставаться Godot-like:
+Новый публичный API должен оставаться Electron2D:
 
 - `Font : Resource`
   - `GetStringSize(string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1f, int fontSize = 16)`
@@ -122,7 +122,7 @@ Text layout выполняется для UTF-8/Unicode текста через 
 
 Минимальный acceptance набор:
 
-- unit tests публичного Godot-like API `Font`, `Control`, `Label`, `VerticalAlignment`;
+- unit tests публичного Electron2D API `Font`, `Control`, `Label`, `VerticalAlignment`;
 - integration tests render command layout для `DrawString()`;
 - integration tests `Label` submission в `Compatibility` и `Standard` профилях;
 - Unicode и базовый RTL tests;

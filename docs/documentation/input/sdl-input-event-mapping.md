@@ -1,4 +1,4 @@
-# SDL input event mapping и Godot-like `InputEvent*`
+# SDL input event mapping и Electron2D `InputEvent*`
 
 Статус: реализованный baseline.
 Задача: `T-0048`.
@@ -6,7 +6,7 @@
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` получил desktop baseline для SDL input events. SDL3-CS остаётся internal platform boundary, а пользовательский код получает Godot-like events через `Node._Input(InputEvent)`.
+Electron2D `0.1.0 Preview` получил desktop baseline для SDL input events. SDL3-CS остаётся internal platform boundary, а пользовательский код получает Electron2D events через `Node._Input(InputEvent)`.
 
 Публичные типы:
 
@@ -32,7 +32,7 @@ Internal `SdlInputEventMapper` преобразует:
 - SDL `MouseWheel` в `InputEventMouseButton` с `MouseButton.Wheel*`;
 - SDL `TextInput` в один или несколько `InputEventKey` с заполненным `Unicode`.
 
-Отдельный public `InputEventText` не добавлен: Godot-like модель использует `InputEventKey.Unicode` для текстового ввода.
+Отдельный public `InputEventText` не добавлен: Electron2D модель использует `InputEventKey.Unicode` для текстового ввода.
 
 ## Dispatch order
 

@@ -6,7 +6,7 @@
 
 ## Public API
 
-Текущий Godot-like text baseline включает:
+Текущий Electron2D text baseline включает:
 
 - `Font : Resource`;
 - `VerticalAlignment`;

@@ -6,7 +6,7 @@
 
 ## Public API
 
-В runtime добавлены Godot-like public ресурсы:
+В runtime добавлены Electron2D public ресурсы:
 
 - `Texture2D`;
 - `AtlasTexture`;

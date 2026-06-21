@@ -19,7 +19,7 @@
 
 ## `ResourceUid`
 
-`ResourceUid` является публичной Godot-like поверхностью T-0035. Он хранит in-memory mapping между UID и путём ресурса:
+`ResourceUid` является публичной Electron2D поверхностью T-0035. Он хранит in-memory mapping между UID и путём ресурса:
 
 - `CreateId()` создаёт новый положительный UID, который ещё не зарегистрирован;
 - `CreateIdForPath(path)` создаёт стабильный UID-кандидат для path;

@@ -68,7 +68,7 @@ public sealed class ResourceUidTests
     }
 
     [Fact]
-    public void InvalidUidTextUsesGodotLikeInvalidMarker()
+    public void InvalidUidTextUsesElectron2DInvalidMarker()
     {
         Assert.Equal("uid://<invalid>", Electron2D.ResourceUid.IdToText(Electron2D.ResourceUid.InvalidId));
         Assert.Equal(Electron2D.ResourceUid.InvalidId, Electron2D.ResourceUid.TextToId("uid://<invalid>"));

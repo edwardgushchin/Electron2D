@@ -6,7 +6,7 @@
 
 ## Public API
 
-`CanvasItem` теперь поддерживает Godot-like custom drawing:
+`CanvasItem` теперь поддерживает Electron2D custom drawing:
 
 - `_Draw()`;
 - `QueueRedraw()`;
@@ -17,7 +17,7 @@
 - `DrawTexture()`;
 - `DrawString()`.
 
-Для `DrawString()` добавлены public Godot-like типы:
+Для `DrawString()` добавлены public Electron2D типы:
 
 - `Font`;
 - `HorizontalAlignment`.

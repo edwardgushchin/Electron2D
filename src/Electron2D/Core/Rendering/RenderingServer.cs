@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like server boundary for rendering capabilities.
+/// Provides the Electron2D server boundary for rendering capabilities.
 /// </summary>
 ///
 /// <remarks>
@@ -37,7 +37,7 @@ namespace Electron2D;
 ///
 /// <para>
 /// Electron2D 0.1.0 Preview keeps SDL_GPU device lifecycle behind internal
-/// backend types. This public server remains the stable Godot-like query
+/// backend types. This public server remains the stable Electron2D query
 /// boundary for the active renderer profile and feature flags.
 /// </para>
 /// </remarks>

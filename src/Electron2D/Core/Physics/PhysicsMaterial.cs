@@ -25,11 +25,11 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like physics material resource for 2D body collision behavior.
+/// Provides an Electron2D physics material resource for 2D body collision behavior.
 /// </summary>
 ///
 /// <remarks>
-/// `Bounce` is the Godot-like public name for restitution. The 0.1.0 Preview
+/// `Bounce` is the Electron2D public name for restitution. The 0.1.0 Preview
 /// stores material state and serializes it for the future solver; it does not
 /// calculate contacts yet.
 /// </remarks>
@@ -84,7 +84,7 @@ public sealed class PhysicsMaterial : Resource
     /// </summary>
     ///
     /// <remarks>
-    /// This is the Godot-like name for restitution.
+    /// This is the Electron2D name for restitution.
     /// </remarks>
     ///
     /// <value>

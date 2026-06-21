@@ -34,7 +34,7 @@ namespace Electron2D;
 /// <remarks>
 /// Electron2D 0.1.0 Preview implements a managed AABB query baseline over
 /// active <see cref="CollisionShape2D" /> nodes. The result format follows the
-/// Godot-like dynamic dictionary/array surface and does not expose backend
+/// Electron2D dynamic dictionary/array surface and does not expose backend
 /// handles.
 /// </remarks>
 ///

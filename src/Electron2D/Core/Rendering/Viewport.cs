@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like viewport node for 2D camera selection and canvas transforms.
+/// Provides the Electron2D viewport node for 2D camera selection and canvas transforms.
 /// </summary>
 ///
 /// <remarks>
@@ -163,7 +163,7 @@ public class Viewport : Node
     /// </returns>
     /// <remarks>
     /// The returned texture reflects the current <see cref="Size" /> when its
-    /// metadata is queried. Electron2D 0.1.0 Preview exposes the Godot-like
+    /// metadata is queried. Electron2D 0.1.0 Preview exposes the Electron2D
     /// resource object before exposing public image readback or GPU handles.
     /// </remarks>
     ///

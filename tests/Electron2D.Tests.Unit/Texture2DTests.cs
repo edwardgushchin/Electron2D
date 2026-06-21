@@ -29,7 +29,7 @@ namespace Electron2D.Tests.Unit;
 public sealed class Texture2DTests
 {
     [Fact]
-    public void Texture2DReportsGodotLikeSizeAlphaMipmapsAndOpacity()
+    public void Texture2DReportsElectron2DSizeAlphaMipmapsAndOpacity()
     {
         var texture = new TestTexture2D(
             width: 16,

@@ -29,7 +29,7 @@ namespace Electron2D.Tests.Unit;
 public sealed class TextPublicApiTests
 {
     [Fact]
-    public void FontExposesGodotLikeMeasurementAndGlyphAvailability()
+    public void FontExposesElectron2DMeasurementAndGlyphAvailability()
     {
         var font = new TestFont();
 
@@ -48,7 +48,7 @@ public sealed class TextPublicApiTests
     }
 
     [Fact]
-    public void ControlLabelAndVerticalAlignmentExposeGodotLikeSurface()
+    public void ControlLabelAndVerticalAlignmentExposeElectron2DSurface()
     {
         Assert.True(typeof(Electron2D.CanvasItem).IsAssignableFrom(typeof(Electron2D.Control)));
         Assert.True(typeof(Electron2D.Control).IsAssignableFrom(typeof(Electron2D.Label)));

@@ -36,15 +36,15 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// <see cref="Variant"/> is the Godot-like dynamic value carrier used by
+/// <see cref="Variant"/> is the Electron2D dynamic value carrier used by
 /// engine APIs that cannot be represented as a single static C# type. It is a
 /// value type; <c>default(Variant)</c> represents <see cref="Type.Nil"/>.
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview intentionally supports a smaller set than Godot:
+/// Electron2D 0.1.0 Preview intentionally supports a closed preview set:
 /// primitive values, 2D math types, identity handles, <see cref="Object"/>
-/// instances, <see cref="Callable"/>, and Godot-like collections. 3D types,
+/// instances, <see cref="Callable"/>, and Electron2D collections. 3D types,
 /// packed arrays, <c>Signal</c>, editor-only values, and arbitrary CLR objects
 /// are not part of this release contract.
 /// </para>
@@ -642,7 +642,7 @@ public readonly struct Variant : IEquatable<Variant>
     }
 
     /// <summary>
-    /// Reads the stored Godot-like array reference.
+    /// Reads the stored Electron2D array reference.
     /// </summary>
     ///
     /// <returns>The stored <see cref="VariantArray"/> instance.</returns>
@@ -654,7 +654,7 @@ public readonly struct Variant : IEquatable<Variant>
     }
 
     /// <summary>
-    /// Reads the stored Godot-like dictionary reference.
+    /// Reads the stored Electron2D dictionary reference.
     /// </summary>
     ///
     /// <returns>The stored <see cref="VariantDictionary"/> instance.</returns>
@@ -944,7 +944,7 @@ public readonly struct Variant : IEquatable<Variant>
     }
 
     /// <summary>
-    /// Converts a Godot-like array reference to a Variant.
+    /// Converts an Electron2D array reference to a Variant.
     /// </summary>
     public static implicit operator Variant(VariantArray? value)
     {
@@ -952,7 +952,7 @@ public readonly struct Variant : IEquatable<Variant>
     }
 
     /// <summary>
-    /// Converts a Godot-like dictionary reference to a Variant.
+    /// Converts an Electron2D dictionary reference to a Variant.
     /// </summary>
     public static implicit operator Variant(VariantDictionary? value)
     {

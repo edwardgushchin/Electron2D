@@ -6,7 +6,7 @@
 
 ## Цель
 
-Новая реализация Electron2D должна начать runtime API с Godot-like базовых типов, без compatibility layer и без Unity-like component history.
+Новая реализация Electron2D должна начать runtime API с Electron2D базовых типов, без compatibility layer и без Unity-like component history.
 
 ## Public API
 

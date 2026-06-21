@@ -38,7 +38,7 @@ public sealed class CanvasItemDrawingPublicApiTests
     }
 
     [Fact]
-    public void FontAndHorizontalAlignmentAreGodotLikePublicTypes()
+    public void FontAndHorizontalAlignmentAreElectron2DPublicTypes()
     {
         Assert.True(typeof(Electron2D.Resource).IsAssignableFrom(typeof(Electron2D.Font)));
         Assert.Equal(0, (int)Electron2D.HorizontalAlignment.Left);

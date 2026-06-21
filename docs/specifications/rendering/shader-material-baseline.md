@@ -8,8 +8,8 @@
 
 Electron2D `0.1.0 Preview` должен получить минимальный проверяемый baseline для материалов canvas shaders:
 
-- public Godot-like `Material` как базовый resource для визуальных материалов;
-- public Godot-like `ShaderMaterial`, который наследуется от `Material`, хранит `Shader` и управляет значениями shader uniforms через `StringName`;
+- public Electron2D `Material` как базовый resource для визуальных материалов;
+- public Electron2D `ShaderMaterial`, который наследуется от `Material`, хранит `Shader` и управляет значениями shader uniforms через `StringName`;
 - поддерживаемые uniform values сохраняются в stable internal snapshot, пригодный для будущего resource pipeline;
 - `Texture2D` может быть назначен как texture sampler parameter;
 - engine-provided canvas built-ins известны движку как reserved names и не могут быть записаны как пользовательские shader parameters;
@@ -47,7 +47,7 @@ public sealed class ShaderMaterial : Material
 
 Ограничения public API:
 
-- `Material` и `ShaderMaterial` добавляются только в Godot-like форме;
+- `Material` и `ShaderMaterial` добавляются только в Electron2D форме;
 - public `SetUniform`, `GetUniform`, `Effect`, `SamplerState`, `IComponent`, renderer handle или compatibility wrapper не добавляются;
 - public API не раскрывает SDL_GPU/SDL_shadercross handles и compiled shader bytecode;
 - `CanvasItem.Material` не добавляется в T-0032, потому что эта задача закрывает resource/model layer, а привязка к draw pipeline относится к следующим renderer tasks.

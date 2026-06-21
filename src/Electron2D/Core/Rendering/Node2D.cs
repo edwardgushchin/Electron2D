@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like 2D transform node used by sprites and future 2D nodes.
+/// Provides the Electron2D 2D transform node used by sprites and future 2D nodes.
 /// </summary>
 ///
 /// <remarks>

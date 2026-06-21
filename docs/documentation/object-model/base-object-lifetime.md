@@ -45,11 +45,11 @@
 - `ResourceSceneUniqueId`;
 - `TakeOverPath(string path)`.
 
-Это минимальный Godot-like baseline. `ResourceUid` и внутренний `.e2res` формат уже добавлены в ресурсном домене, но публичные `ResourceLoader`/`ResourceSaver`, импорт и сохранение файлов будут добавлены отдельными задачами.
+Это минимальный Electron2D baseline. `ResourceUid` и внутренний `.e2res` формат уже добавлены в ресурсном домене, но публичные `ResourceLoader`/`ResourceSaver`, импорт и сохранение файлов будут добавлены отдельными задачами.
 
-## Отличия от Godot в текущем baseline
+## Ограничения текущего baseline
 
 - Реализован только минимальный subset, нужный для старта object model.
 - `Object` пока не содержит metadata API: `StringName` и `Variant` уже есть, но сами metadata методы будут вводиться отдельной задачей с тестами.
 - Базовый `Resource` пока не возвращает `Rid`: `Rid` уже есть, но конкретные server-backed ресурсы появятся вместе с rendering/physics/audio/text servers.
-- Public API не реализует `IDisposable`, чтобы не добавлять .NET-specific метод `Dispose()` в Godot-like surface.
+- Public API не реализует `IDisposable`, чтобы не добавлять .NET-specific метод `Dispose()` в Electron2D surface.

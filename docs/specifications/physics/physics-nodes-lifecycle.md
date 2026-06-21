@@ -2,7 +2,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить Godot-like узлы верхнего уровня для 2D-физики:
+`0.1.0 Preview` должен предоставить Electron2D узлы верхнего уровня для 2D-физики:
 
 - `StaticBody2D`;
 - `RigidBody2D`;
@@ -16,15 +16,15 @@
 
 В этой задаче вводится lifecycle baseline:
 
-- `CollisionObject2D` как abstract Godot-like база для `Area2D` и `PhysicsBody2D`;
-- `PhysicsBody2D` как abstract Godot-like база для `StaticBody2D` и `RigidBody2D`;
+- `CollisionObject2D` как abstract Electron2D база для `Area2D` и `PhysicsBody2D`;
+- `PhysicsBody2D` как abstract Electron2D база для `StaticBody2D` и `RigidBody2D`;
 - `StaticBody2D`, `RigidBody2D` и `Area2D` создают RID через `PhysicsServer2D` при входе в `SceneTree`;
 - эти RID освобождаются при выходе из дерева или при `Free()`/`QueueFree()`;
 - повторный вход в дерево создаёт новый живой RID;
 - `CollisionObject2D.GetRid()` возвращает текущий RID объекта или пустой `Rid`, если узел ещё не внутри дерева;
 - `CollisionObject2D` синхронизирует `GlobalTransform` в physics backend при `_PhysicsProcess()`;
 - fixed timestep и начальное движение `RigidBody2D` закреплены отдельной спецификацией `fixed-physics-step-and-rigid-body-motion.md`;
-- `CollisionShape2D` и `RayCast2D` наследуются от `Node2D` и имеют Godot-like public properties, но не создают physics shape/query RID в этой задаче;
+- `CollisionShape2D` и `RayCast2D` наследуются от `Node2D` и имеют Electron2D public properties, но не создают physics shape/query RID в этой задаче;
 - `QueueFree()` во время `_PhysicsProcess()` должен быть безопасным: узел остаётся живым до конца обхода, а RID освобождается при flush delete queue.
 
 ## Минимальный публичный API
@@ -94,7 +94,7 @@
 - abstract `Resource` base для будущих concrete shape resources;
 - `GetRid()` возвращает shape RID или пустой `Rid`, если concrete shape ещё не реализует RID.
 
-Все members выше должны быть Godot-like: если поведение ещё не реализовано, метод возвращает безопасное пустое состояние, а не Electron2D-only compatibility API.
+Все members выше должны быть Electron2D: если поведение ещё не реализовано, метод возвращает безопасное пустое состояние, а не Electron2D-only compatibility API.
 
 ## Backend state
 

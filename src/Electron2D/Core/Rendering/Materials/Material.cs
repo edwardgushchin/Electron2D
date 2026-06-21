@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides the Godot-like base resource for visual materials.
+/// Provides the Electron2D base resource for visual materials.
 /// </summary>
 ///
 /// <remarks>
@@ -97,7 +97,7 @@ public abstract class Material : Resource
     /// </summary>
     ///
     /// <remarks>
-    /// The valid range matches Godot's material priority range:
+    /// The valid range matches Electron2D's material priority range:
     /// <c>-128</c> through <c>127</c>. The value is stored for future renderer
     /// ordering; current 2D queue ordering is still driven by canvas item
     /// state.

@@ -72,7 +72,7 @@ public sealed class BaseObjectLifetimeTests
     }
 
     [Fact]
-    public void ResourceCarriesGodotLikeIdentityFields()
+    public void ResourceCarriesElectron2DIdentityFields()
     {
         var resource = new Electron2D.Resource
         {

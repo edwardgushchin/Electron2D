@@ -40,9 +40,9 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// This class mirrors the Godot <c>ResourceUID</c> concept using the C# name
-/// shape used by Godot's .NET bindings. In Electron2D 0.1.0 Preview it is a
-/// static runtime facade, not an engine singleton object.
+/// This class provides Electron2D's resource UID registry using the C# naming
+/// shape used by the runtime API. In Electron2D 0.1.0 Preview it is a static
+/// runtime facade, not an engine singleton object.
 /// </para>
 /// </remarks>
 ///

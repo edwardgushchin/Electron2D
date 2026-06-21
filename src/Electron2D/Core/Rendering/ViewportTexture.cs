@@ -25,7 +25,7 @@
 namespace Electron2D;
 
 /// <summary>
-/// Provides a Godot-like dynamic texture for the contents of a <see cref="Viewport" />.
+/// Provides an Electron2D dynamic texture for the contents of a <see cref="Viewport" />.
 /// </summary>
 ///
 /// <remarks>

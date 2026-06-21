@@ -6,7 +6,7 @@
 
 ## Public API
 
-Текущий runtime реализует Godot-like scene resource subset:
+Текущий runtime реализует Electron2D scene resource subset:
 
 - `PackedScene : Resource`;
 - `PackedScene.Pack(Node path)`;
@@ -15,7 +15,7 @@
 - `SceneTree.CurrentScene`;
 - `SceneTree.ChangeSceneToPacked(PackedScene packedScene)`.
 
-`PackedScene` наследуется от `Resource`, как Godot-like ресурс сцены. File-level `ResourceSaver`/`ResourceLoader` ещё не реализованы, поэтому текущий public baseline работает как in-memory scene resource.
+`PackedScene` наследуется от `Resource`, как Electron2D ресурс сцены. File-level `ResourceSaver`/`ResourceLoader` ещё не реализованы, поэтому текущий public baseline работает как in-memory scene resource.
 
 Внутренний scene file document для будущих loader/saver и editor задач уже реализован в ресурсном домене и описан в [Сериализация сцен, ресурсов и переносимых property values](../resources/scene-resource-serialization.md).
 
