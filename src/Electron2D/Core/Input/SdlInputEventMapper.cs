@@ -41,6 +41,8 @@ internal static class SdlInputEventMapper
             SDL.EventType.TextInput => MapTextInput(sdlEvent.Text),
             SDL.EventType.GamepadButtonDown or SDL.EventType.GamepadButtonUp => MapGamepadButton(sdlEvent.GButton),
             SDL.EventType.GamepadAxisMotion => MapGamepadAxis(sdlEvent.GAxis),
+            SDL.EventType.FingerDown or SDL.EventType.FingerUp or SDL.EventType.FingerCanceled => MapTouchFinger(sdlEvent.TFinger),
+            SDL.EventType.FingerMotion => MapTouchDrag(sdlEvent.TFinger),
             _ => Array.Empty<InputEvent>()
         };
     }
@@ -54,6 +56,15 @@ internal static class SdlInputEventMapper
                 break;
             case SDL.EventType.GamepadRemoved:
                 Input.DisconnectJoypad(checked((int)sdlEvent.GDevice.Which));
+                break;
+            case SDL.EventType.DisplayOrientation:
+                DisplayServer.SetScreenOrientationFromPlatform(MapScreenOrientation((SDL.DisplayOrientation)sdlEvent.Display.Data1));
+                break;
+            case SDL.EventType.WindowSafeAreaChanged:
+                DisplayServer.SetDisplaySafeArea(new Rect2I(0, 0, Math.Max(0, sdlEvent.Window.Data1), Math.Max(0, sdlEvent.Window.Data2)));
+                break;
+            case SDL.EventType.ScreenKeyboardHidden:
+                DisplayServer.VirtualKeyboardHide();
                 break;
         }
     }
@@ -231,6 +242,50 @@ internal static class SdlInputEventMapper
         ];
     }
 
+    private static IReadOnlyList<InputEvent> MapTouchFinger(SDL.TouchFingerEvent fingerEvent)
+    {
+        if (!TryGetTouchIds(fingerEvent, out var device, out var index))
+        {
+            return Array.Empty<InputEvent>();
+        }
+
+        return
+        [
+            new InputEventScreenTouch
+            {
+                WindowId = checked((int)fingerEvent.WindowID),
+                Device = device,
+                Index = index,
+                Position = new Vector2(FiniteOrZero(fingerEvent.X), FiniteOrZero(fingerEvent.Y)),
+                Pressed = fingerEvent.Type == SDL.EventType.FingerDown,
+                Canceled = fingerEvent.Type == SDL.EventType.FingerCanceled
+            }
+        ];
+    }
+
+    private static IReadOnlyList<InputEvent> MapTouchDrag(SDL.TouchFingerEvent fingerEvent)
+    {
+        if (!TryGetTouchIds(fingerEvent, out var device, out var index))
+        {
+            return Array.Empty<InputEvent>();
+        }
+
+        var relative = new Vector2(FiniteOrZero(fingerEvent.DX), FiniteOrZero(fingerEvent.DY));
+        return
+        [
+            new InputEventScreenDrag
+            {
+                WindowId = checked((int)fingerEvent.WindowID),
+                Device = device,
+                Index = index,
+                Position = new Vector2(FiniteOrZero(fingerEvent.X), FiniteOrZero(fingerEvent.Y)),
+                Relative = relative,
+                ScreenRelative = relative,
+                Pressure = FiniteOrZero(fingerEvent.Pressure)
+            }
+        ];
+    }
+
     private static Key MapKeycode(SDL.Keycode keycode)
     {
         var value = checked((int)keycode);
@@ -282,6 +337,8 @@ internal static class SdlInputEventMapper
             SDL.Keycode.LShift or SDL.Keycode.RShift => Key.Shift,
             SDL.Keycode.LAlt or SDL.Keycode.RAlt => Key.Alt,
             SDL.Keycode.LGUI or SDL.Keycode.RGUI => Key.Meta,
+            SDL.Keycode.AcBack => Key.Back,
+            SDL.Keycode.Menu or SDL.Keycode.Application => Key.Menu,
             _ => Key.Unknown
         };
     }
@@ -338,8 +395,40 @@ internal static class SdlInputEventMapper
             SDL.Scancode.LShift or SDL.Scancode.RShift => Key.Shift,
             SDL.Scancode.LAlt or SDL.Scancode.RAlt => Key.Alt,
             SDL.Scancode.LGUI or SDL.Scancode.RGUI => Key.Meta,
+            SDL.Scancode.ACBack => Key.Back,
+            SDL.Scancode.Menu or SDL.Scancode.Application => Key.Menu,
             _ => Key.Unknown
         };
+    }
+
+    private static DisplayServer.ScreenOrientation MapScreenOrientation(SDL.DisplayOrientation orientation)
+    {
+        return orientation switch
+        {
+            SDL.DisplayOrientation.Portrait => DisplayServer.ScreenOrientation.Portrait,
+            SDL.DisplayOrientation.PortraitFlipped => DisplayServer.ScreenOrientation.ReversePortrait,
+            SDL.DisplayOrientation.LandscapeFlipped => DisplayServer.ScreenOrientation.ReverseLandscape,
+            _ => DisplayServer.ScreenOrientation.Landscape
+        };
+    }
+
+    private static bool TryGetTouchIds(SDL.TouchFingerEvent fingerEvent, out int device, out int index)
+    {
+        if (fingerEvent.TouchID > int.MaxValue || fingerEvent.FingerID > int.MaxValue)
+        {
+            device = 0;
+            index = 0;
+            return false;
+        }
+
+        device = (int)fingerEvent.TouchID;
+        index = (int)fingerEvent.FingerID;
+        return true;
+    }
+
+    private static float FiniteOrZero(float value)
+    {
+        return float.IsFinite(value) ? value : 0f;
     }
 
     private static KeyLocation MapKeyLocation(SDL.Scancode scancode)

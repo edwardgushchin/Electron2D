@@ -60,7 +60,7 @@ Unknown action не должен автоматически появляться
 - `InputEventMouseButton` - matching по `ButtonIndex`;
 - `InputEventAction` - direct action event matching по `Action`.
 
-Text input через `InputEventKey.Unicode` не считается action binding. Mouse motion не считается action binding. Gamepad/touch/mobile events остаются отдельными задачами.
+Text input через `InputEventKey.Unicode` не считается action binding. Mouse motion, touch drag и screen touch events не считаются action bindings в этом baseline. Gamepad bindings описаны отдельным baseline.
 
 ## Action state
 

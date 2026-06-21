@@ -35,9 +35,10 @@ namespace Electron2D;
 /// frame-local transition state such as <see cref="IsActionJustPressed"/>.
 /// </para>
 /// <para>
-/// 0.1.0 Preview supports keyboard bindings, mouse button bindings and direct
-/// <see cref="InputEventAction"/> events. Gamepad, touch and mobile-specific
-/// input are separate backlog items.
+/// 0.1.0 Preview supports keyboard bindings, mouse button bindings, gamepad
+/// bindings and direct <see cref="InputEventAction"/> events. Touch input is
+/// delivered as screen touch and drag events and is not an action binding in
+/// this baseline.
 /// </para>
 /// </remarks>
 ///

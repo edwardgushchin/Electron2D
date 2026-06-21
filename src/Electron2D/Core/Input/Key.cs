@@ -338,6 +338,12 @@ public enum Key
     /// <summary>F12 key.</summary>
     F12 = 4194343,
 
+    /// <summary>Mobile or application back navigation key.</summary>
+    Back = 4194344,
+
+    /// <summary>Mobile or application menu navigation key.</summary>
+    Menu = 4194345,
+
     /// <summary>Unknown key.</summary>
     Unknown = 8388607
 }

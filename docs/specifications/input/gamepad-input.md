@@ -17,7 +17,7 @@
 - состояние connected devices, button states и axis values через `Input`;
 - vibration API с безопасным no-op, если устройство не подключено или не поддерживает vibration.
 
-Touch, multitouch, virtual keyboard, IME composition, mobile navigation, orientation и safe area остаются отдельной задачей `T-0051`.
+Touch, multitouch, virtual keyboard, committed text input, mobile navigation, orientation и safe area описаны в отдельном mobile input baseline.
 
 ## Public API
 

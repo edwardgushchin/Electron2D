@@ -43,6 +43,7 @@
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal platform mapper для keyboard, mouse, wheel, text input и dispatch order.
 - [InputMap, action state и persistence baseline](input/input-map-actions.md) - текущие `InputMap`, `Input`, action bindings, deadzone, `GetVector()` и internal serializer input settings.
 - [Gamepad input baseline](input/gamepad-input.md) - текущие `JoyAxis`, `JoyButton`, `InputEventJoypad*`, connected gamepads, action bindings и vibration API.
+- [Mobile input baseline](input/mobile-input.md) - текущие `InputEventScreenTouch`, `InputEventScreenDrag`, mobile navigation, virtual keyboard, orientation и safe area state.
 
 ## Локализация и настройки
 

@@ -16,7 +16,7 @@
 - mouse wheel;
 - SDL text input.
 
-Gamepad, touch, multitouch, IME composition, mobile back/navigation, orientation и safe area остаются отдельными задачами из input backlog.
+Gamepad, touch, mobile navigation, orientation и safe area описаны отдельными input baseline документами. Этот документ фиксирует keyboard, mouse, wheel и committed text mapping.
 
 ## Public API
 
