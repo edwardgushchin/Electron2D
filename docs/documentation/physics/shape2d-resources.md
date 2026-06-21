@@ -1,6 +1,6 @@
 # Shape2D resources baseline
 
-`Shape2D` resources - текущий Godot-like baseline форм столкновений для `CollisionShape2D` в `0.1.0 Preview`.
+`Shape2D` resources - текущий baseline форм столкновений для `CollisionShape2D` в `0.1.0 Preview`.
 
 ## Что реализовано
 

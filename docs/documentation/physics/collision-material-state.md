@@ -1,15 +1,15 @@
 # Collision layers, material, gravity и sleeping baseline
 
-`CollisionObject2D`, `PhysicsBody2D`, `RigidBody2D` и `PhysicsMaterial` теперь закрывают начальный Godot-like state baseline для будущего 2D solver.
+`CollisionObject2D`, `PhysicsBody2D`, `RigidBody2D` и `PhysicsMaterial` теперь закрывают начальный state baseline для будущего 2D solver.
 
 ## Что реализовано
 
 - `CollisionObject2D.CollisionLayer` и `CollisionObject2D.CollisionMask` хранят 32-bit collision filter.
-- `SetCollisionLayerValue()`, `GetCollisionLayerValue()`, `SetCollisionMaskValue()`, `GetCollisionMaskValue()` используют Godot-like numbering `1..32`.
+- `SetCollisionLayerValue()`, `GetCollisionLayerValue()`, `SetCollisionMaskValue()`, `GetCollisionMaskValue()` используют numbering `1..32`.
 - Значение `1` соответствует младшему bit, значение `32` соответствует старшему bit `uint`.
 - Номер layer/mask вне `1..32` даёт `ArgumentOutOfRangeException` с понятным диапазоном.
 - `PhysicsMaterial` хранит `Friction`, `Bounce`, `Rough`, `Absorbent`.
-- `Bounce` - публичное Godot-like имя для restitution.
+- `Bounce` - публичное имя для restitution.
 - `Friction` и `Bounce` должны быть конечными значениями `>= 0`.
 - `PhysicsBody2D.PhysicsMaterialOverride` хранит material override для `StaticBody2D`, `RigidBody2D` и будущих body nodes.
 - `RigidBody2D.GravityScale` принимает любое конечное число, включая отрицательное значение для будущей инверсии gravity.

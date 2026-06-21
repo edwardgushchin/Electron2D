@@ -1,6 +1,6 @@
 # Area2D sensors и overlap signals baseline
 
-`Area2D` теперь имеет начальный Godot-like sensor baseline для `0.1.0 Preview`: область на physics frame находит пересечения с телами и другими областями, хранит текущие overlap snapshots и эмитит стандартные signal names через `Object.Connect()`.
+`Area2D` теперь имеет начальный sensor baseline для `0.1.0 Preview`: область на physics frame находит пересечения с телами и другими областями, хранит текущие overlap snapshots и эмитит стандартные signal names через `Object.Connect()`.
 
 ## Что реализовано
 
@@ -27,7 +27,7 @@
 - `CollisionShape2D.GlobalTransform` учитывает transform shape node и родителей `Node2D`;
 - collision object без active shapes не участвует в overlap.
 
-Это не production narrow-phase solver. Baseline нужен, чтобы gameplay-код, editor previews и будущий backend уже использовали стабильный Godot-like public API.
+Это не production narrow-phase solver. Baseline нужен, чтобы gameplay-код, editor previews и будущий backend уже использовали стабильный публичный API.
 
 ## Порядок сигналов
 
@@ -51,9 +51,8 @@ Freed nodes не возвращаются из overlap helper methods и не п
 - точная narrow-phase collision detection;
 - contact manifolds;
 - shape-level signals `body_shape_entered`, `body_shape_exited`, `area_shape_entered`, `area_shape_exited`;
-- raycast, point query и shape query;
-- fixed timestep и continuous collision detection;
-- `CharacterBody2D`;
+- точные shape-level query narrow-phase results;
+- production continuous collision detection;
 - production Box2D.NET backend.
 
 ## Проверки

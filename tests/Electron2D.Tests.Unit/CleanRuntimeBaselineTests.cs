@@ -30,7 +30,7 @@ namespace Electron2D.Tests.Unit;
 public sealed class CleanRuntimeBaselineTests
 {
     [Fact]
-    public void RuntimeAssemblyExportsOnlyCurrentGodotLikeBaselineTypes()
+    public void RuntimeAssemblyExportsOnlyCurrentPublicBaselineTypes()
     {
         var assembly = Assembly.Load("Electron2D");
         var publicTypeNames = assembly
@@ -49,6 +49,9 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.CanvasItem",
                 "Electron2D.CanvasLayer",
                 "Electron2D.CapsuleShape2D",
+                "Electron2D.CharacterBody2D",
+                "Electron2D.CharacterBody2D+MotionModeEnum",
+                "Electron2D.CharacterBody2D+PlatformOnLeaveEnum",
                 "Electron2D.CircleShape2D",
                 "Electron2D.Collections.Array",
                 "Electron2D.Collections.Dictionary",
@@ -72,6 +75,7 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.InputEventWithModifiers",
                 "Electron2D.Key",
                 "Electron2D.KeyLocation",
+                "Electron2D.KinematicCollision2D",
                 "Electron2D.Label",
                 "Electron2D.Material",
                 "Electron2D.Mathf",

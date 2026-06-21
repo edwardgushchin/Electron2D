@@ -47,7 +47,7 @@ Baseline использует AABB-границы активных `CollisionSha
 - нет точного narrow-phase по реальной форме shape;
 - нет contact manifold и shape-level contacts;
 - нет gravity integration;
-- `CharacterBody2D` и kinematic solver остаются отдельной задачей;
+- production kinematic solver narrow-phase остаётся отдельной задачей;
 - production Box2D.NET backend пока не выбран.
 
 ## Проверки

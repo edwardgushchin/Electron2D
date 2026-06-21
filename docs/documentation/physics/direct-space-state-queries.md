@@ -1,6 +1,6 @@
 # PhysicsDirectSpaceState2D raycast, point query и shape query baseline
 
-`0.1.0 Preview` теперь имеет начальный Godot-like query surface для 2D-физики. Он работает поверх managed AABB baseline активных `CollisionShape2D` и не раскрывает Box2D.NET или другие backend handles.
+`0.1.0 Preview` теперь имеет начальный query surface для 2D-физики. Он работает поверх managed AABB baseline активных `CollisionShape2D` и не раскрывает Box2D.NET или другие backend handles.
 
 ## Что реализовано
 
@@ -28,7 +28,7 @@
 - `maxResults < 0` даёт `ArgumentOutOfRangeException`;
 - `maxResults == 0` возвращает пустой `Array`.
 
-`PhysicsShapeQueryParameters2D.ShapeRid` есть как Godot-like API slot для будущего production backend. Текущий managed baseline вычисляет geometry только из `Shape`; если `Shape == null`, `IntersectShape()` возвращает пустой результат.
+`PhysicsShapeQueryParameters2D.ShapeRid` есть как public API slot для будущего production backend. Текущий managed baseline вычисляет geometry только из `Shape`; если `Shape == null`, `IntersectShape()` возвращает пустой результат.
 
 ## Result dictionaries
 
@@ -48,7 +48,7 @@ Point и shape query items содержат:
 - `rid`;
 - `shape`.
 
-Значения хранятся как `Variant`, поэтому результат остаётся совместимым с текущими Godot-like `Dictionary`/`Array` контейнерами.
+Значения хранятся как `Variant`, поэтому результат остаётся совместимым с текущими `Dictionary`/`Array` контейнерами.
 
 ## Ограничения
 
@@ -57,7 +57,7 @@ Point и shape query items содержат:
 - rectangle, circle, capsule, segment, convex polygon и concave segments сводятся к bounds;
 - contact manifolds не создаются;
 - `CollideShape()`, `CastMotion()` и `GetRestInfo()` ещё не реализованы;
-- fixed timestep, continuous collision detection и `CharacterBody2D` остаются следующими задачами.
+- production continuous collision detection остаётся следующей задачей.
 
 ## Проверки
 

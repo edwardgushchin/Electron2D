@@ -33,9 +33,8 @@ namespace Electron2D.Collections;
 ///
 /// <remarks>
 /// <para>
-/// This type is the Electron2D 0.1.0 Preview counterpart of Godot's
-/// <c>Godot.Collections.Array</c>. It stores only values that can be represented
-/// by <see cref="Variant"/> and is intended for dynamic engine APIs.
+/// This type stores only values that can be represented by <see cref="Variant"/>
+/// and is intended for dynamic Electron2D APIs.
 /// </para>
 ///
 /// <para>
@@ -52,6 +51,9 @@ namespace Electron2D.Collections;
 /// <since>
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
+///
+/// <seealso cref="Dictionary"/>
+/// <seealso cref="Variant"/>
 public sealed class Array : IEnumerable<Variant>
 {
     private readonly List<Variant> _values = new();
@@ -67,6 +69,25 @@ public sealed class Array : IEnumerable<Variant>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="index"/> is outside the array bounds.
     /// </exception>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The getter and setter access the live mutable container. Assigning a
+    /// value replaces the existing element without changing <see cref="Count"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This indexer is not synchronized. External synchronization is required
+    /// when the same instance is accessed from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This indexer is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Add"/>
+    /// <seealso cref="RemoveAt"/>
     public Variant this[int index]
     {
         get => _values[index];
@@ -76,6 +97,26 @@ public sealed class Array : IEnumerable<Variant>
     /// <summary>
     /// Gets the number of values stored in the array.
     /// </summary>
+    ///
+    /// <value>
+    /// The current number of <see cref="Variant"/> values.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This value changes when <see cref="Add"/>, <see cref="RemoveAt"/> or
+    /// <see cref="Clear"/> mutates the container.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. External synchronization is required
+    /// when the same instance is accessed from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public int Count => _values.Count;
 
     /// <summary>
@@ -83,6 +124,25 @@ public sealed class Array : IEnumerable<Variant>
     /// </summary>
     ///
     /// <param name="value">The value to append.</param>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The appended value becomes available at index <c>Count - 1</c> after the
+    /// call returns.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is mutated from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RemoveAt"/>
+    /// <seealso cref="Clear"/>
     public void Add(Variant value)
     {
         _values.Add(value);
@@ -91,6 +151,24 @@ public sealed class Array : IEnumerable<Variant>
     /// <summary>
     /// Removes all values from the array.
     /// </summary>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Existing references to this <see cref="Array"/> observe the same mutable
+    /// instance after it has been cleared.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is mutated from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Count"/>
     public void Clear()
     {
         _values.Clear();
@@ -105,6 +183,24 @@ public sealed class Array : IEnumerable<Variant>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="index"/> is outside the array bounds.
     /// </exception>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Values after <paramref name="index"/> shift down by one position.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is mutated from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Add"/>
+    /// <seealso cref="Clear"/>
     public void RemoveAt(int index)
     {
         _values.RemoveAt(index);
@@ -115,6 +211,24 @@ public sealed class Array : IEnumerable<Variant>
     /// </summary>
     ///
     /// <returns>A new CLR array containing the current <see cref="Variant"/> values.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The returned CLR array is a snapshot. Later changes to this
+    /// <see cref="Array"/> do not change the returned array instance.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance may be mutated while the snapshot is being made.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetEnumerator"/>
     public Variant[] ToArray()
     {
         return _values.ToArray();
@@ -125,6 +239,24 @@ public sealed class Array : IEnumerable<Variant>
     /// </summary>
     ///
     /// <returns>An enumerator over <see cref="Variant"/> values.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The enumerator follows the behavior of <see cref="List{T}.GetEnumerator"/>.
+    /// Mutating this container while enumerating it invalidates the enumerator.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance may be mutated while it is being enumerated.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ToArray"/>
     public IEnumerator<Variant> GetEnumerator()
     {
         return _values.GetEnumerator();
@@ -141,6 +273,22 @@ public sealed class Array : IEnumerable<Variant>
     /// </summary>
     ///
     /// <returns>A comma-separated list of values wrapped in square brackets.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The result is intended for diagnostics and logs. It is not a stable
+    /// serialization format.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance may be mutated while the string is being built.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public override string ToString()
     {
         var builder = new StringBuilder();

@@ -1,4 +1,4 @@
-# Таблица совместимости Godot-like API
+# Таблица совместимости API
 
 Статус: реализованная проверка compatibility baseline.
 Задача: `T-0004`.
@@ -16,7 +16,7 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий Godot-like baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline и direct 2D physics query baseline:
+Новый runtime assembly `Electron2D` экспортирует текущий baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement и `CharacterBody2D` kinematic movement baseline:
 
 - `Electron2D.Area2D`
 - `Electron2D.AtlasTexture`
@@ -25,6 +25,9 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.CanvasItem`
 - `Electron2D.CanvasLayer`
 - `Electron2D.CapsuleShape2D`
+- `Electron2D.CharacterBody2D`
+- `Electron2D.CharacterBody2D+MotionModeEnum`
+- `Electron2D.CharacterBody2D+PlatformOnLeaveEnum`
 - `Electron2D.CircleShape2D`
 - `Electron2D.Collections.Array`
 - `Electron2D.Collections.Dictionary`
@@ -48,6 +51,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.InputEventWithModifiers`
 - `Electron2D.Key`
 - `Electron2D.KeyLocation`
+- `Electron2D.KinematicCollision2D`
 - `Electron2D.Label`
 - `Electron2D.Material`
 - `Electron2D.Mathf`
@@ -105,12 +109,12 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.ViewportTexture`
 - `Electron2D.World2D`
 
-Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в Godot-like форме.
+Это осознанный минимальный baseline после удаления старого `src/Electron2D/`: каждый новый публичный тип должен добавляться только через задачу и только в согласованной форме публичного API.
 
 Wiki source содержит:
 
 - легенду статусов `Supported`, `Partial`, `Experimental`, `Planned`, `Not planned`;
-- planned Godot-like 2D surface;
+- planned 2D surface;
 - явно исключённый legacy/component API.
 
 ## Локальная проверка

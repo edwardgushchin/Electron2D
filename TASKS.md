@@ -305,48 +305,6 @@
 
 Пусто до момента, когда агент возьмёт задачу в работу.
 
-## T-0061 [ ] P0: Реализовать `CharacterBody2D` kinematic solver: `MoveAndCollide`, `MoveAndSlide`, floor/wall/ceiling detection
-
-- Создана: 2026-06-20T16:16:20+03:00
-- Приоритет: P0
-- Зависимости: T-0053, T-0059
-- Ссылки:
-  - Upstream commit: нет
-  - Спецификация: `docs/specifications/releases/0.1.0-preview.md`; `docs/specifications/physics/`
-  - Документация: `docs/documentation/physics/`
-  - Исходный код: `src/Electron2D/Core/`; `src/Electron2D/Runtime/`; `examples/`
-
-### Самодостаточное описание
-
-Задача относится к домену «Физика 2D». Цель - Реализовать `CharacterBody2D` kinematic solver: `MoveAndCollide`, `MoveAndSlide`, floor/wall/ceiling detection. Текущее состояние: в проекте подключён Box2D.NET и есть базовые компоненты физики, но публичная `PhysicsServer2D`-граница, kinematic solver и platform validation ещё не завершены. Нужное поведение: результат должен закрыть релизный контракт `0.1.0 Preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: floor snap, safe margin, platform velocity and slope cases covered.
-
-Важное решение из документации: Box2D.NET может быть backend-кандидатом, но публичный API не должен раскрывать Box2D handles; `CharacterBody2D` требует собственного kinematic solver. Ограничение для агента: не раскрывать backend-типы Box2D в публичных `Node`/`Resource` классах и не обещать rollback/deterministic physics. Не менять несвязанные файлы, не расширять scope за пределы `0.1.0 Preview`, не закрывать задачу без проверяемого результата и не подменять обязательные тесты или документацию устным утверждением.
-
-### Критерии приёмки
-
-- [ ] Реализована или подготовлена цель задачи: Реализовать `CharacterBody2D` kinematic solver: `MoveAndCollide`, `MoveAndSlide`, floor/wall/ceiling detection.
-- [ ] floor snap, safe margin, platform velocity and slope cases covered.
-- [ ] Если задача меняет код, готова или обновлена спецификация в `docs/specifications/<domain>/`, соответствующая фактическому изменению.
-- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.
-- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, готова или обновлена справка в `docs/documentation/<domain>/` по фактическому результату изменения кода.
-- [ ] Команда тестирования или проверки задокументирована.
-
-### Подзадачи
-
-- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.
-  - [ ] Сверить требования `0.1.0 Preview`, архитектурный стек и доменную спецификацию.
-    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.
-- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.
-  - [ ] Добавить или обновить автоматические проверки до изменения production-кода, если задача меняет поведение.
-    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только happy path.
-- [ ] Завершить реализацию, документацию и проверку.
-  - [ ] Обновить `docs/documentation/physics/`, если задача меняет исполняемое поведение или публичный контракт.
-    - [ ] Записать итоговые команды проверки и результат в дневник разработки.
-
-### Заметки агента
-
-Пусто до момента, когда агент возьмёт задачу в работу.
-
 ## T-0062 [ ] P1: Добавить debug visualization hooks для collision shapes и physics diagnostics
 
 - Создана: 2026-06-20T16:16:20+03:00
@@ -2291,6 +2249,38 @@
 ### Заметки агента
 
 Создано по запросу пользователя: Wiki должна быть автоматической документацией публичного API в GitHub Wiki, как у SDL3-CS Wiki, без локального сайта.
+
+## T-0129 [ ] P0: Провести полный аудит XML-документации публичного API
+
+- Создана: 2026-06-21T11:19:09+03:00
+- Приоритет: P0
+- Зависимости: T-0106, T-0107
+- Ссылки:
+  - Upstream commit: нет
+  - Спецификация: `docs/specifications/documentation/`
+  - Документация: `docs/documentation/documentation/`; `docs/documentation/release-management/api-compatibility.md`
+  - Исходный код: `src/Electron2D/`; `tools/`; `tests/`
+
+### Самодостаточное описание
+
+Нужно пройти по всему экспортируемому публичному API `Electron2D` и проверить, что каждый публичный тип, constructor, method, field, property, event, delegate, enum и enum value имеет полноценную C# XML documentation в SDL-like стиле: `summary` с `para` для развёрнутого описания, `remarks`, `param name`, `typeparam name`, `returns`, `value`, `exception cref`, `threadsafety`, `since`, `seealso cref`, `see cref`, `paramref name` и `c` там, где они применимы.
+
+Отдельно нужно проверить, что публичная документация не объясняет Electron2D через запрещённые публичные сравнения вне `README.md` и не называет внутренние backend-библиотеки там, где достаточно описать роль backend обычным языком.
+
+### Критерии приёмки
+
+- [ ] Создана или обновлена спецификация documentation quality gate.
+- [ ] Создан автоматический verifier, который читает compiled public surface и XML documentation, находит отсутствующие или неполные public comments и падает в CI.
+- [ ] Verifier проверяет наличие обязательных тегов для методов, свойств, полей, событий, enum values, delegates и constructors.
+- [ ] Verifier запрещает публичные documentation phrases, нарушающие правила `AGENTS.md`, вне `README.md`.
+- [ ] Весь текущий public API `src/Electron2D/` приведён к SDL-like XML documentation формату.
+- [ ] GitHub Wiki API source и локальная implementation documentation синхронизированы с результатом аудита.
+- [ ] Добавлены tests или script-level checks для verifier.
+- [ ] Документация documentation pipeline обновлена.
+
+### Заметки агента
+
+Создано по запросу пользователя: после введения SDL-like XML documentation rules нужен отдельный полный аудит всего public API, а не только новых классов текущих задач.
 
 ## T-0108 [ ] P0: Обеспечить 100% test coverage кода движка
 

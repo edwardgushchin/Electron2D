@@ -35,9 +35,8 @@ namespace Electron2D.Collections;
 ///
 /// <remarks>
 /// <para>
-/// This type is the Electron2D 0.1.0 Preview counterpart of Godot's
-/// <c>Godot.Collections.Dictionary</c>. It is intentionally limited to Variant
-/// keys and Variant values so the supported value set stays closed.
+/// This type is intentionally limited to <see cref="Variant"/> keys and
+/// <see cref="Variant"/> values so the supported value set stays closed.
 /// </para>
 ///
 /// <para>
@@ -54,6 +53,9 @@ namespace Electron2D.Collections;
 /// <since>
 /// This type is available since Electron2D 0.1.0 Preview.
 /// </since>
+///
+/// <seealso cref="Array"/>
+/// <seealso cref="Variant"/>
 public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
 {
     private readonly VariantDictionary _values = new();
@@ -69,6 +71,25 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// <exception cref="KeyNotFoundException">
     /// Thrown when the getter is used and <paramref name="key"/> is not present.
     /// </exception>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The getter reads the live mutable container. The setter adds or replaces
+    /// the value associated with <paramref name="key"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This indexer is not synchronized. External synchronization is required
+    /// when the same instance is accessed from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This indexer is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Add"/>
+    /// <seealso cref="ContainsKey"/>
     public Variant this[Variant key]
     {
         get => _values[key];
@@ -78,6 +99,26 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// <summary>
     /// Gets the number of key/value pairs stored in the dictionary.
     /// </summary>
+    ///
+    /// <value>
+    /// The current number of stored key/value pairs.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This value changes when <see cref="Add"/>, <see cref="Remove"/> or
+    /// <see cref="Clear"/> mutates the container.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. External synchronization is required
+    /// when the same instance is accessed from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public int Count => _values.Count;
 
     /// <summary>
@@ -90,6 +131,25 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="key"/> already exists.
     /// </exception>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Use the indexer to replace an existing value. This method is strict and
+    /// rejects duplicate keys.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is mutated from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ContainsKey"/>
+    /// <seealso cref="Remove"/>
     public void Add(Variant key, Variant value)
     {
         _values.Add(key, value);
@@ -98,6 +158,24 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// <summary>
     /// Removes all key/value pairs from the dictionary.
     /// </summary>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Existing references to this <see cref="Dictionary"/> observe the same
+    /// mutable instance after it has been cleared.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is mutated from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Count"/>
     public void Clear()
     {
         _values.Clear();
@@ -110,6 +188,23 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// <param name="key">The key to search for.</param>
     ///
     /// <returns><c>true</c> if the key is present; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This method does not throw when <paramref name="key"/> is missing.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is accessed from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="TryGetValue"/>
     public bool ContainsKey(Variant key)
     {
         return _values.ContainsKey(key);
@@ -122,6 +217,24 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// <param name="key">The key to remove.</param>
     ///
     /// <returns><c>true</c> if the key was found and removed; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Removing a missing key is a no-op and returns <c>false</c>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is mutated from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Add"/>
+    /// <seealso cref="Clear"/>
     public bool Remove(Variant key)
     {
         return _values.Remove(key);
@@ -138,6 +251,23 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </param>
     ///
     /// <returns><c>true</c> if the key is present; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This method is the non-throwing read path for optional dictionary keys.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance is accessed from multiple threads.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="ContainsKey"/>
     public bool TryGetValue(Variant key, out Variant value)
     {
         return _values.TryGetValue(key, out value);
@@ -148,6 +278,24 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </summary>
     ///
     /// <returns>An enumerator over key/value pairs.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The enumerator follows the behavior of the underlying CLR dictionary.
+    /// Mutating this container while enumerating it invalidates the enumerator.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance may be mutated while it is being enumerated.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="TryGetValue"/>
     public IEnumerator<KeyValuePair<Variant, Variant>> GetEnumerator()
     {
         return _values.GetEnumerator();
@@ -164,6 +312,22 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </summary>
     ///
     /// <returns>A comma-separated list of key/value pairs wrapped in braces.</returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The result is intended for diagnostics and logs. It is not a stable
+    /// serialization format.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. External synchronization is required
+    /// when the same instance may be mutated while the string is being built.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public override string ToString()
     {
         var builder = new StringBuilder();

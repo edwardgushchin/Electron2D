@@ -6,13 +6,13 @@
 
 ## Текущий baseline после reset
 
-С 2026-06-20 реализация `0.1.0 Preview` строится заново: старый каталог `src/Electron2D/` удалён, а дальнейшие задачи должны создавать только Godot-like публичный API без compatibility layer и без Unity-like component history.
+С 2026-06-20 реализация `0.1.0 Preview` строится заново: старый каталог `src/Electron2D/` удалён, а дальнейшие задачи должны создавать только согласованный публичный API без compatibility layer и без legacy component history.
 
 ## Релизное управление
 
 - [Тестовая инфраструктура 0.1.0 Preview](release-management/test-infrastructure.md) - текущие тестовые проекты, команды запуска и baseline-режим.
 - [CI-матрица 0.1.0 Preview](release-management/ci-matrix.md) - текущий GitHub Actions workflow и локальная проверка его структуры.
-- [Таблица совместимости Godot-like API](release-management/api-compatibility.md) - GitHub Wiki source и verifier текущего public API surface.
+- [Таблица совместимости API](release-management/api-compatibility.md) - GitHub Wiki source и verifier текущего public API surface.
 - [Версионирование и release metadata 0.1.0 Preview](release-management/release-metadata.md) - текущие package metadata, changelog и release notes.
 - [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - текущий минимальный шаблон проекта и проверка его сборки/запуска.
 - [Performance budgets и soak-критерии 0.1.0 Preview](release-management/performance-budgets.md) - текущая матрица устройств и release-gate бюджеты.
@@ -39,7 +39,7 @@
 
 ## Ввод
 
-- [SDL input event mapping и Godot-like `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal SDL mapper для keyboard, mouse, wheel, text input и dispatch order.
+- [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal platform mapper для keyboard, mouse, wheel, text input и dispatch order.
 
 ## Физика 2D
 
@@ -51,29 +51,30 @@
 - [Area2D sensors и overlap signals baseline](physics/area2d-overlap-signals.md) - текущие overlap snapshots, `body_entered`/`body_exited`, `area_entered`/`area_exited`, фильтры и deferred removal.
 - [PhysicsDirectSpaceState2D raycast, point query и shape query baseline](physics/direct-space-state-queries.md) - текущие `World2D`, direct state query parameters, `RayCast2D` execution и AABB query results.
 - [Fixed physics timestep, basic CCD и one-way platform baseline](physics/fixed-physics-step-and-rigid-body-motion.md) - текущий fixed tick `1/60`, базовое движение `RigidBody2D`, AABB sweep, one-way collision и deferred body queue.
+- [CharacterBody2D kinematic movement baseline](physics/character-body-2d-kinematic-solver.md) - текущие `MoveAndCollide()`, `MoveAndSlide()`, floor/wall/ceiling state, floor snap, platform velocity и `KinematicCollision2D`.
 
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.
-- [SDL_GPU lifecycle baseline](rendering/sdl-gpu-lifecycle.md) - текущий internal lifecycle adapter для SDL_GPU device/window/frame state machine.
+- [GPU lifecycle baseline](rendering/sdl-gpu-lifecycle.md) - текущий internal lifecycle adapter для graphics device/window/frame state machine.
 - [Android mobile GPU smoke и fallback policy baseline](rendering/android-mobile-gpu-fallback-policy.md) - текущий internal Android mobile create profile, smoke steps, `Automatic`/`FailIfUnavailable` policy и structured startup result.
 - [CanvasItem render queue baseline](rendering/canvas-item-render-queue.md) - текущая internal сортировка canvas item команд и contiguous batching.
 - [Texture2D resource baseline](rendering/texture-resource-baseline.md) - текущие public `Texture2D`/`AtlasTexture` и internal texture lifetime registry.
 - [Canvas node submission baseline](rendering/canvas-node-submission-baseline.md) - текущие public `CanvasItem`/`Node2D`/`Sprite2D`/`CanvasLayer` и internal sprite submission model.
 - [Camera2D, Viewport and presentation baseline](rendering/camera-viewport-presentation-baseline.md) - текущие public `Camera2D`/`Viewport`, camera transform, pixel snapping и internal presentation plan.
 - [Offscreen render target и восстановление GPU resources](rendering/offscreen-render-target-recovery-baseline.md) - текущие public `ViewportTexture`, `Viewport.GetTexture()` и внутреннее восстановление active texture resources после пересоздания device.
-- [Canvas shaders import и diagnostics baseline](rendering/canvas-shader-import-baseline.md) - текущие public `Shader`, import-time vertex/fragment compilation через SDL_shadercross boundary и diagnostics с file/line/column.
+- [Canvas shaders import и diagnostics baseline](rendering/canvas-shader-import-baseline.md) - текущие public `Shader`, import-time vertex/fragment compilation через internal shader translation boundary и diagnostics с file/line/column.
 - [ShaderMaterial, uniforms, samplers и canvas built-ins baseline](rendering/shader-material-baseline.md) - текущие public `Material`/`ShaderMaterial`, supported uniforms, texture samplers, serializable snapshot и reserved canvas built-ins.
-- [SDL_Renderer Compatibility backend baseline](rendering/sdl-renderer-compatibility-backend.md) - текущий internal fallback command plan для sprites/UI/text/primitives/tile-like texture copies и documented limitations.
+- [Compatibility renderer backend baseline](rendering/sdl-renderer-compatibility-backend.md) - текущий internal fallback command plan для sprites/UI/text/primitives/tile-like texture copies и documented limitations.
 - [Immediate drawing baseline](rendering/immediate-drawing-baseline.md) - текущие `_Draw()`, `QueueRedraw()`, `DrawLine()`/`DrawRect()`/`DrawCircle()`/`DrawPolygon()`/`DrawTexture()`/`DrawString()` и internal command capture.
-- [Text backend baseline через SDL_ttf](rendering/text-backend-baseline.md) - текущие public `Font`/`Control`/`Label`, glyph layout, fallback font resolution, internal cache и SDL_ttf boundary.
+- [Text backend baseline](rendering/text-backend-baseline.md) - текущие public `Font`/`Control`/`Label`, glyph layout, fallback font resolution, internal cache и text backend boundary.
 
 ## Базовые типы
 
 - [2D math baseline](core-types/2d-math-baseline.md) - текущие `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`.
-- [RandomNumberGenerator](core-types/random-number-generator.md) - текущий Godot-like RNG с `Seed`, `State`, range API и deterministic sequence tests.
+- [RandomNumberGenerator](core-types/random-number-generator.md) - текущий deterministic RNG с `Seed`, `State`, range API и deterministic sequence tests.
 - [`StringName` и `Rid`](core-types/stringname-rid.md) - текущие identity-типы для имён и низкоуровневых resource handles.
-- [`Variant`](core-types/variant.md) - текущий closed-list value carrier и Godot-like коллекции `Array`/`Dictionary`.
+- [`Variant`](core-types/variant.md) - текущий closed-list value carrier и Electron2D коллекции `Array`/`Dictionary`.
 - [Stable `Variant` serialization](core-types/variant-serialization.md) - текущий internal canonical JSON round-trip для сериализуемого Variant subset.
 
 ## Объектная модель

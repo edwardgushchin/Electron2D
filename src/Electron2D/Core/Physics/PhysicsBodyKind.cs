@@ -28,5 +28,6 @@ internal enum PhysicsBodyKind
 {
     Generic,
     Static,
-    Rigid
+    Rigid,
+    Character
 }

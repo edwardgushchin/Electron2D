@@ -66,23 +66,26 @@ public sealed class PhysicsNodeLifecycleTests
     }
 
     [Fact]
-    public void StaticRigidAndAreaNodesUseExpectedPhysicsResourceKinds()
+    public void StaticRigidCharacterAndAreaNodesUseExpectedPhysicsResourceKinds()
     {
         var backend = new RecordingPhysicsServer2DBackend();
         Electron2D.PhysicsServer2D.SetBackend(backend);
         var tree = new Electron2D.SceneTree();
         var staticBody = new Electron2D.StaticBody2D();
         var rigidBody = new Electron2D.RigidBody2D();
+        var characterBody = new Electron2D.CharacterBody2D();
         var area = new Electron2D.Area2D();
 
         try
         {
             tree.Root.AddChild(staticBody);
             tree.Root.AddChild(rigidBody);
+            tree.Root.AddChild(characterBody);
             tree.Root.AddChild(area);
 
             Assert.Equal(Electron2D.PhysicsBodyKind.Static, backend.BodyKinds[staticBody.GetRid()]);
             Assert.Equal(Electron2D.PhysicsBodyKind.Rigid, backend.BodyKinds[rigidBody.GetRid()]);
+            Assert.Equal(Electron2D.PhysicsBodyKind.Character, backend.BodyKinds[characterBody.GetRid()]);
             Assert.Contains(area.GetRid(), backend.AreaRids);
         }
         finally

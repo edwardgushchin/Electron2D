@@ -1,6 +1,6 @@
 # PhysicsServer2D boundary
 
-`PhysicsServer2D` - текущая публичная Godot-like граница низкоуровневой 2D-физики. В `0.1.0 Preview` она создаёт и освобождает physics resources через `Rid`, но ещё не выполняет реальную симуляцию столкновений.
+`PhysicsServer2D` - текущая публичная граница низкоуровневой 2D-физики. В `0.1.0 Preview` она создаёт и освобождает physics resources через `Rid`, но ещё не выполняет реальную симуляцию столкновений.
 
 ## Что реализовано
 
@@ -27,8 +27,8 @@
 
 - запись geometry из `Shape2D` resources в production backend;
 - physics step, contacts, material combine, collision response, sleeping transitions и CCD;
-- raycast, point query и shape query;
-- `CharacterBody2D` и kinematic solver;
+- production narrow-phase raycast, point query и shape query;
+- production kinematic solver narrow-phase;
 - production backend на Box2D.NET.
 
 ## Проверки
