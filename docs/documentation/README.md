@@ -28,6 +28,7 @@
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.
+- [Renderer profiles](documentation/renderer-profiles.md) - пользовательское описание `Compatibility`, `Standard`, feature flags, Android fallback и `fail_if_unavailable`.
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - текущее правило, команды verifier и статус заполнения XML comments.
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - текущий генератор GitHub Wiki и проверка синхронизации с публичным API.
 
@@ -97,7 +98,7 @@
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.
 - [GPU lifecycle baseline](rendering/sdl-gpu-lifecycle.md) - текущий internal lifecycle adapter для graphics device/window/frame state machine.
-- [Android mobile GPU smoke и fallback policy baseline](rendering/android-mobile-gpu-fallback-policy.md) - текущий internal Android mobile create profile, smoke steps, `Automatic`/`FailIfUnavailable` policy и structured startup result.
+- [Android mobile graphics smoke и fallback policy baseline](rendering/android-mobile-gpu-fallback-policy.md) - текущий internal Android mobile create profile, smoke steps, `Automatic`/`FailIfUnavailable` policy и structured startup result.
 - [CanvasItem render queue baseline](rendering/canvas-item-render-queue.md) - текущая internal сортировка canvas item команд и contiguous batching.
 - [Texture2D resource baseline](rendering/texture-resource-baseline.md) - текущие public `Texture2D`/`AtlasTexture` и internal texture lifetime registry.
 - [Canvas node submission baseline](rendering/canvas-node-submission-baseline.md) - текущие public `CanvasItem`/`Node2D`/`Sprite2D`/`CanvasLayer` и internal sprite submission model.

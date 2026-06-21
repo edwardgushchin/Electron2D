@@ -26,9 +26,11 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $specPath = Join-Path $repoRoot 'docs/specifications/documentation/user-documentation.md'
+$rendererSpecPath = Join-Path $repoRoot 'docs/specifications/documentation/renderer-profiles-user-documentation.md'
 $guidePath = Join-Path $repoRoot 'docs/documentation/documentation/user-guide.md'
+$rendererGuidePath = Join-Path $repoRoot 'docs/documentation/documentation/renderer-profiles.md'
 
-foreach ($path in @($specPath, $guidePath)) {
+foreach ($path in @($specPath, $rendererSpecPath, $guidePath, $rendererGuidePath)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Required user documentation file was not found: $path"
     }
@@ -36,6 +38,8 @@ foreach ($path in @($specPath, $guidePath)) {
 
 $guide = [System.IO.File]::ReadAllText($guidePath, [System.Text.Encoding]::UTF8)
 $spec = [System.IO.File]::ReadAllText($specPath, [System.Text.Encoding]::UTF8)
+$rendererGuide = [System.IO.File]::ReadAllText($rendererGuidePath, [System.Text.Encoding]::UTF8)
+$rendererSpec = [System.IO.File]::ReadAllText($rendererSpecPath, [System.Text.Encoding]::UTF8)
 
 $requiredSectionMarkers = @(
     'user-doc:installation',
@@ -47,6 +51,7 @@ $requiredSectionMarkers = @(
     'user-doc:ui',
     'user-doc:animation',
     'user-doc:input-map',
+    'user-doc:renderer-profiles',
     'user-doc:export',
     'user-doc:troubleshooting'
 )
@@ -65,6 +70,9 @@ $requiredFragments = @(
     'scenes/main.scene.json',
     'Scripts/MainScene.cs',
     'InputMap',
+    'renderer-profiles.md',
+    'RenderingServer.CurrentProfile',
+    'RenderingServer.HasFeature',
     'tools\Verify-WindowsExport.ps1',
     'tools\Verify-LinuxExport.ps1',
     'tools\Verify-MacOSExport.ps1'
@@ -76,7 +84,25 @@ foreach ($fragment in $requiredFragments) {
     }
 }
 
-$combined = $guide + "`n" + $spec
+$requiredRendererFragments = @(
+    'Compatibility',
+    'Standard',
+    'feature flags',
+    'Automatic',
+    'FailIfUnavailable',
+    'fail_if_unavailable',
+    'Android fallback',
+    'RenderingServer.CurrentProfile',
+    'RenderingServer.HasFeature'
+)
+
+foreach ($fragment in $requiredRendererFragments) {
+    if ($rendererGuide.IndexOf($fragment, [System.StringComparison]::Ordinal) -lt 0) {
+        throw "Renderer profile documentation is missing required fragment: $fragment"
+    }
+}
+
+$combined = $guide + "`n" + $spec + "`n" + $rendererGuide + "`n" + $rendererSpec
 $forbiddenPatterns = @(
     '\bSDL\b',
     'Godot',

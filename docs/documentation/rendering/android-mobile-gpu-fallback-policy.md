@@ -1,4 +1,4 @@
-# Android mobile GPU smoke и fallback policy baseline
+# Android mobile graphics smoke и fallback policy baseline
 
 Статус: реализовано.
 Задача: `T-0034`.
@@ -6,28 +6,28 @@
 
 ## Назначение
 
-Добавлена внутренняя startup policy для renderer backend. Она создаёт SDL_GPU backend с platform-specific create info, выполняет smoke test и выбирает один из вариантов:
+Добавлена внутренняя startup policy для renderer backend. Она создаёт standard graphics backend с platform-specific create info, выполняет smoke test и выбирает один из вариантов:
 
-- `SDL_GPU`, если smoke проходит;
+- `Standard`, если smoke проходит;
 - `Compatibility`, если smoke падает и policy равна `Automatic`;
 - structured failure, если smoke падает и policy равна `FailIfUnavailable`.
 
-Публичный API не изменился. Mobile profile остаётся internal policy для SDL_GPU device creation, а не новым public `RenderingProfile`.
+Публичный API не изменился. Mobile profile остаётся internal policy для graphics device creation, а не новым public `RenderingProfile`.
 
 ## Android mobile create profile
 
-Для Android используется `SdlGpuDeviceCreateInfo.AndroidMobile(debugMode)`. В нём отключены optional Vulkan features:
+Для Android используется mobile-compatible graphics create profile. В нём отключены optional graphics features, которые чаще всего ограничивают совместимость старых mobile drivers:
 
 - `ClipDistance`;
 - `DepthClamping`;
 - `IndirectDrawFirstInstance`;
 - `Anisotropy`.
 
-Production adapter `SdlGpuApi` создаёт device через `SDL_CreateGPUDeviceWithProperties` и передаёт эти значения в SDL properties. Стандартный desktop profile оставляет эти optional features включёнными.
+Production adapter передаёт эти значения в native graphics device properties. Стандартный desktop profile оставляет эти optional features включёнными.
 
 ## Smoke test
 
-`SdlGpuMobileSmokeTest` выполняет шаги в стабильном порядке:
+Mobile graphics smoke test выполняет шаги в стабильном порядке:
 
 1. `Texture` - базовая проверка texture path через adapter;
 2. `Pipeline` - проверка pipeline capability через shader format availability;
@@ -38,7 +38,7 @@ Production adapter `SdlGpuApi` создаёт device через `SDL_CreateGPUDe
 
 ## Startup result и log
 
-`SdlGpuStartupResult` содержит:
+Startup result содержит:
 
 - selected backend name;
 - selected `RenderingProfile`, если backend выбран;
@@ -52,7 +52,7 @@ Production adapter `SdlGpuApi` создаёт device через `SDL_CreateGPUDe
 `ToLogLine()` формирует однострочный structured log:
 
 ```text
-backend=Compatibility|profile=Compatibility|fallback=True|gpu=Adreno 730|driver=vulkan|driverVersion=1.3.250|reasons=graphics pipeline creation failed on Vulkan driver.
+backend=Compatibility|profile=Compatibility|fallback=True|gpu=Adreno 730|driver=mobile-driver|driverVersion=1.3.250|reasons=graphics pipeline creation failed on mobile driver.
 ```
 
 Эта строка предназначена для будущих runtime diagnostics и CLI/editor output.

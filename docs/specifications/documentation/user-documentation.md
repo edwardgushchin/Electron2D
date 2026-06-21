@@ -20,6 +20,7 @@
 - UI baseline;
 - animation baseline;
 - Input Map и ввод;
+- renderer profiles, feature flags и fallback policy;
 - export baseline;
 - troubleshooting.
 

@@ -24,6 +24,7 @@
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-documentation.md) - обязательные разделы user guide, проверяемые команды и screenshot policy.
+- [Документация renderer profiles](documentation/renderer-profiles-user-documentation.md) - обязательная пользовательская справка по renderer profiles, feature flags, Android fallback и `fail_if_unavailable`.
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - обязательные XML-теги, verifier modes и правила качества public API comments.
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - автоматическая генерация GitHub Wiki из compiled public API и XML documentation.
 

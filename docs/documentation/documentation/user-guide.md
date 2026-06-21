@@ -148,6 +148,15 @@ Editor timeline data model и специализированные editor views 
 
 Editor Input Map UI ещё не готов. Для текущего baseline action settings проверяются через tests и JSON project settings.
 
+<!-- user-doc:renderer-profiles -->
+## Renderer profiles
+
+Текущий renderer baseline имеет два public profiles: `Compatibility` и `Standard`.
+
+Проверяйте профиль и возможности через `RenderingServer.CurrentProfile` и `RenderingServer.HasFeature(...)`. Это важнее, чем проверять платформу вручную: automatic fallback на Android может выбрать более простой профиль, если устройство не проходит smoke-check.
+
+Подробная страница: [Renderer profiles](renderer-profiles.md).
+
 <!-- user-doc:export -->
 ## Export
 
