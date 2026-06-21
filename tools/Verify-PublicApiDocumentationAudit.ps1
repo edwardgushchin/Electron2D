@@ -103,6 +103,115 @@ $apiWikiScript = Join-Path $PSScriptRoot 'Update-ApiWiki.ps1'
 Invoke-CheckedScript -ScriptPath $publicApiXmlDocsScript -Arguments @('-FailOnIssues')
 Invoke-CheckedScript -ScriptPath $apiWikiScript -Arguments @('-OutputPath', $resolvedWikiPath, '-Check')
 
+$violations = New-Object System.Collections.Generic.List[string]
+
+function Get-WikiPage {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Name
+    )
+
+    $path = Join-Path $resolvedWikiPath $Name
+    if (-not (Test-Path -LiteralPath $path)) {
+        $violations.Add("GitHub Wiki page is missing: $Name")
+        return $null
+    }
+
+    return Get-Item -LiteralPath $path
+}
+
+function Assert-ContentMatches {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RelativePath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Pattern,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    if ($Content -notmatch $Pattern) {
+        $violations.Add("$RelativePath is missing required Wiki structure: $Description")
+    }
+}
+
+function Assert-ContentDoesNotMatch {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RelativePath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Pattern,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    if ($Content -match $Pattern) {
+        $violations.Add("$RelativePath contains forbidden Wiki structure: $Description")
+    }
+}
+
+$requiredWikiPages = @(
+    'Home.md',
+    '_Sidebar.md',
+    '_Footer.md',
+    'API-by-Category.md',
+    'API-Reference.md',
+    'API-Compatibility.md'
+)
+
+foreach ($pageName in $requiredWikiPages) {
+    [void](Get-WikiPage -Name $pageName)
+}
+
+$wikiFiles = Get-ChildItem -LiteralPath $resolvedWikiPath -File -Filter '*.md'
+foreach ($file in $wikiFiles) {
+    $relative = Get-RelativeRepositoryPath -Path $file.FullName
+    $content = [System.IO.File]::ReadAllText($file.FullName, [System.Text.Encoding]::UTF8)
+    Assert-ContentDoesNotMatch -RelativePath $relative -Content $content -Pattern '\]\([^)\s]+\.md(?:#[^)]+)?\)' -Description 'links must use GitHub Wiki page names without .md extensions.'
+}
+
+$homePage = Get-WikiPage -Name 'Home.md'
+if ($null -ne $homePage) {
+    $relative = Get-RelativeRepositoryPath -Path $homePage.FullName
+    $content = [System.IO.File]::ReadAllText($homePage.FullName, [System.Text.Encoding]::UTF8)
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\[API by Category\]\(API-by-Category\)' -Description 'Home links to category API navigation.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\[Complete API Index\]\(API-Reference\)' -Description 'Home links to the complete API index.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\[API Compatibility\]\(API-Compatibility\)' -Description 'Home links to compatibility status.'
+}
+
+$apiReferencePage = Get-WikiPage -Name 'API-Reference.md'
+if ($null -ne $apiReferencePage) {
+    $relative = Get-RelativeRepositoryPath -Path $apiReferencePage.FullName
+    $content = [System.IO.File]::ReadAllText($apiReferencePage.FullName, [System.Text.Encoding]::UTF8)
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\[Home\]\(Home\) \| \[API by Category\]\(API-by-Category\) \| \[Complete API Index\]\(API-Reference\) \| \[API Compatibility\]\(API-Compatibility\)' -Description 'complete top navigation.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '## Type Index' -Description 'complete public type index.'
+}
+
+$apiCompatibilityPage = Get-WikiPage -Name 'API-Compatibility.md'
+if ($null -ne $apiCompatibilityPage) {
+    $relative = Get-RelativeRepositoryPath -Path $apiCompatibilityPage.FullName
+    $content = [System.IO.File]::ReadAllText($apiCompatibilityPage.FullName, [System.Text.Encoding]::UTF8)
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\[Home\]\(Home\) \| \[API by Category\]\(API-by-Category\) \| \[Complete API Index\]\(API-Reference\) \| \[API Compatibility\]\(API-Compatibility\)' -Description 'complete top navigation.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '## Status Legend' -Description 'status legend.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '## Current Public Runtime Surface' -Description 'current public API status table.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '## Planned 2D Surface' -Description 'planned preview surface table.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\| Supported \| Implemented, tested and documented \|' -Description 'supported status definition.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\| Partial \| Implemented only for the described subset \|' -Description 'partial status definition.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\| Experimental \| Implemented but allowed to change before stable release \|' -Description 'experimental status definition.'
+    Assert-ContentMatches -RelativePath $relative -Content $content -Pattern '\| Planned \| Required by `0\.1\.0 Preview`, not implemented yet \|' -Description 'planned status definition.'
+    Assert-ContentDoesNotMatch -RelativePath $relative -Content $content -Pattern '(?i)explicitly[- ]not[- ]planned|removed legacy|legacy API' -Description 'removed/legacy API block must not be published.'
+}
+
 $documentationRoots = @(
     (Join-Path $repoRoot 'docs/specifications/documentation'),
     (Join-Path $repoRoot 'docs/documentation/documentation'),
@@ -123,7 +232,6 @@ $forbiddenPatterns = @(
 )
 
 $scannedFiles = 0
-$violations = New-Object System.Collections.Generic.List[string]
 
 foreach ($root in $documentationRoots) {
     if (-not (Test-Path -LiteralPath $root)) {

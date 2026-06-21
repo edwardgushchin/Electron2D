@@ -23,7 +23,7 @@ https://github.com/edwardgushchin/Electron2D.wiki.git
 - страницы публичных типов с короткими именами, например `Object.md`, `Node.md`, `Collections-Array.md`;
 - `API-Compatibility.md`.
 
-`Home.md`, `_Sidebar.md`, `_Footer.md`, `API-by-Category.md`, category pages, `API-Reference.md` и страницы типов создаются автоматически. `API-Compatibility.md` остаётся отдельной GitHub Wiki page с release/status таблицей, не перезаписывается генератором и не публикует отдельный блок removed/legacy API.
+`Home.md`, `_Sidebar.md`, `_Footer.md`, `API-by-Category.md`, category pages, `API-Reference.md` и страницы типов создаются автоматически. `API-Compatibility.md` остаётся отдельной GitHub Wiki page с release/status таблицей, не перезаписывается генератором и содержит верхнюю навигацию к остальным API reference pages.
 
 ## Generator
 
@@ -49,7 +49,7 @@ powershell -ExecutionPolicy Bypass -File tools\Update-ApiWiki.ps1 -OutputPath .g
 
 ## Текущий статус
 
-На 2026-06-21 генератор создаёт `136` сгенерированных страниц: `Home.md`, `_Sidebar.md`, `_Footer.md`, `API-by-Category.md`, `API-Reference.md`, `11` category pages и `120` страниц публичных типов. Вместе с ручной compatibility page в `Electron2D.wiki.git` хранится `137` Markdown-файлов.
+На 2026-06-21 генератор создаёт `142` сгенерированные страницы: `Home.md`, `_Sidebar.md`, `_Footer.md`, `API-by-Category.md`, `API-Reference.md`, `12` category pages и `125` страниц публичных типов. Вместе с ручной compatibility page в `Electron2D.wiki.git` хранится `143` Markdown-файла.
 
 CI клонирует `Electron2D.wiki.git` в `.github/wiki` и запускает `tools\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check`. Если public API или XML documentation меняются, но GitHub Wiki не обновлена, CI падает.
 
@@ -63,5 +63,7 @@ Verifier сравнивает expected generated Wiki pages с текущими 
 - сгенерированная page устарела;
 - осталась лишняя сгенерированная page;
 - отсутствует `API-Compatibility.md`.
+
+Дополнительный audit проверяет, что `Home.md`, `API-Reference.md`, `_Sidebar.md` и `API-Compatibility.md` связаны wiki-style ссылками без расширения `.md`, а compatibility page содержит status legend, current public runtime surface и planned preview surface.
 
 Такой режим гарантирует, что GitHub Wiki остаётся частью обычного review и release gate без отслеживания Wiki pages в основном репозитории.
