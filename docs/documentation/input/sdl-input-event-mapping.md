@@ -49,7 +49,7 @@ Internal dispatcher читает platform events, мапит каждое соб
 - `InputMap`, action persistence, deadzones и global `Input` API реализованы в `T-0049` и описаны в [InputMap, action state и persistence baseline](input-map-actions.md).
 - Gamepad lifecycle/mapping описан в `gamepad-input.md`.
 - Touch, virtual keyboard, mobile navigation, orientation и safe area описаны в `mobile-input.md`.
-- UI focus/mouse filter pipeline остаётся задачей `T-0052`.
+- UI focus/mouse filter pipeline реализован в [Input dispatch, UI focus и mouse filter baseline](input-dispatch-ui-focus.md).
 - `InputEventMouseMotion.Velocity` и `ScreenVelocity` пока равны `Vector2.Zero`, пока frame timing не подключён к input pump.
 
 ## Проверки

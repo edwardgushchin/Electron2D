@@ -75,7 +75,7 @@ Load заменяет action registry только после успешного
 ## Ограничения
 
 - Touch, virtual keyboard и mobile navigation описаны в `mobile-input.md`; screen touch and drag events не являются action bindings в этом baseline.
-- UI focus/mouse filter pipeline остаётся задачей `T-0052`.
+- UI focus/mouse filter pipeline реализован в [Input dispatch, UI focus и mouse filter baseline](input-dispatch-ui-focus.md).
 - Public project settings API и editor UI для Input Map остаются отдельными задачами.
 - `exactMatch` зарезервирован для будущей проверки modifier/device distinctions.
 

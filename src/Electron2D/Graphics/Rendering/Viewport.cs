@@ -71,6 +71,9 @@ public class Viewport : Node
 
     private Camera2D? currentCamera;
     private ViewportTexture? viewportTexture;
+    private Control? focusedControl;
+    private bool inputDispatchActive;
+    private bool inputHandled;
 
     /// <summary>
     /// Gets or sets the viewport size in pixels.
@@ -246,6 +249,45 @@ public class Viewport : Node
         return viewportTexture;
     }
 
+    /// <summary>
+    /// Marks the input event currently being dispatched by this viewport as handled.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This method affects only the event that is currently moving through
+    /// <see cref="SceneTree.DispatchInput(InputEvent)"/>. The process-wide
+    /// <see cref="Input"/> state has already been updated before user callbacks
+    /// can call this method, so action state is not rolled back.
+    /// </para>
+    /// <para>
+    /// Calling this method when the viewport is not dispatching an input event
+    /// has no effect.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it from the main scene thread
+    /// while processing input for this viewport.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Control.AcceptEvent"/>
+    /// <seealso cref="Node.GetViewport"/>
+    public void SetInputAsHandled()
+    {
+        ThrowIfFreed();
+        if (inputDispatchActive)
+        {
+            inputHandled = true;
+        }
+    }
+
+    internal bool IsInputHandled => inputHandled;
+
     internal void SetCurrentCamera(Camera2D camera)
     {
         ArgumentNullException.ThrowIfNull(camera);
@@ -270,6 +312,168 @@ public class Viewport : Node
     {
         var cameraTransform = currentCamera is null ? Transform2D.Identity : currentCamera.GetCameraTransform(Size);
         return CanvasTransform * cameraTransform;
+    }
+
+    internal void BeginInputDispatch()
+    {
+        inputHandled = false;
+        inputDispatchActive = true;
+    }
+
+    internal void EndInputDispatch()
+    {
+        inputDispatchActive = false;
+    }
+
+    internal void DispatchGuiInput(InputEvent inputEvent)
+    {
+        ArgumentNullException.ThrowIfNull(inputEvent);
+
+        if (inputEvent is InputEventMouse mouseEvent)
+        {
+            var target = FindMouseTarget(this, mouseEvent.Position);
+            if (target is not null)
+            {
+                DispatchMouseGuiInput(target, inputEvent, mouseEvent);
+            }
+
+            return;
+        }
+
+        if (inputEvent is InputEventScreenTouch screenTouch)
+        {
+            var target = FindMouseTarget(this, screenTouch.Position);
+            if (target is not null)
+            {
+                DispatchMouseGuiInput(target, inputEvent, screenTouch);
+            }
+
+            return;
+        }
+
+        if (inputEvent is InputEventScreenDrag screenDrag)
+        {
+            var target = FindMouseTarget(this, screenDrag.Position);
+            if (target is not null)
+            {
+                DispatchMouseGuiInput(target, inputEvent, pointerPressEvent: null);
+            }
+
+            return;
+        }
+
+        var focusOwner = GetValidFocusOwner();
+        if (focusOwner is not null)
+        {
+            focusOwner.DispatchGuiInput(inputEvent);
+        }
+    }
+
+    internal void GrabFocus(Control control)
+    {
+        ArgumentNullException.ThrowIfNull(control);
+        if (control.CanReceiveFocus(this))
+        {
+            focusedControl = control;
+        }
+    }
+
+    internal void ReleaseFocus(Control control)
+    {
+        ArgumentNullException.ThrowIfNull(control);
+        if (ReferenceEquals(focusedControl, control))
+        {
+            focusedControl = null;
+        }
+    }
+
+    internal bool HasFocus(Control control)
+    {
+        ArgumentNullException.ThrowIfNull(control);
+        return ReferenceEquals(GetValidFocusOwner(), control);
+    }
+
+    private void DispatchMouseGuiInput(Control target, InputEvent inputEvent, InputEvent? pointerPressEvent)
+    {
+        var current = target;
+        while (current is not null && !inputHandled)
+        {
+            if (current.MouseFilter == MouseFilter.Ignore)
+            {
+                current = current.GetParent() as Control;
+                continue;
+            }
+
+            if (IsPressEvent(pointerPressEvent) &&
+                current.FocusMode is FocusMode.Click or FocusMode.All)
+            {
+                GrabFocus(current);
+            }
+
+            current.DispatchGuiInput(inputEvent);
+
+            if (inputHandled)
+            {
+                return;
+            }
+
+            if (current.MouseFilter == MouseFilter.Stop)
+            {
+                inputHandled = true;
+                return;
+            }
+
+            current = current.GetParent() as Control;
+        }
+    }
+
+    private Control? GetValidFocusOwner()
+    {
+        if (focusedControl is null)
+        {
+            return null;
+        }
+
+        if (!Object.IsInstanceValid(focusedControl) ||
+            !focusedControl.CanReceiveFocus(this))
+        {
+            focusedControl = null;
+            return null;
+        }
+
+        return focusedControl;
+    }
+
+    private static bool IsPressEvent(InputEvent? inputEvent)
+    {
+        return inputEvent switch
+        {
+            InputEventMouseButton { Pressed: true } => true,
+            InputEventScreenTouch { Pressed: true, Canceled: false } => true,
+            _ => false
+        };
+    }
+
+    private static Control? FindMouseTarget(Node node, Vector2 position)
+    {
+        if (node is CanvasItem canvasItem && !canvasItem.IsVisibleInTree())
+        {
+            return null;
+        }
+
+        var children = node.GetChildrenSnapshot();
+        for (var index = children.Length - 1; index >= 0; index--)
+        {
+            var childTarget = FindMouseTarget(children[index], position);
+            if (childTarget is not null)
+            {
+                return childTarget;
+            }
+        }
+
+        return node is Control control && control.CanReceiveMouseInput(position)
+            ? control
+            : null;
     }
 
     private static Camera2D? FindFirstEnabledCamera(Node node, Camera2D exclude)

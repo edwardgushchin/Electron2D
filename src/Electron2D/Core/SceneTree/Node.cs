@@ -730,6 +730,54 @@ public class Node : Object
     }
 
     /// <summary>
+    /// Gets the nearest viewport that contains this node.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The nearest ancestor <see cref="Viewport"/>, or the root viewport of the
+    /// current <see cref="SceneTree"/> when this node is inside a tree without
+    /// a nearer viewport; otherwise, <c>null</c>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Use this method from input callbacks when user code needs viewport-local
+    /// services, such as <see cref="Viewport.SetInputAsHandled"/>.
+    /// </para>
+    /// <para>
+    /// The 0.1.0 Preview scene tree creates a <see cref="Viewport"/> as its
+    /// root node. Future subviewport nodes can make the nearest ancestor rule
+    /// observable for nested viewports.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread that
+    /// owns this node.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Viewport"/>
+    /// <seealso cref="Viewport.SetInputAsHandled"/>
+    public Viewport? GetViewport()
+    {
+        ThrowIfFreed();
+
+        for (Node? current = this; current is not null; current = current._parent)
+        {
+            if (current is Viewport viewport)
+            {
+                return viewport;
+            }
+        }
+
+        return _tree?.Root as Viewport;
+    }
+
+    /// <summary>
     /// Creates a tween bound to this node.
     /// </summary>
     ///
@@ -1134,19 +1182,28 @@ public class Node : Object
         }
     }
 
-    internal void InputRecursive(InputEvent inputEvent)
+    internal bool InputRecursive(InputEvent inputEvent, Viewport viewport)
     {
         if (!IsInstanceValid(this) || _tree is null)
         {
-            return;
+            return viewport.IsInputHandled;
         }
 
         _tree?.InvokeUserCallback(this, nameof(_Input), () => _Input(inputEvent));
+        if (viewport.IsInputHandled)
+        {
+            return true;
+        }
 
         foreach (var child in _children.ToArray())
         {
-            child.InputRecursive(inputEvent);
+            if (child.InputRecursive(inputEvent, viewport))
+            {
+                return true;
+            }
         }
+
+        return viewport.IsInputHandled;
     }
 
     internal void ExitTreeRecursive()

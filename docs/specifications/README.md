@@ -54,6 +54,7 @@
 
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - keyboard, mouse button, mouse motion, wheel, text input и порядок dispatch через `SceneTree`.
 - [InputMap, action state и persistence baseline](input/input-map-actions.md) - action registry, bindings, deadzone, action state, `GetVector()` и внутренний serializer input settings.
+- [Input dispatch, UI focus и mouse filter baseline](input/input-dispatch-ui-focus.md) - порядок `_Input()`, `Control._GuiInput()`, handled-state, focus ownership и mouse filter.
 - [Gamepad input baseline](input/gamepad-input.md) - connected devices, `InputEventJoypadButton`, `InputEventJoypadMotion`, action bindings, axis/button state и vibration API.
 - [Mobile input baseline](input/mobile-input.md) - touch events, mobile navigation, virtual keyboard, orientation и display safe area state.
 

@@ -490,8 +490,24 @@ public class SceneTree : Object
     internal void DispatchInput(InputEvent inputEvent)
     {
         ArgumentNullException.ThrowIfNull(inputEvent);
+        var viewport = (Viewport)Root;
+        viewport.BeginInputDispatch();
         Input.ProcessEvent(inputEvent);
-        RunTraversal(() => Root.InputRecursive(inputEvent));
+        try
+        {
+            RunTraversal(() =>
+            {
+                Root.InputRecursive(inputEvent, viewport);
+                if (!viewport.IsInputHandled)
+                {
+                    viewport.DispatchGuiInput(inputEvent);
+                }
+            });
+        }
+        finally
+        {
+            viewport.EndInputDispatch();
+        }
     }
 
     internal void QueueDelete(Node node)

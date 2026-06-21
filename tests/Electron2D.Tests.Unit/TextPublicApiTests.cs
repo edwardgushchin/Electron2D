@@ -56,12 +56,20 @@ public sealed class TextPublicApiTests
         Assert.Equal(1, (int)Electron2D.VerticalAlignment.Center);
         Assert.Equal(2, (int)Electron2D.VerticalAlignment.Bottom);
         Assert.Equal(3, (int)Electron2D.VerticalAlignment.Fill);
+        Assert.Equal(0, (int)Electron2D.MouseFilter.Stop);
+        Assert.Equal(1, (int)Electron2D.MouseFilter.Pass);
+        Assert.Equal(2, (int)Electron2D.MouseFilter.Ignore);
+        Assert.Equal(0, (int)Electron2D.FocusMode.None);
+        Assert.Equal(1, (int)Electron2D.FocusMode.Click);
+        Assert.Equal(2, (int)Electron2D.FocusMode.All);
 
         var font = new TestFont();
         var control = new Electron2D.Control
         {
             Position = new Electron2D.Vector2(4f, 5f),
-            Size = new Electron2D.Vector2(120f, 32f)
+            Size = new Electron2D.Vector2(120f, 32f),
+            MouseFilter = Electron2D.MouseFilter.Pass,
+            FocusMode = Electron2D.FocusMode.Click
         };
 
         control.AddThemeFontOverride("font", font);
@@ -73,6 +81,8 @@ public sealed class TextPublicApiTests
         Assert.Equal(16, control.GetThemeFontSize("missing"));
         Assert.Equal(new Electron2D.Vector2(4f, 5f), control.Position);
         Assert.Equal(new Electron2D.Vector2(120f, 32f), control.Size);
+        Assert.Equal(Electron2D.MouseFilter.Pass, control.MouseFilter);
+        Assert.Equal(Electron2D.FocusMode.Click, control.FocusMode);
 
         var label = new Electron2D.Label
         {
