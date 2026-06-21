@@ -445,7 +445,6 @@ public class Camera2D : Node2D
         ThrowIfFreed();
     }
 
-    /// <inheritdoc />
     /// <summary>
     /// Called when this node enters a scene tree.
     /// </summary>
@@ -472,7 +471,6 @@ public class Camera2D : Node2D
         }
     }
 
-    /// <inheritdoc />
     /// <summary>
     /// Called when this node exits a scene tree.
     /// </summary>

@@ -165,7 +165,6 @@ public sealed class AtlasTexture : Texture2D
     ///
     public Rect2 Region { get; set; }
 
-    /// <inheritdoc />
     /// <summary>
     /// Gets the width value.
     /// </summary>
@@ -193,7 +192,6 @@ public sealed class AtlasTexture : Texture2D
         return Atlas is null ? 0 : ToPixelSize(Region.Size.X, Atlas.GetWidth());
     }
 
-    /// <inheritdoc />
     /// <summary>
     /// Gets the height value.
     /// </summary>
@@ -221,7 +219,6 @@ public sealed class AtlasTexture : Texture2D
         return Atlas is null ? 0 : ToPixelSize(Region.Size.Y, Atlas.GetHeight());
     }
 
-    /// <inheritdoc />
     /// <summary>
     /// Checks whether alpha is available.
     /// </summary>
@@ -249,7 +246,6 @@ public sealed class AtlasTexture : Texture2D
         return Atlas?.HasAlpha() == true;
     }
 
-    /// <inheritdoc />
     /// <summary>
     /// Checks whether mipmaps is available.
     /// </summary>
@@ -277,7 +273,6 @@ public sealed class AtlasTexture : Texture2D
         return Atlas?.HasMipmaps() == true;
     }
 
-    /// <inheritdoc />
     /// <summary>
     /// Gets the mipmap count value.
     /// </summary>
@@ -305,7 +300,6 @@ public sealed class AtlasTexture : Texture2D
         return Atlas?.GetMipmapCount() ?? 0;
     }
 
-    /// <inheritdoc />
     /// <summary>
     /// Checks whether pixel opaque is true.
     /// </summary>

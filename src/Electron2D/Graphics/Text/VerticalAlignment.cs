@@ -87,7 +87,12 @@ public enum VerticalAlignment
     Bottom = 2,
 
     /// <summary>
-    /// Uses fill alignment. Electron2D 0.1.0 Preview treats this like top alignment for single-line labels.
+    /// <para>
+    /// Uses fill alignment.
+    /// </para>
+    /// <para>
+    /// Electron2D 0.1.0 Preview treats this like top alignment for single-line labels.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// Use this value with APIs that accept VerticalAlignment.

@@ -22,10 +22,13 @@ CI описан в `.github/workflows/ci.yml`.
 ./tools/Verify-ProjectTemplate.ps1
 ./tools/Verify-UserDocumentation.ps1
 ./tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues
+./tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
+./tools/Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki
 ./tools/Verify-PerformanceBudgets.ps1
 ```
 
 `Verify-PublicApiXmlDocs.ps1 -FailOnIssues` является gate публичной XML documentation: недокументированный или неполный public API ломает CI.
+`Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` является объединённым gate для XML documentation, GitHub Wiki API reference и public API documentation wording.
 
 Platform-specific export verifiers запускаются только на соответствующих runners:
 

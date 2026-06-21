@@ -1,6 +1,6 @@
 # XML documentation публичного API
 
-Статус: целевая спецификация для `T-0106`.
+Статус: целевая спецификация для `T-0106` и audit gate `T-0129`.
 Обновлено: 2026-06-21.
 
 ## Назначение
@@ -41,9 +41,25 @@ Internal, private и protected internal implementation members не являют
 - `<exception cref="...">` для documented expected exceptions;
 - `<inheritdoc />` запрещён как самостоятельная документация, кроме trivial overrides where inherited documentation is exactly correct.
 
+## Applicability matrix
+
+Verifier обязан проверять теги по типу symbol:
+
+| Symbol kind | Обязательные теги |
+| --- | --- |
+| Type | `<summary>`, `<threadsafety>` для non-enum type, `<since>`, применимые `<typeparam>` |
+| Constructor | `<summary>`, `<param>` для каждого параметра, `<threadsafety>`, `<since>` |
+| Method/operator | `<summary>`, `<param>` для каждого параметра, `<typeparam>` для каждого generic параметра, `<returns>` для non-`void`, `<threadsafety>`, `<since>` |
+| Property/indexer | `<summary>`, `<value>`, `<param>` для indexer parameters, `<threadsafety>`, `<since>` |
+| Event | `<summary>`, `<threadsafety>`, `<since>` |
+| Field | `<summary>`, `<since>` |
+| Enum value | `<summary>`, `<since>` |
+
+`<remarks>`, `<exception cref="...">` и `<seealso cref="..."/>` являются обязательными, когда API имеет поведение, ограничения, ожидаемые исключения или очевидные связанные API, которые нужно зафиксировать. Если эти теги присутствуют, verifier обязан проверять, что они не пустые и содержат корректные references.
+
 ## Content rules
 
-- Не оставлять placeholder text, `TODO`, `TBD`, пустые теги или one-line summaries для non-trivial API.
+- Не оставлять placeholder text, незавершённые маркеры работ, пустые теги или one-line summaries для non-trivial API.
 - Использовать `<see cref="..."/>`, `<paramref name="..."/>` и `<c>...</c>` для symbol/literal references.
 - Не описывать public API через backend-library comparisons outside `README.md`.
 - Не возвращать legacy/component API в public surface ради документации.
@@ -57,11 +73,20 @@ Internal, private и protected internal implementation members не являют
 
 CI должен запускать `-FailOnIssues`, чтобы новый недокументированный public API не попадал в green path.
 
+`tools\Verify-PublicApiDocumentationAudit.ps1` должен запускать полный audit:
+
+- strict XML documentation verifier;
+- GitHub Wiki API reference sync verifier against `.github/wiki`;
+- scan public API documentation Markdown under `docs/specifications/documentation/`, `docs/documentation/documentation/` and `.github/wiki`.
+
+Audit scan должен падать на запрещённые публичные формулировки вне `README.md`: имена внутренних backend-family, рекламные сравнения с upstream API и placeholder text.
+
 ## Критерии приёмки
 
 - Verifier умеет читать compiled public surface и XML documentation file.
 - Report mode показывает количество и список missing/incomplete documentation issues.
 - Fail mode возвращает non-zero exit code при issues.
 - CI запускает strict mode через `-FailOnIssues`.
+- CI запускает consolidated public API documentation audit against `.github/wiki`.
 - Документация реализации описывает текущий статус и команду проверки.
 - После заполнения всех comments fail mode подключён к CI.

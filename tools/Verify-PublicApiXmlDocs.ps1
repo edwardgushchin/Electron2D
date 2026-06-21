@@ -208,6 +208,14 @@ XElement? CheckSymbol(string kind, string id, MemberInfo member, bool requireThr
         issues.Add(new Issue("missing-since", id, "Missing non-empty <since>."));
     }
 
+    CheckSummaryShape(id, element.Element("summary"));
+    CheckOptionalTextElement(id, "remarks", element.Element("remarks"));
+    CheckOptionalTextElement(id, "threadsafety", element.Element("threadsafety"));
+    CheckOptionalTextElement(id, "since", element.Element("since"));
+    CheckSeeAlsoReferences(id, element);
+    CheckExceptionReferences(id, element);
+    CheckInheritDoc(id, element);
+
     return element;
 }
 
@@ -254,6 +262,11 @@ void CheckReturns(string id, XElement? element)
     {
         issues.Add(new Issue("missing-returns", id, "Missing non-empty <returns>."));
     }
+
+    if (element is not null)
+    {
+        CheckOptionalTextElement(id, "returns", element.Element("returns"));
+    }
 }
 
 void CheckValue(string id, XElement? element)
@@ -261,6 +274,88 @@ void CheckValue(string id, XElement? element)
     if (element is not null && IsBlank(element.Element("value")))
     {
         issues.Add(new Issue("missing-value", id, "Missing non-empty <value>."));
+    }
+
+    if (element is not null)
+    {
+        CheckOptionalTextElement(id, "value", element.Element("value"));
+    }
+}
+
+void CheckSummaryShape(string id, XElement? summary)
+{
+    if (summary is null)
+    {
+        return;
+    }
+
+    CheckOptionalTextElement(id, "summary", summary);
+    var normalized = NormalizeText(summary.Value);
+    var sentenceCount = normalized.Split(". ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Length;
+    if (sentenceCount > 1 && !summary.Elements("para").Any())
+    {
+        issues.Add(new Issue("summary-missing-para", id, "Multi-sentence <summary> must use <para> blocks."));
+    }
+}
+
+void CheckOptionalTextElement(string id, string tagName, XElement? element)
+{
+    if (element is null)
+    {
+        return;
+    }
+
+    if (string.IsNullOrWhiteSpace(element.Value))
+    {
+        issues.Add(new Issue("empty-" + tagName, id, "Element <" + tagName + "> must not be empty when present."));
+    }
+
+    var text = NormalizeText(element.Value);
+    if (ContainsForbiddenPublicWording(text))
+    {
+        issues.Add(new Issue("forbidden-wording", id, "Element <" + tagName + "> contains forbidden public wording."));
+    }
+
+    if (ContainsPlaceholder(text))
+    {
+        issues.Add(new Issue("placeholder", id, "Element <" + tagName + "> contains TODO/TBD placeholder text."));
+    }
+}
+
+void CheckSeeAlsoReferences(string id, XElement element)
+{
+    foreach (var seeAlso in element.Elements("seealso"))
+    {
+        var cref = seeAlso.Attribute("cref")?.Value;
+        var href = seeAlso.Attribute("href")?.Value;
+        if (string.IsNullOrWhiteSpace(cref) && string.IsNullOrWhiteSpace(href))
+        {
+            issues.Add(new Issue("missing-seealso-reference", id, "<seealso> must include a cref or href target."));
+        }
+    }
+}
+
+void CheckExceptionReferences(string id, XElement element)
+{
+    foreach (var exception in element.Elements("exception"))
+    {
+        if (string.IsNullOrWhiteSpace(exception.Attribute("cref")?.Value))
+        {
+            issues.Add(new Issue("missing-exception-cref", id, "<exception> must include a cref target."));
+        }
+
+        if (string.IsNullOrWhiteSpace(exception.Value))
+        {
+            issues.Add(new Issue("empty-exception", id, "<exception> must explain when the exception is thrown."));
+        }
+    }
+}
+
+void CheckInheritDoc(string id, XElement element)
+{
+    if (element.Descendants("inheritdoc").Any() || element.Elements("inheritdoc").Any())
+    {
+        issues.Add(new Issue("inheritdoc", id, "Public API documentation must not rely on bare <inheritdoc /> in generated XML output."));
     }
 }
 
@@ -352,6 +447,13 @@ static bool ContainsPlaceholder(string value)
 static bool ContainsForbiddenPublicWording(string value)
 {
     return value.Contains("SDL", StringComparison.Ordinal)
+        || value.Contains("SDL3", StringComparison.Ordinal)
+        || value.Contains("SDL_GPU", StringComparison.Ordinal)
+        || value.Contains("SDL_Renderer", StringComparison.Ordinal)
+        || value.Contains("SDL_ttf", StringComparison.Ordinal)
+        || value.Contains("SDL_mixer", StringComparison.Ordinal)
+        || value.Contains("SDL_shadercross", StringComparison.Ordinal)
+        || value.Contains("Simple DirectMedia", StringComparison.OrdinalIgnoreCase)
         || value.Contains("Godot-like", StringComparison.OrdinalIgnoreCase)
         || value.Contains("Godot-подоб", StringComparison.OrdinalIgnoreCase);
 }

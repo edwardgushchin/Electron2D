@@ -1539,39 +1539,6 @@
 - 2026-06-21T01:23:00+03:00 - Задача взята в работу после `T-0019`.
 - Граница scope: `T-0020` фиксирует Electron2D `Variant` и закрытый список поддерживаемых значений; стабильный serialization round-trip остаётся отдельной задачей `T-0021`.
 
-## T-0129 [ ] P0: Проверить всю документацию публичного API на наличие и соответствие правилам
-
-- Создана: 2026-06-21T11:19:09+03:00
-- Приоритет: P0
-- Зависимости: T-0106, T-0107
-- Ссылки:
-  - Upstream commit: нет
-  - Спецификация: `docs/specifications/documentation/`
-  - Документация: `docs/documentation/documentation/`; `docs/documentation/release-management/api-compatibility.md`
-  - Исходный код: `src/Electron2D/`; `tools/`; `tests/`
-
-### Самодостаточное описание
-
-Нужно пройти по всему экспортируемому публичному API `Electron2D` и проверить, что каждый публичный тип, constructor, method, field, property, event, delegate, enum и enum value имеет полноценную C# XML documentation по правилам `AGENTS.md`: `summary` с `para` для развёрнутого описания, `remarks`, `param name`, `typeparam name`, `returns`, `value`, `exception cref`, `threadsafety`, `since`, `seealso cref`, `see cref`, `paramref name` и `c` там, где они применимы.
-
-Отдельно нужно проверить, что публичная документация не объясняет Electron2D через запрещённые публичные сравнения вне `README.md` и не называет внутренние backend-библиотеки там, где достаточно описать роль backend обычным языком.
-
-### Критерии приёмки
-
-- [ ] Создана или обновлена спецификация documentation quality gate.
-- [ ] Для каждого public member проверено, что документация присутствует и соответствует всем правилам `AGENTS.md`; отсутствующие или неполные комментарии исправлены либо приводят verifier к ошибке.
-- [ ] Создан автоматический verifier, который читает compiled public surface и XML documentation, находит отсутствующие или неполные public comments и падает в CI.
-- [ ] Verifier проверяет наличие обязательных тегов для методов, свойств, полей, событий, enum values, delegates и constructors.
-- [ ] Verifier запрещает публичные documentation phrases, нарушающие правила `AGENTS.md`, вне `README.md`.
-- [ ] Весь текущий public API `src/Electron2D/` приведён к полному C# XML documentation формату, закреплённому в `AGENTS.md`.
-- [ ] GitHub Wiki API source и локальная implementation documentation синхронизированы с результатом аудита.
-- [ ] Добавлены tests или script-level checks для verifier.
-- [ ] Документация documentation pipeline обновлена.
-
-### Заметки агента
-
-Создано по запросу пользователя: после введения правил полноты C# XML documentation нужен отдельный полный аудит всего public API, а не только новых классов текущих задач.
-
 ## T-0108 [ ] P0: Обеспечить 100% test coverage кода движка
 
 - Создана: 2026-06-20T22:03:00+03:00

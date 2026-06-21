@@ -46,6 +46,7 @@ $requiredFragments = @(
     'tools/Verify-ProjectTemplate.ps1',
     'tools/Verify-UserDocumentation.ps1',
     'tools/Verify-PublicApiXmlDocs.ps1',
+    'tools/Verify-PublicApiDocumentationAudit.ps1',
     'tools/Update-ApiWiki.ps1',
     'Electron2D.wiki.git',
     'tools/Verify-WindowsExport.ps1',
@@ -72,6 +73,10 @@ if ($workflow.IndexOf('Verify-Box2DPhysicsCandidate.ps1 -NativeAot', [System.Str
 
 if ($workflow.IndexOf('Verify-PublicApiXmlDocs.ps1 -FailOnIssues', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     throw 'CI workflow must run public API XML documentation validation with -FailOnIssues.'
+}
+
+if ($workflow.IndexOf('Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'CI workflow must run the consolidated public API documentation audit against the GitHub Wiki clone.'
 }
 
 if ($workflow.IndexOf('Update-ApiWiki.ps1 -OutputPath .github/wiki -Check', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {

@@ -68,6 +68,10 @@ jobs:
         shell: pwsh
         run: ./tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
 
+      - name: Verify public API documentation audit
+        shell: pwsh
+        run: ./tools/Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki
+
       - name: Verify Windows export
         if: matrix.os == 'windows-latest'
         shell: pwsh
