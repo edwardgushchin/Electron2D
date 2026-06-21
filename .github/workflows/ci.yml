@@ -50,6 +50,11 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-ProjectTemplate.ps1
 
+      - name: Verify Windows export
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: ./tools/Verify-WindowsExport.ps1
+
       - name: Verify performance budgets
         shell: pwsh
         run: ./tools/Verify-PerformanceBudgets.ps1
@@ -61,5 +66,5 @@ jobs:
     steps:
       - name: Report Android/iOS/export gate status
         run: |
-          echo "Android/iOS/export smoke checks are not active in the clean runtime baseline yet."
-          echo "They remain explicit release gaps until the export pipeline tasks implement them."
+          echo "Android/iOS/mobile export smoke checks are not active in the clean runtime baseline yet."
+          echo "They remain explicit release gaps until the mobile export pipeline tasks implement them."

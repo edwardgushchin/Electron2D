@@ -44,9 +44,10 @@ $requiredFragments = @(
     'tools/Run-Tests.ps1',
     'tools/Verify-Box2DPhysicsCandidate.ps1',
     'tools/Verify-ProjectTemplate.ps1',
+    'tools/Verify-WindowsExport.ps1',
     'tools/Verify-PerformanceBudgets.ps1',
     'mobile-export-status',
-    'Android/iOS/export'
+    'Android/iOS/mobile export'
 )
 
 foreach ($fragment in $requiredFragments) {
@@ -61,6 +62,10 @@ if ($workflow.IndexOf('-IncludeBaseline', [System.StringComparison]::OrdinalIgno
 
 if ($workflow.IndexOf('Verify-Box2DPhysicsCandidate.ps1 -NativeAot', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     throw 'CI workflow must run Box2D.NET physics candidate validation with -NativeAot.'
+}
+
+if ($workflow.IndexOf("if: matrix.os == 'windows-latest'", [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'CI workflow must run Windows export verification only on windows-latest.'
 }
 
 Write-Host 'CI matrix verification passed.'
