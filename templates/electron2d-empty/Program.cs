@@ -24,6 +24,9 @@
 */
 using System.Text.Json;
 
+using Electron2D;
+using Electron2D.Empty.Scripts;
+
 var projectFile = Path.Combine(AppContext.BaseDirectory, "project.e2d.json");
 if (!File.Exists(projectFile))
 {
@@ -56,4 +59,13 @@ if (!File.Exists(scenePath))
 }
 
 Console.WriteLine($"Electron2D empty scene loaded: {mainScene}");
-return 0;
+
+var tree = new SceneTree();
+var script = new MainScene { Name = "MainScene" };
+tree.Root.AddChild(script);
+
+Console.WriteLine($"Electron2D C# script lifecycle: {script.LifecycleSummary}");
+Console.WriteLine(
+    $"Electron2D C# script services: tree={script.TreeWasAvailable},text={script.TextFeatureWasAvailable}");
+
+return script.IsReady ? 0 : 1;

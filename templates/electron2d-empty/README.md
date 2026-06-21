@@ -7,4 +7,6 @@ dotnet restore
 dotnet run
 ```
 
-Текущий шаблон проверяет manifest проекта и наличие пустой main scene. Он не использует runtime API до реализации Godot-like object model.
+Текущий шаблон проверяет manifest проекта, наличие пустой main scene и минимальную модель C# script class.
+
+`Scripts/MainScene.cs` показывает базовый сценарий `0.1.0 Preview`: пользовательский script наследуется от `Electron2D.Node`, получает `_EnterTree()`/`_Ready()` и обращается к сервисам через `GetTree()` и `RenderingServer`.

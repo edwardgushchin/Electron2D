@@ -6,7 +6,7 @@
 
 ## Цель
 
-Новый проект Electron2D должен начинаться из минимального шаблона без legacy API. На текущем clean baseline шаблон проверяет структуру проекта, package reference и запуск пустой сцены-манифеста; он не должен требовать ещё не реализованные runtime-типы вроде `Node`.
+Новый проект Electron2D должен начинаться из минимального шаблона без legacy API. После `T-0044` шаблон также фиксирует минимальную C# script model: обычный class file наследуется от `Node`, компилируется обычной .NET toolchain и получает lifecycle callbacks.
 
 ## Шаблон
 
@@ -21,6 +21,7 @@ templates/electron2d-empty/
 - `.template.config/template.json`
 - `Electron2D.Empty.csproj`
 - `Program.cs`
+- `Scripts/MainScene.cs`
 - `project.e2d.json`
 - `scenes/main.scene.json`
 - `README.md`
@@ -48,4 +49,6 @@ Verifier должен:
 2. создать временный проект из шаблона;
 3. восстановить зависимости из локального package source;
 4. собрать проект;
-5. запустить проект и подтвердить, что пустая сцена найдена.
+5. запустить проект и подтвердить, что пустая сцена найдена;
+6. подтвердить, что C# script sample получил `_EnterTree()`/`_Ready()`;
+7. подтвердить, что script sample увидел `GetTree()` и `RenderingServer`.

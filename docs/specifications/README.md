@@ -35,6 +35,10 @@
 - [AOT-safe metadata для Inspector и serialization](resources/aot-safe-metadata.md) - internal metadata registry, typed delegates и NativeAOT smoke для custom `Resource` serialization.
 - [Stress data stability для scene/resource pipeline](resources/data-stability-stress.md) - 100 save/load cycles, rename/move UID stability, import cache rebuild и corruption diagnostics.
 
+## C# scripting
+
+- [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - обычная .NET C# модель script classes, lifecycle callbacks и доступ к сервисам движка.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - серверная граница, `Standard`/`Compatibility` профили и feature flags.

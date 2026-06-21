@@ -32,6 +32,10 @@
 - [AOT-safe metadata для Inspector и serialization](resources/aot-safe-metadata.md) - текущий internal metadata registry для custom `Resource` serialization без reflection fallback.
 - [Stress data stability для scene/resource pipeline](resources/data-stability-stress.md) - текущий release-gate набор для 100 save/load cycles, rename/move, cache rebuild и corruption diagnostics.
 
+## C# scripting
+
+- [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - текущая ordinary .NET модель script classes, template sample и lifecycle/services checks.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.
