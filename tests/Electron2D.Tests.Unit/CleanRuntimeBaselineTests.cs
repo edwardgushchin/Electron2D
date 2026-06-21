@@ -51,6 +51,8 @@ public sealed class CleanRuntimeBaselineTests
                 "Electron2D.AnimationPlayer",
                 "Electron2D.Area2D",
                 "Electron2D.AtlasTexture",
+                "Electron2D.AudioServer",
+                "Electron2D.AudioServer+SpeakerMode",
                 "Electron2D.AudioStream",
                 "Electron2D.Callable",
                 "Electron2D.CallbackTweener",

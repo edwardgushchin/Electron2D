@@ -84,6 +84,10 @@
 - [Animation, AnimationLibrary и AnimationPlayer baseline](animation/animation-player-tracks.md) - value tracks, method call tracks, queue playback, completion signal и применение property values через `NodePath`.
 - [Tween baseline](animation/tween-baseline.md) - deterministic runtime tween processing, property/callback/interval tweeners, easing, pause/resume и cancellation semantics.
 
+## Звук
+
+- [AudioServer и внутренние voice handles](audio/audio-server-voice-handles.md) - public audio server queries, internal voice lifecycle и backend boundary без раскрытия backend handles.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - серверная граница, `Standard`/`Compatibility` профили и feature flags.

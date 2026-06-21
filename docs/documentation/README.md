@@ -86,6 +86,10 @@
 - [Animation, AnimationLibrary и AnimationPlayer baseline](animation/animation-player-tracks.md) - текущие value tracks, method call tracks, queue playback, completion signal и применение property values через `NodePath`.
 - [Tween baseline](animation/tween-baseline.md) - текущие property/callback/interval tweeners, easing, pause/resume, stop/kill, manual step и completion signals.
 
+## Звук
+
+- [AudioServer и внутренние voice handles](audio/audio-server-voice-handles.md) - текущий public `AudioServer`, default `Master` bus, internal voice lifecycle и backend boundary без раскрытия backend handles.
+
 ## Рендеринг
 
 - [`RenderingServer` и renderer profiles](rendering/rendering-server.md) - текущий server boundary, renderer profile и feature flags.
