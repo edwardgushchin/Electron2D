@@ -274,6 +274,53 @@ public class Node : Object
         return _tree;
     }
 
+    /// <summary>
+    /// Creates a tween bound to this node.
+    /// </summary>
+    ///
+    /// <returns>
+    /// A valid <see cref="Tween"/> registered in the current
+    /// <see cref="SceneTree"/> and bound to this node.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The node must already be inside a scene tree. The returned tween is
+    /// processed by that tree and pauses automatic advancement while this node
+    /// is outside the tree or no longer valid.
+    /// </para>
+    /// <para>
+    /// Use <see cref="SceneTree.CreateTween"/> when the tween should not be
+    /// bound to a specific node lifetime.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when this node is not currently inside a <see cref="SceneTree"/>.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread that
+    /// owns this node.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree.CreateTween"/>
+    /// <seealso cref="Tween.BindNode"/>
+    public Tween CreateTween()
+    {
+        ThrowIfFreed();
+        if (_tree is null)
+        {
+            throw new InvalidOperationException("Node must be inside a SceneTree before CreateTween can be used.");
+        }
+
+        return _tree.CreateTween().BindNode(this);
+    }
+
     public Node GetNode(NodePath path)
     {
         var node = GetNodeOrNull(path);

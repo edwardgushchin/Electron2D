@@ -16,7 +16,7 @@ Compatibility table хранится как GitHub Wiki source:
 
 ## Текущий baseline
 
-Новый runtime assembly `Electron2D` экспортирует текущий baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline и debug collision shape hooks:
+Новый runtime assembly `Electron2D` экспортирует текущий baseline объектной модели, resource UID, 2D math, RNG, identity, Variant value carrier, C# scripting marker attributes, keyboard/mouse input events, texture/canvas/camera, shader material resource layer, immediate drawing surface, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, `PhysicsServer2D` RID-boundary, первые 2D physics nodes, concrete shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline и debug collision shape hooks:
 
 - `Electron2D.AnimatedSprite2D`
 - `Electron2D.Animation`
@@ -28,6 +28,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Area2D`
 - `Electron2D.AtlasTexture`
 - `Electron2D.Callable`
+- `Electron2D.CallbackTweener`
 - `Electron2D.Camera2D`
 - `Electron2D.CanvasItem`
 - `Electron2D.CanvasLayer`
@@ -56,6 +57,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.InputEventMouseButton`
 - `Electron2D.InputEventMouseMotion`
 - `Electron2D.InputEventWithModifiers`
+- `Electron2D.IntervalTweener`
 - `Electron2D.Key`
 - `Electron2D.KeyLocation`
 - `Electron2D.KinematicCollision2D`
@@ -79,6 +81,7 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.PhysicsServer2D+ShapeType`
 - `Electron2D.PhysicsServer2D+SpaceParameter`
 - `Electron2D.PhysicsShapeQueryParameters2D`
+- `Electron2D.PropertyTweener`
 - `Electron2D.RandomNumberGenerator`
 - `Electron2D.RayCast2D`
 - `Electron2D.Rect2`
@@ -109,6 +112,10 @@ Compatibility table хранится как GitHub Wiki source:
 - `Electron2D.Texture2D`
 - `Electron2D.ToolAttribute`
 - `Electron2D.Transform2D`
+- `Electron2D.Tween`
+- `Electron2D.Tween+EaseType`
+- `Electron2D.Tween+TransitionType`
+- `Electron2D.Tweener`
 - `Electron2D.Variant`
 - `Electron2D.Variant+Type`
 - `Electron2D.Vector2`

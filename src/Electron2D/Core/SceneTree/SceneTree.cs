@@ -34,6 +34,7 @@ public class SceneTree : Object
     private readonly List<SceneTreeDiagnostic> _diagnostics = new();
     private readonly Queue<DeferredCallQueue.DeferredCall> _deferredCalls = new();
     private readonly List<Node> _deleteQueue = new();
+    private readonly List<Tween> _tweens = new();
     private int _traversalDepth;
     private bool _flushingQueues;
     private double _physicsAccumulator;
@@ -43,6 +44,48 @@ public class SceneTree : Object
     {
         Root = new Viewport { Name = "root" };
         AttachSubtree(Root);
+    }
+
+    /// <summary>
+    /// Creates a tween processed by this scene tree.
+    /// </summary>
+    ///
+    /// <returns>
+    /// A valid <see cref="Tween"/> instance that starts in the running state.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The returned tween is advanced during <see cref="ProcessFrame(double)"/>
+    /// after node process callbacks and before draw callbacks. Add tweeners to
+    /// it with <see cref="Tween.TweenProperty"/>,
+    /// <see cref="Tween.TweenInterval"/> or
+    /// <see cref="Tween.TweenCallback"/>.
+    /// </para>
+    /// <para>
+    /// A tween created this way remains valid until it completes,
+    /// <see cref="Tween.Kill"/> is called, or the tween is otherwise removed
+    /// from the scene tree processing list.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node.CreateTween"/>
+    /// <seealso cref="Tween"/>
+    public Tween CreateTween()
+    {
+        ThrowIfFreed();
+
+        var tween = new Tween(this);
+        _tweens.Add(tween);
+        return tween;
     }
 
     /// <summary>
@@ -172,8 +215,14 @@ public class SceneTree : Object
         RunTraversal(() =>
         {
             Root.ProcessRecursive(delta);
+            ProcessTweens(delta);
             Root.DrawRecursive();
         });
+    }
+
+    internal void UnregisterTween(Tween tween)
+    {
+        _tweens.Remove(tween);
     }
 
     internal void PhysicsFrame(double delta)
@@ -335,6 +384,17 @@ public class SceneTree : Object
 
         Root.AddChild(nextScene);
         CurrentScene = nextScene;
+    }
+
+    private void ProcessTweens(double delta)
+    {
+        foreach (var tween in _tweens.ToArray())
+        {
+            if (_tweens.Contains(tween))
+            {
+                tween.Process(delta);
+            }
+        }
     }
 
     private static MethodInfo? FindCallableMethod(Node node, string method, object?[] args)

@@ -5,7 +5,7 @@ Updated: 2026-06-21.
 
 Electron2D documents the agreed 2D runtime API subset here. This table is a release guard for public types and intentionally excludes removed legacy component APIs.
 
-The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
+The clean rewrite baseline currently exports the first object-model, resource UID, 2D math, random number generator, identity, Variant value-carrier, C# scripting marker attributes, keyboard/mouse input event baseline, texture/viewport/shader, text/UI baseline, frame-based sprite animation, resource animation tracks, `AnimationPlayer`, `Tween`, rendering server boundary, physics server RID-boundary types, first 2D physics nodes, concrete 2D shape resources, physics material resource, `Area2D` overlap signals baseline, direct 2D physics query baseline, fixed physics tick, basic rigid body movement, `CharacterBody2D` kinematic movement baseline and debug collision shape hooks. Planned entries below describe the target public surface for future tasks, not implemented API.
 
 ## Status Legend
 
@@ -31,6 +31,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Area2D` | `Area2D` | Partial | RID lifecycle, monitoring flags, priority, transform sync, AABB overlap snapshots, `body_entered`/`body_exited` and `area_entered`/`area_exited` signals. |
 | `Electron2D.AtlasTexture` | `AtlasTexture` | Partial | Atlas region resource with atlas, region, margin, filter clip and transparency delegation. |
 | `Electron2D.Callable` | `Callable` | Partial | Target-method and C# action callable baseline for synchronous signal emission and deferred calls. |
+| `Electron2D.CallbackTweener` | `CallbackTweener` | Partial | Tween step that invokes a `Callable` once when the sequence reaches it. |
 | `Electron2D.Camera2D` | `Camera2D` | Partial | Current 2D camera selection, target/center/rotation queries, offset, zoom and documented smoothing no-op baseline. |
 | `Electron2D.CanvasItem` | `CanvasItem` | Partial | Visibility, inherited modulate, self-modulate, z-index, y-sort flag, show/hide and `GetWorld2D()` baseline. |
 | `Electron2D.CanvasLayer` | `CanvasLayer` | Partial | Layer, visibility and transform baseline for independent 2D canvas ordering. |
@@ -59,6 +60,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.InputEventMouseButton` | `InputEventMouseButton` | Partial | Mouse button down/up and wheel-as-button baseline. |
 | `Electron2D.InputEventMouseMotion` | `InputEventMouseMotion` | Partial | Mouse position, relative motion and button mask baseline. |
 | `Electron2D.InputEventWithModifiers` | `InputEventWithModifiers` | Partial | Modifier state layer for keyboard and future mouse input events. |
+| `Electron2D.IntervalTweener` | `IntervalTweener` | Partial | Tween step that consumes sequence time without writing properties or calling user callbacks. |
 | `Electron2D.Key` | `Key` | Partial | Printable ASCII and core special key constants used by keyboard mapping. |
 | `Electron2D.KeyLocation` | `KeyLocation` | Partial | Left/right modifier key location baseline. |
 | `Electron2D.KinematicCollision2D` | `KinematicCollision2D` | Partial | Collision result object returned by body movement methods, with collider, normal, travel, remainder and velocity data. |
@@ -82,6 +84,7 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.PhysicsServer2D+ShapeType` | `PhysicsServer2D.ShapeType` | Partial | Shape type enum for physics server shape RID creation. |
 | `Electron2D.PhysicsServer2D+SpaceParameter` | `PhysicsServer2D.SpaceParameter` | Partial | Space parameter enum with value round-trip through the server boundary. |
 | `Electron2D.PhysicsShapeQueryParameters2D` | `PhysicsShapeQueryParameters2D` | Partial | Shape query parameters for direct 2D physics queries, including shape resource, transform, motion, margin, mask and excluded RIDs. |
+| `Electron2D.PropertyTweener` | `PropertyTweener` | Partial | Tween step that captures a public property or field value and writes eased values until completion. |
 | `Electron2D.RandomNumberGenerator` | `RandomNumberGenerator` | Partial | RNG baseline with seed/state replay, integer/float ranges and PCG32 sequence policy for 0.1. |
 | `Electron2D.RayCast2D` | `RayCast2D` | Partial | Ray query settings, forced update and cached AABB hit result through `PhysicsDirectSpaceState2D`. |
 | `Electron2D.Rect2` | `Rect2` | Partial | Floating-point axis-aligned rectangle baseline with intersection, merge, grow and normalization helpers. |
@@ -112,6 +115,10 @@ The clean rewrite baseline currently exports the first object-model, resource UI
 | `Electron2D.Texture2D` | `Texture2D` | Partial | Abstract texture resource baseline for size, alpha, mipmaps and pixel opacity queries. |
 | `Electron2D.ToolAttribute` | `ToolAttribute` / `[Tool]` | Experimental | Marker attribute for editor-time script intent; current metadata marks it experimental and sandboxed. |
 | `Electron2D.Transform2D` | `Transform2D` | Partial | 2D basis/origin transform baseline with point transforms, composition and inverse. |
+| `Electron2D.Tween` | `Tween` | Partial | Sequential runtime tween with property, interval and callback steps, easing, pause/play/stop, kill, manual stepping and completion signals. |
+| `Electron2D.Tween+EaseType` | `Tween.EaseType` | Partial | Ease mode enum for in, out, in-out and out-in interpolation. |
+| `Electron2D.Tween+TransitionType` | `Tween.TransitionType` | Partial | Transition curve enum for linear and deterministic curved interpolation modes. |
+| `Electron2D.Tweener` | `Tweener` | Partial | Public base type for concrete tween sequence steps. |
 | `Electron2D.Variant` | `Variant` | Partial | Closed 0.1 value carrier for nil, primitives, enum-as-int, 2D math, identity handles, Object-derived values, Callable and Electron2D collections. |
 | `Electron2D.Variant+Type` | `Variant.Type` | Partial | Closed 0.1 Variant type enum; 3D, Signal and packed arrays are intentionally excluded for now. |
 | `Electron2D.Vector2` | `Vector2` | Partial | Floating-point 2D vector baseline with arithmetic, length, dot/cross, interpolation and formatting. |
