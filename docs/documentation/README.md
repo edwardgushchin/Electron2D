@@ -35,6 +35,7 @@
 - [WorkspaceJob contract и event stream](project-system/workspace-jobs.md) - текущий internal job core для import/build/test/export/run lifecycle, progress, cancel, diagnostics, artifacts и stale markers.
 - [WorkspaceTransactionEngine](project-system/workspace-transactions.md) - текущий internal transaction core для project operations: dry-run, revision checks, save/headless/external import modes, atomic write, conflicts и grouped undo.
 - [ProjectTaskManager](project-system/project-task-manager.md) - текущий internal task core для встроенных задач пользовательского проекта, activity, human acceptance guard, stable task documents, dependency graph и transaction integration.
+- [Reproducibility lock и e2d doctor](project-system/reproducibility-lock-and-doctor.md) - текущие `global.json`, `electron2d.lock.json`, lock verifier, read-only CLI диагностика окружения и защита signing references от раскрытия секретов.
 
 ## Diagnostics
 

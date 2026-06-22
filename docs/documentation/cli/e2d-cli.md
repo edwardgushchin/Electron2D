@@ -79,6 +79,20 @@ e2d validate --project <path> --format sarif
 
 Команда использует тот же preview validation каркас, что и `project validate`, но пишет SARIF 2.1.0 через diagnostics adapter. Сейчас route проверяет CLI parsing и output contract; полноценный project/compiler/shader validator подключается отдельными задачами, поэтому успешный SARIF output может не содержать diagnostics.
 
+### `doctor`
+
+`e2d doctor` создаёт read-only diagnostic report для reproducibility baseline и локального окружения:
+
+```powershell
+e2d doctor --project <path> --format json
+```
+
+Команда возвращает общий CLI envelope с `command = "doctor"`, `route = "none"`, пустыми `changedFiles` и `dirtyDocuments`, а также `data.mode = "doctor.environment"`. `route = "none"` означает, что команда не открывала `ProjectWorkspace`, не подключалась к active Editor и не становилась вторым владельцем проекта.
+
+`data.checks[]` содержит `dotnetSdk`, `electron2d`, `nativeRuntime`, `androidSdk`, `androidNdk`, `xcode`, `exportTemplates`, `graphicsCapabilities` и `signing`. Optional mobile toolchains могут иметь status `missing` без failed exit code. Missing или malformed reproducibility files дают summary `blocked` и diagnostic `E2D-DOCTOR-0001`.
+
+Signing check читает только references из `export_presets.e2export.json`. Значения environment variables, certificate files, keystore files и private paths не читаются и не выводятся. `env:NAME` может появиться в output как форма ссылки, но значение `NAME` не раскрывается.
+
 ### `workspace transaction`
 
 Generic mutation path:
@@ -215,6 +229,7 @@ CLI adapter добавляет к общему registry:
 | `E2D-CLI-0001` | `Error` | `Tooling` | command group или subcommand не реализован в текущем Preview scope |
 | `E2D-CLI-0002` | `Error` | `Tooling` | CLI arguments неполные или некорректные |
 | `E2D-CLI-0003` | `Error` | `Tooling` | route selection или project root не позволяют безопасно выполнить команду |
+| `E2D-DOCTOR-0001` | `Error` | `Project` | reproducibility files отсутствуют, повреждены или противоречат `global.json`/`.csproj` |
 
 Tooling diagnostics пробрасываются в CLI JSON без потери stable code, severity, category, message и documentation URI.
 
@@ -228,7 +243,6 @@ Tooling diagnostics пробрасываются в CLI JSON без потери
 - удобные scene/resource команды;
 - `api compare-godot`;
 - `context build`;
-- полноценный `doctor`;
 - полноценный project/compiler/shader validator для `validate`;
 - запуск реальных import/build/test/export toolchains;
 - запуск пользовательского C# runtime process внутри `run` headless mode.
@@ -268,4 +282,10 @@ Diagnostics adapters проверка:
 
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~DiagnosticsAdapterTests
+```
+
+Doctor проверка:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ReproducibilityLockDoctorTests
 ```

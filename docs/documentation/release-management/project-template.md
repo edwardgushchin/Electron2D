@@ -10,9 +10,13 @@
 data/templates/electron2d-empty/
 ```
 
-Шаблон содержит .NET template metadata, минимальный `.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json` и пустую сцену `scenes/main.scene.json`.
+Шаблон содержит .NET template metadata, минимальный `.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `global.json`, `electron2d.lock.json` и пустую сцену `scenes/main.scene.json`.
 
 `project.e2d.json` уже использует текущий project settings формат: `Electron2D.ProjectSettings`, `formatVersion: 1`, имя проекта, версию проекта, engine version, main scene, renderer profile, physics tick rate, пустой `input.actions` и display/window defaults.
+
+`global.json` фиксирует .NET SDK `10.0.101` с `rollForward: latestFeature`. `electron2d.lock.json` фиксирует Electron2D package version, target framework, package metadata, renderer profile, physics backend marker, serialization schema version, export template version и signing policy `referencesOnly`.
+
+Проверка этих файлов описана в [Reproducibility lock и e2d doctor](../project-system/reproducibility-lock-and-doctor.md).
 
 ## Как проверять
 

@@ -49,8 +49,9 @@ Published schemas live in `schemas/project-system/`:
 - `scene-file.schema.json`;
 - `resource-file.schema.json`;
 - `project-settings.schema.json`.
+- `electron2d-lock.schema.json`.
 
-`ProjectTextSchemaRegistry.GetSchemaText(kind)` reads those files from the repository root. The integration tests verify that they use JSON Schema Draft 2020-12 and require `format` and `version`.
+`ProjectTextSchemaRegistry.GetSchemaText(kind)` reads scene/resource/project settings schemas from the repository root. The reproducibility lock schema is published in the same folder and verified by `ReproducibilityLockDoctorTests`; it uses JSON Schema Draft 2020-12 and requires the fixed top-level fields from `electron2d.lock.json`.
 
 ## Current limits
 

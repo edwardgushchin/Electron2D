@@ -20,6 +20,8 @@ data/templates/electron2d-empty/
 
 - `.template.config/template.json`
 - `Electron2D.Empty.csproj`
+- `global.json`
+- `electron2d.lock.json`
 - `Program.cs`
 - `Scripts/MainScene.cs`
 - `project.e2d.json`
@@ -40,6 +42,8 @@ data/templates/electron2d-empty/
 - `physicsTicksPerSecond`
 - `input.actions`
 - `display`
+
+`global.json` и `electron2d.lock.json` должны соответствовать [Reproducibility lock и `e2d doctor`](../project-system/reproducibility-lock-and-doctor.md). Шаблон фиксирует .NET SDK, версию Electron2D, target framework, package metadata, renderer profile, physics backend marker, serialization schema version, export template version и signing policy без секретных значений.
 
 `scenes/main.scene.json` должен описывать пустую сцену без legacy component-полей.
 

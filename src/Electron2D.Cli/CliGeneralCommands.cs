@@ -23,6 +23,8 @@
     SOFTWARE.
 */
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Electron2D.Mcp;
@@ -101,6 +103,7 @@ internal static partial class Electron2DCommandLine
         {
             "project" => RunProject(options, output, error),
             "mcp" => RunMcp(options, output, error, context),
+            "doctor" => RunDoctor(options, output, error),
             "workspace" => RunWorkspace(options, output, error, context),
             "validate" => RunValidate(options, output, error),
             "run" when IsRuntimeDebugCommand(options) => RunRuntimeDebug(options, output, error),
@@ -165,6 +168,38 @@ internal static partial class Electron2DCommandLine
             {
                 ["validationMode"] = "previewStub"
             });
+        return WriteResult(result, output, error);
+    }
+
+    private static int RunDoctor(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count != 0)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("doctor", options),
+                    options,
+                    "Unknown doctor command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d doctor` does not take a subcommand in the current Preview scope.")),
+                output,
+                error);
+        }
+
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        var verification = ProjectReproducibilityLockVerifier.Verify(projectRoot);
+        var data = BuildDoctorData(projectRoot, verification);
+        var result = CliResult.Report(
+            "doctor",
+            options,
+            projectRoot,
+            CliRoute.None,
+            "Environment diagnostics completed.",
+            verification.Diagnostics,
+            changedFiles: [],
+            dirtyDocuments: [],
+            operation: null,
+            job: null,
+            data);
         return WriteResult(result, output, error);
     }
 
@@ -485,6 +520,7 @@ internal static partial class Electron2DCommandLine
         {
             "project" => "  validate              Validate a project without requiring GUI runtime.",
             "mcp" => "  serve                 Emit local MCP resources and tools manifest.",
+            "doctor" => "  <default>             Inspect reproducibility lock and local environment without opening workspace.",
             "workspace" => "  transaction           Apply a generic workspace text transaction.",
             "run" => "  debug                 Inspect runtime state, or queue/run headless with runtime options.",
             "import" or "build" or "export" => "  <default>             Queue a job and emit JSON or JSONL status.",
@@ -583,6 +619,378 @@ internal static partial class Electron2DCommandLine
     private static string BuildCommandName(string group, CliOptions options)
     {
         return string.Join(' ', new[] { group }.Concat(options.Values));
+    }
+
+    private static JsonObject BuildDoctorData(
+        string projectRoot,
+        ProjectReproducibilityLockVerificationResult verification)
+    {
+        var lockJson = TryReadJsonObject(Path.Combine(projectRoot, ProjectReproducibilityLockVerifier.LockFileName));
+        var checks = new JsonArray
+        {
+            BuildDotnetSdkCheck(lockJson),
+            BuildElectron2DCheck(verification),
+            BuildLockArrayCheck("nativeRuntime", "nativeRuntime", lockJson),
+            BuildEnvironmentVariableCheck("androidSdk", ["ANDROID_SDK_ROOT", "ANDROID_HOME"]),
+            BuildEnvironmentVariableCheck("androidNdk", ["ANDROID_NDK_ROOT", "ANDROID_NDK_HOME"]),
+            BuildXcodeCheck(),
+            BuildExportTemplatesCheck(lockJson),
+            BuildGraphicsCapabilitiesCheck(lockJson),
+            BuildSigningCheck(projectRoot, lockJson)
+        };
+        var summaryStatus = SummarizeDoctorStatus(checks);
+
+        return new JsonObject
+        {
+            ["mode"] = "doctor.environment",
+            ["summary"] = new JsonObject
+            {
+                ["status"] = summaryStatus,
+                ["blocked"] = string.Equals(summaryStatus, "blocked", StringComparison.Ordinal)
+            },
+            ["checks"] = checks
+        };
+    }
+
+    private static JsonObject BuildDotnetSdkCheck(JsonObject? lockJson)
+    {
+        var expectedSdk = ReadLockString(lockJson, "dotnet", "sdkVersion");
+        var actualSdk = ReadDotnetSdkVersion();
+        if (actualSdk is null)
+        {
+            return DoctorCheck(
+                "dotnetSdk",
+                "blocked",
+                "dotnet SDK was not found on PATH.",
+                new JsonObject
+                {
+                    ["expectedSdkVersion"] = expectedSdk
+                });
+        }
+
+        if (!string.IsNullOrWhiteSpace(expectedSdk) &&
+            !string.Equals(actualSdk, expectedSdk, StringComparison.Ordinal))
+        {
+            return DoctorCheck(
+                "dotnetSdk",
+                "warning",
+                "Installed dotnet SDK differs from the project reproducibility lock.",
+                new JsonObject
+                {
+                    ["expectedSdkVersion"] = expectedSdk,
+                    ["actualSdkVersion"] = actualSdk
+                });
+        }
+
+        return DoctorCheck(
+            "dotnetSdk",
+            "ok",
+            "dotnet SDK is available.",
+            new JsonObject
+            {
+                ["expectedSdkVersion"] = expectedSdk,
+                ["actualSdkVersion"] = actualSdk
+            });
+    }
+
+    private static JsonObject BuildElectron2DCheck(ProjectReproducibilityLockVerificationResult verification)
+    {
+        return verification.Succeeded
+            ? DoctorCheck("electron2d", "ok", "Electron2D package version matches the reproducibility lock.")
+            : DoctorCheck("electron2d", "blocked", "Electron2D reproducibility files are missing, malformed or inconsistent.");
+    }
+
+    private static JsonObject BuildLockArrayCheck(string id, string lockSection, JsonObject? lockJson)
+    {
+        var packages = ReadLockArray(lockJson, lockSection, "packages");
+        if (packages is null || packages.Count == 0)
+        {
+            return DoctorCheck(id, "blocked", $"The {lockSection}.packages lock section is missing or empty.");
+        }
+
+        return DoctorCheck(
+            id,
+            "ok",
+            $"The {lockSection}.packages lock section declares {packages.Count} package(s).",
+            new JsonObject
+            {
+                ["packageCount"] = packages.Count
+            });
+    }
+
+    private static JsonObject BuildEnvironmentVariableCheck(string id, IReadOnlyList<string> variableNames)
+    {
+        foreach (var variableName in variableNames)
+        {
+            if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(variableName)))
+            {
+                return DoctorCheck(
+                    id,
+                    "ok",
+                    $"{variableName} is set.",
+                    new JsonObject
+                    {
+                        ["source"] = variableName
+                    });
+            }
+        }
+
+        return DoctorCheck(
+            id,
+            "missing",
+            string.Join(" or ", variableNames) + " is not set.",
+            new JsonObject
+            {
+                ["sources"] = WriteStringArray(variableNames)
+            });
+    }
+
+    private static JsonObject BuildXcodeCheck()
+    {
+        if (!OperatingSystem.IsMacOS())
+        {
+            return DoctorCheck("xcode", "missing", "Xcode is only available on macOS hosts.");
+        }
+
+        var xcodeVersion = ReadCommandFirstLine("xcodebuild", "-version");
+        return xcodeVersion is null
+            ? DoctorCheck("xcode", "missing", "xcodebuild was not found.")
+            : DoctorCheck(
+                "xcode",
+                "ok",
+                "xcodebuild is available.",
+                new JsonObject
+                {
+                    ["version"] = xcodeVersion
+                });
+    }
+
+    private static JsonObject BuildExportTemplatesCheck(JsonObject? lockJson)
+    {
+        var version = ReadLockString(lockJson, "exportTemplates", "version");
+        return string.IsNullOrWhiteSpace(version)
+            ? DoctorCheck("exportTemplates", "blocked", "exportTemplates.version is missing from the reproducibility lock.")
+            : DoctorCheck(
+                "exportTemplates",
+                "ok",
+                "Export template version is declared in the reproducibility lock.",
+                new JsonObject
+                {
+                    ["version"] = version
+                });
+    }
+
+    private static JsonObject BuildGraphicsCapabilitiesCheck(JsonObject? lockJson)
+    {
+        var rendererProfile = ReadLockString(lockJson, "project", "rendererProfile");
+        return string.IsNullOrWhiteSpace(rendererProfile)
+            ? DoctorCheck("graphicsCapabilities", "blocked", "project.rendererProfile is missing from the reproducibility lock.")
+            : DoctorCheck(
+                "graphicsCapabilities",
+                "ok",
+                "Renderer profile is declared in the reproducibility lock.",
+                new JsonObject
+                {
+                    ["rendererProfile"] = rendererProfile
+                });
+    }
+
+    private static JsonObject BuildSigningCheck(string projectRoot, JsonObject? lockJson)
+    {
+        var signingMode = ReadLockString(lockJson, "signing", "mode");
+        if (!string.Equals(signingMode, "referencesOnly", StringComparison.Ordinal))
+        {
+            return DoctorCheck("signing", "blocked", "signing.mode must be referencesOnly.");
+        }
+
+        var exportPresetsPath = Path.Combine(projectRoot, "export_presets.e2export.json");
+        if (!File.Exists(exportPresetsPath))
+        {
+            return DoctorCheck(
+                "signing",
+                "ok",
+                "No export presets were found; signing policy uses references only.",
+                new JsonObject
+                {
+                    ["presetCount"] = 0,
+                    ["credentialReferences"] = new JsonArray()
+                });
+        }
+
+        var presets = TryReadJsonObject(exportPresetsPath)?["presets"] as JsonArray;
+        if (presets is null)
+        {
+            return DoctorCheck("signing", "blocked", "export_presets.e2export.json could not be read as a preset list.");
+        }
+
+        var requiredSigningCount = 0;
+        var missingRequiredReferences = 0;
+        var references = new JsonArray();
+        foreach (var preset in presets.OfType<JsonObject>())
+        {
+            var signing = preset["signing"] as JsonObject;
+            if (signing is null)
+            {
+                continue;
+            }
+
+            var required = signing["required"] is JsonValue requiredValue &&
+                requiredValue.TryGetValue<bool>(out var requiredFlag) &&
+                requiredFlag;
+            var credentialReference = signing["credentialReference"] is JsonValue referenceValue &&
+                referenceValue.TryGetValue<string>(out var reference)
+                    ? reference ?? string.Empty
+                    : string.Empty;
+
+            if (required)
+            {
+                requiredSigningCount++;
+                if (string.IsNullOrWhiteSpace(credentialReference))
+                {
+                    missingRequiredReferences++;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(credentialReference))
+            {
+                references.Add(SanitizeSigningReference(credentialReference));
+            }
+        }
+
+        var status = missingRequiredReferences == 0 ? "ok" : "warning";
+        return DoctorCheck(
+            "signing",
+            status,
+            missingRequiredReferences == 0
+                ? "Signing presets use external references only."
+                : "Some required signing presets do not declare a credential reference.",
+            new JsonObject
+            {
+                ["presetCount"] = presets.Count,
+                ["requiredSigningCount"] = requiredSigningCount,
+                ["missingRequiredReferences"] = missingRequiredReferences,
+                ["credentialReferences"] = references
+            });
+    }
+
+    private static JsonObject DoctorCheck(string id, string status, string message, JsonObject? details = null)
+    {
+        return new JsonObject
+        {
+            ["id"] = id,
+            ["status"] = status,
+            ["message"] = message,
+            ["details"] = details ?? new JsonObject()
+        };
+    }
+
+    private static string SummarizeDoctorStatus(JsonArray checks)
+    {
+        var statuses = checks
+            .OfType<JsonObject>()
+            .Select(check => check["status"]?.GetValue<string>() ?? "blocked")
+            .ToArray();
+        if (statuses.Contains("blocked", StringComparer.Ordinal))
+        {
+            return "blocked";
+        }
+
+        return statuses.Any(status => status is "warning" or "missing")
+            ? "warning"
+            : "ok";
+    }
+
+    private static JsonObject? TryReadJsonObject(string path)
+    {
+        try
+        {
+            return File.Exists(path)
+                ? JsonNode.Parse(File.ReadAllText(path)) as JsonObject
+                : null;
+        }
+        catch (Exception exception) when (exception is JsonException or IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static string? ReadLockString(JsonObject? lockJson, string section, string property)
+    {
+        return lockJson?[section] is JsonObject sectionObject &&
+            sectionObject[property] is JsonValue value &&
+            value.TryGetValue<string>(out var text)
+                ? text
+                : null;
+    }
+
+    private static JsonArray? ReadLockArray(JsonObject? lockJson, string section, string property)
+    {
+        return lockJson?[section] is JsonObject sectionObject
+            ? sectionObject[property] as JsonArray
+            : null;
+    }
+
+    private static string? ReadDotnetSdkVersion()
+    {
+        return ReadCommandFirstLine("dotnet", "--version");
+    }
+
+    private static string? ReadCommandFirstLine(string fileName, string arguments)
+    {
+        try
+        {
+            using var process = new Process();
+            process.StartInfo = new ProcessStartInfo(fileName, arguments)
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            if (!process.Start())
+            {
+                return null;
+            }
+
+            if (!process.WaitForExit(3000))
+            {
+                try
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+                catch (InvalidOperationException)
+                {
+                }
+
+                return null;
+            }
+
+            return process.ExitCode == 0
+                ? process.StandardOutput.ReadLine()
+                : null;
+        }
+        catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    private static string SanitizeSigningReference(string credentialReference)
+    {
+        return credentialReference.StartsWith("env:", StringComparison.Ordinal)
+            ? credentialReference
+            : "external-reference";
+    }
+
+    private static JsonArray WriteStringArray(IEnumerable<string> values)
+    {
+        var result = new JsonArray();
+        foreach (var value in values)
+        {
+            result.Add(value);
+        }
+
+        return result;
     }
 
     private static string NormalizeProjectRoot(string projectRoot)
@@ -948,6 +1356,35 @@ internal sealed class CliResult
             operation: null,
             job: null,
             data: new JsonObject());
+    }
+
+    public static CliResult Report(
+        string command,
+        CliOptions options,
+        string projectRoot,
+        CliRoute route,
+        string message,
+        IReadOnlyList<StructuredDiagnostic> diagnostics,
+        IReadOnlyList<string> changedFiles,
+        IReadOnlyList<string> dirtyDocuments,
+        JsonObject? operation,
+        JsonObject? job,
+        JsonObject data)
+    {
+        return new CliResult(
+            command,
+            options,
+            succeeded: true,
+            exitCode: 0,
+            projectRoot,
+            route,
+            message,
+            diagnostics,
+            changedFiles,
+            dirtyDocuments,
+            operation,
+            job,
+            data);
     }
 
     public static CliResult FromOperation(

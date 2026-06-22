@@ -32,6 +32,7 @@
 | `E2D-CLI-0002` | `Error` | `Tooling` | CLI arguments неполные или некорректные |
 | `E2D-CLI-0003` | `Error` | `Tooling` | route selection или project root не позволяют безопасно выполнить команду |
 | `E2D-DIAG-0001` | `Error` | `Diagnostics` | diagnostic запись неполная или противоречит registry |
+| `E2D-DOCTOR-0001` | `Error` | `Project` | reproducibility baseline отсутствует, повреждён или противоречит `global.json`/`.csproj` |
 | `E2D-MCP-0001` | `Error` | `Tooling` | MCP tool опубликован в manifest, но его узкая production semantics ещё не реализована в текущем Preview scope |
 | `E2D-PROJECT-0001` | `Error` | `Project` | project document malformed или не может быть parsed |
 | `E2D-PROJECT-0002` | `Error` | `Project` | project document version новее поддерживаемой |

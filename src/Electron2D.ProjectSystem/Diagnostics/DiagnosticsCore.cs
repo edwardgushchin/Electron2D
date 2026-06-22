@@ -143,6 +143,12 @@ internal static class DiagnosticCodeRegistry
             "CLI route selection rejected the command.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-cli-0003"),
         new(
+            "E2D-DOCTOR-0001",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Project,
+            "Project reproducibility baseline is missing, malformed or inconsistent.",
+            "docs/documentation/project-system/reproducibility-lock-and-doctor.md#e2d-doctor-0001"),
+        new(
             "E2D-MCP-0001",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Tooling,
