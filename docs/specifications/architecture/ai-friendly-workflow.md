@@ -115,6 +115,8 @@ OpenAI/Anthropic/Gemini integration, зашитая напрямую в реда
 
 `ProjectWorkspace` опирается на базовую модель документа: identity документа, UID объектов, parser/serializer, persisted revision, in-memory revision и structural diff. Эта core-часть должна существовать до полноценного `ProjectWorkspace`, потому что workspace не может корректно отслеживать dirty state и merge без понятной идентичности документов.
 
+Проверяемый контракт этой core-части вынесен в [Canonical document model, revision model и structural diff](../project-system/canonical-document-model.md). Он фиксирует classification документов, стабильный `DocumentId`, object UID, revision transitions и минимальный structural diff до formatter/migrations/schemas.
+
 Старые документы целей, если они описывают компонентную модель `SpriteRenderer`/`Rigidbody`/`AudioSource`, обязательный `Transform` у каждого `Node`, отсутствие script-binding или только четыре платформы без iOS, считаются историческими, пока не синхронизированы с этой спецификацией и `docs/specifications/releases/0.1.0-preview.md`.
 
 Canonical architecture для `0.1.0 Preview`:

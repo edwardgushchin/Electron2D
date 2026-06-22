@@ -35,6 +35,10 @@
 - [Политика лицензирования исходного кода](repository/license-policy.md) - MIT License, source headers и verifier для вручную написанного исходного кода.
 - [Раскладка репозитория и локальных рабочих материалов](repository/repository-layout.md) - local-only task/diary/release logs и поставляемые данные в `data/`.
 
+## Project system
+
+- [Canonical document model, revision model и structural diff](project-system/canonical-document-model.md) - внутренний контракт identity, классификации, ревизий, parser/serializer boundary и structural diff до `ProjectWorkspace`.
+
 ## Ресурсы, импорт и сериализация
 
 - [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - `ResourceUid`, `.e2res`, external/internal references и diff-friendly формат ресурсов.

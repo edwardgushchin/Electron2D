@@ -26,6 +26,10 @@
 - [Политика MIT License и source headers](repository/license-policy.md) - текущая проверка корневой лицензии и license header в исходных файлах.
 - [Раскладка репозитория и локальных рабочих материалов](repository/repository-layout.md) - текущие local-only рабочие файлы и `data/` root для шаблонов/ассетов.
 
+## Project system
+
+- [Canonical document model](project-system/canonical-document-model.md) - текущий internal project-system слой для document identity, classification, revisions, parser snapshot, debug serializer и structural diff.
+
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.
