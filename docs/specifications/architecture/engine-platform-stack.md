@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация.
 Источник: перенесено из корневого `GOAL.md`.
-Последнее обновление: 2026-06-20.
+Последнее обновление: 2026-06-22.
 Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
 
 Electron2D - кроссплатформенный игровой 2D движок. Представляет из себя .NET библиотеку и инструменты разработки.
@@ -13,8 +13,13 @@ Electron2D - кроссплатформенный игровой 2D движок
 
 Поддерживаемые платформы: Windows, Linux, macOS, Android, iOS
 
-Архитектура: Node-like (все есть Noda)
-Публичный API: копия Godot. В движке представлены такие направления как:
+Архитектура: node/resource модель.
+
+Публичный runtime API Electron2D `0.1.0` воспроизводит утверждённый 2D-профиль Godot `4.7-stable` .NET/C# API один к одному под namespace `Electron2D`. Для каждого типа, включённого в профиль, должны совпадать публичное наследование, свойства, методы, overloads, события, сигналы, enum, constants, типы параметров и возвращаемых значений, значения по умолчанию и наблюдаемое поведение. Типы и подсистемы вне утверждённого 2D-профиля не входят в контракт Electron2D `0.1.0`.
+
+Это означает не 100% всего Godot API, а 100% Godot C# API внутри 100% определённого 2D-профиля. GDScript, `.gd`-файлы, GDScript parser/runtime/compiler/language server и GDScript annotations не поддерживаются.
+
+В движке представлены такие направления как:
 1. https://docs.godotengine.org/en/stable/classes/index.html#nodes
 2. https://docs.godotengine.org/en/stable/classes/index.html#resources (кроме OpenXR)
 3. https://docs.godotengine.org/en/stable/classes/index.html#variant-types
@@ -397,7 +402,7 @@ PacketPeerUDP    → Socket
 
 ## Ключевая архитектурная граница
 
-Поскольку публичный API повторяет Godot, внутреннюю архитектуру также стоит строить вокруг server abstractions:
+Поскольку публичный API внутри утверждённого 2D-профиля повторяет Godot C# API, внутреннюю архитектуру также стоит строить вокруг server abstractions:
 
 ```text
 Nodes / Resources

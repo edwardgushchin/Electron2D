@@ -1,7 +1,7 @@
 # Source domain layout
 
 Статус: целевая спецификация для `T-0134`.
-Обновлено: 2026-06-21.
+Обновлено: 2026-06-22.
 
 ## Назначение
 
@@ -46,12 +46,28 @@
 - `Graphics/Text`;
 - `Graphics/UI`;
 - `Runtime/Animation`;
+- `Runtime/Audio`;
 - `Runtime/Input`;
 - `Runtime/Localization`;
 - `Runtime/Scripting`;
 - `Runtime/Settings`.
 
-`Export` дополнительно делится на поддомены, например `Export/Presets` и будущий `Export/Windows`.
+`Export` в runtime project содержит только публичные data contracts для export preset и платформенно-нейтральной конфигурации. Фактическая orchestration экспорта, поиск toolchain, signing, генерация Xcode project, вызовы Android SDK, упаковка desktop distributions и запуск внешних процессов должны жить в `Electron2D.Tooling` или отдельном tooling/export project.
+
+Разрешённая граница:
+
+```text
+src/Electron2D/Export/Presets/
+    public data contracts
+
+src/Electron2D.Tooling/Export/
+    export orchestration
+
+src/Electron2D.Tooling/Export/Android/
+src/Electron2D.Tooling/Export/iOS/
+src/Electron2D.Tooling/Export/Desktop/
+    platform implementations
+```
 
 ## Namespace policy
 
@@ -69,6 +85,7 @@
 - `Core` содержит только разрешённые core domains;
 - root domains существуют только в крупной форме `Assets`, `Core`, `Export`, `Graphics`, `Physics`, `Runtime`;
 - nested domains существуют внутри своих root domains;
+- audio runtime code лежит в `src/Electron2D/Runtime/Audio`;
 - export presets лежат в `src/Electron2D/Export/Presets`;
 - C# files в `src/Electron2D` используют только разрешённые namespaces.
 

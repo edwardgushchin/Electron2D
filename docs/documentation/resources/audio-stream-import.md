@@ -10,8 +10,8 @@
 
 Текущие типы находятся в:
 
-- `src/Electron2D/Audio/AudioStream.cs` - public base resource для audio metadata queries;
-- `src/Electron2D/Audio/ImportedAudioStream.cs` - internal stream instance, созданный из import metadata;
+- `src/Electron2D/Runtime/Audio/AudioStream.cs` - public base resource для audio metadata queries;
+- `src/Electron2D/Runtime/Audio/ImportedAudioStream.cs` - internal stream instance, созданный из import metadata;
 - `src/Electron2D/Assets/Resources/Importing/AudioStreamImporter.cs` - importer для `.wav` и `.ogg`;
 - `src/Electron2D/Assets/Resources/Importing/AudioMetadataReader.cs` - читает WAV RIFF/WAVE и OGG Vorbis metadata без decoding;
 - `src/Electron2D/Assets/Resources/Importing/AudioImportMetadata.cs` - stable cache metadata model;

@@ -35,12 +35,13 @@
 - `Graphics/Text`;
 - `Graphics/UI`;
 - `Runtime/Animation`;
+- `Runtime/Audio`;
 - `Runtime/Input`;
 - `Runtime/Localization`;
 - `Runtime/Scripting`;
 - `Runtime/Settings`.
 
-`Export/Presets` содержит текущий внутренний preset model. Будущие platform-specific export pieces должны добавляться под `Export/<PlatformOrSubdomain>`, а не в `Core`.
+`Export/Presets` содержит runtime data contracts для export preset и платформенно-нейтральной конфигурации. Platform-specific export orchestration, поиск toolchain, signing, генерация Xcode project, вызовы Android SDK, упаковка desktop distributions и запуск внешних процессов не должны находиться в runtime project `src/Electron2D`; их место — `Electron2D.Tooling` или отдельный tooling/export project.
 
 ## Namespace
 
@@ -57,4 +58,4 @@
 powershell -ExecutionPolicy Bypass -File tools\Verify-SourceDomainLayout.ps1
 ```
 
-Проверка падает, если non-core домен возвращается в `Core`, если мелкий домен оказывается на верхнем уровне `src/Electron2D`, если обязательный root/nested domain отсутствует, если export presets лежат не в `Export/Presets`, или если source file добавляет неподдержанный namespace.
+Проверка падает, если non-core домен возвращается в `Core`, если мелкий домен оказывается на верхнем уровне `src/Electron2D`, если обязательный root/nested domain отсутствует, если audio runtime code лежит не в `Runtime/Audio`, если export presets лежат не в `Export/Presets`, или если source file добавляет неподдержанный namespace.

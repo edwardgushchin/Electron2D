@@ -2,6 +2,8 @@
 
 Статус: целевая архитектурная спецификация.
 Задача: `T-0114`.
+Статус задачи: completed.
+Архив: `completed-tasks/2026/06 Июнь.md#T-0114`.
 Обновлено: 2026-06-22.
 
 ## Позиционирование
@@ -89,13 +91,38 @@ OpenAI/Anthropic/Gemini integration, зашитая напрямую в реда
 - `CommandBus` — единый вход для проектных команд редактора, Tooling, MCP, CLI и тестов;
 - `ChangeEventStream` — поток событий об изменениях для Scene Tree, Inspector, FileSystem dock, viewport, diagnostics и Agent Workspace panel;
 - `RevisionStore` — версии документов и объектов, которые позволяют понять, к какому состоянию применялась команда;
-- `OperationJournal` — журнал происхождения операций: человек, AI-сессия, CLI, внешний файл или тест;
+- `OperationJournal` — журнал происхождения операций и восстановления: человек, AI-сессия, CLI, внешний файл или тест;
 - `UndoRedo` — обычная история отмены и повтора, в которую AI-транзакция попадает одной группой;
 - `ImportState` — состояние импорта ресурсов: ожидает, импортируется, готово или ошибка;
 - `BuildState` — состояние сборки и перезагрузки кода;
 - `DiagnosticsStore` — актуальные ошибки, предупреждения и suggested fixes, то есть безопасные предлагаемые исправления.
 
+`ProjectWorkspace` не заменяет систему задач. Его `OperationJournal` отвечает на вопрос «какие технические операции произошли?»: workspace-команда, revision, actor, undo group, conflict, crash recovery. Цель работы, статус задачи, критерии приёмки и смысловые заметки хранятся в отдельном `ProjectTaskManager`.
+
 Открытый Editor не должен держать приватную модель сцены, которую невозможно изменить через Tooling. Операция «добавить `Sprite2D` в сцену» должна быть одной и той же независимо от того, вызвал её пользователь через Scene Tree dock, AI через MCP tool, CLI-команда, тест или будущий IDE-плагин.
+
+Для одного project root допускается только один основной владелец рабочей сессии (`primary workspace owner`), то есть один Editor, который имеет право менять живую модель проекта. Если тот же проект открывается во втором Editor, второй экземпляр должен либо открыться в режиме только для чтения (`read-only`), либо получить понятный отказ с ссылкой на активную сессию. Активная сессия обязана иметь lease/heartbeat, обнаружение stale endpoint и безопасное освобождение lock после crash.
+
+`OperationJournal` должен поддерживать восстановление после падения Editor:
+
+- snapshot dirty-документов, если это безопасно и не раскрывает секреты;
+- запись незавершённой транзакции;
+- очистку временных файлов после crash;
+- сообщение о восстановленной или отброшенной AI-транзакции при следующем запуске;
+- запрет молча продолжать частично применённую транзакцию.
+
+## Document model и canonical architecture
+
+`ProjectWorkspace` опирается на базовую модель документа: identity документа, UID объектов, parser/serializer, persisted revision, in-memory revision и structural diff. Эта core-часть должна существовать до полноценного `ProjectWorkspace`, потому что workspace не может корректно отслеживать dirty state и merge без понятной идентичности документов.
+
+Старые документы целей, если они описывают компонентную модель `SpriteRenderer`/`Rigidbody`/`AudioSource`, обязательный `Transform` у каждого `Node`, отсутствие script-binding или только четыре платформы без iOS, считаются историческими, пока не синхронизированы с этой спецификацией и `docs/specifications/releases/0.1.0-preview.md`.
+
+Canonical architecture для `0.1.0 Preview`:
+
+- специализированная node/resource модель Electron2D, совместимая с выбранным API-подмножеством Godot;
+- `Node2D` и его наследники имеют 2D transform; базовый `Node` не получает обязательный transform;
+- `scene_attach_script` не добавляет отдельный Script-компонент. Операция связывает сериализованный узел с пользовательским C#-типом, наследующим подходящий Electron2D node type, и после сборки создаётся единый экземпляр этого типа;
+- поддерживаемые платформы релизного контракта включают Windows, Linux, macOS, Android и iOS, но mobile export может оставаться заблокированным до закрытия соответствующих platform tasks и проверок.
 
 ## Единое ядро инструментов
 
@@ -106,6 +133,7 @@ OpenAI/Anthropic/Gemini integration, зашитая напрямую в реда
 ```text
 Electron2D.Tooling
 ├── ProjectService
+├── TaskService
 ├── SceneService
 ├── ResourceService
 ├── ScriptService
@@ -117,9 +145,101 @@ Electron2D.Tooling
 └── DocumentationService
 ```
 
-Изменяющие команды возвращают структурированный результат с `success`, `operation`, `workspaceRevision`, `changedFiles`, `changedObjects`, `createdObjects`, `diagnostics` и `undoGroupId`.
+Изменяющие команды возвращают структурированный результат с `success`, `operation`, `workspaceRevision`, `documentRevisions`, `persistedRevision`, `dirtyDocuments`, `persistenceState`, `changedFiles`, `changedObjects`, `createdObjects`, `diagnostics` и `undoGroupId`.
 
 Все изменяющие команды должны принимать `expectedRevision`, если они работают с уже открытым документом или объектом. Это защита от потери ручных изменений: команда явно говорит, к какой версии состояния она применялась.
+
+Команды делятся на четыре режима применения:
+
+| Режим | Назначение |
+| --- | --- |
+| `WorkspaceOnly` | Меняет живую модель Editor, создаёт Undo-запись и помечает документы dirty. На диск автоматически не пишет. |
+| `SaveAffectedDocuments` | Сохраняет уже применённые workspace-изменения через временные файлы и атомарную замену. |
+| `HeadlessCommit` | Применяет и сохраняет транзакцию атомарно. Используется CLI/CI, когда Editor закрыт или команда явно запущена в headless-режиме. |
+| `ExternalImport` | Файл уже изменён на диске. Синхронизатор сравнивает его с `PersistedRevision` и объединяет с текущим dirty-состоянием. |
+
+Editor-команда по умолчанию использует `WorkspaceOnly`. Сохранение на диск — отдельная операция или явный режим. Это запрещает AI-команде автоматически сохранять ручные несохранённые изменения разработчика и не заставляет UI ждать успешной записи на диск перед обновлением живой модели.
+
+## WorkspaceSnapshot для build/test/run
+
+`build`, `test` и `run` не должны читать произвольное состояние с диска, если открытый Editor содержит dirty-документы или открытые code buffers. Перед долгой операцией `ProjectWorkspace` создаёт immutable `WorkspaceSnapshot` — неизменяемый снимок входного состояния:
+
+```text
+WorkspaceSnapshot
+├── SnapshotId
+├── WorkspaceRevision
+├── ContentRevision
+├── DocumentRevisions
+├── DirtyDocuments
+├── OpenCodeBuffers
+└── CreatedAt
+```
+
+Snapshot фиксирует ровно то состояние, которое проверяет build/test/run job. Если отдельный game process или build toolchain не умеет читать workspace из памяти, snapshot материализуется во временную директорию:
+
+```text
+.electron2d/workspaces/<session>/<snapshot-id>/
+```
+
+Материализация snapshot не считается сохранением проекта и не меняет `PersistedRevision`. Временная директория является internal workspace artifact: её нельзя редактировать вручную, добавлять в source control или использовать как новый источник правды.
+
+Каждый job и каждый artifact, который относится к build/test/run/export/import diagnostics или runtime capture, возвращает:
+
+```text
+InputSnapshotId
+InputWorkspaceRevision
+InputContentRevision
+InputDocumentRevisions
+InputBuildConfigurationHash
+```
+
+`WorkspaceRevision` меняется от любого изменения рабочей сессии: task activity, board rank, selection, editor camera, scene/resource/code edits или project settings. `ContentRevision` меняется только от документов и настроек, влияющих на build/test/run/export/runtime result.
+
+Job, diagnostics, screenshot, runtime tree или visual diff помечаются как `stale` только тогда, когда после старта job изменился один из `InputDocumentRevisions`, `InputContentRevision` или build/run configuration, от которых зависел job. Изменение task status, `TaskActivity`, board rank, selection или другого `EditorMetadata`, не входящего в inputs job, не делает игровой artifact stale.
+
+Политика export отличается от run/test/build:
+
+- по умолчанию экспортируется только clean persisted state;
+- export dirty snapshot требует явной команды и показывает, что результат собран из несохранённого снимка;
+- export никогда не сохраняет ручные dirty-документы неявно;
+- release artifact не может считаться готовым, если он построен из dirty snapshot без явного acceptance решения.
+
+Импорт, сборка, тесты, экспорт и запуск игры являются долгими операциями и используют job-контракт, а не обычный синхронный result:
+
+```json
+{
+  "operationId": "op_01",
+  "kind": "build",
+  "inputSnapshotId": "snap_01",
+  "inputWorkspaceRevision": 42,
+  "inputContentRevision": 17,
+  "inputDocumentRevisions": {
+    "scenes/main.e2scene": 8,
+    "scripts/Player.cs": 3
+  },
+  "inputBuildConfigurationHash": "sha256:...",
+  "state": "running",
+  "progress": 0.42,
+  "canCancel": true,
+  "stale": false,
+  "diagnostics": [],
+  "artifacts": [],
+  "startedAt": "2026-06-22T11:00:00+03:00",
+  "completedAt": null
+}
+```
+
+Состояния job: `queued`, `running`, `succeeded`, `failed`, `cancelled`.
+
+Поток событий долгих операций:
+
+- `operation.started`;
+- `operation.progress`;
+- `operation.diagnostic`;
+- `operation.artifactProduced`;
+- `operation.completed`.
+
+Job contract предоставляет общий event stream, cancellation semantics и snapshot identity. CLI JSONL, MCP events, Agent Workspace UI, Editor build/import/test panels, screenshots и runtime snapshots подключают этот поток в своих адаптерных задачах, не превращая core job contract в зависимость от готового UI или протокольного клиента.
 
 ## Agent Workspace panel
 
@@ -133,10 +253,33 @@ Electron2D.Tooling
 - подсветка затронутого объекта во viewport;
 - diagnostics и suggested fixes, полученные во время работы агента;
 - screenshots и runtime snapshots, созданные агентом;
+- текущую задачу `ProjectTaskManager`, её статус, связанные операции, jobs, diagnostics и artifacts;
 - остановка, пауза или cancel текущей агентской операции, если command поддерживает отмену;
 - grouped undo последней AI-транзакции обычным редакторским Undo.
 
 Панель не должна быть единственным способом AI-интеграции. Если агент подключается снаружи через MCP, Editor обязан показывать его операции в той же панели и в обычных UI-обновлениях.
+
+Агент, запущенный профилем из Editor, должен автоматически получить session-scoped MCP configuration и подключиться к активной Editor-сессии. Без этого Agent Workspace превращается в обычный терминал с coding agent.
+
+Bootstrap запуска:
+
+```text
+Editor creates agent session
+    ↓
+session ID + local endpoint + ephemeral token
+    ↓
+temporary MCP configuration
+    ↓
+agent process starts in project root
+    ↓
+MCP handshake
+    ↓
+Agent Workspace shows Connected
+```
+
+Ephemeral token — временный локальный токен только для этой сессии. Он не должен попадать в project files, logs, screenshots, `AGENTS.md`, shell history или commit.
+
+После handshake агент должен уметь прочитать текущую сцену, selection, revisions, dirty documents и diagnostics. Для агента, запущенного вне Editor, должна быть документированная команда подключения к существующей сессии.
 
 ## Мгновенная синхронизация Editor и AI
 
@@ -155,7 +298,7 @@ Workspace events
  ↓
 Scene Tree + Inspector + FileSystem + Viewport + Diagnostics
  ↓
-atomic persistence
+dirty-документы или явная операция сохранения
 ```
 
 Например:
@@ -203,17 +346,33 @@ Editor update
 - обновление уже открытой сцены;
 - conflict handling для dirty документов;
 - структурированная диагностика parse/import/build ошибок.
+- fallback при потере или объединении событий watcher-а.
 
 Критерии задержки:
 
 - semantic Tooling operation обновляет UI в том же editor dispatch cycle;
-- external text-file change обнаруживается и отображается не позднее 250 мс после стабилизации записи;
+- external text-file change обнаруживается и отображается не позднее 250 мс после стабилизации записи как P95 на локальной файловой системе Tier 1 desktop-платформ; сетевые диски и перегруженные watcher-и должны деградировать в диагностируемый режим, а не обещать абсолютную задержку;
 - новый импортируемый asset сразу появляется в FileSystem dock со статусом `Importing`, `Compiling` или `Error`;
 - preview и зависимые объекты обновляются после завершения импорта или сборки;
 - пользователь не нажимает `Refresh` и не перезапускает Editor;
 - Editor не блокируется полным переимпортом проекта.
 
 Полноценный C# Hot Reload не обязателен для `0.1`. Допустим быстрый rebuild и автоматический перезапуск preview/play session, если файл кода изменился.
+
+Fallback-стратегия watcher-а:
+
+- normal event — incremental update;
+- переполнение watcher-а (`watcher overflow`) — сверка затронутого каталога;
+- неоднозначное переименование — сверка по UID/hash;
+- возврат Editor к работе после паузы — лёгкая проверка согласованности проекта.
+
+Группировка Undo для внешних изменений:
+
+- операции через MCP/Tooling — одна именованная Undo-группа;
+- прямые файловые изменения — external transaction на debounce batch;
+- для группировки прямых изменений агент использует `workspace_begin_transaction` / `workspace_commit_transaction`;
+- build/import/run/export не входят в Undo проекта;
+- удаление и перезапись файлов отменимы только при наличии сохранённого snapshot.
 
 ## Совместное редактирование человеком и AI
 
@@ -240,6 +399,18 @@ Editor update
 | Изменение пришло от Tooling | Попадает в Undo/Redo как одна транзакция |
 | Изменение пришло прямой записью файла | Импортируется как external transaction |
 
+Merge policy зависит от типа документа:
+
+| Тип документа | Merge |
+| --- | --- |
+| Scene/resource/settings | UID/property structural three-way merge. |
+| C#/JSON/text | Обычный three-way text merge. |
+| Generated files | Не редактируются и не участвуют в автоматическом merge. |
+| Изображения/audio/fonts | Автоматическое merge запрещено. |
+| Удаление/замена binary | Конфликт, если ресурс используется или был изменён в workspace. |
+
+Открытые C# buffers считаются workspace-документами. Если AI меняет `.cs` на диске, а разработчик держит несохранённую правку того же файла во встроенном или внешнем редакторе, синхронизатор обязан применить text merge или показать конфликт, но не перезаписать один вариант молча.
+
 Пример группировки:
 
 ```text
@@ -259,13 +430,27 @@ Agent transaction: "Add player movement"
 ```json
 {
   "capability": "scene.node.set_property",
+  "kind": "projectMutation",
   "editorCommand": "SceneSetProperty",
   "toolingCommand": "scene.setProperty",
   "mcpTool": "scene_set_property",
-  "cliCommand": "e2d scene set",
+  "cliBinding": {
+    "kind": "dedicatedCommand",
+    "command": "e2d scene set"
+  },
   "status": "supported"
 }
 ```
+
+Классы capability:
+
+| Класс | Назначение |
+| --- | --- |
+| `projectMutation` | Меняет проектные документы: add node, set property, edit resource, Input Map. Имеет revisions, dirty state и Undo. |
+| `editorSessionAction` | Меняет только состояние Editor: select node, open document, focus Inspector, move editor camera, highlight object. Не повышает document revision и обычно не входит в Undo проекта. |
+| `runtimeAction` | Управляет `RuntimeSession`: run, pause, step, inject input, capture screenshot. |
+| `backgroundJob` | Запускает import/build/test/export и использует job-контракт. |
+| `readOnlyQuery` | Читает состояние без изменения проекта или Editor-сессии. |
 
 Manifest должен покрывать:
 
@@ -294,7 +479,44 @@ Manifest должен покрывать:
 - запуск тестов;
 - просмотр diagnostics.
 
-CI должен падать, если Editor получил новую проектную операцию, но для неё нет Tooling-команды, MCP tool/resource или явного `not_applicable` с объяснением.
+Tooling и MCP должны иметь полный паритет для семантически значимых возможностей. CLI не обязан иметь отдельную удобную команду для каждого действия Editor, если есть универсальный headless-путь:
+
+```json
+{
+  "capability": "animation.track.insert_key",
+  "kind": "projectMutation",
+  "toolingBinding": "animation.track.insertKey",
+  "mcpBinding": "animation_insert_key",
+  "cliBinding": {
+    "kind": "genericTransaction"
+  }
+}
+```
+
+Для действий, которые не применимы к CLI, допускается явное исключение:
+
+```json
+{
+  "capability": "editor.camera.pan",
+  "kind": "editorSessionAction",
+  "cliBinding": {
+    "kind": "notApplicable",
+    "reason": "Editor-session navigation only"
+  }
+}
+```
+
+Release-gate инвариант:
+
+```text
+Если Editor capability объявлена Supported в 0.1:
+    Tooling binding должен быть Supported.
+    MCP binding должен быть Supported.
+```
+
+`partial` допустим для Tooling или MCP только тогда, когда сама Editor capability тоже объявлена `partial` и не входит в release-required semantic operations. Нельзя считать AI-паритет выполненным при состоянии `Editor: Supported`, `MCP: Partial` или `Tooling: Partial`.
+
+Для CLI допустимы `genericTransaction` и `notApplicable`, если Tooling/MCP имеют полную поддержку. CI должен падать, если Editor получил новую семантически значимую операцию без полного Tooling binding, полного MCP binding или корректного CLI-исключения.
 
 ## CLI как обязательный headless-интерфейс
 
@@ -363,7 +585,9 @@ CI должен падать, если Editor получил новую прое
 
 ## Машиночитаемый API manifest
 
-Electron2D должен поставлять версионированный API manifest в JSON. Manifest нужен, чтобы AI-агенты, CLI, Inspector, Wiki, source generators и будущий language server не угадывали отличия Electron2D от Godot.
+Electron2D должен поставлять версионированный API manifest в JSON. Manifest нужен, чтобы AI-агенты, CLI, Inspector, Wiki, source generators и будущий language server не угадывали границы утверждённого Godot-compatible 2D-профиля.
+
+Эталон для `0.1.0` — Godot `4.7-stable` .NET/C# API. Electron2D реализует 100% публичного C# API только внутри утверждённого 2D-профиля под namespace `Electron2D`; GDScript и API вне профиля не входят в контракт.
 
 Manifest содержит:
 
@@ -379,24 +603,37 @@ Manifest содержит:
 - поддерживаемые Variant-типы;
 - доступность по платформам;
 - требования к renderer profile;
-- статус `supported`, `partial`, `experimental`;
-- отличия от Godot;
+- статус `supported`, `parity_verified`, `out_of_profile`, `planned`;
+- ссылку на Godot `4.7-stable` C# manifest для типов профиля;
+- strict parity result для типов профиля;
 - примеры использования;
 - версию появления или изменения элемента.
 
 ## Карта совместимости с Godot
 
-Electron2D API требует формальной карты отличий, а не только общей фразы в README. Для каждого публичного типа документация должна содержать блок:
+Electron2D API требует формального profile manifest, а не общей фразы в README. Для каждого публичного типа из 2D-профиля документация должна содержать блок:
 
 ```text
-Compatibility with Godot
-Supported:
-Partial:
-Not supported:
-Behavioral differences:
+Godot 4.7 C# profile compatibility
+Profile: Electron2D 0.1.0 2D
+Status: Supported / Parity verified
+Out of profile: no
 ```
 
-Команда `e2d api compare-godot <type> --format json` должна возвращать совместимые члены, неподдерживаемые члены и поведенческие отличия. Без этого AI-агенты будут создавать убедительно выглядящий, но некомпилируемый Electron2D-код.
+Для типов внутри release profile статусы `partial` и `experimental` недопустимы. Они могут существовать только для API вне обязательного профиля `0.1.0` или для будущих расширений.
+
+Команда `e2d api compare-godot <type> --format json` является строгим verifier-ом для типов профиля. Для включённого типа она должна возвращать:
+
+```text
+missing types: 0
+missing members: 0
+signature mismatches: 0
+inheritance mismatches: 0
+default mismatches: 0
+unexpected changes: 0
+```
+
+Для типа вне профиля команда должна явно возвращать `out_of_profile`, а не рекомендовать обходной API.
 
 ## MCP и Editor-hosted Agent Gateway
 
@@ -443,6 +680,16 @@ Editor-hosted Agent Gateway — локальная точка подключен
 - active play session;
 - capabilities Editor и runtime.
 
+Gateway должен поддерживать:
+
+- session lease/heartbeat;
+- отказ или read-only режим для второго Editor на тот же project root;
+- stale endpoint cleanup;
+- mismatch project root diagnostics;
+- crash-safe release lock;
+- запрет работы за пределами project root;
+- отключение MCP без деградации ручного Editor workflow.
+
 Минимальные MCP resources:
 
 - `electron2d://project/summary`;
@@ -470,6 +717,9 @@ Editor-hosted Agent Gateway — локальная точка подключен
 - `resource_inspect`, `resource_import`, `resource_find_references`;
 - `workspace_get_state`, `workspace_apply_transaction`, `workspace_resolve_conflict`, `workspace_undo_transaction`;
 - `runtime_start`, `runtime_stop`, `runtime_pause`, `runtime_step`, `runtime_inject_input`, `runtime_capture_frame`, `runtime_get_scene_tree`, `runtime_get_diagnostics`.
+- `task_list`, `task_get`, `task_create`, `task_update`, `task_claim`, `task_set_status`, `task_add_subtask`, `task_add_dependency`, `task_append_activity`, `task_link_transaction`, `task_link_job`, `task_link_artifact`, `task_submit_for_acceptance`, `task_accept`, `task_request_changes`, `task_cancel`.
+
+`task_accept` и `task_request_changes` являются операциями человеческой приёмки. Для агентской сессии они недоступны без доверенного `OperationContext` с interactive Editor capability и краткоживущим подтверждением Editor UI. `task_cancel` отменяет задачу как больше не нужную и переводит её в `Cancelled`; это отдельное workflow-действие, а не отказ от результата на приёмке.
 
 ## Контекстный пакет проекта
 
@@ -492,6 +742,244 @@ Editor-hosted Agent Gateway — локальная точка подключен
 
 Контекст не должен содержать импортированные бинарные данные, весь исходный код движка, секреты подписи, огромные логи, содержимое `.git` и неиспользуемые API.
 
+## ProjectTaskManager и TaskActivity
+
+Пользовательские проекты Electron2D используют встроенный `ProjectTaskManager` как единственный источник состояния задач. Отдельные `TASKS.md`, `completed-tasks/` и `dev-diary/` в пользовательских проектах не создаются шаблоном, не упоминаются в project-local `AGENTS.md`, не имеют отдельного UI и не являются экспортируемым источником правды.
+
+Модель разделяется так:
+
+| Система | Назначение |
+| --- | --- |
+| `ProjectTaskManager` | Что нужно сделать, кто делает, статус, зависимости и критерии приёмки. |
+| `TaskActivity` | Осмысленный ход выполнения: комментарии, решения, исследования, blockers, результаты проверок и итог agent session. |
+| `OperationJournal` | Низкоуровневая история workspace-операций, revisions, Undo-групп, конфликтов и crash recovery. |
+| Specifications / ADR | Итоговые архитектурные решения и причины. |
+| Diagnostics / Job artifacts | Подтверждение результата: тесты, сборки, screenshots, ошибки и другие artifacts. |
+| Git | Сохранённые изменения репозитория. |
+
+Task и board documents являются first-class документами `ProjectWorkspace`. Из этого следуют обязательные правила:
+
+- task mutations проходят через `WorkspaceTransactionEngine`;
+- поддерживают `expectedRevision`;
+- участвуют в dirty state и `SaveAffectedDocuments`;
+- поддерживают grouped Undo/Redo;
+- внешние изменения проходят через `ExternalChangeSynchronizer`;
+- конфликтующие правки не затираются;
+- UI обновляется в том же editor dispatch cycle.
+
+Минимальная доменная модель core-слоя:
+
+```text
+ProjectTaskManager
+├── TaskStore
+├── TaskActivityStore
+├── TaskDependencyGraph
+├── TaskAcceptanceService
+└── TaskArtifactLinks
+```
+
+Доска первой версии:
+
+```text
+Backlog
+Ready
+In Progress
+Blocked
+Review
+Awaiting Acceptance
+Done
+Cancelled
+```
+
+Модель задачи:
+
+```text
+Task
+├── TaskId
+├── Title
+├── Description
+├── Status
+├── Readiness
+├── BlockingReasons
+├── Priority
+├── Rank / SortKey
+├── Labels
+├── Assignee
+├── CreatedBy
+├── ParentTaskId
+├── Dependencies
+├── AcceptanceCriteria
+├── Subtasks
+├── Activity
+├── LinkedTransactions
+├── LinkedJobs
+├── LinkedDiagnostics
+├── LinkedArtifacts
+├── LinkedScenesResourcesAndNodes
+├── CreatedAt
+├── UpdatedAt
+├── SubmittedAt
+├── CompletedAt
+├── AcceptedAt
+├── AcceptedBy
+├── AcceptanceState
+├── ArchivedAt
+├── ArchivedBy
+└── CancellationReason
+```
+
+`TaskActivityEntry` поддерживает типы:
+
+- `Comment`;
+- `Decision`;
+- `Investigation`;
+- `Blocker`;
+- `TestResult`;
+- `StatusChange`;
+- `AgentSummary`;
+- `AcceptanceResult`.
+
+Каждая activity entry имеет стабильный UID:
+
+```text
+TaskActivityEntry
+├── ActivityEntryId
+├── ActorId
+├── ActorKind
+├── CreatedAt
+├── Kind
+└── Payload
+```
+
+`ActorId`, `ActorKind` и `CreatedAt` являются audit fields. Их заполняет `TaskActivityStore` из доверенного `OperationContext` и системных часов; вызывающий агент, CLI или MCP payload не может передать или переписать эти поля как обычные данные activity.
+
+Acceptance criteria тоже имеют стабильные UID, чтобы одновременные добавления человеком и AI не конфликтовали как правка одного массива:
+
+```text
+AcceptanceCriterion
+├── CriterionId
+├── Description
+├── State
+└── EvidenceLinks
+```
+
+AI может выполнить задачу и перевести её в `Awaiting Acceptance`, но не может самостоятельно установить `Accepted` или `Done`, если проект требует человеческой приёмки. Это контролируется `TaskAcceptanceService`, а не текстовой инструкцией в `AGENTS.md`.
+
+`ActorKind`, записанный в activity, является audit metadata, а не полномочием. Изменяющие операции получают доверенный `OperationContext`, который создаётся Editor, Tooling host или MCP gateway и не принимается из payload задачи. Контракт находится ниже `Electron2D.Tooling` в общем project-system/contracts слое, чтобы `TaskAcceptanceService` из core `ProjectTaskManager` не зависел от будущего `TaskService`:
+
+```text
+Electron2D.ProjectSystem/Operations/
+├── OperationContext
+├── PrincipalKind
+└── OperationCapability
+```
+
+```text
+OperationContext
+├── PrincipalId
+├── PrincipalKind
+├── SessionId
+├── Capabilities
+└── Origin
+```
+
+Agent MCP session получает capability `Task.SubmitForAcceptance`, но не получает `Task.Accept` или `Task.RequestChanges`. Interactive Editor user может получить `Task.Accept`, `Task.RequestChanges` и `Task.Cancel`. Краткоживущее подтверждение приёмки выдаёт только Editor UI; агент не может отправить `ActorKind = Human` или произвольный `PrincipalKind = Human` через Tooling/MCP и обойти guard.
+
+`Review` и `Awaiting Acceptance` означают разное:
+
+- `Review` — техническая проверка: тесты, диагностика, code review или проверка другим агентом;
+- `Awaiting Acceptance` — результат подготовлен и ждёт решения разработчика;
+- `Done` — разработчик принял результат;
+- `Request changes` означает, что результат не принят и задача возвращается в `In Progress`;
+- `Cancel` означает, что задача больше не нужна, и переводит её в `Cancelled`.
+
+Разрешённые переходы task state:
+
+| Текущий статус | Разрешённые переходы |
+| --- | --- |
+| `Backlog` | `Ready`, `Cancelled` |
+| `Ready` | `Backlog`, `InProgress`, `Blocked`, `Cancelled` |
+| `InProgress` | `Ready`, `Blocked`, `Review`, `Cancelled` |
+| `Blocked` | `Ready`, `InProgress`, `Cancelled` |
+| `Review` | `InProgress`, `AwaitingAcceptance`, `Blocked` |
+| `AwaitingAcceptance` | `InProgress`, `Done` |
+| `Done` | человеческое действие `Reopen` переводит в `Ready` |
+| `Cancelled` | человеческое действие `Reopen` переводит в `Backlog` |
+
+`Done` недоступен AI на уровне `TaskAcceptanceService`, даже если вызов пришёл не через MCP, а через другой Tooling adapter.
+
+`Reopen` — это действие, а не отдельный статус. Расширенная команда может явно выбрать целевой статус через `task_reopen(targetStatus: Backlog | Ready | InProgress)`, если это разрешено policy. `CompletedAt`, `AcceptedAt`, `AcceptedBy` и прошлый `AcceptanceState` не удаляются: reopen добавляет `TaskActivityEntry` и задаёт новый текущий acceptance state, сохраняя историю принятия.
+
+`Status = Blocked` является ручным workflow-состоянием. Dependency blocking хранится отдельно:
+
+```text
+Readiness:
+    Ready | BlockedByDependencies
+
+BlockingReasons:
+    dependency | environment | decision | external | manual
+```
+
+`TaskDependencyGraph` обязан запрещать циклические зависимости, не переводить задачу в `Ready` автоматически, если обязательная dependency ещё не завершена, возвращать диагностируемую причину blocked-состояния, обновлять только dependency-related blocking reason после закрытия dependency и явно описывать поведение при отмене dependency. Завершение dependency не должно снимать ручной blocker, например отсутствие устройства или внешнее решение.
+
+Обычное удаление задачи заменяется на `Cancel` или `Archive`. Hard delete разрешён только для задачи без activity, dependencies и внешних ссылок либо после отдельного destructive confirmation с проверкой всех references. Архивация использует `ArchivedAt` и `ArchivedBy`, не требует отдельной колонки и скрывает карточку из обычных представлений.
+
+Каждая агентская операция связывается с активной задачей:
+
+```text
+TaskId
+AgentSessionId
+OperationId
+TransactionId
+SnapshotId
+JobId
+```
+
+Agent Workspace должен показывать текущую задачу, её статус, активного агента, changed objects, transactions, test/job results и diagnostics. Так разработчик видит не только поток действий, но и цель, ради которой они выполнены.
+
+Каноническое хранилище задач — стабильные текстовые metadata-документы проекта:
+
+```text
+.electron2d/
+└── tasks/
+    ├── task-01J....e2task
+    ├── task-01K....e2task
+    └── board.e2tasks
+```
+
+Файлы задач имеют schema version, стабильные UID, canonical formatting, небольшой diff, structural merge и migrations. Editor, AI и пользователь не обязаны редактировать их вручную; Tooling/MCP и headless-команды должны уметь их читать. SQLite или другой индекс допустим только как cache, а не как единственный canonical source.
+
+`.electron2d/tasks/**` является `EditorMetadata`, а не игровыми ресурсами. Task documents:
+
+- хранятся в source control только по решению разработчика;
+- доступны Editor, Tooling, CLI и MCP;
+- не импортируются как игровые ресурсы;
+- не попадают в production asset packs;
+- не включаются в APK, AAB, app bundle и desktop distribution;
+- не материализуются в runtime snapshot как игровые файлы;
+- если экспортируются во внешний отчёт, то только отдельной явной report-командой.
+
+Job может хранить `TaskId`, но не обязан и не должен по умолчанию копировать содержимое задачи в build directory.
+
+Project template не должен добавлять `.electron2d/` целиком в `.gitignore`, иначе вместе с cache будут потеряны задачи. Политика по умолчанию:
+
+```gitignore
+.electron2d/import-cache/
+.electron2d/workspaces/
+.electron2d/context/
+.electron2d/session/
+```
+
+`.electron2d/tasks/` отслеживается по умолчанию либо включается отдельной настройкой Project Manager; в обоих случаях template обязан сделать выбор явным.
+
+Completed tasks — это представление `Status = Done ORDER BY CompletedAt DESC`, а не отдельная папка. Markdown-отчёт может генерироваться отдельной P1 CLI/report задачей, если она реализована:
+
+```bash
+e2d tasks export --status done --format markdown
+```
+
+Такой экспорт является отчётом, не обязателен для `0.1.0` и не становится источником истины.
+
 ## Project-local `AGENTS.md` и skills
 
 Каждый новый проект должен содержать `AGENTS.md` — предсказуемое место для инструкций coding-агентам. Шаблон должен быть похож по назначению на глобальный пользовательский `AGENTS.md`, но не должен копировать приватные правила пользователя.
@@ -505,11 +993,13 @@ Editor-hosted Agent Gateway — локальная точка подключен
 - запрет редактировать import cache;
 - правило стабильных UID;
 - правило проверки через `e2d validate`;
-- предупреждение не предполагать полную совместимость с Godot;
-- команду `e2d api compare-godot <type>` для спорных API;
-- правило подключаться к активной Editor-сессии, если она открыта.
-- правила ведения рабочих Markdown-записей проекта: `TASKS.md`, `dev-diary/`, `completed-tasks/`, `docs/specifications/` и `docs/documentation/`;
-- запрет закрывать задачи без явной приёмки пользователя и правило переносить принятые задачи в monthly archive `completed-tasks/YYYY/MM Месяц.md`.
+- предупреждение не использовать Godot API вне утверждённого Electron2D 2D-профиля;
+- команду `e2d api compare-godot <type>` как strict verifier для спорных API внутри профиля;
+- правило подключаться к активной Editor-сессии, если она открыта;
+- правило использовать `ProjectTaskManager` через Editor, Tooling или MCP;
+- запрет редактировать task storage files напрямую;
+- правило связывать изменения, tests, diagnostics, jobs и artifacts с активной задачей;
+- правило отправлять завершённую работу на человеческую приёмку через `task_submit_for_acceptance`.
 
 Новый проект также получает стартовые project-local skills для создания сцены, написания gameplay-кода, импорта ресурсов, запуска тестов и подготовки экспорта.
 
@@ -583,7 +1073,7 @@ artifacts/run-001/
 
 Битовая детерминированность физики между всеми платформами не требуется, но один тест должен воспроизводиться на одной платформе при одинаковой конфигурации.
 
-Editor должен показывать ход тестов, diagnostics и visual diff в рабочей области, если тест запущен из Editor или подключённой AI-сессии.
+Core test framework возвращает machine-readable diagnostics, screenshots, pixel-diff artifacts и snapshot identity. Отображение хода тестов и visual diff в Editor или Agent Workspace подключается отдельными Editor/UI-задачами поверх этих artifacts.
 
 ## Структурированная диагностика
 
@@ -609,11 +1099,13 @@ Editor должен показывать ход тестов, diagnostics и vis
 e2d validate --format sarif > electron2d.sarif
 ```
 
-Editor должен получать live diagnostics stream, то есть поток актуальных ошибок и предупреждений без ручного перезапуска проверки. Агент должен видеть те же diagnostics через MCP.
+Diagnostics core должен быть пригоден для live stream, то есть для потока актуальных ошибок и предупреждений без ручного перезапуска проверки. Editor и MCP получают этот поток через отдельные adapters, которые не входят в минимальный `Diagnostics.Core`.
 
 ## Безопасное изменение проекта
 
-Изменяющие операции AI должны быть транзакционными:
+Изменяющие операции AI должны быть транзакционными, но путь транзакции зависит от режима.
+
+`WorkspaceOnly`:
 
 ```text
 read current workspace revision
@@ -628,14 +1120,96 @@ validate resulting state
     ↓
 publish workspace events
     ↓
+mark affected documents dirty
+    ↓
+return changed objects, dirty documents and diagnostics
+```
+
+`SaveAffectedDocuments`:
+
+```text
+read dirty documents
+    ↓
+validate persisted revision
+    ↓
 write temporary files
     ↓
 atomic replace
     ↓
-return changed files, changed objects and diagnostics
+update persisted revision
+    ↓
+return changed files and persistence state
 ```
 
-Обязательны `--dry-run`, atomic writes, automatic backup для миграций, защита от записи за пределами project root, запрет изменения import cache через scene API, список затронутых файлов, validation before commit, стабильные UID, отсутствие молчаливого удаления неизвестных свойств, audit log операций MCP и undo group для каждой AI-транзакции.
+`HeadlessCommit`:
+
+```text
+parse persisted files
+    ↓
+validate current persisted state
+    ↓
+apply transaction in memory
+    ↓
+validate resulting state
+    ↓
+write temporary files
+    ↓
+atomic replace
+    ↓
+return changed files, revisions and diagnostics
+```
+
+`ExternalImport`:
+
+```text
+read changed file
+    ↓
+compare with persisted revision
+    ↓
+parse + structural diff
+    ↓
+merge with dirty workspace state
+    ↓
+publish workspace events or conflict
+```
+
+Для task documents `ExternalImport`, migration, CLI, crash recovery и любая другая запись проходят через доменный `TaskTransitionValidator` и `TaskAcceptanceService`. Внешний файл получает непривилегированный контекст:
+
+```text
+PrincipalKind = ExternalFile
+Capabilities  = Task.EditUnprivilegedFields
+Origin        = ExternalImport
+```
+
+Обычный payload, включая direct file edit, не может управлять privileged fields:
+
+```text
+CreatedBy
+CreatedAt
+UpdatedAt
+SubmittedAt
+CompletedAt
+AcceptedAt
+AcceptedBy
+AcceptanceState
+ArchivedAt
+ArchivedBy
+TaskActivityEntry.ActorId
+TaskActivityEntry.ActorKind
+TaskActivityEntry.CreatedAt
+```
+
+Также нельзя импортировать privileged transitions без доверенной команды:
+
+```text
+AwaitingAcceptance -> Done
+Done -> Ready
+Cancelled -> Backlog
+```
+
+При попытке такого импорта Editor не должен молча отбрасывать поля. Изменение переходит в conflict или pending-import state, а diagnostics возвращают стабильный structured code и объяснение, какую trusted operation нужно выполнить.
+
+Обязательны `--dry-run`, atomic writes для save/headless paths, automatic backup для миграций, защита от записи за пределами project root, запрет изменения import cache через scene API, список затронутых файлов, validation before commit, стабильные UID, отсутствие молчаливого удаления неизвестных свойств, audit log операций MCP и undo group для каждой AI-транзакции.
 
 MCP-сервер не должен автоматически подписывать Android/iOS сборки, читать keystore/certificates, публиковать игру, удалять произвольные файлы или выполнять произвольный shell без отдельного разрешения.
 
@@ -669,7 +1243,7 @@ e2d docs member CharacterBody2D.MoveAndSlide
 e2d docs example "platformer movement"
 ```
 
-Документация каждого публичного API должна содержать назначение, сигнатуру, lifecycle restrictions, thread affinity, ownership/disposal, пример, ошибки, платформенные ограничения, renderer restrictions и отличия от Godot.
+Документация каждого публичного API должна содержать назначение, сигнатуру, lifecycle restrictions, thread affinity, ownership/disposal, пример, ошибки, платформенные ограничения и renderer restrictions. Отличия от Godot описываются только для API вне обязательного 2D-профиля `0.1.0`; для типов внутри профиля требуется `Parity verified`.
 
 ## Что AI-friendly не означает
 
@@ -695,10 +1269,12 @@ Editor должен оставаться полноценным инструме
 Critical для 0.1:
 
 - Live `ProjectWorkspace`;
+- immutable `WorkspaceSnapshot` для build/test/run/export artifacts;
 - общий Tooling слой семантических операций;
 - Editor session discovery и локальный IPC;
 - MCP подключение к активной Editor-сессии;
 - Agent Workspace panel;
+- `ProjectTaskManager` и `TaskActivity`;
 - live external-change synchronizer;
 - human-AI concurrent editing;
 - grouped Undo/Redo для AI-транзакций;
@@ -738,10 +1314,16 @@ High для 0.1:
 6. Разработчик вручную меняет другое свойство, и оба изменения сохраняются.
 7. Разработчик и AI меняют одно и то же свойство, и Editor показывает conflict panel, а не теряет данные.
 8. Агент запускает текущую сцену, и разработчик видит запущенную игру.
-9. Агент ставит игру на паузу, делает один frame step, отправляет input и получает screenshot.
-10. Агент обнаруживает ошибку через structured diagnostics и исправляет её.
-11. Разработчик одним Undo отменяет последнюю агентскую транзакцию.
-12. После отключения AI проект остаётся полностью редактируемым вручную.
+9. Запуск использует `WorkspaceSnapshot`, поэтому видимая игра отражает dirty-изменения игровых документов; изменение task activity после старта job не делает screenshot или runtime tree `stale`.
+10. Агент ставит игру на паузу, делает один frame step, отправляет input и получает screenshot.
+11. Агент обнаруживает ошибку через structured diagnostics и исправляет её.
+12. Agent Workspace показывает current task, linked transactions, linked jobs, diagnostics и artifacts.
+13. Агент переводит задачу в `Awaiting Acceptance`, но не может сам установить `Done` или обойти приёмку через подмену `ActorKind`/`PrincipalKind`.
+14. Разработчик одним Undo отменяет последнюю агентскую транзакцию.
+15. После отключения AI проект остаётся полностью редактируемым вручную.
+16. Агент аварийно завершается во время чтения состояния, и session lease освобождается без повреждения проекта.
+17. Агент аварийно завершается во время staged-транзакции, и Editor сохраняет целостное состояние с понятной diagnostics.
+18. Editor запускается и работает вручную, когда MCP отключён или недоступен.
 
 ### Headless benchmark
 
@@ -761,12 +1343,32 @@ High для 0.1:
 - агент не использовал недоступный Godot API;
 - проект открывается в Editor;
 - сцены проходят round-trip;
+- task state хранится в `ProjectTaskManager`, а не в `TASKS.md` или `completed-tasks/`;
 - тесты проходят;
 - сборка запускается;
 - все изменения находятся в ожидаемых source-файлах;
 - задача выполнена через документированный публичный интерфейс.
 
 Целевой показатель первой версии: Editor co-development benchmark проходит полностью для основного supported агента, а headless benchmark имеет не менее 80% успешных эталонных задач минимум на двух разных AI-агентах без специальных скрытых инструкций.
+
+## Рекомендуемый критический путь
+
+1. Canonical document model, UID и diagnostics core.
+2. `ProjectWorkspace` и stable formats.
+3. Immutable `WorkspaceSnapshot` и job contract.
+4. `WorkspaceTransactionEngine`.
+5. `ProjectTaskManager` Core.
+6. `Electron2D.Tooling` и `TaskService`.
+7. Workspace IPC protocol, CLI и MCP.
+8. Project Tasks board.
+9. Agent Workspace и project templates.
+10. Human-AI conflict handling.
+11. Headless runtime и debug bridge.
+12. Visible Editor-attached runtime.
+13. Capability manifest.
+14. AI acceptance benchmarks.
+15. Full release candidate gate.
+16. Final README и release packaging.
 
 ## Источники
 

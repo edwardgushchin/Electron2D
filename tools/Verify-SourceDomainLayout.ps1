@@ -50,7 +50,6 @@ $allowedCoreDomains = @(
 
 $requiredRootDomains = @(
     'Assets',
-    'Audio',
     'Core',
     'Export',
     'Graphics',
@@ -76,6 +75,7 @@ $requiredNestedDomains = @{
     )
     'Runtime' = @(
         'Animation',
+        'Audio',
         'Input',
         'Localization',
         'Scripting',
