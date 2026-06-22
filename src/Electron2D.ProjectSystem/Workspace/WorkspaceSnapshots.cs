@@ -370,6 +370,13 @@ internal sealed class WorkspaceJobArtifact
     public string ArtifactKind { get; }
 
     public WorkspaceJobInputIdentity InputIdentity { get; }
+
+    public bool Stale { get; private set; }
+
+    internal void SetStale(bool stale)
+    {
+        Stale = stale;
+    }
 }
 
 internal static class WorkspaceSnapshotStalenessEvaluator

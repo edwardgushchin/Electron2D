@@ -30,6 +30,7 @@
 | `E2D-PROJECT-0001` | `Error` | `Project` | project document malformed или не может быть parsed |
 | `E2D-PROJECT-0002` | `Error` | `Project` | project document version новее поддерживаемой |
 | `E2D-PROJECT-0003` | `Warning` | `Project` | project document содержит безопасно применимый suggested fix |
+| `E2D-TOOLING-0001` | `Info` | `Tooling` | job cancellation state changed или cancel request был отклонён без изменения job state |
 
 `StructuredDiagnostic.Create(...)` создаёт запись только по registered code. Если severity или category не совпадают с registry, factory завершает создание ошибкой. Это нужно, чтобы будущие CLI/MCP/Editor adapters не расходились в трактовке одного и того же кода.
 

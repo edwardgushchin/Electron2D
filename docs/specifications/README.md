@@ -43,6 +43,7 @@
 - [Stable project text formats, migrations и JSON Schema](project-system/project-text-formats.md) - deterministic formatting, validation, migration pipeline и JSON Schema для scene/resource/project JSON source files.
 - [Live ProjectWorkspace](project-system/live-project-workspace.md) - внутренняя live model проекта: document store, revisions, dirty state, events, ownership lease, operation journal и diagnostics store.
 - [WorkspaceSnapshot, job input identity и dirty export policy](project-system/workspace-snapshot.md) - immutable snapshot для build/test/run/export artifacts, materialization, stale rules и export dirty snapshot policy.
+- [WorkspaceJob contract и event stream](project-system/workspace-jobs.md) - внутренний контракт долгих import/build/test/export/run операций, lifecycle states, progress, cancel, diagnostics, artifacts и stale markers.
 
 ## Diagnostics
 

@@ -141,7 +141,13 @@ internal static class DiagnosticCodeRegistry
             DiagnosticSeverity.Warning,
             DiagnosticCategory.Project,
             "Project document has a safe suggested fix.",
-            "docs/documentation/diagnostics/diagnostics-core.md#e2d-project-0003")
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-project-0003"),
+        new(
+            "E2D-TOOLING-0001",
+            DiagnosticSeverity.Info,
+            DiagnosticCategory.Tooling,
+            "Workspace job cancellation state changed.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0001")
     ];
 
     private static readonly IReadOnlyList<DiagnosticCodeDefinition> SortedDefinitions =

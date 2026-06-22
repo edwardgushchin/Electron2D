@@ -239,6 +239,7 @@ internal sealed class ProjectWorkspace : IDisposable
         ImportState = new ProjectWorkspaceImportStateStore();
         BuildState = new ProjectWorkspaceBuildStateStore();
         Diagnostics = new ProjectWorkspaceDiagnosticsStore(this);
+        Jobs = new WorkspaceJobStore(this);
         CommandBus = new ProjectWorkspaceCommandBus(this);
     }
 
@@ -265,6 +266,8 @@ internal sealed class ProjectWorkspace : IDisposable
     public ProjectWorkspaceBuildStateStore BuildState { get; }
 
     public ProjectWorkspaceDiagnosticsStore Diagnostics { get; }
+
+    public WorkspaceJobStore Jobs { get; }
 
     public static ProjectWorkspace CreateHeadless(string projectRoot, string ownerId)
     {
