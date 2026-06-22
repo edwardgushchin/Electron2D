@@ -97,6 +97,13 @@ public class Panel : Control
             return;
         }
 
-        DrawRect(new Rect2(Vector2.Zero, Size), new Color(0.16f, 0.17f, 0.19f, 1f));
+        var rect = new Rect2(Vector2.Zero, Size);
+        if (GetThemeStyleBox("panel") is { } styleBox)
+        {
+            styleBox.Draw(this, rect);
+            return;
+        }
+
+        DrawRect(rect, HasThemeColor("panel") ? GetThemeColor("panel") : new Color(0.16f, 0.17f, 0.19f, 1f));
     }
 }

@@ -72,6 +72,7 @@ public class Viewport : Node
     private Camera2D? currentCamera;
     private ViewportTexture? viewportTexture;
     private Control? focusedControl;
+    private Control? hoveredControl;
     private bool inputDispatchActive;
     private bool inputHandled;
 
@@ -286,6 +287,41 @@ public class Viewport : Node
         }
     }
 
+    /// <summary>
+    /// Gets the control currently under the GUI pointer.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The last visible control hit by mouse or touch input, or <c>null</c>
+    /// when no control is currently hovered.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The value is updated during <see cref="SceneTree.DispatchInput(InputEvent)"/>
+    /// when the dispatched event carries a pointer position.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Control.GetTooltip(Vector2)"/>
+    public Control? GuiGetHoveredControl()
+    {
+        ThrowIfFreed();
+        return hoveredControl is not null &&
+            Object.IsInstanceValid(hoveredControl) &&
+            hoveredControl.IsVisibleInTree()
+            ? hoveredControl
+            : null;
+    }
+
     internal bool IsInputHandled => inputHandled;
 
     internal void SetCurrentCamera(Camera2D camera)
@@ -332,6 +368,7 @@ public class Viewport : Node
         if (inputEvent is InputEventMouse mouseEvent)
         {
             var target = FindMouseTarget(this, mouseEvent.Position);
+            hoveredControl = target;
             if (target is not null)
             {
                 DispatchMouseGuiInput(target, inputEvent, mouseEvent);
@@ -343,6 +380,7 @@ public class Viewport : Node
         if (inputEvent is InputEventScreenTouch screenTouch)
         {
             var target = FindMouseTarget(this, screenTouch.Position);
+            hoveredControl = target;
             if (target is not null)
             {
                 DispatchMouseGuiInput(target, inputEvent, screenTouch);
@@ -354,6 +392,7 @@ public class Viewport : Node
         if (inputEvent is InputEventScreenDrag screenDrag)
         {
             var target = FindMouseTarget(this, screenDrag.Position);
+            hoveredControl = target;
             if (target is not null)
             {
                 DispatchMouseGuiInput(target, inputEvent, pointerPressEvent: null);

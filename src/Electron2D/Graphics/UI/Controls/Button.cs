@@ -138,7 +138,16 @@ public class Button : BaseButton
     /// <seealso cref="BaseButton"/>
     public override void _Draw()
     {
-        DrawButtonFrame(new Rect2(Vector2.Zero, Size), GetButtonColor());
+        var rect = new Rect2(Vector2.Zero, Size);
+        if (GetThemeStyleBox(GetButtonStyleBoxName()) is { } styleBox)
+        {
+            styleBox.Draw(this, rect);
+        }
+        else
+        {
+            DrawButtonFrame(rect, GetButtonColor());
+        }
+
         DrawButtonText(new Vector2(8f, 0f), MathF.Max(0f, Size.X - 16f));
     }
 
@@ -204,23 +213,42 @@ public class Button : BaseButton
 
         var fontSize = GetThemeFontSize("font_size");
         var baseline = offset + new Vector2(0f, MathF.Max(font.GetAscent(fontSize), ((Size.Y - font.GetHeight(fontSize)) * 0.5f) + font.GetAscent(fontSize)));
-        DrawString(font, baseline, Text, HorizontalAlignment.Center, width, fontSize);
+        var color = HasThemeColor("font_color") ? GetThemeColor("font_color") : (Color?)null;
+        DrawString(font, baseline, Text, HorizontalAlignment.Center, width, fontSize, color);
     }
 
     internal Color GetButtonColor()
     {
         if (Disabled)
         {
-            return new Color(0.18f, 0.18f, 0.19f, 0.75f);
+            return HasThemeColor("disabled_color") ? GetThemeColor("disabled_color") : new Color(0.18f, 0.18f, 0.19f, 0.75f);
         }
 
         if (ButtonPressed || IsPressing)
         {
-            return new Color(0.25f, 0.32f, 0.45f, 1f);
+            return HasThemeColor("pressed_color") ? GetThemeColor("pressed_color") : new Color(0.25f, 0.32f, 0.45f, 1f);
         }
 
-        return HasFocus()
-            ? new Color(0.22f, 0.28f, 0.38f, 1f)
-            : new Color(0.20f, 0.22f, 0.25f, 1f);
+        if (HasFocus())
+        {
+            return HasThemeColor("focus_color") ? GetThemeColor("focus_color") : new Color(0.22f, 0.28f, 0.38f, 1f);
+        }
+
+        return HasThemeColor("normal_color") ? GetThemeColor("normal_color") : new Color(0.20f, 0.22f, 0.25f, 1f);
+    }
+
+    private string GetButtonStyleBoxName()
+    {
+        if (Disabled)
+        {
+            return "disabled";
+        }
+
+        if (ButtonPressed || IsPressing)
+        {
+            return "pressed";
+        }
+
+        return HasFocus() ? "focus" : "normal";
     }
 }

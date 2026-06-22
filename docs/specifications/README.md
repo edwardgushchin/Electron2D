@@ -63,6 +63,7 @@
 - [Control layout core](ui/control-layout-core.md) - anchors/offsets, minimum size, grow direction, clipping hit-test и focus navigation baseline.
 - [UI containers](ui/containers.md) - `Container`, линейные, табличные, margin, center и scroll containers, size flags и theme constants для layout.
 - [Базовые UI controls](ui/basic-controls.md) - `Panel`, кнопки, текстовый ввод, `Range`, `Slider`, `ProgressBar`, `TextureRect` и `NinePatchRect`.
+- [Темы, DPI scale и tooltips UI](ui/theme-tooltips.md) - `Theme`, style boxes, local theme overrides, fallback lookup, base scale и tooltip API.
 
 ## Локализация и настройки
 

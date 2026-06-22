@@ -236,6 +236,7 @@ internal static class ResourceObjectMetadataRegistry
         PhysicsShapeResourceMetadata.Register();
         PhysicsMaterialResourceMetadata.Register();
         TileSetResourceMetadata.Register();
+        ThemeResourceMetadata.Register();
     }
 
     public static void Register(ResourceObjectTypeMetadata metadata)

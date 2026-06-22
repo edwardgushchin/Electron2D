@@ -80,6 +80,9 @@ public class Control : CanvasItem
     private readonly Dictionary<string, Font> fontOverrides = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> fontSizeOverrides = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> themeConstantOverrides = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Color> colorOverrides = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Texture2D> iconOverrides = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, StyleBox> styleBoxOverrides = new(StringComparer.Ordinal);
     private float anchorLeft;
     private float anchorTop;
     private float anchorRight;
@@ -90,6 +93,9 @@ public class Control : CanvasItem
     private float offsetBottom;
     private Vector2 customMinimumSize;
     private float sizeFlagsStretchRatio = 1f;
+    private Theme? theme;
+    private string themeTypeVariation = string.Empty;
+    private string tooltipText = string.Empty;
 
     /// <summary>
     /// Gets or sets the left anchor of this control.
@@ -696,6 +702,125 @@ public class Control : CanvasItem
     public FocusMode FocusMode { get; set; } = FocusMode.None;
 
     /// <summary>
+    /// Gets or sets the theme resource applied to this control branch.
+    /// </summary>
+    ///
+    /// <value>
+    /// The theme resource assigned to this control, or <c>null</c> when this
+    /// control should inherit a theme from its parent controls.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// A theme assigned to a control is used by that control and by descendant
+    /// controls while the parent chain remains made of controls.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Theme"/>
+    /// <seealso cref="GetThemeColor(string, string)"/>
+    public Theme? Theme
+    {
+        get
+        {
+            ThrowIfFreed();
+            return theme;
+        }
+        set
+        {
+            ThrowIfFreed();
+            theme = value;
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the theme type variation used before this control type.
+    /// </summary>
+    ///
+    /// <value>
+    /// The variation name, or an empty string when no variation is used.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// A non-empty value gives a theme a way to style one control differently
+    /// from other controls of the same runtime type.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Theme"/>
+    public string ThemeTypeVariation
+    {
+        get
+        {
+            ThrowIfFreed();
+            return themeTypeVariation;
+        }
+        set
+        {
+            ThrowIfFreed();
+            themeTypeVariation = value ?? string.Empty;
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the default tooltip text for this control.
+    /// </summary>
+    ///
+    /// <value>
+    /// The tooltip text. A <c>null</c> assignment is normalized to an empty
+    /// string.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Override <see cref="_GetTooltip(Vector2)"/> when the text depends on
+    /// the pointer position.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetTooltip(Vector2)"/>
+    public string TooltipText
+    {
+        get
+        {
+            ThrowIfFreed();
+            return tooltipText;
+        }
+        set
+        {
+            ThrowIfFreed();
+            tooltipText = value ?? string.Empty;
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the explicit focus target used when navigating to the next control.
     /// </summary>
     ///
@@ -894,6 +1019,76 @@ public class Control : CanvasItem
     /// <seealso cref="FocusMode"/>
     public virtual void _GuiInput(InputEvent inputEvent)
     {
+    }
+
+    /// <summary>
+    /// Called to resolve tooltip text for a local pointer position.
+    /// </summary>
+    ///
+    /// <param name="atPosition">
+    /// The pointer position in this control's local coordinate space.
+    /// </param>
+    ///
+    /// <returns>
+    /// The tooltip text for the position, or an empty string when no tooltip
+    /// should be shown.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The base implementation returns <see cref="TooltipText"/>. Derived
+    /// controls can return different text for different subregions.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. It is called on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetTooltip(Vector2)"/>
+    /// <seealso cref="_MakeCustomTooltip(string)"/>
+    public virtual string _GetTooltip(Vector2 atPosition)
+    {
+        return TooltipText;
+    }
+
+    /// <summary>
+    /// Called to create a custom tooltip control for resolved text.
+    /// </summary>
+    ///
+    /// <param name="forText">
+    /// The tooltip text returned by <see cref="GetTooltip(Vector2)"/>.
+    /// </param>
+    ///
+    /// <returns>
+    /// A control used as a custom tooltip, or <c>null</c> to use the default
+    /// tooltip presentation.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The base implementation returns <c>null</c>. Callers that show tooltip
+    /// visuals own the returned control's lifetime.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. It is called on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetTooltip(Vector2)"/>
+    public virtual Control? _MakeCustomTooltip(string forText)
+    {
+        ArgumentNullException.ThrowIfNull(forText);
+        return null;
     }
 
     /// <summary>
@@ -1324,6 +1519,164 @@ public class Control : CanvasItem
     }
 
     /// <summary>
+    /// Gets tooltip text for a local pointer position.
+    /// </summary>
+    ///
+    /// <param name="atPosition">The pointer position in this control's local coordinate space.</param>
+    ///
+    /// <returns>The tooltip text, or an empty string when no tooltip is available.</returns>
+    ///
+    /// <remarks>
+    /// This method wraps <see cref="_GetTooltip(Vector2)"/> and normalizes a
+    /// <c>null</c> result to an empty string.
+    /// </remarks>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="TooltipText"/>
+    /// <seealso cref="_MakeCustomTooltip(string)"/>
+    public string GetTooltip(Vector2 atPosition)
+    {
+        ThrowIfFreed();
+        ValidateFinite(atPosition.X, nameof(atPosition));
+        ValidateFinite(atPosition.Y, nameof(atPosition));
+        return _GetTooltip(atPosition) ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Adds or replaces a color theme override for this control.
+    /// </summary>
+    ///
+    /// <param name="name">The theme color name.</param>
+    /// <param name="color">The color value to use.</param>
+    ///
+    /// <remarks>Local overrides have priority over assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="GetThemeColor(string, string)"/>
+    public void AddThemeColorOverride(string name, Color color)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        colorOverrides[name] = color;
+        QueueRedraw();
+    }
+
+    /// <summary>
+    /// Removes a color theme override from this control.
+    /// </summary>
+    ///
+    /// <param name="name">The theme color name.</param>
+    ///
+    /// <remarks>Removing a missing override is a no-op.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="HasThemeColorOverride(string)"/>
+    public void RemoveThemeColorOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (colorOverrides.Remove(name))
+        {
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
+    /// Reports whether this control has a local color override.
+    /// </summary>
+    ///
+    /// <param name="name">The theme color name.</param>
+    ///
+    /// <returns><c>true</c> when an override exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method does not inspect assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="AddThemeColorOverride(string, Color)"/>
+    public bool HasThemeColorOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return colorOverrides.ContainsKey(name);
+    }
+
+    /// <summary>
+    /// Gets a color from local overrides or inherited themes.
+    /// </summary>
+    ///
+    /// <param name="name">The theme color name.</param>
+    /// <param name="themeType">The optional theme type to query before this control's type chain.</param>
+    ///
+    /// <returns>The resolved color, or opaque white when no value exists.</returns>
+    ///
+    /// <remarks>Use <see cref="HasThemeColor(string, string)"/> to distinguish a missing value from an explicit white value.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="Theme"/>
+    public Color GetThemeColor(string name, string themeType = "")
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (colorOverrides.TryGetValue(name, out var color))
+        {
+            return color;
+        }
+
+        return TryResolveThemeItem(themeType, (Theme resolvedTheme, string candidateType, out Color value) => resolvedTheme.TryGetColor(name, candidateType, out value), out color)
+            ? color
+            : new Color(1f, 1f, 1f, 1f);
+    }
+
+    /// <summary>
+    /// Reports whether a color can be resolved.
+    /// </summary>
+    ///
+    /// <param name="name">The theme color name.</param>
+    /// <param name="themeType">The optional theme type to query before this control's type chain.</param>
+    ///
+    /// <returns><c>true</c> when a local or theme color exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method checks local overrides and inherited themes.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="GetThemeColor(string, string)"/>
+    public bool HasThemeColor(string name, string themeType = "")
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return colorOverrides.ContainsKey(name) ||
+            TryResolveThemeItem<Color>(themeType, (Theme resolvedTheme, string candidateType, out Color value) => resolvedTheme.TryGetColor(name, candidateType, out value), out _);
+    }
+
+    /// <summary>
     /// Adds or replaces a font theme override for this control.
     /// </summary>
     ///
@@ -1362,14 +1715,79 @@ public class Control : CanvasItem
     }
 
     /// <summary>
-    /// Gets a font theme override by name.
+    /// Removes a font theme override from this control.
     /// </summary>
     ///
     /// <param name="name">The theme font name.</param>
-    /// <returns>The overridden font, or <c>null</c> when no override exists.</returns>
+    ///
+    /// <remarks>Removing a missing override is a no-op.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="HasThemeFontOverride(string)"/>
+    public void RemoveThemeFontOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (fontOverrides.Remove(name))
+        {
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
+    /// Reports whether this control has a local font override.
+    /// </summary>
+    ///
+    /// <param name="name">The theme font name.</param>
+    ///
+    /// <returns><c>true</c> when an override exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method does not inspect assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="AddThemeFontOverride(string, Font)"/>
+    public bool HasThemeFontOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return fontOverrides.ContainsKey(name);
+    }
+
+    /// <summary>
+    /// Gets a font from local overrides, inherited themes or the default theme font.
+    /// </summary>
+    ///
+    /// <param name="name">The theme font item name.</param>
+    /// <param name="themeType">
+    /// The optional theme type to query before this control's variation and
+    /// runtime type chain.
+    /// </param>
+    ///
+    /// <returns>
+    /// The resolved font resource, or <c>null</c> when no matching item and no
+    /// default theme font exist.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Local overrides have priority. If no local override exists, the lookup
+    /// walks this control and its control parents until it finds a matching
+    /// theme item or default theme font.
+    /// </para>
+    /// </remarks>
     ///
     /// <exception cref="ArgumentException">
-    /// Thrown when <paramref name="name" /> is <c>null</c>, empty or whitespace.
+    /// Thrown when <paramref name="name"/> is <c>null</c>, empty or whitespace.
     /// </exception>
     ///
     /// <threadsafety>
@@ -1379,18 +1797,26 @@ public class Control : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
-    /// <remarks>
-    /// This method follows the validation and lifetime rules of its declaring type.
-    /// </remarks>
     ///
-    /// <seealso cref="Control" />
-    ///
-    public Font? GetThemeFont(string name)
+    /// <seealso cref="AddThemeFontOverride(string, Font)"/>
+    /// <seealso cref="Theme.SetFont(string, string, Font)"/>
+    /// <seealso cref="GetThemeDefaultFont"/>
+    public Font? GetThemeFont(string name, string themeType = "")
     {
         ThrowIfFreed();
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        return fontOverrides.TryGetValue(name, out var font) ? font : null;
+        if (fontOverrides.TryGetValue(name, out var font))
+        {
+            return font;
+        }
+
+        if (TryResolveThemeItem(themeType, (Theme resolvedTheme, string candidateType, out Font? value) => resolvedTheme.TryGetFont(name, candidateType, out value), out font))
+        {
+            return font;
+        }
+
+        return GetThemeDefaultFont();
     }
 
     /// <summary>
@@ -1435,14 +1861,80 @@ public class Control : CanvasItem
     }
 
     /// <summary>
-    /// Gets a font size theme override by name.
+    /// Removes a font size theme override from this control.
     /// </summary>
     ///
     /// <param name="name">The theme font size name.</param>
-    /// <returns>The overridden font size in pixels, or <c>16</c> when no override exists.</returns>
+    ///
+    /// <remarks>Removing a missing override is a no-op.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="HasThemeFontSizeOverride(string)"/>
+    public void RemoveThemeFontSizeOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (fontSizeOverrides.Remove(name))
+        {
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
+    /// Reports whether this control has a local font size override.
+    /// </summary>
+    ///
+    /// <param name="name">The theme font size name.</param>
+    ///
+    /// <returns><c>true</c> when an override exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method does not inspect assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="AddThemeFontSizeOverride(string, int)"/>
+    public bool HasThemeFontSizeOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return fontSizeOverrides.ContainsKey(name);
+    }
+
+    /// <summary>
+    /// Gets a scaled font size from local overrides, inherited themes or fallback values.
+    /// </summary>
+    ///
+    /// <param name="name">The theme font size item name.</param>
+    /// <param name="themeType">
+    /// The optional theme type to query before this control's variation and
+    /// runtime type chain.
+    /// </param>
+    ///
+    /// <returns>
+    /// The resolved font size after applying the resolved theme base scale.
+    /// The fallback value is <c>16</c> before scaling.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Local overrides and theme values are stored as logical UI units.
+    /// <c>GetThemeFontSize</c> multiplies the value by
+    /// <see cref="GetThemeDefaultBaseScale"/> and rounds it to at least
+    /// <c>1</c>.
+    /// </para>
+    /// </remarks>
     ///
     /// <exception cref="ArgumentException">
-    /// Thrown when <paramref name="name" /> is <c>null</c>, empty or whitespace.
+    /// Thrown when <paramref name="name"/> is <c>null</c>, empty or whitespace.
     /// </exception>
     ///
     /// <threadsafety>
@@ -1452,18 +1944,26 @@ public class Control : CanvasItem
     /// <since>
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
-    /// <remarks>
-    /// This method follows the validation and lifetime rules of its declaring type.
-    /// </remarks>
     ///
-    /// <seealso cref="Control" />
-    ///
-    public int GetThemeFontSize(string name)
+    /// <seealso cref="AddThemeFontSizeOverride(string, int)"/>
+    /// <seealso cref="Theme.SetFontSize(string, string, int)"/>
+    /// <seealso cref="GetThemeDefaultBaseScale"/>
+    public int GetThemeFontSize(string name, string themeType = "")
     {
         ThrowIfFreed();
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        return fontSizeOverrides.TryGetValue(name, out var fontSize) ? fontSize : 16;
+        if (fontSizeOverrides.TryGetValue(name, out var fontSize))
+        {
+            return ScaleFontSize(fontSize);
+        }
+
+        if (TryResolveThemeItem(themeType, (Theme resolvedTheme, string candidateType, out int value) => resolvedTheme.TryGetFontSize(name, candidateType, out value), out fontSize))
+        {
+            return ScaleFontSize(fontSize);
+        }
+
+        return GetThemeDefaultFontSize();
     }
 
     /// <summary>
@@ -1519,21 +2019,52 @@ public class Control : CanvasItem
     }
 
     /// <summary>
+    /// Removes a constant theme override from this control.
+    /// </summary>
+    ///
+    /// <param name="name">The theme constant name.</param>
+    ///
+    /// <remarks>Removing a missing override is a no-op.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="HasThemeConstantOverride(string)"/>
+    public void RemoveThemeConstantOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (themeConstantOverrides.Remove(name))
+        {
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
     /// Gets an integer theme constant override by name.
     /// </summary>
     ///
     /// <param name="name">
     /// The theme constant name.
     /// </param>
+    /// <param name="themeType">
+    /// The optional theme type to query before this control's variation and
+    /// runtime type chain.
+    /// </param>
     ///
     /// <returns>
-    /// The overridden constant value, or <c>0</c> when no override exists.
+    /// The resolved constant after applying the resolved theme base scale, or
+    /// <c>0</c> when no value exists.
     /// </returns>
     ///
     /// <remarks>
     /// <para>
-    /// Containers use this method for spacing and margin values. Missing values
-    /// deliberately resolve to zero so a caller can supply its own default.
+    /// Containers and controls use this method for spacing and margin values.
+    /// Local overrides have priority over inherited themes. Missing values
+    /// deliberately resolve to <c>0</c> so a caller can supply its own default.
     /// </para>
     /// </remarks>
     ///
@@ -1549,14 +2080,48 @@ public class Control : CanvasItem
     /// This method is available since Electron2D 0.1.0 Preview.
     /// </since>
     ///
-    /// <seealso cref="AddThemeConstantOverride"/>
-    /// <seealso cref="HasThemeConstantOverride"/>
-    public int GetThemeConstant(string name)
+    /// <seealso cref="AddThemeConstantOverride(string, int)"/>
+    /// <seealso cref="HasThemeConstant(string, string)"/>
+    /// <seealso cref="GetThemeDefaultBaseScale"/>
+    public int GetThemeConstant(string name, string themeType = "")
     {
         ThrowIfFreed();
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        return themeConstantOverrides.TryGetValue(name, out var constant) ? constant : 0;
+        if (themeConstantOverrides.TryGetValue(name, out var constant))
+        {
+            return ScaleConstant(constant);
+        }
+
+        return TryResolveThemeItem(themeType, (Theme resolvedTheme, string candidateType, out int value) => resolvedTheme.TryGetConstant(name, candidateType, out value), out constant)
+            ? ScaleConstant(constant)
+            : 0;
+    }
+
+    /// <summary>
+    /// Reports whether a constant can be resolved.
+    /// </summary>
+    ///
+    /// <param name="name">The theme constant name.</param>
+    /// <param name="themeType">The optional theme type to query before this control's type chain.</param>
+    ///
+    /// <returns><c>true</c> when a local or theme constant exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method checks local overrides and inherited themes.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="GetThemeConstant(string, string)"/>
+    public bool HasThemeConstant(string name, string themeType = "")
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return themeConstantOverrides.ContainsKey(name) ||
+            TryResolveThemeItem<int>(themeType, (Theme resolvedTheme, string candidateType, out int value) => resolvedTheme.TryGetConstant(name, candidateType, out value), out _);
     }
 
     /// <summary>
@@ -1600,9 +2165,352 @@ public class Control : CanvasItem
         return themeConstantOverrides.ContainsKey(name);
     }
 
+    /// <summary>
+    /// Adds or replaces an icon theme override for this control.
+    /// </summary>
+    ///
+    /// <param name="name">The theme icon name.</param>
+    /// <param name="icon">The texture resource to use.</param>
+    ///
+    /// <remarks>Local overrides have priority over assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="icon"/> is <c>null</c>.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="GetThemeIcon(string, string)"/>
+    public void AddThemeIconOverride(string name, Texture2D icon)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(icon);
+        iconOverrides[name] = icon;
+        QueueRedraw();
+    }
+
+    /// <summary>
+    /// Removes an icon theme override from this control.
+    /// </summary>
+    ///
+    /// <param name="name">The theme icon name.</param>
+    ///
+    /// <remarks>Removing a missing override is a no-op.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="HasThemeIconOverride(string)"/>
+    public void RemoveThemeIconOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (iconOverrides.Remove(name))
+        {
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
+    /// Reports whether this control has a local icon override.
+    /// </summary>
+    ///
+    /// <param name="name">The theme icon name.</param>
+    ///
+    /// <returns><c>true</c> when an override exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method does not inspect assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="AddThemeIconOverride(string, Texture2D)"/>
+    public bool HasThemeIconOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return iconOverrides.ContainsKey(name);
+    }
+
+    /// <summary>
+    /// Gets an icon from local overrides or inherited themes.
+    /// </summary>
+    ///
+    /// <param name="name">The theme icon name.</param>
+    /// <param name="themeType">The optional theme type to query before this control's type chain.</param>
+    ///
+    /// <returns>The resolved icon, or <c>null</c> when no value exists.</returns>
+    ///
+    /// <remarks>Icon lookup follows the same branch theme rules as colors and fonts.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="Theme.SetIcon(string, string, Texture2D)"/>
+    public Texture2D? GetThemeIcon(string name, string themeType = "")
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (iconOverrides.TryGetValue(name, out var icon))
+        {
+            return icon;
+        }
+
+        return TryResolveThemeItem(themeType, (Theme resolvedTheme, string candidateType, out Texture2D? value) => resolvedTheme.TryGetIcon(name, candidateType, out value), out icon) ? icon : null;
+    }
+
+    /// <summary>
+    /// Reports whether an icon can be resolved.
+    /// </summary>
+    ///
+    /// <param name="name">The theme icon name.</param>
+    /// <param name="themeType">The optional theme type to query before this control's type chain.</param>
+    ///
+    /// <returns><c>true</c> when a local or theme icon exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method checks local overrides and inherited themes.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="GetThemeIcon(string, string)"/>
+    public bool HasThemeIcon(string name, string themeType = "")
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return iconOverrides.ContainsKey(name) ||
+            TryResolveThemeItem<Texture2D?>(themeType, (Theme resolvedTheme, string candidateType, out Texture2D? value) => resolvedTheme.TryGetIcon(name, candidateType, out value), out _);
+    }
+
+    /// <summary>
+    /// Adds or replaces a style box theme override for this control.
+    /// </summary>
+    ///
+    /// <param name="name">The theme style box name.</param>
+    /// <param name="styleBox">The style box resource to use.</param>
+    ///
+    /// <remarks>Local overrides have priority over assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="styleBox"/> is <c>null</c>.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="GetThemeStyleBox(string, string)"/>
+    public void AddThemeStyleBoxOverride(string name, StyleBox styleBox)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(styleBox);
+        styleBoxOverrides[name] = styleBox;
+        QueueRedraw();
+    }
+
+    /// <summary>
+    /// Removes a style box theme override from this control.
+    /// </summary>
+    ///
+    /// <param name="name">The theme style box name.</param>
+    ///
+    /// <remarks>Removing a missing override is a no-op.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="HasThemeStyleBoxOverride(string)"/>
+    public void RemoveThemeStyleBoxOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (styleBoxOverrides.Remove(name))
+        {
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>
+    /// Reports whether this control has a local style box override.
+    /// </summary>
+    ///
+    /// <param name="name">The theme style box name.</param>
+    ///
+    /// <returns><c>true</c> when an override exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method does not inspect assigned theme resources.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="AddThemeStyleBoxOverride(string, StyleBox)"/>
+    public bool HasThemeStyleBoxOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return styleBoxOverrides.ContainsKey(name);
+    }
+
+    /// <summary>
+    /// Gets a style box from local overrides or inherited themes.
+    /// </summary>
+    ///
+    /// <param name="name">The theme style box name.</param>
+    /// <param name="themeType">The optional theme type to query before this control's type chain.</param>
+    ///
+    /// <returns>The resolved style box, or <c>null</c> when no value exists.</returns>
+    ///
+    /// <remarks>Style boxes are used by controls that draw themed backgrounds and borders.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="StyleBox"/>
+    public StyleBox? GetThemeStyleBox(string name, string themeType = "")
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (styleBoxOverrides.TryGetValue(name, out var styleBox))
+        {
+            return styleBox;
+        }
+
+        return TryResolveThemeItem(themeType, (Theme resolvedTheme, string candidateType, out StyleBox? value) => resolvedTheme.TryGetStyleBox(name, candidateType, out value), out styleBox) ? styleBox : null;
+    }
+
+    /// <summary>
+    /// Reports whether a style box can be resolved.
+    /// </summary>
+    ///
+    /// <param name="name">The theme style box name.</param>
+    /// <param name="themeType">The optional theme type to query before this control's type chain.</param>
+    ///
+    /// <returns><c>true</c> when a local or theme style box exists; otherwise, <c>false</c>.</returns>
+    ///
+    /// <remarks>This method checks local overrides and inherited themes.</remarks>
+    ///
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="GetThemeStyleBox(string, string)"/>
+    public bool HasThemeStyleBox(string name, string themeType = "")
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        return styleBoxOverrides.ContainsKey(name) ||
+            TryResolveThemeItem<StyleBox?>(themeType, (Theme resolvedTheme, string candidateType, out StyleBox? value) => resolvedTheme.TryGetStyleBox(name, candidateType, out value), out _);
+    }
+
+    /// <summary>
+    /// Gets the resolved theme base scale.
+    /// </summary>
+    ///
+    /// <returns>The nearest valid theme base scale, or <c>1</c> when no theme supplies one.</returns>
+    ///
+    /// <remarks>This value is used to scale font sizes and constants resolved by this control.</remarks>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="Theme.DefaultBaseScale"/>
+    public float GetThemeDefaultBaseScale()
+    {
+        ThrowIfFreed();
+        foreach (var candidate in EnumerateThemeOwners())
+        {
+            if (candidate.Theme?.HasDefaultBaseScale() == true)
+            {
+                return candidate.Theme.DefaultBaseScale;
+            }
+        }
+
+        return 1f;
+    }
+
+    /// <summary>
+    /// Gets the resolved default theme font.
+    /// </summary>
+    ///
+    /// <returns>The nearest default font, or <c>null</c> when no theme supplies one.</returns>
+    ///
+    /// <remarks>This value is used as fallback by <see cref="GetThemeFont(string, string)"/>.</remarks>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="Theme.DefaultFont"/>
+    public Font? GetThemeDefaultFont()
+    {
+        ThrowIfFreed();
+        foreach (var candidate in EnumerateThemeOwners())
+        {
+            if (candidate.Theme?.HasDefaultFont() == true)
+            {
+                return candidate.Theme.DefaultFont;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Gets the resolved default theme font size.
+    /// </summary>
+    ///
+    /// <returns>The scaled nearest default font size, or <c>16</c> when no theme supplies one.</returns>
+    ///
+    /// <remarks>This value is used as fallback by <see cref="GetThemeFontSize(string, string)"/>.</remarks>
+    ///
+    /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
+    ///
+    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    ///
+    /// <seealso cref="Theme.DefaultFontSize"/>
+    public int GetThemeDefaultFontSize()
+    {
+        ThrowIfFreed();
+        foreach (var candidate in EnumerateThemeOwners())
+        {
+            if (candidate.Theme?.HasDefaultFontSize() == true)
+            {
+                return ScaleFontSize(candidate.Theme.DefaultFontSize);
+            }
+        }
+
+        return ScaleFontSize(16);
+    }
+
     internal int GetThemeConstantOrDefault(string name, int defaultValue)
     {
-        return themeConstantOverrides.TryGetValue(name, out var constant) ? constant : defaultValue;
+        return HasThemeConstant(name) ? GetThemeConstant(name) : ScaleConstant(defaultValue);
     }
 
     internal Vector2 GlobalPosition
@@ -1662,6 +2570,73 @@ public class Control : CanvasItem
             Key.Down => FindExplicitFocus(FocusNeighborBottom),
             _ => null
         };
+    }
+
+    private delegate bool ThemeItemResolver<TValue>(Theme theme, string themeType, out TValue value);
+
+    private bool TryResolveThemeItem<TValue>(string themeType, ThemeItemResolver<TValue> resolver, out TValue value)
+    {
+        foreach (var owner in EnumerateThemeOwners())
+        {
+            var ownerTheme = owner.Theme;
+            if (ownerTheme is null)
+            {
+                continue;
+            }
+
+            foreach (var candidateType in GetThemeTypeCandidates(themeType))
+            {
+                if (resolver(ownerTheme, candidateType, out value!))
+                {
+                    return true;
+                }
+            }
+        }
+
+        value = default!;
+        return false;
+    }
+
+    private IEnumerable<Control> EnumerateThemeOwners()
+    {
+        for (Control? current = this; current is not null; current = current.GetParent() as Control)
+        {
+            yield return current;
+        }
+    }
+
+    private IEnumerable<string> GetThemeTypeCandidates(string explicitThemeType)
+    {
+        if (!string.IsNullOrWhiteSpace(explicitThemeType))
+        {
+            yield return explicitThemeType;
+        }
+
+        if (!string.IsNullOrWhiteSpace(ThemeTypeVariation))
+        {
+            yield return ThemeTypeVariation;
+        }
+
+        for (var type = GetType(); type is not null && typeof(Control).IsAssignableFrom(type); type = type.BaseType)
+        {
+            yield return type.Name;
+            if (type == typeof(Control))
+            {
+                yield break;
+            }
+        }
+    }
+
+    private int ScaleConstant(int value)
+    {
+        var scaled = value * GetThemeDefaultBaseScale();
+        return Math.Max(0, (int)MathF.Round(scaled, MidpointRounding.AwayFromZero));
+    }
+
+    private int ScaleFontSize(int value)
+    {
+        var scaled = value * GetThemeDefaultBaseScale();
+        return Math.Max(1, (int)MathF.Round(scaled, MidpointRounding.AwayFromZero));
     }
 
     private Rect2 GetLocalRect()
