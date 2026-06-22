@@ -30,6 +30,8 @@ Electron2D C# script lifecycle: _EnterTree,_Ready
 Electron2D C# script services: tree=True,text=True
 ```
 
+При запуске из редактора template также понимает переменную процесса `ELECTRON2D_CURRENT_SCENE`. Это относительный project path для запуска выбранной scene без изменения `project.e2d.json`.
+
 ## Script sample
 
 `Scripts/MainScene.cs` наследуется от `Electron2D.Node`, переопределяет `_EnterTree()` и `_Ready()`, а в `_Ready()` обращается к `GetTree()` и `RenderingServer`. Это минимальный baseline C# scripting без runtime compilation и без dynamic assembly load.

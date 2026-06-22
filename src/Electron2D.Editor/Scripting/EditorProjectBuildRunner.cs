@@ -102,7 +102,7 @@ internal sealed partial class EditorProjectBuildRunner
         return result;
     }
 
-    private static string ResolveProjectFile(string projectPath)
+    internal static string ResolveProjectFile(string projectPath)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(projectPath);
         var fullPath = Path.GetFullPath(projectPath);

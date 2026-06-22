@@ -25,6 +25,7 @@
 using Electron2D.Editor.Inspector;
 using Electron2D.Editor.FileSystemDock;
 using Electron2D.Editor.ProjectManagement;
+using Electron2D.Editor.Run;
 using Electron2D.Editor.Scripting;
 using Electron2D.Editor.SceneTreeDock;
 using Electron2D.Editor.Viewport2D;
@@ -75,7 +76,12 @@ internal static class Program
             return RunScriptWorkflowSmoke(scriptWorkflowWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>]");
+        if (args is ["--run-workflow-smoke", var runWorkflowWorkRoot])
+        {
+            return RunRunWorkflowSmoke(runWorkflowWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>]");
         return 2;
     }
 
@@ -304,6 +310,68 @@ internal static class Program
         }
     }
 
+    private static int RunRunWorkflowSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorRunWorkflowSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor run workflow smoke passed");
+            Console.WriteLine($"ProjectPath={result.ProjectPath}");
+            Console.WriteLine($"MainScenePath={result.MainScenePath}");
+            Console.WriteLine($"AlternateScenePath={result.AlternateScenePath}");
+            Console.WriteLine($"BuildDiagnosticCount={result.BuildDiagnosticCount}");
+            Console.WriteLine($"BuildFirstCode={result.BuildFirstCode}");
+            Console.WriteLine($"BuildFirstLine={result.BuildFirstLine}");
+            Console.WriteLine($"BuildFirstColumn={result.BuildFirstColumn}");
+            Console.WriteLine($"BuildFailureStartedProcess={result.BuildFailureStartedProcess}");
+            Console.WriteLine($"ProjectRunExitCode={result.ProjectRunExitCode}");
+            Console.WriteLine($"ProjectRunScene={result.ProjectRunScene}");
+            Console.WriteLine($"CurrentSceneRunExitCode={result.CurrentSceneRunExitCode}");
+            Console.WriteLine($"CurrentSceneRunScene={result.CurrentSceneRunScene}");
+            Console.WriteLine($"CurrentSceneOverrideStable={result.CurrentSceneOverrideStable}");
+            Console.WriteLine($"OutputContainsProjectRun={result.OutputContainsProjectRun}");
+            Console.WriteLine($"OutputContainsCurrentSceneRun={result.OutputContainsCurrentSceneRun}");
+            Console.WriteLine($"OutputLineCount={result.OutputLineCount}");
+            Console.WriteLine($"RuntimeFailureExitCode={result.RuntimeFailureExitCode}");
+            Console.WriteLine($"RuntimeStackTraceContains={result.RuntimeStackTraceContains}");
+            Console.WriteLine($"ShaderDiagnosticCount={result.ShaderDiagnosticCount}");
+            Console.WriteLine($"ShaderDiagnosticFile={result.ShaderDiagnosticFile}");
+            Console.WriteLine($"ShaderDiagnosticLine={result.ShaderDiagnosticLine}");
+            Console.WriteLine($"ShaderDiagnosticColumn={result.ShaderDiagnosticColumn}");
+            Console.WriteLine($"StopRequested={result.StopRequested}");
+            Console.WriteLine($"StopObserved={result.StopObserved}");
+            Console.WriteLine($"RepeatedRunStopCycles={result.RepeatedRunStopCycles}");
+            Console.WriteLine($"ActiveSessionAfterStop={result.ActiveSessionAfterStop}");
+            Console.WriteLine($"FrameSamples={result.FrameSamples}");
+            Console.WriteLine($"LastFrameTimeMs={Format(result.LastFrameTimeMs)}");
+            Console.WriteLine($"AverageFrameTimeMs={Format(result.AverageFrameTimeMs)}");
+            Console.WriteLine($"FramesPerSecond={Format(result.FramesPerSecond)}");
+
+            return result.ProjectRunExitCode == 0 &&
+                result.CurrentSceneRunExitCode == 0 &&
+                result.RuntimeFailureExitCode == 1 &&
+                !result.BuildFailureStartedProcess &&
+                result.CurrentSceneOverrideStable &&
+                result.OutputContainsProjectRun &&
+                result.OutputContainsCurrentSceneRun &&
+                result.RuntimeStackTraceContains &&
+                result.ShaderDiagnosticCount > 0 &&
+                result.StopRequested &&
+                result.StopObserved &&
+                result.RepeatedRunStopCycles == 3 &&
+                !result.ActiveSessionAfterStop &&
+                result.FrameSamples > 0
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
     private static string Format(Electron2D.Vector2 value)
     {
         return string.Create(
@@ -319,6 +387,11 @@ internal static class Program
     }
 
     private static string Format(float value)
+    {
+        return value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static string Format(double value)
     {
         return value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
     }

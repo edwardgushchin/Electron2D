@@ -59,6 +59,7 @@
 - [2D Viewport редактора](editor/viewport-2d.md) - текущая внутренняя модель pan/zoom, выбора, transform-инструментов, snapping, bounds, collision overlays и camera preview.
 - [Inspector редактора](editor/inspector.md) - текущая внутренняя модель редактирования saved properties, reset defaults, nested resources, serialization и undo/redo.
 - [FileSystem dock редактора](editor/file-system-dock.md) - текущая внутренняя модель просмотра project files, folders, rename/move resources, reimport, search, drag resource into scene и visible import errors.
+- [Run/output workflow редактора](editor/run-output-workflow.md) - текущая модель внутри редактора для запуска project/current scene, stop, output console, diagnostics и frame timing.
 
 ## Ввод
 

@@ -27,7 +27,10 @@ using System.Text.Json;
 using Electron2D;
 using Electron2D.Empty.Scripts;
 
-var projectFile = Path.Combine(AppContext.BaseDirectory, "project.e2d.json");
+const string CurrentSceneEnvironmentVariable = "ELECTRON2D_CURRENT_SCENE";
+
+var projectRoot = ResolveProjectRoot();
+var projectFile = Path.Combine(projectRoot, "project.e2d.json");
 if (!File.Exists(projectFile))
 {
     Console.Error.WriteLine("Electron2D project manifest was not found.");
@@ -48,17 +51,22 @@ if (string.IsNullOrWhiteSpace(mainScene))
     return 1;
 }
 
+var requestedScene = Environment.GetEnvironmentVariable(CurrentSceneEnvironmentVariable);
+var sceneToLoad = string.IsNullOrWhiteSpace(requestedScene)
+    ? mainScene
+    : NormalizeScenePath(requestedScene);
+
 var scenePath = Path.Combine(
-    AppContext.BaseDirectory,
-    mainScene.Replace('/', Path.DirectorySeparatorChar));
+    projectRoot,
+    sceneToLoad.Replace('/', Path.DirectorySeparatorChar));
 
 if (!File.Exists(scenePath))
 {
-    Console.Error.WriteLine($"Electron2D main scene was not found: {mainScene}");
+    Console.Error.WriteLine($"Electron2D scene was not found: {sceneToLoad}");
     return 1;
 }
 
-Console.WriteLine($"Electron2D empty scene loaded: {mainScene}");
+Console.WriteLine($"Electron2D empty scene loaded: {sceneToLoad}");
 
 var tree = new SceneTree();
 var script = new MainScene { Name = "MainScene" };
@@ -69,3 +77,35 @@ Console.WriteLine(
     $"Electron2D C# script services: tree={script.TreeWasAvailable},text={script.TextFeatureWasAvailable}");
 
 return script.IsReady ? 0 : 1;
+
+static string ResolveProjectRoot()
+{
+    var currentDirectoryProjectFile = Path.Combine(Environment.CurrentDirectory, "project.e2d.json");
+    if (File.Exists(currentDirectoryProjectFile))
+    {
+        return Environment.CurrentDirectory;
+    }
+
+    var outputDirectoryProjectFile = Path.Combine(AppContext.BaseDirectory, "project.e2d.json");
+    if (File.Exists(outputDirectoryProjectFile))
+    {
+        return AppContext.BaseDirectory;
+    }
+
+    return Environment.CurrentDirectory;
+}
+
+static string NormalizeScenePath(string value)
+{
+    var normalized = value.Replace('\\', '/').Trim();
+    if (Path.IsPathRooted(normalized) ||
+        normalized.Length == 0 ||
+        normalized.Split('/').Any(part => part is "" or "." or ".."))
+    {
+        Console.Error.WriteLine("Electron2D current scene override must be a relative project path.");
+        Environment.ExitCode = 1;
+        return string.Empty;
+    }
+
+    return normalized;
+}

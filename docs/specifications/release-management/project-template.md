@@ -58,3 +58,7 @@ Verifier должен:
 5. запустить проект и подтвердить, что пустая сцена найдена;
 6. подтвердить, что C# script sample получил `_EnterTree()`/`_Ready()`;
 7. подтвердить, что script sample увидел `GetTree()` и `RenderingServer`.
+
+## Editor run override
+
+Шаблон должен понимать переменную процесса `ELECTRON2D_CURRENT_SCENE`. Если она задана, проект запускает указанный scene file как относительный путь внутри проекта и не меняет `project.e2d.json`.

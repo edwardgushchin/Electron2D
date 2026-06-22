@@ -59,6 +59,7 @@
 - [2D Viewport редактора](editor/viewport-2d.md) - pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision-shape overlays и camera preview.
 - [Inspector редактора](editor/inspector.md) - редактирование saved properties, export metadata, reset defaults, nested resources, serialization и undo/redo.
 - [FileSystem dock редактора](editor/file-system-dock.md) - browse project files, folders, rename/move resources, reimport, search, drag resource into scene и visible import errors.
+- [Run/output workflow редактора](editor/run-output-workflow.md) - запуск project/current scene, stop, output console, diagnostics и frame timing.
 
 ## Ввод
 
