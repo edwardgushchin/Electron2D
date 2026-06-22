@@ -83,7 +83,7 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- docs example "p
 - `grouped Undo/Redo` — правило, что AI-транзакция попадает в историю отмены одной группой;
 - `visible runtime control` — запуск, пауза, step frame, input injection и screenshot в наблюдаемом пользователем runtime.
 
-`Editor Capability Manifest` — будущий машиночитаемый список семантически значимых возможностей редактора и их Tooling/MCP/CLI bindings. В текущем pipeline он доступен человеку и AI-агенту через indexed architecture documentation; будущие generated manifests должны добавлять отдельные `documentation` или `example` entries с тем же source metadata.
+`Editor Capability Manifest` — текущий машиночитаемый список семантически значимых возможностей редактора и их Tooling/MCP/CLI bindings. Canonical artifact хранится в `data/editor/electron2d-editor-capabilities.json`, а implementation documentation индексируется как обычная страница Tooling. MCP resource `electron2d://editor/capabilities` возвращает тот же manifest для AI-клиентов.
 
 `MCP resources` — ресурсы локального MCP-сервера, через которые AI-клиент читает состояние открытого проекта, документацию, диагностику и artifacts. До реализации MCP adapter локальная документация фиксирует контракт в `agent-native-workflow.md`, а `Verify-LocalDocumentation.ps1` проверяет, что этот раздел не выпал из documentation pipeline.
 

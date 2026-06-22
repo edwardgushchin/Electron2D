@@ -286,7 +286,7 @@ internal sealed class McpServerSession : IDisposable
         new("electron2d://resource/{uid}", "Resource document by stable UID."),
         new("electron2d://api/type/{name}", "API type description from local manifest."),
         new("electron2d://api/godot-compatibility/{name}", "Compatibility status from local manifest."),
-        new("electron2d://editor/capabilities", "Editor capability manifest placeholder."),
+        new("electron2d://editor/capabilities", "Editor capability manifest."),
         new("electron2d://runtime/capabilities", "Runtime capability manifest placeholder."),
         new("electron2d://runtime/session", "Active runtime session placeholder."),
         new("electron2d://docs/topic/{name}", "Local documentation topic.")
@@ -339,6 +339,8 @@ internal sealed class McpServerSession : IDisposable
         "task_request_changes",
         "task_cancel"
     ];
+
+    public static IReadOnlyList<string> DefaultToolNames => ToolNames;
 
     private readonly IDisposable owned;
     private bool disposed;
@@ -438,6 +440,7 @@ internal sealed class McpServerSession : IDisposable
             {
                 ["state"] = Workspace.BuildState.State
             }),
+            "electron2d://editor/capabilities" => new McpResourceResult(uri, EditorCapabilities()),
             _ => new McpResourceResult(uri, new JsonObject
             {
                 ["uri"] = uri,
@@ -488,7 +491,8 @@ internal sealed class McpServerSession : IDisposable
             ["route"] = RouteName(Route),
             ["cloudProviderRequired"] = false,
             ["resources"] = WriteResources(ListResources()),
-            ["tools"] = WriteTools(ListTools())
+            ["tools"] = WriteTools(ListTools()),
+            ["editorCapabilityManifest"] = EditorCapabilitySummary()
         };
     }
 
@@ -576,6 +580,30 @@ internal sealed class McpServerSession : IDisposable
         };
     }
 
+    private JsonObject EditorCapabilities()
+    {
+        return EditorCapabilityManifestSerializer.ToJson(EditorCapabilityManifestFactory.CreateDefault());
+    }
+
+    private JsonObject EditorCapabilitySummary()
+    {
+        var manifest = EditorCapabilityManifestFactory.CreateDefault();
+        var verification = EditorCapabilityManifestVerifier.Verify(
+            manifest,
+            new EditorCapabilityManifestVerificationInput(
+                DefaultToolNames,
+                ProjectToolingHost.SupportedCommandNames,
+                ResolveRepositoryRoot()));
+        return new JsonObject
+        {
+            ["path"] = "data/editor/electron2d-editor-capabilities.json",
+            ["capabilities"] = manifest.Capabilities.Count,
+            ["releaseRequired"] = manifest.Capabilities.Count(capability => capability.ReleaseRequired),
+            ["succeeded"] = verification.Succeeded,
+            ["diagnostics"] = WriteDiagnostics(verification.Diagnostics)
+        };
+    }
+
     private JsonObject OpenDocuments()
     {
         var documents = new JsonArray();
@@ -612,6 +640,22 @@ internal sealed class McpServerSession : IDisposable
             var relativePath = Path.GetRelativePath(projectRoot, file).Replace(Path.DirectorySeparatorChar, '/');
             OpenDocumentIfNeeded(workspace, projectRoot, relativePath, new ProjectDocumentRevision(1));
         }
+    }
+
+    private static string ResolveRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "data", "api", "electron2d-api-manifest.json")))
+            {
+                return directory.FullName;
+            }
+
+            directory = directory.Parent;
+        }
+
+        return AppContext.BaseDirectory;
     }
 
     private static void OpenDocumentIfNeeded(

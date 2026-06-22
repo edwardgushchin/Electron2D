@@ -177,6 +177,10 @@ public sealed class Electron2DMcpServerTests
         Assert.Contains(root.GetProperty("data").GetProperty("tools").EnumerateArray(), tool => tool.GetProperty("name").GetString() == "workspace_apply_transaction");
         Assert.Contains(root.GetProperty("data").GetProperty("resources").EnumerateArray(), resource => resource.GetProperty("uri").GetString() == "electron2d://project/summary");
         Assert.False(root.GetProperty("data").GetProperty("cloudProviderRequired").GetBoolean());
+        var capabilities = root.GetProperty("data").GetProperty("editorCapabilityManifest");
+        Assert.True(capabilities.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("data/editor/electron2d-editor-capabilities.json", capabilities.GetProperty("path").GetString());
+        Assert.True(capabilities.GetProperty("capabilities").GetInt32() >= 18);
     }
 
     private static string CreateProjectRoot(string name, string sceneText, string taskText)

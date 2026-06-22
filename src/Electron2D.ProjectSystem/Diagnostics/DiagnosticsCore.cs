@@ -143,6 +143,30 @@ internal static class DiagnosticCodeRegistry
             "CLI route selection rejected the command.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-cli-0003"),
         new(
+            "E2D-CAPABILITY-0001",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Editor capability parity is incomplete.",
+            "docs/documentation/tooling/editor-capability-manifest.md#diagnostics"),
+        new(
+            "E2D-CAPABILITY-0002",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Editor capability CLI binding policy is invalid.",
+            "docs/documentation/tooling/editor-capability-manifest.md#diagnostics"),
+        new(
+            "E2D-CAPABILITY-0003",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Editor capability manifest shape is invalid.",
+            "docs/documentation/tooling/editor-capability-manifest.md#diagnostics"),
+        new(
+            "E2D-CAPABILITY-0004",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Editor capability binding references an unpublished Tooling or MCP surface.",
+            "docs/documentation/tooling/editor-capability-manifest.md#diagnostics"),
+        new(
             "E2D-DOCTOR-0001",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Project,

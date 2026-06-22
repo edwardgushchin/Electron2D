@@ -1,0 +1,646 @@
+{
+  "schemaVersion": 1,
+  "manifestVersion": "0.1.0-preview",
+  "apiManifest": {
+    "path": "data/api/electron2d-api-manifest.json",
+    "references": [
+      "electron2d://api/type/Electron2D.AnimationPlayer",
+      "electron2d://api/type/Electron2D.Control",
+      "electron2d://api/type/Electron2D.InputMap",
+      "electron2d://api/type/Electron2D.Node",
+      "electron2d://api/type/Electron2D.Node2D",
+      "electron2d://api/type/Electron2D.Resource",
+      "electron2d://api/type/Electron2D.SceneTree",
+      "electron2d://api/type/Electron2D.TileMapLayer"
+    ]
+  },
+  "capabilities": [
+    {
+      "capability": "animationplayer.edit",
+      "title": "Edit AnimationPlayer tracks",
+      "categories": [
+        "animationplayer",
+        "scene"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": false,
+      "editor": {
+        "command": "AnimationPlayerEdit",
+        "status": "partial",
+        "explanation": "Editor workflow is represented in the manifest but still needs its specialized production UI task."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "partial",
+        "explanation": "Generic text mutation exists; specialized semantic command is not yet complete."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "partial",
+        "explanation": "Generic MCP transaction exists; specialized tool semantics are not yet complete."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI can use a generic transaction while the specialized workflow is completed."
+      }
+    },
+    {
+      "capability": "diagnostics.read",
+      "title": "Read workspace diagnostics",
+      "categories": [
+        "diagnostics"
+      ],
+      "kind": "readOnlyQuery",
+      "releaseRequired": true,
+      "editor": {
+        "command": "DiagnosticsRead",
+        "status": "supported",
+        "explanation": "Editor diagnostics are readable from the shared workspace state."
+      },
+      "tooling": {
+        "command": "diagnostics.read",
+        "status": "supported",
+        "explanation": "Tooling exposes diagnostics through the workspace state query contract."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_get_state",
+        "status": "supported",
+        "explanation": "MCP exposes diagnostics through the workspace state tool."
+      },
+      "cli": {
+        "kind": "notApplicable",
+        "command": null,
+        "explanation": "Read-only diagnostics are available through MCP/resources and do not require a dedicated CLI command."
+      }
+    },
+    {
+      "capability": "export.presets.update",
+      "title": "Update export presets source",
+      "categories": [
+        "export-presets",
+        "project-settings"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ExportPresetsUpdate",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "project.export",
+      "title": "Run project export job",
+      "categories": [
+        "export-presets"
+      ],
+      "kind": "backgroundJob",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ProjectExportRun",
+        "status": "supported",
+        "explanation": "Editor queues the operation through the shared job contract."
+      },
+      "tooling": {
+        "command": "project.export",
+        "status": "supported",
+        "explanation": "Tooling queues the operation with snapshot identity."
+      },
+      "mcp": {
+        "toolOrResource": "project_export",
+        "status": "supported",
+        "explanation": "MCP exposes the job tool with queued job events."
+      },
+      "cli": {
+        "kind": "dedicatedCommand",
+        "command": "export",
+        "explanation": "CLI has a dedicated `e2d export` route for this job."
+      }
+    },
+    {
+      "capability": "project.input_map.update",
+      "title": "Update Input Map source",
+      "categories": [
+        "input-map",
+        "project-settings"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ProjectInputMapUpdate",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "project.main_scene.set",
+      "title": "Set main scene",
+      "categories": [
+        "main-scene",
+        "project-settings"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ProjectMainSceneSet",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "project.settings.update",
+      "title": "Update Project Settings source",
+      "categories": [
+        "project-settings"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ProjectSettingsUpdate",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "resource.import",
+      "title": "Import resources",
+      "categories": [
+        "import-settings",
+        "resources"
+      ],
+      "kind": "backgroundJob",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ResourceImport",
+        "status": "supported",
+        "explanation": "Editor queues the operation through the shared job contract."
+      },
+      "tooling": {
+        "command": "resource.import",
+        "status": "supported",
+        "explanation": "Tooling queues the operation with snapshot identity."
+      },
+      "mcp": {
+        "toolOrResource": "resource_import",
+        "status": "supported",
+        "explanation": "MCP exposes the job tool with queued job events."
+      },
+      "cli": {
+        "kind": "dedicatedCommand",
+        "command": "import",
+        "explanation": "CLI has a dedicated `e2d import` route for this job."
+      }
+    },
+    {
+      "capability": "resource.import_settings.update",
+      "title": "Update resource import settings source",
+      "categories": [
+        "import-settings",
+        "resources"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ResourceImportSettingsUpdate",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "runtime.control.pause_step_input",
+      "title": "Pause, step and inject input into visible runtime",
+      "categories": [
+        "runtime-control"
+      ],
+      "kind": "runtimeAction",
+      "releaseRequired": false,
+      "editor": {
+        "command": "RuntimePauseStepInput",
+        "status": "partial",
+        "explanation": "Visible attached runtime controls are tracked for the later runtime-control task."
+      },
+      "tooling": {
+        "command": "runtime.pause-step-input",
+        "status": "partial",
+        "explanation": "Runtime debug bridge has partial state controls; full visible session parity is not complete."
+      },
+      "mcp": {
+        "toolOrResource": "runtime_pause",
+        "status": "partial",
+        "explanation": "MCP reserves runtime control tool names, but full production semantics are not complete."
+      },
+      "cli": {
+        "kind": "notApplicable",
+        "command": null,
+        "explanation": "Fine-grained visible Editor controls are not a dedicated headless CLI command."
+      }
+    },
+    {
+      "capability": "runtime.control.start",
+      "title": "Start runtime session",
+      "categories": [
+        "runtime-control"
+      ],
+      "kind": "runtimeAction",
+      "releaseRequired": true,
+      "editor": {
+        "command": "RuntimeStart",
+        "status": "supported",
+        "explanation": "Editor run workflow is routed through the shared runtime/job contract."
+      },
+      "tooling": {
+        "command": "project.run",
+        "status": "supported",
+        "explanation": "Tooling exposes runtime job queueing with snapshot identity."
+      },
+      "mcp": {
+        "toolOrResource": "project_run",
+        "status": "supported",
+        "explanation": "MCP exposes runtime start through the project run tool."
+      },
+      "cli": {
+        "kind": "dedicatedCommand",
+        "command": "run",
+        "explanation": "CLI has a dedicated `e2d run` route."
+      }
+    },
+    {
+      "capability": "scene.group.update",
+      "title": "Update node groups",
+      "categories": [
+        "groups",
+        "scene"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "SceneUpdateGroups",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "scene.node.add",
+      "title": "Add node to scene source",
+      "categories": [
+        "node",
+        "scene"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "SceneAddNode",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "scene.node.move",
+      "title": "Move or reparent node in scene source",
+      "categories": [
+        "node",
+        "scene"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "SceneMoveNode",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "scene.node.remove",
+      "title": "Remove node from scene source",
+      "categories": [
+        "node",
+        "scene"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "SceneRemoveNode",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "scene.node.set_property",
+      "title": "Set saved scene node property",
+      "categories": [
+        "inspector",
+        "node",
+        "scene"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "SceneSetProperty",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "scene.signal.connect",
+      "title": "Connect scene signal",
+      "categories": [
+        "scene",
+        "signals"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": true,
+      "editor": {
+        "command": "SceneConnectSignal",
+        "status": "supported",
+        "explanation": "Editor operation maps to the shared project document mutation route."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "supported",
+        "explanation": "Current Preview route uses the shared workspace transaction path for stable text project documents."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "supported",
+        "explanation": "MCP exposes the same project mutation through a stable workspace tool."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "spriteframes.edit",
+      "title": "Edit SpriteFrames resource",
+      "categories": [
+        "resources",
+        "spriteframes"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": false,
+      "editor": {
+        "command": "SpriteFramesEdit",
+        "status": "partial",
+        "explanation": "Editor workflow is represented in the manifest but still needs its specialized production UI task."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "partial",
+        "explanation": "Generic text mutation exists; specialized semantic command is not yet complete."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "partial",
+        "explanation": "Generic MCP transaction exists; specialized tool semantics are not yet complete."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI can use a generic transaction while the specialized workflow is completed."
+      }
+    },
+    {
+      "capability": "tests.run",
+      "title": "Run project tests",
+      "categories": [
+        "diagnostics",
+        "tests"
+      ],
+      "kind": "backgroundJob",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ProjectTestRun",
+        "status": "supported",
+        "explanation": "Editor queues the operation through the shared job contract."
+      },
+      "tooling": {
+        "command": "project.test",
+        "status": "supported",
+        "explanation": "Tooling queues the operation with snapshot identity."
+      },
+      "mcp": {
+        "toolOrResource": "project_test",
+        "status": "supported",
+        "explanation": "MCP exposes the job tool with queued job events."
+      },
+      "cli": {
+        "kind": "dedicatedCommand",
+        "command": "test",
+        "explanation": "CLI has a dedicated `e2d test` route for this job."
+      }
+    },
+    {
+      "capability": "tilemap.edit",
+      "title": "Edit TileMap cells and palette",
+      "categories": [
+        "resources",
+        "scene",
+        "tilemap"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": false,
+      "editor": {
+        "command": "TileMapEdit",
+        "status": "partial",
+        "explanation": "Editor workflow is represented in the manifest but still needs its specialized production UI task."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "partial",
+        "explanation": "Generic text mutation exists; specialized semantic command is not yet complete."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "partial",
+        "explanation": "Generic MCP transaction exists; specialized tool semantics are not yet complete."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI can use a generic transaction while the specialized workflow is completed."
+      }
+    },
+    {
+      "capability": "ui.theme.edit",
+      "title": "Edit UI theme resources",
+      "categories": [
+        "resources",
+        "ui-themes"
+      ],
+      "kind": "projectMutation",
+      "releaseRequired": false,
+      "editor": {
+        "command": "UiThemeEdit",
+        "status": "partial",
+        "explanation": "Editor workflow is represented in the manifest but still needs its specialized production UI task."
+      },
+      "tooling": {
+        "command": "workspace.apply-transaction",
+        "status": "partial",
+        "explanation": "Generic text mutation exists; specialized semantic command is not yet complete."
+      },
+      "mcp": {
+        "toolOrResource": "workspace_apply_transaction",
+        "status": "partial",
+        "explanation": "Generic MCP transaction exists; specialized tool semantics are not yet complete."
+      },
+      "cli": {
+        "kind": "genericTransaction",
+        "command": null,
+        "explanation": "CLI can use a generic transaction while the specialized workflow is completed."
+      }
+    }
+  ]
+}

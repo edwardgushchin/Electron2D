@@ -46,6 +46,8 @@ Manifest публикует обязательные Preview resources:
 
 `project/diagnostics` должен сохранять тот же полный diagnostic payload, что и CLI/JSONL adapters: file/node/resource location, related locations и safe suggested fixes не сокращаются до human-only строки.
 
+`electron2d://editor/capabilities` возвращает canonical `Editor Capability Manifest` из `data/editor/electron2d-editor-capabilities.json`. Этот resource показывает каждую capability, её category, support status, Tooling binding, MCP binding и CLI policy. Если строка имеет `partial`, это означает видимый контракт будущего workflow, а не готовый production путь.
+
 ## Tools
 
 Manifest публикует все обязательные tool names из MCP specification: project, scene, resource, workspace, runtime и task tools. Наличие имени означает стабильный route и безопасный failure mode.
@@ -93,7 +95,9 @@ Diagnostics lists внутри job events и будущие `operation.diagnosti
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- mcp serve --project <project-root> --format json
 ```
 
-возвращает общий CLI envelope с `command = "mcp serve"`, `route`, `data.resources`, `data.tools` и `data.cloudProviderRequired = false`.
+возвращает общий CLI envelope с `command = "mcp serve"`, `route`, `data.resources`, `data.tools`, `data.cloudProviderRequired = false` и `data.editorCapabilityManifest`.
+
+`data.editorCapabilityManifest` содержит `path`, количество capabilities, количество `releaseRequired` строк, `succeeded` и diagnostics verifier-а. Полный manifest читается через resource `electron2d://editor/capabilities`.
 
 ## Проверка
 
@@ -103,4 +107,4 @@ Focused проверка:
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DMcpServerTests
 ```
 
-Она покрывает manifest resources/tools, live dirty state active Editor route, `workspace_apply_transaction`, headless job event snapshot identity, task acceptance guard и CLI manifest без облачного AI-провайдера.
+Она покрывает manifest resources/tools, `electron2d://editor/capabilities`, live dirty state active Editor route, `workspace_apply_transaction`, headless job event snapshot identity, task acceptance guard и CLI manifest без облачного AI-провайдера.

@@ -47,6 +47,7 @@
 
 - [Electron2D.Tooling service boundary](tooling/tooling-service-boundary.md) - текущий internal project для общего operation result, project transaction wrappers, task service wrappers и job-backed long operations.
 - [Editor session discovery и Editor-hosted Agent Gateway](tooling/editor-session-discovery.md) - текущий internal registry/gateway contract для active Editor discovery, lease/heartbeat, endpoint validation, read-only второго Editor и headless fallback CLI/MCP adapter-ов.
+- [Editor Capability Manifest](tooling/editor-capability-manifest.md) - текущий tracked manifest возможностей Editor, Tooling/MCP parity verifier, CLI binding policy и MCP exposure.
 
 ## CLI
 

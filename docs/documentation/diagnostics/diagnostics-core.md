@@ -31,6 +31,10 @@
 | `E2D-CLI-0001` | `Error` | `Tooling` | command group или subcommand не реализован в текущем Preview scope |
 | `E2D-CLI-0002` | `Error` | `Tooling` | CLI arguments неполные или некорректные |
 | `E2D-CLI-0003` | `Error` | `Tooling` | route selection или project root не позволяют безопасно выполнить команду |
+| `E2D-CAPABILITY-0001` | `Error` | `Tooling` | Editor capability parity нарушен между Editor, Tooling и MCP |
+| `E2D-CAPABILITY-0002` | `Error` | `Tooling` | CLI binding policy для capability некорректна |
+| `E2D-CAPABILITY-0003` | `Error` | `Tooling` | Editor capability manifest имеет некорректную форму, ссылку или покрытие категорий |
+| `E2D-CAPABILITY-0004` | `Error` | `Tooling` | capability ссылается на неопубликованный Tooling command или MCP tool/resource |
 | `E2D-DIAG-0001` | `Error` | `Diagnostics` | diagnostic запись неполная или противоречит registry |
 | `E2D-DOCTOR-0001` | `Error` | `Project` | reproducibility baseline отсутствует, повреждён или противоречит `global.json`/`.csproj` |
 | `E2D-MCP-0001` | `Error` | `Tooling` | MCP tool опубликован в manifest, но его узкая production semantics ещё не реализована в текущем Preview scope |

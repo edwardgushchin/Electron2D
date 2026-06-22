@@ -36,6 +36,8 @@ internal enum ToolingApplyMode
 
 internal sealed class ProjectToolingHost
 {
+    public static IReadOnlyList<string> SupportedCommandNames => ProjectToolingCommandCatalog.SupportedCommandNames;
+
     public ProjectToolingHost(ProjectWorkspace workspace)
     {
         ArgumentNullException.ThrowIfNull(workspace);

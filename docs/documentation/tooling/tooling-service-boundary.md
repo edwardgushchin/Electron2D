@@ -24,6 +24,8 @@
 
 `ProjectToolingHost` не создаёт workspace lease сам. Открытие Editor/headless workspace остаётся ответственностью слоя выше.
 
+`ProjectToolingHost.SupportedCommandNames` публикует machine-readable список Tooling command identifiers для `Editor Capability Manifest`. Это не отдельный dispatcher: список нужен verifier-у, чтобы capability не ссылалась на несуществующий Tooling endpoint. Production semantics по-прежнему находятся в `ProjectService`, `TaskService` и job services.
+
 ## ToolingOperationResult
 
 Изменяющие операции возвращают `ToolingOperationResult`:
@@ -117,7 +119,9 @@ Tooling не имеет собственной логики merge, atomic write 
 
 Локальный registry/gateway contract для обнаружения active Editor-сессии реализован отдельно: [Editor session discovery и Editor-hosted Agent Gateway](editor-session-discovery.md).
 
-Эти возможности остаются в следующих задачах и должны использовать текущий Tooling contract.
+`Editor Capability Manifest` реализован отдельно: [Editor Capability Manifest](editor-capability-manifest.md). Он использует текущий Tooling catalog, чтобы проверять AI-паритет между Editor, Tooling, MCP и CLI.
+
+Остальные возможности остаются в следующих задачах и должны использовать текущий Tooling contract.
 
 ## Проверка
 
