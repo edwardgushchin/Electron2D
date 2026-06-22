@@ -363,7 +363,7 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
         "API-UI-and-Text.md",
         "UI and Text",
         "UI controls, labels, fonts and text alignment values.",
-        type => Named(type, "BaseButton", "BoxContainer", "BoxContainerAlignmentMode", "Button", "CenterContainer", "CheckBox", "Container", "Control", "FocusMode", "GridContainer", "GrowDirection", "HBoxContainer", "Label", "LineEdit", "MarginContainer", "NinePatchRect", "Panel", "ProgressBar", "Range", "ScrollContainer", "ScrollHintMode", "ScrollMode", "SizeFlags", "Slider", "StyleBox", "StyleBoxFlat", "TextureButton", "TextureRect", "Theme", "VBoxContainer", "Font", "HorizontalAlignment", "MouseFilter", "VerticalAlignment")),
+        type => Named(type, "BaseButton", "BoxContainer", "BoxContainerAlignmentMode", "Button", "CenterContainer", "CheckBox", "Container", "Control", "FocusMode", "GridContainer", "GrowDirection", "HBoxContainer", "ItemList", "Label", "LineEdit", "MarginContainer", "NinePatchRect", "Panel", "PopupMenu", "ProgressBar", "Range", "ScrollContainer", "ScrollHintMode", "ScrollMode", "SizeFlags", "Slider", "StyleBox", "StyleBoxFlat", "TabContainer", "TextureButton", "TextureRect", "Theme", "Tree", "TreeItem", "VBoxContainer", "Font", "HorizontalAlignment", "MouseFilter", "VerticalAlignment")),
     new ApiCategory(
         "API-Scripting-Metadata.md",
         "Scripting Metadata",
