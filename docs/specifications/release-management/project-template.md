@@ -13,7 +13,7 @@
 Canonical template:
 
 ```text
-templates/electron2d-empty/
+data/templates/electron2d-empty/
 ```
 
 Шаблон должен содержать:

@@ -12,7 +12,7 @@ Reference platformer и UI-heavy reference game должны получать л
 
 Маркер проверки: `reference-assets:manifest`.
 
-Поставляемый набор должен находиться в `assets/reference-games/` и включать:
+Поставляемый набор должен находиться в `data/assets/reference-games/` и включать:
 
 - `manifest.json` - machine-readable список файлов, sources, roles, games, sizes и SHA-256.
 - `LICENSES.md` - человекочитаемые license metadata по каждому внешнему source.
@@ -37,10 +37,10 @@ Reference platformer и UI-heavy reference game должны получать л
 
 Verifier `tools\Verify-ReferenceGameAssets.ps1` должен:
 
-- читать `assets/reference-games/manifest.json`;
+- читать `data/assets/reference-games/manifest.json`;
 - проверять `networkRequiredDuringBuild = false`;
 - запрещать remote asset paths;
-- проверять, что все shipped files находятся внутри `assets/reference-games/`;
+- проверять, что все shipped files находятся внутри `data/assets/reference-games/`;
 - проверять size и SHA-256 каждого asset file;
 - проверять базовые сигнатуры PNG, OGG и TTF;
 - проверять JSON/XML parse для localization, game data и source tilemap files;

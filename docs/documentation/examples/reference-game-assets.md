@@ -1,17 +1,17 @@
 # Ассеты reference games
 
-Текущий baseline `0.1.0 Preview` поставляет curated subset ассетов в `assets/reference-games/`.
+Текущий baseline `0.1.0 Preview` поставляет curated subset ассетов в `data/assets/reference-games/`.
 
 Маркер проверки: `reference-assets:manifest`.
 
 ## Что находится в репозитории
 
-- `assets/reference-games/manifest.json` - authoritative manifest для verifier-а и будущего release archive.
-- `assets/reference-games/LICENSES.md` - source metadata, author, license и upstream archive hashes.
-- `assets/reference-games/README.md` - локальные правила использования набора.
-- `assets/reference-games/platformer/` - графика, source tilemap files и OGG-звуки для reference platformer.
-- `assets/reference-games/shared/` - общий TTF font и UI sprites.
-- `assets/reference-games/ui-heavy/` - UI-графика, OGG-звуки, localization JSON и card-set JSON.
+- `data/assets/reference-games/manifest.json` - authoritative manifest для verifier-а и будущего release archive.
+- `data/assets/reference-games/LICENSES.md` - source metadata, author, license и upstream archive hashes.
+- `data/assets/reference-games/README.md` - локальные правила использования набора.
+- `data/assets/reference-games/platformer/` - графика, source tilemap files и OGG-звуки для reference platformer.
+- `data/assets/reference-games/shared/` - общий TTF font и UI sprites.
+- `data/assets/reference-games/ui-heavy/` - UI-графика, OGG-звуки, localization JSON и card-set JSON.
 
 ## Источники
 

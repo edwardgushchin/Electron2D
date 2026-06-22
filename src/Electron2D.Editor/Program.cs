@@ -113,7 +113,7 @@ internal static class Program
     {
         try
         {
-            var templateRoot = Path.Combine(FindRepositoryRoot(), "templates", "electron2d-empty");
+            var templateRoot = Path.Combine(FindRepositoryRoot(), "data", "templates", "electron2d-empty");
             var userSettingsPath = Path.Combine(Path.GetFullPath(userDataRoot), "user.e2settings.json");
             var manager = new EditorProjectManager(templateRoot);
             var result = manager.RunSmoke(workRoot, userSettingsPath);
@@ -402,7 +402,7 @@ internal static class Program
 
         while (directory is not null)
         {
-            if (Directory.Exists(Path.Combine(directory.FullName, "templates", "electron2d-empty")) &&
+            if (Directory.Exists(Path.Combine(directory.FullName, "data", "templates", "electron2d-empty")) &&
                 File.Exists(Path.Combine(directory.FullName, "src", "Electron2D.sln")))
             {
                 return directory.FullName;
@@ -414,7 +414,7 @@ internal static class Program
         var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory);
         while (workingDirectory is not null)
         {
-            if (Directory.Exists(Path.Combine(workingDirectory.FullName, "templates", "electron2d-empty")) &&
+            if (Directory.Exists(Path.Combine(workingDirectory.FullName, "data", "templates", "electron2d-empty")) &&
                 File.Exists(Path.Combine(workingDirectory.FullName, "src", "Electron2D.sln")))
             {
                 return workingDirectory.FullName;

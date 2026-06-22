@@ -17,7 +17,7 @@ Project settings сохраняются в `project.e2d.json`. Файл явля
 - `input.actions`: сохранённые `InputMap` actions;
 - `display`: window/display defaults.
 
-`templates/electron2d-empty/project.e2d.json` уже использует этот формат. `Program.cs` в шаблоне по-прежнему читает `mainScene` из root object, поэтому template verifier сохраняет прежний запуск пустой сцены.
+`data/templates/electron2d-empty/project.e2d.json` уже использует этот формат. `Program.cs` в шаблоне по-прежнему читает `mainScene` из root object, поэтому template verifier сохраняет прежний запуск пустой сцены.
 
 ## Input settings
 

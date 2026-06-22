@@ -9,7 +9,7 @@
 
 ## Контракт создания проекта
 
-- Project Manager использует canonical template `templates/electron2d-empty/`.
+- Project Manager использует canonical template `data/templates/electron2d-empty/`.
 - Создание проекта принимает имя проекта, целевую папку и renderer profile.
 - Имя проекта используется как имя папки, project display name в `project.e2d.json` и имя `.csproj`.
 - Значение namespace в template-коде нормализуется до валидного C# namespace token, если имя проекта содержит пробелы или недопустимые символы.

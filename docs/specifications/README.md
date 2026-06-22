@@ -32,6 +32,7 @@
 ## Репозиторий
 
 - [Политика лицензирования исходного кода](repository/license-policy.md) - MIT License, source headers и verifier для вручную написанного исходного кода.
+- [Раскладка репозитория и локальных рабочих материалов](repository/repository-layout.md) - local-only task/diary/release logs и поставляемые данные в `data/`.
 
 ## Ресурсы, импорт и сериализация
 

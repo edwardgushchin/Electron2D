@@ -54,7 +54,7 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-LinuxExport.ps1
 Verifier работает на Linux host напрямую или на Windows host через WSL. Он:
 
 1. восстанавливает и собирает локальный package `Electron2D`;
-2. создаёт временный проект из `templates/electron2d-empty`;
+2. создаёт временный проект из `data/templates/electron2d-empty`;
 3. восстанавливает зависимости из локального package source под `linux-x64`;
 4. публикует `Debug` и `Release` под `linux-x64` с `--self-contained true`;
 5. запускает exported Linux executable;

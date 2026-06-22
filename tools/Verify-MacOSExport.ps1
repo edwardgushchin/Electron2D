@@ -35,7 +35,7 @@ if ($architecture -ne 'arm64') {
 }
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$templateRoot = Join-Path $repoRoot 'templates/electron2d-empty'
+$templateRoot = Join-Path $repoRoot 'data/templates/electron2d-empty'
 $packageOutput = Join-Path $repoRoot '.temp/macos-export-package'
 $workRoot = Join-Path $repoRoot '.temp/macos-export-check'
 $createdProject = Join-Path $workRoot 'Electron2D.Empty'
@@ -44,7 +44,7 @@ $packagesRoot = Join-Path $workRoot '.nuget-packages'
 $nugetConfig = Join-Path $workRoot 'NuGet.Config'
 
 if (-not (Test-Path -LiteralPath $templateRoot)) {
-    throw 'Template directory templates/electron2d-empty was not found.'
+    throw 'Template directory data/templates/electron2d-empty was not found.'
 }
 
 Remove-Item -LiteralPath $packageOutput, $workRoot -Recurse -Force -ErrorAction SilentlyContinue

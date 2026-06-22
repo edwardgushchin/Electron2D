@@ -66,7 +66,7 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-MacOSExport.ps1
 Verifier работает только на macOS arm64 host. Он:
 
 1. восстанавливает и собирает локальный package `Electron2D`;
-2. создаёт временный проект из `templates/electron2d-empty`;
+2. создаёт временный проект из `data/templates/electron2d-empty`;
 3. восстанавливает зависимости из локального package source под `osx-arm64`;
 4. публикует `Debug` и `Release` под `osx-arm64` с `--self-contained true`;
 5. создаёт `.app` bundle с `Contents/Info.plist`;

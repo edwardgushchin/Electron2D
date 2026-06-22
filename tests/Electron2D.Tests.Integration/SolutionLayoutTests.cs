@@ -35,7 +35,61 @@ public sealed class SolutionLayoutTests
 
         Assert.True(File.Exists(Path.Combine(root, "src", "Electron2D", "Electron2D.csproj")));
         Assert.True(File.Exists(Path.Combine(root, "docs", "specifications", "releases", "0.1.0-preview.md")));
-        Assert.True(File.Exists(Path.Combine(root, "TASKS.md")));
+        Assert.True(Directory.Exists(Path.Combine(root, "data", "templates", "electron2d-empty")));
+        Assert.True(Directory.Exists(Path.Combine(root, "data", "assets", "reference-games")));
+        Assert.False(Directory.Exists(Path.Combine(root, "templates")));
+        Assert.False(Directory.Exists(Path.Combine(root, "assets")));
+    }
+
+    [Fact]
+    public void RepositoryDoesNotTrackLocalWorkMaterials()
+    {
+        var root = FindRepositoryRoot();
+        var trackedFiles = GetTrackedFiles();
+        var forbidden = new[]
+        {
+            "TASKS.md",
+            "CHANGELOG.md",
+            "RELEASE-NOTES.md"
+        };
+
+        foreach (var file in forbidden)
+        {
+            Assert.DoesNotContain(file, trackedFiles);
+        }
+
+        Assert.DoesNotContain(trackedFiles, file => file.StartsWith("completed-tasks/", StringComparison.Ordinal));
+        Assert.DoesNotContain(trackedFiles, file => file.StartsWith("dev-diary/", StringComparison.Ordinal));
+
+        var gitignore = File.ReadAllText(Path.Combine(root, ".gitignore"));
+        foreach (var pattern in new[] { "/TASKS.md", "/CHANGELOG*", "/RELEASE-NOTES*", "/completed-tasks/", "/dev-diary/" })
+        {
+            Assert.Contains(pattern, gitignore, StringComparison.Ordinal);
+        }
+
+        var gitattributes = File.ReadAllText(Path.Combine(root, ".gitattributes"));
+        Assert.Contains("data/assets/reference-games/** binary", gitattributes, StringComparison.Ordinal);
+    }
+
+    private static string[] GetTrackedFiles()
+    {
+        var root = FindRepositoryRoot();
+        var startInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = "git",
+            WorkingDirectory = root,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+        startInfo.ArgumentList.Add("ls-files");
+
+        using var process = System.Diagnostics.Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start git.");
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+
+        Assert.True(process.ExitCode == 0, $"git ls-files failed: {error}");
+        return output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
     }
 
     private static string FindRepositoryRoot()

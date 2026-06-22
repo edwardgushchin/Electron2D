@@ -19,11 +19,11 @@ Runtime package `src/Electron2D/Electron2D.csproj` использует:
 - `PackageReadmeFile`: `README.md`
 - `RepositoryType`: `git`
 
-## Релизные документы
+## Релизные документы и локальные черновики
 
-- `CHANGELOG.md` описывает текущее состояние preview baseline.
-- `RELEASE-NOTES.md` фиксирует ограничения: старый runtime удалён, новый Electron2D runtime ещё строится задачами из `TASKS.md`.
-- Breaking changes policy для `0.x` описывает, что публичный API может меняться между preview-сборками без compatibility layer, но каждое breaking change должно быть явно записано в changelog и release notes.
+- `CHANGELOG*` и `RELEASE-NOTES*` являются локальными черновиками maintainer-а и не отслеживаются Git.
+- Публичная release metadata для репозитория сейчас живёт в `README.md` и project metadata.
+- Breaking changes policy для `0.x` описывает, что публичный API может меняться между preview-сборками без compatibility layer, но каждое breaking change должно быть явно записано в публичном release text или локальном release draft перед публикацией GitHub Release.
 
 ## Проверка
 
@@ -31,4 +31,4 @@ Runtime package `src/Electron2D/Electron2D.csproj` использует:
 powershell -ExecutionPolicy Bypass -File tools/Verify-ReleaseMetadata.ps1
 ```
 
-Команда проверяет согласованность package metadata, changelog, release notes и README.
+Команда проверяет согласованность package metadata, README и отсутствие tracked release draft файлов.

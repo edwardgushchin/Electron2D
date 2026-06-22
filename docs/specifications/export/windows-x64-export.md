@@ -58,7 +58,7 @@ Diagnostics не должны содержать секреты или credentia
 `tools/Verify-WindowsExport.ps1` должен выполняться только на Windows host и проверять:
 
 1. локальную упаковку `Electron2D`;
-2. создание временного проекта из `templates/electron2d-empty`;
+2. создание временного проекта из `data/templates/electron2d-empty`;
 3. restore из локального package source;
 4. `dotnet publish` для Debug и Release с `win-x64` и `--self-contained true`;
 5. запуск exported executable;

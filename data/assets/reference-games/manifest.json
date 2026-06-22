@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "release": "0.1.0-preview",
+  "assetRoot": "data/assets/reference-games",
+  "networkRequiredDuringBuild": false,
+  "sources": [
+    {
+      "id": "kenney-pixel-platformer",
+      "title": "Pixel Platformer",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://opengameart.org/content/pixel-platformer-0",
+      "sourceArchive": "kenney_pixel-platformer.zip",
+      "sourceArchiveSha256": "d01a196dbe3cc964e00d83ba3b987df62f332dc9260c9f941b4fbcc9047130f4"
+    },
+    {
+      "id": "kenney-ui-pack",
+      "title": "UI Pack",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://opengameart.org/content/ui-pack",
+      "sourceArchive": "kenney_ui-pack.zip",
+      "sourceArchiveSha256": "a8a14a234911eb648c062622915c93e79e94e97cb7f9f375a70f6617f1174318"
+    },
+    {
+      "id": "kenney-rpg-sounds",
+      "title": "50 RPG Sound Effects",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://opengameart.org/content/50-rpg-sound-effects",
+      "sourceArchive": "RPGsounds_Kenney.zip",
+      "sourceArchiveSha256": "3ae398ad63e293f9c450bda22d5d81c3af69c74df66fc1400f33c012c0bbc231"
+    },
+    {
+      "id": "electron2d",
+      "title": "Electron2D reference game metadata",
+      "author": "Electron2D contributors",
+      "license": "MIT",
+      "licenseUrl": "../../LICENSE",
+      "sourceUrl": "https://github.com/edwardgushchin/Electron2D",
+      "sourceArchive": null,
+      "sourceArchiveSha256": null
+    }
+  ],
+  "requirements": {
+    "reference-platformer": [
+      "graphics.tileset",
+      "graphics.characters",
+      "graphics.backgrounds",
+      "graphics.sprite",
+      "audio.footstep",
+      "audio.movement",
+      "audio.interaction",
+      "level.source",
+      "ui.font",
+      "ui.sprite"
+    ],
+    "ui-heavy-reference": [
+      "graphics.ui",
+      "audio.interaction",
+      "audio.reward",
+      "ui.font",
+      "ui.sprite",
+      "localization",
+      "game.data"
+    ]
+  },
+  "assets": [
+    {
+      "id": "platformer.tilemap",
+      "path": "data/assets/reference-games/platformer/graphics/tilemap.png",
+      "games": [ "reference-platformer" ],
+      "roles": [ "graphics.tileset" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 6180,
+      "sha256": "75c4eb86e8ceba008cd73bfd839609e91de1ab32686ccd34dff904cfd39883ed"
+    },
+    {
+      "id": "platformer.characters",
+      "path": "data/assets/reference-games/platformer/graphics/tilemap-characters.png",
+      "games": [ "reference-platformer" ],
+      "roles": [ "graphics.characters" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 1996,
+      "sha256": "b4f63a99b228021c7c8106a09af47b1c9635e1a20b9dd9e6e666c9b36cc7d259"
+    },
+    {
+      "id": "platformer.backgrounds",
+      "path": "data/assets/reference-games/platformer/graphics/tilemap-backgrounds.png",
+      "games": [ "reference-platformer" ],
+      "roles": [ "graphics.backgrounds" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 669,
+      "sha256": "d9d06a0ea339d9b1ec27760a5f3189eebf193547ce531ecf7ecaa10262d4b43c"
+    },
+    {
+      "id": "platformer.player-idle",
+      "path": "data/assets/reference-games/platformer/graphics/player-idle.png",
+      "games": [ "reference-platformer" ],
+      "roles": [ "graphics.sprite" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 254,
+      "sha256": "15df14143949310c001b09b2a00ed2278a5a9b4a10edd276af306b77b8c9d658"
+    },
+    {
+      "id": "platformer.terrain-solid",
+      "path": "data/assets/reference-games/platformer/graphics/terrain-solid.png",
+      "games": [ "reference-platformer" ],
+      "roles": [ "graphics.sprite" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 190,
+      "sha256": "d7d12bf435f5b5fc2c12a93a86495a0e6e6afdccdb90f77436f08cf20a7f0c95"
+    },
+    {
+      "id": "platformer.tilemap-example-a",
+      "path": "data/assets/reference-games/platformer/levels/tilemap-example-a.tmx",
+      "games": [ "reference-platformer" ],
+      "roles": [ "level.source" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 4576,
+      "sha256": "f282da8d55c665707e922e5e79fdc1d91cce06001df5177f6ce7a0ff329973dd"
+    },
+    {
+      "id": "platformer.tileset-characters",
+      "path": "data/assets/reference-games/platformer/levels/tileset-characters.tsx",
+      "games": [ "reference-platformer" ],
+      "roles": [ "level.source" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 298,
+      "sha256": "b31ce20bc6d9ba798c6cd4062a4f4699b17053ad3030dbcebc01760874638c35"
+    },
+    {
+      "id": "platformer.tileset-tiles",
+      "path": "data/assets/reference-games/platformer/levels/tileset-tiles.tsx",
+      "games": [ "reference-platformer" ],
+      "roles": [ "level.source" ],
+      "source": "kenney-pixel-platformer",
+      "bytes": 254,
+      "sha256": "78624f84646a46221566f03364295dc5aee4990c3ecaac110cc38248730de5ef"
+    },
+    {
+      "id": "platformer.footstep",
+      "path": "data/assets/reference-games/platformer/audio/footstep00.ogg",
+      "games": [ "reference-platformer" ],
+      "roles": [ "audio.footstep" ],
+      "source": "kenney-rpg-sounds",
+      "bytes": 9475,
+      "sha256": "6fe61ef1fc3bcf0e253bf2eb64759db6cb69e2fe452f4d88cc597ecf78a3d601"
+    },
+    {
+      "id": "platformer.jump",
+      "path": "data/assets/reference-games/platformer/audio/jump-cloth1.ogg",
+      "games": [ "reference-platformer" ],
+      "roles": [ "audio.movement" ],
+      "source": "kenney-rpg-sounds",
+      "bytes": 16508,
+      "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+    },
+    {
+      "id": "platformer.checkpoint",
+      "path": "data/assets/reference-games/platformer/audio/checkpoint-door-open.ogg",
+      "games": [ "reference-platformer" ],
+      "roles": [ "audio.interaction" ],
+      "source": "kenney-rpg-sounds",
+      "bytes": 22848,
+      "sha256": "4ab93bab96522d8eb109ff96dc57cb6765deb02448fe14c10472084be5bb2a0b"
+    },
+    {
+      "id": "shared.font.kenney-future",
+      "path": "data/assets/reference-games/shared/fonts/kenney-future.ttf",
+      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "roles": [ "ui.font" ],
+      "source": "kenney-ui-pack",
+      "bytes": 34160,
+      "sha256": "7a55b07f5968fac872648a7c5e959bd2b93e06f63153b585d56e4d5298ddff61"
+    },
+    {
+      "id": "shared.ui.button",
+      "path": "data/assets/reference-games/shared/ui/button-rectangle-depth-flat.png",
+      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "roles": [ "ui.sprite" ],
+      "source": "kenney-ui-pack",
+      "bytes": 383,
+      "sha256": "6c709a45aae0330ffff5b060d9f14cc2297839f664e0a4c9e516d90ad085ec0b"
+    },
+    {
+      "id": "shared.ui.check",
+      "path": "data/assets/reference-games/shared/ui/check-square-color-checkmark.png",
+      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "roles": [ "ui.sprite" ],
+      "source": "kenney-ui-pack",
+      "bytes": 555,
+      "sha256": "4cfdc27d788a8f932e8f5c8bf5fa3d15e0ced631185d786161afe4b8d860d006"
+    },
+    {
+      "id": "shared.ui.slider",
+      "path": "data/assets/reference-games/shared/ui/slide-horizontal-color.png",
+      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "roles": [ "ui.sprite" ],
+      "source": "kenney-ui-pack",
+      "bytes": 383,
+      "sha256": "5e4336d1d816aefd6a17441ea190bacdab54705b560b59f0e54f5449f46c8798"
+    },
+    {
+      "id": "shared.ui.star",
+      "path": "data/assets/reference-games/shared/ui/star.png",
+      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "roles": [ "ui.sprite" ],
+      "source": "kenney-ui-pack",
+      "bytes": 1507,
+      "sha256": "ba91a196117f8c324beac04ae426379d054e9497be901469eea5d333b369265c"
+    },
+    {
+      "id": "ui-heavy.button-gradient",
+      "path": "data/assets/reference-games/ui-heavy/graphics/button-rectangle-depth-gradient.png",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "graphics.ui" ],
+      "source": "kenney-ui-pack",
+      "bytes": 582,
+      "sha256": "3fc1d9bedf07da0f1a49bed143311e6edf3bebd9a937e95a6ab4b812c8448ec0"
+    },
+    {
+      "id": "ui-heavy.square-button",
+      "path": "data/assets/reference-games/ui-heavy/graphics/button-square-depth-flat.png",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "graphics.ui" ],
+      "source": "kenney-ui-pack",
+      "bytes": 355,
+      "sha256": "7f113aa488dee62009fe7b7043b51672c9845d5d0dd0c856d8aa179c91a9c688"
+    },
+    {
+      "id": "ui-heavy.icon-checkmark",
+      "path": "data/assets/reference-games/ui-heavy/graphics/icon-checkmark.png",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "graphics.ui" ],
+      "source": "kenney-ui-pack",
+      "bytes": 377,
+      "sha256": "82a5c1c3dfe9a704e9f5f220c9510b622c77c2207c226b41728978c2335b1f3b"
+    },
+    {
+      "id": "ui-heavy.icon-cross",
+      "path": "data/assets/reference-games/ui-heavy/graphics/icon-cross.png",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "graphics.ui" ],
+      "source": "kenney-ui-pack",
+      "bytes": 350,
+      "sha256": "32eea5ea58f44f15c82691cad35406b32dfad7c3c1152d633dcd74a25e430d48"
+    },
+    {
+      "id": "ui-heavy.card-flip",
+      "path": "data/assets/reference-games/ui-heavy/audio/card-flip-bookflip1.ogg",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "audio.interaction" ],
+      "source": "kenney-rpg-sounds",
+      "bytes": 18248,
+      "sha256": "fa81ac2fedc8c641661b87e349630a36c9800e795e0c800e029214efdbe26a7d"
+    },
+    {
+      "id": "ui-heavy.reward",
+      "path": "data/assets/reference-games/ui-heavy/audio/reward-handle-coins.ogg",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "audio.reward" ],
+      "source": "kenney-rpg-sounds",
+      "bytes": 25394,
+      "sha256": "8a91f969e932df709df80ee124d86a51389eed9b67f22e5e716bc2bbf60d8dab"
+    },
+    {
+      "id": "ui-heavy.card-set",
+      "path": "data/assets/reference-games/ui-heavy/data/card-set.json",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "game.data" ],
+      "source": "electron2d",
+      "bytes": 403,
+      "sha256": "2fad6fb9eb32687c93835ea40f83e870d1695abd864e573f197a5903a0cb14d9"
+    },
+    {
+      "id": "ui-heavy.locale.en",
+      "path": "data/assets/reference-games/ui-heavy/localization/en.json",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "localization" ],
+      "source": "electron2d",
+      "bytes": 245,
+      "sha256": "16a8f5b133f8f8356fe41418f49bc0f9d57bb47b0b0dc406255ccd6104aca9ac"
+    },
+    {
+      "id": "ui-heavy.locale.ru",
+      "path": "data/assets/reference-games/ui-heavy/localization/ru.json",
+      "games": [ "ui-heavy-reference" ],
+      "roles": [ "localization" ],
+      "source": "electron2d",
+      "bytes": 310,
+      "sha256": "4eb6f8ceff6559151d05344310d5d39a0067b4393c098368c5aa4bee6b2f24ad"
+    }
+  ]
+}

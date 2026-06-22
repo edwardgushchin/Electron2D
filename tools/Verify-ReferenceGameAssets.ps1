@@ -25,9 +25,9 @@
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$manifestPath = Join-Path $repoRoot 'assets/reference-games/manifest.json'
-$licensesPath = Join-Path $repoRoot 'assets/reference-games/LICENSES.md'
-$readmePath = Join-Path $repoRoot 'assets/reference-games/README.md'
+$manifestPath = Join-Path $repoRoot 'data/assets/reference-games/manifest.json'
+$licensesPath = Join-Path $repoRoot 'data/assets/reference-games/LICENSES.md'
+$readmePath = Join-Path $repoRoot 'data/assets/reference-games/README.md'
 
 function Resolve-RepositoryPath([string]$relativePath) {
     if ([System.String]::IsNullOrWhiteSpace($relativePath)) {
@@ -123,7 +123,7 @@ if ($manifest.release -ne '0.1.0-preview') {
     throw "Unexpected reference asset manifest release: $($manifest.release)"
 }
 
-if ($manifest.assetRoot -ne 'assets/reference-games') {
+if ($manifest.assetRoot -ne 'data/assets/reference-games') {
     throw "Unexpected reference asset root: $($manifest.assetRoot)"
 }
 
@@ -179,8 +179,8 @@ foreach ($asset in @($manifest.assets)) {
     }
 
     $assetPath = [string]$asset.path
-    if (-not $assetPath.StartsWith('assets/reference-games/', [System.StringComparison]::Ordinal)) {
-        throw "Reference asset path must stay under assets/reference-games: $assetPath"
+    if (-not $assetPath.StartsWith('data/assets/reference-games/', [System.StringComparison]::Ordinal)) {
+        throw "Reference asset path must stay under data/assets/reference-games: $assetPath"
     }
 
     if ($assetPath -match '\\') {
@@ -248,9 +248,9 @@ $unexpectedFiles = Get-ChildItem -LiteralPath $manifestDirectory -Recurse -File 
         $relative = Resolve-Path -LiteralPath $_.FullName -Relative
         $normalized = ($relative -replace '^\.([\\/])', '').Replace('\', '/')
         $normalized -notin @(
-            'assets/reference-games/manifest.json',
-            'assets/reference-games/README.md',
-            'assets/reference-games/LICENSES.md'
+            'data/assets/reference-games/manifest.json',
+            'data/assets/reference-games/README.md',
+            'data/assets/reference-games/LICENSES.md'
         ) -and -not $assetPaths.Contains($normalized)
     }
 

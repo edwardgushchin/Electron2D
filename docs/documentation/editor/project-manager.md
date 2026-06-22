@@ -11,7 +11,7 @@ Project Manager в `Electron2D.Editor` отвечает за первый раб
 
 ## Создание проекта
 
-Project Manager создаёт проект из `templates/electron2d-empty/`:
+Project Manager создаёт проект из `data/templates/electron2d-empty/`:
 
 - копирует `Electron2D.Empty.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `scenes/main.scene.json` и `README.md`;
 - пропускает `.template.config/`, потому что это metadata для `dotnet new`, а не часть созданного проекта;

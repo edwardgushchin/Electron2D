@@ -50,7 +50,7 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-WindowsExport.ps1
 Verifier работает только на Windows host. Он:
 
 1. собирает локальный package `Electron2D`;
-2. создаёт временный проект из `templates/electron2d-empty`;
+2. создаёт временный проект из `data/templates/electron2d-empty`;
 3. восстанавливает зависимости из локального package source;
 4. публикует `Debug` и `Release` под `win-x64` с `--self-contained true`;
 5. запускает exported `.exe`;

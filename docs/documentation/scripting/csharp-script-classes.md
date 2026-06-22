@@ -21,7 +21,7 @@ Electron2D `0.1.0 Preview` фиксирует C# script model без runtime com
 
 ## Template sample
 
-Шаблон `templates/electron2d-empty/` содержит:
+Шаблон `data/templates/electron2d-empty/` содержит:
 
 - `Scripts/MainScene.cs` - минимальный script class `MainScene : Node`;
 - `Program.cs` - создаёт `SceneTree`, добавляет `MainScene` в `Root` и печатает проверочные строки.

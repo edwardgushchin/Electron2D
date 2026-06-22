@@ -26,8 +26,6 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $repoRoot 'src/Electron2D/Electron2D.csproj'
-$changelogPath = Join-Path $repoRoot 'CHANGELOG.md'
-$releaseNotesPath = Join-Path $repoRoot 'RELEASE-NOTES.md'
 $readmePath = Join-Path $repoRoot 'README.md'
 
 if (-not (Test-Path -LiteralPath $projectPath)) {
@@ -68,35 +66,25 @@ foreach ($entry in $expectedProperties.GetEnumerator()) {
     }
 }
 
-foreach ($path in @($changelogPath, $releaseNotesPath, $readmePath)) {
+foreach ($path in @($readmePath)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Required release metadata file was not found: $path"
     }
 }
 
-$changelog = Get-Content -LiteralPath $changelogPath -Raw
-$releaseNotes = Get-Content -LiteralPath $releaseNotesPath -Raw
 $readme = Get-Content -LiteralPath $readmePath -Raw
-
-if ($changelog.IndexOf('0.1.0-preview', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
-    throw 'CHANGELOG.md does not mention 0.1.0-preview.'
-}
-
-if ($releaseNotes.IndexOf('0.1.0 Preview', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
-    throw 'RELEASE-NOTES.md does not mention 0.1.0 Preview.'
-}
 
 if ($readme.IndexOf('0.1.0 Preview', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     throw 'README.md does not mention 0.1.0 Preview.'
 }
 
-if ($changelog.IndexOf('Breaking changes policy', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
-    throw 'CHANGELOG.md does not describe the breaking changes policy.'
+$trackedDrafts = & git -C $repoRoot ls-files -- 'CHANGELOG*' 'RELEASE-NOTES*' 'TASKS.md'
+if ($LASTEXITCODE -ne 0) {
+    throw 'git ls-files failed while checking local-only release draft files.'
 }
 
-if ($releaseNotes.IndexOf('Breaking changes policy', [System.StringComparison]::OrdinalIgnoreCase) -lt 0 -or
-    $releaseNotes.IndexOf('0.x', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
-    throw 'RELEASE-NOTES.md does not describe the 0.x breaking changes policy.'
+if (-not [System.String]::IsNullOrWhiteSpace($trackedDrafts)) {
+    throw "Local-only release draft or task files are tracked by Git: $trackedDrafts"
 }
 
 Write-Host 'Release metadata verification passed.'

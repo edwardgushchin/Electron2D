@@ -22,7 +22,7 @@ Script class должен:
 
 ## Template sample
 
-Шаблон `templates/electron2d-empty/` должен содержать `Scripts/MainScene.cs`.
+Шаблон `data/templates/electron2d-empty/` должен содержать `Scripts/MainScene.cs`.
 
 Минимальный sample:
 

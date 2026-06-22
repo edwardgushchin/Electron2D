@@ -7,7 +7,7 @@
 ## Где находится шаблон
 
 ```text
-templates/electron2d-empty/
+data/templates/electron2d-empty/
 ```
 
 Шаблон содержит .NET template metadata, минимальный `.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json` и пустую сцену `scenes/main.scene.json`.

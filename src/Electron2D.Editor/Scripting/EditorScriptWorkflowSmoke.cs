@@ -38,7 +38,7 @@ internal static class EditorScriptWorkflowSmoke
         ArgumentException.ThrowIfNullOrWhiteSpace(workRoot);
 
         var repoRoot = FindRepositoryRoot();
-        var templateRoot = Path.Combine(repoRoot, "templates", "electron2d-empty");
+        var templateRoot = Path.Combine(repoRoot, "data", "templates", "electron2d-empty");
         var manager = new EditorProjectManager(templateRoot);
         var creation = manager.CreateProject(new EditorProjectCreateOptions(
             ProjectName,
@@ -212,7 +212,7 @@ internal static class EditorScriptWorkflowSmoke
 
         while (directory is not null)
         {
-            if (Directory.Exists(Path.Combine(directory.FullName, "templates", "electron2d-empty")) &&
+            if (Directory.Exists(Path.Combine(directory.FullName, "data", "templates", "electron2d-empty")) &&
                 File.Exists(Path.Combine(directory.FullName, "src", "Electron2D.sln")))
             {
                 return directory.FullName;
@@ -224,7 +224,7 @@ internal static class EditorScriptWorkflowSmoke
         var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory);
         while (workingDirectory is not null)
         {
-            if (Directory.Exists(Path.Combine(workingDirectory.FullName, "templates", "electron2d-empty")) &&
+            if (Directory.Exists(Path.Combine(workingDirectory.FullName, "data", "templates", "electron2d-empty")) &&
                 File.Exists(Path.Combine(workingDirectory.FullName, "src", "Electron2D.sln")))
             {
                 return workingDirectory.FullName;

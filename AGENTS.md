@@ -22,7 +22,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Every public API type, constructor, method, field, property, event, delegate, enum, and enum value must have full SDL-like C# XML documentation. Follow the completeness level of SDL3-CS public API comments such as `PInvoke.cs`: use `<summary>` with `<para>` blocks when the description has more than one sentence, `<remarks>` for behavior and limits, `<param name="...">`, `<typeparam name="...">`, `<returns>`, `<exception cref="...">`, `<threadsafety>`, `<since>`, and `<seealso cref="..."/>` where applicable. Use inline XML tags such as `<see cref="..."/>`, `<paramref name="..."/>`, and `<c>...</c>` instead of plain text code names when a symbol or literal is referenced. Do not leave placeholder comments, bare `<inheritdoc />`, or one-line summaries for public API unless the member is a trivial override whose inherited documentation is exactly correct.
 
 ## Repository-First Workflow
-- Inspect the repository before changing it. Start with local instructions, `README` or documentation indexes, `TASKS.md`, and nearby source or tests relevant to the request.
+- Inspect the repository before changing it. Start with local instructions, `README` or documentation indexes, local `TASKS.md` when present, and nearby source or tests relevant to the request.
 - Use fast search tools such as `rg --files` and `rg` when available.
 - Let the existing structure, patterns, helper APIs, naming, and test style guide the implementation.
 - Keep edits scoped to the requested behavior. Avoid unrelated refactors, formatting churn, dependency changes, and metadata churn unless they are necessary to complete the task safely.
@@ -30,7 +30,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 
 ## License Policy
 - Electron2D is distributed under the MIT License. Do not replace it with SDL's zlib license text: "SDL-like" for this repository means a full per-file license block at the top of source files, using Electron2D's MIT terms.
-- Every tracked hand-written C# source file (`*.cs`) in `src/`, `tests/`, and `templates/` must start with the project MIT header in `/* ... */` form.
+- Every tracked hand-written C# source file (`*.cs`) in `src/`, `tests/`, and `data/templates/` must start with the project MIT header in `/* ... */` form.
 - Every tracked PowerShell source file (`*.ps1`) in `tools/` must start with the project MIT header in `<# ... #>` form.
 - Preserve existing license headers when editing source files. When creating a new source file, add the header before code or declarations.
 - Run `powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1` before staging or committing source changes.
@@ -53,20 +53,21 @@ These instructions are global defaults for Codex agents across projects. They ap
 - A feature or runtime change is not complete until the specification, automated tests, implementation documentation, and code are aligned. If the project has no viable test toolchain, add and document one or mark implementation blocked before writing production code.
 
 ## Task Workflow
-- Active tasks live in `TASKS.md`. Every substantive project change should be represented there before implementation.
-- If `TASKS.md` is missing, create it with a minimal generic task template in the repository's default human language before making substantive changes.
+- Active tasks live in local `TASKS.md`. This file is intentionally ignored by Git and must not be staged or pushed. Every substantive project change should still be represented there before implementation when the local file is present.
+- If local `TASKS.md` is missing, create it with a minimal generic task template in the repository's default human language before making substantive changes, but keep it local-only.
+- `CHANGELOG*` and `RELEASE-NOTES*` are local release draft files. They must stay ignored by Git and must not be staged, committed, pushed, or treated as canonical remote documentation.
 - Task IDs should be stable and sequential, for example `T-0001`. Use local ISO 8601 timestamps with timezone offsets.
 - Use clear statuses such as open, in progress, blocked, and accepted/closed. Mark only the task being worked on as in progress.
 - Each task should be zero-context for another agent: include priority, dependencies, linked specs/docs/source files, a detailed brief, acceptance criteria, subtasks when useful, and agent notes.
 - Acceptance criteria for code changes must explicitly require the specification, automated tests, and implementation documentation described in the Feature Gate.
 - Do not close or archive a task just because implementation is finished. Close/archive only after the user explicitly accepts it.
-- Completed tasks belong in `completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. Do not create one-file-per-task archives such as `completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
+- Completed tasks belong in local `completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. These archives are intentionally ignored by Git and must not be staged or pushed. Do not create one-file-per-task archives such as `completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
 
 ## Release Sequencing
 - Do not start `Electron2D.Editor` implementation tasks until the UI public API gate is closed: all UI-related public API rows in GitHub Wiki `API-Compatibility.md` must be implemented, tested, documented, and marked `Supported`, not `Partial`. It is not enough to change compatibility labels; the underlying runtime API, XML comments, generated Wiki pages, specifications, implementation documentation, and automated checks must already match the `Supported` status.
 
 ## Development Diary
-- Every agent session that works in this repository must keep a development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product specifications, and must not be used as a future-work backlog.
+- Every agent session that works in this repository must keep a local development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product specifications, and must not be used as a future-work backlog. `dev-diary/` is intentionally ignored by Git and must not be staged or pushed.
 - Use the local date for the file path: `dev-diary/YYYY/MM Месяц/DD-MM-YYYY.md`, for example `dev-diary/2026/06 Июнь/21-06-2026.md`. `YYYY` is the local four-digit year. Month directory names use Russian month names.
 - New daily diary files must start with `# Дневник разработки: DD-MM-YYYY`. If a historical daily file already exists without this heading or in an older format, keep it append-only and add new entries strictly at the tail; do not rewrite old entries only to migrate formatting.
 - Add or update a diary entry when starting work in the repository, after important decisions, discoveries, file changes, checks, commits, pushes, blockers, cleanup, scope changes, and before sending the final response.

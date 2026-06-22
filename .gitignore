@@ -33,6 +33,13 @@ coverage.*
 *.temp
 .temp/
 
+# Local project management notes and release drafting files.
+/TASKS.md
+/completed-tasks/
+/dev-diary/
+/CHANGELOG*
+/RELEASE-NOTES*
+
 # Local clone of the GitHub Wiki repository.
 /.github/wiki/
 

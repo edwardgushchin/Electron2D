@@ -25,7 +25,7 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-template_root="$repo_root/templates/electron2d-empty"
+template_root="$repo_root/data/templates/electron2d-empty"
 package_output="$repo_root/.temp/linux-export-package"
 work_root="$repo_root/.temp/linux-export-check"
 created_project="$work_root/Electron2D.Empty"
@@ -34,7 +34,7 @@ packages_root="$work_root/.nuget-packages"
 nuget_config="$work_root/NuGet.Config"
 
 if [[ ! -d "$template_root" ]]; then
-    echo "Template directory templates/electron2d-empty was not found." >&2
+    echo "Template directory data/templates/electron2d-empty was not found." >&2
     exit 1
 fi
 

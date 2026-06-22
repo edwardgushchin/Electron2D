@@ -15,7 +15,7 @@
 powershell -ExecutionPolicy Bypass -File tools\Verify-ProjectTemplate.ps1
 ```
 
-Эта команда собирает локальный package `Electron2D`, создаёт проект из `templates/electron2d-empty`, выполняет restore/build/run и проверяет output первой сцены и C# script lifecycle.
+Эта команда собирает локальный package `Electron2D`, создаёт проект из `data/templates/electron2d-empty`, выполняет restore/build/run и проверяет output первой сцены и C# script lifecycle.
 
 После публикации package обычный проект будет подключать runtime как NuGet dependency:
 
@@ -28,7 +28,7 @@ dotnet add package Electron2D --version 0.1.0-preview
 <!-- user-doc:first-project -->
 ## Первый проект
 
-Проверенный template находится в `templates/electron2d-empty`.
+Проверенный template находится в `data/templates/electron2d-empty`.
 
 Минимальный проект содержит:
 
@@ -76,7 +76,7 @@ Main scene задаётся в `project.e2d.json`:
 
 Текущий scripting baseline использует обычные C# classes, которые наследуются от `Node`.
 
-Проверенный пример находится в `templates/electron2d-empty/Scripts/MainScene.cs`. Он показывает lifecycle callbacks `_EnterTree()` и `_Ready()`, а также доступ к runtime services через `GetTree()` и `RenderingServer`.
+Проверенный пример находится в `data/templates/electron2d-empty/Scripts/MainScene.cs`. Он показывает lifecycle callbacks `_EnterTree()` и `_Ready()`, а также доступ к runtime services через `GetTree()` и `RenderingServer`.
 
 Editor workflow для создания script file, attach к узлу, встроенного редактирования code text и сборки проекта реализован как внутренняя модель редактора. Пользовательский script остаётся обычным `.cs` файлом проекта и компилируется вместе с проектом.
 

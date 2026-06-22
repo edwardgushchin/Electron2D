@@ -24,6 +24,7 @@
 ## Репозиторий
 
 - [Политика MIT License и source headers](repository/license-policy.md) - текущая проверка корневой лицензии и license header в исходных файлах.
+- [Раскладка репозитория и локальных рабочих материалов](repository/repository-layout.md) - текущие local-only рабочие файлы и `data/` root для шаблонов/ассетов.
 
 ## Документация
 
