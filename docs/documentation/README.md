@@ -50,6 +50,10 @@
 - [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - текущие публичные marker attributes и internal metadata bridge для export properties, signals и tool-state.
 - [Безопасное editor-time выполнение `[Tool]` scripts](scripting/tool-script-execution.md) - текущий внутренний execution host для registered tool metadata без dynamic assembly load.
 
+## Редактор
+
+- [Electron2D.Editor project shell](editor/editor-project-shell.md) - текущий executable shell редактора, smoke-запуск на runtime Electron2D и отсутствие внешнего desktop UI framework.
+
 ## Ввод
 
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - текущий internal platform mapper для keyboard, mouse, wheel, text input и dispatch order.

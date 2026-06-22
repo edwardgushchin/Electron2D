@@ -50,6 +50,10 @@
 - [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - публичные marker attributes и internal AOT-safe bridge для serialization/Inspector.
 - [Безопасное editor-time выполнение `[Tool]` scripts](scripting/tool-script-execution.md) - внутренний execution host для registered tool metadata без dynamic assembly load.
 
+## Редактор
+
+- [Electron2D.Editor project shell](editor/editor-project-shell.md) - базовый executable project редактора, smoke-запуск на runtime Electron2D и запрет внешнего desktop UI framework.
+
 ## Ввод
 
 - [Input event mapping и `InputEvent*`](input/sdl-input-event-mapping.md) - keyboard, mouse button, mouse motion, wheel, text input и порядок dispatch через `SceneTree`.
