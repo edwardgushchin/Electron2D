@@ -242,6 +242,7 @@ internal sealed class ProjectWorkspace : IDisposable
         BuildState = new ProjectWorkspaceBuildStateStore();
         Diagnostics = new ProjectWorkspaceDiagnosticsStore(this);
         Jobs = new WorkspaceJobStore(this);
+        Runtime = new ProjectWorkspaceRuntimeSessionStore();
         Transactions = new WorkspaceTransactionEngine(this);
         Tasks = new ProjectTaskManager(this);
         CommandBus = new ProjectWorkspaceCommandBus(this);
@@ -272,6 +273,8 @@ internal sealed class ProjectWorkspace : IDisposable
     public ProjectWorkspaceDiagnosticsStore Diagnostics { get; }
 
     public WorkspaceJobStore Jobs { get; }
+
+    public ProjectWorkspaceRuntimeSessionStore Runtime { get; }
 
     public WorkspaceTransactionEngine Transactions { get; }
 

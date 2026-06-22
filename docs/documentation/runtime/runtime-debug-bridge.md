@@ -7,9 +7,9 @@
 
 ## Назначение
 
-`RuntimeDebugBridge` реализован в `Electron2D.ProjectSystem` как общий внутренний контракт для чтения runtime-состояния сцены. Его могут использовать CLI, MCP и будущий Editor `RuntimeController`, не создавая отдельные payloads для scene tree, metrics, diagnostics или screenshots.
+`RuntimeDebugBridge` реализован в `Electron2D.ProjectSystem` как общий внутренний контракт для чтения runtime-состояния сцены. Его используют CLI, MCP и Editor-attached runtime control, не создавая отдельные payloads для scene tree, metrics, diagnostics или screenshots.
 
-Текущая реализация является deterministic preview layer: она читает стабильный scene JSON и не запускает настоящий game process. Видимый Editor-attached запуск подключается отдельной задачей поверх этого же контракта.
+Текущая реализация является deterministic preview layer: она читает стабильный scene JSON и не запускает настоящий game process. Видимый Editor-owned game process управляется run workflow, а shared control/readback подключён поверх bridge через [Editor-attached runtime control](editor-attached-runtime-control.md).
 
 ## Session model
 
@@ -33,6 +33,8 @@
 - `CurrentPhysicsFrame`;
 - `InputActions`;
 - `BuildConfigurationHash`.
+
+`State` может быть `Running`, `Paused`, `Stopped` или `Crashed`. Crash state используется Editor-attached runtime control, чтобы показать падение game process без завершения Editor workspace.
 
 ## Runtime actions
 
@@ -113,11 +115,11 @@ If `--screenshot` is relative, it must stay inside project root. Absolute output
 
 ## Текущие ограничения
 
-- Нет настоящего отдельного game process.
-- Нет embedded viewport или видимого окна редактора; это scope будущего `T-0144`.
+- Настоящий отдельный game process принадлежит Editor run workflow; bridge остаётся read/control layer.
+- Embedded viewport пока не реализован; текущий visible mode для attached session - `SeparateWindow`.
 - Screenshot сейчас deterministic placeholder PNG.
 - Physics, animation, script execution, renderer output и live process diagnostics ещё не выполняются.
-- MCP runtime tools пока имеют manifest names; их production semantics должны подключиться к этому bridge в отдельной задаче.
+- MCP runtime tools подключены к Editor-attached runtime session и используют этот bridge для preview state.
 
 ## Проверка
 

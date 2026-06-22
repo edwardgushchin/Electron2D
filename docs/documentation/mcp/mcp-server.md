@@ -2,7 +2,7 @@
 
 Статус: реализованный внутренний контракт для `T-0119`.
 Обновлено: 2026-06-22.
-Связанные документы: [Локальный MCP-сервер поверх active Editor session и Tooling](../../specifications/mcp/mcp-server.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, JSONL stream и SARIF](../diagnostics/diagnostics-adapters.md); [Runtime debug bridge и scene inspection](../runtime/runtime-debug-bridge.md).
+Связанные документы: [Локальный MCP-сервер поверх active Editor session и Tooling](../../specifications/mcp/mcp-server.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, JSONL stream и SARIF](../diagnostics/diagnostics-adapters.md); [Runtime debug bridge и scene inspection](../runtime/runtime-debug-bridge.md); [Editor-attached runtime control](../runtime/editor-attached-runtime-control.md).
 
 ## Назначение
 
@@ -42,11 +42,13 @@ Manifest публикует обязательные Preview resources:
 - `electron2d://runtime/session`;
 - `electron2d://docs/topic/{name}`.
 
-Полностью исполняемая часть `T-0119` уже возвращает live state для `project/summary`, `workspace/open-documents`, `project/diagnostics`, `workspace/import-state` и `workspace/build-state`. Остальные resources имеют стабильные URI и безопасный placeholder payload, пока узкие доменные подсистемы реализуются отдельными задачами.
+Полностью исполняемая часть возвращает live state для `project/summary`, `workspace/open-documents`, `project/diagnostics`, `workspace/import-state`, `workspace/build-state` и `runtime/session`. Остальные resources имеют стабильные URI и безопасный placeholder payload, пока узкие доменные подсистемы реализуются отдельными задачами.
 
 `project/diagnostics` должен сохранять тот же полный diagnostic payload, что и CLI/JSONL adapters: file/node/resource location, related locations и safe suggested fixes не сокращаются до human-only строки.
 
 `electron2d://editor/capabilities` возвращает canonical `Editor Capability Manifest` из `data/editor/electron2d-editor-capabilities.json`. Этот resource показывает каждую capability, её category, support status, Tooling binding, MCP binding и CLI policy. Если строка имеет `partial`, это означает видимый контракт будущего workflow, а не готовый production путь.
+
+`electron2d://runtime/session` возвращает active Editor-attached runtime session: session kind, state, snapshot identity, metrics, input actions, highlighted node path and diagnostics. Если attached session отсутствует, resource возвращает `active = false`.
 
 ## Tools
 
@@ -57,11 +59,12 @@ Manifest публикует все обязательные tool names из MCP 
 - `workspace_get_state` возвращает open documents, dirty documents, workspace/content revisions и per-document revisions;
 - `workspace_apply_transaction` применяет text transaction через `ProjectToolingHost.Project.ApplyTextEdit`; в active Editor route используется `WorkspaceOnly`, в headless route используется `HeadlessCommit`;
 - `project_build`, `project_run`, `project_test`, `project_export` и `resource_import` создают `WorkspaceJob` через соответствующий Tooling service;
+- `runtime_start`, `runtime_stop`, `runtime_pause`, `runtime_resume`, `runtime_step`, `runtime_inject_input`, `runtime_capture_frame`, `runtime_get_scene_tree`, `runtime_get_diagnostics`, `runtime_highlight_node` и `runtime_report_crash` управляют active Editor-attached runtime session через `ToolingRuntimeService`;
 - `task_list`, `task_get`, `task_append_activity`, `task_submit_for_acceptance`, `task_accept`, `task_request_changes` и `task_cancel` идут через `TaskService`.
 
-Узкие scene/resource/runtime tools, которые ещё не имеют production semantics, возвращают structured diagnostic `E2D-MCP-0001` и не пишут project files напрямую.
+Узкие scene/resource tools, которые ещё не имеют production semantics, возвращают structured diagnostic `E2D-MCP-0001` и не пишут project files напрямую.
 
-Runtime tool names в manifest должны подключаться к `RuntimeDebugBridge`, когда появятся production semantics для live runtime session. Текущий MCP adapter не создаёт отдельный runtime scene tree или screenshot payload.
+Runtime tools не создают отдельную приватную модель. Они читают и меняют `ProjectWorkspace.Runtime.ActiveSession`, поэтому Agent Workspace и MCP видят один и тот же state.
 
 ## Task guard
 
@@ -107,4 +110,4 @@ Focused проверка:
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DMcpServerTests
 ```
 
-Она покрывает manifest resources/tools, `electron2d://editor/capabilities`, live dirty state active Editor route, `workspace_apply_transaction`, headless job event snapshot identity, task acceptance guard и CLI manifest без облачного AI-провайдера.
+Она покрывает manifest resources/tools, `electron2d://editor/capabilities`, `electron2d://runtime/session`, live dirty state active Editor route, `workspace_apply_transaction`, headless job event snapshot identity, runtime control tools, task acceptance guard и CLI manifest без облачного AI-провайдера.

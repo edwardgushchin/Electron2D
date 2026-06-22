@@ -229,6 +229,39 @@ internal sealed class McpToolResult
             content: new JsonObject());
     }
 
+    public static McpToolResult FromRuntime(
+        string toolName,
+        McpRoute route,
+        bool succeeded,
+        IReadOnlyList<StructuredDiagnostic> diagnostics,
+        ToolingJobResult? job,
+        JsonObject content)
+    {
+        McpJobEvent[] jobEvents = job is null
+            ? []
+            :
+            [
+                new McpJobEvent(
+                    "operation.queued",
+                    job.JobKind.ToString(),
+                    job.JobState.ToString(),
+                    job.InputSnapshotId,
+                    job.InputWorkspaceRevision,
+                    job.InputContentRevision,
+                    job.InputDocumentRevisions,
+                    job.InputBuildConfigurationHash,
+                    stale: false)
+            ];
+        return new McpToolResult(
+            toolName,
+            succeeded,
+            route,
+            diagnostics,
+            operation: null,
+            jobEvents,
+            content);
+    }
+
     public static McpToolResult ContentOnly(string toolName, McpRoute route, JsonObject content)
     {
         return new McpToolResult(toolName, succeeded: true, route, diagnostics: [], operation: null, jobEvents: [], content);
@@ -317,11 +350,14 @@ internal sealed class McpServerSession : IDisposable
         "runtime_start",
         "runtime_stop",
         "runtime_pause",
+        "runtime_resume",
         "runtime_step",
         "runtime_inject_input",
         "runtime_capture_frame",
         "runtime_get_scene_tree",
         "runtime_get_diagnostics",
+        "runtime_highlight_node",
+        "runtime_report_crash",
         "task_list",
         "task_get",
         "task_create",
@@ -440,6 +476,7 @@ internal sealed class McpServerSession : IDisposable
             {
                 ["state"] = Workspace.BuildState.State
             }),
+            "electron2d://runtime/session" => new McpResourceResult(uri, RuntimeSession()),
             "electron2d://editor/capabilities" => new McpResourceResult(uri, EditorCapabilities()),
             _ => new McpResourceResult(uri, new JsonObject
             {
@@ -462,6 +499,17 @@ internal sealed class McpServerSession : IDisposable
             "project_test" => QueueJob(request, Tooling.Tests, "sha256:mcp-default"),
             "project_export" => QueueJob(request, Tooling.Export, "sha256:mcp-default"),
             "resource_import" => QueueJob(request, Tooling.Import, "sha256:mcp-default"),
+            "runtime_start" => RuntimeStart(request),
+            "runtime_stop" => RuntimeCommand(request, Tooling.Runtime.Stop),
+            "runtime_pause" => RuntimeCommand(request, Tooling.Runtime.Pause),
+            "runtime_resume" => RuntimeCommand(request, Tooling.Runtime.Resume),
+            "runtime_step" => RuntimeStep(request),
+            "runtime_inject_input" => RuntimeInjectInput(request),
+            "runtime_capture_frame" => RuntimeCaptureFrame(request),
+            "runtime_get_scene_tree" => RuntimeSceneTree(request),
+            "runtime_get_diagnostics" => RuntimeCommand(request, Tooling.Runtime.GetDiagnostics),
+            "runtime_highlight_node" => RuntimeHighlightNode(request),
+            "runtime_report_crash" => RuntimeReportCrash(request),
             "task_list" => McpToolResult.ContentOnly(request.ToolName, Route, new JsonObject
             {
                 ["tasks"] = WriteTasks(Tooling.Tasks.List())
@@ -548,6 +596,92 @@ internal sealed class McpServerSession : IDisposable
         return McpToolResult.FromJob(request.ToolName, Route, result, hash, RouteDiagnostics);
     }
 
+    private McpToolResult QueueJob(McpToolRequest request, ToolingRuntimeService service, string defaultBuildConfigurationHash)
+    {
+        var hash = Get(request, "inputBuildConfigurationHash") ?? defaultBuildConfigurationHash;
+        var result = service.Queue(new ToolingJobRequest(OperationId(request.ToolName), hash));
+        return McpToolResult.FromJob(request.ToolName, Route, result, hash, RouteDiagnostics);
+    }
+
+    private McpToolResult RuntimeStart(McpToolRequest request)
+    {
+        var hash = Get(request, "inputBuildConfigurationHash") ?? "sha256:mcp-runtime";
+        var result = Tooling.Runtime.StartEditorAttached(new ToolingRuntimeStartRequest(
+            OperationId(request.ToolName),
+            Get(request, "scene") ?? "scenes/main.scene.json",
+            hash,
+            RuntimeVisibleMode.SeparateWindow));
+        return McpToolResult.FromRuntime(
+            request.ToolName,
+            Route,
+            result.Succeeded,
+            result.Diagnostics,
+            result.Job,
+            RuntimeSession());
+    }
+
+    private McpToolResult RuntimeCommand(McpToolRequest request, Func<ToolingRuntimeCommandResult> command)
+    {
+        var result = command();
+        return McpToolResult.FromRuntime(
+            request.ToolName,
+            Route,
+            result.Succeeded,
+            result.Diagnostics,
+            job: null,
+            RuntimeSession(result));
+    }
+
+    private McpToolResult RuntimeStep(McpToolRequest request)
+    {
+        var kind = (Get(request, "kind") ?? "frame").Equals("physics", StringComparison.OrdinalIgnoreCase)
+            ? RuntimeStepKind.Physics
+            : RuntimeStepKind.Frame;
+        var count = int.TryParse(Get(request, "count") ?? "1", out var parsedCount) ? parsedCount : 1;
+        var fixedDelta = double.TryParse(
+            Get(request, "fixedDelta") ?? "0.0166667",
+            System.Globalization.NumberStyles.Float,
+            System.Globalization.CultureInfo.InvariantCulture,
+            out var parsedDelta)
+                ? parsedDelta
+                : 0.0166667;
+        var result = Tooling.Runtime.Step(kind, count, fixedDelta);
+        return McpToolResult.FromRuntime(request.ToolName, Route, result.Succeeded, result.Diagnostics, job: null, RuntimeSession(result));
+    }
+
+    private McpToolResult RuntimeInjectInput(McpToolRequest request)
+    {
+        var state = Get(request, "state") ?? "pressed";
+        var pressed = state.Equals("pressed", StringComparison.OrdinalIgnoreCase);
+        var result = Tooling.Runtime.InjectInput(Require(request, "action"), pressed);
+        return McpToolResult.FromRuntime(request.ToolName, Route, result.Succeeded, result.Diagnostics, job: null, RuntimeSession(result));
+    }
+
+    private McpToolResult RuntimeCaptureFrame(McpToolRequest request)
+    {
+        var result = Tooling.Runtime.CaptureFrame();
+        return McpToolResult.FromRuntime(request.ToolName, Route, result.Succeeded, result.Diagnostics, job: null, RuntimeSession(result));
+    }
+
+    private McpToolResult RuntimeSceneTree(McpToolRequest request)
+    {
+        var result = Tooling.Runtime.GetSceneTree();
+        return McpToolResult.FromRuntime(request.ToolName, Route, result.Succeeded, result.Diagnostics, job: null, RuntimeSession(result));
+    }
+
+    private McpToolResult RuntimeHighlightNode(McpToolRequest request)
+    {
+        var result = Tooling.Runtime.HighlightNode(Require(request, "nodePath"));
+        return McpToolResult.FromRuntime(request.ToolName, Route, result.Succeeded, result.Diagnostics, job: null, RuntimeSession(result));
+    }
+
+    private McpToolResult RuntimeReportCrash(McpToolRequest request)
+    {
+        var exitCode = int.TryParse(Get(request, "exitCode") ?? "1", out var parsed) ? parsed : 1;
+        var result = Tooling.Runtime.ReportProcessCrash(exitCode, Get(request, "stderr") ?? string.Empty);
+        return McpToolResult.FromRuntime(request.ToolName, Route, result.Succeeded, result.Diagnostics, job: null, RuntimeSession(result));
+    }
+
     private ToolingTaskStatusRequest TaskStatusRequest(McpToolRequest request, OperationCapability capability)
     {
         return new ToolingTaskStatusRequest(
@@ -577,6 +711,70 @@ internal sealed class McpServerSession : IDisposable
             ["workspaceRevision"] = Workspace.Revisions.WorkspaceRevision.Value,
             ["contentRevision"] = Workspace.Revisions.ContentRevision.Value,
             ["dirtyDocuments"] = WriteStringArray(Workspace.Revisions.DirtyDocuments)
+        };
+    }
+
+    private JsonObject RuntimeSession(ToolingRuntimeCommandResult? result = null)
+    {
+        var session = result?.Session ?? Workspace.Runtime.ActiveSession;
+        if (session is null)
+        {
+            return new JsonObject
+            {
+                ["route"] = RouteName(Route),
+                ["active"] = false,
+                ["diagnostics"] = result is null ? new JsonArray() : WriteDiagnostics(result.Diagnostics)
+            };
+        }
+
+        var root = new JsonObject
+        {
+            ["route"] = RouteName(Route),
+            ["active"] = true,
+            ["inputSnapshotId"] = session.InputSnapshotId,
+            ["inputWorkspaceRevision"] = session.InputWorkspaceRevision.Value,
+            ["inputContentRevision"] = session.InputContentRevision.Value,
+            ["inputDocumentRevisions"] = WriteRevisions(session.InputDocumentRevisions),
+            ["inputBuildConfigurationHash"] = session.InputBuildConfigurationHash,
+            ["visibleMode"] = session.VisibleMode.ToString(),
+            ["isProcessIsolated"] = session.IsProcessIsolated,
+            ["highlightedNodePath"] = session.HighlightedNodePath,
+            ["session"] = WriteRuntimeSession(session),
+            ["metrics"] = RuntimeDebugJsonSerializer.ToJson(session.GetMetrics()),
+            ["diagnostics"] = WriteDiagnostics(result?.Diagnostics ?? session.Diagnostics)
+        };
+
+        if (result?.SceneTree is not null)
+        {
+            root["sceneTree"] = RuntimeDebugJsonSerializer.ToJson(result.SceneTree);
+        }
+
+        if (result?.Screenshot is not null)
+        {
+            root["screenshot"] = RuntimeDebugJsonSerializer.ToJson(result.Screenshot, path: null);
+        }
+
+        return root;
+    }
+
+    private static JsonObject WriteRuntimeSession(ProjectWorkspaceRuntimeSession session)
+    {
+        var inputActions = new JsonObject();
+        foreach (var (action, pressed) in session.InputActions.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        {
+            inputActions[action] = pressed;
+        }
+
+        return new JsonObject
+        {
+            ["sessionId"] = session.SessionId,
+            ["sessionKind"] = session.SessionKind.ToString(),
+            ["scene"] = session.ScenePath,
+            ["state"] = session.State.ToString(),
+            ["currentFrame"] = session.CurrentFrame,
+            ["currentPhysicsFrame"] = session.CurrentPhysicsFrame,
+            ["inputActions"] = inputActions,
+            ["buildConfigurationHash"] = session.InputBuildConfigurationHash
         };
     }
 

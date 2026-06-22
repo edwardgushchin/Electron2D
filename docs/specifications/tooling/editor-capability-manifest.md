@@ -81,12 +81,13 @@ Verifier должен возвращать structured diagnostics и `Succeeded 
 
 1. Supported Editor capability имеет Tooling или MCP status ниже `supported`.
 2. `partial` или `experimental` у Tooling/MCP используется для `releaseRequired = true`.
-3. `releaseRequired` capability с kind `projectMutation`, `runtimeAction` или `backgroundJob` имеет `cli.kind = notApplicable`.
-4. CLI binding имеет неизвестный kind или dedicated binding без команды.
-5. Manifest не покрывает обязательную категорию.
-6. Manifest не ссылается на существующий JSON API manifest.
-7. Capability ссылается на Tooling command или MCP tool/resource, которого нет в опубликованных списках.
-8. Есть дублирующиеся capability identifiers.
+3. `releaseRequired` capability с kind `projectMutation` или `backgroundJob` имеет `cli.kind = notApplicable`.
+4. `releaseRequired` capability с kind `runtimeAction` имеет `cli.kind = notApplicable` без supported Tooling/MCP parity. Visible Editor-only runtime actions могут не иметь dedicated CLI route, если они доступны через active Editor Tooling/MCP session.
+5. CLI binding имеет неизвестный kind или dedicated binding без команды.
+6. Manifest не покрывает обязательную категорию.
+7. Manifest не ссылается на существующий JSON API manifest.
+8. Capability ссылается на Tooling command или MCP tool/resource, которого нет в опубликованных списках.
+9. Есть дублирующиеся capability identifiers.
 
 Diagnostic codes:
 
@@ -115,6 +116,7 @@ Diagnostic codes:
 - Тест подтверждает покрытие всех required categories.
 - Тест подтверждает, что default manifest проходит verifier.
 - Тест подтверждает, что verifier падает при supported Editor capability без supported Tooling/MCP.
-- Тест подтверждает, что verifier падает при `notApplicable` CLI binding для release-required project/runtime/background operation.
+- Тест подтверждает, что verifier падает при `notApplicable` CLI binding для release-required project/background operation.
+- Тест подтверждает, что fine-grained visible runtime controls могут быть release-required с supported Tooling/MCP и CLI `notApplicable`.
 - MCP resource `electron2d://editor/capabilities` возвращает manifest.
 - Документация реализации описывает artifact, verifier, команды проверки и текущие ограничения.

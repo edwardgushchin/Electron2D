@@ -8,7 +8,7 @@
 
 `WorkspaceSnapshot` реализован в `Electron2D.ProjectSystem` как internal core для будущих build/test/run/export jobs. Он фиксирует входное состояние открытого `ProjectWorkspace`, чтобы долгие операции не читали случайное старое состояние с диска, когда Editor или headless workspace содержит dirty-документы.
 
-Этот слой не запускает реальные build/test/run jobs и не является публичным runtime API для игр. Он предоставляет snapshot identity, materialization, staleness evaluation и export input policy, на которые будут опираться последующие Tooling, CLI, MCP и Editor adapters.
+Этот слой не является публичным runtime API для игр. Он предоставляет snapshot identity, materialization, staleness evaluation и export input policy для Tooling, CLI, MCP и Editor adapters. Editor-attached runtime control уже использует snapshot materialization для `runtime_start`, чтобы dirty project documents попали в проверяемую runtime session без неявного сохранения исходных файлов.
 
 ## Snapshot
 

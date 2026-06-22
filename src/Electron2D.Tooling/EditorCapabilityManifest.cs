@@ -241,7 +241,7 @@ internal static class EditorCapabilityManifestFactory
                     "Edit UI theme resources",
                     ["ui-themes", "resources"],
                     "UiThemeEdit"),
-                PartialRuntime(
+                SupportedFineGrainedRuntime(
                     "runtime.control.pause_step_input",
                     "Pause, step and inject input into visible runtime",
                     ["runtime-control"],
@@ -327,7 +327,7 @@ internal static class EditorCapabilityManifestFactory
             new EditorCapabilityCliBinding(EditorCapabilityCliBindingKind.DedicatedCommand, cliCommand, $"CLI has a dedicated `e2d {cliCommand}` route."));
     }
 
-    private static EditorCapability PartialRuntime(
+    private static EditorCapability SupportedFineGrainedRuntime(
         string id,
         string title,
         IReadOnlyList<string> categories,
@@ -338,10 +338,10 @@ internal static class EditorCapabilityManifestFactory
             title,
             categories,
             EditorCapabilityKind.RuntimeAction,
-            ReleaseRequired: false,
-            new EditorCapabilityEndpoint(editorCommand, EditorCapabilitySupportStatus.Partial, "Visible attached runtime controls are tracked for the later runtime-control task."),
-            new EditorCapabilityEndpoint("runtime.pause-step-input", EditorCapabilitySupportStatus.Partial, "Runtime debug bridge has partial state controls; full visible session parity is not complete."),
-            new EditorCapabilityEndpoint("runtime_pause", EditorCapabilitySupportStatus.Partial, "MCP reserves runtime control tool names, but full production semantics are not complete."),
+            ReleaseRequired: true,
+            new EditorCapabilityEndpoint(editorCommand, EditorCapabilitySupportStatus.Supported, "Editor-attached runtime controls use the shared workspace runtime session."),
+            new EditorCapabilityEndpoint("runtime.pause-step-input", EditorCapabilitySupportStatus.Supported, "Tooling controls the active editor-attached runtime session through the runtime service."),
+            new EditorCapabilityEndpoint("runtime_pause", EditorCapabilitySupportStatus.Supported, "MCP exposes fine-grained runtime controls through the active editor runtime session."),
             new EditorCapabilityCliBinding(EditorCapabilityCliBindingKind.NotApplicable, Command: null, "Fine-grained visible Editor controls are not a dedicated headless CLI command."));
     }
 
@@ -633,7 +633,7 @@ internal static class EditorCapabilityManifestVerifier
         }
 
         if (capability.ReleaseRequired &&
-            capability.Kind is EditorCapabilityKind.ProjectMutation or EditorCapabilityKind.RuntimeAction or EditorCapabilityKind.BackgroundJob &&
+            capability.Kind is EditorCapabilityKind.ProjectMutation or EditorCapabilityKind.BackgroundJob &&
             capability.Cli.Kind == EditorCapabilityCliBindingKind.NotApplicable)
         {
             diagnostics.Add(Diagnostic("E2D-CAPABILITY-0002", $"Release-required capability '{capability.Id}' requires a dedicated CLI command or generic transaction binding."));
@@ -674,6 +674,11 @@ internal static class ProjectToolingCommandCatalog
         "runtime.start",
         "runtime.stop",
         "runtime.pause-step-input",
+        "runtime.resume",
+        "runtime.capture-frame",
+        "runtime.get-scene-tree",
+        "runtime.get-diagnostics",
+        "runtime.highlight-node",
         "task.list",
         "task.get",
         "task.create",

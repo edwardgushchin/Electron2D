@@ -49,6 +49,9 @@ public sealed class Electron2DMcpServerTests
         Assert.Contains("workspace_apply_transaction", tools);
         Assert.Contains("project_build", tools);
         Assert.Contains("resource_import", tools);
+        Assert.Contains("runtime_start", tools);
+        Assert.Contains("runtime_resume", tools);
+        Assert.Contains("runtime_highlight_node", tools);
         Assert.Contains("task_submit_for_acceptance", tools);
         Assert.Contains("task_accept", tools);
         Assert.All(session.ListTools(), tool => Assert.False(string.IsNullOrWhiteSpace(tool.Description)));
@@ -118,6 +121,78 @@ public sealed class Electron2DMcpServerTests
         Assert.Equal("sha256:mcp-build", queued.InputBuildConfigurationHash);
         Assert.False(queued.Stale);
         Assert.Equal(1, queued.InputDocumentRevisions["scenes/main.scene.json"].Value);
+    }
+
+    [Fact]
+    public void RuntimeToolsControlActiveEditorSessionAndExposeRuntimeResource()
+    {
+        var projectRoot = CreateProjectRoot("runtime-tools", SceneText(speed: 10), TaskText("task-alpha", ProjectTaskStatus.InProgress));
+        var registry = new EditorSessionRegistry(TimeSpan.FromSeconds(30));
+        using var editor = registry.OpenEditorSession(
+            projectRoot,
+            "editor-runtime",
+            EditorSessionEndpoint.NamedPipe(@"\\.\pipe\electron2d-mcp-runtime"),
+            FixedInstant);
+        editor.Workspace.CommandBus.OpenTextDocument(
+            "scenes/main.scene.json",
+            SceneText(speed: 10),
+            1,
+            ProjectWorkspaceOperationContext.ForTest("open-runtime-scene"));
+        using var session = McpServerSession.Open(projectRoot, registry, FixedInstant.AddSeconds(1));
+
+        var started = session.CallTool(new McpToolRequest("runtime_start", new Dictionary<string, string>
+        {
+            ["scene"] = "scenes/main.scene.json",
+            ["inputBuildConfigurationHash"] = "sha256:mcp-runtime"
+        }));
+        var paused = session.CallTool(new McpToolRequest("runtime_pause", new Dictionary<string, string>()));
+        var stepped = session.CallTool(new McpToolRequest("runtime_step", new Dictionary<string, string>
+        {
+            ["kind"] = "frame",
+            ["count"] = "2",
+            ["fixedDelta"] = "0.25"
+        }));
+        var input = session.CallTool(new McpToolRequest("runtime_inject_input", new Dictionary<string, string>
+        {
+            ["action"] = "jump",
+            ["state"] = "pressed"
+        }));
+        var highlighted = session.CallTool(new McpToolRequest("runtime_highlight_node", new Dictionary<string, string>
+        {
+            ["nodePath"] = "/Player"
+        }));
+        var tree = session.CallTool(new McpToolRequest("runtime_get_scene_tree", new Dictionary<string, string>()));
+        var captured = session.CallTool(new McpToolRequest("runtime_capture_frame", new Dictionary<string, string>()));
+        var resource = session.ReadResource("electron2d://runtime/session");
+
+        Assert.True(started.Succeeded);
+        Assert.True(paused.Succeeded);
+        Assert.True(stepped.Succeeded);
+        Assert.True(input.Succeeded);
+        Assert.True(highlighted.Succeeded);
+        Assert.True(tree.Succeeded);
+        Assert.True(captured.Succeeded);
+        Assert.Equal(McpRoute.ActiveEditor, started.Route);
+        Assert.Single(started.JobEvents);
+        Assert.Equal("EditorAttachedPreview", resource.Content["session"]!["sessionKind"]!.GetValue<string>());
+        Assert.Equal("Paused", resource.Content["session"]!["state"]!.GetValue<string>());
+        Assert.Equal(2, resource.Content["metrics"]!["currentFrame"]!.GetValue<int>());
+        Assert.Equal("/Player", resource.Content["highlightedNodePath"]!.GetValue<string>());
+        Assert.True(resource.Content["inputSnapshotId"]!.GetValue<string>().Length > 0);
+        Assert.Contains(tree.Content["sceneTree"]!["nodes"]!.AsArray(), node => node!["path"]!.GetValue<string>() == "/Player");
+        Assert.Equal("image/png", captured.Content["screenshot"]!["contentType"]!.GetValue<string>());
+
+        var crashed = session.CallTool(new McpToolRequest("runtime_report_crash", new Dictionary<string, string>
+        {
+            ["exitCode"] = "13",
+            ["stderr"] = "boom"
+        }));
+        var diagnostics = session.CallTool(new McpToolRequest("runtime_get_diagnostics", new Dictionary<string, string>()));
+
+        Assert.True(crashed.Succeeded);
+        Assert.True(diagnostics.Succeeded);
+        Assert.Equal("Crashed", session.ReadResource("electron2d://runtime/session").Content["session"]!["state"]!.GetValue<string>());
+        Assert.Contains(diagnostics.Diagnostics, diagnostic => diagnostic.Code == "E2D-RUNTIME-0001");
     }
 
     [Fact]

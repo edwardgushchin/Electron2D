@@ -40,6 +40,7 @@
 
 - [Headless runtime automation](runtime/headless-runtime-automation.md) - CLI-запуск сцены без ручного Editor UI, fixed frame loop, input trace, runtime artifacts, JSON schemas и snapshot identity для CI и автономных агентов.
 - [Runtime debug bridge и scene inspection](runtime/runtime-debug-bridge.md) - общий контракт runtime session inspection, pause/step/input/screenshot, Remote Scene Tree и fail-closed diagnostics для будущего Editor RuntimeController/MCP.
+- [Editor-attached runtime control](runtime/editor-attached-runtime-control.md) - видимый Editor-owned game process, shared runtime session, Tooling/MCP control commands, Remote Scene Tree, screenshots, metrics и crash isolation.
 
 ## Тестирование
 

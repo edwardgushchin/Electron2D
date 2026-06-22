@@ -278,6 +278,59 @@ public sealed class ToolingServiceBoundaryTests
         Assert.Equal(5, workspace.Jobs.Jobs.Count);
     }
 
+    [Fact]
+    public void RuntimeServiceStartsEditorAttachedSessionAndControlsVisibleState()
+    {
+        using var workspace = CreateWorkspace("runtime-control", SceneText(speed: 10), TaskText("task-alpha", ProjectTaskStatus.InProgress));
+        var host = new ProjectToolingHost(workspace);
+
+        var started = host.Runtime.StartEditorAttached(new ToolingRuntimeStartRequest(
+            "op-runtime-start",
+            "scenes/main.scene.json",
+            "sha256:runtime-debug",
+            RuntimeVisibleMode.SeparateWindow));
+
+        Assert.True(started.Succeeded);
+        Assert.NotNull(started.Session);
+        Assert.Equal(RuntimeDebugSessionKind.EditorAttachedPreview, started.Session!.SessionKind);
+        Assert.Equal(RuntimeDebugSessionState.Running, started.Session.State);
+        Assert.True(started.Session.IsProcessIsolated);
+        Assert.Equal(RuntimeVisibleMode.SeparateWindow, started.Session.VisibleMode);
+        Assert.False(string.IsNullOrWhiteSpace(started.Session.InputSnapshotId));
+        Assert.Equal(WorkspaceJobKind.Run, started.Job!.JobKind);
+        Assert.Equal("sha256:runtime-debug", started.Session.InputBuildConfigurationHash);
+
+        var paused = host.Runtime.Pause();
+        var stepped = host.Runtime.Step(RuntimeStepKind.Frame, count: 2, fixedDelta: 0.25);
+        host.Runtime.Step(RuntimeStepKind.Physics, count: 1, fixedDelta: 0.5);
+        host.Runtime.InjectInput("jump", pressed: true);
+        var highlighted = host.Runtime.HighlightNode("/Player");
+        var screenshot = host.Runtime.CaptureFrame();
+        var tree = host.Runtime.GetSceneTree();
+
+        Assert.True(paused.Succeeded);
+        Assert.True(stepped.Succeeded);
+        Assert.True(highlighted.Succeeded);
+        Assert.Equal(RuntimeDebugSessionState.Paused, workspace.Runtime.ActiveSession!.State);
+        Assert.Equal(2, workspace.Runtime.ActiveSession.CurrentFrame);
+        Assert.Equal(1, workspace.Runtime.ActiveSession.CurrentPhysicsFrame);
+        Assert.True(workspace.Runtime.ActiveSession.InputActions["jump"]);
+        Assert.Equal("/Player", workspace.Runtime.ActiveSession.HighlightedNodePath);
+        Assert.Equal("image/png", screenshot.Screenshot!.ContentType);
+        Assert.Contains(tree.SceneTree!.Nodes, node => node.Path == "/Player");
+
+        var crashed = host.Runtime.ReportProcessCrash(exitCode: 13, stderr: "boom");
+
+        Assert.True(crashed.Succeeded);
+        Assert.Equal(RuntimeDebugSessionState.Crashed, workspace.Runtime.ActiveSession!.State);
+        Assert.Contains(host.Runtime.GetDiagnostics().Diagnostics, diagnostic => diagnostic.Code == "E2D-RUNTIME-0001");
+
+        var stopped = host.Runtime.Stop();
+
+        Assert.True(stopped.Succeeded);
+        Assert.Null(workspace.Runtime.ActiveSession);
+    }
+
     private static ProjectWorkspace CreateWorkspace(string name, string sceneText, string taskText)
     {
         var root = Path.Combine(Path.GetTempPath(), "Electron2D-ToolingServiceBoundaryTests", name, Guid.NewGuid().ToString("N"));

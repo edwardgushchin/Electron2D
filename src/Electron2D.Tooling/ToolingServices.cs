@@ -48,7 +48,7 @@ internal sealed class ProjectToolingHost
         Tests = new ToolingJobService(workspace, WorkspaceJobKind.Test);
         Export = new ToolingJobService(workspace, WorkspaceJobKind.Export);
         Import = new ToolingJobService(workspace, WorkspaceJobKind.Import);
-        Runtime = new ToolingJobService(workspace, WorkspaceJobKind.Run);
+        Runtime = new ToolingRuntimeService(workspace);
     }
 
     public ProjectService Project { get; }
@@ -63,7 +63,7 @@ internal sealed class ProjectToolingHost
 
     public ToolingJobService Import { get; }
 
-    public ToolingJobService Runtime { get; }
+    public ToolingRuntimeService Runtime { get; }
 }
 
 internal sealed class ToolingTextEditRequest
@@ -614,6 +614,113 @@ internal sealed class ToolingJobRequest
     public string InputBuildConfigurationHash { get; }
 }
 
+internal sealed class ToolingRuntimeStartRequest
+{
+    public ToolingRuntimeStartRequest(
+        string operationId,
+        string scenePath,
+        string inputBuildConfigurationHash,
+        RuntimeVisibleMode visibleMode)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(operationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(scenePath);
+        ArgumentException.ThrowIfNullOrWhiteSpace(inputBuildConfigurationHash);
+
+        OperationId = operationId;
+        ScenePath = ProjectDocumentPaths.NormalizeRelativePath(scenePath);
+        InputBuildConfigurationHash = inputBuildConfigurationHash;
+        VisibleMode = visibleMode;
+    }
+
+    public string OperationId { get; }
+
+    public string ScenePath { get; }
+
+    public string InputBuildConfigurationHash { get; }
+
+    public RuntimeVisibleMode VisibleMode { get; }
+}
+
+internal sealed class ToolingRuntimeSessionResult
+{
+    private ToolingRuntimeSessionResult(
+        bool succeeded,
+        ProjectWorkspaceRuntimeSession? session,
+        ToolingJobResult? job,
+        IEnumerable<StructuredDiagnostic> diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostics);
+
+        Succeeded = succeeded;
+        Session = session;
+        Job = job;
+        Diagnostics = diagnostics.ToArray();
+    }
+
+    public bool Succeeded { get; }
+
+    public ProjectWorkspaceRuntimeSession? Session { get; }
+
+    public ToolingJobResult? Job { get; }
+
+    public IReadOnlyList<StructuredDiagnostic> Diagnostics { get; }
+
+    public static ToolingRuntimeSessionResult Success(ProjectWorkspaceRuntimeSession session, ToolingJobResult job)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(job);
+        return new ToolingRuntimeSessionResult(true, session, job, []);
+    }
+
+    public static ToolingRuntimeSessionResult Failure(IEnumerable<StructuredDiagnostic> diagnostics)
+    {
+        return new ToolingRuntimeSessionResult(false, null, null, diagnostics);
+    }
+}
+
+internal sealed class ToolingRuntimeCommandResult
+{
+    private ToolingRuntimeCommandResult(
+        bool succeeded,
+        ProjectWorkspaceRuntimeSession? session,
+        RuntimeDebugSceneTreeSnapshot? sceneTree,
+        RuntimeDebugScreenshot? screenshot,
+        IEnumerable<StructuredDiagnostic> diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostics);
+
+        Succeeded = succeeded;
+        Session = session;
+        SceneTree = sceneTree;
+        Screenshot = screenshot;
+        Diagnostics = diagnostics.ToArray();
+    }
+
+    public bool Succeeded { get; }
+
+    public ProjectWorkspaceRuntimeSession? Session { get; }
+
+    public RuntimeDebugSceneTreeSnapshot? SceneTree { get; }
+
+    public RuntimeDebugScreenshot? Screenshot { get; }
+
+    public IReadOnlyList<StructuredDiagnostic> Diagnostics { get; }
+
+    public static ToolingRuntimeCommandResult Success(
+        ProjectWorkspaceRuntimeSession session,
+        RuntimeDebugSceneTreeSnapshot? sceneTree = null,
+        RuntimeDebugScreenshot? screenshot = null)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        return new ToolingRuntimeCommandResult(true, session, sceneTree, screenshot, session.Diagnostics);
+    }
+
+    public static ToolingRuntimeCommandResult Failure(IEnumerable<StructuredDiagnostic> diagnostics)
+    {
+        return new ToolingRuntimeCommandResult(false, null, null, null, diagnostics);
+    }
+}
+
 internal sealed class ToolingJobResult
 {
     public ToolingJobResult(bool succeeded, WorkspaceJob job)
@@ -630,6 +737,7 @@ internal sealed class ToolingJobResult
         InputContentRevision = job.InputIdentity.InputContentRevision;
         InputDocumentRevisions = new ReadOnlyDictionary<string, ProjectDocumentRevision>(
             job.InputIdentity.InputDocumentRevisions.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal));
+        InputBuildConfigurationHash = job.InputIdentity.InputBuildConfigurationHash;
         Diagnostics = job.Diagnostics;
         Artifacts = job.Artifacts;
     }
@@ -651,6 +759,8 @@ internal sealed class ToolingJobResult
     public ProjectWorkspaceRevision InputContentRevision { get; }
 
     public IReadOnlyDictionary<string, ProjectDocumentRevision> InputDocumentRevisions { get; }
+
+    public string InputBuildConfigurationHash { get; }
 
     public IReadOnlyList<StructuredDiagnostic> Diagnostics { get; }
 
@@ -683,5 +793,183 @@ internal sealed class ToolingJobService
             WorkspaceJobInputIdentity.FromSnapshot(snapshot, request.InputBuildConfigurationHash),
             canCancel: true);
         return new ToolingJobResult(succeeded: true, job);
+    }
+}
+
+internal sealed class ToolingRuntimeService
+{
+    private readonly ProjectWorkspace workspace;
+
+    public ToolingRuntimeService(ProjectWorkspace workspace)
+    {
+        ArgumentNullException.ThrowIfNull(workspace);
+        this.workspace = workspace;
+    }
+
+    public ToolingJobResult Queue(ToolingJobRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var job = EnqueueRunJob(request.OperationId, request.InputBuildConfigurationHash, out _);
+        return new ToolingJobResult(succeeded: true, job);
+    }
+
+    public ToolingRuntimeSessionResult StartEditorAttached(ToolingRuntimeStartRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (workspace.Runtime.ActiveSession is { State: RuntimeDebugSessionState.Running or RuntimeDebugSessionState.Paused })
+        {
+            return ToolingRuntimeSessionResult.Failure(
+            [
+                RuntimeDebugBridge.CreateDiagnostic("An editor-attached runtime session is already active.", file: request.ScenePath)
+            ]);
+        }
+
+        var job = EnqueueRunJob(request.OperationId, request.InputBuildConfigurationHash, out var snapshot);
+        var materialization = WorkspaceSnapshotMaterializer.Materialize(
+            workspace.ProjectRoot,
+            $"runtime-{request.OperationId}",
+            snapshot);
+        var start = RuntimeDebugBridge.Start(new RuntimeDebugStartRequest(
+            materialization.RootPath,
+            request.ScenePath,
+            RuntimeDebugSessionKind.EditorAttachedPreview,
+            developmentMode: true,
+            request.InputBuildConfigurationHash));
+        if (!start.Succeeded)
+        {
+            return ToolingRuntimeSessionResult.Failure(start.Diagnostics);
+        }
+
+        var session = workspace.Runtime.StartEditorAttached(start.Session!, job, request.VisibleMode);
+        return ToolingRuntimeSessionResult.Success(session, new ToolingJobResult(succeeded: true, job));
+    }
+
+    public ToolingRuntimeCommandResult Pause()
+    {
+        return Execute(session =>
+        {
+            session.Pause();
+            return ToolingRuntimeCommandResult.Success(session);
+        });
+    }
+
+    public ToolingRuntimeCommandResult Resume()
+    {
+        return Execute(session =>
+        {
+            session.Resume();
+            return ToolingRuntimeCommandResult.Success(session);
+        });
+    }
+
+    public ToolingRuntimeCommandResult Stop()
+    {
+        return Execute(session =>
+        {
+            session.Stop();
+            workspace.Runtime.ClearActiveSession(session);
+            return ToolingRuntimeCommandResult.Success(session);
+        }, allowCrashed: true);
+    }
+
+    public ToolingRuntimeCommandResult Step(RuntimeStepKind kind, int count, double fixedDelta)
+    {
+        return Execute(session =>
+        {
+            session.Step(kind, count, fixedDelta);
+            return ToolingRuntimeCommandResult.Success(session);
+        });
+    }
+
+    public ToolingRuntimeCommandResult InjectInput(string action, bool pressed)
+    {
+        return Execute(session =>
+        {
+            session.InjectInput(action, pressed);
+            return ToolingRuntimeCommandResult.Success(session);
+        });
+    }
+
+    public ToolingRuntimeCommandResult CaptureFrame()
+    {
+        return Execute(session => ToolingRuntimeCommandResult.Success(session, screenshot: session.CaptureFrame()));
+    }
+
+    public ToolingRuntimeCommandResult GetSceneTree()
+    {
+        return Execute(session => ToolingRuntimeCommandResult.Success(session, sceneTree: session.GetSceneTree()), allowCrashed: true);
+    }
+
+    public ToolingRuntimeCommandResult GetDiagnostics()
+    {
+        var session = workspace.Runtime.ActiveSession;
+        return session is null
+            ? ToolingRuntimeCommandResult.Failure([RuntimeDebugBridge.CreateDiagnostic("There is no active editor-attached runtime session.")])
+            : ToolingRuntimeCommandResult.Success(session);
+    }
+
+    public ToolingRuntimeCommandResult HighlightNode(string nodePath)
+    {
+        return Execute(session =>
+        {
+            var result = session.HighlightNode(nodePath);
+            return result.Succeeded
+                ? ToolingRuntimeCommandResult.Success(session)
+                : ToolingRuntimeCommandResult.Failure(result.Diagnostics);
+        });
+    }
+
+    public ToolingRuntimeCommandResult ReportProcessCrash(int exitCode, string stderr)
+    {
+        return Execute(session =>
+        {
+            session.ReportProcessCrash(exitCode, stderr);
+            return ToolingRuntimeCommandResult.Success(session);
+        }, allowCrashed: true);
+    }
+
+    private WorkspaceJob EnqueueRunJob(
+        string operationId,
+        string inputBuildConfigurationHash,
+        out WorkspaceSnapshot snapshot)
+    {
+        snapshot = WorkspaceSnapshot.Create(
+            workspace,
+            new WorkspaceSnapshotId($"snapshot-{operationId}"),
+            DateTimeOffset.UtcNow);
+        return workspace.Jobs.Enqueue(
+            operationId,
+            WorkspaceJobKind.Run,
+            WorkspaceJobInputIdentity.FromSnapshot(snapshot, inputBuildConfigurationHash),
+            canCancel: true);
+    }
+
+    private ToolingRuntimeCommandResult Execute(
+        Func<ProjectWorkspaceRuntimeSession, ToolingRuntimeCommandResult> action,
+        bool allowCrashed = false)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        var session = workspace.Runtime.ActiveSession;
+        if (session is null)
+        {
+            return ToolingRuntimeCommandResult.Failure([RuntimeDebugBridge.CreateDiagnostic("There is no active editor-attached runtime session.")]);
+        }
+
+        if (!allowCrashed && session.State == RuntimeDebugSessionState.Crashed)
+        {
+            return ToolingRuntimeCommandResult.Failure(session.Diagnostics);
+        }
+
+        try
+        {
+            return action(session);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or ArgumentException)
+        {
+            return ToolingRuntimeCommandResult.Failure([RuntimeDebugBridge.CreateDiagnostic(exception.Message, file: session.ScenePath)]);
+        }
     }
 }

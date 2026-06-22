@@ -34,7 +34,7 @@ Stable API identifiers используются для связи capability с 
 - SpriteFrames, AnimationPlayer, TileMap и UI themes;
 - tests, diagnostics и runtime control.
 
-Часть строк уже `supported`: shared workspace transaction для text project documents, resource import job, test/export/run job, diagnostics query. Часть строк помечена `partial`: специализированные SpriteFrames/AnimationPlayer/TileMap/UI theme workflows и fine-grained visible runtime controls. Такой статус означает, что строка входит в parity map, но её production workflow закрывается последующими задачами.
+Часть строк уже `supported`: shared workspace transaction для text project documents, resource import job, test/export/run job, diagnostics query и fine-grained visible runtime controls. Часть строк помечена `partial`: специализированные SpriteFrames/AnimationPlayer/TileMap/UI theme workflows. Такой статус означает, что строка входит в parity map, но её production workflow закрывается последующими задачами.
 
 ## Verifier
 
@@ -49,7 +49,8 @@ Stable API identifiers используются для связи capability с 
 - обязательные поля endpoint-ов;
 - `supported` Editor capability не имеет более слабых Tooling/MCP binding;
 - `releaseRequired` capability не использует partial/experimental Tooling или MCP;
-- `projectMutation`, `runtimeAction` и `backgroundJob` release capability имеют `dedicatedCommand` или `genericTransaction`, а не `notApplicable`;
+- `projectMutation` и `backgroundJob` release capability имеют `dedicatedCommand` или `genericTransaction`, а не `notApplicable`;
+- release-required `runtimeAction` может иметь CLI `notApplicable`, если действие имеет смысл только для активной visible Editor session и покрыто Tooling/MCP parity;
 - Tooling command и MCP tool/resource опубликованы в catalog.
 
 ## Diagnostics
@@ -57,7 +58,7 @@ Stable API identifiers используются для связи capability с 
 | Code | Meaning |
 | --- | --- |
 | `E2D-CAPABILITY-0001` | Editor/Tooling/MCP parity нарушен: поддержанная Editor capability не имеет полной Tooling/MCP поддержки или release-required строка использует partial/experimental binding |
-| `E2D-CAPABILITY-0002` | CLI binding policy некорректна: release-required mutation/runtime/job capability не имеет dedicated или generic CLI path |
+| `E2D-CAPABILITY-0002` | CLI binding policy некорректна: release-required mutation/job capability не имеет dedicated или generic CLI path |
 | `E2D-CAPABILITY-0003` | Manifest shape некорректен: версия, API manifest reference, duplicate id, required category или mandatory field |
 | `E2D-CAPABILITY-0004` | Capability ссылается на Tooling command или MCP tool/resource, которого нет в опубликованных списках |
 

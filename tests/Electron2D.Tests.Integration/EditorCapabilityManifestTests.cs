@@ -88,6 +88,14 @@ public sealed class EditorCapabilityManifestTests
             Assert.False(string.IsNullOrWhiteSpace(capability.Cli.Explanation));
         });
 
+        var runtimeControls = Assert.Single(manifest.Capabilities, capability => capability.Id == "runtime.control.pause_step_input");
+        Assert.True(runtimeControls.ReleaseRequired);
+        Assert.Equal(EditorCapabilitySupportStatus.Supported, runtimeControls.Editor.Status);
+        Assert.Equal(EditorCapabilitySupportStatus.Supported, runtimeControls.Tooling.Status);
+        Assert.Equal(EditorCapabilitySupportStatus.Supported, runtimeControls.Mcp.Status);
+        Assert.Equal("runtime.pause-step-input", runtimeControls.Tooling.Command);
+        Assert.Equal("runtime_pause", runtimeControls.Mcp.Command);
+
         var verification = EditorCapabilityManifestVerifier.Verify(
             manifest,
             new EditorCapabilityManifestVerificationInput(

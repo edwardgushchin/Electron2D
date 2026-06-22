@@ -40,7 +40,8 @@ internal enum RuntimeDebugSessionState
 {
     Running,
     Paused,
-    Stopped
+    Stopped,
+    Crashed
 }
 
 internal sealed class RuntimeDebugStartRequest
@@ -205,6 +206,11 @@ internal sealed class RuntimeDebugSession
         State = RuntimeDebugSessionState.Stopped;
     }
 
+    public void MarkCrashed()
+    {
+        State = RuntimeDebugSessionState.Crashed;
+    }
+
     public void StepFrame(int count, double fixedDelta)
     {
         EnsureNotStopped();
@@ -286,9 +292,9 @@ internal sealed class RuntimeDebugSession
 
     private void EnsureNotStopped()
     {
-        if (State == RuntimeDebugSessionState.Stopped)
+        if (State is RuntimeDebugSessionState.Stopped or RuntimeDebugSessionState.Crashed)
         {
-            throw new InvalidOperationException("Runtime debug session is stopped.");
+            throw new InvalidOperationException("Runtime debug session is not running.");
         }
     }
 

@@ -97,7 +97,7 @@ Tooling не имеет собственной логики merge, atomic write 
 
 ## Job services
 
-`Build`, `Tests`, `Export`, `Import` и `Runtime` создают `WorkspaceJob` через `WorkspaceJobStore`. Текущая реализация не запускает реальные toolchains; она фиксирует job-backed contract:
+`Build`, `Tests`, `Export` и `Import` создают `WorkspaceJob` через `WorkspaceJobStore`. `Runtime.Queue(...)` сохраняет тот же job-backed contract для generic `project.run` route. Эти paths не запускают реальные toolchains; они фиксируют job lifecycle shape:
 
 - создаётся `WorkspaceSnapshot`;
 - `WorkspaceJobInputIdentity` сохраняет snapshot id, workspace revision, content revision, document revisions и build configuration hash;
@@ -105,6 +105,17 @@ Tooling не имеет собственной логики merge, atomic write 
 - result возвращает `JobKind`, `JobState`, input identity, diagnostics и artifacts.
 
 Такой result нужен будущим CLI JSONL, MCP events и Editor panels без дублирования job lifecycle.
+
+## Runtime service
+
+`ProjectToolingHost.Runtime` дополнительно реализует Editor-attached runtime control:
+
+- `StartEditorAttached(...)` создаёт `WorkspaceSnapshot`, materializes snapshot, ставит run job в очередь и создаёт active `ProjectWorkspace.Runtime` session с `SessionKind = EditorAttachedPreview`;
+- `Pause()`, `Resume()`, `Step(...)`, `InjectInput(...)`, `CaptureFrame()`, `GetSceneTree()`, `GetDiagnostics()`, `HighlightNode(...)`, `ReportProcessCrash(...)` и `Stop()` управляют active session;
+- отсутствующая active session или недопустимая команда возвращает structured diagnostic `E2D-RUNTIME-0001`;
+- crash state остаётся в workspace runtime session, чтобы MCP и Agent Workspace могли показать diagnostics без падения Editor workspace.
+
+Этот service не является managed debugger и не заменяет будущий renderer-backed frame capture.
 
 ## Текущие ограничения
 
@@ -116,6 +127,7 @@ Tooling не имеет собственной логики merge, atomic write 
 - полноценные scene/resource/script convenience commands;
 - реальный import/build/test/export/run toolchain запуск;
 - реальный named pipe/Unix domain socket protocol server.
+- renderer-backed screenshot для attached runtime session.
 
 Локальный registry/gateway contract для обнаружения active Editor-сессии реализован отдельно: [Editor session discovery и Editor-hosted Agent Gateway](editor-session-discovery.md).
 
@@ -131,4 +143,4 @@ Focused проверка:
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ToolingServiceBoundaryTests
 ```
 
-Проверка покрывает transaction wrappers, result shape, revision mismatch, unsafe path, TaskService acceptance guard, task links через transaction semantics и job-backed long operations.
+Проверка покрывает transaction wrappers, result shape, revision mismatch, unsafe path, TaskService acceptance guard, task links через transaction semantics, job-backed long operations и Editor-attached runtime control.

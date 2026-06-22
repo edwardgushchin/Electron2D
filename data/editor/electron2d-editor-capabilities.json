@@ -289,21 +289,21 @@
         "runtime-control"
       ],
       "kind": "runtimeAction",
-      "releaseRequired": false,
+      "releaseRequired": true,
       "editor": {
         "command": "RuntimePauseStepInput",
-        "status": "partial",
-        "explanation": "Visible attached runtime controls are tracked for the later runtime-control task."
+        "status": "supported",
+        "explanation": "Editor-attached runtime controls use the shared workspace runtime session."
       },
       "tooling": {
         "command": "runtime.pause-step-input",
-        "status": "partial",
-        "explanation": "Runtime debug bridge has partial state controls; full visible session parity is not complete."
+        "status": "supported",
+        "explanation": "Tooling controls the active editor-attached runtime session through the runtime service."
       },
       "mcp": {
         "toolOrResource": "runtime_pause",
-        "status": "partial",
-        "explanation": "MCP reserves runtime control tool names, but full production semantics are not complete."
+        "status": "supported",
+        "explanation": "MCP exposes fine-grained runtime controls through the active editor runtime session."
       },
       "cli": {
         "kind": "notApplicable",
