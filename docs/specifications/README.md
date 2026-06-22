@@ -65,6 +65,7 @@
 - [Базовые UI controls](ui/basic-controls.md) - `Panel`, кнопки, текстовый ввод, `Range`, `Slider`, `ProgressBar`, `TextureRect` и `NinePatchRect`.
 - [Структурные UI controls](ui/structured-controls.md) - `ItemList`, `Tree`, `TreeItem`, `PopupMenu` и `TabContainer` для runtime UI и будущего редактора.
 - [Темы, DPI scale и tooltips UI](ui/theme-tooltips.md) - `Theme`, style boxes, local theme overrides, fallback lookup, base scale и tooltip API.
+- [UI public API gate](ui/public-api-gate.md) - release gate, который запрещает editor work, пока все UI/Text строки GitHub Wiki compatibility table не имеют статус `Supported`.
 
 ## Локализация и настройки
 

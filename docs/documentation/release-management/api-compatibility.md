@@ -141,7 +141,7 @@ GitHub Wiki содержит:
 
 ## UI gate before Editor
 
-Текущий UI public API ещё не является полным `Supported` surface для редактора. До начала реализации `Electron2D.Editor` должен быть закрыт отдельный UI public API gate: все UI-related строки в GitHub Wiki `API-Compatibility.md` должны соответствовать фактическому runtime API, иметь тесты, XML documentation, generated Wiki pages, спецификацию, документацию реализации и статус `Supported`, а не `Partial`.
+UI public API gate закрывается отдельной проверкой поверх GitHub Wiki: все строки из generated category page `API-UI-and-Text.md` должны соответствовать фактическому runtime API, иметь тесты, XML documentation, generated Wiki pages, спецификацию, документацию реализации и статус `Supported`, а не `Partial`.
 
 Если будущая editor-задача требует public UI type, property, method или event, которого ещё нет в runtime, такая editor-задача остаётся заблокированной. Нельзя разблокировать редактор простой заменой статуса в таблице совместимости без реализации и проверок.
 
@@ -152,3 +152,11 @@ powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1
 ```
 
 Verifier собирает `src/Electron2D/Electron2D.csproj`, читает exported public types из `Electron2D.dll`, сверяет их с `API-Compatibility.md` в клоне `Electron2D.wiki.git` и запрещает возврат legacy/component типов без публикации отдельного legacy-блока в Wiki.
+
+UI gate проверяется отдельно:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/Verify-UiPublicApiGate.ps1 -WikiPath .github/wiki
+```
+
+Эта проверка читает generated Wiki category `API-UI-and-Text.md` и падает, если хотя бы один UI/Text public type отсутствует в `API-Compatibility.md` или имеет статус не `Supported`.

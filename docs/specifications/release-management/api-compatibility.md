@@ -40,6 +40,8 @@ API-Compatibility.md
 
 Запрещено переводить UI rows из `Partial` в `Supported` только ради разблокировки редактора. Если для редактора, Project Manager, Inspector, dock UI, встроенного редактора кода или AI-friendly terminal panel не хватает публичного UI API, соответствующая задача должна оставаться заблокированной до реализации этого API в runtime.
 
+Список UI/Text rows берётся из generated GitHub Wiki page `API-UI-and-Text.md`. Локальная и CI-проверка `tools/Verify-UiPublicApiGate.ps1` должна падать, если любая строка из этого списка отсутствует в `API-Compatibility.md` или имеет статус не `Supported`.
+
 ## Запрещённый API
 
 Следующие имена не должны появляться в public surface новой реализации:
@@ -59,6 +61,7 @@ API-Compatibility.md
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1
+powershell -ExecutionPolicy Bypass -File tools/Verify-UiPublicApiGate.ps1 -WikiPath .github/wiki
 ```
 
 Verifier должен собрать runtime, прочитать exported public types и убедиться, что каждый публичный тип отражён в GitHub Wiki clone с допустимым статусом. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki.

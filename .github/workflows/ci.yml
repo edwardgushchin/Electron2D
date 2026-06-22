@@ -72,6 +72,10 @@ jobs:
         shell: pwsh
         run: ./tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
 
+      - name: Verify UI public API gate
+        shell: pwsh
+        run: ./tools/Verify-UiPublicApiGate.ps1 -WikiPath .github/wiki
+
       - name: Verify public API documentation audit
         shell: pwsh
         run: ./tools/Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki

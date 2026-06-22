@@ -65,6 +65,7 @@
 - [Базовые UI controls](ui/basic-controls.md) - текущие `Panel`, кнопки, текстовый ввод, `Range`, `Slider`, `ProgressBar`, `TextureRect` и `NinePatchRect`.
 - [Структурные UI controls](ui/structured-controls.md) - текущие `ItemList`, `Tree`, `TreeItem`, `PopupMenu`, `TabContainer`, selection, activation и tab switching.
 - [Темы, DPI scale и tooltips UI](ui/theme-tooltips.md) - текущие `Theme`, `StyleBox`, `StyleBoxFlat`, theme overrides, lookup fallback, base scale и tooltip source API.
+- [UI public API gate](ui/public-api-gate.md) - текущая проверка, которая требует статус `Supported` для всех UI/Text строк GitHub Wiki compatibility table перед editor-задачами.
 
 ## Локализация и настройки
 
