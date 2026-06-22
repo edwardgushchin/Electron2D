@@ -73,7 +73,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/documentation/canonical-goal-alignment.md",
-                                                    "sha256":  "8873621caf039aa844d073d5ab6bf343d41d35a2265b42038bc026b20d364152"
+                                                    "sha256":  "aa7e9d207b39f34e2fbed9e19cddb1d7dbcf321509bd17276d41b483dc1abbc9"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/documentation/github-wiki-api-reference.md",
@@ -81,7 +81,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/documentation/local-documentation-pipeline.md",
-                                                    "sha256":  "49a448b10b5121272b4e548b3dd8c879751f37ffcc7b037d927270af734ad3d8"
+                                                    "sha256":  "b633eb223cbeb3f332163442d934abb6808183439007841c6f81b63946c39ef0"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/documentation/public-api-xml-documentation.md",
@@ -113,7 +113,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/project-manager.md",
-                                                    "sha256":  "01bc655f9172e38c5efa0678241ab604ea7d1263682459c7593a0979aaa91d1b"
+                                                    "sha256":  "f537d77f27f62ed0aa916d5934dfa63e879c0a9da64ffeb4274f3535ed8e41d0"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/run-output-workflow.md",
@@ -405,7 +405,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/resources/scene-resource-serialization.md",
-                                                    "sha256":  "86ae78547c32fdebcdbb3f227ee2ff05feb092f5ab7a47a54a585f36c6db2332"
+                                                    "sha256":  "5bae3aa3bc0fb5c7432db8197c164b25508305546cabdb792205daba7fbcd6aa"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/resources/shader-source-import.md",
@@ -488,12 +488,12 @@
                                                     "sha256":  "49f6c98b96013182ebe8b2bf85cb59a1fa2e0b2272b3de3818f8ac4d6f614d64"
                                                 },
                                                 {
-                                                    "path":  "docs/specifications/architecture/ai-friendly-workflow.md",
-                                                    "sha256":  "954f09c451ba6b5c614b61d0b5de0871529e68859150733f6cbbf5edc6f0f3d4"
+                                                    "path":  "docs/specifications/architecture/agent-native-workflow.md",
+                                                    "sha256":  "8a1146cbd13548fecf59d9a2d14567ce7b323b4c6fe36472a66b66e66ea36aab"
                                                 },
                                                 {
                                                     "path":  "docs/specifications/documentation/local-documentation-pipeline.md",
-                                                    "sha256":  "dea322822ed148a08a9e64e4a3df252dd357483e36a69438b33c18b281f34913"
+                                                    "sha256":  "a45efe283ece1265799c01add9a65f3647494a9ed67f215b25276ad5de8667e8"
                                                 }
                                             ],
                           "examples":  {
@@ -671,10 +671,10 @@
                                                         "docs/documentation/ui/public-api-gate.md",
                                                         "docs/documentation/ui/structured-controls.md",
                                                         "docs/documentation/ui/theme-tooltips.md",
-                                                        "docs/specifications/architecture/ai-friendly-workflow.md",
+                                                        "docs/specifications/architecture/agent-native-workflow.md",
                                                         "docs/specifications/documentation/local-documentation-pipeline.md"
                                                     ],
-                                          "contract":  "Current implementation documentation and AI-friendly architecture notes."
+                                          "contract":  "Current implementation documentation and Agent-native cross-platform 2D game engine architecture notes."
                                       },
                     "examples":  {
                                      "path":  "data/documentation/electron2d-doc-examples.json",
@@ -26263,27 +26263,32 @@
                                       ]
                     },
                     {
-                        "id":  "doc:architecture.ai-friendly-workflow",
+                        "id":  "doc:architecture.agent-native-workflow",
                         "kind":  "documentation",
-                        "title":  "AI-friendly workflow Electron2D 0.1",
+                        "title":  "Agent-native cross-platform 2D game engine workflow Electron2D 0.1",
                         "summary":  "Статус: целевая архитектурная спецификация.",
                         "keywords":  [
                                          "0",
                                          "1",
                                          "2",
-                                         "ai",
+                                         "2d",
+                                         "agent",
                                          "architecture",
+                                         "cross",
                                          "d",
                                          "docs",
                                          "electron",
                                          "electron2d",
-                                         "friendly",
+                                         "engine",
+                                         "game",
                                          "md",
+                                         "native",
+                                         "platform",
                                          "specifications",
                                          "workflow"
                                      ],
-                        "sourcePath":  "docs/specifications/architecture/ai-friendly-workflow.md",
-                        "sourceId":  "doc:architecture.ai-friendly-workflow",
+                        "sourcePath":  "docs/specifications/architecture/agent-native-workflow.md",
+                        "sourceId":  "doc:architecture.agent-native-workflow",
                         "audiences":  [
                                           "human",
                                           "ai",

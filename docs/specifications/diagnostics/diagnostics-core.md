@@ -3,7 +3,7 @@
 Статус: целевая спецификация.
 Задача: `T-0146`.
 Обновлено: 2026-06-22.
-Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Runtime diagnostics пользовательского кода](../object-model/runtime-diagnostics.md).
+Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Runtime diagnostics пользовательского кода](../object-model/runtime-diagnostics.md).
 
 ## Цель
 

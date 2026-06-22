@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="data/assets/branding/readme/electron2d_readme_dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="data/assets/branding/readme/electron2d_readme_light.svg">
-    <img alt="Electron2D - AI-friendly cross-platform 2D game engine"
+    <img alt="Electron2D - Agent-native cross-platform 2D game engine"
          src="data/assets/branding/readme/electron2d_readme_light.svg"
          width="900">
   </picture>

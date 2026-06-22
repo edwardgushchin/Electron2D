@@ -155,7 +155,7 @@ return 0;
 string RenderHome(IReadOnlyList<Type> types, IReadOnlyList<ApiCategory> categories)
 {
     var builder = NewGeneratedPage();
-    builder.AppendLine("Electron2D is an AI-friendly 2D game engine for C# and .NET. The `0.1.0 Preview` line focuses on a clean runtime API, deterministic project tooling and documentation that can be read by both developers and coding agents.");
+    builder.AppendLine("Electron2D is an Agent-native cross-platform 2D game engine for C# and .NET. The `0.1.0 Preview` line focuses on a clean runtime API, deterministic project tooling and documentation that can be read by both developers and coding agents.");
     builder.AppendLine();
     builder.AppendLine("This Wiki is the public documentation hub for the preview API surface. It is generated from the compiled runtime assembly and XML documentation comments, so the reference follows the code that ships in the engine package.");
     builder.AppendLine();
@@ -188,7 +188,7 @@ string RenderHome(IReadOnlyList<Type> types, IReadOnlyList<ApiCategory> categori
     builder.AppendLine("| Navigation | Category pages, complete index and focused common API sidebar |");
     builder.AppendLine("| Release line | `0.1.0 Preview` |");
     builder.AppendLine();
-    builder.AppendLine("## AI-friendly workflow");
+    builder.AppendLine("## Agent-native cross-platform 2D game engine workflow");
     builder.AppendLine();
     builder.AppendLine("The documentation is generated in a stable structure so humans and coding agents can link to the same pages, compare public types, and avoid guessing which preview APIs exist.");
     builder.AppendLine();

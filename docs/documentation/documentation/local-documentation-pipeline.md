@@ -28,7 +28,7 @@ Executable assembly name:
 e2d
 ```
 
-Index создаётся из `data/api/electron2d-api-manifest.json`, implementation documentation under `docs/documentation/`, architecture spec `docs/specifications/architecture/ai-friendly-workflow.md` и examples source. Public API entries в index хранят stable `apiId`, но полный type/member payload CLI читает из API manifest.
+Index создаётся из `data/api/electron2d-api-manifest.json`, implementation documentation under `docs/documentation/`, architecture spec `docs/specifications/architecture/agent-native-workflow.md` и examples source. Public API entries в index хранят stable `apiId`, но полный type/member payload CLI читает из API manifest.
 
 ## Команды
 
@@ -71,7 +71,7 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- docs example "p
 
 ## Editor co-development workflow
 
-Документация AI-friendly workflow доступна через index как обычный documentation entry. Она простыми словами описывает:
+Документация Agent-native cross-platform 2D game engine workflow доступна через index как обычный documentation entry. Она простыми словами описывает:
 
 - `ProjectWorkspace` — внутреннюю живую модель открытого проекта, где редактор, CLI, MCP и будущие IDE-интеграции видят одни и те же документы, ревизии и диагностику;
 - `ProjectTaskManager` — проектную систему задач пользователя внутри Electron2D, а не локальный task tracker этого репозитория;
@@ -85,7 +85,7 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- docs example "p
 
 `Editor Capability Manifest` — будущий машиночитаемый список семантически значимых возможностей редактора и их Tooling/MCP/CLI bindings. В текущем pipeline он доступен человеку и AI-агенту через indexed architecture documentation; будущие generated manifests должны добавлять отдельные `documentation` или `example` entries с тем же source metadata.
 
-`MCP resources` — ресурсы локального MCP-сервера, через которые AI-клиент читает состояние открытого проекта, документацию, диагностику и artifacts. До реализации MCP adapter локальная документация фиксирует контракт в `ai-friendly-workflow.md`, а `Verify-LocalDocumentation.ps1` проверяет, что этот раздел не выпал из documentation pipeline.
+`MCP resources` — ресурсы локального MCP-сервера, через которые AI-клиент читает состояние открытого проекта, документацию, диагностику и artifacts. До реализации MCP adapter локальная документация фиксирует контракт в `agent-native-workflow.md`, а `Verify-LocalDocumentation.ps1` проверяет, что этот раздел не выпал из documentation pipeline.
 
 Headless CI workflow описывается отдельно: если Editor закрыт, CLI/MCP создают headless `ProjectWorkspace`, выполняют build/test/run/export через snapshot и возвращают структурированные результаты без владения GUI-сессией.
 

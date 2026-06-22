@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация для `T-0153`.
 Обновлено: 2026-06-22.
-Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Live ProjectWorkspace](live-project-workspace.md); [Canonical document model, revision model и structural diff](canonical-document-model.md).
+Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Live ProjectWorkspace](live-project-workspace.md); [Canonical document model, revision model и structural diff](canonical-document-model.md).
 
 ## Назначение
 

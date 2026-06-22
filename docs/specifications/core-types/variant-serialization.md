@@ -2,7 +2,7 @@
 
 ## Назначение
 
-`T-0021` должен зафиксировать стабильный текстовый round-trip формат для сериализуемого подмножества `Variant` в Electron2D `0.1.0 Preview`. Этот формат нужен будущим scene/resource files, golden-data тестам и AI-friendly tooling. Он не добавляет новый публичный API: в `0.1.0 Preview` serializer остаётся internal runtime сервисом.
+`T-0021` должен зафиксировать стабильный текстовый round-trip формат для сериализуемого подмножества `Variant` в Electron2D `0.1.0 Preview`. Этот формат нужен будущим scene/resource files, golden-data тестам и Agent-native cross-platform 2D game engine tooling. Он не добавляет новый публичный API: в `0.1.0 Preview` serializer остаётся internal runtime сервисом.
 
 ## Формат
 

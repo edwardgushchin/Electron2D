@@ -148,8 +148,8 @@ function New-DocumentationEntry {
     $stem = $relative -replace '^docs/', ''
     $stem = $stem -replace '\.md$', ''
     $id = 'doc:' + ($stem -replace '/', '.')
-    if ($relative -eq 'docs/specifications/architecture/ai-friendly-workflow.md') {
-        $id = 'doc:architecture.ai-friendly-workflow'
+    if ($relative -eq 'docs/specifications/architecture/agent-native-workflow.md') {
+        $id = 'doc:architecture.agent-native-workflow'
     }
 
     $title = Get-MarkdownTitle -Text $text -Fallback $stem
@@ -299,7 +299,7 @@ Get-ChildItem -LiteralPath (Join-Path $repoRoot 'docs/documentation') -Recurse -
             $documentationFiles.Add($_.FullName)
         }
     }
-$documentationFiles.Add((Join-Path $repoRoot 'docs/specifications/architecture/ai-friendly-workflow.md'))
+$documentationFiles.Add((Join-Path $repoRoot 'docs/specifications/architecture/agent-native-workflow.md'))
 $documentationFiles.Add((Join-Path $repoRoot 'docs/specifications/documentation/local-documentation-pipeline.md'))
 
 $entries = New-Object System.Collections.Generic.List[object]
@@ -372,7 +372,7 @@ $index = [ordered]@{
         }
         documentation = [ordered]@{
             paths = @($documentationHashRecords.path)
-            contract = 'Current implementation documentation and AI-friendly architecture notes.'
+            contract = 'Current implementation documentation and Agent-native cross-platform 2D game engine architecture notes.'
         }
         examples = [ordered]@{
             path = 'data/documentation/electron2d-doc-examples.json'

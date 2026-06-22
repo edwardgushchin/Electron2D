@@ -4,7 +4,7 @@
 Источник: исторически перенесено из корневого `GOAL.md`, затем синхронизировано с текущим release contract.
 Synchronized with `docs/specifications/releases/0.1.0-preview.md`.
 Последнее обновление: 2026-06-22.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [AI-friendly workflow Electron2D 0.1](ai-friendly-workflow.md); [Live ProjectWorkspace](../project-system/live-project-workspace.md).
+Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](agent-native-workflow.md); [Live ProjectWorkspace](../project-system/live-project-workspace.md).
 
 ## Canonical status
 
@@ -101,4 +101,4 @@ Canonical goal alignment проверяется локально:
 powershell -ExecutionPolicy Bypass -File tools\Verify-CanonicalGoalAlignment.ps1
 ```
 
-Verifier проверяет, что этот документ и release/AI-friendly specifications закрепляют актуальный five-platform, specialized node/resource, `Node2D` transform и `scene_attach_script` contract, а старое backend-specific или component-first позиционирование не возвращается как действующая цель.
+Verifier проверяет, что этот документ и release/Agent-native cross-platform 2D game engine specifications закрепляют актуальный five-platform, specialized node/resource, `Node2D` transform и `scene_attach_script` contract, а старое backend-specific или component-first позиционирование не возвращается как действующая цель.

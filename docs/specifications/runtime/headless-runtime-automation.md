@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация для `T-0121`.
 Обновлено: 2026-06-22.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md), [WorkspaceSnapshot, job input identity и dirty export policy](../project-system/workspace-snapshot.md), [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md).
+Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [WorkspaceSnapshot, job input identity и dirty export policy](../project-system/workspace-snapshot.md), [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md).
 
 ## Назначение
 

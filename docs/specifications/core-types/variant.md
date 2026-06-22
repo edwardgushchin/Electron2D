@@ -2,7 +2,7 @@
 
 ## Назначение
 
-`Variant` должен стать Electron2D контейнером значения для динамических runtime API Electron2D `0.1.0 Preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и AI-friendly tooling. Публичный C# API `Variant`, входящий в утверждённый 2D-профиль, должен совпадать с Godot `4.7-stable` .NET/C# API. Значения и типы, относящиеся к API вне 2D-профиля, в `0.1.0 Preview` не входят, но их отсутствие должно быть явно отражено в profile manifest и проверках совместимости.
+`Variant` должен стать Electron2D контейнером значения для динамических runtime API Electron2D `0.1.0 Preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и Agent-native cross-platform 2D game engine tooling. Публичный C# API `Variant`, входящий в утверждённый 2D-профиль, должен совпадать с Godot `4.7-stable` .NET/C# API. Значения и типы, относящиеся к API вне 2D-профиля, в `0.1.0 Preview` не входят, но их отсутствие должно быть явно отражено в profile manifest и проверках совместимости.
 
 ## Источники поведения
 

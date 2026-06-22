@@ -1,4 +1,4 @@
-# AI-friendly workflow Electron2D 0.1
+# Agent-native cross-platform 2D game engine workflow Electron2D 0.1
 
 Статус: целевая архитектурная спецификация.
 Задача: `T-0114`.
@@ -14,15 +14,15 @@ Electron2D — C#-first кроссплатформенный 2D-движок с 
 
 Семантически значимая операция — это изменение проекта, сцены, ресурса, кода, настроек, импорта, диагностики, тестового запуска или экспорта. Перетаскивание dock-ов, смена темы, размер окна и другие действия, не меняющие проектный смысл, не входят в обязательный AI-паритет.
 
-Это архитектурное требование, а не требование встроенного чата. AI-friendly означает, что редактор, локальный MCP-сервер, CLI, CI и будущие IDE-интеграции работают с одной моделью проекта через стабильные команды, текстовые файлы, структурированную диагностику и машиночитаемую документацию. Встроенная LLM, генерация игры по одному prompt, облачный аккаунт и привязка к одному AI-провайдеру в `0.1.0` не нужны.
+Это архитектурное требование, а не требование встроенного чата. Agent-native cross-platform 2D game engine означает, что редактор, локальный MCP-сервер, CLI, CI и будущие IDE-интеграции работают с одной моделью проекта через стабильные команды, текстовые файлы, структурированную диагностику и машиночитаемую документацию. Встроенная LLM, генерация игры по одному prompt, облачный аккаунт и привязка к одному AI-провайдеру в `0.1.0` не нужны.
 
 Короткая продуктовая формулировка:
 
-> Electron2D — 2D-движок на C# для совместной разработки человеком и AI.
+> Electron2D — Agent-native cross-platform 2D game engine.
 
 Английский слоган:
 
-> Electron2D — a C# 2D engine built for humans and AI agents.
+> Agent-native cross-platform 2D game engine.
 
 ## Обновлённая цель 0.1
 
@@ -1413,7 +1413,7 @@ e2d docs example "platformer movement"
 
 Документация каждого публичного API должна содержать назначение, сигнатуру, lifecycle restrictions, thread affinity, ownership/disposal, пример, ошибки, платформенные ограничения и renderer restrictions. Отличия от Godot описываются только для API вне обязательного 2D-профиля `0.1.0`; для типов внутри профиля требуется `Parity verified`.
 
-## Что AI-friendly не означает
+## Что Agent-native cross-platform 2D game engine не означает
 
 Первая версия не обязана иметь:
 
@@ -1468,7 +1468,7 @@ High для 0.1:
 
 Можно отложить: Hot Reload, Edit and Continue, remote debugger для Android/iOS, сложные solution-wide refactorings, visual shader editor, сложный `AnimationTree`, skeletal animation, расширенный particle editor, полноценный profiler UI, plugin marketplace, расширенная dock-система сверх Godot 4 baseline, встроенный AI-chat и автоматическая публикация в магазины.
 
-## Критерии приёмки AI-friendly
+## Критерии приёмки Agent-native cross-platform 2D game engine
 
 Нужны два benchmark-набора.
 

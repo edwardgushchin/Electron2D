@@ -50,7 +50,7 @@ Smoke-режим также выводит абсолютные пути `Projec
 ## Ограничения
 
 - В этой задаче Project Manager реализован как внутренняя логика редактора и smoke-команда. Полноценный экран выбора проектов в интерактивном окне добавляется следующими editor-задачами.
-- Project Manager не создаёт локальный Git repository, agent file или skills. Это отдельный AI-friendly project workflow.
+- Project Manager не создаёт локальный Git repository, agent file или skills. Это отдельный Agent-native cross-platform 2D game engine project workflow.
 - Project Manager не собирает пользовательский проект; он только проверяет доступность .NET SDK до будущих build/run workflow.
 
 ## Проверки

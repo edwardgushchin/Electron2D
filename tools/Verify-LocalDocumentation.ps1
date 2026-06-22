@@ -74,7 +74,7 @@ foreach ($command in $requiredCommands) {
 $requiredEntryIds = @(
     'api-type:Electron2D.CharacterBody2D',
     'api-member:Electron2D.CharacterBody2D.MoveAndSlide',
-    'doc:architecture.ai-friendly-workflow',
+    'doc:architecture.agent-native-workflow',
     'example:platformer-movement'
 )
 foreach ($entryId in $requiredEntryIds) {

@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация для `T-0117`.
 Обновлено: 2026-06-22.
-Связанные документы: [Canonical document model, revision model и structural diff](canonical-document-model.md), [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md), [Сериализация сцен, ресурсов и переносимых property values](../resources/scene-resource-serialization.md), [Resource file baseline, stable UID и ссылки ресурсов](../resources/resource-file-baseline.md).
+Связанные документы: [Canonical document model, revision model и structural diff](canonical-document-model.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Сериализация сцен, ресурсов и переносимых property values](../resources/scene-resource-serialization.md), [Resource file baseline, stable UID и ссылки ресурсов](../resources/resource-file-baseline.md).
 
 ## Назначение
 

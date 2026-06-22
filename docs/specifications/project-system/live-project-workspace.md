@@ -3,7 +3,7 @@
 Статус: целевая спецификация.
 Задача: `T-0139`.
 Обновлено: 2026-06-22.
-Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Canonical document model, revision model и structural diff](canonical-document-model.md); [Stable project text formats, migrations и JSON Schema](project-text-formats.md); [Diagnostics.Core](../diagnostics/diagnostics-core.md).
+Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Canonical document model, revision model и structural diff](canonical-document-model.md); [Stable project text formats, migrations и JSON Schema](project-text-formats.md); [Diagnostics.Core](../diagnostics/diagnostics-core.md).
 
 ## Цель
 

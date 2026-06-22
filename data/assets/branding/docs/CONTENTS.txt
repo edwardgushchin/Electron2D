@@ -10,7 +10,7 @@ icon/
   Windows ICO, source SVG and PNG sizes: 16, 24, 32, 48, 64, 128, 256, 512, 1024.
 
 social/
-  Transparent GitHub social previews, both dark-text and light-text variants, SVG and PNG.
+  Cropped transparent logo variants, both dark-text and light-text variants, SVG and PNG.
 
 mark/
   Standalone symbol for light and dark surfaces.

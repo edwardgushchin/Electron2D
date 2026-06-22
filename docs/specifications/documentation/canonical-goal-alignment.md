@@ -3,7 +3,7 @@
 Статус: целевая спецификация.
 Задача: `T-0152`.
 Обновлено: 2026-06-22.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Архитектура и платформенный стек Electron2D](../architecture/engine-platform-stack.md).
+Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Архитектура и платформенный стек Electron2D](../architecture/engine-platform-stack.md).
 
 ## Назначение
 

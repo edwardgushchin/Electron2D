@@ -8,7 +8,7 @@
 
 `T-0041` добавляет внутренний file-level serializer baseline для сцен и ресурсов. Он должен сохранять переносимые значения, ссылки на ресурсы и структуру сцены в стабильном JSON, чтобы `load -> modify -> save -> load` не терял values и references.
 
-В `0.1.0 Preview` задача не добавляет public `ResourceLoader`, public `ResourceSaver`, editor FileSystem dock или полный metadata database. Результат является внутренним механизмом для тестов, будущего редактора, import/export tooling и AI-friendly project operations.
+В `0.1.0 Preview` задача не добавляет public `ResourceLoader`, public `ResourceSaver`, editor FileSystem dock или полный metadata database. Результат является внутренним механизмом для тестов, будущего редактора, import/export tooling и Agent-native cross-platform 2D game engine project operations.
 
 ## Property value model
 

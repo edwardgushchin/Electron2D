@@ -26,17 +26,17 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $releaseSpecPath = Join-Path $repoRoot 'docs/specifications/releases/0.1.0-preview.md'
-$aiWorkflowSpecPath = Join-Path $repoRoot 'docs/specifications/architecture/ai-friendly-workflow.md'
+$agentNativeWorkflowSpecPath = Join-Path $repoRoot 'docs/specifications/architecture/agent-native-workflow.md'
 $engineStackSpecPath = Join-Path $repoRoot 'docs/specifications/architecture/engine-platform-stack.md'
 
-foreach ($path in @($releaseSpecPath, $aiWorkflowSpecPath, $engineStackSpecPath)) {
+foreach ($path in @($releaseSpecPath, $agentNativeWorkflowSpecPath, $engineStackSpecPath)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Required canonical goal document was not found: $path"
     }
 }
 
 $releaseSpec = [System.IO.File]::ReadAllText($releaseSpecPath, [System.Text.Encoding]::UTF8)
-$aiWorkflowSpec = [System.IO.File]::ReadAllText($aiWorkflowSpecPath, [System.Text.Encoding]::UTF8)
+$agentNativeWorkflowSpec = [System.IO.File]::ReadAllText($agentNativeWorkflowSpecPath, [System.Text.Encoding]::UTF8)
 $engineStackSpec = [System.IO.File]::ReadAllText($engineStackSpecPath, [System.Text.Encoding]::UTF8)
 
 function Assert-Contains {
@@ -55,11 +55,11 @@ Assert-Contains -Content $releaseSpec -Fragment 'Windows, Linux, macOS, Android'
 Assert-Contains -Content $releaseSpec -Fragment 'iOS' -Description 'Release canonical contract'
 Assert-Contains -Content $releaseSpec -Fragment 'node/resource' -Description 'Release canonical contract'
 Assert-Contains -Content $releaseSpec -Fragment 'SpriteRenderer' -Description 'Release legacy exclusion record'
-Assert-Contains -Content $aiWorkflowSpec -Fragment '`Node2D`' -Description 'AI-friendly canonical architecture'
-Assert-Contains -Content $aiWorkflowSpec -Fragment 'transform' -Description 'AI-friendly canonical architecture'
-Assert-Contains -Content $aiWorkflowSpec -Fragment '`scene_attach_script`' -Description 'AI-friendly canonical architecture'
-Assert-Contains -Content $aiWorkflowSpec -Fragment 'Windows, Linux, macOS, Android' -Description 'AI-friendly platform contract'
-Assert-Contains -Content $aiWorkflowSpec -Fragment 'iOS' -Description 'AI-friendly platform contract'
+Assert-Contains -Content $agentNativeWorkflowSpec -Fragment '`Node2D`' -Description 'Agent-native cross-platform 2D game engine canonical architecture'
+Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'transform' -Description 'Agent-native cross-platform 2D game engine canonical architecture'
+Assert-Contains -Content $agentNativeWorkflowSpec -Fragment '`scene_attach_script`' -Description 'Agent-native cross-platform 2D game engine canonical architecture'
+Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'Windows, Linux, macOS, Android' -Description 'Agent-native cross-platform 2D game engine platform contract'
+Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'iOS' -Description 'Agent-native cross-platform 2D game engine platform contract'
 
 Assert-Contains -Content $engineStackSpec -Fragment 'Synchronized with `docs/specifications/releases/0.1.0-preview.md`' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment 'Windows, Linux, macOS, Android' -Description 'Engine platform stack canonical status'

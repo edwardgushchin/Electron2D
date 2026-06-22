@@ -5,7 +5,7 @@
 ## Архитектура
 
 - [Архитектура и платформенный стек Electron2D](architecture/engine-platform-stack.md) - стек платформенных backend, fallback-рендеринга, физики, аудио, текста, geometry и сетевой основы.
-- [AI-friendly workflow Electron2D 0.1](architecture/ai-friendly-workflow.md) - архитектурный контракт живой Editor-сессии, `ProjectWorkspace`, MCP/tooling, синхронизации изменений, диагностики, управления запущенной игрой и AI benchmark.
+- [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](architecture/agent-native-workflow.md) - архитектурный контракт живой Editor-сессии, `ProjectWorkspace`, MCP/tooling, синхронизации изменений, диагностики, управления запущенной игрой и AI benchmark.
 - [Source domain layout](architecture/source-domain-layout.md) - правило, какие исходники остаются в `Core`, какие живут отдельными доменами и почему папки не задают namespace.
 
 ## Релизы
@@ -58,6 +58,7 @@
 
 - [Canonical document model, revision model и structural diff](project-system/canonical-document-model.md) - внутренний контракт identity, классификации, ревизий, parser/serializer boundary и structural diff до `ProjectWorkspace`.
 - [Stable project text formats, migrations и JSON Schema](project-system/project-text-formats.md) - deterministic formatting, validation, migration pipeline и JSON Schema для scene/resource/project JSON source files.
+- [Reproducibility lock и `e2d doctor`](project-system/reproducibility-lock-and-doctor.md) - `global.json`, `electron2d.lock.json`, lock verifier и read-only диагностика локального окружения.
 - [Live ProjectWorkspace](project-system/live-project-workspace.md) - внутренняя live model проекта: document store, revisions, dirty state, events, ownership lease, operation journal и diagnostics store.
 - [WorkspaceSnapshot, job input identity и dirty export policy](project-system/workspace-snapshot.md) - immutable snapshot для build/test/run/export artifacts, materialization, stale rules и export dirty snapshot policy.
 - [WorkspaceJob contract и event stream](project-system/workspace-jobs.md) - внутренний контракт долгих import/build/test/export/run операций, lifecycle states, progress, cancel, diagnostics, artifacts и stale markers.
