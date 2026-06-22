@@ -41,4 +41,5 @@ internal sealed record EditorFileSystemDockSmokeResult(
     int ImportErrorCount,
     string ImportErrorPath,
     bool ImportErrorVisible,
+    bool LiveImportStatusVisible,
     bool RoundTripStable);

@@ -37,6 +37,7 @@ internal enum PrincipalKind
 internal enum OperationCapability
 {
     TaskWrite,
+    TaskEditUnprivilegedFields,
     TaskSubmitForAcceptance,
     TaskAccept,
     TaskRequestChanges,

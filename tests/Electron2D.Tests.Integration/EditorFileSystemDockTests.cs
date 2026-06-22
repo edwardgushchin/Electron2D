@@ -83,6 +83,7 @@ public sealed class EditorFileSystemDockTests
             Assert.Equal("1", lines["ImportErrorCount"]);
             Assert.Equal("res://assets/broken.e2res", lines["ImportErrorPath"]);
             Assert.Equal("True", lines["ImportErrorVisible"]);
+            Assert.Equal("True", lines["LiveImportStatusVisible"]);
             Assert.Equal("True", lines["RoundTripStable"]);
 
             using var document = JsonDocument.Parse(File.ReadAllText(scenePath));

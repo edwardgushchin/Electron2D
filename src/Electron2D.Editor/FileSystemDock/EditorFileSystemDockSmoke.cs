@@ -35,7 +35,10 @@ internal static class EditorFileSystemDockSmoke
         var projectRoot = Path.GetFullPath(workRoot);
         Directory.CreateDirectory(projectRoot);
 
-        var dock = new EditorFileSystemDock(projectRoot);
+        var liveImportStates = new Dictionary<string, string>(StringComparer.Ordinal);
+        var dock = new EditorFileSystemDock(
+            projectRoot,
+            relativePath => liveImportStates.TryGetValue(relativePath, out var state) ? state : null);
         dock.CreateFolder(string.Empty, "assets");
         dock.CreateFolder(string.Empty, "scenes");
         WriteResource(projectRoot, "assets/player.e2res", TextureUid, "Electron2D.Texture2D");
@@ -66,6 +69,11 @@ internal static class EditorFileSystemDockSmoke
         dock.Reimport();
         var errors = dock.GetImportErrors();
         var importError = errors.SingleOrDefault(error => error.ResourcePath == "res://assets/broken.e2res");
+        File.WriteAllBytes(Path.Combine(projectRoot, "assets", "pending.png"), [137, 80, 78, 71, 13, 10, 26, 10]);
+        liveImportStates["assets/pending.png"] = "Importing";
+        var liveImportStatusVisible = dock.Browse()
+            .Single(item => item.RelativePath == "assets/pending.png")
+            .ImportStatus == "Importing";
 
         var sceneText = File.ReadAllText(scenePath);
         var scene = Electron2D.SceneFileTextSerializer.Deserialize(sceneText);
@@ -93,6 +101,7 @@ internal static class EditorFileSystemDockSmoke
             errors.Count,
             importError?.ResourcePath ?? string.Empty,
             importError is not null && !string.IsNullOrWhiteSpace(importError.Message),
+            liveImportStatusVisible,
             roundTripStable);
     }
 

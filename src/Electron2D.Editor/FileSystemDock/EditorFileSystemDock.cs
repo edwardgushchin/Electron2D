@@ -28,13 +28,15 @@ internal sealed class EditorFileSystemDock
 {
     private const string ImportCacheManifestPath = ".electron2d/import-cache/import-cache.json";
     private readonly string projectRoot;
+    private readonly Func<string, string?> liveImportStateProvider;
     private readonly Electron2D.ResourceImportOptions importOptions;
     private Electron2D.ResourceImportReport? lastImportReport;
 
-    public EditorFileSystemDock(string projectRoot)
+    public EditorFileSystemDock(string projectRoot, Func<string, string?>? liveImportStateProvider = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(projectRoot);
         this.projectRoot = Path.GetFullPath(projectRoot);
+        this.liveImportStateProvider = liveImportStateProvider ?? (_ => null);
         Directory.CreateDirectory(this.projectRoot);
         importOptions = Electron2D.ResourceImportOptions.CreateDefault(this.projectRoot);
         RegisterManifestResourceUids();
@@ -69,7 +71,9 @@ internal sealed class EditorFileSystemDock
             manifestBySource.TryGetValue(resourcePath, out var manifestEntry);
             reportsBySource.TryGetValue(resourcePath, out var reportEntry);
             var uid = manifestEntry?.Uid ?? TryReadResourceFileUid(file);
-            var status = reportEntry?.Status.ToString() ?? (manifestEntry is null ? string.Empty : "Cached");
+            var status = liveImportStateProvider(relativePath) ??
+                reportEntry?.Status.ToString() ??
+                (manifestEntry is null ? string.Empty : "Cached");
             var error = reportEntry?.ErrorMessage ?? string.Empty;
 
             result.Add(new EditorFileSystemItemSnapshot(

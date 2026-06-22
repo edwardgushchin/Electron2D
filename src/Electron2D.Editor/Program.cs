@@ -250,12 +250,14 @@ internal static class Program
             Console.WriteLine($"ImportErrorCount={result.ImportErrorCount}");
             Console.WriteLine($"ImportErrorPath={result.ImportErrorPath}");
             Console.WriteLine($"ImportErrorVisible={result.ImportErrorVisible}");
+            Console.WriteLine($"LiveImportStatusVisible={result.LiveImportStatusVisible}");
             Console.WriteLine($"RoundTripStable={result.RoundTripStable}");
 
             return result.FolderCreated &&
                 result.MovedFileExists &&
                 result.UidStable &&
                 result.ImportErrorVisible &&
+                result.LiveImportStatusVisible &&
                 result.RoundTripStable
                 ? 0
                 : 1;

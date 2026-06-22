@@ -47,6 +47,8 @@ internal enum ProjectWorkspaceEventKind
     DocumentOpened,
     DocumentChanged,
     DocumentPersisted,
+    DocumentMoved,
+    DocumentDeleted,
     DiagnosticsUpdated
 }
 
@@ -618,6 +620,41 @@ internal sealed class ProjectWorkspaceDocumentStore
         return changed;
     }
 
+    public ProjectWorkspaceDocument PutTextDocumentState(
+        string relativePath,
+        string text,
+        ProjectDocumentRevision persistedRevision,
+        ProjectDocumentRevision inMemoryRevision,
+        string persistedText)
+    {
+        var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(relativePath);
+        var snapshot = ProjectDocumentParser.ParseText(
+            normalizedPath,
+            text,
+            new ProjectDocumentRevisionState(persistedRevision, inMemoryRevision));
+        var changed = new ProjectWorkspaceDocument(normalizedPath, text, snapshot, persistedText);
+        documents[normalizedPath] = changed;
+        return changed;
+    }
+
+    public bool TryGetByPath(string relativePath, out ProjectWorkspaceDocument document)
+    {
+        var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(relativePath);
+        return documents.TryGetValue(normalizedPath, out document!);
+    }
+
+    public bool RemoveTextDocument(string relativePath, out ProjectWorkspaceDocument document)
+    {
+        var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(relativePath);
+        if (!documents.TryGetValue(normalizedPath, out document!))
+        {
+            return false;
+        }
+
+        documents.Remove(normalizedPath);
+        return true;
+    }
+
     public ProjectWorkspaceDocument GetByPath(string relativePath)
     {
         var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(relativePath);
@@ -677,6 +714,30 @@ internal sealed class ProjectWorkspaceRevisionStore
         WorkspaceRevision = WorkspaceRevision.Next();
         documentRevisions[document.Path] = document.InMemoryRevision;
         UpdateDirtyState(document);
+    }
+
+    public void RecordDocumentMoved(string oldPath, ProjectWorkspaceDocument document)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(oldPath);
+        ArgumentNullException.ThrowIfNull(document);
+
+        WorkspaceRevision = WorkspaceRevision.Next();
+        ContentRevision = ContentRevision.Next();
+        documentRevisions.Remove(ProjectDocumentPaths.NormalizeRelativePath(oldPath));
+        dirtyDocuments.Remove(ProjectDocumentPaths.NormalizeRelativePath(oldPath));
+        documentRevisions[document.Path] = document.InMemoryRevision;
+        UpdateDirtyState(document);
+    }
+
+    public void RecordDocumentDeleted(string relativePath)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(relativePath);
+
+        WorkspaceRevision = WorkspaceRevision.Next();
+        ContentRevision = ContentRevision.Next();
+        var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(relativePath);
+        documentRevisions.Remove(normalizedPath);
+        dirtyDocuments.Remove(normalizedPath);
     }
 
     public void RecordDiagnosticsUpdated()
