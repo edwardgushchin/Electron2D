@@ -119,6 +119,24 @@ internal static class DiagnosticCodeRegistry
     private static readonly DiagnosticCodeDefinition[] Definitions =
     [
         new(
+            "E2D-AGENT-0001",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Agent MCP handshake was rejected.",
+            "docs/documentation/editor/agent-process-bootstrap.md#e2d-agent-0001"),
+        new(
+            "E2D-AGENT-0002",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Agent MCP token expired.",
+            "docs/documentation/editor/agent-process-bootstrap.md#e2d-agent-0002"),
+        new(
+            "E2D-AGENT-0003",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Agent process bootstrap failed.",
+            "docs/documentation/editor/agent-process-bootstrap.md#e2d-agent-0003"),
+        new(
             "E2D-DIAG-0001",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Diagnostics,

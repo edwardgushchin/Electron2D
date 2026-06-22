@@ -10,6 +10,8 @@
 
 Registry связывает normalized project root с active Editor-сессией. Если Editor открыт, CLI/MCP adapter получает `ProjectToolingHost` того же `ProjectWorkspace`. Если Editor закрыт или lease устарел, adapter получает явный `HeadlessFallback` и headless `ProjectWorkspace`.
 
+Agent process bootstrap из `T-0149` использует этот registry как authoritatve source active Editor route. Bootstrapper не создаёт второй workspace: после token handshake он вызывает `ConnectToDescriptor(..., EditorSessionAdapterKind.Mcp, ...)` и получает тот же `ProjectWorkspace`, который видит Editor.
+
 ## Endpoint abstraction
 
 `EditorSessionEndpoint` поддерживает два вида локальных endpoint-ов:
@@ -90,6 +92,8 @@ Endpoint validation fail-closed отклоняет:
 - CLI command parser для project mutations;
 - Agent Workspace UI;
 - capability manifest parity checks.
+
+Agent process profiles, temporary MCP configuration, ephemeral token и Agent Workspace connection state реализованы отдельно в [Agent process bootstrap из Editor](../editor/agent-process-bootstrap.md).
 
 Эти adapter-ы должны использовать текущий registry/gateway contract и `Electron2D.Tooling`, а не создавать второй independent workspace при открытом Editor.
 

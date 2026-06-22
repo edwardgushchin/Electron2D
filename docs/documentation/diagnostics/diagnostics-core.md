@@ -28,6 +28,9 @@
 
 | Code | Severity | Category | Назначение |
 | --- | --- | --- | --- |
+| `E2D-AGENT-0001` | `Error` | `Tooling` | agent MCP handshake отклонён: неизвестная сессия, неверный token или невозможность подключиться к active Editor route |
+| `E2D-AGENT-0002` | `Error` | `Tooling` | agent MCP token истёк до handshake |
+| `E2D-AGENT-0003` | `Error` | `Tooling` | agent process bootstrap или запуск процесса отклонён до handshake |
 | `E2D-CLI-0001` | `Error` | `Tooling` | command group или subcommand не реализован в текущем Preview scope |
 | `E2D-CLI-0002` | `Error` | `Tooling` | CLI arguments неполные или некорректные |
 | `E2D-CLI-0003` | `Error` | `Tooling` | route selection или project root не позволяют безопасно выполнить команду |

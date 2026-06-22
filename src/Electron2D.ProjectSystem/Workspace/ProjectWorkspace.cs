@@ -1049,6 +1049,14 @@ internal sealed class ProjectWorkspaceDiagnosticsStore
         ArgumentException.ThrowIfNullOrWhiteSpace(source);
         return diagnosticsBySource.TryGetValue(source, out var diagnostics) ? diagnostics : [];
     }
+
+    public IReadOnlyList<StructuredDiagnostic> GetAllDiagnostics()
+    {
+        return diagnosticsBySource
+            .OrderBy(pair => pair.Key, StringComparer.Ordinal)
+            .SelectMany(pair => pair.Value)
+            .ToArray();
+    }
 }
 
 internal sealed class ProjectWorkspaceUndoRedoStore

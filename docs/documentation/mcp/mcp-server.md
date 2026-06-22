@@ -10,6 +10,8 @@
 
 Adapter не зависит от облачного AI-провайдера, не содержит ключи моделей, не запускает произвольный shell и не читает signing secrets. Команда `e2d mcp serve` сейчас выводит manifest resources/tools и route information в общем CLI JSON envelope; она не запускает долгоживущий серверный процесс.
 
+`T-0149` добавляет Editor-side bootstrap для локальных агентских процессов. Bootstrapper создаёт temporary MCP configuration outside project root и передаёт агенту только путь к нему через `ELECTRON2D_MCP_CONFIG`; token остаётся внутри config file и проверяется до подключения к active Editor route. Сам `McpServerSession` по-прежнему является in-process contract без cloud provider и без shell execution.
+
 ## Route selection
 
 `McpServerSession.Open(projectRoot, registry, nowUtc)` нормализует project root и выбирает route:
@@ -101,6 +103,10 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- mcp serve --pro
 возвращает общий CLI envelope с `command = "mcp serve"`, `route`, `data.resources`, `data.tools`, `data.cloudProviderRequired = false` и `data.editorCapabilityManifest`.
 
 `data.editorCapabilityManifest` содержит `path`, количество capabilities, количество `releaseRequired` строк, `succeeded` и diagnostics verifier-а. Полный manifest читается через resource `electron2d://editor/capabilities`.
+
+## Agent bootstrap config
+
+Agent process bootstrap использует тот же route vocabulary, что и `McpServerSession`: successful handshake из открытого Editor должен получить `activeEditor`. Config file имеет format `Electron2D.AgentMcpBootstrap`, содержит `agentSessionId`, `projectRoot`, local endpoint descriptor, `expiresAtUtc` и ephemeral token. Этот файл временный, хранится вне project root и не является canonical project storage.
 
 ## Проверка
 
