@@ -22,6 +22,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using Electron2D.Editor.Inspector;
 using Electron2D.Editor.ProjectManagement;
 using Electron2D.Editor.SceneTreeDock;
 using Electron2D.Editor.Viewport2D;
@@ -57,7 +58,12 @@ internal static class Program
             return RunViewport2DSmoke(viewport2DWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>]");
+        if (args is ["--inspector-smoke", var inspectorWorkRoot])
+        {
+            return RunInspectorSmoke(inspectorWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>]");
         return 2;
     }
 
@@ -166,6 +172,37 @@ internal static class Program
             return 0;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunInspectorSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorInspectorSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor inspector smoke passed");
+            Console.WriteLine($"ScenePath={result.ScenePath}");
+            Console.WriteLine($"PropertyCount={result.PropertyCount}");
+            Console.WriteLine($"ExportedProperties={result.ExportedProperties}");
+            Console.WriteLine($"SerializedHealth={result.SerializedHealth}");
+            Console.WriteLine($"SerializedName={result.SerializedName}");
+            Console.WriteLine($"UndoName={result.UndoName}");
+            Console.WriteLine($"RedoName={result.RedoName}");
+            Console.WriteLine($"SerializedMode={result.SerializedMode}");
+            Console.WriteLine($"SerializedFlags={result.SerializedFlags}");
+            Console.WriteLine($"SerializedTags={result.SerializedTags}");
+            Console.WriteLine($"SerializedPath={result.SerializedPath}");
+            Console.WriteLine($"ResourceReference={result.ResourceReference}");
+            Console.WriteLine($"NestedMaxHealth={result.NestedMaxHealth}");
+            Console.WriteLine($"RoundTripStable={result.RoundTripStable}");
+
+            return result.PropertyCount == result.ExportedProperties && result.RoundTripStable ? 0 : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
         {
             Console.Error.WriteLine(exception.Message);
             return 1;

@@ -56,6 +56,7 @@
 - [Project Manager редактора](editor/project-manager.md) - текущая внутренняя логика создания/открытия проекта, recent projects, renderer profile и SDK smoke-проверка.
 - [Scene Tree dock редактора](editor/scene-tree-dock.md) - текущая внутренняя логика редактирования дерева сцены, undo/redo и синхронизация с runtime `Tree`.
 - [2D Viewport редактора](editor/viewport-2d.md) - текущая внутренняя модель pan/zoom, выбора, transform-инструментов, snapping, bounds, collision overlays и camera preview.
+- [Inspector редактора](editor/inspector.md) - текущая внутренняя модель редактирования saved properties, reset defaults, nested resources, serialization и undo/redo.
 
 ## Ввод
 
