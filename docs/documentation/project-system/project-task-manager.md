@@ -2,7 +2,7 @@
 
 Статус: реализованная внутренняя основа.
 Задача: `T-0154`.
-Обновлено: 2026-06-22.
+Обновлено: 2026-06-23.
 
 ## Назначение
 
@@ -58,6 +58,8 @@ AI-агент не может поставить `Done` или принять з
 
 `ProjectTaskSerializer` пишет deterministic JSON с `format = "Electron2D.TaskFile"` или `format = "Electron2D.TaskBoard"` и `version = 1`. `.e2task` и `.e2tasks` классифицируются как JSON `EditorMetadata`.
 
+Новый проект из шаблона получает стартовую доску `.electron2d/tasks/board.e2tasks` и задачу `.electron2d/tasks/welcome.e2task`. Эти файлы создаёт `ProjectTemplateCreator`; дальнейшие изменения должны идти через Editor, Tooling или MCP, а не через прямую ручную правку JSON.
+
 Task mutations:
 
 - используют `WorkspaceTransactionEngine` в режиме `WorkspaceOnly`;
@@ -94,7 +96,6 @@ Dependency-related блокировка обновляет только `Readine
 - визуальную доску `Tasks`;
 - Tooling-команды;
 - MCP tools/resources;
-- project template, создающий начальную доску;
 - Agent Workspace current task UI;
 - Markdown-report export.
 

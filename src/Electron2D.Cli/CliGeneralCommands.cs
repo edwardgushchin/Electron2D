@@ -123,6 +123,43 @@ internal static partial class Electron2DCommandLine
 
     private static int RunProject(CliOptions options, TextWriter output, TextWriter error)
     {
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "create", StringComparison.OrdinalIgnoreCase))
+        {
+            var projectsRoot = options.GetOption("--output") ?? options.ProjectRoot;
+            var rendererProfile = options.GetOption("--renderer-profile") ?? "Automatic";
+            var templateRoot = Path.Combine(FindRepositoryRoot(), "data", "templates", "electron2d-empty");
+            var created = ProjectTemplateCreator.Create(new ProjectTemplateCreateOptions(
+                templateRoot,
+                options.Values[1],
+                projectsRoot,
+                rendererProfile,
+                InitializeGit: true));
+            var result = CliResult.Report(
+                "project create",
+                options,
+                created.ProjectPath,
+                CliRoute.Headless,
+                "Project created.",
+                created.Diagnostics,
+                changedFiles: [],
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: new JsonObject
+                {
+                    ["projectName"] = created.ProjectName,
+                    ["projectPath"] = created.ProjectPath,
+                    ["projectSettingsPath"] = created.ProjectSettingsPath,
+                    ["mainScenePath"] = created.MainScenePath,
+                    ["rendererProfile"] = created.RendererProfile,
+                    ["gitInitialized"] = created.GitInitialized,
+                    ["taskBoardPath"] = created.TaskBoardPath,
+                    ["starterSkillCount"] = created.StarterSkillCount,
+                    ["agentInstructionsPath"] = created.AgentInstructionsPath
+                });
+            return WriteResult(result, output, error);
+        }
+
         if (options.Values.Count == 1 && string.Equals(options.Values[0], "validate", StringComparison.OrdinalIgnoreCase))
         {
             var result = CliResult.Success(
@@ -147,7 +184,7 @@ internal static partial class Electron2DCommandLine
                 BuildCommandName("project", options),
                 options,
                 "Unknown project command.",
-                CreateCliDiagnostic("E2D-CLI-0001", "Only `e2d project validate` is implemented in the current Preview CLI scope.")),
+                CreateCliDiagnostic("E2D-CLI-0001", "Use `e2d project create <name> --output <projects-root>` or `e2d project validate`.")),
             output,
             error);
     }
@@ -518,7 +555,7 @@ internal static partial class Electron2DCommandLine
         output.WriteLine("Commands:");
         var commands = group switch
         {
-            "project" => "  validate              Validate a project without requiring GUI runtime.",
+            "project" => "  create|validate       Create an AI-ready project or validate a project without requiring GUI runtime.",
             "mcp" => "  serve                 Emit local MCP resources and tools manifest.",
             "doctor" => "  <default>             Inspect reproducibility lock and local environment without opening workspace.",
             "workspace" => "  transaction           Apply a generic workspace text transaction.",

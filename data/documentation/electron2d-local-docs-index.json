@@ -37,7 +37,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/cli/e2d-cli.md",
-                                                    "sha256":  "9758ea47381cb02b584204892a4dfdd4e687b2d08827d6d9fe0e807f65388fbc"
+                                                    "sha256":  "2d6b47ab9ee27fb6b82707b868d2210d95e88b205cc3e3ea04ecfafdab7b003a"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/core-types/2d-math-baseline.md",
@@ -113,7 +113,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/project-manager.md",
-                                                    "sha256":  "f537d77f27f62ed0aa916d5934dfa63e879c0a9da64ffeb4274f3535ed8e41d0"
+                                                    "sha256":  "37b6bbe49579bdea1fb50275b166b38f18e498a8d039cfdaaecd249e4aa5a548"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/run-output-workflow.md",
@@ -277,7 +277,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/project-system/project-task-manager.md",
-                                                    "sha256":  "82733e31f912e447741af28f9b3f828f0d16710cd2d6755759ae6242dbd5e93e"
+                                                    "sha256":  "8466c59010d6e1c324b5860c854b425dbe297f4aa08c57d9e1e3d85f737c68aa"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/project-system/project-text-formats.md",
@@ -301,7 +301,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/README.md",
-                                                    "sha256":  "24c1df498f5d57a7d7e9683334bd24e6e068ee59be8abb9594e5841c2995521a"
+                                                    "sha256":  "c9fad20ad6cb4d5a3938cecf3f13c7974e2e91eb3c0ade66b5b2a9c4885807cf"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/release-management/api-compatibility.md",
@@ -317,7 +317,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/release-management/project-template.md",
-                                                    "sha256":  "6faa7e22852056b27e55ef580acc360ce99c01b56df1a4daebde125267e2e7cc"
+                                                    "sha256":  "fb8005372c61ba713b1cd590809565cd95b051c874042c40404b76678d5adb25"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/release-management/release-metadata.md",
@@ -25866,9 +25866,10 @@
                         "id":  "doc:documentation.release-management.project-template",
                         "kind":  "documentation",
                         "title":  "Формат проекта и шаблон `electron2d-empty`",
-                        "summary":  "Статус: реализованный минимальный шаблон.",
+                        "summary":  "Статус: реализованный AI-ready шаблон.",
                         "keywords":  [
                                          "2",
+                                         "ai",
                                          "d",
                                          "docs",
                                          "documentation",
@@ -25878,6 +25879,7 @@
                                          "management",
                                          "md",
                                          "project",
+                                         "ready",
                                          "release",
                                          "template"
                                      ],
@@ -27162,9 +27164,10 @@
                         "id":  "doc:documentation.editor.project-manager",
                         "kind":  "documentation",
                         "title":  "Project Manager редактора",
-                        "summary":  "Статус: документация реализации для `T-0079`.",
+                        "summary":  "Статус: документация реализации для `T-0079` и `T-0148`.",
                         "keywords":  [
                                          "0079",
+                                         "0148",
                                          "docs",
                                          "documentation",
                                          "editor",

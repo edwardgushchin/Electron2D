@@ -1,25 +1,32 @@
 # Project Manager редактора
 
-Статус: документация реализации для `T-0079`.
-Дата: 2026-06-22.
+Статус: документация реализации для `T-0079` и `T-0148`.
+Дата: 2026-06-23.
 
 ## Назначение
 
-Project Manager в `Electron2D.Editor` отвечает за первый рабочий путь проекта: создать проект из стандартного шаблона, открыть существующий проект, запомнить последние открытые проекты, выбрать renderer profile и заранее проверить доступность .NET SDK.
+Project Manager в `Electron2D.Editor` отвечает за первый рабочий путь проекта: создать AI-ready проект из стандартного шаблона, открыть существующий проект, запомнить последние открытые проекты, выбрать renderer profile и заранее проверить доступность .NET SDK.
 
 Это внутренняя часть editor executable. Она не добавляет новые публичные типы в runtime assembly `Electron2D`.
 
 ## Создание проекта
 
-Project Manager создаёт проект из `data/templates/electron2d-empty/`:
+Project Manager создаёт проект через общий `ProjectTemplateCreator` из `Electron2D.ProjectSystem`, используя `data/templates/electron2d-empty/`:
 
-- копирует `Electron2D.Empty.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `scenes/main.scene.json` и `README.md`;
+- копирует `Electron2D.Empty.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `scenes/main.scene.json`, `README.md`, `AGENTS.md`, `.gitignore`, `.codex/skills/` и `.electron2d/tasks/`;
 - пропускает `.template.config/`, потому что это metadata для `dotnet new`, а не часть созданного проекта;
 - переименовывает `.csproj` под имя проекта;
 - обновляет `project.e2d.json`: `name` и `rendererProfile`;
+- обновляет `electron2d.lock.json`: `project.rendererProfile`;
 - нормализует namespace sample-кода, чтобы проект с пользовательским именем продолжал собираться.
+- создаёт или переписывает project-local `AGENTS.md`, starter skills и начальную доску `ProjectTaskManager`;
+- пытается выполнить `git init` в корне нового проекта.
 
 Создание проекта не перезаписывает существующую непустую папку.
+
+Если `git` недоступен, файлы проекта остаются созданными, а create result получает warning diagnostic `E2D-PROJECT-0003`. На машине с доступным `git` после создания существует каталог `.git/`.
+
+Project Manager не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте. Canonical task storage находится в `.electron2d/tasks/`.
 
 ## Открытие проекта
 
@@ -50,7 +57,6 @@ Smoke-режим также выводит абсолютные пути `Projec
 ## Ограничения
 
 - В этой задаче Project Manager реализован как внутренняя логика редактора и smoke-команда. Полноценный экран выбора проектов в интерактивном окне добавляется следующими editor-задачами.
-- Project Manager не создаёт локальный Git repository, agent file или skills. Это отдельный Agent-native cross-platform 2D game engine project workflow.
 - Project Manager не собирает пользовательский проект; он только проверяет доступность .NET SDK до будущих build/run workflow.
 
 ## Проверки

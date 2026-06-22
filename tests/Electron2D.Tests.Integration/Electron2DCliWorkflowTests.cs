@@ -139,6 +139,51 @@ public sealed class Electron2DCliWorkflowTests
         Assert.Contains("\"value\": 10", File.ReadAllText(Path.Combine(projectRoot, "scenes", "main.scene.json")), StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void ProjectCreateCreatesAgentReadyTemplateAndStableJsonEnvelope()
+    {
+        var projectsRoot = CreateTemporaryDirectory("electron2d-cli-project-create-");
+
+        try
+        {
+            var result = RunCli(
+                CliExecutionContext.ForTests(FixedInstant),
+                "project",
+                "create",
+                "CliAgentGame",
+                "--output",
+                projectsRoot,
+                "--renderer-profile",
+                "Compatibility",
+                "--format",
+                "json");
+
+            Assert.Equal(0, result.ExitCode);
+            using var json = JsonDocument.Parse(result.Output);
+            var root = json.RootElement;
+            var data = root.GetProperty("data");
+            var projectRoot = data.GetProperty("projectPath").GetString() ?? string.Empty;
+
+            Assert.True(root.GetProperty("succeeded").GetBoolean());
+            Assert.Equal("project create", root.GetProperty("command").GetString());
+            Assert.Equal("headless", root.GetProperty("route").GetString());
+            Assert.Equal("CliAgentGame", data.GetProperty("projectName").GetString());
+            Assert.Equal("Compatibility", data.GetProperty("rendererProfile").GetString());
+            Assert.True(data.GetProperty("gitInitialized").GetBoolean());
+            Assert.Equal(5, data.GetProperty("starterSkillCount").GetInt32());
+            Assert.EndsWith("AGENTS.md", data.GetProperty("agentInstructionsPath").GetString(), StringComparison.Ordinal);
+            Assert.EndsWith(".electron2d/tasks/board.e2tasks", data.GetProperty("taskBoardPath").GetString()?.Replace('\\', '/'), StringComparison.Ordinal);
+            Assert.True(File.Exists(data.GetProperty("projectSettingsPath").GetString()));
+            Assert.True(File.Exists(data.GetProperty("mainScenePath").GetString()));
+
+            AssertAgentReadyProject(projectRoot, "Compatibility");
+        }
+        finally
+        {
+            Directory.Delete(projectsRoot, recursive: true);
+        }
+    }
+
     [Theory]
     [InlineData("import", "Import")]
     [InlineData("build", "Build")]
@@ -210,6 +255,44 @@ public sealed class Electron2DCliWorkflowTests
         Directory.CreateDirectory(Path.Combine(root, "scenes"));
         File.WriteAllText(Path.Combine(root, "scenes", "main.scene.json"), sceneText);
         return root;
+    }
+
+    private static string CreateTemporaryDirectory(string prefix)
+    {
+        var directory = Path.Combine(Path.GetTempPath(), prefix + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        return directory;
+    }
+
+    private static void AssertAgentReadyProject(string projectRoot, string rendererProfile)
+    {
+        Assert.True(Directory.Exists(Path.Combine(projectRoot, ".git")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "AGENTS.md")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, ".gitignore")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, ".electron2d", "tasks", "board.e2tasks")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, ".electron2d", "tasks", "welcome.e2task")));
+        Assert.False(File.Exists(Path.Combine(projectRoot, "TASKS.md")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "completed-tasks")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "dev-diary")));
+
+        var agents = File.ReadAllText(Path.Combine(projectRoot, "AGENTS.md"));
+        Assert.Contains("Electron2D 0.1.0-preview", agents, StringComparison.Ordinal);
+        Assert.Contains($"Renderer profile: `{rendererProfile}`", agents, StringComparison.Ordinal);
+        Assert.Contains("task_submit_for_acceptance", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("TASKS.md", agents, StringComparison.Ordinal);
+
+        var gitIgnoreLines = File.ReadAllLines(Path.Combine(projectRoot, ".gitignore"));
+        Assert.Contains(".electron2d/import-cache/", gitIgnoreLines);
+        Assert.Contains(".electron2d/workspaces/", gitIgnoreLines);
+        Assert.Contains(".electron2d/context/", gitIgnoreLines);
+        Assert.Contains(".electron2d/session/", gitIgnoreLines);
+        Assert.Contains(".electron2d/user/", gitIgnoreLines);
+        Assert.DoesNotContain(".electron2d/", gitIgnoreLines);
+        Assert.DoesNotContain(".electron2d/tasks/", gitIgnoreLines);
+
+        var skillFiles = Directory.EnumerateFiles(Path.Combine(projectRoot, ".codex", "skills"), "SKILL.md", SearchOption.AllDirectories)
+            .ToArray();
+        Assert.Equal(5, skillFiles.Length);
     }
 
     private static string SceneText(int speed)

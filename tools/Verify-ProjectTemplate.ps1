@@ -40,11 +40,22 @@ if (-not (Test-Path -LiteralPath $templateRoot)) {
 $requiredFiles = @(
     '.template.config/template.json',
     'Electron2D.Empty.csproj',
+    'global.json',
+    'electron2d.lock.json',
     'Program.cs',
     'Scripts/MainScene.cs',
     'project.e2d.json',
     'scenes/main.scene.json',
-    'README.md'
+    'README.md',
+    '.gitignore',
+    'AGENTS.md',
+    '.codex/skills/electron2d-scene/SKILL.md',
+    '.codex/skills/electron2d-gameplay-code/SKILL.md',
+    '.codex/skills/electron2d-resource-import/SKILL.md',
+    '.codex/skills/electron2d-run-test/SKILL.md',
+    '.codex/skills/electron2d-export/SKILL.md',
+    '.electron2d/tasks/board.e2tasks',
+    '.electron2d/tasks/welcome.e2task'
 )
 
 foreach ($relativePath in $requiredFiles) {
@@ -111,6 +122,72 @@ $expectedServiceOutput = 'Electron2D C# script services: tree=True,text=True'
 if ($joinedOutput.IndexOf($expectedServiceOutput, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     Write-Host $runOutput
     throw "Template run output does not contain expected line: $expectedServiceOutput"
+}
+
+$forbiddenProjectFiles = @(
+    'TASKS.md',
+    'completed-tasks',
+    'dev-diary'
+)
+
+foreach ($relativePath in $forbiddenProjectFiles) {
+    $path = Join-Path $createdProject $relativePath
+    if (Test-Path -LiteralPath $path) {
+        throw "Template must not create repository workflow file or directory: $relativePath"
+    }
+}
+
+$agentInstructionsPath = Join-Path $createdProject 'AGENTS.md'
+$agentInstructions = Get-Content -Raw -LiteralPath $agentInstructionsPath
+foreach ($requiredText in @(
+    'Electron2D 0.1.0-preview',
+    '.NET 10.0.101',
+    'e2d validate',
+    'e2d api compare-godot <type>',
+    'ProjectTaskManager',
+    'task_submit_for_acceptance'
+)) {
+    if ($agentInstructions.IndexOf($requiredText, [System.StringComparison]::Ordinal) -lt 0) {
+        throw "AGENTS.md does not contain required text: $requiredText"
+    }
+}
+
+if ($agentInstructions.IndexOf('TASKS.md', [System.StringComparison]::Ordinal) -ge 0 -or
+    $agentInstructions.IndexOf('completed-tasks', [System.StringComparison]::Ordinal) -ge 0 -or
+    $agentInstructions.IndexOf('dev-diary', [System.StringComparison]::Ordinal) -ge 0) {
+    throw 'AGENTS.md must not point user projects at repository-local Markdown workflow files.'
+}
+
+$gitIgnoreLines = Get-Content -LiteralPath (Join-Path $createdProject '.gitignore')
+foreach ($requiredLine in @(
+    '.electron2d/import-cache/',
+    '.electron2d/workspaces/',
+    '.electron2d/context/',
+    '.electron2d/session/',
+    '.electron2d/user/'
+)) {
+    if ($gitIgnoreLines -notcontains $requiredLine) {
+        throw ".gitignore is missing required line: $requiredLine"
+    }
+}
+
+if ($gitIgnoreLines -contains '.electron2d/' -or $gitIgnoreLines -contains '.electron2d/tasks/') {
+    throw '.gitignore must not hide .electron2d/tasks/.'
+}
+
+$skillFiles = Get-ChildItem -LiteralPath (Join-Path $createdProject '.codex/skills') -Recurse -Filter 'SKILL.md'
+if ($skillFiles.Count -ne 5) {
+    throw "Expected 5 starter skills, found $($skillFiles.Count)."
+}
+
+$board = Get-Content -Raw -LiteralPath (Join-Path $createdProject '.electron2d/tasks/board.e2tasks') | ConvertFrom-Json
+if ($board.format -ne 'Electron2D.TaskBoard') {
+    throw 'Task board format is invalid.'
+}
+
+$welcomeTask = Get-Content -Raw -LiteralPath (Join-Path $createdProject '.electron2d/tasks/welcome.e2task') | ConvertFrom-Json
+if ($welcomeTask.format -ne 'Electron2D.TaskFile' -or $welcomeTask.status -ne 'Backlog') {
+    throw 'Starter task document is invalid.'
 }
 
 Write-Host 'Project template verification passed.'

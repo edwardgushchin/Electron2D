@@ -87,6 +87,7 @@ public sealed class EditorProjectManagerTests
             Assert.True(File.Exists(projectSettingsPath));
             Assert.True(File.Exists(mainScenePath));
             Assert.True(File.Exists(userSettingsPath));
+            AssertAgentReadyProject(createdProjectPath, "Compatibility");
 
             using var projectDocument = JsonDocument.Parse(File.ReadAllText(projectSettingsPath));
             Assert.Equal("Electron2D.ProjectSettings", projectDocument.RootElement.GetProperty("format").GetString());
@@ -107,6 +108,71 @@ public sealed class EditorProjectManagerTests
             Directory.Delete(workRoot, recursive: true);
             Directory.Delete(userDataRoot, recursive: true);
         }
+    }
+
+    private static void AssertAgentReadyProject(string projectRoot, string rendererProfile)
+    {
+        Assert.True(Directory.Exists(Path.Combine(projectRoot, ".git")));
+        Assert.False(File.Exists(Path.Combine(projectRoot, "TASKS.md")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "completed-tasks")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "dev-diary")));
+
+        var gitIgnorePath = Path.Combine(projectRoot, ".gitignore");
+        Assert.True(File.Exists(gitIgnorePath));
+        var gitIgnore = File.ReadAllText(gitIgnorePath);
+        Assert.Contains(".electron2d/import-cache/", gitIgnore, StringComparison.Ordinal);
+        Assert.Contains(".electron2d/workspaces/", gitIgnore, StringComparison.Ordinal);
+        Assert.Contains(".electron2d/context/", gitIgnore, StringComparison.Ordinal);
+        Assert.Contains(".electron2d/session/", gitIgnore, StringComparison.Ordinal);
+        Assert.Contains(".electron2d/user/", gitIgnore, StringComparison.Ordinal);
+        Assert.DoesNotContain(".electron2d/", gitIgnore.Split(Environment.NewLine, StringSplitOptions.TrimEntries));
+        Assert.DoesNotContain(".electron2d/tasks/", gitIgnore, StringComparison.Ordinal);
+
+        var agentsPath = Path.Combine(projectRoot, "AGENTS.md");
+        Assert.True(File.Exists(agentsPath));
+        var agents = File.ReadAllText(agentsPath);
+        Assert.Contains("Electron2D 0.1.0-preview", agents, StringComparison.Ordinal);
+        Assert.Contains(".NET 10.0.101", agents, StringComparison.Ordinal);
+        Assert.Contains($"Renderer profile: `{rendererProfile}`", agents, StringComparison.Ordinal);
+        Assert.Contains("e2d validate", agents, StringComparison.Ordinal);
+        Assert.Contains("e2d api compare-godot <type>", agents, StringComparison.Ordinal);
+        Assert.Contains("active Editor session", agents, StringComparison.Ordinal);
+        Assert.Contains("ProjectTaskManager", agents, StringComparison.Ordinal);
+        Assert.Contains("task_submit_for_acceptance", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("completed-tasks", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("dev-diary", agents, StringComparison.Ordinal);
+
+        var skillFiles = Directory.EnumerateFiles(Path.Combine(projectRoot, ".codex", "skills"), "SKILL.md", SearchOption.AllDirectories)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+        Assert.Equal(5, skillFiles.Length);
+        foreach (var skillFile in skillFiles)
+        {
+            var skill = File.ReadAllText(skillFile);
+            Assert.StartsWith("---", skill, StringComparison.Ordinal);
+            Assert.Contains("name:", skill, StringComparison.Ordinal);
+            Assert.Contains("description:", skill, StringComparison.Ordinal);
+            Assert.DoesNotContain("G:\\", skill, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("TASKS.md", skill, StringComparison.Ordinal);
+        }
+
+        var boardPath = Path.Combine(projectRoot, ".electron2d", "tasks", "board.e2tasks");
+        var taskPath = Path.Combine(projectRoot, ".electron2d", "tasks", "welcome.e2task");
+        Assert.True(File.Exists(boardPath));
+        Assert.True(File.Exists(taskPath));
+
+        using var boardDocument = JsonDocument.Parse(File.ReadAllText(boardPath));
+        Assert.Equal("Electron2D.TaskBoard", boardDocument.RootElement.GetProperty("format").GetString());
+        Assert.Contains(
+            boardDocument.RootElement.GetProperty("columns").EnumerateArray(),
+            column => column.GetProperty("status").GetString() == "Backlog" &&
+                column.GetProperty("taskIds").EnumerateArray().Any(task => task.GetString() == "welcome"));
+
+        using var taskDocument = JsonDocument.Parse(File.ReadAllText(taskPath));
+        Assert.Equal("Electron2D.TaskFile", taskDocument.RootElement.GetProperty("format").GetString());
+        Assert.Equal("welcome", taskDocument.RootElement.GetProperty("taskId").GetString());
+        Assert.Equal("Backlog", taskDocument.RootElement.GetProperty("status").GetString());
+        Assert.NotEmpty(taskDocument.RootElement.GetProperty("acceptanceCriteria").EnumerateArray());
     }
 
     private static Dictionary<string, string> ParseMachineReadableOutput(string output)

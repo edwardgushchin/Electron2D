@@ -23,6 +23,7 @@
     SOFTWARE.
 */
 using System.Text;
+using Electron2D.ProjectSystem;
 
 namespace Electron2D.Editor.ProjectManagement;
 
@@ -77,11 +78,14 @@ internal sealed class EditorProjectManager
             throw new InvalidOperationException($"Project directory is not empty: {projectPath}");
         }
 
-        Directory.CreateDirectory(projectPath);
-        CopyTemplate(projectPath);
-        RewriteProjectFiles(projectPath, projectName, options.RendererProfile);
+        var createdProject = ProjectTemplateCreator.Create(new ProjectTemplateCreateOptions(
+            _templateRoot,
+            projectName,
+            projectsRoot,
+            options.RendererProfile.ToString(),
+            InitializeGit: true));
 
-        var projectSettingsPath = Path.Combine(projectPath, "project.e2d.json");
+        var projectSettingsPath = createdProject.ProjectSettingsPath;
         var loadResult = Electron2D.Electron2DSettingsStore.LoadProject(projectSettingsPath);
         if (!loadResult.Succeeded || loadResult.Settings is null)
         {

@@ -18,7 +18,7 @@
 - [CI-матрица 0.1.0 Preview](release-management/ci-matrix.md) - desktop matrix, test runner и явная отметка mobile/export gap.
 - [Таблица совместимости API](release-management/api-compatibility.md) - GitHub Wiki repository и verifier для public API surface.
 - [Версионирование и release metadata 0.1.0 Preview](release-management/release-metadata.md) - package metadata, changelog и release notes.
-- [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - минимальный project manifest, scene manifest и проверка build/run.
+- [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - project manifest, scene manifest, AI-ready project surface и проверка build/run.
 - [Performance budgets и soak-критерии 0.1.0 Preview](release-management/performance-budgets.md) - целевые устройства, 60 FPS, memory budgets и mobile cycles.
 
 ## Документация

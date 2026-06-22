@@ -1,0 +1,41 @@
+{
+  "format": "Electron2D.TaskBoard",
+  "version": 1,
+  "boardId": "board-main",
+  "columns": [
+    {
+      "status": "Backlog",
+      "taskIds": [
+        "welcome"
+      ]
+    },
+    {
+      "status": "Ready",
+      "taskIds": []
+    },
+    {
+      "status": "InProgress",
+      "taskIds": []
+    },
+    {
+      "status": "Blocked",
+      "taskIds": []
+    },
+    {
+      "status": "Review",
+      "taskIds": []
+    },
+    {
+      "status": "AwaitingAcceptance",
+      "taskIds": []
+    },
+    {
+      "status": "Done",
+      "taskIds": []
+    },
+    {
+      "status": "Cancelled",
+      "taskIds": []
+    }
+  ]
+}

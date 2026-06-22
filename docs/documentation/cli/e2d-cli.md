@@ -1,8 +1,8 @@
 # `e2d` CLI для headless, CI и active Editor routing
 
 Статус: реализованная внутренняя основа.
-Задача: `T-0116`.
-Обновлено: 2026-06-22.
+Задачи: `T-0116`, `T-0148`.
+Обновлено: 2026-06-23.
 
 ## Назначение
 
@@ -68,6 +68,20 @@ e2d docs example "platformer movement" --format json
 ### `project validate`
 
 `project validate` создаёт stable CLI envelope. Текущий `T-0116` не запускает полный project validator; команда фиксирует parser/output contract для будущего validation layer.
+
+### `project create`
+
+`project create` создаёт AI-ready проект из `data/templates/electron2d-empty/` через тот же `ProjectTemplateCreator`, который использует Project Manager:
+
+```powershell
+e2d project create MyGame --output .\projects --renderer-profile Compatibility --format json
+```
+
+Команда создаёт `.csproj`, `project.e2d.json`, main scene, `AGENTS.md`, `.gitignore`, starter skills в `.codex/skills/`, начальную доску `.electron2d/tasks/board.e2tasks` и стартовую задачу `.electron2d/tasks/welcome.e2task`. Затем она пытается выполнить `git init`.
+
+JSON envelope возвращает `command = "project create"`, `route = "headless"` и `data` с `projectName`, `projectPath`, `projectSettingsPath`, `mainScenePath`, `rendererProfile`, `gitInitialized`, `taskBoardPath`, `starterSkillCount` и `agentInstructionsPath`.
+
+Если `git` недоступен, команда остаётся успешной для созданных файлов, но добавляет warning diagnostic `E2D-PROJECT-0003`; `gitInitialized` будет `false`.
 
 ### `validate`
 
@@ -237,9 +251,8 @@ Tooling diagnostics пробрасываются в CLI JSON без потери
 
 ## Текущие ограничения
 
-`T-0116`/`T-0121` всё ещё не реализуют:
+`T-0116`/`T-0121`/`T-0148` всё ещё не реализуют:
 
-- `project create`;
 - удобные scene/resource команды;
 - `api compare-godot`;
 - `context build`;
@@ -258,7 +271,7 @@ Focused проверка:
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests
 ```
 
-Проверка покрывает root/group help, common flags, `workspace transaction` JSON, dry-run headless fallback, active Editor routing, JSONL job identity и stable unsupported-command diagnostic.
+Проверка покрывает root/group help, common flags, `project create`, `workspace transaction` JSON, dry-run headless fallback, active Editor routing, JSONL job identity и stable unsupported-command diagnostic.
 
 Headless runtime проверка:
 
