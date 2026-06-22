@@ -8,7 +8,7 @@
 
 `0.1.0 Preview` поддерживает только C# script classes. Script class - это обычный C# тип в проекте пользователя, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется обычной .NET toolchain вместе с проектом игры.
 
-Задача не добавляет GDScript, visual scripting, обязательный Hot Reload, runtime C# compilation, dynamic iOS code load или встроенный полноценный IDE.
+Задача не добавляет GDScript, visual scripting, обязательный Hot Reload, runtime C# compilation, dynamic iOS code load или managed debugger. Встроенная C# IDE описана отдельной спецификацией `editor-script-workflow.md` и обязательна для полного редакторского workflow `0.1.0`.
 
 ## Контракт script class
 
@@ -38,7 +38,7 @@ Script class должен:
 - Script classes не загружаются динамически на runtime path.
 - iOS не требует runtime compilation или dynamic assembly loading.
 - Export metadata, signals metadata и `[Tool]` описаны отдельной спецификацией `script-metadata.md`.
-- Создание/attach script из редактора и открытие внешнего IDE остаются задачей `T-0046`.
+- Создание/attach script из редактора, встроенное редактирование C#, language services и managed debugger описаны в `docs/specifications/scripting/editor-script-workflow.md`.
 
 ## Проверки
 

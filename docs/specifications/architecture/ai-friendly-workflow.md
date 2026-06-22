@@ -241,6 +241,28 @@ Job, diagnostics, screenshot, runtime tree или visual diff помечаютс
 
 Job contract предоставляет общий event stream, cancellation semantics и snapshot identity. CLI JSONL, MCP events, Agent Workspace UI, Editor build/import/test panels, screenshots и runtime snapshots подключают этот поток в своих адаптерных задачах, не превращая core job contract в зависимость от готового UI или протокольного клиента.
 
+## Editor UX baseline
+
+Godot 4 является каноническим UX- и layout-референсом для `Electron2D.Editor 0.1.0`. Это означает знакомую структуру редактора: верхнее меню, переключатель центральных workspaces, scene/document tabs, `Scene` и `FileSystem` docks слева, `Inspector`/`Node` справа, bottom panel для output/debug/diagnostics и run controls в верхней зоне.
+
+Electron2D меняет этот baseline только там, где это связано с продуктовым контрактом:
+
+- `3D` workspace полностью отсутствует;
+- 3D nodes, 3D viewport, 3D gizmos, 3D settings, 3D shortcuts и disabled 3D controls не появляются в UI;
+- `AssetLib` отсутствует в `0.1.0`;
+- `Script` поддерживает только C#;
+- вместо `AssetLib` и `3D` в центральном переключателе есть `Tasks`;
+- `Agent Workspace` является постоянным dock рядом с любым workspace.
+
+Центральные workspaces:
+
+- `2D` — scene editing, viewport tools, snapping, `Camera2D` preview, collision overlays, `TileMap` и `Control` layout;
+- `Script` — встроенная базовая C# IDE с language services и managed debugger;
+- `Game` — видимый run/debug workspace с runtime scene tree, screenshots, frame stepping, input injection и performance counters;
+- `Tasks` — центральная доска `ProjectTaskManager`, а не dock или bottom panel.
+
+Полный UX-контракт описан в `docs/specifications/editor/godot4-editor-reference.md`.
+
 ## Agent Workspace panel
 
 Терминальный dock — только точка запуска локального агента. В редакторе нужна более широкая Agent Workspace panel:
@@ -256,6 +278,8 @@ Job contract предоставляет общий event stream, cancellation se
 - текущую задачу `ProjectTaskManager`, её статус, связанные операции, jobs, diagnostics и artifacts;
 - остановка, пауза или cancel текущей агентской операции, если command поддерживает отмену;
 - grouped undo последней AI-транзакции обычным редакторским Undo.
+
+Default placement: правая dock area под `Inspector`/`Node` либо в одной dock-группе с ними. Панель должна быть dockable, resizable, hideable, movable, maximizable, сохранять layout между запусками и оставаться доступной в `2D`, `Script`, `Game` и `Tasks`.
 
 Панель не должна быть единственным способом AI-интеграции. Если агент подключается снаружи через MCP, Editor обязан показывать его операции в той же панели и в обычных UI-обновлениях.
 
@@ -409,7 +433,7 @@ Merge policy зависит от типа документа:
 | Изображения/audio/fonts | Автоматическое merge запрещено. |
 | Удаление/замена binary | Конфликт, если ресурс используется или был изменён в workspace. |
 
-Открытые C# buffers считаются workspace-документами. Если AI меняет `.cs` на диске, а разработчик держит несохранённую правку того же файла во встроенном или внешнем редакторе, синхронизатор обязан применить text merge или показать конфликт, но не перезаписать один вариант молча.
+Открытые C# buffers являются first-class `CodeDocument` в `ProjectWorkspace`, а нормативным владельцем таких buffers в Editor является центральный workspace `Script`. Если AI меняет `.cs` через Tooling/MCP или прямой файл, а разработчик держит несохранённую правку того же файла во встроенном `Script` workspace, синхронизатор обязан применить text merge или показать конфликт, но не перезаписать один вариант молча. IntelliSense, compiler diagnostics, build/run/test и debug session должны учитывать актуальный in-memory buffer через `WorkspaceSnapshot`, а не только persisted file на диске.
 
 Пример группировки:
 
@@ -470,6 +494,12 @@ Manifest должен покрывать:
 - import settings;
 - main scene;
 - export presets;
+- script create/open/read/apply text edits/save/format;
+- script diagnostics, completions, signature help, hover, definition, references и rename symbol;
+- debugger breakpoints;
+- debug start/attach/pause/continue/stop/restart;
+- debug step into/over/out;
+- debug threads, call stack, current frame, locals, arguments и watches;
 - запуск текущей сцены и проекта;
 - stop/restart/pause;
 - step frame и step physics;
@@ -478,6 +508,41 @@ Manifest должен покрывать:
 - runtime inspection;
 - запуск тестов;
 - просмотр diagnostics.
+
+AI не должен редактировать C# через эмуляцию клавиатуры или pixel automation. Для `Script` workspace нужны семантические Tooling/MCP-команды:
+
+```text
+script_create
+script_open
+script_read
+script_apply_text_edits
+script_save
+script_format
+script_get_diagnostics
+script_get_completions
+script_get_signature_help
+script_get_hover
+script_get_definition
+script_find_references
+script_rename_symbol
+
+debug_set_breakpoint
+debug_remove_breakpoint
+debug_start
+debug_attach
+debug_pause
+debug_continue
+debug_step_into
+debug_step_over
+debug_step_out
+debug_get_threads
+debug_get_stack
+debug_get_locals
+debug_get_watches
+debug_stop
+```
+
+Editor показывает действия агента в обычном `Script` workspace: изменённые строки, diagnostics, breakpoints, текущий stack frame и состояние debug session. Просмотр locals и простых values разрешён как baseline; вычисление выражений с возможными side effects требует отдельного явного подтверждения разработчика.
 
 Tooling и MCP должны иметь полный паритет для семантически значимых возможностей. CLI не обязан иметь отдельную удобную команду для каждого действия Editor, если есть универсальный headless-путь:
 
@@ -1298,7 +1363,7 @@ High для 0.1:
 - visual regression UX в Editor;
 - runtime metrics panel.
 
-Можно отложить: встроенный редактор C#, visual shader editor, сложный `AnimationTree`, skeletal animation, расширенный particle editor, полноценный profiler UI, plugin marketplace, сложная dock-система, встроенный AI-chat и автоматическая публикация в магазины.
+Можно отложить: Hot Reload, Edit and Continue, remote debugger для Android/iOS, сложные solution-wide refactorings, visual shader editor, сложный `AnimationTree`, skeletal animation, расширенный particle editor, полноценный profiler UI, plugin marketplace, расширенная dock-система сверх Godot 4 baseline, встроенный AI-chat и автоматическая публикация в магазины.
 
 ## Критерии приёмки AI-friendly
 
@@ -1317,13 +1382,15 @@ High для 0.1:
 9. Запуск использует `WorkspaceSnapshot`, поэтому видимая игра отражает dirty-изменения игровых документов; изменение task activity после старта job не делает screenshot или runtime tree `stale`.
 10. Агент ставит игру на паузу, делает один frame step, отправляет input и получает screenshot.
 11. Агент обнаруживает ошибку через structured diagnostics и исправляет её.
-12. Agent Workspace показывает current task, linked transactions, linked jobs, diagnostics и artifacts.
-13. Агент переводит задачу в `Awaiting Acceptance`, но не может сам установить `Done` или обойти приёмку через подмену `ActorKind`/`PrincipalKind`.
-14. Разработчик одним Undo отменяет последнюю агентскую транзакцию.
-15. После отключения AI проект остаётся полностью редактируемым вручную.
-16. Агент аварийно завершается во время чтения состояния, и session lease освобождается без повреждения проекта.
-17. Агент аварийно завершается во время staged-транзакции, и Editor сохраняет целостное состояние с понятной diagnostics.
-18. Editor запускается и работает вручную, когда MCP отключён или недоступен.
+12. Агент открывает `Script` workspace, применяет text edits через `script_apply_text_edits`, получает live diagnostics и completion result без эмуляции клавиатуры.
+13. Агент ставит breakpoint, запускает текущую сцену под managed C# debugger, останавливается на breakpoint, читает call stack/locals/watches и продолжает выполнение.
+14. Agent Workspace показывает current task, linked transactions, linked jobs, diagnostics и artifacts.
+15. Агент переводит задачу в `Awaiting Acceptance`, но не может сам установить `Done` или обойти приёмку через подмену `ActorKind`/`PrincipalKind`.
+16. Разработчик одним Undo отменяет последнюю агентскую транзакцию.
+17. После отключения AI проект остаётся полностью редактируемым вручную.
+18. Агент аварийно завершается во время чтения состояния, и session lease освобождается без повреждения проекта.
+19. Агент аварийно завершается во время staged-транзакции, и Editor сохраняет целостное состояние с понятной diagnostics.
+20. Editor запускается и работает вручную, когда MCP отключён или недоступен.
 
 ### Headless benchmark
 
@@ -1360,18 +1427,22 @@ High для 0.1:
 5. `ProjectTaskManager` Core.
 6. `Electron2D.Tooling` и `TaskService`.
 7. Workspace IPC protocol, CLI и MCP.
-8. Project Tasks board.
-9. Agent Workspace и project templates.
-10. Human-AI conflict handling.
-11. Headless runtime и debug bridge.
-12. Visible Editor-attached runtime.
-13. Capability manifest.
-14. AI acceptance benchmarks.
-15. Full release candidate gate.
-16. Final README и release packaging.
+8. Editor shell по UX-референсу Godot 4.
+9. Script workspace, C# language services и managed debugger.
+10. Project Tasks board.
+11. Agent Workspace и project templates.
+12. Human-AI conflict handling.
+13. Headless runtime и debug bridge.
+14. Visible Editor-attached runtime.
+15. Capability manifest.
+16. Script/debug Tooling и MCP parity.
+17. AI acceptance benchmarks.
+18. Full release candidate gate.
+19. Final README и release packaging.
 
 ## Источники
 
+- [Первый взгляд на интерфейс Godot](https://docs.godotengine.org/ru/4.x/getting_started/introduction/first_look_at_the_editor.html) - человекочитаемый UX/layout reference для структуры Editor.
 - [Godot command line tutorial](https://docs.godotengine.org/en/latest/tutorials/editor/command_line_tutorial.html) - headless запуск, импорт и экспорт как устоявшийся паттерн игровых инструментов.
 - [JSON Schema Draft 2020-12](https://json-schema.org/draft/2020-12) - целевая версия схем для JSON-представлений.
 - [Model Context Protocol Tools](https://modelcontextprotocol.io/specification/draft/server/tools) - типизированные tools/resources/prompts для локальной AI-интеграции.

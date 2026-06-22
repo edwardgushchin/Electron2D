@@ -50,10 +50,11 @@
 - [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - обычная .NET C# модель script classes, lifecycle callbacks и доступ к сервисам движка.
 - [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - публичные marker attributes и internal AOT-safe bridge для serialization/Inspector.
 - [Безопасное editor-time выполнение `[Tool]` scripts](scripting/tool-script-execution.md) - внутренний execution host для registered tool metadata без dynamic assembly load.
-- [Script workflow в редакторе](scripting/editor-script-workflow.md) - создание, встроенное редактирование, attach к node, build diagnostics и запуск проекта после rebuild.
+- [Script workspace и встроенная C# IDE](scripting/editor-script-workflow.md) - центральный C# workspace, text editor, IntelliSense, build diagnostics, managed debugger и Tooling/MCP parity.
 
 ## Редактор
 
+- [Референс интерфейса редактора Godot 4](editor/godot4-editor-reference.md) - Godot 4 как baseline layout, центральные workspaces `2D`/`Script`/`Game`/`Tasks`, docks, Agent Workspace и полный запрет 3D/GDScript UI.
 - [Electron2D.Editor project shell](editor/editor-project-shell.md) - базовый executable project редактора, smoke-запуск на runtime Electron2D и запрет внешнего desktop UI framework.
 - [Project Manager редактора](editor/project-manager.md) - создание и открытие проектов, recent projects, renderer profile и clean-machine SDK smoke workflow.
 - [Scene Tree dock редактора](editor/scene-tree-dock.md) - add/delete/rename/duplicate/reparent/drag-and-drop, ownership и undo/redo для сохранённого дерева сцены.
