@@ -45,6 +45,7 @@ Registry должен быть immutable во время работы проце
 | `E2D-PROJECT-0002` | `Error` | `Project` | project document version новее поддерживаемой |
 | `E2D-PROJECT-0003` | `Warning` | `Project` | project document содержит безопасно применимый suggested fix |
 | `E2D-TOOLING-0001` | `Info` | `Tooling` | job cancellation state changed или cancel request был отклонён без изменения job state |
+| `E2D-TOOLING-0002` | `Error` | `Tooling` | workspace transaction rejected из-за revision mismatch, unsafe path, validation error или conflict |
 
 ## Suggested fixes
 

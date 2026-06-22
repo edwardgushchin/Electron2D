@@ -23,6 +23,7 @@
 - `ImportState` — минимальное хранилище import states по project-relative path;
 - `BuildState` — минимальное in-memory состояние сборки;
 - `DiagnosticsStore` — structured diagnostics из `Diagnostics.Core` по source key.
+- `Transactions` — internal transaction engine для dry-run, revision checks, safe save/headless/external import modes, conflicts и grouped undo.
 
 ## Ownership
 

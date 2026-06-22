@@ -33,6 +33,7 @@
 - [Live ProjectWorkspace](project-system/live-project-workspace.md) - текущий internal workspace core для ownership lease, document store, revision/dirty state, in-memory events, operation journal и diagnostics store.
 - [WorkspaceSnapshot](project-system/workspace-snapshot.md) - текущий internal snapshot core для build/test/run/export input identity, materialization, stale rules и dirty export policy.
 - [WorkspaceJob contract и event stream](project-system/workspace-jobs.md) - текущий internal job core для import/build/test/export/run lifecycle, progress, cancel, diagnostics, artifacts и stale markers.
+- [WorkspaceTransactionEngine](project-system/workspace-transactions.md) - текущий internal transaction core для project operations: dry-run, revision checks, save/headless/external import modes, atomic write, conflicts и grouped undo.
 
 ## Diagnostics
 

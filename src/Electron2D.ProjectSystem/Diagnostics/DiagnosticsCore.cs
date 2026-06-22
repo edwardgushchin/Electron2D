@@ -147,7 +147,13 @@ internal static class DiagnosticCodeRegistry
             DiagnosticSeverity.Info,
             DiagnosticCategory.Tooling,
             "Workspace job cancellation state changed.",
-            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0001")
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0001"),
+        new(
+            "E2D-TOOLING-0002",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Workspace transaction was rejected.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0002")
     ];
 
     private static readonly IReadOnlyList<DiagnosticCodeDefinition> SortedDefinitions =

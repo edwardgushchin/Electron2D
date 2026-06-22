@@ -240,6 +240,7 @@ internal sealed class ProjectWorkspace : IDisposable
         BuildState = new ProjectWorkspaceBuildStateStore();
         Diagnostics = new ProjectWorkspaceDiagnosticsStore(this);
         Jobs = new WorkspaceJobStore(this);
+        Transactions = new WorkspaceTransactionEngine(this);
         CommandBus = new ProjectWorkspaceCommandBus(this);
     }
 
@@ -268,6 +269,8 @@ internal sealed class ProjectWorkspace : IDisposable
     public ProjectWorkspaceDiagnosticsStore Diagnostics { get; }
 
     public WorkspaceJobStore Jobs { get; }
+
+    public WorkspaceTransactionEngine Transactions { get; }
 
     public static ProjectWorkspace CreateHeadless(string projectRoot, string ownerId)
     {
@@ -518,7 +521,11 @@ internal sealed class ProjectWorkspaceCommandResult
 
 internal sealed class ProjectWorkspaceDocument
 {
-    public ProjectWorkspaceDocument(string path, string text, ProjectDocumentSnapshot snapshot)
+    public ProjectWorkspaceDocument(
+        string path,
+        string text,
+        ProjectDocumentSnapshot snapshot,
+        string? persistedText = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         ArgumentNullException.ThrowIfNull(text);
@@ -527,11 +534,14 @@ internal sealed class ProjectWorkspaceDocument
         Path = ProjectDocumentPaths.NormalizeRelativePath(path);
         Text = text.ReplaceLineEndings("\n");
         Snapshot = snapshot;
+        PersistedText = (persistedText ?? text).ReplaceLineEndings("\n");
     }
 
     public string Path { get; }
 
     public string Text { get; }
+
+    public string PersistedText { get; }
 
     public ProjectDocumentSnapshot Snapshot { get; }
 
@@ -558,7 +568,7 @@ internal sealed class ProjectWorkspaceDocumentStore
     {
         var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(relativePath);
         var snapshot = ProjectDocumentParser.ParseText(normalizedPath, text, revisionState);
-        var document = new ProjectWorkspaceDocument(normalizedPath, text, snapshot);
+        var document = new ProjectWorkspaceDocument(normalizedPath, text, snapshot, text);
         documents[normalizedPath] = document;
         return document;
     }
@@ -571,7 +581,7 @@ internal sealed class ProjectWorkspaceDocumentStore
             existing.Path,
             text,
             new ProjectDocumentRevisionState(existing.PersistedRevision, nextRevision));
-        var changed = new ProjectWorkspaceDocument(existing.Path, text, snapshot);
+        var changed = new ProjectWorkspaceDocument(existing.Path, text, snapshot, existing.PersistedText);
         documents[existing.Path] = changed;
         return changed;
     }
@@ -582,9 +592,27 @@ internal sealed class ProjectWorkspaceDocumentStore
         var persisted = new ProjectWorkspaceDocument(
             existing.Path,
             existing.Text,
-            existing.Snapshot.MarkPersisted());
+            existing.Snapshot.MarkPersisted(),
+            existing.Text);
         documents[existing.Path] = persisted;
         return persisted;
+    }
+
+    public ProjectWorkspaceDocument ApplyTextDocumentState(
+        string relativePath,
+        string text,
+        ProjectDocumentRevision persistedRevision,
+        ProjectDocumentRevision inMemoryRevision,
+        string persistedText)
+    {
+        var existing = GetByPath(relativePath);
+        var snapshot = ProjectDocumentParser.ParseText(
+            existing.Path,
+            text,
+            new ProjectDocumentRevisionState(persistedRevision, inMemoryRevision));
+        var changed = new ProjectWorkspaceDocument(existing.Path, text, snapshot, persistedText);
+        documents[existing.Path] = changed;
+        return changed;
     }
 
     public ProjectWorkspaceDocument GetByPath(string relativePath)

@@ -24,6 +24,7 @@
 - `ImportState` — in-memory состояние импорта resources;
 - `BuildState` — in-memory состояние сборки/reload;
 - `DiagnosticsStore` — актуальные structured diagnostics из `Diagnostics.Core`.
+- `Transactions` — внутренний transaction engine для dry-run, revision checks, safe save/headless/external import modes, conflicts и grouped undo.
 
 Первая реализация может использовать in-memory storage и typed methods без disk save. Atomic writes, external watcher, IPC, SARIF, MCP и Editor UI bindings выполняются отдельными задачами.
 
