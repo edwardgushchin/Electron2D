@@ -39,6 +39,7 @@
 
 - [Canonical document model, revision model и structural diff](project-system/canonical-document-model.md) - внутренний контракт identity, классификации, ревизий, parser/serializer boundary и structural diff до `ProjectWorkspace`.
 - [Stable project text formats, migrations и JSON Schema](project-system/project-text-formats.md) - deterministic formatting, validation, migration pipeline и JSON Schema для scene/resource/project JSON source files.
+- [Live ProjectWorkspace](project-system/live-project-workspace.md) - внутренняя live model проекта: document store, revisions, dirty state, events, ownership lease, operation journal и diagnostics store.
 
 ## Diagnostics
 
