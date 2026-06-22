@@ -61,6 +61,7 @@
 ## UI
 
 - [Control layout core](ui/control-layout-core.md) - текущие anchors/offsets, minimum size, grow direction, clipping hit-test и focus navigation baseline.
+- [UI containers](ui/containers.md) - текущие `Container`, `BoxContainer`, `HBoxContainer`, `VBoxContainer`, `GridContainer`, `MarginContainer`, `CenterContainer`, `ScrollContainer`, size flags и theme constants.
 
 ## Локализация и настройки
 

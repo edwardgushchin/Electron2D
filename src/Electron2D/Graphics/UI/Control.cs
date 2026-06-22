@@ -79,6 +79,7 @@ public class Control : CanvasItem
 
     private readonly Dictionary<string, Font> fontOverrides = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> fontSizeOverrides = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int> themeConstantOverrides = new(StringComparer.Ordinal);
     private float anchorLeft;
     private float anchorTop;
     private float anchorRight;
@@ -88,6 +89,7 @@ public class Control : CanvasItem
     private float offsetRight;
     private float offsetBottom;
     private Vector2 customMinimumSize;
+    private float sizeFlagsStretchRatio = 1f;
 
     /// <summary>
     /// Gets or sets the left anchor of this control.
@@ -492,6 +494,108 @@ public class Control : CanvasItem
     /// <seealso cref="GrowHorizontal"/>
     /// <seealso cref="GrowDirection"/>
     public GrowDirection GrowVertical { get; set; } = GrowDirection.End;
+
+    /// <summary>
+    /// Gets or sets the horizontal size flags used by a parent <see cref="Container"/>.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="SizeFlags"/> value that describes how this control should
+    /// use horizontal space allocated by a container.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This property is read by layout containers only. It does not change this
+    /// control's rectangle until a parent container performs layout.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SizeFlagsVertical"/>
+    /// <seealso cref="SizeFlagsStretchRatio"/>
+    /// <seealso cref="Container"/>
+    public SizeFlags SizeFlagsHorizontal { get; set; } = SizeFlags.Fill;
+
+    /// <summary>
+    /// Gets or sets the vertical size flags used by a parent <see cref="Container"/>.
+    /// </summary>
+    ///
+    /// <value>
+    /// A <see cref="SizeFlags"/> value that describes how this control should
+    /// use vertical space allocated by a container.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This property is read by layout containers only. It does not change this
+    /// control's rectangle until a parent container performs layout.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SizeFlagsHorizontal"/>
+    /// <seealso cref="SizeFlagsStretchRatio"/>
+    /// <seealso cref="Container"/>
+    public SizeFlags SizeFlagsVertical { get; set; } = SizeFlags.Fill;
+
+    /// <summary>
+    /// Gets or sets the expansion weight used by a parent <see cref="Container"/>.
+    /// </summary>
+    ///
+    /// <value>
+    /// The positive finite ratio used when a container distributes free space
+    /// between expanding children.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The value is considered only when the relevant size flag contains
+    /// <see cref="SizeFlags.Expand"/> or <see cref="SizeFlags.ExpandFill"/>.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the value is not finite or is less than or equal to zero.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SizeFlagsHorizontal"/>
+    /// <seealso cref="SizeFlagsVertical"/>
+    public float SizeFlagsStretchRatio
+    {
+        get => sizeFlagsStretchRatio;
+        set
+        {
+            if (!Mathf.IsFinite(value) || value <= 0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Stretch ratio must be finite and greater than zero.");
+            }
+
+            sizeFlagsStretchRatio = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets whether this control clips GUI hit-testing for its descendants.
@@ -1360,6 +1464,145 @@ public class Control : CanvasItem
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
         return fontSizeOverrides.TryGetValue(name, out var fontSize) ? fontSize : 16;
+    }
+
+    /// <summary>
+    /// Adds or replaces an integer theme constant override for this control.
+    /// </summary>
+    ///
+    /// <param name="name">
+    /// The theme constant name, for example <c>separation</c> or
+    /// <c>margin_left</c>.
+    /// </param>
+    ///
+    /// <param name="constant">
+    /// The non-negative constant value in pixels.
+    /// </param>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The 0.1.0 Preview UI containers use this baseline for spacing and
+    /// margins before full theme resources are introduced.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="name"/> is <c>null</c>, empty or whitespace.
+    /// </exception>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="constant"/> is less than zero.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="GetThemeConstant"/>
+    /// <seealso cref="HasThemeConstantOverride"/>
+    /// <seealso cref="Container"/>
+    public void AddThemeConstantOverride(string name, int constant)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (constant < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(constant), constant, "Theme constant must be non-negative.");
+        }
+
+        themeConstantOverrides[name] = constant;
+        QueueRedraw();
+    }
+
+    /// <summary>
+    /// Gets an integer theme constant override by name.
+    /// </summary>
+    ///
+    /// <param name="name">
+    /// The theme constant name.
+    /// </param>
+    ///
+    /// <returns>
+    /// The overridden constant value, or <c>0</c> when no override exists.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// Containers use this method for spacing and margin values. Missing values
+    /// deliberately resolve to zero so a caller can supply its own default.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="name"/> is <c>null</c>, empty or whitespace.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AddThemeConstantOverride"/>
+    /// <seealso cref="HasThemeConstantOverride"/>
+    public int GetThemeConstant(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
+        return themeConstantOverrides.TryGetValue(name, out var constant) ? constant : 0;
+    }
+
+    /// <summary>
+    /// Reports whether this control has a theme constant override by name.
+    /// </summary>
+    ///
+    /// <param name="name">
+    /// The theme constant name.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when an override exists; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This method lets container code distinguish a missing value from an
+    /// explicit zero value.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="name"/> is <c>null</c>, empty or whitespace.
+    /// </exception>
+    ///
+    /// <threadsafety>
+    /// This method is not synchronized. Call it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="AddThemeConstantOverride"/>
+    /// <seealso cref="GetThemeConstant"/>
+    public bool HasThemeConstantOverride(string name)
+    {
+        ThrowIfFreed();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
+        return themeConstantOverrides.ContainsKey(name);
+    }
+
+    internal int GetThemeConstantOrDefault(string name, int defaultValue)
+    {
+        return themeConstantOverrides.TryGetValue(name, out var constant) ? constant : defaultValue;
     }
 
     internal Vector2 GlobalPosition
