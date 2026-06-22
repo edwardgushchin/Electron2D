@@ -31,6 +31,10 @@
 - [Canonical document model](project-system/canonical-document-model.md) - текущий internal project-system слой для document identity, classification, revisions, parser snapshot, debug serializer и structural diff.
 - [Stable project text formats](project-system/project-text-formats.md) - текущий formatter/schema/migration layer для scene/resource/project JSON, validation safety checks и published JSON Schema files.
 
+## Diagnostics
+
+- [Diagnostics.Core](diagnostics/diagnostics-core.md) - текущий internal contract для structured diagnostics, stable code registry, locations, safe suggested fixes и deterministic JSON serialization.
+
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.

@@ -40,6 +40,10 @@
 - [Canonical document model, revision model и structural diff](project-system/canonical-document-model.md) - внутренний контракт identity, классификации, ревизий, parser/serializer boundary и structural diff до `ProjectWorkspace`.
 - [Stable project text formats, migrations и JSON Schema](project-system/project-text-formats.md) - deterministic formatting, validation, migration pipeline и JSON Schema для scene/resource/project JSON source files.
 
+## Diagnostics
+
+- [Diagnostics.Core](diagnostics/diagnostics-core.md) - внутренний контракт structured diagnostics, stable error code registry, locations, suggested fixes и deterministic JSON serialization.
+
 ## Ресурсы, импорт и сериализация
 
 - [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - `ResourceUid`, `.e2res`, external/internal references и diff-friendly формат ресурсов.
