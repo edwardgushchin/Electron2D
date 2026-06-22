@@ -8,6 +8,7 @@
     <LangVersion>preview</LangVersion>
     <AssemblyName>Electron2D.Editor</AssemblyName>
     <RootNamespace>Electron2D.Editor</RootNamespace>
+    <ApplicationIcon>..\..\data\assets\branding\icon\electron2d.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

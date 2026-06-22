@@ -19,12 +19,14 @@
     <Description>C#-first 2D game engine runtime for .NET, currently at the 0.1.0 Preview clean rewrite baseline.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>electron2d_windows_icon_128.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <PackageTags>game-engine;2d;csharp;dotnet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\data\assets\branding\icon\electron2d_windows_icon_128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

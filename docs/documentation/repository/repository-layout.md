@@ -20,8 +20,9 @@
 
 - `data/templates/electron2d-empty/`
 - `data/assets/reference-games/`
+- `data/assets/branding/`
 
-Все verifiers, editor workflows и export checks читают template и reference assets из этих путей.
+Все verifiers, editor workflows и export checks читают template, reference assets и брендовые ассеты из этих путей. Брендовый набор используется README, NuGet metadata runtime package и executable-проектом `Electron2D.Editor`.
 
 ## Проверки
 
@@ -29,4 +30,5 @@
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~SolutionLayoutTests" --no-restore -m:1
 powershell -ExecutionPolicy Bypass -File tools\Verify-ProjectTemplate.ps1
 powershell -ExecutionPolicy Bypass -File tools\Verify-ReferenceGameAssets.ps1
+powershell -ExecutionPolicy Bypass -File tools\Verify-ReleaseMetadata.ps1
 ```

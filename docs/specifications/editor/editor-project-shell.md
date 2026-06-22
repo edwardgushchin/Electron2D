@@ -17,6 +17,7 @@ Project Manager, scene tree dock, 2D viewport, Inspector, FileSystem dock, run/s
 - Editor project не использует WPF, WinForms, Avalonia или другой внешний desktop UI framework.
 - Editor project не добавляет публичные runtime types в assembly `Electron2D`.
 - Исходные файлы editor project имеют MIT header проекта.
+- Editor project использует `data/assets/branding/icon/electron2d.ico` как `ApplicationIcon` для desktop executable.
 
 ## Smoke-режим
 
@@ -40,6 +41,7 @@ Smoke-режим должен:
 ## Приемочные критерии
 
 - Есть integration tests, которые подтверждают наличие editor project в solution, отсутствие внешнего UI framework package references и успешный `dotnet run --project src/Electron2D.Editor/Electron2D.Editor.csproj -- --smoke`.
+- Release metadata verifier подтверждает, что `Electron2D.Editor` подключает брендовую `.ico`-иконку.
 - `dotnet build src/Electron2D.sln -c Release` проходит.
 - `powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1` проходит.
 - `powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1` проходит.

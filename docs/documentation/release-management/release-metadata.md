@@ -17,7 +17,10 @@ Runtime package `src/Electron2D/Electron2D.csproj` использует:
 - `Authors`: `Electron2D Team`
 - `PackageLicenseExpression`: `MIT`
 - `PackageReadmeFile`: `README.md`
+- `PackageIcon`: `electron2d_windows_icon_128.png`
 - `RepositoryType`: `git`
+
+Runtime package пакует `data/assets/branding/icon/electron2d_windows_icon_128.png` в корень package как `electron2d_windows_icon_128.png`. `Electron2D.Editor` использует `data/assets/branding/icon/electron2d.ico` как `ApplicationIcon` для desktop executable.
 
 ## Релизные документы и локальные черновики
 
@@ -31,4 +34,4 @@ Runtime package `src/Electron2D/Electron2D.csproj` использует:
 powershell -ExecutionPolicy Bypass -File tools/Verify-ReleaseMetadata.ps1
 ```
 
-Команда проверяет согласованность package metadata, README и отсутствие tracked release draft файлов.
+Команда проверяет согласованность package metadata, README, брендовых файлов, иконки `Electron2D.Editor` и отсутствие tracked release draft файлов.

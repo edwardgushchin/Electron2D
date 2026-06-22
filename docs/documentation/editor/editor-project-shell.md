@@ -19,6 +19,8 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --smoke
 
 Smoke-режим создаёт `SceneTree`, настраивает root `Viewport`, строит первый UI root через runtime controls и выводит machine-readable строки с результатом. Проверка используется тестами и CI, чтобы подтвердить, что editor shell запускается на Electron2D runtime.
 
+`Electron2D.Editor` подключает `data/assets/branding/icon/electron2d.ico` как `ApplicationIcon`, поэтому собираемый desktop executable получает брендовую иконку из поставляемого asset pack.
+
 ## Ограничения
 
 - В этой задаче нет постоянного desktop window event loop.
@@ -38,6 +40,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1
+powershell -ExecutionPolicy Bypass -File tools\Verify-ReleaseMetadata.ps1
 powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1
 dotnet build src\Electron2D.sln -c Release
 ```
