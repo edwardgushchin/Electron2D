@@ -147,6 +147,8 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 
 Поскольку `T-0116` ещё не запускает реальные toolchains, progress/completion появляются позже. CLI уже должен сериализовать same identity fields, чтобы будущий real runner не менял schema.
 
+`run` имеет отдельный headless runtime mode, когда указаны runtime-флаги `--scene`, `--frames`, `--fixed-delta`, `--input`, `--capture-frame` или `--output`. Этот mode описан в [Headless runtime automation](../runtime/headless-runtime-automation.md) и должен сосуществовать с generic job JSONL mode: `e2d run --format jsonl` без runtime-флагов продолжает возвращать queued job event.
+
 ## Documentation commands
 
 `docs search/type/member/example` сохраняют существующее поведение. Они должны поддерживать common flags, но `--format jsonl` для docs недопустим и возвращает `E2D-CLI-0002`.

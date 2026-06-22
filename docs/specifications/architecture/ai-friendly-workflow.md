@@ -1218,6 +1218,8 @@ artifacts/run-001/
 └── performance.json
 ```
 
+Проверяемый контракт CLI flags, input trace, runtime artifacts, JSON schemas и snapshot identity вынесен в [Headless runtime automation](../runtime/headless-runtime-automation.md).
+
 ## Тестовый framework для игр
 
 Кроме обычного `dotnet test`, Electron2D 0.1 должен иметь средства для scene tests и visual tests.

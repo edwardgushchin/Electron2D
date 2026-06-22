@@ -108,6 +108,26 @@ e2d build --project <path> --format jsonl --input-build-configuration-hash sha25
 
 Реальные toolchain progress/completion events появятся в соответствующих import/build/run/test/export задачах. Schema уже фиксирует identity fields, чтобы будущий runner не менял CLI contract.
 
+### `run` headless runtime mode
+
+`e2d run` остаётся generic job command, если runtime-флаги не указаны. Headless runtime mode включается при `--scene`, `--frames`, `--fixed-delta`, `--input`, `--capture-frame` или `--output`.
+
+Пример:
+
+```powershell
+e2d run `
+  --project <path> `
+  --scene scenes/main.scene.json `
+  --frames 600 `
+  --fixed-delta 0.0166667 `
+  --input tests/input/start-game.json `
+  --capture-frame 300 `
+  --output artifacts/run-001 `
+  --format json
+```
+
+В этом режиме команда создаёт output directory с `result.json`, `diagnostics.json`, `runtime.log.jsonl`, `scene-tree-final.json`, `performance.json` и `frame-XXXX.png`, если указан `--capture-frame`. JSON artifacts используют schemas из `schemas/runtime/` и сохраняют snapshot identity fields. Фактический формат описан в [Headless runtime automation](../runtime/headless-runtime-automation.md).
+
 ## JSON envelope
 
 `--format json` возвращает stable object:
@@ -148,15 +168,15 @@ Tooling diagnostics пробрасываются в CLI JSON без потери
 
 ## Текущие ограничения
 
-`T-0116` не реализует:
+`T-0116`/`T-0121` всё ещё не реализуют:
 
 - `project create`;
 - удобные scene/resource команды;
 - `api compare-godot`;
-- реальный `mcp serve`;
 - `context build`;
 - полноценный `doctor`;
-- запуск реальных import/build/run/test/export toolchains.
+- запуск реальных import/build/test/export toolchains;
+- запуск пользовательского C# runtime process внутри `run` headless mode.
 
 Эти задачи должны использовать текущий parser, route selection, result envelope и `Electron2D.Tooling`, а не создавать второй project state.
 
@@ -169,3 +189,9 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 ```
 
 Проверка покрывает root/group help, common flags, `workspace transaction` JSON, dry-run headless fallback, active Editor routing, JSONL job identity и stable unsupported-command diagnostic.
+
+Headless runtime проверка:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests
+```

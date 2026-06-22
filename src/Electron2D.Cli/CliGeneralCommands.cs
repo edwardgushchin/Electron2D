@@ -98,6 +98,7 @@ internal static partial class Electron2DCommandLine
             "project" => RunProject(options, output, error),
             "mcp" => RunMcp(options, output, error, context),
             "workspace" => RunWorkspace(options, output, error, context),
+            "run" when HeadlessRuntimeAutomation.HasRuntimeOptions(options) => RunHeadlessRuntime(options, output, error, context),
             "import" or "build" or "run" or "test" or "export" => RunJob(group, options, output, error, context),
             _ => WriteResult(
                 CliResult.Blocked(
@@ -236,6 +237,30 @@ internal static partial class Electron2DCommandLine
             result,
             route.Diagnostics);
         return WriteResult(envelope, output, error);
+    }
+
+    private static int RunHeadlessRuntime(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        var request = HeadlessRuntimeAutomation.Parse(options, projectRoot);
+        var buildConfigurationHash = options.GetOption("--input-build-configuration-hash") ?? "sha256:default";
+        using var route = OpenWorkspaceForJob(options, context, projectRoot);
+        HeadlessRuntimeAutomation.OpenRuntimeInputsIfNeeded(route.Workspace, projectRoot, request);
+        var operationId = HeadlessRuntimeAutomation.CreateOperationId(request, route.Workspace, buildConfigurationHash);
+        var job = route.Tooling.Runtime.Queue(new ToolingJobRequest(operationId, buildConfigurationHash));
+        var result = HeadlessRuntimeAutomation.Run(
+            options,
+            projectRoot,
+            route.Route,
+            request,
+            job,
+            buildConfigurationHash,
+            route.Diagnostics);
+        return WriteResult(result, output, error);
     }
 
     private static int RunJob(
@@ -409,7 +434,8 @@ internal static partial class Electron2DCommandLine
             "project" => "  validate              Validate a project without requiring GUI runtime.",
             "mcp" => "  serve                 Emit local MCP resources and tools manifest.",
             "workspace" => "  transaction           Apply a generic workspace text transaction.",
-            "import" or "build" or "run" or "test" or "export" => "  <default>             Queue a job and emit JSON or JSONL status.",
+            "run" => "  <default>             Queue a job, or run headless with --scene --frames --fixed-delta --output.",
+            "import" or "build" or "test" or "export" => "  <default>             Queue a job and emit JSON or JSONL status.",
             "docs" => "  search|type|member|example",
             _ => "  Reserved for a later Preview task."
         };

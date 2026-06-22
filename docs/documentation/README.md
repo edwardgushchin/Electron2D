@@ -49,6 +49,10 @@
 
 - [`e2d` CLI для headless, CI и active Editor routing](cli/e2d-cli.md) - текущий executable CLI parser, common flags, stable JSON/JSONL envelope, generic workspace transaction, job stubs и route selection через active Editor или headless workspace.
 
+## Runtime
+
+- [Headless runtime automation](runtime/headless-runtime-automation.md) - текущий `e2d run` headless mode: fixed frame loop, input trace, stable runtime artifacts, JSON schemas и snapshot identity для CI и автономных агентов.
+
 ## MCP
 
 - [Локальный MCP adapter для Editor-сессии и Tooling](mcp/mcp-server.md) - текущий in-process contract для local resources/tools, route selection, workspace transactions, job events, task guard и `e2d mcp serve` manifest.

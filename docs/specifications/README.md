@@ -36,6 +36,10 @@
 
 - [`e2d` CLI для headless, CI и active Editor routing](cli/e2d-cli.md) - общий parser/result envelope, common flags, generic workspace transaction, job JSONL и routing через active Editor session.
 
+## Runtime
+
+- [Headless runtime automation](runtime/headless-runtime-automation.md) - CLI-запуск сцены без ручного Editor UI, fixed frame loop, input trace, runtime artifacts, JSON schemas и snapshot identity для CI и автономных агентов.
+
 ## MCP
 
 - [Локальный MCP-сервер поверх active Editor session и Tooling](mcp/mcp-server.md) - resources/tools manifest, route semantics, Tooling adapter rules, task guard, job events и fail-closed security для локального MCP adapter-а.

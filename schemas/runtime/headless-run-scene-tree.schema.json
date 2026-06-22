@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/runtime/headless-run-scene-tree.schema.json",
+  "title": "Electron2D headless run final scene tree",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "scene",
+    "finalFrame",
+    "inputSnapshotId",
+    "inputWorkspaceRevision",
+    "inputContentRevision",
+    "inputDocumentRevisions",
+    "inputBuildConfigurationHash",
+    "actionStates",
+    "nodes"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://electron2d.dev/schemas/runtime/headless-run-scene-tree.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "scene": {
+      "type": "string"
+    },
+    "finalFrame": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "inputSnapshotId": {
+      "type": "string"
+    },
+    "inputWorkspaceRevision": {
+      "type": "integer"
+    },
+    "inputContentRevision": {
+      "type": "integer"
+    },
+    "inputDocumentRevisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "inputBuildConfigurationHash": {
+      "type": "string"
+    },
+    "actionStates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "name",
+          "parent",
+          "properties"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "properties": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

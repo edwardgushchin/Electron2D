@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/runtime/headless-run-diagnostics.schema.json",
+  "title": "Electron2D headless run diagnostics",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "inputSnapshotId",
+    "inputWorkspaceRevision",
+    "inputContentRevision",
+    "inputDocumentRevisions",
+    "inputBuildConfigurationHash",
+    "diagnostics"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://electron2d.dev/schemas/runtime/headless-run-diagnostics.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "inputSnapshotId": {
+      "type": "string"
+    },
+    "inputWorkspaceRevision": {
+      "type": "integer"
+    },
+    "inputContentRevision": {
+      "type": "integer"
+    },
+    "inputDocumentRevisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "inputBuildConfigurationHash": {
+      "type": "string"
+    },
+    "diagnostics": {
+      "type": "array"
+    }
+  }
+}

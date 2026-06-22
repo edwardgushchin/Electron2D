@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/runtime/headless-run-result.schema.json",
+  "title": "Electron2D headless run result",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "command",
+    "succeeded",
+    "scene",
+    "frames",
+    "fixedDelta",
+    "outputDirectory",
+    "artifacts",
+    "inputSnapshotId",
+    "inputWorkspaceRevision",
+    "inputContentRevision",
+    "inputDocumentRevisions",
+    "inputBuildConfigurationHash",
+    "actionStates"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://electron2d.dev/schemas/runtime/headless-run-result.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "command": {
+      "const": "run"
+    },
+    "succeeded": {
+      "type": "boolean"
+    },
+    "scene": {
+      "type": "string"
+    },
+    "frames": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fixedDelta": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "capturedFrame": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "outputDirectory": {
+      "type": "string"
+    },
+    "artifacts": {
+      "$ref": "#/$defs/artifacts"
+    },
+    "inputSnapshotId": {
+      "type": "string"
+    },
+    "inputWorkspaceRevision": {
+      "type": "integer"
+    },
+    "inputContentRevision": {
+      "type": "integer"
+    },
+    "inputDocumentRevisions": {
+      "$ref": "#/$defs/revisions"
+    },
+    "inputBuildConfigurationHash": {
+      "type": "string"
+    },
+    "actionStates": {
+      "$ref": "#/$defs/actionStates"
+    }
+  },
+  "$defs": {
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "revisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "actionStates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    }
+  }
+}

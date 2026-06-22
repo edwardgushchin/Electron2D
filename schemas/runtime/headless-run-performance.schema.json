@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/runtime/headless-run-performance.schema.json",
+  "title": "Electron2D headless run performance metrics",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "frames",
+    "fixedDelta",
+    "simulatedSeconds",
+    "averageFrameTimeMs",
+    "fps",
+    "inputSnapshotId",
+    "inputWorkspaceRevision",
+    "inputContentRevision",
+    "inputDocumentRevisions",
+    "inputBuildConfigurationHash"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://electron2d.dev/schemas/runtime/headless-run-performance.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "frames": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fixedDelta": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "simulatedSeconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "averageFrameTimeMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "fps": {
+      "type": "number",
+      "minimum": 0
+    },
+    "inputSnapshotId": {
+      "type": "string"
+    },
+    "inputWorkspaceRevision": {
+      "type": "integer"
+    },
+    "inputContentRevision": {
+      "type": "integer"
+    },
+    "inputDocumentRevisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "inputBuildConfigurationHash": {
+      "type": "string"
+    }
+  }
+}

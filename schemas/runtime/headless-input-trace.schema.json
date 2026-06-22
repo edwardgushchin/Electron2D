@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/runtime/headless-input-trace.schema.json",
+  "title": "Electron2D headless input trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "events"
+  ],
+  "properties": {
+    "format": {
+      "const": "Electron2D.InputTrace"
+    },
+    "version": {
+      "const": 1
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "frame",
+          "action",
+          "state"
+        ],
+        "properties": {
+          "frame": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "enum": [
+              "pressed",
+              "released"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
