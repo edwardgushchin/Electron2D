@@ -78,7 +78,7 @@ Main scene задаётся в `project.e2d.json`:
 
 Проверенный пример находится в `templates/electron2d-empty/Scripts/MainScene.cs`. Он показывает lifecycle callbacks `_EnterTree()` и `_Ready()`, а также доступ к runtime services через `GetTree()` и `RenderingServer`.
 
-Editor workflow для создания script file, attach к узлу и встроенный редактор кода ещё реализуется отдельной задачей. Сейчас проверенный путь - обычный C# project, build и run через .NET tooling.
+Editor workflow для создания script file, attach к узлу, встроенного редактирования code text и сборки проекта реализован как внутренняя модель редактора. Пользовательский script остаётся обычным `.cs` файлом проекта и компилируется вместе с проектом.
 
 <!-- user-doc:resources -->
 ## Resources

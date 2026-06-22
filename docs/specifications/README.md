@@ -49,6 +49,7 @@
 - [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - обычная .NET C# модель script classes, lifecycle callbacks и доступ к сервисам движка.
 - [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - публичные marker attributes и internal AOT-safe bridge для serialization/Inspector.
 - [Безопасное editor-time выполнение `[Tool]` scripts](scripting/tool-script-execution.md) - внутренний execution host для registered tool metadata без dynamic assembly load.
+- [Script workflow в редакторе](scripting/editor-script-workflow.md) - создание, встроенное редактирование, attach к node, build diagnostics и запуск проекта после rebuild.
 
 ## Редактор
 

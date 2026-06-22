@@ -25,6 +25,7 @@
 using Electron2D.Editor.Inspector;
 using Electron2D.Editor.FileSystemDock;
 using Electron2D.Editor.ProjectManagement;
+using Electron2D.Editor.Scripting;
 using Electron2D.Editor.SceneTreeDock;
 using Electron2D.Editor.Viewport2D;
 
@@ -69,7 +70,12 @@ internal static class Program
             return RunFileSystemDockSmoke(fileSystemDockWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>]");
+        if (args is ["--script-workflow-smoke", var scriptWorkflowWorkRoot])
+        {
+            return RunScriptWorkflowSmoke(scriptWorkflowWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>]");
         return 2;
     }
 
@@ -245,6 +251,49 @@ internal static class Program
                 result.UidStable &&
                 result.ImportErrorVisible &&
                 result.RoundTripStable
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunScriptWorkflowSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorScriptWorkflowSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor script workflow smoke passed");
+            Console.WriteLine($"ProjectPath={result.ProjectPath}");
+            Console.WriteLine($"ScenePath={result.ScenePath}");
+            Console.WriteLine($"ScriptPath={result.ScriptPath}");
+            Console.WriteLine($"CreatedScriptExists={result.CreatedScriptExists}");
+            Console.WriteLine($"OpenedScript={result.OpenedScript}");
+            Console.WriteLine($"DirtyBeforeSave={result.DirtyBeforeSave}");
+            Console.WriteLine($"DirtyAfterSave={result.DirtyAfterSave}");
+            Console.WriteLine($"AttachedNodeType={result.AttachedNodeType}");
+            Console.WriteLine($"CompilerErrorCount={result.CompilerErrorCount}");
+            Console.WriteLine($"FirstCompilerErrorCode={result.FirstCompilerErrorCode}");
+            Console.WriteLine($"FirstCompilerErrorLine={result.FirstCompilerErrorLine}");
+            Console.WriteLine($"FirstCompilerErrorColumn={result.FirstCompilerErrorColumn}");
+            Console.WriteLine($"FixedBuildSucceeded={result.FixedBuildSucceeded}");
+            Console.WriteLine($"RunExitCode={result.RunExitCode}");
+            Console.WriteLine($"RunOutputContainsMessage={result.RunOutputContainsMessage}");
+            Console.WriteLine($"SceneRoundTripStable={result.SceneRoundTripStable}");
+            Console.WriteLine($"RerunAfterRebuild={result.RerunAfterRebuild}");
+
+            return result.CreatedScriptExists &&
+                result.OpenedScript &&
+                result.DirtyBeforeSave &&
+                !result.DirtyAfterSave &&
+                result.CompilerErrorCount > 0 &&
+                result.FixedBuildSucceeded &&
+                result.RerunAfterRebuild &&
+                result.SceneRoundTripStable
                 ? 0
                 : 1;
         }

@@ -49,6 +49,7 @@
 - [C# script classes, inheritance from `Node` и lifecycle](scripting/csharp-script-classes.md) - текущая ordinary .NET модель script classes, template sample и lifecycle/services checks.
 - [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](scripting/script-metadata.md) - текущие публичные marker attributes и internal metadata bridge для export properties, signals и tool-state.
 - [Безопасное editor-time выполнение `[Tool]` scripts](scripting/tool-script-execution.md) - текущий внутренний execution host для registered tool metadata без dynamic assembly load.
+- [Script workflow в редакторе](scripting/editor-script-workflow.md) - текущая внутренняя модель создания, встроенного редактирования, attach к node, build diagnostics и запуска проекта после rebuild.
 
 ## Редактор
 

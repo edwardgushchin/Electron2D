@@ -53,4 +53,4 @@ powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1
 
 - Runtime не компилирует и не загружает C# scripts динамически.
 - `[Export]`, `[Signal]`, `[Tool]` metadata реализованы отдельным baseline и описаны в `docs/documentation/scripting/script-metadata.md`.
-- Создание script из редактора, attach к node и внешнее IDE workflow добавляются отдельной задачей.
+- Создание script из редактора, attach к node, встроенное редактирование code text и build diagnostics описаны в `docs/documentation/scripting/editor-script-workflow.md`.
