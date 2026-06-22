@@ -433,7 +433,73 @@ Merge policy зависит от типа документа:
 | Изображения/audio/fonts | Автоматическое merge запрещено. |
 | Удаление/замена binary | Конфликт, если ресурс используется или был изменён в workspace. |
 
-Открытые C# buffers являются first-class `CodeDocument` в `ProjectWorkspace`, а нормативным владельцем таких buffers в Editor является центральный workspace `Script`. Если AI меняет `.cs` через Tooling/MCP или прямой файл, а разработчик держит несохранённую правку того же файла во встроенном `Script` workspace, синхронизатор обязан применить text merge или показать конфликт, но не перезаписать один вариант молча. IntelliSense, compiler diagnostics, build/run/test и debug session должны учитывать актуальный in-memory buffer через `WorkspaceSnapshot`, а не только persisted file на диске.
+Открытые C# buffers являются first-class `CodeDocument` в `ProjectWorkspace`, а нормативным владельцем таких buffers в Editor является центральный workspace `Script`. Если AI меняет `.cs` через Tooling/MCP или прямой файл, а разработчик держит несохранённую правку того же файла во встроенном `Script` workspace, синхронизатор обязан применить text merge или показать конфликт, но не перезаписать один вариант молча.
+
+Граница code editing:
+
+```text
+Human typing
+    → TextBufferEditSession
+    → lightweight CodeDocumentChanged events
+    → TextBufferUndo
+    → CodeDocument.Revision
+
+AI / refactoring / multi-file operation
+    → WorkspaceTransactionEngine
+    → WorkspaceUndo
+    → OperationJournal
+    → shared UndoGroupId
+
+Save
+    → persistence transaction
+    → atomic write
+    → PersistedRevision
+```
+
+`TextBufferEditSession` публикует grouped/debounced document-change events для dirty state, live Roslyn Workspace и MCP-наблюдения, но не создаёт полноценную `OperationJournal` entry на каждый символ. Агентский `script_save` не может сохранить документ, если после базовой revision агента появились ручные unsaved changes; требуется structured conflict либо интерактивное подтверждение разработчика.
+
+IntelliSense, hover, navigation и live diagnostics работают через live Roslyn Workspace, синхронизированный с `CodeDocument`, и используют `DocumentRevision` + `SemanticVersion`. `WorkspaceSnapshot` используется для воспроизводимых build/test/run/debug и пакетного анализа, а не для каждого completion request или hover.
+
+Code editor использует двухуровневую Undo-модель:
+
+- `TextBufferUndo` — локальный Undo ручного ввода, удаления, paste и локального форматирования внутри одного buffer. Последовательный ввод coalescing-ится в разумные edit groups, меняет `CodeDocument.Revision`, но не создаёт отдельную `OperationJournal` entry на каждый символ.
+- `WorkspaceUndo` — глобальный Undo для AI `script_apply_text_edits`, rename symbol, code actions на несколько файлов, attach script, create/rename/delete file и grouped rollback всей AI-транзакции. Такая операция создаёт одну осмысленную workspace transaction, один `UndoGroupId` и одну запись происхождения операции.
+
+AI/refactoring text edits должны отображаться как compound operation в каждом затронутом buffer и одновременно иметь общий `UndoGroupId` для отмены всех файлов.
+
+C# language services строятся в отдельном `Electron2D.CSharpLanguageServices` assembly или process, не в runtime assembly и не внутри Editor UI. Каждый async request/result содержит `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; если buffer изменился до ответа, результат отбрасывается. Live diagnostics debounce-ятся, предыдущие запросы отменяются, а изменения `.csproj`, `Directory.Build.props`, `Directory.Build.targets`, `global.json` и package references перезагружают semantic model. Tooling adapters подключаются позже поверх этих сервисов.
+
+Managed debugger интегрируется через протокольную границу:
+
+```text
+Electron2D.Editor
+      ↓
+ManagedDebugClient
+      ↓ DAP
+packaged .NET debug adapter
+      ↓
+Electron2D game process
+```
+
+Конкретный packaged .NET debug adapter выбирается отдельным technical spike до реализации полноценного debugger. Spike проверяет Windows x64, Linux x64, macOS arm64, Portable PDB, launch/attach, breakpoints, stepping, locals/watches, exceptions, restart, DAP capability matrix, лицензию, право распространения вместе с Electron2D и способ обновления adapter binaries. Editor не должен зависеть от API конкретного debugger напрямую.
+
+Debugging core живёт отдельно от UI и Tooling adapters:
+
+```text
+Electron2D.ManagedDebugging
+    DAP client, breakpoint model, debug sessions
+
+Electron2D.Editor
+    Script/Debugger UI
+
+Electron2D.Tooling
+    adapters к language/debug services
+
+Electron2D.Mcp
+    MCP presentation
+```
+
+Breakpoint model использует stable `ManagedBreakpoint` с `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`. Breakpoint следует за document rename через `DocumentId`, text edits выполняют source-anchor rebase, а неоднозначный rebase помечает breakpoint как unverified вместо молчаливого переноса. Breakpoints являются локальными Editor metadata и не попадают в runtime export.
 
 Пример группировки:
 
@@ -542,7 +608,16 @@ debug_get_watches
 debug_stop
 ```
 
+`debug_attach` в `0.1.0` не является произвольным `attach(pid)` для агента. Agent MCP/Tooling session может attach только к game process активной Editor play/debug session. Любой attach к другому процессу отсутствует либо требует явного интерактивного подтверждения разработчика.
+
 Editor показывает действия агента в обычном `Script` workspace: изменённые строки, diagnostics, breakpoints, текущий stack frame и состояние debug session. Просмотр locals и простых values разрешён как baseline; вычисление выражений с возможными side effects требует отдельного явного подтверждения разработчика.
+
+Не все script/debug команды требуют `WorkspaceSnapshot`:
+
+- `script_get_completions`, `script_get_signature_help`, `script_get_hover`, `script_get_diagnostics`, `script_get_definition`, `script_find_references` используют `DocumentRevision`, `SemanticVersion` и live Roslyn Workspace;
+- `script_apply_text_edits`, `script_format` и `script_rename_symbol` используют `expectedRevision` и создают workspace transaction только для фактического изменения документов;
+- `script_save` использует persistence transaction и проверяет, что нет ручных unsaved changes после базовой revision агента;
+- `debug_start`, build, run и test используют immutable `WorkspaceSnapshot`.
 
 Tooling и MCP должны иметь полный паритет для семантически значимых возможностей. CLI не обязан иметь отдельную удобную команду для каждого действия Editor, если есть универсальный headless-путь:
 
@@ -1428,22 +1503,26 @@ High для 0.1:
 6. `Electron2D.Tooling` и `TaskService`.
 7. Workspace IPC protocol, CLI и MCP.
 8. Editor shell по UX-референсу Godot 4.
-9. Script workspace, C# language services и managed debugger.
+9. Script workspace и C# language services.
 10. Project Tasks board.
 11. Agent Workspace и project templates.
 12. Human-AI conflict handling.
 13. Headless runtime и debug bridge.
 14. Visible Editor-attached runtime.
-15. Capability manifest.
-16. Script/debug Tooling и MCP parity.
-17. AI acceptance benchmarks.
-18. Full release candidate gate.
-19. Final README и release packaging.
+15. Packaged .NET debug adapter spike.
+16. Managed C# debugger.
+17. Capability manifest.
+18. Script/debug Tooling и MCP parity.
+19. AI acceptance benchmarks.
+20. Full release candidate gate.
+21. Final README и release packaging.
 
 ## Источники
 
 - [Первый взгляд на интерфейс Godot](https://docs.godotengine.org/ru/4.x/getting_started/introduction/first_look_at_the_editor.html) - человекочитаемый UX/layout reference для структуры Editor.
 - [Godot command line tutorial](https://docs.godotengine.org/en/latest/tutorials/editor/command_line_tutorial.html) - headless запуск, импорт и экспорт как устоявшийся паттерн игровых инструментов.
+- [dotnet/roslyn](https://github.com/dotnet/roslyn) - baseline для C# compiler и code-analysis tooling в Editor/tooling layer.
+- [Debug Adapter Protocol](https://microsoft.github.io/debug-adapter-protocol/) - протокольная граница между Editor и packaged .NET debugger adapter.
 - [JSON Schema Draft 2020-12](https://json-schema.org/draft/2020-12) - целевая версия схем для JSON-представлений.
 - [Model Context Protocol Tools](https://modelcontextprotocol.io/specification/draft/server/tools) - типизированные tools/resources/prompts для локальной AI-интеграции.
 - [AGENTS.md convention](https://agents.md/) - предсказуемый файл инструкций для coding agents.
