@@ -7,7 +7,7 @@
 
 `Electron2D.Editor` должен появиться как отдельный desktop executable в `src/Electron2D.Editor/`. Эта задача создаёт только базовый shell редактора: проект должен собираться вместе с решением, ссылаться на runtime `Electron2D`, стартовать в проверяемом smoke-режиме и строить первый UI root на публичном runtime UI API.
 
-Project Manager, scene tree dock, 2D viewport, Inspector, FileSystem dock, run/stop workflow, встроенный редактор кода и AI-friendly terminal panel остаются отдельными задачами. Эта задача не должна подменять их placeholder UI или публичными editor-only API.
+Project Manager, scene tree dock, 2D viewport, Inspector, FileSystem dock, run/stop workflow, встроенный редактор кода и Agent Workspace panel остаются отдельными задачами. Эта задача не должна подменять их placeholder UI или публичными editor-only API.
 
 ## Контракт проекта
 

@@ -38,7 +38,7 @@ API-Compatibility.md
 
 `Electron2D.Editor` нельзя начинать до отдельного UI public API gate. Этот gate считается закрытым только когда все UI-related public API строки в GitHub Wiki `API-Compatibility.md` переведены в `Supported` на основании фактической реализации, тестов, XML documentation, generated Wiki pages, спецификаций и документации реализации.
 
-Запрещено переводить UI rows из `Partial` в `Supported` только ради разблокировки редактора. Если для редактора, Project Manager, Inspector, dock UI, встроенного редактора кода или AI-friendly terminal panel не хватает публичного UI API, соответствующая задача должна оставаться заблокированной до реализации этого API в runtime.
+Запрещено переводить UI rows из `Partial` в `Supported` только ради разблокировки редактора. Если для редактора, Project Manager, Inspector, dock UI, встроенного редактора кода или Agent Workspace panel не хватает публичного UI API, соответствующая задача должна оставаться заблокированной до реализации этого API в runtime.
 
 Список UI/Text rows берётся из generated GitHub Wiki page `API-UI-and-Text.md`. Локальная и CI-проверка `tools/Verify-UiPublicApiGate.ps1` должна падать, если любая строка из этого списка отсутствует в `API-Compatibility.md` или имеет статус не `Supported`.
 

@@ -7,7 +7,7 @@
 
 `Electron2D.Editor` является отдельным executable project для будущего desktop-редактора. Текущий shell проверяет, что editor build path существует, использует runtime `Electron2D` и может стартовать без внешнего desktop UI framework.
 
-Это не полноценный редактор. Project Manager, docks, viewport interactions, Inspector, run/stop workflow, встроенный редактор кода и AI-friendly terminal panel реализуются отдельными задачами поверх этого проекта.
+Это не полноценный редактор. Project Manager, docks, viewport interactions, Inspector, run/stop workflow, встроенный редактор кода и Agent Workspace panel реализуются отдельными задачами поверх этого проекта.
 
 ## Текущее поведение
 
