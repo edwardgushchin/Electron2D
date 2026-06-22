@@ -23,6 +23,7 @@
     SOFTWARE.
 */
 using Electron2D.Editor.ProjectManagement;
+using Electron2D.Editor.SceneTreeDock;
 
 namespace Electron2D.Editor;
 
@@ -45,7 +46,12 @@ internal static class Program
             return RunProjectManagerSmoke(workRoot, userDataRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>]");
+        if (args is ["--scene-tree-dock-smoke", var sceneTreeDockWorkRoot])
+        {
+            return RunSceneTreeDockSmoke(sceneTreeDockWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>]");
         return 2;
     }
 
@@ -99,6 +105,31 @@ internal static class Program
             return succeeded ? 0 : 1;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunSceneTreeDockSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorSceneTreeDockSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor scene tree dock smoke passed");
+            Console.WriteLine($"ScenePath={result.ScenePath}");
+            Console.WriteLine($"NodeCount={result.NodeCount}");
+            Console.WriteLine($"InvalidOwnerCount={result.InvalidOwnerCount}");
+            Console.WriteLine($"UndoAvailable={result.UndoAvailable}");
+            Console.WriteLine($"UndoRestored={result.UndoRestored}");
+            Console.WriteLine($"RedoRemoved={result.RedoRemoved}");
+            Console.WriteLine($"TreeRootText={result.TreeRootText}");
+            Console.WriteLine($"ScenePaths={result.ScenePaths}");
+
+            return result.InvalidOwnerCount == 0 && result.UndoAvailable && result.UndoRestored && result.RedoRemoved ? 0 : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
         {
             Console.Error.WriteLine(exception.Message);
             return 1;
