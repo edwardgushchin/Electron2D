@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/project-system/project-settings.schema.json",
+  "title": "Electron2D project settings",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "format",
+    "version"
+  ],
+  "properties": {
+    "format": {
+      "const": "Electron2D.ProjectSettings"
+    },
+    "version": {
+      "const": 1
+    },
+    "engineVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string"
+    },
+    "mainScene": {
+      "type": "string",
+      "pattern": "^res://"
+    },
+    "rendererProfile": {
+      "type": "string"
+    },
+    "physicsTickRate": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

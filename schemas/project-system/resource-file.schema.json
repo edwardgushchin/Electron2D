@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/project-system/resource-file.schema.json",
+  "title": "Electron2D resource file",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "uid",
+    "type",
+    "path",
+    "external",
+    "internal",
+    "properties"
+  ],
+  "properties": {
+    "format": {
+      "const": "Electron2D.ResourceFile"
+    },
+    "version": {
+      "const": 1
+    },
+    "uid": {
+      "type": "string",
+      "pattern": "^uid://"
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^res://"
+    },
+    "external": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/externalReference"
+      }
+    },
+    "internal": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/internalResource"
+      }
+    },
+    "properties": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "externalReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "uid",
+        "path",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "uid": {
+          "type": "string",
+          "pattern": "^uid://"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^res://"
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "internalResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "properties"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "properties": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

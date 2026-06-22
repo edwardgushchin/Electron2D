@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/project-system/scene-file.schema.json",
+  "title": "Electron2D scene file",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "external",
+    "internal",
+    "nodes"
+  ],
+  "properties": {
+    "format": {
+      "const": "Electron2D.SceneFile"
+    },
+    "version": {
+      "const": 1
+    },
+    "external": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/externalReference"
+      }
+    },
+    "internal": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/internalResource"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sceneNode"
+      }
+    }
+  },
+  "$defs": {
+    "externalReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "uid",
+        "path",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "uid": {
+          "type": "string",
+          "pattern": "^uid://"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^res://"
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "internalResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "properties"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "properties": {
+          "type": "object"
+        }
+      }
+    },
+    "sceneNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "name",
+        "parent",
+        "owner",
+        "groups",
+        "properties"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "parent": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "owner": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "properties": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

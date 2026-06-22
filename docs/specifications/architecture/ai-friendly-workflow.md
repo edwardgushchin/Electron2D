@@ -740,6 +740,8 @@ Release-gate инвариант:
 
 Текстовый формат не заменяет live-синхронизацию. Он нужен для diff, code review, автономных агентов и восстановления состояния, но открытый Editor обязан применять изменения через `ProjectWorkspace`, а не только через полное перечитывание файлов.
 
+Проверяемый formatter/schema/migration contract для первой реализации описан в [Stable project text formats, migrations и JSON Schema](../project-system/project-text-formats.md). Этот документ уточняет, какие source JSON files покрыты сейчас и какие typed schemas остаются за доменными задачами.
+
 ## Машиночитаемый API manifest
 
 Electron2D должен поставлять версионированный API manifest в JSON. Manifest нужен, чтобы AI-агенты, CLI, Inspector, Wiki, source generators и будущий language server не угадывали границы утверждённого Godot-compatible 2D-профиля.

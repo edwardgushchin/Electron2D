@@ -29,6 +29,7 @@
 ## Project system
 
 - [Canonical document model](project-system/canonical-document-model.md) - текущий internal project-system слой для document identity, classification, revisions, parser snapshot, debug serializer и structural diff.
+- [Stable project text formats](project-system/project-text-formats.md) - текущий formatter/schema/migration layer для scene/resource/project JSON, validation safety checks и published JSON Schema files.
 
 ## Документация
 
