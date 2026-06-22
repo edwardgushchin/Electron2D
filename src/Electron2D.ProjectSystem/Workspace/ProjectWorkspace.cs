@@ -241,6 +241,7 @@ internal sealed class ProjectWorkspace : IDisposable
         Diagnostics = new ProjectWorkspaceDiagnosticsStore(this);
         Jobs = new WorkspaceJobStore(this);
         Transactions = new WorkspaceTransactionEngine(this);
+        Tasks = new ProjectTaskManager(this);
         CommandBus = new ProjectWorkspaceCommandBus(this);
     }
 
@@ -271,6 +272,8 @@ internal sealed class ProjectWorkspace : IDisposable
     public WorkspaceJobStore Jobs { get; }
 
     public WorkspaceTransactionEngine Transactions { get; }
+
+    public ProjectTaskManager Tasks { get; }
 
     public static ProjectWorkspace CreateHeadless(string projectRoot, string ownerId)
     {

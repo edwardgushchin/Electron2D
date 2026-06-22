@@ -153,6 +153,7 @@ internal static class ProjectDocumentClassifier
 
         if (normalizedPath.EndsWith(".json", StringComparison.Ordinal) ||
             normalizedPath.EndsWith(".e2res", StringComparison.Ordinal) ||
+            normalizedPath.EndsWith(".e2task", StringComparison.Ordinal) ||
             normalizedPath.EndsWith(".e2tasks", StringComparison.Ordinal))
         {
             return ProjectDocumentContentKind.Json;

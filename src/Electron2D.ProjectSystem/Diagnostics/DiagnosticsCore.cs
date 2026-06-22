@@ -153,7 +153,19 @@ internal static class DiagnosticCodeRegistry
             DiagnosticSeverity.Error,
             DiagnosticCategory.Tooling,
             "Workspace transaction was rejected.",
-            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0002")
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0002"),
+        new(
+            "E2D-TASK-0002",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Project,
+            "Project task acceptance or privileged field guard rejected the operation.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-task-0002"),
+        new(
+            "E2D-TASK-0003",
+            DiagnosticSeverity.Warning,
+            DiagnosticCategory.Project,
+            "Project task dependency graph requires attention.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-task-0003")
     ];
 
     private static readonly IReadOnlyList<DiagnosticCodeDefinition> SortedDefinitions =
