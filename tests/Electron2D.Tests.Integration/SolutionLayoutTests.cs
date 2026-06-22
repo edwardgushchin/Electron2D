@@ -62,7 +62,7 @@ public sealed class SolutionLayoutTests
         Assert.DoesNotContain(trackedFiles, file => file.StartsWith("dev-diary/", StringComparison.Ordinal));
 
         var gitignore = File.ReadAllText(Path.Combine(root, ".gitignore"));
-        foreach (var pattern in new[] { "/TASKS.md", "/CHANGELOG*", "/RELEASE-NOTES*", "/completed-tasks/", "/dev-diary/" })
+        foreach (var pattern in new[] { "/TASKS.md", "/CHANGELOG*", "/RELEASE-NOTES*", "/completed-tasks/", "/dev-diary/", ".electron2d/user/" })
         {
             Assert.Contains(pattern, gitignore, StringComparison.Ordinal);
         }

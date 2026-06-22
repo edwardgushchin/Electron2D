@@ -173,7 +173,7 @@ AI-изменение должно одновременно отображать
 
 Это project-aware language services, а не словарное дополнение текста.
 
-Архитектурный baseline — Roslyn. Roslyn используется как официальный C# compiler/code-analysis host, но не попадает в игровой runtime и не зависит от Editor UI. Граница реализации:
+Архитектурный baseline — Roslyn. Для `0.1.0` Roslyn host реализуется как отдельный assembly `Electron2D.CSharpLanguageServices`, работающий внутри Editor process. Он не попадает в игровой runtime и не зависит от Editor UI. Отдельный language-service process не входит в `0.1.0`; его можно добавить позже отдельной задачей, где будут описаны IPC, restart, crash recovery и синхронизация процесса. Граница реализации:
 
 ```text
 Electron2D.CSharpLanguageServices
@@ -269,7 +269,7 @@ Compiler errors должны быть actionable: Editor знает файл, с
 
 Managed C# debugger не заменяет runtime debug bridge. Это отдельная подсистема.
 
-Editor не зависит от API конкретного debugger напрямую. Между Editor и debugger adapter фиксируется протокольная граница, предпочтительно Debug Adapter Protocol:
+Editor не зависит от API конкретного debugger напрямую. Managed debugger Electron2D `0.1` использует Debug Adapter Protocol (DAP) как обязательную протокольную границу:
 
 ```text
 Electron2D.Editor
@@ -280,6 +280,8 @@ packaged .NET debug adapter
       ↓
 Electron2D game process
 ```
+
+Отклонение от DAP допускается только новым архитектурным решением, если `T-0163` докажет отсутствие подходящего распространяемого adapter.
 
 Конкретный packaged .NET debug adapter выбирается отдельным техническим spike до реализации полноценного debugger. Spike обязан проверить:
 
@@ -362,6 +364,8 @@ Electron2D.ManagedDebugging
 
 Breakpoints хранятся как локальные Editor metadata и не входят в игру, asset pack, runtime snapshot или production export.
 
+Физическое хранение: `.electron2d/user/breakpoints.e2debug`. Каталог `.electron2d/user/` является локальными пользовательскими настройками: игнорируется Git, не входит в `WorkspaceSnapshot` и runtime export, переживает перезапуск Editor и не удаляется при очистке временной runtime-session.
+
 ```text
 ManagedBreakpoint
 ├── BreakpointId
@@ -421,6 +425,9 @@ AI не редактирует код через keyboard emulation или pixel
 script_create
 script_open
 script_read
+script_rename
+script_delete
+script_search_text
 script_apply_text_edits
 script_save
 script_format
@@ -429,13 +436,18 @@ script_get_completions
 script_get_signature_help
 script_get_hover
 script_get_definition
+script_get_document_symbols
 script_find_references
 script_rename_symbol
+script_get_code_actions
+script_apply_code_action
 
 debug_set_breakpoint
+debug_update_breakpoint
 debug_remove_breakpoint
 debug_start
 debug_attach
+debug_restart
 debug_pause
 debug_continue
 debug_step_into
@@ -443,10 +455,17 @@ debug_step_over
 debug_step_out
 debug_get_threads
 debug_get_stack
-debug_get_locals
+debug_get_locals(frameId)
+debug_get_arguments(frameId)
 debug_get_watches
+debug_evaluate_watches(frameId)
+debug_add_watch
+debug_update_watch
+debug_remove_watch
 debug_stop
 ```
+
+`debug_update_breakpoint` управляет включением, отключением и изменением существующего breakpoint через `BreakpointId`. `debug_get_stack()` возвращает stacks всех threads. `debug_get_locals(frameId)` и `debug_get_arguments(frameId)` всегда читают данные выбранного stack frame явно, без скрытой зависимости от текущего UI selection. `debug_get_watches()` возвращает только определения watches без вычисления expressions; `debug_evaluate_watches(frameId)` вычисляет watches в явно указанном frame.
 
 Для `0.1.0` `debug_attach` не является произвольным `attach(pid)` для агента:
 
@@ -456,7 +475,7 @@ debug_stop
 
 Editor показывает действия агента в `Script` workspace: изменённые строки, diagnostics, breakpoints, current stack frame и debug session state.
 
-Вычисление expressions debugger может иметь side effects. Для AI baseline — просмотр locals и простых values. Любое вычисление выражения, которое может изменить состояние процесса, требует явного подтверждения разработчика.
+Вычисление expressions debugger может иметь side effects. Для AI baseline — просмотр locals, arguments, watch definitions и простых values. `debug_evaluate_watches(frameId)` должен использовать безопасный режим без side effects там, где adapter это поддерживает; более широкое evaluate требует явного подтверждения разработчика.
 
 ## Smoke и acceptance
 
@@ -490,11 +509,12 @@ Acceptance для `T-0160`:
 
 Acceptance для `T-0161`:
 
-- Tooling/MCP script commands применяют text edits без keyboard emulation.
-- AI получает diagnostics/completion/definition/references через Tooling/MCP.
-- AI ставит breakpoint, запускает debug session, читает stack/locals/watches и продолжает выполнение.
+- Tooling/MCP script commands применяют text edits, rename/delete file, search, symbols и code actions без keyboard emulation.
+- AI получает diagnostics/completion/definition/references/document symbols/code actions через Tooling/MCP.
+- AI ставит и обновляет breakpoint, запускает debug session, выполняет restart, читает stack/locals/arguments, получает watch definitions, явно вычисляет watches для выбранного frame, управляет watches и продолжает выполнение.
 - `debug_attach` для агента ограничен active Editor game process; произвольный attach требует человеческого подтверждения.
 - Agent Workspace показывает script/debug operations и links к active task.
+- Подготовлен script/debug integration harness, который используется benchmark-задачей `T-0128`.
 
 Общие проверки:
 

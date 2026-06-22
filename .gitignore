@@ -43,6 +43,14 @@ coverage.*
 # Local clone of the GitHub Wiki repository.
 /.github/wiki/
 
+# Electron2D generated local project data. Do not ignore .electron2d/ as a whole:
+# .electron2d/tasks/ may be source-controlled by project choice.
+.electron2d/import-cache/
+.electron2d/workspaces/
+.electron2d/context/
+.electron2d/session/
+.electron2d/user/
+
 # Local goal drafts moved to docs/specifications/
 /GOAL-0.1.0.md
 /GOAL.md
