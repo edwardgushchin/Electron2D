@@ -155,6 +155,18 @@ internal static class DiagnosticCodeRegistry
             "Workspace transaction was rejected.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0002"),
         new(
+            "E2D-TOOLING-0003",
+            DiagnosticSeverity.Warning,
+            DiagnosticCategory.Tooling,
+            "Editor session discovery selected fallback or rejected a mismatched descriptor.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0003"),
+        new(
+            "E2D-TOOLING-0004",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Editor session endpoint was rejected.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-tooling-0004"),
+        new(
             "E2D-TASK-0002",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Project,

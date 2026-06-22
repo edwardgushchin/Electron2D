@@ -849,6 +849,8 @@ Gateway должен поддерживать:
 - запрет работы за пределами project root;
 - отключение MCP без деградации ручного Editor workflow.
 
+Проверяемый contract registry/discovery/gateway вынесен в [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md). Он фиксирует безопасный endpoint descriptor, normalized project root verification, stale cleanup, crash-safe release lock и явный headless fallback для CLI/MCP adapter-ов.
+
 Минимальные MCP resources:
 
 - `electron2d://project/summary`;

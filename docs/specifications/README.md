@@ -54,6 +54,7 @@
 ## Tooling
 
 - [Electron2D.Tooling service boundary](tooling/tooling-service-boundary.md) - общий слой семантических операций над `ProjectWorkspace`, единый operation result, task commands, job-backed long operations и запрет обхода transaction/task/job contracts.
+- [Editor session discovery и Editor-hosted Agent Gateway](tooling/editor-session-discovery.md) - registry, lease/heartbeat, локальные endpoint-ы, project-root verification, read-only второй Editor и headless fallback для CLI/MCP adapter-ов.
 
 ## Ресурсы, импорт и сериализация
 

@@ -113,7 +113,9 @@ Tooling не имеет собственной логики merge, atomic write 
 - Editor UI updates сверх событий, уже публикуемых `ProjectWorkspace`;
 - полноценные scene/resource/script convenience commands;
 - реальный import/build/test/export/run toolchain запуск;
-- локальный IPC discovery активного Editor.
+- реальный named pipe/Unix domain socket protocol server.
+
+Локальный registry/gateway contract для обнаружения active Editor-сессии реализован отдельно: [Editor session discovery и Editor-hosted Agent Gateway](editor-session-discovery.md).
 
 Эти возможности остаются в следующих задачах и должны использовать текущий Tooling contract.
 

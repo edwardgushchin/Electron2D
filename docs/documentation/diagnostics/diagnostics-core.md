@@ -34,6 +34,8 @@
 | `E2D-TASK-0003` | `Warning` | `Project` | dependency graph требует внимания: cycle, unfinished dependency или cancelled dependency |
 | `E2D-TOOLING-0001` | `Info` | `Tooling` | job cancellation state changed или cancel request был отклонён без изменения job state |
 | `E2D-TOOLING-0002` | `Error` | `Tooling` | workspace transaction rejected из-за revision mismatch, unsafe path, validation error или conflict |
+| `E2D-TOOLING-0003` | `Warning` | `Tooling` | active Editor session не найдена, устарела, освобождена или descriptor относится к другому project root |
+| `E2D-TOOLING-0004` | `Error` | `Tooling` | Editor session endpoint небезопасен или не является поддержанным локальным endpoint |
 
 `StructuredDiagnostic.Create(...)` создаёт запись только по registered code. Если severity или category не совпадают с registry, factory завершает создание ошибкой. Это нужно, чтобы будущие CLI/MCP/Editor adapters не расходились в трактовке одного и того же кода.
 
