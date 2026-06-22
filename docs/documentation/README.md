@@ -87,10 +87,13 @@
 
 ## Export pipeline и платформы
 
+- [Export guide](export/export-guide.md) - пользовательская матрица export targets, desktop verifier commands, мобильные ограничения, signing references, политика секретов и known limitations.
 - [Export preset model и toolchain validation](export/export-preset-model.md) - текущий внутренний JSON-контракт export presets, SDK/toolchain/signing checks и fail-closed diagnostics без запуска сборки или публикации.
 - [Windows x64 export](export/windows-x64-export.md) - текущий internal package plan и локальная проверка `win-x64` self-contained publish/run.
 - [Linux x64 glibc export](export/linux-x64-export.md) - текущий internal package plan и локальная проверка `linux-x64` self-contained publish/run на Linux или через WSL.
 - [macOS arm64 export](export/macos-arm64-export.md) - текущий internal package plan, `.app` bundle и проверка `osx-arm64` self-contained publish/run на macOS arm64.
+- [Android arm64 export](export/android-arm64-export.md) - текущий заблокированный статус mobile export, будущие требования SDK/signing и запрет считать Android export готовым release path.
+- [iOS arm64 export](export/ios-arm64-export.md) - текущий заблокированный статус mobile export, будущие требования Xcode/signing и запрет считать iOS export готовым release path.
 
 ## Примеры и reference games
 

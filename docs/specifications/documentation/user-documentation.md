@@ -21,7 +21,7 @@
 - animation baseline;
 - Input Map и ввод;
 - renderer profiles, feature flags и fallback policy;
-- export baseline;
+- export baseline, включая общую export guide, desktop verifier commands и mobile status gaps;
 - troubleshooting;
 - release checklist.
 
@@ -32,6 +32,7 @@
 - `tools\Verify-ProjectTemplate.ps1` для чистого проекта;
 - `tools\Run-Tests.ps1` для полного тестового набора;
 - platform-specific export verifiers для desktop export.
+- `tools\Verify-ExportDocumentation.ps1` для полноты export guide, platform pages, secret policy и mobile limitations.
 
 Документация может показывать ручные команды `dotnet restore`, `dotnet build` и `dotnet run`, но должна явно отделять release-package команды от локального repository verification path.
 
@@ -50,7 +51,7 @@
 
 - User guide существует в `docs/documentation/documentation/user-guide.md`.
 - Guide содержит все обязательные разделы.
-- Guide ссылается на проверяемые команды и текущие verifier scripts.
+- Guide ссылается на проверяемые команды, текущие verifier scripts и export guide.
 - Guide не содержит запрещённых публичных формулировок.
 - Screenshot links отсутствуют или указывают на существующие файлы.
 - `tools\Verify-UserDocumentation.ps1` проходит локально и в CI.

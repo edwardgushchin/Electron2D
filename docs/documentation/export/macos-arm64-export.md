@@ -2,6 +2,31 @@
 
 Текущая реализация добавляет внутренний macOS export planner и macOS-only verifier для `osx-arm64` `.app` bundle. Внутренний planner означает механизм, доступный коду движка, будущим tools и тестам через assembly internals; это не публичный runtime API для игровых проектов.
 
+## Target
+
+- Export target: `MacOSArm64`.
+- Runtime identifier: `osx-arm64`.
+- Package shape: self-contained `.app` bundle.
+- Verification status: checked by `tools\Verify-MacOSExport.ps1` on macOS arm64.
+
+## Host requirements
+
+macOS export verification must run on a macOS arm64 host. CI runs it only in the `macos-latest` job.
+
+## SDK and toolchain
+
+The verifier uses .NET SDK `10.0.x`, `dotnet restore`, and `dotnet publish` for `osx-arm64`. It creates the `.app` bundle layout and `Info.plist` locally. x64 macOS export is intentionally outside the current preview scope.
+
+## Signing and credentials
+
+The current planner can include deterministic `codesign` arguments when signing is required, but the verifier does not read secrets and does not require real signing credentials. Repository files may contain only a signing identity label or credential reference. Passwords, tokens, private keys, certificate contents, provisioning profile contents, and copied secret payloads must stay outside the repository.
+
+## Known limitations
+
+- arm64 is the only macOS runtime identifier verified in `0.1.0 Preview`.
+- Notarization, `.dmg` packaging, App Store packaging, real certificate lookup, auto-update metadata, and GitHub Release publication are outside this verifier.
+- The verifier covers the empty project template, not final reference games.
+
 ## Planner
 
 `Electron2DMacOSExportPlanner.CreatePlan(...)` принимает:

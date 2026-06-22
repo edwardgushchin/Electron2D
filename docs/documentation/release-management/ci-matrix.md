@@ -21,6 +21,7 @@ CI описан в `.github/workflows/ci.yml`.
 ./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
 ./tools/Verify-ProjectTemplate.ps1
 ./tools/Verify-UserDocumentation.ps1
+./tools/Verify-ExportDocumentation.ps1
 ./tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues
 ./tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
 ./tools/Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki

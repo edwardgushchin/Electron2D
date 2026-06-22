@@ -54,6 +54,10 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-UserDocumentation.ps1
 
+      - name: Verify export documentation
+        shell: pwsh
+        run: ./tools/Verify-ExportDocumentation.ps1
+
       - name: Verify reference game assets
         shell: pwsh
         run: ./tools/Verify-ReferenceGameAssets.ps1

@@ -2,6 +2,31 @@
 
 Текущая реализация добавляет внутренний Windows export planner и локальный verifier для `win-x64` publish/run. Внутренний planner означает механизм, доступный коду движка, будущим tools и тестам через assembly internals; это не публичный runtime API для игровых проектов.
 
+## Target
+
+- Export target: `WindowsX64`.
+- Runtime identifier: `win-x64`.
+- Package shape: self-contained desktop folder with `Electron2D.Empty.exe`.
+- Verification status: checked by `tools\Verify-WindowsExport.ps1` on Windows.
+
+## Host requirements
+
+Windows export verification must run on a Windows host. CI runs it only in the `windows-latest` job.
+
+## SDK and toolchain
+
+The verifier uses .NET SDK `10.0.x`, `dotnet restore`, and `dotnet publish` for `win-x64`. It does not require an external installer builder, store packaging tool, or signing provider.
+
+## Signing and credentials
+
+The current Windows verifier does not sign artifacts. If a future release preset requires signing, repository files may contain only a signing identity label or credential reference. Passwords, tokens, private keys, certificate contents, and copied secret payloads must stay outside the repository.
+
+## Known limitations
+
+- x64 is the only Windows runtime identifier verified in `0.1.0 Preview`.
+- Installer generation, code signing, store packaging, auto-update metadata, and GitHub Release publication are outside this verifier.
+- The verifier covers the empty project template, not final reference games.
+
 ## Planner
 
 `Electron2DWindowsExportPlanner.CreatePlan(...)` принимает:

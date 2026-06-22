@@ -1,0 +1,79 @@
+# Export guide
+
+<!-- export-doc:overview -->
+## Overview
+
+Electron2D `0.1.0 Preview` has a verified desktop export baseline and explicit mobile export gaps. This page is the user-facing entry point for export documentation: it explains which targets are currently verified, which toolchains are required, how signing references are represented, and which commands prove the current repository state.
+
+The export layer is intentionally fail-closed. A missing SDK, unsupported runtime identifier, missing signing identity, or missing project setting must produce diagnostics instead of a partial package.
+
+<!-- export-doc:target-matrix -->
+## Target matrix
+
+| Target | Runtime identifier | Status | Verification |
+| --- | --- | --- | --- |
+| `WindowsX64` | `win-x64` | Verified desktop baseline | `tools\Verify-WindowsExport.ps1` on Windows |
+| `LinuxX64` | `linux-x64` | Verified desktop baseline | `tools\Verify-LinuxExport.ps1` on Linux or WSL |
+| `MacOSArm64` | `osx-arm64` | Verified desktop baseline | `tools\Verify-MacOSExport.ps1` on macOS arm64 |
+| `AndroidArm64` | `android-arm64` | Blocked mobile status | [Android arm64 export](android-arm64-export.md) |
+| `IosArm64` | `ios-arm64` | Blocked mobile status | [iOS arm64 export](ios-arm64-export.md) |
+
+Desktop export means the repository can create, publish, and run the empty project package on the matching host. Mobile status pages describe required SDK/signing inputs and limitations, but mobile export is not a supported release route yet.
+
+<!-- export-doc:preset-file -->
+## Preset file
+
+Export presets live in `export_presets.e2export.json`. The current model is documented in [Export preset model](export-preset-model.md).
+
+Each preset names a target, configuration, runtime identifier, output directory, renderer profile, debug symbol policy, and signing references. The file must not contain secret values. Use references such as a CI secret name, environment variable name, certificate alias, or signing identity label instead of passwords, private keys, keystore contents, certificates, provisioning profile contents, or tokens.
+
+<!-- export-doc:desktop-verification -->
+## Desktop verification
+
+Run the verifier that matches the host operating system:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\Verify-WindowsExport.ps1
+powershell -ExecutionPolicy Bypass -File tools\Verify-LinuxExport.ps1
+powershell -ExecutionPolicy Bypass -File tools\Verify-MacOSExport.ps1
+```
+
+Each verifier builds the local package, creates a temporary project from `data/templates/electron2d-empty`, restores that project from the local package source, publishes a self-contained build, runs the exported executable, and checks the reference scene output.
+
+The macOS verifier must run on macOS arm64. The Linux verifier runs on Linux directly or through WSL on Windows. The Windows verifier must run on Windows.
+
+<!-- export-doc:mobile-status -->
+## Mobile status
+
+`AndroidArm64` and `IosArm64` are documented as blocked targets in this preview. Their pages define the expected SDK, signing, credential-reference, lifecycle, safe-area, input, audio, resource, and filesystem requirements for the future implementation. They do not provide a ready mobile release command.
+
+Mobile export remains blocked until the corresponding platform tasks provide real-device or simulator smoke checks and CI/reporting evidence.
+
+<!-- export-doc:signing-credentials -->
+## Signing and credentials
+
+Signing data is split into two categories:
+
+- public or non-secret labels: signing identity name, certificate alias, profile name, bundle identifier, package id;
+- secret-bearing material: passwords, tokens, private keys, keystore contents, certificate contents, provisioning profile contents.
+
+Repository files may contain only the first category. Secret-bearing material must stay outside the repository and be referenced through `credentialReference` or the future editor/CI secret configuration.
+
+Verifier scripts do not read real secrets and do not publish artifacts.
+
+<!-- export-doc:known-limitations -->
+## Known limitations
+
+- Desktop export is verified against the empty project template, not finished reference games.
+- Windows x64, Linux x64 glibc, and macOS arm64 are the only verified desktop targets.
+- Linux musl, Linux ARM, Windows ARM, macOS x64, Android, and iOS are outside the current verified export baseline.
+- Mobile lifecycle, orientation, safe area, touch, virtual keyboard, package signing, store packaging, deployment, and runtime smoke are not complete release paths.
+- GitHub Release publication is intentionally outside these verifier commands and requires a separate user command.
+
+## Documentation check
+
+After editing export documentation, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\Verify-ExportDocumentation.ps1
+```

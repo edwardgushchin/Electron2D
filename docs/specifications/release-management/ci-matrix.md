@@ -23,6 +23,7 @@ CI должен проверять новый clean runtime baseline на Tier 1
 - запускать `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`.
 - запускать `tools/Verify-ProjectTemplate.ps1`.
 - запускать `tools/Verify-UserDocumentation.ps1`.
+- запускать `tools/Verify-ExportDocumentation.ps1`.
 - запускать `tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues`.
 - клонировать `Electron2D.wiki.git` в `.github/wiki`.
 - запускать `tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check`.
