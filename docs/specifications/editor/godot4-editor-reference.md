@@ -263,15 +263,21 @@ Workspace switching не должен сбрасывать:
 
 Точный shortcut map должен быть machine-readable и проверяться, чтобы 3D/GDScript shortcuts не появлялись в `0.1.0`.
 
-## Acceptance reference
+## Visual acceptance reference
 
-`T-0157` должен включать screenshot/golden acceptance:
+Каждая задача `Electron2D.Editor`, которая создаёт или меняет видимый UI, должна включать screenshot/golden acceptance: исполнитель открывает реальное окно редактора или documented automated harness, сохраняет screenshot как артефакт задачи и явно анализирует layout до передачи на приёмку. Одной сборки, model test или headless smoke-команды недостаточно, если UI должен быть видимым пользователю.
+
+Минимальный visual checklist для таких задач:
 
 - default layout на Windows, Linux и macOS;
 - верхний workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`;
 - слева видны `Scene` и `FileSystem`;
 - справа видны `Inspector`/`Node` и `Agent Workspace`;
 - снизу видна сворачиваемая bottom panel;
+- новые кнопки, поля, вкладки, панели и списки находятся в ожидаемой области layout;
+- pointer/keyboard interaction работает для изменённых элементов там, где это применимо;
+- текст не выходит за границы контейнеров и не перекрывает соседние элементы;
+- hover, active, focus, selected и disabled states не меняют layout непредсказуемо;
 - `3D` и `AssetLib` отсутствуют во всех видимых menus, shortcuts и create-node flows;
 - `Tasks` занимает центральную область;
 - `Agent Workspace` сохраняет dock placement после restart;
