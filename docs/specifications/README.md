@@ -36,6 +36,10 @@
 
 - [`e2d` CLI для headless, CI и active Editor routing](cli/e2d-cli.md) - общий parser/result envelope, common flags, generic workspace transaction, job JSONL и routing через active Editor session.
 
+## MCP
+
+- [Локальный MCP-сервер поверх active Editor session и Tooling](mcp/mcp-server.md) - resources/tools manifest, route semantics, Tooling adapter rules, task guard, job events и fail-closed security для локального MCP adapter-а.
+
 ## Репозиторий
 
 - [Политика лицензирования исходного кода](repository/license-policy.md) - MIT License, source headers и verifier для вручную написанного исходного кода.

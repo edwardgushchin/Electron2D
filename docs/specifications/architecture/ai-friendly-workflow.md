@@ -806,6 +806,8 @@ e2d mcp serve
 
 MCP остаётся тонким адаптером над `Electron2D.Tooling`, а не второй независимой реализацией.
 
+Проверяемый MCP adapter contract вынесен в [Локальный MCP-сервер поверх active Editor session и Tooling](../mcp/mcp-server.md). Он фиксирует resources/tools manifest, route semantics, task acceptance guard, job event fields и fail-closed security без привязки к облачному AI-провайдеру.
+
 Когда Editor открыт:
 
 ```text

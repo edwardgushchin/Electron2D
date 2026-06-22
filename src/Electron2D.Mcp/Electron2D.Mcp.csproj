@@ -1,19 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
-    <AssemblyName>e2d</AssemblyName>
-    <RootNamespace>Electron2D.Cli</RootNamespace>
+    <AssemblyName>Electron2D.Mcp</AssemblyName>
+    <RootNamespace>Electron2D.Mcp</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Electron2D.ProjectSystem\Electron2D.ProjectSystem.csproj" />
-    <ProjectReference Include="..\Electron2D.Mcp\Electron2D.Mcp.csproj" />
     <ProjectReference Include="..\Electron2D.Tooling\Electron2D.Tooling.csproj" />
   </ItemGroup>
 

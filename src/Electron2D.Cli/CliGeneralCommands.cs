@@ -25,6 +25,7 @@
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Electron2D.Mcp;
 using Electron2D.ProjectSystem;
 using Electron2D.Tooling;
 
@@ -95,6 +96,7 @@ internal static partial class Electron2DCommandLine
         return group switch
         {
             "project" => RunProject(options, output, error),
+            "mcp" => RunMcp(options, output, error, context),
             "workspace" => RunWorkspace(options, output, error, context),
             "import" or "build" or "run" or "test" or "export" => RunJob(group, options, output, error, context),
             _ => WriteResult(
@@ -137,6 +139,43 @@ internal static partial class Electron2DCommandLine
                 CreateCliDiagnostic("E2D-CLI-0001", "Only `e2d project validate` is implemented in the current Preview CLI scope.")),
             output,
             error);
+    }
+
+    private static int RunMcp(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        if (options.Values.Count != 1 || !string.Equals(options.Values[0], "serve", StringComparison.OrdinalIgnoreCase))
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("mcp", options),
+                    options,
+                    "Unknown MCP command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d mcp serve` is the implemented local MCP manifest command.")),
+                output,
+                error);
+        }
+
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        using var session = McpServerSession.Open(
+            projectRoot,
+            options.Headless ? null : context.SessionRegistry,
+            context.NowUtc);
+        var result = CliResult.Success(
+            "mcp serve",
+            options,
+            projectRoot,
+            ToCliRoute(session.Route),
+            "MCP manifest emitted.",
+            changedFiles: [],
+            dirtyDocuments: [],
+            operation: null,
+            job: null,
+            data: session.Manifest());
+        return WriteResult(result, output, error);
     }
 
     private static int RunWorkspace(
@@ -368,6 +407,7 @@ internal static partial class Electron2DCommandLine
         var commands = group switch
         {
             "project" => "  validate              Validate a project without requiring GUI runtime.",
+            "mcp" => "  serve                 Emit local MCP resources and tools manifest.",
             "workspace" => "  transaction           Apply a generic workspace text transaction.",
             "import" or "build" or "run" or "test" or "export" => "  <default>             Queue a job and emit JSON or JSONL status.",
             "docs" => "  search|type|member|example",
@@ -464,6 +504,17 @@ internal static partial class Electron2DCommandLine
             CliRoute.Headless => "headless",
             CliRoute.Blocked => "blocked",
             _ => "none"
+        };
+    }
+
+    private static CliRoute ToCliRoute(McpRoute route)
+    {
+        return route switch
+        {
+            McpRoute.ActiveEditor => CliRoute.ActiveEditor,
+            McpRoute.Headless => CliRoute.Headless,
+            McpRoute.Blocked => CliRoute.Blocked,
+            _ => CliRoute.Blocked
         };
     }
 }

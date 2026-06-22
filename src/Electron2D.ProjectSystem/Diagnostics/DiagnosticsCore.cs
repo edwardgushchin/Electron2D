@@ -143,6 +143,12 @@ internal static class DiagnosticCodeRegistry
             "CLI route selection rejected the command.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-cli-0003"),
         new(
+            "E2D-MCP-0001",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "MCP tool is not implemented in the current Preview scope.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-mcp-0001"),
+        new(
             "E2D-PROJECT-0001",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Project,

@@ -44,6 +44,7 @@ Registry должен быть immutable во время работы проце
 | `E2D-CLI-0002` | `Error` | `Tooling` | CLI arguments неполные или некорректные |
 | `E2D-CLI-0003` | `Error` | `Tooling` | route selection или project root не позволяют безопасно выполнить команду |
 | `E2D-DIAG-0001` | `Error` | `Diagnostics` | сама diagnostic запись неполная или противоречит registry |
+| `E2D-MCP-0001` | `Error` | `Tooling` | MCP tool опубликован в manifest, но его узкая production semantics ещё не реализована в текущем Preview scope |
 | `E2D-PROJECT-0001` | `Error` | `Project` | project document malformed или не может быть parsed |
 | `E2D-PROJECT-0002` | `Error` | `Project` | project document version новее поддерживаемой |
 | `E2D-PROJECT-0003` | `Warning` | `Project` | project document содержит безопасно применимый suggested fix |
