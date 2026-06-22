@@ -53,6 +53,7 @@
 ## Редактор
 
 - [Electron2D.Editor project shell](editor/editor-project-shell.md) - текущий executable shell редактора, smoke-запуск на runtime Electron2D и отсутствие внешнего desktop UI framework.
+- [Project Manager редактора](editor/project-manager.md) - текущая внутренняя логика создания/открытия проекта, recent projects, renderer profile и SDK smoke-проверка.
 
 ## Ввод
 

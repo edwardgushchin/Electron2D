@@ -22,10 +22,14 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+namespace Electron2D.Editor.ProjectManagement;
 
-[assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.GoldenData")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
-[assembly: InternalsVisibleTo("Electron2D.Tests.AotSmoke")]
-[assembly: InternalsVisibleTo("Electron2D.Editor")]
+internal readonly record struct EditorProjectManagerSmokeResult(
+    string ProjectName,
+    string ProjectPath,
+    string ProjectSettingsPath,
+    string MainScenePath,
+    Electron2D.Electron2DRendererProfileSetting RendererProfile,
+    string UserSettingsPath,
+    EditorSdkCheckResult SdkCheck,
+    int RecentProjectCount);

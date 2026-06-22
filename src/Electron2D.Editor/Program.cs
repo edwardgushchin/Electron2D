@@ -22,6 +22,8 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using Electron2D.Editor.ProjectManagement;
+
 namespace Electron2D.Editor;
 
 internal static class Program
@@ -38,7 +40,12 @@ internal static class Program
             return RunOnce(isSmoke: true);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke]");
+        if (args is ["--project-manager-smoke", var workRoot, "--user-data-dir", var userDataRoot])
+        {
+            return RunProjectManagerSmoke(workRoot, userDataRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>]");
         return 2;
     }
 
@@ -64,5 +71,67 @@ internal static class Program
         Console.WriteLine($"RenderingProfile={result.RenderingProfile}");
 
         return 0;
+    }
+
+    private static int RunProjectManagerSmoke(string workRoot, string userDataRoot)
+    {
+        try
+        {
+            var templateRoot = Path.Combine(FindRepositoryRoot(), "templates", "electron2d-empty");
+            var userSettingsPath = Path.Combine(Path.GetFullPath(userDataRoot), "user.e2settings.json");
+            var manager = new EditorProjectManager(templateRoot);
+            var result = manager.RunSmoke(workRoot, userSettingsPath);
+            var succeeded = result.SdkCheck.Available;
+
+            Console.WriteLine(succeeded
+                ? "Electron2D.Editor project manager smoke passed"
+                : "Electron2D.Editor project manager smoke failed");
+            Console.WriteLine($"ProjectName={result.ProjectName}");
+            Console.WriteLine($"ProjectPath={result.ProjectPath}");
+            Console.WriteLine($"ProjectSettingsPath={result.ProjectSettingsPath}");
+            Console.WriteLine($"MainScenePath={result.MainScenePath}");
+            Console.WriteLine($"RendererProfile={result.RendererProfile}");
+            Console.WriteLine($"UserSettingsPath={result.UserSettingsPath}");
+            Console.WriteLine($"SdkAvailable={result.SdkCheck.Available}");
+            Console.WriteLine($"SdkVersion={result.SdkCheck.Version}");
+            Console.WriteLine($"RecentProjects={result.RecentProjectCount}");
+
+            return succeeded ? 0 : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+
+        while (directory is not null)
+        {
+            if (Directory.Exists(Path.Combine(directory.FullName, "templates", "electron2d-empty")) &&
+                File.Exists(Path.Combine(directory.FullName, "src", "Electron2D.sln")))
+            {
+                return directory.FullName;
+            }
+
+            directory = directory.Parent;
+        }
+
+        var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+        while (workingDirectory is not null)
+        {
+            if (Directory.Exists(Path.Combine(workingDirectory.FullName, "templates", "electron2d-empty")) &&
+                File.Exists(Path.Combine(workingDirectory.FullName, "src", "Electron2D.sln")))
+            {
+                return workingDirectory.FullName;
+            }
+
+            workingDirectory = workingDirectory.Parent;
+        }
+
+        throw new InvalidOperationException("Electron2D repository root was not found.");
     }
 }
