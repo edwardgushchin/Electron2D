@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация для `T-0119`.
 Обновлено: 2026-06-22.
-Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager, TaskActivity и task storage](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
+Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager, TaskActivity и task storage](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md); [Runtime debug bridge и scene inspection](../runtime/runtime-debug-bridge.md).
 
 ## Назначение
 
@@ -71,6 +71,8 @@ Resources должны читать live `ProjectWorkspace` state, когда se
 - `task_list`, `task_get`, `task_create`, `task_update`, `task_claim`, `task_set_status`, `task_add_subtask`, `task_add_dependency`, `task_append_activity`, `task_link_transaction`, `task_link_job`, `task_link_artifact`, `task_submit_for_acceptance`, `task_accept`, `task_request_changes`, `task_cancel`.
 
 Наличие tool в manifest означает стабильное имя, schema и safe failure mode. Узкие scene/resource/runtime commands, которые ещё не имеют production semantics, могут возвращать `E2D-MCP-0001`, но они должны быть видимыми и не должны делать direct file writes.
+
+Runtime tools `runtime_pause`, `runtime_step`, `runtime_inject_input`, `runtime_capture_frame`, `runtime_get_scene_tree` и `runtime_get_diagnostics` должны подключаться к shared runtime debug bridge contract, а не читать process state отдельным форматом.
 
 Обязательный исполняемый минимум `T-0119`:
 

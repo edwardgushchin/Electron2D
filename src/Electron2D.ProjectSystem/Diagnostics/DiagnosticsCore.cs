@@ -167,6 +167,12 @@ internal static class DiagnosticCodeRegistry
             "Project document has a safe suggested fix.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-project-0003"),
         new(
+            "E2D-RUNTIME-0001",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Runtime,
+            "Runtime debug bridge rejected the request.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-runtime-0001"),
+        new(
             "E2D-TEST-0001",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Tooling,

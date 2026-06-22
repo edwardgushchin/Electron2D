@@ -121,6 +121,29 @@ e2d build --project <path> --format jsonl --input-build-configuration-hash sha25
 
 Реальные toolchain progress/completion events появятся в соответствующих import/build/run/test/export задачах. Schema уже фиксирует identity fields, чтобы будущий runner не менял CLI contract.
 
+### `run debug`
+
+`e2d run debug` подключает preview runtime debug bridge. Он не запускает настоящий видимый game process; текущий route создаёт deterministic debug session по scene JSON и возвращает machine-readable runtime state.
+
+Пример:
+
+```powershell
+e2d run debug `
+  --project <path> `
+  --scene scenes/main.scene.json `
+  --session-kind editor `
+  --step-frames 2 `
+  --step-physics 1 `
+  --fixed-delta 0.0166667 `
+  --physics-delta 0.0166667 `
+  --input-action jump=pressed `
+  --inspect-node /Root/Player `
+  --screenshot artifacts/debug/frame.png `
+  --format json
+```
+
+Output использует общий CLI envelope с `command = "run debug"`, `data.mode = "runtime.debugBridge"`, `data.session`, `data.sceneTree`, `data.inspectedNode`, `data.metrics`, `data.diagnostics` и optional `data.screenshot`. Фактический contract описан в [Runtime debug bridge и scene inspection](../runtime/runtime-debug-bridge.md).
+
 ### `run` headless runtime mode
 
 `e2d run` остаётся generic job command, если runtime-флаги не указаны. Headless runtime mode включается при `--scene`, `--frames`, `--fixed-delta`, `--input`, `--capture-frame` или `--output`.
@@ -209,6 +232,7 @@ Tooling diagnostics пробрасываются в CLI JSON без потери
 - полноценный project/compiler/shader validator для `validate`;
 - запуск реальных import/build/test/export toolchains;
 - запуск пользовательского C# runtime process внутри `run` headless mode.
+- настоящий visible game process внутри `run debug`; текущий bridge фиксирует shared inspection contract.
 
 Эти задачи должны использовать текущий parser, route selection, result envelope и `Electron2D.Tooling`, а не создавать второй project state.
 
@@ -226,6 +250,12 @@ Headless runtime проверка:
 
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests
+```
+
+Runtime debug bridge проверка:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~RuntimeDebugBridgeTests
 ```
 
 Scene/visual testing проверка:

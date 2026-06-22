@@ -48,6 +48,7 @@ Registry должен быть immutable во время работы проце
 | `E2D-PROJECT-0001` | `Error` | `Project` | project document malformed или не может быть parsed |
 | `E2D-PROJECT-0002` | `Error` | `Project` | project document version новее поддерживаемой |
 | `E2D-PROJECT-0003` | `Warning` | `Project` | project document содержит безопасно применимый suggested fix |
+| `E2D-RUNTIME-0001` | `Error` | `Runtime` | runtime debug bridge отклонил unsafe, production-mode или invalid runtime inspection request |
 | `E2D-TASK-0002` | `Error` | `Project` | task operation rejected из-за acceptance guard, privileged field guard или недопустимого перехода |
 | `E2D-TASK-0003` | `Warning` | `Project` | dependency graph требует внимания: cycle, unfinished dependency или cancelled dependency |
 | `E2D-TEST-0001` | `Error` | `Tooling` | scene test assertion не нашёл ожидаемый node, type или property value |

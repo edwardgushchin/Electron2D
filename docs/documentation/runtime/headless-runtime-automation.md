@@ -109,6 +109,8 @@ Published schemas:
 
 Она пока не выполняет пользовательский C# runtime process, physics, rendering backend или audio. Эти части подключаются последующими runtime/debug/visual-test задачами поверх того же artifact contract.
 
+Shared runtime inspection, pause/step/input/screenshot и preview CLI route `e2d run debug` описаны отдельно: [Runtime debug bridge и scene inspection](runtime-debug-bridge.md).
+
 ## Проверка
 
 Focused проверка:

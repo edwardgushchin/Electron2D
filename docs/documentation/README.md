@@ -53,6 +53,7 @@
 ## Runtime
 
 - [Headless runtime automation](runtime/headless-runtime-automation.md) - текущий `e2d run` headless mode: fixed frame loop, input trace, stable runtime artifacts, JSON schemas и snapshot identity для CI и автономных агентов.
+- [Runtime debug bridge и scene inspection](runtime/runtime-debug-bridge.md) - текущий shared runtime inspection contract для Remote Scene Tree, inspect node, pause/step/input/screenshot, metrics и CLI `e2d run debug`.
 
 ## Тестирование
 

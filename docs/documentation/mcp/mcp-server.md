@@ -2,7 +2,7 @@
 
 Статус: реализованный внутренний контракт для `T-0119`.
 Обновлено: 2026-06-22.
-Связанные документы: [Локальный MCP-сервер поверх active Editor session и Tooling](../../specifications/mcp/mcp-server.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, JSONL stream и SARIF](../diagnostics/diagnostics-adapters.md).
+Связанные документы: [Локальный MCP-сервер поверх active Editor session и Tooling](../../specifications/mcp/mcp-server.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, JSONL stream и SARIF](../diagnostics/diagnostics-adapters.md); [Runtime debug bridge и scene inspection](../runtime/runtime-debug-bridge.md).
 
 ## Назначение
 
@@ -58,6 +58,8 @@ Manifest публикует все обязательные tool names из MCP 
 - `task_list`, `task_get`, `task_append_activity`, `task_submit_for_acceptance`, `task_accept`, `task_request_changes` и `task_cancel` идут через `TaskService`.
 
 Узкие scene/resource/runtime tools, которые ещё не имеют production semantics, возвращают structured diagnostic `E2D-MCP-0001` и не пишут project files напрямую.
+
+Runtime tool names в manifest должны подключаться к `RuntimeDebugBridge`, когда появятся production semantics для live runtime session. Текущий MCP adapter не создаёт отдельный runtime scene tree или screenshot payload.
 
 ## Task guard
 
