@@ -31,6 +31,7 @@
 - [Canonical document model](project-system/canonical-document-model.md) - текущий internal project-system слой для document identity, classification, revisions, parser snapshot, debug serializer и structural diff.
 - [Stable project text formats](project-system/project-text-formats.md) - текущий formatter/schema/migration layer для scene/resource/project JSON, validation safety checks и published JSON Schema files.
 - [Live ProjectWorkspace](project-system/live-project-workspace.md) - текущий internal workspace core для ownership lease, document store, revision/dirty state, in-memory events, operation journal и diagnostics store.
+- [WorkspaceSnapshot](project-system/workspace-snapshot.md) - текущий internal snapshot core для build/test/run/export input identity, materialization, stale rules и dirty export policy.
 
 ## Diagnostics
 
