@@ -23,6 +23,7 @@ CI должен проверять новый clean runtime baseline на Tier 1
 - запускать `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`.
 - запускать `tools/Verify-ProjectTemplate.ps1`.
 - запускать `tools/Verify-UserDocumentation.ps1`.
+- запускать `tools/Verify-CanonicalGoalAlignment.ps1`.
 - запускать `tools/Verify-ExportDocumentation.ps1`.
 - запускать `tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues`.
 - клонировать `Electron2D.wiki.git` в `.github/wiki`.
@@ -43,4 +44,4 @@ CI не запускает `Category=Baseline` по умолчанию, пото
 powershell -ExecutionPolicy Bypass -File tools/Verify-CiMatrix.ps1
 ```
 
-Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1`, запуск `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`, API manifest gate, документационные проверки и явное упоминание mobile/export status gap.
+Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1`, запуск `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`, API manifest gate, canonical goal alignment audit, документационные проверки и явное упоминание mobile/export status gap.
