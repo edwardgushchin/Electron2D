@@ -23,6 +23,7 @@ Root help показывает группы:
 - `run`;
 - `test`;
 - `export`;
+- `validate`;
 - `docs`;
 - `api`;
 - `mcp`;
@@ -36,7 +37,7 @@ Root help показывает группы:
 Group help показывает common flags:
 
 - `--project <path>`;
-- `--format text|json|jsonl`;
+- `--format text|json|jsonl|sarif`;
 - `--quiet`;
 - `--verbose`.
 
@@ -46,6 +47,8 @@ Group help показывает common flags:
 - `--headless`.
 
 `--project` по умолчанию равен текущей директории. `--headless` запрещает active Editor route для команды и создаёт headless `ProjectWorkspace`.
+
+Команды `docs search/type/member/example` остаются отдельной справочной веткой и принимают только `--format text|json`; `jsonl` и `sarif` для них не поддерживаются.
 
 ## Реализованные команды
 
@@ -65,6 +68,16 @@ e2d docs example "platformer movement" --format json
 ### `project validate`
 
 `project validate` создаёт stable CLI envelope. Текущий `T-0116` не запускает полный project validator; команда фиксирует parser/output contract для будущего validation layer.
+
+### `validate`
+
+Короткая команда validation route:
+
+```powershell
+e2d validate --project <path> --format sarif
+```
+
+Команда использует тот же preview validation каркас, что и `project validate`, но пишет SARIF 2.1.0 через diagnostics adapter. Сейчас route проверяет CLI parsing и output contract; полноценный project/compiler/shader validator подключается отдельными задачами, поэтому успешный SARIF output может не содержать diagnostics.
 
 ### `workspace transaction`
 
@@ -182,6 +195,8 @@ CLI adapter добавляет к общему registry:
 
 Tooling diagnostics пробрасываются в CLI JSON без потери stable code, severity, category, message и documentation URI.
 
+После `T-0123` CLI JSON и JSONL diagnostics используют полный payload `StructuredDiagnostic`: `location`, `relatedLocations` и `suggestedFixes` сохраняются вместе с code/severity/category/message/documentation URI. SARIF output сохраняет тот же Electron2D payload в `result.properties.electron2dDiagnostic`, а suggested fixes - в `result.properties.electron2dSuggestedFixes`.
+
 ## Текущие ограничения
 
 `T-0116`/`T-0121` всё ещё не реализуют:
@@ -191,6 +206,7 @@ Tooling diagnostics пробрасываются в CLI JSON без потери
 - `api compare-godot`;
 - `context build`;
 - полноценный `doctor`;
+- полноценный project/compiler/shader validator для `validate`;
 - запуск реальных import/build/test/export toolchains;
 - запуск пользовательского C# runtime process внутри `run` headless mode.
 
@@ -216,4 +232,10 @@ Scene/visual testing проверка:
 
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DSceneVisualTestingTests
+```
+
+Diagnostics adapters проверка:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~DiagnosticsAdapterTests
 ```

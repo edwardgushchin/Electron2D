@@ -39,6 +39,7 @@
 ## Diagnostics
 
 - [Diagnostics.Core](diagnostics/diagnostics-core.md) - текущий internal contract для structured diagnostics, stable code registry, locations, safe suggested fixes и deterministic JSON serialization.
+- [Diagnostics adapters: JSON, JSONL stream и SARIF](diagnostics/diagnostics-adapters.md) - текущий adapter слой для полного diagnostic payload в CLI/JSONL, diagnostics stream events, SARIF 2.1.0 output и published schemas.
 
 ## Tooling
 

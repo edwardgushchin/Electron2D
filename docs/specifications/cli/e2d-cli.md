@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация для `T-0116`.
 Обновлено: 2026-06-22.
-Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md).
+Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
 
 ## Назначение
 
@@ -23,6 +23,7 @@ Root help должен показывать группы:
 - `run`;
 - `test`;
 - `export`;
+- `validate`;
 - `docs`;
 - `api`;
 - `mcp`;
@@ -33,6 +34,7 @@ Root help должен показывать группы:
 
 - существующие `docs search/type/member/example`;
 - `project validate`;
+- `validate` как короткий diagnostics/validation route;
 - `workspace transaction` как generic mutation path;
 - job-backed stubs для `import`, `build`, `run`, `test`, `export`;
 - help и stable unsupported-command diagnostics для групп, реализация которых закреплена отдельными задачами.
@@ -44,7 +46,7 @@ Root help должен показывать группы:
 Каждая команда и группа должны принимать:
 
 - `--help`;
-- `--format text|json|jsonl`;
+- `--format text|json|jsonl|sarif`;
 - `--quiet`;
 - `--verbose`;
 - `--project <path>`.
@@ -57,6 +59,8 @@ Root help должен показывать группы:
 `--project` нормализуется в absolute project root. Если флаг отсутствует, используется текущая директория.
 
 `--headless` означает: не использовать active Editor route даже если discovery нашёл Editor. Без `--headless` `workspace transaction` выбирает active Editor, если registry/gateway доступен.
+
+`sarif` является форматом diagnostics/validation output. Documentation commands `docs search/type/member/example` остаются отдельной веткой и принимают только `--format text|json`.
 
 ## Result envelope
 
@@ -103,7 +107,7 @@ JSON output должен быть stable:
 - `E2D-CLI-0002` — аргументы неполные или некорректные;
 - `E2D-CLI-0003` — route selection или project root не позволяют безопасно выполнить команду.
 
-Tooling diagnostics пробрасываются без потери `code`, `severity`, `category`, `message` и `documentationUri`.
+Tooling diagnostics пробрасываются без потери полного `StructuredDiagnostic` payload: `code`, `severity`, `category`, `message`, `location`, `relatedLocations`, `suggestedFixes` и `documentationUri`.
 
 ## `workspace transaction`
 
@@ -151,19 +155,35 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 
 `test` имеет отдельный scene/visual mode для `--format json`, когда найден `tests/electron2d.scene-tests.json` или явно указан `--manifest <path>`. Этот mode описан в [Scene tests и visual regression tests](../testing/scene-visual-testing.md) и должен сосуществовать с generic job JSONL mode: `e2d test --format jsonl` без scene-test manifest продолжает возвращать queued job event.
 
+## Validation и SARIF
+
+`e2d validate --project <path> --format sarif` должен писать SARIF 2.1.0 через общий diagnostics adapter. `e2d project validate --format sarif` может использовать тот же writer.
+
+Правила:
+
+- SARIF root содержит `$schema = https://json.schemastore.org/sarif-2.1.0.json` и `version = 2.1.0`;
+- `runs[0].tool.driver.name = Electron2D`;
+- diagnostic codes попадают в `runs[0].tool.driver.rules`;
+- каждый result сохраняет `ruleId`, `level`, `message`, location при наличии файла и полный Electron2D payload в `result.properties.electron2dDiagnostic`;
+- suggested fixes сохраняются как structured actions в `result.properties.electron2dSuggestedFixes`;
+- validation route может временно возвращать пустой diagnostics set, пока полноценный project/compiler/shader validator реализуется отдельными задачами.
+
 ## Documentation commands
 
-`docs search/type/member/example` сохраняют существующее поведение. Они должны поддерживать common flags, но `--format jsonl` для docs недопустим и возвращает `E2D-CLI-0002`.
+`docs search/type/member/example` сохраняют существующее поведение. Они должны поддерживать `--project`, `--quiet`, `--verbose` и `--format text|json`, но `jsonl` и `sarif` для docs недопустимы и возвращают ошибку формата.
 
 ## Acceptance criteria
 
 - Root help и group help показывают обязательные command groups и common flags.
-- `project validate`, `workspace transaction`, `import`, `build`, `run`, `test`, `export`, `docs` принимают `--project`, `--format`, `--quiet`, `--verbose`; mutating/job commands принимают `--dry-run`.
+- `project validate`, `validate`, `workspace transaction`, `import`, `build`, `run`, `test`, `export` принимают `--project`, `--format text|json|jsonl|sarif`, `--quiet`, `--verbose`; mutating/job commands принимают `--dry-run`.
+- `docs` принимает `--project`, `--format text|json`, `--quiet`, `--verbose`, но отклоняет `jsonl` и `sarif`.
 - `workspace transaction --format json` возвращает stable result envelope с route, diagnostics, changed files, dirty documents и operation metadata.
 - При active Editor registry command routed в active `ProjectWorkspace` и не создаёт independent writer.
 - При отсутствии active Editor command использует explicit headless fallback.
 - `--dry-run` не меняет файл и workspace.
 - `import/build/run/test/export --format jsonl` возвращают stable JSONL job event с snapshot identity fields и stale marker.
+- JSON и JSONL diagnostics сохраняют полный payload с location, related locations и suggested fixes.
+- `e2d validate --format sarif` возвращает SARIF 2.1.0 с rules, results, locations и сохранённым Electron2D payload.
 - Unsupported groups/subcommands возвращают stable CLI diagnostic code и non-zero exit code.
 - Существующие `docs` JSON commands продолжают работать.
 - Есть focused integration tests для JSON/JSONL shape, common flags/help, active Editor routing, headless fallback и unsupported diagnostics.

@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация для `T-0119`.
 Обновлено: 2026-06-22.
-Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager, TaskActivity и task storage](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md).
+Связанные документы: [AI-friendly workflow Electron2D 0.1](../architecture/ai-friendly-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager, TaskActivity и task storage](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
 
 ## Назначение
 
@@ -57,6 +57,8 @@ Result каждого call содержит:
 
 Resources должны читать live `ProjectWorkspace` state, когда session routed в active Editor. Например, `electron2d://workspace/open-documents` обязан видеть dirty documents, открытые только в памяти.
 
+`electron2d://project/diagnostics` и будущие diagnostics events должны использовать полный payload из `Diagnostics adapters`: `location`, `relatedLocations` и `suggestedFixes` не должны теряться при переходе из `DiagnosticsStore` в MCP resource или stream.
+
 ## Tools
 
 `T-0119` должен регистрировать tools:
@@ -104,6 +106,8 @@ Job tools используют `WorkspaceJob` через Tooling. MCP event stre
 - `Stale`.
 
 Progress/completion для реальных toolchains добавляется позднее, но schema уже фиксирована.
+
+События `operation.diagnostic` и diagnostics lists внутри job events должны использовать тот же diagnostics stream contract, что и CLI/Tooling adapters. MCP transport не вводит отдельный формат diagnostic payload.
 
 ## Security
 

@@ -47,10 +47,13 @@ public sealed class Electron2DCliWorkflowTests
         foreach (var group in RequiredGroups)
         {
             var help = RunCli(CliExecutionContext.ForTests(FixedInstant), group, "--help");
+            var expectedFormats = string.Equals(group, "docs", StringComparison.Ordinal)
+                ? "--format text|json"
+                : "--format text|json|jsonl|sarif";
 
             Assert.Equal(0, help.ExitCode);
             Assert.Contains("--project <path>", help.Output, StringComparison.Ordinal);
-            Assert.Contains("--format text|json|jsonl", help.Output, StringComparison.Ordinal);
+            Assert.Contains(expectedFormats, help.Output, StringComparison.Ordinal);
             Assert.Contains("--quiet", help.Output, StringComparison.Ordinal);
             Assert.Contains("--verbose", help.Output, StringComparison.Ordinal);
             if (MutatingOrJobGroups.Contains(group, StringComparer.Ordinal))
@@ -248,6 +251,7 @@ public sealed class Electron2DCliWorkflowTests
         "run",
         "test",
         "export",
+        "validate",
         "docs",
         "api",
         "mcp",

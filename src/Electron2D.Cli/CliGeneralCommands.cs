@@ -48,6 +48,7 @@ internal static partial class Electron2DCommandLine
         "run",
         "test",
         "export",
+        "validate",
         "docs",
         "api",
         "mcp",
@@ -101,6 +102,7 @@ internal static partial class Electron2DCommandLine
             "project" => RunProject(options, output, error),
             "mcp" => RunMcp(options, output, error, context),
             "workspace" => RunWorkspace(options, output, error, context),
+            "validate" => RunValidate(options, output, error),
             "run" when HeadlessRuntimeAutomation.HasRuntimeOptions(options) => RunHeadlessRuntime(options, output, error, context),
             "test" when HasSceneTestSuite(options, NormalizeProjectRoot(options.ProjectRoot)) => RunSceneTests(options, output, error, context),
             "import" or "build" or "run" or "test" or "export" => RunJob(group, options, output, error, context),
@@ -144,6 +146,25 @@ internal static partial class Electron2DCommandLine
                 CreateCliDiagnostic("E2D-CLI-0001", "Only `e2d project validate` is implemented in the current Preview CLI scope.")),
             output,
             error);
+    }
+
+    private static int RunValidate(CliOptions options, TextWriter output, TextWriter error)
+    {
+        var result = CliResult.Success(
+            "validate",
+            options,
+            NormalizeProjectRoot(options.ProjectRoot),
+            CliRoute.Headless,
+            "Project validation command completed.",
+            changedFiles: [],
+            dirtyDocuments: [],
+            operation: null,
+            job: null,
+            data: new JsonObject
+            {
+                ["validationMode"] = "previewStub"
+            });
+        return WriteResult(result, output, error);
     }
 
     private static int RunMcp(
@@ -410,6 +431,12 @@ internal static partial class Electron2DCommandLine
             return result.ExitCode;
         }
 
+        if (result.Options.Format == CliOutputFormat.Sarif)
+        {
+            output.WriteLine(DiagnosticSarifSerializer.WriteRun("Electron2D", "https://electron2d.dev", result.Diagnostics).ToJsonString(CliJsonOptions));
+            return result.ExitCode;
+        }
+
         if (result.Options.Format == CliOutputFormat.Json)
         {
             output.WriteLine(result.ToJson().ToJsonString(CliJsonOptions));
@@ -445,7 +472,7 @@ internal static partial class Electron2DCommandLine
     {
         output.WriteLine($"Usage: e2d {group} [command] [options]");
         output.WriteLine();
-        output.WriteLine("Common options: --project <path> --format text|json|jsonl --quiet --verbose");
+        output.WriteLine("Common options: --project <path> --format text|json|jsonl|sarif --quiet --verbose");
         if (MutatingOrJobGroups.Contains(group, StringComparer.Ordinal))
         {
             output.WriteLine("Mutation/job options: --dry-run --headless");
@@ -461,6 +488,7 @@ internal static partial class Electron2DCommandLine
             "run" => "  <default>             Queue a job, or run headless with --scene --frames --fixed-delta --output.",
             "import" or "build" or "export" => "  <default>             Queue a job and emit JSON or JSONL status.",
             "test" => "  <default>             Queue a job, or run scene tests with --format json and a scene-test manifest.",
+            "validate" => "  <default>             Validate a project and emit text, JSON or SARIF diagnostics.",
             "docs" => "  search|type|member|example",
             _ => "  Reserved for a later Preview task."
         };
@@ -524,20 +552,7 @@ internal static partial class Electron2DCommandLine
 
     internal static JsonArray WriteDiagnostics(IEnumerable<StructuredDiagnostic> diagnostics)
     {
-        var array = new JsonArray();
-        foreach (var diagnostic in diagnostics)
-        {
-            array.Add(new JsonObject
-            {
-                ["code"] = diagnostic.Code,
-                ["severity"] = diagnostic.Severity.ToString(),
-                ["category"] = diagnostic.Category.ToString(),
-                ["message"] = diagnostic.Message,
-                ["documentationUri"] = diagnostic.DocumentationUri
-            });
-        }
-
-        return array;
+        return DiagnosticJsonSerializer.ToJsonArray(diagnostics);
     }
 
     internal static JsonObject WriteRevisions(IReadOnlyDictionary<string, ProjectDocumentRevision> revisions)
@@ -625,7 +640,8 @@ internal enum CliOutputFormat
 {
     Text,
     Json,
-    Jsonl
+    Jsonl,
+    Sarif
 }
 
 internal enum CliRoute
@@ -735,10 +751,11 @@ internal sealed class CliOptions
                     "text" => CliOutputFormat.Text,
                     "json" => CliOutputFormat.Json,
                     "jsonl" => CliOutputFormat.Jsonl,
+                    "sarif" => CliOutputFormat.Sarif,
                     _ => throw new CliCommandException(
                         group,
                         Placeholder(group),
-                        "Unsupported output format. Use text, json or jsonl.",
+                        "Unsupported output format. Use text, json, jsonl or sarif.",
                         Electron2DCommandLine.CreateCliDiagnostic("E2D-CLI-0002", "Unsupported output format."))
                 };
                 continue;

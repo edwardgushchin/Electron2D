@@ -259,7 +259,7 @@ internal static partial class Electron2DCommandLine
     {
         output.WriteLine("Usage: e2d <command> [options]");
         output.WriteLine();
-        output.WriteLine("Common options: --project <path> --format text|json|jsonl --quiet --verbose");
+        output.WriteLine("Common options: --project <path> --format text|json|jsonl|sarif --quiet --verbose");
         output.WriteLine();
         output.WriteLine("Commands:");
         output.WriteLine("  project    Project create, inspect and validate commands.");
@@ -271,6 +271,7 @@ internal static partial class Electron2DCommandLine
         output.WriteLine("  run        Queue run jobs.");
         output.WriteLine("  test       Queue test jobs or run scene tests.");
         output.WriteLine("  export     Queue export jobs.");
+        output.WriteLine("  validate   Validate a project and emit diagnostics.");
         output.WriteLine("  docs       Search local documentation and API manifest.");
         output.WriteLine("  api        API comparison commands.");
         output.WriteLine("  mcp        MCP server commands.");
@@ -282,7 +283,7 @@ internal static partial class Electron2DCommandLine
     {
         output.WriteLine("Usage: e2d docs <search|type|member|example> [query] [--format text|json]");
         output.WriteLine();
-        output.WriteLine("Common options: --project <path> --format text|json|jsonl --quiet --verbose");
+        output.WriteLine("Common options: --project <path> --format text|json --quiet --verbose");
         output.WriteLine();
         output.WriteLine("Commands:");
         output.WriteLine("  search   Search local API, documentation and examples.");

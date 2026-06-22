@@ -582,7 +582,7 @@ internal static class DiagnosticJsonSerializer
     public static string Serialize(StructuredDiagnostic diagnostic)
     {
         ArgumentNullException.ThrowIfNull(diagnostic);
-        return WriteDiagnostic(diagnostic).ToJsonString(IndentedOptions).ReplaceLineEndings("\n");
+        return ToJson(diagnostic).ToJsonString(IndentedOptions).ReplaceLineEndings("\n");
     }
 
     public static StructuredDiagnostic Deserialize(string text)
@@ -592,6 +592,24 @@ internal static class DiagnosticJsonSerializer
         var root = JsonNode.Parse(text) as JsonObject ??
             throw new FormatException("Diagnostic JSON root must be an object.");
         return ReadDiagnostic(root);
+    }
+
+    public static JsonObject ToJson(StructuredDiagnostic diagnostic)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostic);
+        return WriteDiagnostic(diagnostic);
+    }
+
+    public static JsonArray ToJsonArray(IEnumerable<StructuredDiagnostic> diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        var result = new JsonArray();
+        foreach (var diagnostic in diagnostics)
+        {
+            result.Add(ToJson(diagnostic));
+        }
+
+        return result;
     }
 
     private static JsonObject WriteDiagnostic(StructuredDiagnostic diagnostic)

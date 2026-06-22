@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/diagnostics/diagnostic-stream-event.schema.json",
+  "title": "Electron2D diagnostic stream event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "event",
+    "producer",
+    "timestampUtc",
+    "diagnostics"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "event": {
+      "type": "string",
+      "minLength": 1
+    },
+    "producer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestampUtc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "https://electron2d.dev/schemas/diagnostics/electron2d-diagnostic.schema.json"
+      }
+    }
+  }
+}

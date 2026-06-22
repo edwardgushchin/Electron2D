@@ -2,7 +2,7 @@
 
 Статус: реализованный внутренний контракт для `T-0119`.
 Обновлено: 2026-06-22.
-Связанные документы: [Локальный MCP-сервер поверх active Editor session и Tooling](../../specifications/mcp/mcp-server.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md).
+Связанные документы: [Локальный MCP-сервер поверх active Editor session и Tooling](../../specifications/mcp/mcp-server.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, JSONL stream и SARIF](../diagnostics/diagnostics-adapters.md).
 
 ## Назначение
 
@@ -44,6 +44,8 @@ Manifest публикует обязательные Preview resources:
 
 Полностью исполняемая часть `T-0119` уже возвращает live state для `project/summary`, `workspace/open-documents`, `project/diagnostics`, `workspace/import-state` и `workspace/build-state`. Остальные resources имеют стабильные URI и безопасный placeholder payload, пока узкие доменные подсистемы реализуются отдельными задачами.
 
+`project/diagnostics` должен сохранять тот же полный diagnostic payload, что и CLI/JSONL adapters: file/node/resource location, related locations и safe suggested fixes не сокращаются до human-only строки.
+
 ## Tools
 
 Manifest публикует все обязательные tool names из MCP specification: project, scene, resource, workspace, runtime и task tools. Наличие имени означает стабильный route и безопасный failure mode.
@@ -78,6 +80,8 @@ Job tools возвращают queued MCP event с именем `operation.queue
 - `Stale`.
 
 `operation.started`, `operation.progress`, `operation.diagnostic`, `operation.artifactProduced` и `operation.completed` уже закреплены specification как stream shape, но реальные toolchain runners подключаются отдельными задачами.
+
+Diagnostics lists внутри job events и будущие `operation.diagnostic` events используют общий diagnostics stream contract из `Diagnostics adapters`. MCP adapter не создаёт отдельный payload для diagnostic сообщений.
 
 ## CLI manifest
 

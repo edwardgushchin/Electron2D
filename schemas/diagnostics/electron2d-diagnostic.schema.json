@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/diagnostics/electron2d-diagnostic.schema.json",
+  "title": "Electron2D diagnostic",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "code",
+    "severity",
+    "category",
+    "message",
+    "location",
+    "relatedLocations",
+    "suggestedFixes",
+    "documentationUri"
+  ],
+  "properties": {
+    "code": {
+      "type": "string",
+      "pattern": "^E2D-[A-Z0-9]+-[0-9]{4}$"
+    },
+    "severity": {
+      "enum": [
+        "Error",
+        "Warning",
+        "Info",
+        "Hint"
+      ]
+    },
+    "category": {
+      "enum": [
+        "Project",
+        "Scene",
+        "Resource",
+        "Import",
+        "Build",
+        "Runtime",
+        "Script",
+        "Export",
+        "Tooling",
+        "Diagnostics"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "location": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/location"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "relatedLocations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "location",
+          "message"
+        ],
+        "properties": {
+          "location": {
+            "$ref": "#/$defs/location"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "suggestedFixes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "actions"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/action"
+            }
+          }
+        }
+      }
+    },
+    "documentationUri": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "line",
+        "column",
+        "sceneUid",
+        "nodePath",
+        "resourceUid"
+      ],
+      "properties": {
+        "file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "line": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "column": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "sceneUid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nodePath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resourceUid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": [
+        "kind",
+        "path"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "ReplaceText",
+            "CreateFile",
+            "UpdateJsonProperty",
+            "DeleteJsonProperty"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "startLine": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "startColumn": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "endLine": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "endColumn": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "expectedText": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "newText": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "jsonPointer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "expectedValue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "newValue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

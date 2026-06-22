@@ -10,6 +10,8 @@
 
 Слой задаёт общий формат structured diagnostics: сообщений об ошибках, предупреждениях, информационных состояниях и подсказках. Он не зависит от CLI, MCP, Editor UI или SARIF. Эти внешние представления должны подключаться отдельными adapters поверх core-модели.
 
+Текущий adapter слой для CLI, JSONL stream events и SARIF описан в [Diagnostics adapters: JSON, JSONL stream и SARIF](diagnostics-adapters.md). Core остаётся источником registry, validation rules и безопасных suggested fixes; adapters отвечают только за внешнее представление того же payload.
+
 ## Registry кодов
 
 `DiagnosticCodeRegistry` хранит immutable список `DiagnosticCodeDefinition`. Каждый definition фиксирует:
@@ -85,6 +87,8 @@ Core-слой только описывает fix. Он не применяет 
 - round-trip сохраняет code, severity, category, message, location, related locations, suggested fixes и documentation URI.
 
 Deserializer проверяет, что `documentationUri` совпадает с registry definition для `code`.
+
+Методы `DiagnosticJsonSerializer.ToJson(...)` и `DiagnosticJsonSerializer.ToJsonArray(...)` используются adapters для сохранения полного diagnostic payload в CLI JSON, JSONL events и SARIF properties.
 
 ## Проверка
 
