@@ -23,6 +23,7 @@
     SOFTWARE.
 */
 using Electron2D.Editor.Inspector;
+using Electron2D.Editor.FileSystemDock;
 using Electron2D.Editor.ProjectManagement;
 using Electron2D.Editor.SceneTreeDock;
 using Electron2D.Editor.Viewport2D;
@@ -63,7 +64,12 @@ internal static class Program
             return RunInspectorSmoke(inspectorWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>]");
+        if (args is ["--file-system-dock-smoke", var fileSystemDockWorkRoot])
+        {
+            return RunFileSystemDockSmoke(fileSystemDockWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>]");
         return 2;
     }
 
@@ -201,6 +207,46 @@ internal static class Program
             Console.WriteLine($"RoundTripStable={result.RoundTripStable}");
 
             return result.PropertyCount == result.ExportedProperties && result.RoundTripStable ? 0 : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunFileSystemDockSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorFileSystemDockSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor file system dock smoke passed");
+            Console.WriteLine($"ScenePath={result.ScenePath}");
+            Console.WriteLine($"InitialItemCount={result.InitialItemCount}");
+            Console.WriteLine($"FolderCreated={result.FolderCreated}");
+            Console.WriteLine($"MovedFileExists={result.MovedFileExists}");
+            Console.WriteLine($"RenamedResourcePath={result.RenamedResourcePath}");
+            Console.WriteLine($"MovedResourcePath={result.MovedResourcePath}");
+            Console.WriteLine($"UidBefore={result.UidBefore}");
+            Console.WriteLine($"UidAfter={result.UidAfter}");
+            Console.WriteLine($"UidStable={result.UidStable}");
+            Console.WriteLine($"SceneExternalReferencePath={result.SceneExternalReferencePath}");
+            Console.WriteLine($"SceneExternalReferenceUid={result.SceneExternalReferenceUid}");
+            Console.WriteLine($"DraggedNodeType={result.DraggedNodeType}");
+            Console.WriteLine($"SearchResults={result.SearchResults}");
+            Console.WriteLine($"ImportErrorCount={result.ImportErrorCount}");
+            Console.WriteLine($"ImportErrorPath={result.ImportErrorPath}");
+            Console.WriteLine($"ImportErrorVisible={result.ImportErrorVisible}");
+            Console.WriteLine($"RoundTripStable={result.RoundTripStable}");
+
+            return result.FolderCreated &&
+                result.MovedFileExists &&
+                result.UidStable &&
+                result.ImportErrorVisible &&
+                result.RoundTripStable
+                ? 0
+                : 1;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
         {
