@@ -73,7 +73,8 @@ internal sealed class ToolingTextEditRequest
         string path,
         ProjectDocumentRevision expectedRevision,
         string text,
-        string? undoGroupId)
+        string? undoGroupId,
+        bool dryRun = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(operationId);
         ArgumentException.ThrowIfNullOrWhiteSpace(operationKind);
@@ -87,6 +88,7 @@ internal sealed class ToolingTextEditRequest
         ExpectedRevision = expectedRevision;
         Text = text.ReplaceLineEndings("\n");
         UndoGroupId = undoGroupId;
+        DryRun = dryRun;
     }
 
     public string OperationId { get; }
@@ -102,6 +104,8 @@ internal sealed class ToolingTextEditRequest
     public string Text { get; }
 
     public string? UndoGroupId { get; }
+
+    public bool DryRun { get; }
 }
 
 internal sealed class ToolingOperationResult
@@ -111,6 +115,7 @@ internal sealed class ToolingOperationResult
         string operationId,
         string operationKind,
         ProjectWorkspaceRevision workspaceRevision,
+        ProjectWorkspaceRevision contentRevision,
         IReadOnlyDictionary<string, ProjectDocumentRevision> documentRevisions,
         ProjectDocumentRevision persistedRevision,
         IReadOnlyList<string> dirtyDocuments,
@@ -127,6 +132,7 @@ internal sealed class ToolingOperationResult
         OperationId = operationId;
         OperationKind = operationKind;
         WorkspaceRevision = workspaceRevision;
+        ContentRevision = contentRevision;
         DocumentRevisions = CopyDictionary(documentRevisions);
         PersistedRevision = persistedRevision;
         DirtyDocuments = dirtyDocuments.OrderBy(path => path, StringComparer.Ordinal).ToArray();
@@ -147,6 +153,8 @@ internal sealed class ToolingOperationResult
     public string OperationKind { get; }
 
     public ProjectWorkspaceRevision WorkspaceRevision { get; }
+
+    public ProjectWorkspaceRevision ContentRevision { get; }
 
     public IReadOnlyDictionary<string, ProjectDocumentRevision> DocumentRevisions { get; }
 
@@ -184,6 +192,7 @@ internal sealed class ToolingOperationResult
             result.OperationId,
             operationKind,
             result.WorkspaceRevision,
+            result.ContentRevision,
             result.DocumentRevisions,
             SelectPersistedRevision(result),
             result.DirtyDocuments,
@@ -257,7 +266,7 @@ internal sealed class ProjectService
             ToWorkspaceActorKind(context.PrincipalKind),
             request.OperationKind,
             ToTransactionMode(request.Mode),
-            dryRun: false,
+            request.DryRun,
             request.UndoGroupId,
             [WorkspaceTransactionDocumentEdit.ReplaceText(request.Path, request.ExpectedRevision, request.Text)]));
         return ToolingOperationResult.FromTransaction(result, request.OperationKind);

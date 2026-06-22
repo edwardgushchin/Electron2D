@@ -11,4 +11,9 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Electron2D.ProjectSystem\Electron2D.ProjectSystem.csproj" />
+    <ProjectReference Include="..\Electron2D.Tooling\Electron2D.Tooling.csproj" />
+  </ItemGroup>
+
 </Project>

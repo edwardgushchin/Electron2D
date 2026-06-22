@@ -45,6 +45,10 @@
 - [Electron2D.Tooling service boundary](tooling/tooling-service-boundary.md) - текущий internal project для общего operation result, project transaction wrappers, task service wrappers и job-backed long operations.
 - [Editor session discovery и Editor-hosted Agent Gateway](tooling/editor-session-discovery.md) - текущий internal registry/gateway contract для active Editor discovery, lease/heartbeat, endpoint validation, read-only второго Editor и headless fallback CLI/MCP adapter-ов.
 
+## CLI
+
+- [`e2d` CLI для headless, CI и active Editor routing](cli/e2d-cli.md) - текущий executable CLI parser, common flags, stable JSON/JSONL envelope, generic workspace transaction, job stubs и route selection через active Editor или headless workspace.
+
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.

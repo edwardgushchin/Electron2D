@@ -125,6 +125,24 @@ internal static class DiagnosticCodeRegistry
             "Diagnostic record is invalid.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-diag-0001"),
         new(
+            "E2D-CLI-0001",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "CLI command is not implemented in the current Preview scope.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-cli-0001"),
+        new(
+            "E2D-CLI-0002",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "CLI arguments are invalid.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-cli-0002"),
+        new(
+            "E2D-CLI-0003",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "CLI route selection rejected the command.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-cli-0003"),
+        new(
             "E2D-PROJECT-0001",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Project,

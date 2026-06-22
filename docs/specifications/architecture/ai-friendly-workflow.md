@@ -706,6 +706,8 @@ Release-gate инвариант:
 
 Если активная Editor-сессия найдена, изменяющие CLI-команды должны по умолчанию работать через неё или явно требовать флаг headless-режима, чтобы не было двух независимых владельцев состояния проекта.
 
+Проверяемый CLI contract вынесен в [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md). Он фиксирует common flags, stable JSON/JSONL envelope, generic workspace transaction path, job stream fields и route mode между active Editor и headless workspace.
+
 ## Текстовый формат проекта
 
 Все семантически значимые данные проекта должны храниться в исходных текстовых файлах:

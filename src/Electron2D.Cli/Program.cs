@@ -30,7 +30,7 @@ using System.Text.RegularExpressions;
 var exitCode = Electron2DCommandLine.Run(args, Console.Out, Console.Error);
 return exitCode;
 
-internal static class Electron2DCommandLine
+internal static partial class Electron2DCommandLine
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -39,6 +39,13 @@ internal static class Electron2DCommandLine
 
     public static int Run(string[] args, TextWriter output, TextWriter error)
     {
+        return Run(args, output, error, CliExecutionContext.Default());
+    }
+
+    public static int Run(string[] args, TextWriter output, TextWriter error, CliExecutionContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
         try
         {
             if (args.Length == 0 || IsHelp(args[0]))
@@ -47,12 +54,14 @@ internal static class Electron2DCommandLine
                 return 0;
             }
 
-            if (!string.Equals(args[0], "docs", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new CommandLineException("Unknown command group. Use `e2d --help`.");
-            }
-
-            return RunDocs(args.Skip(1).ToArray(), output);
+            var group = args[0].ToLowerInvariant();
+            return group == "docs"
+                ? RunDocs(args.Skip(1).ToArray(), output)
+                : RunGeneralCommand(group, args.Skip(1).ToArray(), output, error, context);
+        }
+        catch (CliCommandException exception)
+        {
+            return WriteCliError(exception, output, error);
         }
         catch (CommandLineException exception)
         {
@@ -250,13 +259,30 @@ internal static class Electron2DCommandLine
     {
         output.WriteLine("Usage: e2d <command> [options]");
         output.WriteLine();
+        output.WriteLine("Common options: --project <path> --format text|json|jsonl --quiet --verbose");
+        output.WriteLine();
         output.WriteLine("Commands:");
-        output.WriteLine("  docs    Search local documentation and API manifest.");
+        output.WriteLine("  project    Project create, inspect and validate commands.");
+        output.WriteLine("  scene      Scene inspection and mutation commands.");
+        output.WriteLine("  resource   Resource inspection and dependency commands.");
+        output.WriteLine("  workspace  Generic workspace transaction commands.");
+        output.WriteLine("  import     Queue import jobs.");
+        output.WriteLine("  build      Queue build jobs.");
+        output.WriteLine("  run        Queue run jobs.");
+        output.WriteLine("  test       Queue test jobs.");
+        output.WriteLine("  export     Queue export jobs.");
+        output.WriteLine("  docs       Search local documentation and API manifest.");
+        output.WriteLine("  api        API comparison commands.");
+        output.WriteLine("  mcp        MCP server commands.");
+        output.WriteLine("  context    Static context pack commands.");
+        output.WriteLine("  doctor     Environment diagnostics.");
     }
 
     private static void WriteDocsHelp(TextWriter output)
     {
         output.WriteLine("Usage: e2d docs <search|type|member|example> [query] [--format text|json]");
+        output.WriteLine();
+        output.WriteLine("Common options: --project <path> --format text|json|jsonl --quiet --verbose");
         output.WriteLine();
         output.WriteLine("Commands:");
         output.WriteLine("  search   Search local API, documentation and examples.");

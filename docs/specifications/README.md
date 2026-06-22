@@ -32,6 +32,10 @@
 - [Local documentation pipeline](documentation/local-documentation-pipeline.md) - локальный документационный индекс и команды `e2d docs` поверх согласованных Wiki/XML/API manifest источников.
 - [Canonical goal alignment audit](documentation/canonical-goal-alignment.md) - проверка, что старые goal/architecture материалы не возвращают устаревшее component-first или four-platform позиционирование как актуальный контракт.
 
+## CLI
+
+- [`e2d` CLI для headless, CI и active Editor routing](cli/e2d-cli.md) - общий parser/result envelope, common flags, generic workspace transaction, job JSONL и routing через active Editor session.
+
 ## Репозиторий
 
 - [Политика лицензирования исходного кода](repository/license-policy.md) - MIT License, source headers и verifier для вручную написанного исходного кода.
