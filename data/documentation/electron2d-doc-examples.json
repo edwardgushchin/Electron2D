@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "manifestVersion": "0.1.0-preview",
+  "examples": [
+    {
+      "id": "example:platformer-movement",
+      "title": "Platformer movement with CharacterBody2D",
+      "summary": "Minimal C# movement loop that reads Input Map actions and advances a CharacterBody2D with MoveAndSlide.",
+      "keywords": [
+        "platformer",
+        "movement",
+        "move and slide",
+        "character body",
+        "input map"
+      ],
+      "apiIds": [
+        "electron2d://api/type/Electron2D.CharacterBody2D",
+        "electron2d://api/member/Electron2D.CharacterBody2D/Method/MoveAndSlide%28%29",
+        "electron2d://api/type/Electron2D.Input",
+        "electron2d://api/type/Electron2D.Vector2"
+      ],
+      "code": "using Electron2D;\n\npublic sealed class PlayerController : CharacterBody2D\n{\n    public override void _PhysicsProcess(double delta)\n    {\n        var direction = Input.GetVector(\"move_left\", \"move_right\", \"move_up\", \"move_down\");\n        Velocity = direction * 240.0f;\n        MoveAndSlide();\n    }\n}\n"
+    }
+  ]
+}

@@ -45,6 +45,7 @@ $requiredFragments = @(
     'tools/Verify-Box2DPhysicsCandidate.ps1',
     'tools/Verify-ProjectTemplate.ps1',
     'tools/Verify-UserDocumentation.ps1',
+    'tools/Verify-LocalDocumentation.ps1',
     'tools/Verify-CanonicalGoalAlignment.ps1',
     'tools/Verify-ExportDocumentation.ps1',
     'tools/Verify-PublicApiXmlDocs.ps1',
@@ -84,6 +85,10 @@ if ($workflow.IndexOf('Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/
 
 if ($workflow.IndexOf('Verify-CanonicalGoalAlignment.ps1', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     throw 'CI workflow must run canonical goal alignment verification.'
+}
+
+if ($workflow.IndexOf('Verify-LocalDocumentation.ps1', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'CI workflow must run local documentation verification.'
 }
 
 if ($workflow.IndexOf('Update-ApiWiki.ps1 -OutputPath .github/wiki -Check', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {

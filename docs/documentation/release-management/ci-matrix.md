@@ -2,7 +2,7 @@
 
 Статус: реализованная CI-конфигурация.
 Задача: `T-0003`.
-Обновлено: 2026-06-21.
+Обновлено: 2026-06-22.
 
 ## Workflow
 
@@ -21,6 +21,7 @@ CI описан в `.github/workflows/ci.yml`.
 ./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
 ./tools/Verify-ProjectTemplate.ps1
 ./tools/Verify-UserDocumentation.ps1
+./tools/Verify-LocalDocumentation.ps1
 ./tools/Verify-CanonicalGoalAlignment.ps1
 ./tools/Verify-ExportDocumentation.ps1
 ./tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues
@@ -31,6 +32,7 @@ CI описан в `.github/workflows/ci.yml`.
 ```
 
 `Verify-PublicApiXmlDocs.ps1 -FailOnIssues` является gate публичной XML documentation: недокументированный или неполный public API ломает CI.
+`Verify-LocalDocumentation.ps1` является gate локальной документации: generated local-docs index, `e2d docs search/type/member/example`, examples source и documentation pipeline должны оставаться синхронизированными.
 `Verify-CanonicalGoalAlignment.ps1` является gate для исторических goal/architecture материалов: старое component-first или four-platform позиционирование не должно возвращаться как актуальный контракт.
 `Update-ApiManifest.ps1 -WikiPath .github/wiki -Check` является gate machine-readable API manifest: tracked JSON должен совпадать с compiled public API, XML documentation и GitHub Wiki compatibility table.
 `Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` является объединённым gate для XML documentation, GitHub Wiki API reference и public API documentation wording.

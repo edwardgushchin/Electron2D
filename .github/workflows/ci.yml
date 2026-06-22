@@ -54,6 +54,10 @@ jobs:
         shell: pwsh
         run: ./tools/Verify-UserDocumentation.ps1
 
+      - name: Verify local documentation
+        shell: pwsh
+        run: ./tools/Verify-LocalDocumentation.ps1
+
       - name: Verify canonical goal alignment
         shell: pwsh
         run: ./tools/Verify-CanonicalGoalAlignment.ps1

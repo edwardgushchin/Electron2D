@@ -29,6 +29,7 @@
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - обязательные XML-теги, verifier modes и правила качества public API comments.
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - автоматическая генерация GitHub Wiki из compiled public API и XML documentation.
 - [Machine-readable API manifest](documentation/api-manifest.md) - JSON manifest публичного API, stable identifiers, compatibility status и проверка синхронизации с compiled assembly, XML docs и GitHub Wiki.
+- [Local documentation pipeline](documentation/local-documentation-pipeline.md) - локальный документационный индекс и команды `e2d docs` поверх согласованных Wiki/XML/API manifest источников.
 - [Canonical goal alignment audit](documentation/canonical-goal-alignment.md) - проверка, что старые goal/architecture материалы не возвращают устаревшее component-first или four-platform позиционирование как актуальный контракт.
 
 ## Репозиторий

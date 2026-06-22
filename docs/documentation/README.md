@@ -44,6 +44,7 @@
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - текущее правило, команды verifier и статус заполнения XML comments.
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - текущий генератор GitHub Wiki и проверка синхронизации с публичным API.
 - [Machine-readable API manifest](documentation/api-manifest.md) - текущий JSON manifest публичного API, stable identifiers, compatibility status и CI-проверка синхронизации.
+- [Local documentation pipeline](documentation/local-documentation-pipeline.md) - текущий generated local-docs index и команды `e2d docs search/type/member/example`.
 - [Canonical goal alignment audit](documentation/canonical-goal-alignment.md) - текущая проверка, что исторические goal/architecture материалы не возвращают устаревший project contract.
 
 ## Ресурсы, импорт и сериализация
