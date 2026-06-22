@@ -237,7 +237,7 @@ internal sealed class ProjectWorkspace : IDisposable
         Revisions = new ProjectWorkspaceRevisionStore();
         OperationJournal = new ProjectWorkspaceOperationJournal();
         Documents = new ProjectWorkspaceDocumentStore();
-        UndoRedo = new ProjectWorkspaceUndoRedoStore();
+        UndoRedo = new ProjectWorkspaceUndoRedoStore(this);
         ImportState = new ProjectWorkspaceImportStateStore();
         BuildState = new ProjectWorkspaceBuildStateStore();
         Diagnostics = new ProjectWorkspaceDiagnosticsStore(this);
@@ -1050,14 +1050,342 @@ internal sealed class ProjectWorkspaceDiagnosticsStore
 
 internal sealed class ProjectWorkspaceUndoRedoStore
 {
-    private readonly List<string> undoGroups = [];
+    private readonly ProjectWorkspace workspace;
+    private readonly List<ProjectWorkspaceUndoGroup> undoGroups = [];
+    private readonly List<ProjectWorkspaceUndoGroup> redoGroups = [];
 
-    public IReadOnlyList<string> UndoGroups => undoGroups.ToArray();
+    public ProjectWorkspaceUndoRedoStore(ProjectWorkspace workspace)
+    {
+        ArgumentNullException.ThrowIfNull(workspace);
+        this.workspace = workspace;
+    }
+
+    public IReadOnlyList<string> UndoGroups => undoGroups.Select(group => group.UndoGroupId).ToArray();
+
+    public IReadOnlyList<string> RedoGroups => redoGroups.Select(group => group.UndoGroupId).ToArray();
+
+    public bool CanUndo => undoGroups.Count > 0;
+
+    public bool CanRedo => redoGroups.Count > 0;
 
     public void AddUndoGroup(string undoGroupId)
     {
+        AddUndoGroup(
+            undoGroupId,
+            operationId: undoGroupId,
+            ProjectWorkspaceActorKind.Test,
+            operationKind: "workspace.undo-group",
+            beforeStates: [],
+            afterStates: []);
+    }
+
+    public void AddUndoGroup(
+        string undoGroupId,
+        string operationId,
+        ProjectWorkspaceActorKind actorKind,
+        string operationKind,
+        IEnumerable<ProjectWorkspaceUndoDocumentState> beforeStates,
+        IEnumerable<ProjectWorkspaceUndoDocumentState> afterStates)
+    {
         ArgumentException.ThrowIfNullOrWhiteSpace(undoGroupId);
-        undoGroups.Add(undoGroupId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(operationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(operationKind);
+        ArgumentNullException.ThrowIfNull(beforeStates);
+        ArgumentNullException.ThrowIfNull(afterStates);
+
+        var next = new ProjectWorkspaceUndoGroup(
+            undoGroupId,
+            operationId,
+            actorKind,
+            operationKind,
+            beforeStates,
+            afterStates);
+        if (undoGroups.Count > 0 &&
+            string.Equals(undoGroups[^1].UndoGroupId, undoGroupId, StringComparison.Ordinal))
+        {
+            undoGroups[^1] = undoGroups[^1].Merge(next);
+        }
+        else
+        {
+            undoGroups.Add(next);
+        }
+
+        redoGroups.Clear();
+    }
+
+    public ProjectWorkspaceUndoRedoResult UndoLast(ProjectWorkspaceOperationContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        if (undoGroups.Count == 0)
+        {
+            return ProjectWorkspaceUndoRedoResult.Failure("No workspace undo group is available.");
+        }
+
+        var group = undoGroups[^1];
+        undoGroups.RemoveAt(undoGroups.Count - 1);
+        var changedDocuments = ApplyStates(group.BeforeStates, context);
+        redoGroups.Add(group);
+        return ProjectWorkspaceUndoRedoResult.Success(group.UndoGroupId, changedDocuments);
+    }
+
+    public ProjectWorkspaceUndoRedoResult RedoLast(ProjectWorkspaceOperationContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        if (redoGroups.Count == 0)
+        {
+            return ProjectWorkspaceUndoRedoResult.Failure("No workspace redo group is available.");
+        }
+
+        var group = redoGroups[^1];
+        redoGroups.RemoveAt(redoGroups.Count - 1);
+        var changedDocuments = ApplyStates(group.AfterStates, context);
+        undoGroups.Add(group);
+        return ProjectWorkspaceUndoRedoResult.Success(group.UndoGroupId, changedDocuments);
+    }
+
+    private IReadOnlyList<string> ApplyStates(
+        IReadOnlyList<ProjectWorkspaceUndoDocumentState> states,
+        ProjectWorkspaceOperationContext context)
+    {
+        var changedDocuments = new List<string>();
+        foreach (var state in states.OrderBy(state => state.Path, StringComparer.Ordinal))
+        {
+            if (state.Exists)
+            {
+                var existed = workspace.Documents.TryGetByPath(state.Path, out _);
+                var document = workspace.Documents.PutTextDocumentState(
+                    state.Path,
+                    state.Text,
+                    state.PersistedRevision,
+                    state.InMemoryRevision,
+                    state.PersistedText);
+                if (existed)
+                {
+                    workspace.Revisions.RecordDocumentChanged(document);
+                }
+                else
+                {
+                    workspace.Revisions.RecordDocumentOpened(document);
+                }
+
+                workspace.Events.Publish(new ProjectWorkspaceEvent(
+                    existed ? ProjectWorkspaceEventKind.DocumentChanged : ProjectWorkspaceEventKind.DocumentOpened,
+                    workspace.Revisions.WorkspaceRevision,
+                    document.DocumentId,
+                    document.Path,
+                    context.OperationId,
+                    source: null,
+                    diagnostics: []));
+                changedDocuments.Add(document.Path);
+                continue;
+            }
+
+            if (workspace.Documents.RemoveTextDocument(state.Path, out var removed))
+            {
+                workspace.Revisions.RecordDocumentDeleted(state.Path);
+                workspace.Events.Publish(new ProjectWorkspaceEvent(
+                    ProjectWorkspaceEventKind.DocumentDeleted,
+                    workspace.Revisions.WorkspaceRevision,
+                    removed.DocumentId,
+                    state.Path,
+                    context.OperationId,
+                    source: null,
+                    diagnostics: []));
+                changedDocuments.Add(state.Path);
+            }
+        }
+
+        if (changedDocuments.Count > 0)
+        {
+            workspace.OperationJournal.RecordCompleted(
+                context,
+                changedDocuments,
+                DateTimeOffset.UtcNow);
+        }
+
+        return changedDocuments.OrderBy(path => path, StringComparer.Ordinal).ToArray();
+    }
+}
+
+internal sealed class ProjectWorkspaceUndoRedoResult
+{
+    private ProjectWorkspaceUndoRedoResult(
+        bool succeeded,
+        string? undoGroupId,
+        IEnumerable<string> changedDocuments,
+        IEnumerable<StructuredDiagnostic> diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(changedDocuments);
+        ArgumentNullException.ThrowIfNull(diagnostics);
+
+        Succeeded = succeeded;
+        UndoGroupId = undoGroupId;
+        ChangedDocuments = changedDocuments.OrderBy(path => path, StringComparer.Ordinal).ToArray();
+        Diagnostics = diagnostics.ToArray();
+    }
+
+    public bool Succeeded { get; }
+
+    public string? UndoGroupId { get; }
+
+    public IReadOnlyList<string> ChangedDocuments { get; }
+
+    public IReadOnlyList<StructuredDiagnostic> Diagnostics { get; }
+
+    public static ProjectWorkspaceUndoRedoResult Success(string undoGroupId, IEnumerable<string> changedDocuments)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(undoGroupId);
+        return new ProjectWorkspaceUndoRedoResult(true, undoGroupId, changedDocuments, []);
+    }
+
+    public static ProjectWorkspaceUndoRedoResult Failure(string message)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
+        return new ProjectWorkspaceUndoRedoResult(
+            false,
+            undoGroupId: null,
+            changedDocuments: [],
+            diagnostics:
+            [
+                StructuredDiagnostic.Create(
+                    "E2D-TOOLING-0002",
+                    DiagnosticSeverity.Error,
+                    DiagnosticCategory.Tooling,
+                    message,
+                    location: null,
+                    relatedLocations: [],
+                    suggestedFixes: [])
+            ]);
+    }
+}
+
+internal sealed class ProjectWorkspaceUndoDocumentState
+{
+    private ProjectWorkspaceUndoDocumentState(
+        string path,
+        bool exists,
+        string text,
+        ProjectDocumentRevision persistedRevision,
+        ProjectDocumentRevision inMemoryRevision,
+        string persistedText)
+    {
+        Path = ProjectDocumentPaths.NormalizeRelativePath(path);
+        Exists = exists;
+        Text = text.ReplaceLineEndings("\n");
+        PersistedRevision = persistedRevision;
+        InMemoryRevision = inMemoryRevision;
+        PersistedText = persistedText.ReplaceLineEndings("\n");
+    }
+
+    public string Path { get; }
+
+    public bool Exists { get; }
+
+    public string Text { get; }
+
+    public ProjectDocumentRevision PersistedRevision { get; }
+
+    public ProjectDocumentRevision InMemoryRevision { get; }
+
+    public string PersistedText { get; }
+
+    public static ProjectWorkspaceUndoDocumentState FromDocument(ProjectWorkspaceDocument document)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        return new ProjectWorkspaceUndoDocumentState(
+            document.Path,
+            exists: true,
+            document.Text,
+            document.PersistedRevision,
+            document.InMemoryRevision,
+            document.PersistedText);
+    }
+
+    public static ProjectWorkspaceUndoDocumentState Missing(string path)
+    {
+        return new ProjectWorkspaceUndoDocumentState(
+            path,
+            exists: false,
+            text: string.Empty,
+            new ProjectDocumentRevision(0),
+            new ProjectDocumentRevision(0),
+            persistedText: string.Empty);
+    }
+}
+
+internal sealed class ProjectWorkspaceUndoGroup
+{
+    public ProjectWorkspaceUndoGroup(
+        string undoGroupId,
+        string operationId,
+        ProjectWorkspaceActorKind actorKind,
+        string operationKind,
+        IEnumerable<ProjectWorkspaceUndoDocumentState> beforeStates,
+        IEnumerable<ProjectWorkspaceUndoDocumentState> afterStates)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(undoGroupId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(operationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(operationKind);
+        ArgumentNullException.ThrowIfNull(beforeStates);
+        ArgumentNullException.ThrowIfNull(afterStates);
+
+        UndoGroupId = undoGroupId;
+        OperationId = operationId;
+        ActorKind = actorKind;
+        OperationKind = operationKind;
+        BeforeStates = CopyStates(beforeStates);
+        AfterStates = CopyStates(afterStates);
+    }
+
+    public string UndoGroupId { get; }
+
+    public string OperationId { get; }
+
+    public ProjectWorkspaceActorKind ActorKind { get; }
+
+    public string OperationKind { get; }
+
+    public IReadOnlyList<ProjectWorkspaceUndoDocumentState> BeforeStates { get; }
+
+    public IReadOnlyList<ProjectWorkspaceUndoDocumentState> AfterStates { get; }
+
+    public ProjectWorkspaceUndoGroup Merge(ProjectWorkspaceUndoGroup next)
+    {
+        ArgumentNullException.ThrowIfNull(next);
+        if (!string.Equals(UndoGroupId, next.UndoGroupId, StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException("Only matching workspace undo groups can be merged.");
+        }
+
+        var beforeByPath = BeforeStates.ToDictionary(state => state.Path, StringComparer.Ordinal);
+        foreach (var before in next.BeforeStates)
+        {
+            beforeByPath.TryAdd(before.Path, before);
+        }
+
+        var afterByPath = AfterStates.ToDictionary(state => state.Path, StringComparer.Ordinal);
+        foreach (var after in next.AfterStates)
+        {
+            afterByPath[after.Path] = after;
+        }
+
+        return new ProjectWorkspaceUndoGroup(
+            UndoGroupId,
+            OperationId,
+            ActorKind,
+            OperationKind,
+            beforeByPath.Values,
+            afterByPath.Values);
+    }
+
+    private static IReadOnlyList<ProjectWorkspaceUndoDocumentState> CopyStates(
+        IEnumerable<ProjectWorkspaceUndoDocumentState> states)
+    {
+        return states
+            .GroupBy(state => state.Path, StringComparer.Ordinal)
+            .Select(group => group.Last())
+            .OrderBy(state => state.Path, StringComparer.Ordinal)
+            .ToArray();
     }
 }
 

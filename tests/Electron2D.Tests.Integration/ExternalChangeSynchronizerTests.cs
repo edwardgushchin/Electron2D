@@ -228,6 +228,69 @@ public sealed class ExternalChangeSynchronizerTests
             record.FileSystemDockStatus == "Importing");
     }
 
+    [Fact]
+    public void ExternalTextChangesInOneDebounceBatchShareSingleUndoGroup()
+    {
+        using var workspace = CreateWorkspace(
+            "external-batch-undo",
+            ("scenes/main.scene.json", SceneText(speed: 10, health: 100)),
+            ("scenes/enemy.scene.json", SceneText(speed: 4, health: 50)));
+        var synchronizer = CreateSynchronizer(workspace);
+
+        File.WriteAllText(Path.Combine(workspace.ProjectRoot, "scenes", "main.scene.json"), SceneText(speed: 12, health: 100));
+        File.WriteAllText(Path.Combine(workspace.ProjectRoot, "scenes", "enemy.scene.json"), SceneText(speed: 6, health: 50));
+        synchronizer.Notify(ExternalFileChangeEvent.Changed("scenes/main.scene.json", FixedInstant));
+        synchronizer.Notify(ExternalFileChangeEvent.Changed("scenes/enemy.scene.json", FixedInstant));
+
+        var result = synchronizer.Drain(FixedInstant.AddMilliseconds(250));
+
+        Assert.Equal(["scenes/enemy.scene.json", "scenes/main.scene.json"], result.ChangedFiles);
+        var undoGroup = Assert.Single(workspace.UndoRedo.UndoGroups, group => group.StartsWith("undo-external-batch-", StringComparison.Ordinal));
+        Assert.All(result.ImportRecords, record => Assert.Equal(undoGroup.Replace("undo-", "op-", StringComparison.Ordinal), record.OperationId));
+
+        var undo = workspace.UndoRedo.UndoLast(new ProjectWorkspaceOperationContext(
+            "op-undo-external-batch",
+            ProjectWorkspaceActorKind.Human,
+            "workspace.undo"));
+
+        Assert.True(undo.Succeeded);
+        Assert.Equal(["scenes/enemy.scene.json", "scenes/main.scene.json"], undo.ChangedDocuments);
+        Assert.Contains("\"value\": 10", workspace.Documents.GetByPath("scenes/main.scene.json").Text, StringComparison.Ordinal);
+        Assert.Contains("\"value\": 4", workspace.Documents.GetByPath("scenes/enemy.scene.json").Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void BinaryReplaceAndDeleteOfUsedResourceBecomePendingConflicts()
+    {
+        using var workspace = CreateWorkspace("binary-conflict", ("scenes/main.scene.json", SceneTextWithExternalAsset("res://assets/logo.png")));
+        var synchronizer = CreateSynchronizer(workspace);
+        var assetPath = Path.Combine(workspace.ProjectRoot, "assets", "logo.png");
+        Directory.CreateDirectory(Path.GetDirectoryName(assetPath)!);
+        File.WriteAllBytes(assetPath, [137, 80, 78, 71, 1]);
+
+        synchronizer.Notify(ExternalFileChangeEvent.Created("assets/logo.png", FixedInstant));
+        var created = synchronizer.Drain(FixedInstant.AddMilliseconds(250));
+
+        Assert.Equal(["assets/logo.png"], created.ProcessedPaths);
+        Assert.Equal("Importing", workspace.ImportState.States["assets/logo.png"]);
+
+        File.WriteAllBytes(assetPath, [137, 80, 78, 71, 2]);
+        synchronizer.Notify(ExternalFileChangeEvent.Changed("assets/logo.png", FixedInstant.AddMilliseconds(300)));
+        var replaced = synchronizer.Drain(FixedInstant.AddMilliseconds(550));
+
+        Assert.Contains(replaced.Diagnostics, diagnostic => diagnostic.Code == "E2D-TOOLING-0002");
+        Assert.Equal("pending-conflict", workspace.ImportState.States["assets/logo.png"]);
+        Assert.Empty(workspace.UndoRedo.UndoGroups);
+
+        File.Delete(assetPath);
+        synchronizer.Notify(ExternalFileChangeEvent.Deleted("assets/logo.png", FixedInstant.AddMilliseconds(600)));
+        var deleted = synchronizer.Drain(FixedInstant.AddMilliseconds(850));
+
+        Assert.Contains(deleted.Diagnostics, diagnostic => diagnostic.Code == "E2D-TOOLING-0002");
+        Assert.Equal("pending-conflict", workspace.ImportState.States["assets/logo.png"]);
+        Assert.DoesNotContain("assets/logo.png", deleted.DeletedPaths);
+    }
+
     private static ExternalChangeSynchronizer CreateSynchronizer(ProjectWorkspace workspace)
     {
         return new ExternalChangeSynchronizer(workspace, new ExternalChangeSynchronizerOptions(
@@ -276,6 +339,36 @@ public sealed class ExternalChangeSynchronizerTests
                     "health": {
                       "kind": "Int",
                       "value": {{health}}
+                    }
+                  }
+                }
+              ]
+            }
+            """;
+    }
+
+    private static string SceneTextWithExternalAsset(string assetPath)
+    {
+        return $$"""
+            {
+              "format": "Electron2D.SceneFile",
+              "version": 1,
+              "external": [
+                {
+                  "path": "{{assetPath}}"
+                }
+              ],
+              "internal": [],
+              "nodes": [
+                {
+                  "id": 1,
+                  "type": "Electron2D.Sprite2D",
+                  "name": "Logo",
+                  "parent": null,
+                  "properties": {
+                    "texture": {
+                      "kind": "ResourcePath",
+                      "value": "{{assetPath}}"
                     }
                   }
                 }

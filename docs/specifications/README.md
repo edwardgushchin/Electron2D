@@ -63,6 +63,7 @@
 - [WorkspaceSnapshot, job input identity и dirty export policy](project-system/workspace-snapshot.md) - immutable snapshot для build/test/run/export artifacts, materialization, stale rules и export dirty snapshot policy.
 - [WorkspaceJob contract и event stream](project-system/workspace-jobs.md) - внутренний контракт долгих import/build/test/export/run операций, lifecycle states, progress, cancel, diagnostics, artifacts и stale markers.
 - [WorkspaceTransactionEngine и безопасные project operations](project-system/workspace-transactions.md) - внутренний контракт транзакционных project operations: dry-run, revisions, save/headless/external import modes, atomic write, conflicts и grouped undo.
+- [Human-AI concurrent editing, conflicts и grouped Undo](project-system/concurrent-editing-and-undo.md) - internal policy совместного редактирования, conflict detection, operation provenance, binary asset guards и реального grouped Undo/Redo.
 - [ProjectTaskManager, TaskActivity и task storage](project-system/project-task-manager.md) - встроенная модель задач пользовательского проекта, activity, human acceptance guard, dependency graph, stable task documents и transaction integration.
 - [External Change Synchronizer](project-system/external-change-synchronizer.md) - внутренний слой синхронизации файлов, изменённых вне Editor, через debounce, фильтры, `ExternalImport`, task guards и live import state.
 

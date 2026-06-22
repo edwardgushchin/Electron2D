@@ -422,7 +422,12 @@ internal sealed class ExternalChangeSynchronizer
     public ExternalChangeSynchronizerResult Drain(DateTimeOffset nowUtc)
     {
         PruneExpiredSuppressions(nowUtc);
-        var builder = new ExternalChangeResultBuilder(ignoredSinceLastDrain, suppressedSinceLastDrain);
+        var batchOperationId = BuildBatchOperationId(nowUtc);
+        var builder = new ExternalChangeResultBuilder(
+            ignoredSinceLastDrain,
+            suppressedSinceLastDrain,
+            batchOperationId,
+            batchOperationId.Replace("op-", "undo-", StringComparison.Ordinal));
         ignoredSinceLastDrain.Clear();
         suppressedSinceLastDrain.Clear();
 
@@ -485,6 +490,12 @@ internal sealed class ExternalChangeSynchronizer
 
         if (IsBinaryAsset(relativePath))
         {
+            if (knownFiles.ContainsKey(relativePath) && IsBinaryAssetUsed(relativePath))
+            {
+                RecordBinaryConflict(relativePath, "replace", builder);
+                return;
+            }
+
             workspace.ImportState.SetState(relativePath, "Importing");
             knownFiles[relativePath] = FileFingerprint.FromFile(fullPath);
             builder.AddProcessed(relativePath);
@@ -517,12 +528,12 @@ internal sealed class ExternalChangeSynchronizer
         }
 
         var transaction = workspace.Transactions.Apply(new WorkspaceTransactionRequest(
-            BuildOperationId("external-import", relativePath),
+            builder.ExternalBatchOperationId,
             ProjectWorkspaceActorKind.ExternalFile,
             "external.import",
             WorkspaceTransactionMode.ExternalImport,
             dryRun: false,
-            undoGroupId: BuildUndoGroupId("external-import", relativePath),
+            undoGroupId: builder.ExternalBatchUndoGroupId,
             [WorkspaceTransactionDocumentEdit.ReplaceText(relativePath, document.InMemoryRevision, text)]));
         builder.AddProcessed(relativePath);
         builder.AddChangedFile(relativePath);
@@ -727,6 +738,12 @@ internal sealed class ExternalChangeSynchronizer
             return;
         }
 
+        if (IsBinaryAsset(relativePath) && IsBinaryAssetUsed(relativePath))
+        {
+            RecordBinaryConflict(relativePath, "delete", builder);
+            return;
+        }
+
         if (!workspace.Documents.TryGetByPath(relativePath, out var document))
         {
             knownFiles.Remove(relativePath);
@@ -912,6 +929,33 @@ internal sealed class ExternalChangeSynchronizer
             fileSystemDockStatus);
     }
 
+    private void RecordBinaryConflict(
+        string relativePath,
+        string action,
+        ExternalChangeResultBuilder builder)
+    {
+        workspace.ImportState.SetState(relativePath, "pending-conflict");
+        builder.AddProcessed(relativePath);
+        builder.AddDiagnostic(CreateDiagnostic(
+            $"External binary asset {action} of '{relativePath}' conflicts with a used resource reference."));
+        builder.AddImportRecord(CreateImportRecord(
+            relativePath,
+            builder.ExternalBatchOperationId,
+            routedThroughTaskManager: false,
+            usedWorkspaceTransaction: false,
+            "pending-conflict"));
+    }
+
+    private bool IsBinaryAssetUsed(string relativePath)
+    {
+        var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(relativePath);
+        var resourcePath = ProjectDocumentPaths.ToResourcePath(normalizedPath);
+        return workspace.Documents.Documents.Any(document =>
+            !string.Equals(document.Path, normalizedPath, StringComparison.Ordinal) &&
+            (document.Text.Contains(normalizedPath, StringComparison.Ordinal) ||
+                document.Text.Contains(resourcePath, StringComparison.Ordinal)));
+    }
+
     private static StructuredDiagnostic CreateDiagnostic(string message)
     {
         return StructuredDiagnostic.Create(
@@ -941,6 +985,11 @@ internal sealed class ExternalChangeSynchronizer
     private static string BuildUndoGroupId(string prefix, string path)
     {
         return BuildOperationId(prefix, path).Replace("op-", "undo-", StringComparison.Ordinal);
+    }
+
+    private static string BuildBatchOperationId(DateTimeOffset timestampUtc)
+    {
+        return $"op-external-batch-{timestampUtc.UtcTicks.ToString("x", System.Globalization.CultureInfo.InvariantCulture)}";
     }
 
     private static bool IsTaskFile(string path)
@@ -1079,11 +1128,24 @@ internal sealed class ExternalChangeSynchronizer
         private readonly List<ExternalChangeImportRecord> importRecords = [];
         private TimeSpan maxAppliedDelay = TimeSpan.Zero;
 
-        public ExternalChangeResultBuilder(IEnumerable<string> ignoredPaths, IEnumerable<string> suppressedPaths)
+        public ExternalChangeResultBuilder(
+            IEnumerable<string> ignoredPaths,
+            IEnumerable<string> suppressedPaths,
+            string externalBatchOperationId,
+            string externalBatchUndoGroupId)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(externalBatchOperationId);
+            ArgumentException.ThrowIfNullOrWhiteSpace(externalBatchUndoGroupId);
+
             this.ignoredPaths = ignoredPaths.ToList();
             this.suppressedPaths = suppressedPaths.ToList();
+            ExternalBatchOperationId = externalBatchOperationId;
+            ExternalBatchUndoGroupId = externalBatchUndoGroupId;
         }
+
+        public string ExternalBatchOperationId { get; }
+
+        public string ExternalBatchUndoGroupId { get; }
 
         public int DirectoryScanCount { get; private set; }
 

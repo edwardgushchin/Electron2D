@@ -19,7 +19,7 @@
 - `ChangeEventStream` — in-memory publisher/subscriber для workspace events;
 - `RevisionStore` — `WorkspaceRevision`, `ContentRevision`, `DocumentRevisions`, `DirtyDocuments` и `PersistenceState`;
 - `OperationJournal` — завершённые operations, unfinished transaction marker и recovery snapshot dirty-документов;
-- `UndoRedo` — минимальный in-memory список undo groups для следующих задач;
+- `UndoRedo` — in-memory store reversible undo/redo groups с before/after snapshots открытых text documents;
 - `ImportState` — минимальное хранилище import states по project-relative path;
 - `BuildState` — минимальное in-memory состояние сборки;
 - `DiagnosticsStore` — structured diagnostics из `Diagnostics.Core` по source key.
@@ -69,6 +69,12 @@
 4. увеличивает `WorkspaceRevision`;
 5. публикует `DocumentPersisted`;
 6. записывает completed operation journal entry.
+
+## Undo/redo
+
+`ProjectWorkspaceUndoRedoStore` хранит reversible groups. Группа содержит `UndoGroupId`, provenance исходной операции и before/after snapshots affected documents. `UndoLast(...)` возвращает все documents группы к before snapshots, `RedoLast(...)` применяет after snapshots.
+
+Если несколько операций подряд добавляют тот же `UndoGroupId`, store объединяет их в одну группу: первый before snapshot остаётся началом группы, последний after snapshot становится итогом. Это используется external synchronizer-ом для debounce batch.
 
 ## Diagnostics и recovery
 

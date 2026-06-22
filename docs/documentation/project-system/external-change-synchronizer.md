@@ -26,6 +26,8 @@ Synchronizer создаётся поверх открытого `ProjectWorkspac
 - create/change/delete text documents;
 - rename/move text documents с сохранением `DocumentId`, если UID или hash позволяют связать старый и новый path;
 - asset create/change через live import state `Importing`;
+- binary asset replace/delete conflict для используемых ресурсов;
+- grouped external Undo для text changes внутри одного debounce batch;
 - `.e2task` и `.e2tasks` routing;
 - structured diagnostics и pending-conflict state вместо перезаписи dirty documents.
 
@@ -59,6 +61,12 @@ Assets:
 - `ExternalChangeSynchronizerResult.ImportRecords` содержит `FileSystemDockStatus = "Importing"`;
 - текущий FileSystem dock умеет принять live status provider и показать этот статус до завершения полноценного reimport.
 
+Если binary asset уже известен synchronizer-у и используется открытым document через project-relative path или `res://` reference, replace/delete не применяется автоматически. Result получает diagnostic `E2D-TOOLING-0002`, `ImportState[path] = pending-conflict`, known fingerprint сохраняется, а project Undo group не создаётся.
+
+## Grouped external Undo
+
+Каждый `Drain(...)` создаёт batch operation id вида `op-external-batch-*` и matching `undo-external-batch-*`. Успешные text imports внутри одного debounce batch используют этот общий undo group. `ProjectWorkspaceUndoRedoStore` объединяет повторное добавление такого group id, поэтому пользователь может отменить весь batch одним `UndoLast(...)`.
+
 ## Result contract
 
 `ExternalChangeSynchronizerResult` возвращает:
@@ -87,6 +95,7 @@ Assets:
 - FileSystem watcher wrapper уже настраивает recursive observation, но focused tests не зависят от реальных OS-events, чтобы не делать проверку нестабильной.
 - Visual conflict panel пока не реализована. Текущий слой возвращает structured diagnostics, transaction conflicts и `pending-conflict` state.
 - Binary asset import пока выставляет live status `Importing`; завершённый import job и `Compiling`/`Error` обновляются существующим resource import pipeline или будущим job adapter.
+- Binary usage graph сейчас основан на ссылках в открытых documents. Полный resource graph будет расширяться вместе с Editor resource workflow.
 - Root-level watcher overflow может потребовать root scan, если underlying platform не сообщает affected directory. Directory-specific overflow не запускает full project rescan.
 
 ## Проверка
@@ -108,3 +117,5 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~ExternalChangeSynchronizerTests|FullyQualifiedName~EditorFileSystemDockTests|FullyQualifiedName~ProjectWorkspaceTests|FullyQualifiedName~WorkspaceTransactionTests|FullyQualifiedName~ProjectTaskManagerTests"
 ```
+
+Тесты покрывают recursive watcher contract, debounce/coalescing, create/change/move/delete, ignore rules, self-write suppression, overflow/resume scans, task document guards, dirty conflict, grouped external undo, binary replace/delete pending conflict и visible import state.

@@ -302,7 +302,7 @@ internal sealed class WorkspaceTransactionEngine
             return Success(request, changedObjects: plan.ChangedObjects, createdObjects: plan.CreatedObjects);
         }
 
-        AddUndoGroup(request);
+        var beforeStates = CaptureUndoStates(plan.Edits.Select(edit => edit.Path));
         var context = CreateContext(request);
         foreach (var edit in plan.Edits)
         {
@@ -317,6 +317,7 @@ internal sealed class WorkspaceTransactionEngine
             }
         }
 
+        AddUndoGroup(request, beforeStates, CaptureUndoStates(plan.Edits.Select(edit => edit.Path)));
         return Success(request, changedObjects: plan.ChangedObjects, createdObjects: plan.CreatedObjects);
     }
 
@@ -461,6 +462,7 @@ internal sealed class WorkspaceTransactionEngine
                 createdObjects: createdObjects);
         }
 
+        var beforeStates = CaptureUndoStates([document.Path]);
         var mergedText = MergeIncomingChanges(document.Text, document.Path, incomingChanges);
         var nextPersistedRevision = document.PersistedRevision.Next();
         var nextInMemoryRevision = document.IsDirty
@@ -473,7 +475,6 @@ internal sealed class WorkspaceTransactionEngine
             nextInMemoryRevision,
             edit.Text);
         workspace.Revisions.RecordDocumentChanged(changed);
-        AddUndoGroup(request);
         workspace.OperationJournal.RecordCompleted(
             CreateContext(request),
             [changed.Path],
@@ -487,6 +488,7 @@ internal sealed class WorkspaceTransactionEngine
             source: null,
             diagnostics: []));
 
+        AddUndoGroup(request, beforeStates, CaptureUndoStates([changed.Path]));
         return Success(
             request,
             changedObjects: changedObjects,
@@ -805,11 +807,32 @@ internal sealed class WorkspaceTransactionEngine
         return false;
     }
 
-    private void AddUndoGroup(WorkspaceTransactionRequest request)
+    private IReadOnlyList<ProjectWorkspaceUndoDocumentState> CaptureUndoStates(IEnumerable<string> paths)
+    {
+        return paths
+            .Select(ProjectDocumentPaths.NormalizeRelativePath)
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .Select(path => workspace.Documents.TryGetByPath(path, out var document)
+                ? ProjectWorkspaceUndoDocumentState.FromDocument(document)
+                : ProjectWorkspaceUndoDocumentState.Missing(path))
+            .ToArray();
+    }
+
+    private void AddUndoGroup(
+        WorkspaceTransactionRequest request,
+        IReadOnlyList<ProjectWorkspaceUndoDocumentState> beforeStates,
+        IReadOnlyList<ProjectWorkspaceUndoDocumentState> afterStates)
     {
         if (!string.IsNullOrWhiteSpace(request.UndoGroupId))
         {
-            workspace.UndoRedo.AddUndoGroup(request.UndoGroupId);
+            workspace.UndoRedo.AddUndoGroup(
+                request.UndoGroupId,
+                request.OperationId,
+                request.ActorKind,
+                request.OperationKind,
+                beforeStates,
+                afterStates);
         }
     }
 

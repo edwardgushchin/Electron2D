@@ -296,6 +296,109 @@ public sealed class WorkspaceTransactionTests
     }
 
     [Fact]
+    public void AgentTransactionUndoRedoRestoresAllDocumentsAndKeepsProvenance()
+    {
+        using var workspace = CreateWorkspace(
+            "grouped-undo",
+            ("scenes/main.scene.json", SceneText(speed: 10, health: 100)),
+            ("project-settings.json", SettingsText("scenes/main.scene.json", width: 1280)));
+
+        var result = workspace.Transactions.Apply(new WorkspaceTransactionRequest(
+            "op-agent-multi-edit",
+            ProjectWorkspaceActorKind.Agent,
+            "workspace.apply-transaction",
+            WorkspaceTransactionMode.WorkspaceOnly,
+            dryRun: false,
+            undoGroupId: "undo-agent-multi-edit",
+            edits:
+            [
+                WorkspaceTransactionDocumentEdit.ReplaceText(
+                    "scenes/main.scene.json",
+                    new ProjectDocumentRevision(1),
+                    SceneText(speed: 18, health: 100)),
+                WorkspaceTransactionDocumentEdit.ReplaceText(
+                    "project-settings.json",
+                    new ProjectDocumentRevision(1),
+                    SettingsText("scenes/main.scene.json", width: 1920))
+            ]));
+
+        Assert.True(result.Succeeded);
+        Assert.Contains("undo-agent-multi-edit", workspace.UndoRedo.UndoGroups);
+        var agentEntries = workspace.OperationJournal.Entries.Where(entry => entry.OperationId == "op-agent-multi-edit").ToArray();
+        Assert.NotEmpty(agentEntries);
+        Assert.All(agentEntries, entry => Assert.Equal(ProjectWorkspaceActorKind.Agent, entry.ActorKind));
+        Assert.Contains(agentEntries, entry => entry.AffectedDocuments.Contains("scenes/main.scene.json", StringComparer.Ordinal));
+        Assert.Contains(agentEntries, entry => entry.AffectedDocuments.Contains("project-settings.json", StringComparer.Ordinal));
+
+        var undo = workspace.UndoRedo.UndoLast(new ProjectWorkspaceOperationContext(
+            "op-undo-agent-multi-edit",
+            ProjectWorkspaceActorKind.Human,
+            "workspace.undo"));
+
+        Assert.True(undo.Succeeded);
+        Assert.Equal("undo-agent-multi-edit", undo.UndoGroupId);
+        Assert.Equal(["project-settings.json", "scenes/main.scene.json"], undo.ChangedDocuments);
+        Assert.Contains("\"value\": 10", workspace.Documents.GetByPath("scenes/main.scene.json").Text, StringComparison.Ordinal);
+        Assert.Contains("\"width\": 1280", workspace.Documents.GetByPath("project-settings.json").Text, StringComparison.Ordinal);
+        Assert.DoesNotContain("undo-agent-multi-edit", workspace.UndoRedo.UndoGroups);
+        Assert.Contains("undo-agent-multi-edit", workspace.UndoRedo.RedoGroups);
+
+        var redo = workspace.UndoRedo.RedoLast(new ProjectWorkspaceOperationContext(
+            "op-redo-agent-multi-edit",
+            ProjectWorkspaceActorKind.Human,
+            "workspace.redo"));
+
+        Assert.True(redo.Succeeded);
+        Assert.Equal("undo-agent-multi-edit", redo.UndoGroupId);
+        Assert.Contains("\"value\": 18", workspace.Documents.GetByPath("scenes/main.scene.json").Text, StringComparison.Ordinal);
+        Assert.Contains("\"width\": 1920", workspace.Documents.GetByPath("project-settings.json").Text, StringComparison.Ordinal);
+        Assert.Contains("undo-agent-multi-edit", workspace.UndoRedo.UndoGroups);
+    }
+
+    [Fact]
+    public void DirtyCodeBufferExternalImportReturnsConflictInsteadOfOverwritingUnsavedText()
+    {
+        using var workspace = CreateWorkspace("code-conflict", ("scripts/Player.cs", "public sealed class Player { }\n"));
+        workspace.Transactions.Apply(new WorkspaceTransactionRequest(
+            "op-human-code-edit",
+            ProjectWorkspaceActorKind.Human,
+            "script.edit",
+            WorkspaceTransactionMode.WorkspaceOnly,
+            dryRun: false,
+            undoGroupId: "undo-human-code-edit",
+            edits:
+            [
+                WorkspaceTransactionDocumentEdit.ReplaceText(
+                    "scripts/Player.cs",
+                    new ProjectDocumentRevision(1),
+                    "public sealed class Player\n{\n    private int speed;\n}\n")
+            ]));
+
+        var import = workspace.Transactions.Apply(new WorkspaceTransactionRequest(
+            "op-external-code-edit",
+            ProjectWorkspaceActorKind.ExternalFile,
+            "external.import",
+            WorkspaceTransactionMode.ExternalImport,
+            dryRun: false,
+            undoGroupId: "undo-external-code-edit",
+            edits:
+            [
+                WorkspaceTransactionDocumentEdit.ReplaceText(
+                    "scripts/Player.cs",
+                    new ProjectDocumentRevision(2),
+                    "public sealed class Player\n{\n    private int healthAndLongName;\n}\n")
+            ]));
+
+        Assert.False(import.Succeeded);
+        var conflict = Assert.Single(import.Conflicts);
+        Assert.Equal(WorkspaceTransactionConflictKind.PropertyConflict, conflict.Kind);
+        Assert.Equal("text:root", conflict.ObjectUid);
+        Assert.Equal("length", conflict.PropertyPath);
+        Assert.Contains("speed", workspace.Documents.GetByPath("scripts/Player.cs").Text, StringComparison.Ordinal);
+        Assert.DoesNotContain("healthAndLongName", workspace.Documents.GetByPath("scripts/Player.cs").Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void TransactionsRejectGeneratedCacheAndEscapingPaths()
     {
         using var workspace = CreateWorkspace("path-safety", SceneText(speed: 10, health: 100));
@@ -340,17 +443,26 @@ public sealed class WorkspaceTransactionTests
 
     private static ProjectWorkspace CreateWorkspace(string name, string text)
     {
+        return CreateWorkspace(name, ("scenes/main.scene.json", text));
+    }
+
+    private static ProjectWorkspace CreateWorkspace(string name, params (string Path, string Text)[] documents)
+    {
         var root = Path.Combine(Path.GetTempPath(), "Electron2D.Tests", "WorkspaceTransactions", name, Guid.NewGuid().ToString("N"));
-        var sourcePath = Path.Combine(root, "scenes", "main.scene.json");
-        Directory.CreateDirectory(Path.GetDirectoryName(sourcePath)!);
-        File.WriteAllText(sourcePath, text.ReplaceLineEndings("\n"));
 
         var workspace = ProjectWorkspace.CreateHeadless(root, "test-runner");
-        workspace.CommandBus.OpenTextDocument(
-            "scenes/main.scene.json",
-            text,
-            persistedRevision: 1,
-            ProjectWorkspaceOperationContext.ForTest($"open-{name}"));
+        foreach (var (path, text) in documents)
+        {
+            var sourcePath = Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(sourcePath)!);
+            File.WriteAllText(sourcePath, text.ReplaceLineEndings("\n"));
+            workspace.CommandBus.OpenTextDocument(
+                path,
+                text,
+                persistedRevision: 1,
+                ProjectWorkspaceOperationContext.ForTest($"open-{name}-{path.Replace('/', '-')}"));
+        }
+
         return workspace;
     }
 
@@ -402,6 +514,18 @@ public sealed class WorkspaceTransactionTests
               "external": [],
               "internal": [],
               "nodes": []
+            }
+            """;
+    }
+
+    private static string SettingsText(string mainScene, int width)
+    {
+        return $$"""
+            {
+              "format": "Electron2D.ProjectSettings",
+              "version": 1,
+              "mainScene": "{{mainScene}}",
+              "width": {{width}}
             }
             """;
     }
