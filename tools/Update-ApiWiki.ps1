@@ -363,7 +363,7 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
         "API-UI-and-Text.md",
         "UI and Text",
         "UI controls, labels, fonts and text alignment values.",
-        type => Named(type, "BoxContainer", "BoxContainerAlignmentMode", "CenterContainer", "Container", "Control", "FocusMode", "GridContainer", "GrowDirection", "HBoxContainer", "Label", "MarginContainer", "ScrollContainer", "ScrollHintMode", "ScrollMode", "SizeFlags", "VBoxContainer", "Font", "HorizontalAlignment", "MouseFilter", "VerticalAlignment")),
+        type => Named(type, "BaseButton", "BoxContainer", "BoxContainerAlignmentMode", "Button", "CenterContainer", "CheckBox", "Container", "Control", "FocusMode", "GridContainer", "GrowDirection", "HBoxContainer", "Label", "LineEdit", "MarginContainer", "NinePatchRect", "Panel", "ProgressBar", "Range", "ScrollContainer", "ScrollHintMode", "ScrollMode", "SizeFlags", "Slider", "TextureButton", "TextureRect", "VBoxContainer", "Font", "HorizontalAlignment", "MouseFilter", "VerticalAlignment")),
     new ApiCategory(
         "API-Scripting-Metadata.md",
         "Scripting Metadata",

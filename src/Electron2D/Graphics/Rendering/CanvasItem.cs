@@ -519,6 +519,28 @@ public class CanvasItem : Node
         AddDrawingCommand(CanvasItemDrawingCommand.CreateTexture(texture, position, modulate ?? Color.White));
     }
 
+    internal void DrawTextureRect(
+        Texture2D texture,
+        Rect2 rect,
+        Rect2? sourceRect = null,
+        Color? modulate = null,
+        bool flipH = false,
+        bool flipV = false)
+    {
+        ArgumentNullException.ThrowIfNull(texture);
+        ValidateDrawingRect(rect);
+        var textureSize = texture.GetSize();
+        var resolvedSourceRect = sourceRect ?? new Rect2(0f, 0f, textureSize.X, textureSize.Y);
+        ValidateDrawingRect(resolvedSourceRect);
+        AddDrawingCommand(CanvasItemDrawingCommand.CreateTextureRect(
+            texture,
+            rect,
+            resolvedSourceRect,
+            modulate ?? Color.White,
+            flipH,
+            flipV));
+    }
+
     /// <summary>
     /// Draws text using a font at a local-space baseline position.
     /// </summary>
@@ -641,5 +663,13 @@ public class CanvasItem : Node
         }
 
         drawingCommands.Add(command);
+    }
+
+    private static void ValidateDrawingRect(Rect2 rect)
+    {
+        if (!rect.Position.IsFinite() || !rect.Size.IsFinite() || rect.Size.X < 0f || rect.Size.Y < 0f)
+        {
+            throw new ArgumentOutOfRangeException(nameof(rect), rect, "Drawing rectangle values must be finite and non-negative.");
+        }
     }
 }

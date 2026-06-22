@@ -30,6 +30,7 @@ internal readonly struct CanvasItemDrawingCommand
         CanvasItemRenderCommandKind kind,
         Vector2 position,
         Rect2 rect,
+        Rect2 sourceRect,
         Vector2[] points,
         Color[] colors,
         Vector2[] uvs,
@@ -44,11 +45,14 @@ internal readonly struct CanvasItemDrawingCommand
         float radius,
         float width,
         bool filled,
-        bool antialiased)
+        bool antialiased,
+        bool flipH,
+        bool flipV)
     {
         Kind = kind;
         Position = position;
         Rect = rect;
+        SourceRect = sourceRect;
         Points = points;
         Colors = colors;
         Uvs = uvs;
@@ -64,6 +68,8 @@ internal readonly struct CanvasItemDrawingCommand
         Width = width;
         Filled = filled;
         Antialiased = antialiased;
+        FlipH = flipH;
+        FlipV = flipV;
     }
 
     public CanvasItemRenderCommandKind Kind { get; }
@@ -71,6 +77,8 @@ internal readonly struct CanvasItemDrawingCommand
     public Vector2 Position { get; }
 
     public Rect2 Rect { get; }
+
+    public Rect2 SourceRect { get; }
 
     public IReadOnlyList<Vector2> Points { get; }
 
@@ -102,6 +110,10 @@ internal readonly struct CanvasItemDrawingCommand
 
     public bool Antialiased { get; }
 
+    public bool FlipH { get; }
+
+    public bool FlipV { get; }
+
     public static CanvasItemDrawingCommand CreateLine(
         Vector2 from,
         Vector2 to,
@@ -113,6 +125,7 @@ internal readonly struct CanvasItemDrawingCommand
             CanvasItemRenderCommandKind.Line,
             position: default,
             rect: default,
+            sourceRect: default,
             new[] { from, to },
             Array.Empty<Color>(),
             Array.Empty<Vector2>(),
@@ -127,7 +140,9 @@ internal readonly struct CanvasItemDrawingCommand
             radius: 0f,
             width,
             filled: true,
-            antialiased);
+            antialiased,
+            flipH: false,
+            flipV: false);
     }
 
     public static CanvasItemDrawingCommand CreateRect(
@@ -141,6 +156,7 @@ internal readonly struct CanvasItemDrawingCommand
             CanvasItemRenderCommandKind.Rect,
             position: default,
             rect,
+            sourceRect: default,
             Array.Empty<Vector2>(),
             Array.Empty<Color>(),
             Array.Empty<Vector2>(),
@@ -155,7 +171,9 @@ internal readonly struct CanvasItemDrawingCommand
             radius: 0f,
             width,
             filled,
-            antialiased);
+            antialiased,
+            flipH: false,
+            flipV: false);
     }
 
     public static CanvasItemDrawingCommand CreateCircle(
@@ -170,6 +188,7 @@ internal readonly struct CanvasItemDrawingCommand
             CanvasItemRenderCommandKind.Circle,
             position,
             rect: default,
+            sourceRect: default,
             Array.Empty<Vector2>(),
             Array.Empty<Color>(),
             Array.Empty<Vector2>(),
@@ -184,7 +203,9 @@ internal readonly struct CanvasItemDrawingCommand
             radius,
             width,
             filled,
-            antialiased);
+            antialiased,
+            flipH: false,
+            flipV: false);
     }
 
     public static CanvasItemDrawingCommand CreatePolygon(
@@ -197,6 +218,7 @@ internal readonly struct CanvasItemDrawingCommand
             CanvasItemRenderCommandKind.Polygon,
             position: default,
             rect: default,
+            sourceRect: default,
             points,
             colors,
             uvs,
@@ -211,7 +233,9 @@ internal readonly struct CanvasItemDrawingCommand
             radius: 0f,
             width: -1f,
             filled: true,
-            antialiased: false);
+            antialiased: false,
+            flipH: false,
+            flipV: false);
     }
 
     public static CanvasItemDrawingCommand CreateTexture(
@@ -224,6 +248,7 @@ internal readonly struct CanvasItemDrawingCommand
             CanvasItemRenderCommandKind.Texture,
             position,
             new Rect2(position, new Vector2(size.X, size.Y)),
+            new Rect2(0f, 0f, size.X, size.Y),
             Array.Empty<Vector2>(),
             Array.Empty<Color>(),
             Array.Empty<Vector2>(),
@@ -238,7 +263,41 @@ internal readonly struct CanvasItemDrawingCommand
             radius: 0f,
             width: -1f,
             filled: true,
-            antialiased: false);
+            antialiased: false,
+            flipH: false,
+            flipV: false);
+    }
+
+    public static CanvasItemDrawingCommand CreateTextureRect(
+        Texture2D texture,
+        Rect2 rect,
+        Rect2 sourceRect,
+        Color modulate,
+        bool flipH,
+        bool flipV)
+    {
+        return new CanvasItemDrawingCommand(
+            CanvasItemRenderCommandKind.Texture,
+            position: rect.Position,
+            rect,
+            sourceRect,
+            Array.Empty<Vector2>(),
+            Array.Empty<Color>(),
+            Array.Empty<Vector2>(),
+            texture,
+            font: null,
+            text: string.Empty,
+            textLayout: null,
+            HorizontalAlignment.Left,
+            textWidth: -1f,
+            fontSize: 16,
+            modulate,
+            radius: 0f,
+            width: -1f,
+            filled: true,
+            antialiased: false,
+            flipH,
+            flipV);
     }
 
     public static CanvasItemDrawingCommand CreateString(
@@ -255,6 +314,7 @@ internal readonly struct CanvasItemDrawingCommand
             CanvasItemRenderCommandKind.String,
             position,
             textLayout.GetDestinationRect(position),
+            sourceRect: default,
             Array.Empty<Vector2>(),
             Array.Empty<Color>(),
             Array.Empty<Vector2>(),
@@ -269,6 +329,8 @@ internal readonly struct CanvasItemDrawingCommand
             radius: 0f,
             width: -1f,
             filled: true,
-            antialiased: false);
+            antialiased: false,
+            flipH: false,
+            flipV: false);
     }
 }

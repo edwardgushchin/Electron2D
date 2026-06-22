@@ -307,6 +307,8 @@ internal sealed class CanvasSubmissionContext
             width: drawingCommand.Width,
             filled: drawingCommand.Filled,
             antialiased: drawingCommand.Antialiased,
+            flipH: drawingCommand.FlipH,
+            flipV: drawingCommand.FlipV,
             debugName: canvasItem.Name));
     }
 
@@ -356,8 +358,7 @@ internal sealed class CanvasSubmissionContext
             return default;
         }
 
-        var size = drawingCommand.Texture.GetSize();
-        return new Rect2(0f, 0f, size.X, size.Y);
+        return drawingCommand.SourceRect;
     }
 
     private readonly record struct SubmissionState(

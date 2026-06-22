@@ -62,6 +62,7 @@
 
 - [Control layout core](ui/control-layout-core.md) - текущие anchors/offsets, minimum size, grow direction, clipping hit-test и focus navigation baseline.
 - [UI containers](ui/containers.md) - текущие `Container`, `BoxContainer`, `HBoxContainer`, `VBoxContainer`, `GridContainer`, `MarginContainer`, `CenterContainer`, `ScrollContainer`, size flags и theme constants.
+- [Базовые UI controls](ui/basic-controls.md) - текущие `Panel`, кнопки, текстовый ввод, `Range`, `Slider`, `ProgressBar`, `TextureRect` и `NinePatchRect`.
 
 ## Локализация и настройки
 

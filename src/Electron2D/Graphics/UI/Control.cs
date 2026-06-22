@@ -1637,7 +1637,13 @@ public class Control : CanvasItem
         return FocusMode != FocusMode.None &&
             IsInsideTree() &&
             IsVisibleInTree() &&
+            CanReceiveFocusCore() &&
             ReferenceEquals(GetViewport(), viewport);
+    }
+
+    internal virtual bool CanReceiveFocusCore()
+    {
+        return true;
     }
 
     internal void DispatchGuiInput(InputEvent inputEvent)
