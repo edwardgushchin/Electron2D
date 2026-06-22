@@ -45,13 +45,15 @@ powershell -ExecutionPolicy Bypass -File tools\Update-ApiWiki.ps1 -OutputPath .g
 powershell -ExecutionPolicy Bypass -File tools\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
 ```
 
-Генератор собирает `src\Electron2D\Electron2D.csproj` с XML documentation file, читает compiled public surface из runtime assembly и создаёт GitHub Wiki Markdown pages. Ручной список публичных типов не используется.
+Генератор собирает `src\Electron2D\Electron2D.csproj` с XML documentation file, читает compiled public surface из runtime assembly, читает `data/api/electron2d-api-manifest.json` и создаёт GitHub Wiki Markdown pages. Ручной список публичных типов не используется.
+
+Каждая generated type page содержит блок `Godot 4.7 C# profile compatibility`. Для `Supported` API блок показывает `Supported / Parity verified` и `Out of profile: no`; для `Partial`, `Experimental` и `Planned` API показывает непроверенный status и `Out of profile: yes`.
 
 ## Текущий статус
 
-На 2026-06-21 генератор создаёт `142` сгенерированные страницы: `Home.md`, `_Sidebar.md`, `_Footer.md`, `API-by-Category.md`, `API-Reference.md`, `12` category pages и `125` страниц публичных типов. Вместе с ручной compatibility page в `Electron2D.wiki.git` хранится `143` Markdown-файла.
+На 2026-06-22 генератор создаёт `190` сгенерированных страниц: `Home.md`, `_Sidebar.md`, `_Footer.md`, `API-by-Category.md`, `API-Reference.md`, category pages и страницы публичных типов. Вместе с ручной compatibility page в `Electron2D.wiki.git` хранится полный API reference для текущего public runtime surface.
 
-CI клонирует `Electron2D.wiki.git` в `.github/wiki` и запускает `tools\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check`. Если public API или XML documentation меняются, но GitHub Wiki не обновлена, CI падает.
+CI клонирует `Electron2D.wiki.git` в `.github/wiki`, запускает `tools\Update-ApiManifest.ps1 -WikiPath .github/wiki -Check`, затем запускает `tools\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check`. Если public API, XML documentation, manifest или generated Wiki pages меняются несогласованно, CI падает.
 
 Все внутренние ссылки генерируются без расширения `.md`, чтобы GitHub открывал rendered Wiki pages, а не raw Markdown.
 
@@ -63,6 +65,7 @@ Verifier сравнивает expected generated Wiki pages с текущими 
 - сгенерированная page устарела;
 - осталась лишняя сгенерированная page;
 - отсутствует `API-Compatibility.md`.
+- tracked `data/api/electron2d-api-manifest.json` устарел относительно public API, XML documentation или `API-Compatibility.md`.
 
 Дополнительный audit проверяет, что `Home.md`, `API-Reference.md`, `_Sidebar.md` и `API-Compatibility.md` связаны wiki-style ссылками без расширения `.md`, а compatibility page содержит status legend, current public runtime surface и planned preview surface.
 

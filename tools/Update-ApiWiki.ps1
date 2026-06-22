@@ -89,23 +89,26 @@ New-Item -ItemType Directory -Force -Path $expectedWikiRoot | Out-Null
 @'
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Xml.Linq;
 
-if (args.Length != 3)
+if (args.Length != 4)
 {
-    Console.Error.WriteLine("Usage: Generator <assemblyPath> <xmlPath> <wikiRoot>");
+    Console.Error.WriteLine("Usage: Generator <assemblyPath> <xmlPath> <wikiRoot> <apiManifestPath>");
     return 2;
 }
 
 var assemblyPath = args[0];
 var xmlPath = args[1];
 var wikiRoot = args[2];
+var apiManifestPath = args[3];
 var assembly = Assembly.LoadFrom(assemblyPath);
 var xml = XDocument.Load(xmlPath);
 var docs = xml.Root?.Element("members")?.Elements("member")
     .Where(item => item.Attribute("name") is not null)
     .ToDictionary(item => item.Attribute("name")!.Value, item => item, StringComparer.Ordinal)
     ?? new Dictionary<string, XElement>(StringComparer.Ordinal);
+var manifestProfiles = ApiManifestProfiles.Load(apiManifestPath);
 
 var publicTypes = assembly.GetExportedTypes()
     .Where(type => type.Assembly == assembly)
@@ -408,6 +411,8 @@ string RenderTypePage(Type type)
     builder.AppendLine(TypeDeclaration(type));
     builder.AppendLine("```");
 
+    AppendCompatibilityBlock(builder, type);
+
     AppendOptionalDocBlock(builder, "Remarks", typeDoc?.Element("remarks"));
     AppendOptionalDocBlock(builder, "Thread Safety", typeDoc?.Element("threadsafety"));
     AppendOptionalDocBlock(builder, "Since", typeDoc?.Element("since"));
@@ -436,6 +441,25 @@ string RenderTypePage(Type type)
     }
 
     return builder.ToString();
+}
+
+void AppendCompatibilityBlock(StringBuilder builder, Type type)
+{
+    var profile = manifestProfiles.GetRequired(DisplayName(type));
+    builder.AppendLine();
+    builder.AppendLine("## Godot 4.7 C# profile compatibility");
+    builder.AppendLine();
+    builder.AppendLine("```text");
+    builder.AppendLine("Profile: " + profile.Name);
+    builder.AppendLine("Status: " + StatusLabel(profile.Status) + " / " + ParityLabel(profile.Parity));
+    builder.AppendLine("Out of profile: " + (profile.OutOfProfile ? "yes" : "no"));
+    builder.AppendLine("Godot reference: " + profile.GodotReference);
+    builder.AppendLine("```");
+    if (!string.IsNullOrWhiteSpace(profile.Notes))
+    {
+        builder.AppendLine();
+        builder.AppendLine(profile.Notes);
+    }
 }
 
 void AppendMemberDetails(StringBuilder builder, ApiMember member)
@@ -990,12 +1014,76 @@ static string EscapeTable(string value)
     return value.Replace("|", "\\|").Replace("\r", " ").Replace("\n", " ").Trim();
 }
 
+string StatusLabel(string status) => status switch
+{
+    "supported" => "Supported",
+    "partial" => "Partial",
+    "experimental" => "Experimental",
+    "planned" => "Planned",
+    _ => status
+};
+
+string ParityLabel(string parity) => parity switch
+{
+    "parity_verified" => "Parity verified",
+    "not_verified" => "Not verified",
+    _ => parity
+};
+
 public sealed record ApiMember(string Kind, string DisplayName, string Signature, string XmlId);
 
 public sealed record ApiCategory(string PageFileName, string Title, string Description, Func<Type, bool> Matches);
+
+public sealed record ApiProfile(string Name, string Status, string Parity, bool OutOfProfile, string GodotReference, string Notes);
+
+public sealed class ApiManifestProfiles
+{
+    private readonly Dictionary<string, ApiProfile> profiles;
+
+    private ApiManifestProfiles(Dictionary<string, ApiProfile> profiles)
+    {
+        this.profiles = profiles;
+    }
+
+    public static ApiManifestProfiles Load(string path)
+    {
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException("API manifest was not found.", path);
+        }
+
+        var profiles = new Dictionary<string, ApiProfile>(StringComparer.Ordinal);
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        foreach (var type in document.RootElement.GetProperty("types").EnumerateArray())
+        {
+            var fullName = type.GetProperty("fullName").GetString() ?? string.Empty;
+            var profile = type.GetProperty("profile");
+            profiles[fullName] = new ApiProfile(
+                Name: profile.GetProperty("name").GetString() ?? string.Empty,
+                Status: profile.GetProperty("status").GetString() ?? string.Empty,
+                Parity: profile.GetProperty("parity").GetString() ?? string.Empty,
+                OutOfProfile: profile.GetProperty("outOfProfile").GetBoolean(),
+                GodotReference: profile.GetProperty("godotReference").GetString() ?? string.Empty,
+                Notes: profile.GetProperty("notes").GetString() ?? string.Empty);
+        }
+
+        return new ApiManifestProfiles(profiles);
+    }
+
+    public ApiProfile GetRequired(string fullName)
+    {
+        if (profiles.TryGetValue(fullName, out var profile))
+        {
+            return profile;
+        }
+
+        throw new InvalidOperationException("API manifest does not contain type: " + fullName);
+    }
+}
 '@ | Set-Content -LiteralPath $generatorSource -Encoding UTF8
 
-$generatorOutput = & dotnet run --project $generatorProject -- $assemblyPath $xmlPath $expectedWikiRoot 2>&1
+$apiManifestPath = Join-Path $repoRoot 'data/api/electron2d-api-manifest.json'
+$generatorOutput = & dotnet run --project $generatorProject -- $assemblyPath $xmlPath $expectedWikiRoot $apiManifestPath 2>&1
 $generatorExitCode = $LASTEXITCODE
 if ($generatorExitCode -ne 0) {
     Write-Host ($generatorOutput -join [Environment]::NewLine)
@@ -1102,6 +1190,12 @@ if ($Check) {
             Write-Host "- $issue"
         }
         exit 1
+    }
+
+    $apiManifestScript = Join-Path $PSScriptRoot 'Update-ApiManifest.ps1'
+    & $apiManifestScript -WikiPath $wikiRoot -Check
+    if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
     }
 
     Write-Host "GitHub Wiki API reference verification passed for $wikiRoot. Generated pages: $($expectedFiles.Count)."

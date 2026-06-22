@@ -28,6 +28,7 @@
 - [Troubleshooting guide и release checklist](documentation/troubleshooting-release-checklist.md) - обязательные разделы troubleshooting и preview release checklist для пользовательской документации.
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - обязательные XML-теги, verifier modes и правила качества public API comments.
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - автоматическая генерация GitHub Wiki из compiled public API и XML documentation.
+- [Machine-readable API manifest](documentation/api-manifest.md) - JSON manifest публичного API, stable identifiers, compatibility status и проверка синхронизации с compiled assembly, XML docs и GitHub Wiki.
 
 ## Репозиторий
 

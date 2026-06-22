@@ -49,6 +49,7 @@ $requiredFragments = @(
     'tools/Verify-PublicApiXmlDocs.ps1',
     'tools/Verify-PublicApiDocumentationAudit.ps1',
     'tools/Update-ApiWiki.ps1',
+    'tools/Update-ApiManifest.ps1',
     'Electron2D.wiki.git',
     'tools/Verify-WindowsExport.ps1',
     'tools/Verify-LinuxExport.ps1',
@@ -82,6 +83,10 @@ if ($workflow.IndexOf('Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/
 
 if ($workflow.IndexOf('Update-ApiWiki.ps1 -OutputPath .github/wiki -Check', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     throw 'CI workflow must run GitHub Wiki API reference validation against the GitHub Wiki clone with -Check.'
+}
+
+if ($workflow.IndexOf('Update-ApiManifest.ps1 -WikiPath .github/wiki -Check', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'CI workflow must run API manifest validation against the GitHub Wiki clone with -Check.'
 }
 
 if ($workflow.IndexOf("if: matrix.os == 'windows-latest'", [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {

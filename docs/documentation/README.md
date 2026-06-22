@@ -33,6 +33,7 @@
 - [Troubleshooting guide и release checklist](documentation/troubleshooting-release-checklist.md) - проверяемые действия для import, build, shader, export, mobile lifecycle, runtime diagnostics и preview release gate.
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md) - текущее правило, команды verifier и статус заполнения XML comments.
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md) - текущий генератор GitHub Wiki и проверка синхронизации с публичным API.
+- [Machine-readable API manifest](documentation/api-manifest.md) - текущий JSON manifest публичного API, stable identifiers, compatibility status и CI-проверка синхронизации.
 
 ## Ресурсы, импорт и сериализация
 
