@@ -51,6 +51,10 @@
 
 - [Diagnostics.Core](diagnostics/diagnostics-core.md) - внутренний контракт structured diagnostics, stable error code registry, locations, suggested fixes и deterministic JSON serialization.
 
+## Tooling
+
+- [Electron2D.Tooling service boundary](tooling/tooling-service-boundary.md) - общий слой семантических операций над `ProjectWorkspace`, единый operation result, task commands, job-backed long operations и запрет обхода transaction/task/job contracts.
+
 ## Ресурсы, импорт и сериализация
 
 - [Resource file baseline, stable UID и ссылки ресурсов](resources/resource-file-baseline.md) - `ResourceUid`, `.e2res`, external/internal references и diff-friendly формат ресурсов.

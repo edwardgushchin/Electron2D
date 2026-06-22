@@ -40,6 +40,10 @@
 
 - [Diagnostics.Core](diagnostics/diagnostics-core.md) - текущий internal contract для structured diagnostics, stable code registry, locations, safe suggested fixes и deterministic JSON serialization.
 
+## Tooling
+
+- [Electron2D.Tooling service boundary](tooling/tooling-service-boundary.md) - текущий internal project для общего operation result, project transaction wrappers, task service wrappers и job-backed long operations.
+
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md) - проверенный путь установки, первого проекта, сцены, scripting, ресурсов, physics, UI, animation, Input Map и export limitations.

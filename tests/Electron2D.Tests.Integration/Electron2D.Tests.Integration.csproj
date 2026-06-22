@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Electron2D\Electron2D.csproj" />
     <ProjectReference Include="..\..\src\Electron2D.ProjectSystem\Electron2D.ProjectSystem.csproj" />
+    <ProjectReference Include="..\..\src\Electron2D.Tooling\Electron2D.Tooling.csproj" />
   </ItemGroup>
 
 </Project>
