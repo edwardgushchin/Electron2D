@@ -2,6 +2,8 @@
 
 `T-0136` закрывает блокер по отсутствующим реальным ассетам для приёмочных игр `0.1.0 Preview`.
 
+Эта спецификация не закрывает сами reference games. `T-0094` и `T-0095` должны создать полноценные валидные проекты `Electron2D.Editor`: с `project.e2d.json`, `.csproj`, main scene, project settings, Input Map, export presets, импортируемыми resources, scripts и `.electron2d/tasks/**` metadata. Успешная проверка ассетов означает только готовность исходных файлов ресурсов; она не заменяет Editor project validation, открытие проекта в Editor, save/reopen cycle, run/debug/export workflow и platform packaging checks.
+
 ## Цель
 
 Reference platformer и UI-heavy reference game должны получать локально поставляемые файлы ассетов с понятной лицензией, проверяемым manifest и без сетевого скачивания во время build, test или release archive packaging.
