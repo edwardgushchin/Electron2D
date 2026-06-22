@@ -65,6 +65,20 @@ e2d docs example "platformer movement" --format json
 
 Они читают `data/api/electron2d-api-manifest.json` и `data/documentation/electron2d-local-docs-index.json`.
 
+### `api compare-godot`
+
+`api compare-godot` проверяет один публичный тип по canonical API manifest:
+
+```powershell
+e2d api compare-godot Control --format json
+```
+
+Команда читает `data/api/electron2d-api-manifest.json`, не открывает `ProjectWorkspace` и возвращает общий JSON envelope с `route = none`. В `data` находятся `mode = api.compareGodot`, `sourcePath`, краткое описание `type`, `result.status` и `strictParity`.
+
+Для типа внутри утверждённого `0.1.0` 2D-профиля `result.status = parity_verified`, `succeeded = true`, `exitCode = 0`, а счётчики `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches` и `unexpectedChanges` равны `0`.
+
+Для типа вне утверждённого профиля команда завершается fail-closed: `succeeded = false`, `exitCode = 1`, `data.result.status = out_of_profile`, diagnostics содержит `E2D-CLI-0002`. Output не предлагает alternative API или workaround, чтобы агент не обходил границы строгого profile contract.
+
 ### `project validate`
 
 `project validate` создаёт stable CLI envelope. Текущий `T-0116` не запускает полный project validator; команда фиксирует parser/output contract для будущего validation layer.
@@ -254,7 +268,6 @@ Tooling diagnostics пробрасываются в CLI JSON без потери
 `T-0116`/`T-0121`/`T-0148` всё ещё не реализуют:
 
 - удобные scene/resource команды;
-- `api compare-godot`;
 - `context build`;
 - полноценный project/compiler/shader validator для `validate`;
 - запуск реальных import/build/test/export toolchains;

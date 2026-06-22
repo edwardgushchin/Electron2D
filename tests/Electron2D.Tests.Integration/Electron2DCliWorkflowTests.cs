@@ -219,13 +219,78 @@ public sealed class Electron2DCliWorkflowTests
     }
 
     [Fact]
-    public void UnsupportedCommandReturnsStableJsonDiagnostic()
+    public void ApiCompareGodotReturnsManifestBackedParityJsonForProfileType()
     {
         var result = RunCli(
             CliExecutionContext.ForTests(FixedInstant),
             "api",
             "compare-godot",
-            "Node",
+            "Control",
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var type = data.GetProperty("type");
+        var profile = type.GetProperty("profile");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("api compare-godot", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.Equal("api.compareGodot", data.GetProperty("mode").GetString());
+        Assert.Equal("data/api/electron2d-api-manifest.json", data.GetProperty("sourcePath").GetString());
+        Assert.Equal("Electron2D.Control", type.GetProperty("fullName").GetString());
+        Assert.Equal("electron2d://api/type/Electron2D.Control", type.GetProperty("id").GetString());
+        Assert.Equal("supported", profile.GetProperty("status").GetString());
+        Assert.Equal("parity_verified", profile.GetProperty("parity").GetString());
+        Assert.False(profile.GetProperty("outOfProfile").GetBoolean());
+        Assert.Equal("parity_verified", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal(0, root.GetProperty("diagnostics").GetArrayLength());
+        AssertParityCountersAreZero(data.GetProperty("strictParity"));
+    }
+
+    [Fact]
+    public void ApiCompareGodotRejectsOutOfProfileTypeWithStableDiagnostic()
+    {
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "api",
+            "compare-godot",
+            "CharacterBody2D",
+            "--format",
+            "json");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var type = data.GetProperty("type");
+        var profile = type.GetProperty("profile");
+        var diagnostic = root.GetProperty("diagnostics")[0];
+
+        Assert.False(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("api compare-godot", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.Equal("out_of_profile", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal("Electron2D.CharacterBody2D", type.GetProperty("fullName").GetString());
+        Assert.True(profile.GetProperty("outOfProfile").GetBoolean());
+        Assert.Equal("E2D-CLI-0002", diagnostic.GetProperty("code").GetString());
+        Assert.Contains("outside the Electron2D 0.1.0 2D profile", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+        Assert.DoesNotContain("workaround", result.Output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("alternative", result.Output, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void UnknownCommandGroupReturnsStableJsonDiagnostic()
+    {
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "unknown",
+            "command",
             "--format",
             "json");
 
@@ -237,6 +302,16 @@ public sealed class Electron2DCliWorkflowTests
         Assert.False(json.RootElement.GetProperty("succeeded").GetBoolean());
         Assert.Equal("blocked", json.RootElement.GetProperty("route").GetString());
         Assert.Equal("E2D-CLI-0001", diagnostic.GetProperty("code").GetString());
+    }
+
+    private static void AssertParityCountersAreZero(JsonElement strictParity)
+    {
+        Assert.Equal(0, strictParity.GetProperty("missingTypes").GetInt32());
+        Assert.Equal(0, strictParity.GetProperty("missingMembers").GetInt32());
+        Assert.Equal(0, strictParity.GetProperty("signatureMismatches").GetInt32());
+        Assert.Equal(0, strictParity.GetProperty("inheritanceMismatches").GetInt32());
+        Assert.Equal(0, strictParity.GetProperty("defaultMismatches").GetInt32());
+        Assert.Equal(0, strictParity.GetProperty("unexpectedChanges").GetInt32());
     }
 
     private static CliRunResult RunCli(CliExecutionContext context, params string[] args)

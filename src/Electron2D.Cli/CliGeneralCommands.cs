@@ -102,6 +102,7 @@ internal static partial class Electron2DCommandLine
         return group switch
         {
             "project" => RunProject(options, output, error),
+            "api" => RunApi(options, output, error),
             "mcp" => RunMcp(options, output, error, context),
             "doctor" => RunDoctor(options, output, error),
             "workspace" => RunWorkspace(options, output, error, context),
@@ -206,6 +207,90 @@ internal static partial class Electron2DCommandLine
                 ["validationMode"] = "previewStub"
             });
         return WriteResult(result, output, error);
+    }
+
+    private static int RunApi(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count == 0 || !string.Equals(options.Values[0], "compare-godot", StringComparison.OrdinalIgnoreCase))
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("api", options),
+                    options,
+                    "Unknown API command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d api compare-godot <type>` is the implemented API verifier command.")),
+                output,
+                error);
+        }
+
+        if (options.Values.Count != 2)
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "api compare-godot",
+                    options,
+                    NormalizeProjectRoot(options.ProjectRoot),
+                    CliRoute.None,
+                    "API comparison requires a single type name.",
+                    CreateCliDiagnostic("E2D-CLI-0002", "Usage: e2d api compare-godot <type> --format json."),
+                    BuildApiCompareData(type: null, options.Values.Count > 1 ? options.Values[1] : null, "invalid_query", null)),
+                output,
+                error);
+        }
+
+        var query = options.Values[1];
+        var manifest = LoadApiManifest();
+        var type = FindApiManifestType(manifest, query);
+        if (type is null)
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "api compare-godot",
+                    options,
+                    NormalizeProjectRoot(options.ProjectRoot),
+                    CliRoute.None,
+                    $"API type was not found in the manifest: {query}.",
+                    CreateCliDiagnostic("E2D-CLI-0002", $"API type was not found in the manifest: {query}."),
+                    BuildApiCompareData(type: null, query, "type_not_found", manifest)),
+                output,
+                error);
+        }
+
+        var profile = type["profile"]?.AsObject()
+            ?? throw new CommandLineException($"API manifest type '{Value(type, "fullName")}' is missing `profile`.");
+        var outOfProfile = profile["outOfProfile"]?.GetValue<bool>() ?? true;
+        var resultStatus = outOfProfile ? "out_of_profile" : "parity_verified";
+        var data = BuildApiCompareData(type, query, resultStatus, manifest);
+        if (outOfProfile)
+        {
+            var fullName = Value(type, "fullName");
+            return WriteResult(
+                CliResult.Failure(
+                    "api compare-godot",
+                    options,
+                    NormalizeProjectRoot(options.ProjectRoot),
+                    CliRoute.None,
+                    "API type is outside the Electron2D 0.1.0 2D profile.",
+                    CreateCliDiagnostic("E2D-CLI-0002", $"API type '{fullName}' is outside the Electron2D 0.1.0 2D profile."),
+                    data),
+                output,
+                error);
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "api compare-godot",
+                options,
+                NormalizeProjectRoot(options.ProjectRoot),
+                CliRoute.None,
+                "API parity verified.",
+                changedFiles: [],
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data),
+            output,
+            error);
     }
 
     private static int RunDoctor(CliOptions options, TextWriter output, TextWriter error)
@@ -564,9 +649,91 @@ internal static partial class Electron2DCommandLine
             "test" => "  <default>             Queue a job, or run scene tests with --format json and a scene-test manifest.",
             "validate" => "  <default>             Validate a project and emit text, JSON or SARIF diagnostics.",
             "docs" => "  search|type|member|example",
+            "api" => "  compare-godot <type>  Compare one API type against the approved Electron2D 0.1.0 2D profile.",
             _ => "  Reserved for a later Preview task."
         };
         output.WriteLine(commands);
+    }
+
+    private static JsonObject LoadApiManifest()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var apiManifestPath = Path.Combine(repositoryRoot, LocalDocumentationStore.ApiManifestPath.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(apiManifestPath))
+        {
+            throw new FileNotFoundException($"API manifest was not found: {apiManifestPath}");
+        }
+
+        return JsonNode.Parse(File.ReadAllText(apiManifestPath))?.AsObject()
+            ?? throw new CommandLineException("API manifest root must be a JSON object.");
+    }
+
+    private static JsonObject? FindApiManifestType(JsonObject manifest, string query)
+    {
+        var normalized = NormalizeApiTypeQuery(query);
+        var types = manifest["types"]?.AsArray()
+            ?? throw new CommandLineException("API manifest is missing `types`.");
+        return types
+            .OfType<JsonObject>()
+            .FirstOrDefault(type =>
+                string.Equals(Value(type, "fullName"), normalized, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(Value(type, "name"), normalized, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(Value(type, "fullName"), "Electron2D." + normalized, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static JsonObject BuildApiCompareData(JsonObject? type, string? query, string resultStatus, JsonObject? manifest)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "api.compareGodot",
+            ["sourcePath"] = LocalDocumentationStore.ApiManifestPath,
+            ["query"] = query,
+            ["type"] = type is null ? null : BuildApiTypeSummary(type),
+            ["result"] = new JsonObject
+            {
+                ["status"] = resultStatus
+            },
+            ["strictParity"] = manifest is null
+                ? new JsonObject()
+                : CloneObject(manifest["strictParitySummary"], "API manifest is missing `strictParitySummary`.")
+        };
+    }
+
+    private static JsonObject BuildApiTypeSummary(JsonObject type)
+    {
+        var profile = type["profile"]?.AsObject()
+            ?? throw new CommandLineException($"API manifest type '{Value(type, "fullName")}' is missing `profile`.");
+        return new JsonObject
+        {
+            ["fullName"] = Value(type, "fullName"),
+            ["id"] = Value(type, "id"),
+            ["profile"] = new JsonObject
+            {
+                ["status"] = Value(profile, "status"),
+                ["parity"] = Value(profile, "parity"),
+                ["outOfProfile"] = profile["outOfProfile"]?.GetValue<bool>() ?? true
+            }
+        };
+    }
+
+    private static JsonObject CloneObject(JsonNode? node, string errorMessage)
+    {
+        if (node is not JsonObject)
+        {
+            throw new CommandLineException(errorMessage);
+        }
+
+        return JsonNode.Parse(node.ToJsonString())?.AsObject()
+            ?? throw new CommandLineException(errorMessage);
+    }
+
+    private static string NormalizeApiTypeQuery(string query)
+    {
+        var value = query.Trim();
+        const string prefix = "Electron2D.";
+        return value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+            ? value[prefix.Length..]
+            : value;
     }
 
     private static JsonObject WriteJobEvent(
@@ -1393,6 +1560,31 @@ internal sealed class CliResult
             operation: null,
             job: null,
             data: new JsonObject());
+    }
+
+    public static CliResult Failure(
+        string command,
+        CliOptions options,
+        string projectRoot,
+        CliRoute route,
+        string message,
+        StructuredDiagnostic diagnostic,
+        JsonObject data)
+    {
+        return new CliResult(
+            command,
+            options,
+            succeeded: false,
+            exitCode: 1,
+            projectRoot,
+            route,
+            message,
+            [diagnostic],
+            changedFiles: [],
+            dirtyDocuments: [],
+            operation: null,
+            job: null,
+            data);
     }
 
     public static CliResult Report(

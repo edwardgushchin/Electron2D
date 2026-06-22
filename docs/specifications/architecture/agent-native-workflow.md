@@ -808,6 +808,17 @@ unexpected changes: 0
 
 Для типа вне профиля команда должна явно возвращать `out_of_profile`, а не рекомендовать обходной API.
 
+JSON output команды использует общий CLI envelope `schemaVersion`, `command`, `succeeded`, `exitCode`, `route`, `diagnostics` и `data`. Для `T-0151` обязательный `data` contract:
+
+- `mode = api.compareGodot`;
+- `sourcePath = data/api/electron2d-api-manifest.json`;
+- `type.fullName`, `type.id`, `type.profile.status`, `type.profile.parity` и `type.profile.outOfProfile` взяты из manifest;
+- `result.status = parity_verified` для типа внутри утверждённого 2D-профиля;
+- `result.status = out_of_profile` для типа вне утверждённого 2D-профиля;
+- `strictParity` содержит `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches` и `unexpectedChanges`.
+
+Для типа внутри профиля команда завершается с `exitCode = 0`, `succeeded = true`, `route = none` и всеми `strictParity` counters равными `0`. Для типа вне профиля команда завершается fail-closed: `exitCode = 1`, `succeeded = false`, `route = none`, `data.result.status = out_of_profile` и diagnostics содержит stable CLI diagnostic `E2D-CLI-0002`. Для неизвестного типа команда также завершается `exitCode = 1` с diagnostic `E2D-CLI-0002`, не предлагая замену или обходной API.
+
 ## MCP и Editor-hosted Agent Gateway
 
 MCP означает Model Context Protocol: локальный протокол, через который AI-клиент получает типизированные tools, resources и prompts. Electron2D должен предоставлять локальный, необлачный MCP-сервер, не привязанный к конкретной модели или поставщику:

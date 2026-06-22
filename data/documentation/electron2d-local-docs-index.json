@@ -37,7 +37,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/cli/e2d-cli.md",
-                                                    "sha256":  "2d6b47ab9ee27fb6b82707b868d2210d95e88b205cc3e3ea04ecfafdab7b003a"
+                                                    "sha256":  "2f59c04dce9b8d0a060fce701d63ccaf54e60ac10f109b83b292f1540596ecdc"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/core-types/2d-math-baseline.md",
@@ -69,7 +69,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/documentation/api-manifest.md",
-                                                    "sha256":  "b644cfeb63a8dd76849f7c4100d0220da6955e411a0c191b6d72627f97c09b6e"
+                                                    "sha256":  "0841f81964e51f168f2d7c647c57a4b93d94efa782892885f00689027656cf12"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/documentation/canonical-goal-alignment.md",
@@ -513,7 +513,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/specifications/architecture/agent-native-workflow.md",
-                                                    "sha256":  "f1a73a3b4f29c2e2f7b8de9f8d484ad8d1ac7070ca9fa36ed61fe7c92a4359bf"
+                                                    "sha256":  "ada9103a92f188a1866a8d82e001a72876552caaa15d444bb512a0231f084a82"
                                                 },
                                                 {
                                                     "path":  "docs/specifications/documentation/local-documentation-pipeline.md",

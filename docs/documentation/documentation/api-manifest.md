@@ -84,3 +84,23 @@ Out of profile: no
 ```
 
 Для `partial`, `experimental` и `planned` API тот же блок показывает непроверенный status и `Out of profile: yes`.
+
+## CLI parity verifier
+
+`e2d api compare-godot <type> --format json` читает tracked manifest и возвращает машинный результат проверки одного типа:
+
+```powershell
+e2d api compare-godot Control --format json
+```
+
+Команда использует общий CLI envelope:
+
+- `command = api compare-godot`;
+- `route = none`, потому что `ProjectWorkspace` не открывается;
+- `data.mode = api.compareGodot`;
+- `data.sourcePath = data/api/electron2d-api-manifest.json`;
+- `data.type` содержит `fullName`, `id` и `profile`;
+- `data.result.status` показывает `parity_verified` или `out_of_profile`;
+- `data.strictParity` содержит шесть counters strict parity.
+
+Для поддержанного profile type все strict parity counters равны `0`, `succeeded = true` и `exitCode = 0`. Для type вне утверждённого профиля команда возвращает `succeeded = false`, `exitCode = 1`, `data.result.status = out_of_profile` и diagnostic `E2D-CLI-0002`.
