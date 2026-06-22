@@ -53,6 +53,10 @@
 
 - [Headless runtime automation](runtime/headless-runtime-automation.md) - текущий `e2d run` headless mode: fixed frame loop, input trace, stable runtime artifacts, JSON schemas и snapshot identity для CI и автономных агентов.
 
+## Тестирование
+
+- [Scene tests и visual regression tests](testing/scene-visual-testing.md) - текущий `Electron2D.Testing` layer, `e2d test --format json`, scene assertions, visual artifacts, progress events, diagnostics и JSON schemas.
+
 ## MCP
 
 - [Локальный MCP adapter для Editor-сессии и Tooling](mcp/mcp-server.md) - текущий in-process contract для local resources/tools, route selection, workspace transactions, job events, task guard и `e2d mcp serve` manifest.

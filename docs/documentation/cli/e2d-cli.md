@@ -128,6 +128,22 @@ e2d run `
 
 В этом режиме команда создаёт output directory с `result.json`, `diagnostics.json`, `runtime.log.jsonl`, `scene-tree-final.json`, `performance.json` и `frame-XXXX.png`, если указан `--capture-frame`. JSON artifacts используют schemas из `schemas/runtime/` и сохраняют snapshot identity fields. Фактический формат описан в [Headless runtime automation](../runtime/headless-runtime-automation.md).
 
+### `test` scene/visual mode
+
+`e2d test` остаётся generic job command для `--format jsonl` и для проектов без scene-test manifest. Scene/visual mode включается только для `--format json`, когда найден `tests/electron2d.scene-tests.json` или явно указан `--manifest <path>`.
+
+Пример:
+
+```powershell
+e2d test `
+  --project <path> `
+  --format json `
+  --output artifacts/tests `
+  --input-build-configuration-hash sha256:tests
+```
+
+В этом режиме команда запускает `Electron2D.Testing`, возвращает `route = headless`, `data.mode = test.scene` и создаёт `result.json`, `diagnostics.json`, `events.jsonl`, screenshots и pixel-diff artifacts. Фактический manifest и ограничения описаны в [Scene tests и visual regression tests](../testing/scene-visual-testing.md).
+
 ## JSON envelope
 
 `--format json` возвращает stable object:
@@ -194,4 +210,10 @@ Headless runtime проверка:
 
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests
+```
+
+Scene/visual testing проверка:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DSceneVisualTestingTests
 ```

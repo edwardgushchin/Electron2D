@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/testing/scene-test-result.schema.json",
+  "title": "Electron2D scene test result",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "succeeded",
+    "suite",
+    "inputSnapshotId",
+    "inputWorkspaceRevision",
+    "inputContentRevision",
+    "inputDocumentRevisions",
+    "inputBuildConfigurationHash",
+    "tests",
+    "diagnostics",
+    "artifacts"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://electron2d.dev/schemas/testing/scene-test-result.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "succeeded": {
+      "type": "boolean"
+    },
+    "suite": {
+      "type": "string"
+    },
+    "inputSnapshotId": {
+      "type": "string"
+    },
+    "inputWorkspaceRevision": {
+      "type": "integer"
+    },
+    "inputContentRevision": {
+      "type": "integer"
+    },
+    "inputDocumentRevisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "inputBuildConfigurationHash": {
+      "type": "string"
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "succeeded",
+          "framesAdvanced",
+          "fixedDelta",
+          "diagnostics"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "succeeded": {
+            "type": "boolean"
+          },
+          "framesAdvanced": {
+            "type": "integer"
+          },
+          "fixedDelta": {
+            "type": "number"
+          },
+          "visual": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "diagnostics": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "array"
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

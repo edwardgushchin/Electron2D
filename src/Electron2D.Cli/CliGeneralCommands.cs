@@ -27,6 +27,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Electron2D.Mcp;
 using Electron2D.ProjectSystem;
+using Electron2D.Testing;
 using Electron2D.Tooling;
 
 internal static partial class Electron2DCommandLine
@@ -67,6 +68,8 @@ internal static partial class Electron2DCommandLine
         "export"
     ];
 
+    private const string DefaultSceneTestManifestPath = "tests/electron2d.scene-tests.json";
+
     private static int RunGeneralCommand(
         string group,
         string[] args,
@@ -99,6 +102,7 @@ internal static partial class Electron2DCommandLine
             "mcp" => RunMcp(options, output, error, context),
             "workspace" => RunWorkspace(options, output, error, context),
             "run" when HeadlessRuntimeAutomation.HasRuntimeOptions(options) => RunHeadlessRuntime(options, output, error, context),
+            "test" when HasSceneTestSuite(options, NormalizeProjectRoot(options.ProjectRoot)) => RunSceneTests(options, output, error, context),
             "import" or "build" or "run" or "test" or "export" => RunJob(group, options, output, error, context),
             _ => WriteResult(
                 CliResult.Blocked(
@@ -261,6 +265,26 @@ internal static partial class Electron2DCommandLine
             buildConfigurationHash,
             route.Diagnostics);
         return WriteResult(result, output, error);
+    }
+
+    private static int RunSceneTests(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        var manifestPath = options.GetOption("--manifest") ?? DefaultSceneTestManifestPath;
+        var outputDirectory = ResolveSceneTestOutputDirectory(projectRoot, options.GetOption("--output") ?? ".electron2d/test-artifacts/latest");
+        var buildConfigurationHash = options.GetOption("--input-build-configuration-hash") ?? "sha256:default";
+        var result = SceneTestRunner.Run(new SceneTestRunRequest(
+            projectRoot,
+            manifestPath,
+            outputDirectory,
+            buildConfigurationHash,
+            context.NowUtc));
+
+        return WriteResult(CliResult.FromSceneTests(options, projectRoot, result), output, error);
     }
 
     private static int RunJob(
@@ -435,7 +459,8 @@ internal static partial class Electron2DCommandLine
             "mcp" => "  serve                 Emit local MCP resources and tools manifest.",
             "workspace" => "  transaction           Apply a generic workspace text transaction.",
             "run" => "  <default>             Queue a job, or run headless with --scene --frames --fixed-delta --output.",
-            "import" or "build" or "test" or "export" => "  <default>             Queue a job and emit JSON or JSONL status.",
+            "import" or "build" or "export" => "  <default>             Queue a job and emit JSON or JSONL status.",
+            "test" => "  <default>             Queue a job, or run scene tests with --format json and a scene-test manifest.",
             "docs" => "  search|type|member|example",
             _ => "  Reserved for a later Preview task."
         };
@@ -467,6 +492,34 @@ internal static partial class Electron2DCommandLine
             ["diagnostics"] = WriteDiagnostics(result.Diagnostics),
             ["artifacts"] = new JsonArray()
         };
+    }
+
+    private static bool HasSceneTestSuite(CliOptions options, string projectRoot)
+    {
+        if (options.Format != CliOutputFormat.Json)
+        {
+            return false;
+        }
+
+        if (options.GetOption("--manifest") is not null)
+        {
+            return true;
+        }
+
+        return File.Exists(Path.Combine(projectRoot, DefaultSceneTestManifestPath.Replace('/', Path.DirectorySeparatorChar)));
+    }
+
+    private static string ResolveSceneTestOutputDirectory(string projectRoot, string outputDirectory)
+    {
+        var fullPath = Path.IsPathRooted(outputDirectory)
+            ? Path.GetFullPath(outputDirectory)
+            : Path.GetFullPath(Path.Combine(projectRoot, outputDirectory));
+        if (!Path.IsPathRooted(outputDirectory))
+        {
+            WorkspaceSnapshotMaterializer.EnsureChildPath(projectRoot, fullPath);
+        }
+
+        return fullPath;
     }
 
     internal static JsonArray WriteDiagnostics(IEnumerable<StructuredDiagnostic> diagnostics)
@@ -948,6 +1001,29 @@ internal sealed class CliResult
                 ["stale"] = false
             },
             data: new JsonObject());
+    }
+
+    public static CliResult FromSceneTests(
+        CliOptions options,
+        string projectRoot,
+        SceneTestRunResult result)
+    {
+        var data = JsonNode.Parse(result.ToJson().ToJsonString())!.AsObject();
+        data["mode"] = "test.scene";
+        return new CliResult(
+            "test",
+            options,
+            result.Succeeded,
+            result.Succeeded ? 0 : 1,
+            projectRoot,
+            CliRoute.Headless,
+            result.Succeeded ? "Scene tests completed." : "Scene tests failed.",
+            result.Diagnostics,
+            result.Artifacts.Values.ToArray(),
+            dirtyDocuments: [],
+            operation: null,
+            job: null,
+            data);
     }
 
     public JsonObject ToJson()

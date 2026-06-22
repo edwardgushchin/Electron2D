@@ -167,6 +167,18 @@ internal static class DiagnosticCodeRegistry
             "Project document has a safe suggested fix.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-project-0003"),
         new(
+            "E2D-TEST-0001",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Scene test assertion failed.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-test-0001"),
+        new(
+            "E2D-TEST-0002",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Tooling,
+            "Scene visual comparison failed.",
+            "docs/documentation/diagnostics/diagnostics-core.md#e2d-test-0002"),
+        new(
             "E2D-TOOLING-0001",
             DiagnosticSeverity.Info,
             DiagnosticCategory.Tooling,

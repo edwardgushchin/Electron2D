@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/testing/scene-test-events.schema.json",
+  "title": "Electron2D scene test event",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "event",
+    "progress",
+    "inputSnapshotId",
+    "inputWorkspaceRevision",
+    "inputContentRevision",
+    "inputDocumentRevisions",
+    "inputBuildConfigurationHash"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://electron2d.dev/schemas/testing/scene-test-events.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "event": {
+      "type": "string"
+    },
+    "testName": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "progress": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "inputSnapshotId": {
+      "type": "string"
+    },
+    "inputWorkspaceRevision": {
+      "type": "integer"
+    },
+    "inputContentRevision": {
+      "type": "integer"
+    },
+    "inputDocumentRevisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "inputBuildConfigurationHash": {
+      "type": "string"
+    }
+  }
+}

@@ -269,7 +269,7 @@ internal static partial class Electron2DCommandLine
         output.WriteLine("  import     Queue import jobs.");
         output.WriteLine("  build      Queue build jobs.");
         output.WriteLine("  run        Queue run jobs.");
-        output.WriteLine("  test       Queue test jobs.");
+        output.WriteLine("  test       Queue test jobs or run scene tests.");
         output.WriteLine("  export     Queue export jobs.");
         output.WriteLine("  docs       Search local documentation and API manifest.");
         output.WriteLine("  api        API comparison commands.");

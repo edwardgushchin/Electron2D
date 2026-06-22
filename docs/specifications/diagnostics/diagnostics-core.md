@@ -50,6 +50,8 @@ Registry должен быть immutable во время работы проце
 | `E2D-PROJECT-0003` | `Warning` | `Project` | project document содержит безопасно применимый suggested fix |
 | `E2D-TASK-0002` | `Error` | `Project` | task operation rejected из-за acceptance guard, privileged field guard или недопустимого перехода |
 | `E2D-TASK-0003` | `Warning` | `Project` | dependency graph требует внимания: cycle, unfinished dependency или cancelled dependency |
+| `E2D-TEST-0001` | `Error` | `Tooling` | scene test assertion не нашёл ожидаемый node, type или property value |
+| `E2D-TEST-0002` | `Error` | `Tooling` | scene visual comparison не нашёл reference image или превысил tolerance |
 | `E2D-TOOLING-0001` | `Info` | `Tooling` | job cancellation state changed или cancel request был отклонён без изменения job state |
 | `E2D-TOOLING-0002` | `Error` | `Tooling` | workspace transaction rejected из-за revision mismatch, unsafe path, validation error или conflict |
 | `E2D-TOOLING-0003` | `Warning` | `Tooling` | active Editor session не найдена, устарела, освобождена или descriptor относится к другому project root |

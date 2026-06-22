@@ -40,6 +40,10 @@
 
 - [Headless runtime automation](runtime/headless-runtime-automation.md) - CLI-запуск сцены без ручного Editor UI, fixed frame loop, input trace, runtime artifacts, JSON schemas и snapshot identity для CI и автономных агентов.
 
+## Тестирование
+
+- [Scene tests и visual regression tests](testing/scene-visual-testing.md) - project scene test suite manifest, deterministic frame advance, node/property assertions, visual comparison artifacts, JSON schemas и CLI `e2d test --format json`.
+
 ## MCP
 
 - [Локальный MCP-сервер поверх active Editor session и Tooling](mcp/mcp-server.md) - resources/tools manifest, route semantics, Tooling adapter rules, task guard, job events и fail-closed security для локального MCP adapter-а.

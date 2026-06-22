@@ -149,6 +149,8 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 
 `run` имеет отдельный headless runtime mode, когда указаны runtime-флаги `--scene`, `--frames`, `--fixed-delta`, `--input`, `--capture-frame` или `--output`. Этот mode описан в [Headless runtime automation](../runtime/headless-runtime-automation.md) и должен сосуществовать с generic job JSONL mode: `e2d run --format jsonl` без runtime-флагов продолжает возвращать queued job event.
 
+`test` имеет отдельный scene/visual mode для `--format json`, когда найден `tests/electron2d.scene-tests.json` или явно указан `--manifest <path>`. Этот mode описан в [Scene tests и visual regression tests](../testing/scene-visual-testing.md) и должен сосуществовать с generic job JSONL mode: `e2d test --format jsonl` без scene-test manifest продолжает возвращать queued job event.
+
 ## Documentation commands
 
 `docs search/type/member/example` сохраняют существующее поведение. Они должны поддерживать common flags, но `--format jsonl` для docs недопустим и возвращает `E2D-CLI-0002`.

@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\src\Electron2D.Cli\Electron2D.Cli.csproj" />
     <ProjectReference Include="..\..\src\Electron2D.Mcp\Electron2D.Mcp.csproj" />
     <ProjectReference Include="..\..\src\Electron2D.ProjectSystem\Electron2D.ProjectSystem.csproj" />
+    <ProjectReference Include="..\..\src\Electron2D.Testing\Electron2D.Testing.csproj" />
     <ProjectReference Include="..\..\src\Electron2D.Tooling\Electron2D.Tooling.csproj" />
   </ItemGroup>
 

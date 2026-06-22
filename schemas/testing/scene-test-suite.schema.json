@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/testing/scene-test-suite.schema.json",
+  "title": "Electron2D scene test suite",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "tests"
+  ],
+  "properties": {
+    "format": {
+      "const": "Electron2D.SceneTestSuite"
+    },
+    "version": {
+      "const": 1
+    },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "scene",
+          "frames",
+          "fixedDelta"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scene": {
+            "type": "string",
+            "minLength": 1
+          },
+          "frames": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "fixedDelta": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "assertNodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "type"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "pattern": "^/"
+                },
+                "type": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "assertProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "node",
+                "property",
+                "equals"
+              ],
+              "properties": {
+                "node": {
+                  "type": "string",
+                  "pattern": "^/"
+                },
+                "property": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "equals": true
+              }
+            }
+          },
+          "visual": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "captureFrame",
+              "reference",
+              "tolerance"
+            ],
+            "properties": {
+              "captureFrame": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "reference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tolerance": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
