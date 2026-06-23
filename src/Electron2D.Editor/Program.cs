@@ -89,6 +89,11 @@ internal static class Program
             return RunScriptLanguageServicesSmoke(scriptLanguageServicesWorkRoot);
         }
 
+        if (args is ["--managed-debugger-smoke", var managedDebuggerWorkRoot])
+        {
+            return RunManagedDebuggerSmoke(managedDebuggerWorkRoot);
+        }
+
         if (args is ["--run-workflow-smoke", var runWorkflowWorkRoot])
         {
             return RunRunWorkflowSmoke(runWorkflowWorkRoot);
@@ -109,7 +114,7 @@ internal static class Program
             return RunProjectTasksBoardSmoke(tasksBoardWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
         return 2;
     }
 
@@ -479,6 +484,103 @@ internal static class Program
                 result.TextOverflowCount == 0 &&
                 result.ForbiddenUiMatchCount == 0 &&
                 result.ClickableControlCount >= 16 &&
+                result.ScreenshotReviewed
+                    ? 0
+                    : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunManagedDebuggerSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorManagedDebuggerSmoke.Run(workRoot);
+            var state = result.State;
+            var breakpoint = state.Breakpoint;
+            var argument = state.Arguments.Single(variable => variable.Name == "delta");
+            var local = state.Locals.Single(variable => variable.Name == "speed");
+            var watch = state.Watches.Single();
+
+            Console.WriteLine("Electron2D.Editor managed debugger smoke passed");
+            Console.WriteLine($"ManagedDebuggerAssembly={state.GetType().Assembly.GetName().Name}");
+            Console.WriteLine($"AdapterId={state.Adapter.AdapterId}");
+            Console.WriteLine($"AdapterReleaseTag={state.Adapter.ReleaseTag}");
+            Console.WriteLine($"DapBoundary={state.Adapter.Boundary}");
+            Console.WriteLine($"AdapterArguments={Join(state.Adapter.Arguments)}");
+            Console.WriteLine($"DapInitialize={state.DapTranscript.Has("initialize")}");
+            Console.WriteLine($"DapLaunch={state.DapTranscript.Has("launch")}");
+            Console.WriteLine($"DapAttach={state.DapTranscript.Has("attach")}");
+            Console.WriteLine($"DapSetBreakpoints={state.DapTranscript.Has("setBreakpoints")}");
+            Console.WriteLine($"DapStoppedBreakpoint={state.DapTranscript.Has("stopped:breakpoint")}");
+            Console.WriteLine($"DapThreads={state.DapTranscript.Has("threads")}");
+            Console.WriteLine($"DapStackTrace={state.DapTranscript.Has("stackTrace")}");
+            Console.WriteLine($"DapScopes={state.DapTranscript.Has("scopes")}");
+            Console.WriteLine($"DapVariables={state.DapTranscript.Has("variables")}");
+            Console.WriteLine($"DapPause={state.DapTranscript.Has("pause")}");
+            Console.WriteLine($"DapContinue={state.DapTranscript.Has("continue")}");
+            Console.WriteLine($"DapStepInto={state.DapTranscript.Has("stepIn")}");
+            Console.WriteLine($"DapStepOver={state.DapTranscript.Has("next")}");
+            Console.WriteLine($"DapStepOut={state.DapTranscript.Has("stepOut")}");
+            Console.WriteLine($"RestartStrategy={state.Adapter.RestartStrategy}");
+            Console.WriteLine($"BreakpointId={breakpoint.BreakpointId}");
+            Console.WriteLine($"BreakpointDocumentId={breakpoint.DocumentId}");
+            Console.WriteLine($"BreakpointSourceAnchor={breakpoint.SourceAnchor}");
+            Console.WriteLine($"BreakpointEnabled={breakpoint.Enabled}");
+            Console.WriteLine($"BreakpointVerified={breakpoint.Verified}");
+            Console.WriteLine($"BreakpointResolvedLine={breakpoint.ResolvedLine}");
+            Console.WriteLine($"BreakpointResolvedColumn={breakpoint.ResolvedColumn}");
+            Console.WriteLine($"BreakpointLastBoundSnapshotId={breakpoint.LastBoundSnapshotId}");
+            Console.WriteLine($"BreakpointAdapterMessage={breakpoint.AdapterMessage}");
+            Console.WriteLine($"BreakpointPersisted={state.BreakpointPersisted}");
+            Console.WriteLine($"BreakpointSurvivesRestart={state.BreakpointSurvivesRestart}");
+            Console.WriteLine($"BreakpointExcludedFromSnapshot={state.BreakpointExcludedFromSnapshot}");
+            Console.WriteLine($"BreakpointRenamedPath={state.RenamedBreakpoint.SourceAnchor.Path}");
+            Console.WriteLine($"BreakpointRebasedLine={state.RebasedBreakpoint.SourceAnchor.Line}");
+            Console.WriteLine($"AmbiguousBreakpointVerified={state.AmbiguousBreakpoint.Verified}");
+            Console.WriteLine($"DebugBuildPortablePdb={state.DebugBuildPortablePdb}");
+            Console.WriteLine($"SnapshotId={state.SnapshotId}");
+            Console.WriteLine($"AttachedProcessId={state.AttachedProcessId}");
+            Console.WriteLine($"CurrentExecutionLine={state.CurrentExecutionLine}");
+            Console.WriteLine($"ThreadCount={state.Threads.Count}");
+            Console.WriteLine($"SelectedFrame={state.StackFrames[0].Display}");
+            Console.WriteLine($"ArgumentValue={argument.Name}={argument.Value}");
+            Console.WriteLine($"LocalValue={local.Name}={local.Value}");
+            Console.WriteLine($"WatchExpression={watch.Expression}");
+            Console.WriteLine($"WatchValue={watch.Value}");
+            Console.WriteLine($"ExceptionType={state.Exception.Type}");
+            Console.WriteLine($"StaleAfterCodeEdit={state.StaleAfterCodeEdit}");
+            Console.WriteLine($"RemoteAndroidIosExcluded={state.RemoteAndroidIosExcluded}");
+            Console.WriteLine($"RemoteWebAssemblyExcluded={state.RemoteWebAssemblyExcluded}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"StatePath={result.StatePath}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return state.Adapter.AdapterId == "netcoredbg" &&
+                state.DapTranscript.Has("initialize") &&
+                state.DapTranscript.Has("launch") &&
+                state.DapTranscript.Has("attach") &&
+                state.DapTranscript.Has("stopped:breakpoint") &&
+                breakpoint.Verified &&
+                state.BreakpointPersisted &&
+                state.BreakpointSurvivesRestart &&
+                state.BreakpointExcludedFromSnapshot &&
+                state.DebugBuildPortablePdb &&
+                state.Threads.Count >= 2 &&
+                state.Locals.Count > 0 &&
+                state.Arguments.Count > 0 &&
+                state.Watches.Count > 0 &&
+                state.StaleAfterCodeEdit &&
+                state.RemoteAndroidIosExcluded &&
+                state.RemoteWebAssemblyExcluded &&
+                result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
+                result.ClickableControlCount >= 18 &&
                 result.ScreenshotReviewed
                     ? 0
                     : 1;

@@ -1,11 +1,11 @@
 # Выбор managed .NET debug adapter
 
-Статус: реализовано для `T-0163`.
+Статус: реализовано для `T-0163` и используется `T-0160`.
 Обновлено: 2026-06-23.
 
 ## Назначение
 
-`T-0163` выбирает распространяемый .NET debug adapter до реализации полноценного managed debugger в `T-0160`. Debug adapter — это отдельный процесс, с которым `Electron2D.Editor` будет говорить через Debug Adapter Protocol, сокращённо DAP. DAP задаёт JSON-сообщения для `launch`, `attach`, breakpoints, stack frames, variables и других команд debugger UI.
+`T-0163` выбрал распространяемый .NET debug adapter до реализации managed debugger в `T-0160`. Debug adapter — это отдельный процесс, с которым `Electron2D.Editor` говорит через Debug Adapter Protocol, сокращённо DAP. DAP задаёт JSON-сообщения для `launch`, `attach`, breakpoints, stack frames, variables и других команд debugger UI.
 
 Выбранный adapter: `netcoredbg`.
 
@@ -38,7 +38,7 @@ Manifest фиксирует:
 - candidate review;
 - platform targets;
 - capability matrix;
-- handoff для `T-0160`, чтобы следующая задача не выбирала adapter заново.
+- handoff для `T-0160`, чтобы managed debugger не выбирал adapter заново.
 
 ## Platform matrix
 

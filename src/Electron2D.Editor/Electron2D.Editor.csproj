@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Electron2D\Electron2D.csproj" />
     <ProjectReference Include="..\Electron2D.CSharpLanguageServices\Electron2D.CSharpLanguageServices.csproj" />
+    <ProjectReference Include="..\Electron2D.ManagedDebugging\Electron2D.ManagedDebugging.csproj" />
     <ProjectReference Include="..\Electron2D.ProjectSystem\Electron2D.ProjectSystem.csproj" />
   </ItemGroup>
 

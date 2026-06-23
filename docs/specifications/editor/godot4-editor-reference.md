@@ -123,6 +123,16 @@ Default docks:
 - Signature help state, current active parameter, go-to-definition target, references count, rename preview, formatting/code-action result и stale-response marker присутствуют в JSON analysis.
 - Screenshot и analysis фиксируют keyboard selection/focus state для completion popup, отсутствие text overflow и отсутствие GDScript/3D/AssetLib UI.
 
+Проверяемый минимум UI для `T-0160`:
+
+- `Script` workspace остаётся выбранным в общем workspace switcher и показывает C# debugger как часть встроенного редактора, без внешней IDE.
+- В gutter виден активный breakpoint с enabled/verified state; у breakpoint есть доступная click target область для enable/disable/remove.
+- В editor surface видна current execution line highlight, не совпадающая с dirty buffer после `stale` marker.
+- Верхние debugger controls показывают `Start Debug`, `Attach`, `Pause`, `Continue`, `Stop`, `Restart`, `Step Into`, `Step Over`, `Step Out`; controls кликабельны и не меняют layout.
+- В нижней или правой Debugger панели видны threads, call stack, selected stack frame, locals, arguments, watches, watch evaluation result, exception info, stack trace и Debug Output.
+- JSON analysis фиксирует bounds breakpoint gutter, current line highlight, controls, call stack, threads, locals/arguments/watches, exception panel, debug output, `stale` marker, DAP boundary и отсутствие text overflow.
+- Screenshot и analysis фиксируют отсутствие `3D`, `AssetLib`, GDScript UI, `.gd` files и remote mobile/WebAssembly debugger controls в обязательном `0.1.0` workflow.
+
 ### `Game`
 
 Видимый тестовый запуск проекта:

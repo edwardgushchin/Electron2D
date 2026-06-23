@@ -48,6 +48,8 @@ internal sealed class EditorRunSession : IDisposable
 
     public EditorOutputConsole OutputConsole { get; }
 
+    public int ProcessId => process.Id;
+
     public bool IsRunning => !process.HasExited;
 
     public int? ExitCode => process.HasExited ? process.ExitCode : null;

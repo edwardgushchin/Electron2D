@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.Testing", "Elect
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.CSharpLanguageServices", "Electron2D.CSharpLanguageServices\Electron2D.CSharpLanguageServices.csproj", "{E0E38537-EB89-441E-A01B-DF690AFC56D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Electron2D.ManagedDebugging", "Electron2D.ManagedDebugging\Electron2D.ManagedDebugging.csproj", "{E5E84F65-5EBD-40A6-B974-2371213B7AFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -210,6 +212,18 @@ Global
 		{E0E38537-EB89-441E-A01B-DF690AFC56D9}.Release|x64.Build.0 = Release|Any CPU
 		{E0E38537-EB89-441E-A01B-DF690AFC56D9}.Release|x86.ActiveCfg = Release|Any CPU
 		{E0E38537-EB89-441E-A01B-DF690AFC56D9}.Release|x86.Build.0 = Release|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Debug|x64.Build.0 = Debug|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Debug|x86.Build.0 = Debug|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Release|x64.ActiveCfg = Release|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Release|x64.Build.0 = Release|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Release|x86.ActiveCfg = Release|Any CPU
+		{E5E84F65-5EBD-40A6-B974-2371213B7AFC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

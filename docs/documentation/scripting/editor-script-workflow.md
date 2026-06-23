@@ -9,7 +9,7 @@
 
 Workflow не добавляет runtime compilation и не загружает пользовательские assemblies динамически. Script остаётся обычным `.cs` файлом проекта игры и компилируется обычной .NET toolchain.
 
-Центральное рабочее пространство `Script` описано отдельно: [Script workspace редактора](../editor/script-workspace.md). Встроенные C# подсказки, semantic diagnostics и code actions описаны отдельно: [C# language services в Script workspace](editor-language-services.md).
+Центральное рабочее пространство `Script` описано отдельно: [Script workspace редактора](../editor/script-workspace.md). Встроенные C# подсказки, semantic diagnostics и code actions описаны отдельно: [C# language services в Script workspace](editor-language-services.md). Source-level отладка C# описана отдельно: [Managed C# debugger в редакторе](managed-debugger.md).
 
 ## Текущее поведение
 
@@ -30,6 +30,8 @@ Attach script меняет serialized node type на полное имя script 
 Отдельная UI-модель `Script` workspace добавляет проверяемый editor surface: вкладки документов, line gutter, caret, selection, syntax token categories, search/replace, go-to-line, save/save-all, clipboard round-trip, grouped undo для AI/refactoring и обработку внешних изменений файла. Внутренняя `TextBufferEditSession` означает, что набор текста обновляет текущий `CodeDocument`, но не создаёт отдельные project operations в `OperationJournal` на каждый символ.
 
 C# language services вынесены в отдельную сборку `Electron2D.CSharpLanguageServices`. Эта сборка работает внутри процесса Editor, использует Roslyn semantic model и обслуживает live `CodeDocument` с unsaved text. Completion, signature help, hover, live diagnostics, go to definition, references, rename, formatting и basic code action используют `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; `WorkspaceSnapshot` остаётся для build/test/run/debug и пакетного анализа.
+
+Managed C# debugger вынесен в отдельную сборку `Electron2D.ManagedDebugging`. Эта сборка читает выбранный adapter manifest из `data/debugging/dotnet-debug-adapter-selection.json`, хранит local breakpoints в `.electron2d/user/breakpoints.e2debug`, описывает DAP boundary до `netcoredbg`, debug session state, stack/locals/arguments/watches и stale marker после изменения code document.
 
 ## Smoke workflow
 
@@ -69,10 +71,18 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-
 
 Она сохраняет state JSON, PNG screenshot и JSON analysis artifact для проверки completion popup, hover/Quick Info panel, signature help, live diagnostics panel, go-to-definition target, references count, rename preview, formatting/code-action result, stale response marker и отсутствия запрещённых UI elements.
 
+Дополнительная smoke-команда для managed C# debugger:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --managed-debugger-smoke .temp\managed-debugger
+```
+
+Она сохраняет state JSON, PNG screenshot и JSON analysis artifact для проверки DAP boundary, breakpoint persistence, rename/rebase, Debug build/PDB marker, attach process id, restart strategy, current line, threads, call stack, locals, arguments, watches, exception panel, stale marker и отсутствия запрещённых UI elements.
+
 ## Ограничения
 
 - Это ещё не полный desktop IDE event loop, то есть не постоянный цикл обработки окна, pointer/keyboard input и repaint: C# language services покрыты smoke-моделью и visual harness, а постоянная привязка popup/hover/diagnostics к real-time input будет подключаться следующими editor tasks.
-- Debugger UI и managed debugger не входят в текущий baseline и реализуются отдельными задачами.
+- Managed debugger реализован как model-first core и smoke UI surface. Постоянная desktop-привязка к real-time pointer/keyboard input и packaged adapter binary resolution подключается поверх этого контракта в следующих editor/release tasks.
 - Hot Reload не является обязательным workflow. После изменения script проект пересобирается.
 - Runtime не компилирует scripts из текста и не загружает их динамически.
 - Текущий `Script` workspace является model-first UI surface: сначала проверяется модель состояния UI и screenshot artifact, а live desktop text input и полноценная привязка к окну подключаются следующими задачами.
@@ -85,6 +95,7 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptWorkflowTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptWorkspaceTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptLanguageServicesTests"
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorManagedDebuggerTests"
 ```
 
 Полные проверки:

@@ -97,7 +97,8 @@
 - [Безопасное editor-time выполнение `[Tool]` scripts](scripting/tool-script-execution.md) - текущий внутренний execution host для registered tool metadata без dynamic assembly load.
 - [Script workflow в редакторе](scripting/editor-script-workflow.md) - текущая внутренняя модель создания, встроенного редактирования, attach к node, build diagnostics и запуска проекта после rebuild.
 - [C# language services в Script workspace](scripting/editor-language-services.md) - текущая отдельная Roslyn-backed сборка для completion, signature help, hover, live diagnostics, navigation, rename, formatting, code actions и visual acceptance harness.
-- [Выбор managed .NET debug adapter](scripting/managed-debug-adapter-selection.md) - текущий `netcoredbg` selection manifest, DAP capability matrix, license/redistribution decision и platform packaging plan для будущего managed debugger.
+- [Выбор managed .NET debug adapter](scripting/managed-debug-adapter-selection.md) - текущий `netcoredbg` selection manifest, DAP capability matrix, license/redistribution decision и platform packaging plan для managed debugger.
+- [Managed C# debugger в редакторе](scripting/managed-debugger.md) - текущая внутренняя сборка `Electron2D.ManagedDebugging`, local breakpoints, DAP boundary, debug session state и visual acceptance harness.
 
 ## Редактор
 

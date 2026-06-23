@@ -76,7 +76,7 @@ Runtime MCP tools now call the same Tooling runtime service:
 - Current screenshot bytes are deterministic preview output, not a real renderer capture.
 - Current runtime scene tree is parsed from the materialized snapshot scene JSON.
 - Process pause/step is represented by the debug bridge control state; low-level OS process suspension is not part of this contract.
-- Managed breakpoints, stack frames, locals and watches belong to the managed debugger tasks.
+- Managed breakpoints, stack frames, locals and watches belong to `Electron2D.ManagedDebugging`; runtime debug bridge remains responsible only for scene/runtime inspection and frame control.
 - Embedded viewport can be added later without changing Tooling/MCP payload because `VisibleMode` is already part of session state.
 
 ## Проверка

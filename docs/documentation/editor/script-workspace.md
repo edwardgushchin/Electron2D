@@ -42,6 +42,16 @@ Language services UI поверх `Script` workspace показывает:
 
 Фактическая C# semantic model описана отдельно: [C# language services в Script workspace](../scripting/editor-language-services.md).
 
+Managed debugger UI поверх `Script` workspace показывает:
+
+- top debugger controls `Start Debug`, `Attach`, `Pause`, `Continue`, `Stop`, `Restart`, `Step Into`, `Step Over`, `Step Out`;
+- breakpoint marker в gutter с enabled/verified state;
+- current execution line highlight;
+- right `Debug Session` section с adapter id и `Stale Rebuild` marker;
+- bottom `Debugger` panel с threads, call stack, locals, arguments, watches, evaluated watch value и exception info.
+
+Фактическая debugger model описана отдельно: [Managed C# debugger в редакторе](../scripting/managed-debugger.md).
+
 ## Visual harness
 
 Команда:
@@ -86,6 +96,12 @@ Language services smoke-команда:
 
 ```powershell
 dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-language-services-smoke .temp\script-language-services
+```
+
+Managed debugger smoke-команда:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --managed-debugger-smoke .temp\managed-debugger
 ```
 
 Документационный verifier после изменения справки:

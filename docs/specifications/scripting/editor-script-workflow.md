@@ -410,6 +410,21 @@ Electron2D.ManagedDebugging
 - переход из stack trace к исходному коду;
 - Debug Output.
 
+Проверяемый минимум `T-0160` для managed debugger:
+
+- создан отдельный project/assembly `Electron2D.ManagedDebugging`, который не входит в игровой runtime assembly, не зависит от `Electron2D.Tooling`/`Electron2D.Mcp` и использует adapter manifest `data/debugging/dotnet-debug-adapter-selection.json` из `T-0163`;
+- Editor подключает debugger core как внутренний сервис `Script` workspace и не выбирает debugger adapter заново;
+- `ManagedDebugClient` строит DAP boundary `Electron2D.Editor -> Electron2D.ManagedDebugging -> DAP stdio -> netcoredbg -> Electron2D game process`, читает выбранный adapter id/release/arguments из manifest и сохраняет machine-readable transcript команд `initialize`, `launch`, `attach`, `setBreakpoints`, `configurationDone`, `stopped:breakpoint`, `threads`, `stackTrace`, `scopes`, `variables`, `pause`, `continue`, `next`, `stepIn`, `stepOut`, `disconnect`;
+- запуск проекта под debugger использует immutable `WorkspaceSnapshot`, Debug build с Portable PDB и mapping snapshot source file к canonical `CodeDocument`;
+- attach ограничен game process, запущенным Editor; `EditorRunSession` публикует `ProcessId`, чтобы debugger не требовал произвольный attach к чужому процессу;
+- restart реализован как Editor-managed `disconnect` текущей сессии и новый `launch` на свежем `WorkspaceSnapshot`, потому что выбранный adapter не объявляет native DAP restart request;
+- breakpoint store пишет локальные metadata в `.electron2d/user/breakpoints.e2debug`, сохраняет `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`, переживает перезапуск Editor и не попадает в `WorkspaceSnapshot`/export;
+- breakpoint следует за document rename через `DocumentId`, rebases `SourceAnchor` после text edits и получает `Verified = false` при неоднозначном переносе;
+- debug state содержит current execution line, выбранный thread/frame, call stack, threads, locals, arguments, watch definitions, watch evaluation result, exception info и debug output;
+- изменение C# document после старта debug session помечает session как `stale` и предлагает rebuild/restart без автоматического сохранения dirty buffer;
+- remote Android/iOS/WebAssembly debugger явно помечен как excluded from `0.1.0`;
+- UI smoke harness создаёт PNG screenshot и JSON analysis. Acceptance требует открыть screenshot, проверить breakpoint gutter, current line highlight, debugger controls, call stack, threads, locals, arguments, watches, exception panel, absence of overflow, absence of 3D/GDScript/AssetLib UI и соответствие `docs/specifications/editor/godot4-editor-reference.md`.
+
 ## Breakpoint model
 
 Breakpoints хранятся как локальные Editor metadata и не входят в игру, asset pack, runtime snapshot или production export.
