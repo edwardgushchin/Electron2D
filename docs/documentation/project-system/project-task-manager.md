@@ -93,13 +93,11 @@ Dependency-related блокировка обновляет только `Readine
 
 Реализация закрывает core/domain/storage слой. Она не добавляет:
 
-- визуальную доску `Tasks`;
 - Tooling-команды;
 - MCP tools/resources;
-- Agent Workspace current task UI;
 - Markdown-report export.
 
-Эти возможности остаются в отдельных задачах и должны использовать текущий core contract.
+Визуальная доска `Tasks` и Agent Workspace current task UI уже существуют как model-first UI snapshot и visual harness в `Electron2D.Editor`; постоянная live-привязка к desktop event loop и MCP-проверка остаются следующими слоями поверх текущего core contract.
 
 ## Проверка
 

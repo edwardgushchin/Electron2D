@@ -151,6 +151,18 @@ Awaiting Acceptance | Done | Cancelled
 
 `Tasks` workspace должен полностью работать вручную без AI.
 
+Проверяемый минимум UI для `T-0155`:
+
+- `Tasks` выбран в общем workspace switcher и занимает центральную область, а не dock и не bottom panel.
+- Board показывает колонки `Backlog`, `Ready`, `In Progress`, `Blocked`, `Review`, `Awaiting Acceptance`, `Done`, `Cancelled`.
+- Карточки показывают task id, title, priority, labels, assignee, readiness, blocking reasons и rank.
+- У выбранной карточки справа в `Inspector` виден `Task Details`, включая description, dependencies, acceptance criteria, activity и linked artifacts.
+- На board видны drag-and-drop affordances, то есть понятные зоны/подсказки перемещения карточки между колонками и ручной сортировки.
+- Действия `Accept`, `Request changes`, `Cancel`, `Create`, `Edit`, `Archive` и `Hard delete` видны как отдельные controls; `Accept`/`Request changes` являются trusted interactive Editor actions и не выполняются от имени AI.
+- `Review` и `Awaiting Acceptance` визуально различимы, а manual blocker и dependency blocker показаны разными markers.
+- Фильтры status, priority, labels, assignee, text и linked object находятся в верхней области board.
+- PNG screenshot и JSON analysis фиксируют bounds board/details/actions, количество кликабельных controls, отсутствие text overflow и отсутствие forbidden UI entries.
+
 ## Agent Workspace dock
 
 `Agent Workspace` — постоянная dock-панель, доступная одновременно с любым центральным workspace.

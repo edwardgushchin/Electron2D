@@ -25,6 +25,7 @@
 using Electron2D.Editor.Inspector;
 using Electron2D.Editor.AgentWorkspace;
 using Electron2D.Editor.FileSystemDock;
+using Electron2D.Editor.ProjectTasks;
 using Electron2D.Editor.ProjectManagement;
 using Electron2D.Editor.Run;
 using Electron2D.Editor.Scripting;
@@ -93,7 +94,12 @@ internal static class Program
             return RunAgentWorkspacePanelSmoke(agentWorkspacePanelWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>]");
+        if (args is ["--tasks-board-smoke", var tasksBoardWorkRoot])
+        {
+            return RunProjectTasksBoardSmoke(tasksBoardWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
         return 2;
     }
 
@@ -493,6 +499,77 @@ internal static class Program
         }
     }
 
+    private static int RunProjectTasksBoardSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorProjectTasksBoardSmoke.Run(workRoot);
+            var snapshot = result.Snapshot;
+            var selected = snapshot.SelectedTask;
+            var details = snapshot.Details;
+
+            Console.WriteLine("Electron2D.Editor project tasks board smoke passed");
+            Console.WriteLine($"WorkspaceSwitcher={Join(snapshot.WorkspaceSwitcher)}");
+            Console.WriteLine($"SelectedWorkspace={snapshot.SelectedWorkspace}");
+            Console.WriteLine($"Columns={Join(snapshot.Columns.Select(column => column.Label))}");
+            Console.WriteLine($"TaskIds={Join(snapshot.VisibleTaskIds)}");
+            Console.WriteLine($"SelectedTaskId={selected.TaskId}");
+            Console.WriteLine($"SelectedTaskTitle={selected.Title}");
+            Console.WriteLine($"SelectedTaskPriority={selected.Priority}");
+            Console.WriteLine($"SelectedTaskLabels={Join(selected.Labels)}");
+            Console.WriteLine($"SelectedTaskAssignee={selected.Assignee}");
+            Console.WriteLine($"SelectedTaskReadiness={selected.Readiness}");
+            Console.WriteLine($"ManualBlockingReasons={Join(snapshot.ManualBlockingReasons)}");
+            Console.WriteLine($"DependencyBlockingReasons={Join(snapshot.DependencyBlockingReasons)}");
+            Console.WriteLine($"InspectorTitle={details.InspectorTitle}");
+            Console.WriteLine($"DescriptionVisible={details.DescriptionVisible}");
+            Console.WriteLine($"AcceptanceCriteriaVisible={details.AcceptanceCriteriaVisible}");
+            Console.WriteLine($"SubtasksVisible={details.SubtasksVisible}");
+            Console.WriteLine($"ActivityKinds={Join(details.ActivityKinds.Select(kind => kind.ToString()))}");
+            Console.WriteLine($"LinkedTransactions={Join(details.LinkedTransactions)}");
+            Console.WriteLine($"LinkedJobs={Join(details.LinkedJobs)}");
+            Console.WriteLine($"LinkedDiagnostics={Join(details.LinkedDiagnostics)}");
+            Console.WriteLine($"LinkedArtifacts={Join(details.LinkedArtifacts)}");
+            Console.WriteLine($"LinkedObjects={Join(details.LinkedObjects)}");
+            Console.WriteLine($"DragDropIntent={FormatTaskDragDrop(snapshot.DragDropIntent)}");
+            Console.WriteLine($"DragDropAllowed={snapshot.DragDropIntent.Allowed}");
+            Console.WriteLine($"RejectedDropDiagnostic={snapshot.DragDropIntent.RejectedDiagnosticCode}");
+            Console.WriteLine($"RankRoundTripStable={snapshot.RankRoundTripStable}");
+            Console.WriteLine($"ArchiveViewAvailable={snapshot.ArchiveViewAvailable}");
+            Console.WriteLine($"ArchivedHiddenFromBoard={snapshot.ArchivedHiddenFromBoard}");
+            Console.WriteLine($"HardDeleteRequiresConfirmation={snapshot.HardDeleteRequiresConfirmation}");
+            Console.WriteLine($"HumanAcceptActionUsesTrustedContext={snapshot.HumanAcceptActionUsesTrustedContext}");
+            Console.WriteLine($"AgentAcceptActionAvailable={snapshot.AgentAcceptActionAvailable}");
+            Console.WriteLine($"ReviewStatesDiffer={snapshot.ReviewStatesDiffer}");
+            Console.WriteLine($"Filters={Join(snapshot.Filters)}");
+            Console.WriteLine($"WorkspaceEventRevision={snapshot.WorkspaceEventRevision.Value}");
+            Console.WriteLine($"WorksWithoutAi={snapshot.WorksWithoutAi}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"StatePath={result.StatePath}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
+                result.ClickableControlCount >= 16 &&
+                snapshot.RankRoundTripStable &&
+                snapshot.ArchiveViewAvailable &&
+                snapshot.ArchivedHiddenFromBoard &&
+                snapshot.HardDeleteRequiresConfirmation &&
+                snapshot.HumanAcceptActionUsesTrustedContext &&
+                !snapshot.AgentAcceptActionAvailable &&
+                snapshot.WorksWithoutAi &&
+                result.ScreenshotReviewed
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
     private static string Format(Electron2D.Vector2 value)
     {
         return string.Create(
@@ -525,6 +602,11 @@ internal static class Program
     private static string FormatChangedObject(EditorAgentWorkspaceChangedObject changedObject)
     {
         return $"{EditorAgentWorkspaceVisualHarness.KindPrefix(changedObject.Kind)}:{changedObject.NavigationTarget}";
+    }
+
+    private static string FormatTaskDragDrop(EditorProjectTasksDragDropIntent intent)
+    {
+        return $"{intent.TaskId}:{intent.SourceStatus}->{intent.TargetStatus}@{intent.TargetRank}";
     }
 
     private static string FindRepositoryRoot()

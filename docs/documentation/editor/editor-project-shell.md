@@ -37,11 +37,19 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --agent-w
 
 Она сохраняет dock state, PNG screenshot и JSON analysis artifact для проверки правого размещения Agent Workspace, session/task/job/actions model, полного diagnostics payload, artifacts с snapshot identity, grouped Undo и отсутствия AI action для human acceptance.
 
+Smoke-команда Project Tasks board:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --tasks-board-smoke .temp\project-tasks-board
+```
+
+Она сохраняет board state, PNG screenshot и JSON analysis artifact для проверки центрального `Tasks` workspace, колонок `ProjectTaskManager`, правого `Task Details`, filters, drag-and-drop intent, trusted human actions и отсутствия запрещённых 3D/GDScript/AssetLib UI.
+
 ## Ограничения
 
 - В этой задаче нет постоянного desktop window event loop.
 - Нет Project Manager и файловых операций editor UI.
-- Общий shell layout уже содержит зоны docks. Project Manager, scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace и model-first Agent Workspace content реализованы отдельными задачами, а постоянный desktop event loop остаётся следующим слоем.
+- Общий shell layout уже содержит зоны docks. Project Manager, scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace, model-first Agent Workspace content и model-first `Tasks` workspace реализованы отдельными задачами, а постоянный desktop event loop остаётся следующим слоем.
 - Editor project не должен добавлять WPF, WinForms, Avalonia или другой внешний UI framework.
 
 ## Проверки
@@ -52,6 +60,7 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --agent-w
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectShellTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorShellLayoutTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorAgentWorkspacePanelTests"
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectTasksBoardTests"
 ```
 
 Полные проверки:
