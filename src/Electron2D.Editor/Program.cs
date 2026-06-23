@@ -26,6 +26,7 @@ using Electron2D.Editor.Inspector;
 using Electron2D.Editor.AgentWorkspace;
 using Electron2D.Editor.FileSystemDock;
 using Electron2D.Editor.ProjectTasks;
+using Electron2D.Editor.ProjectSettings;
 using Electron2D.Editor.ProjectManagement;
 using Electron2D.Editor.Run;
 using Electron2D.Editor.Scripting;
@@ -124,7 +125,12 @@ internal static class Program
             return RunProjectTasksBoardSmoke(tasksBoardWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--window-smoke <work-root>] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
+        if (args is ["--project-settings-smoke", var projectSettingsWorkRoot])
+        {
+            return RunProjectSettingsSmoke(projectSettingsWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--window-smoke <work-root>] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>] [--project-settings-smoke <work-root>]");
         return 2;
     }
 
@@ -491,6 +497,60 @@ internal static class Program
                 textBuffer.OperationJournalEntriesForTyping == 0 &&
                 textBuffer.TextBufferUndoAvailable &&
                 snapshot.ExternalChange.ConflictMarker &&
+                result.ScreenshotReviewed
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunProjectSettingsSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorProjectSettingsSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor project settings smoke passed");
+            Console.WriteLine($"ProjectPath={result.ProjectPath}");
+            Console.WriteLine($"ProjectSettingsPath={result.ProjectSettingsPath}");
+            Console.WriteLine($"ExportPresetsPath={result.ExportPresetsPath}");
+            Console.WriteLine($"MainScene={result.MainScene}");
+            Console.WriteLine($"RendererProfile={result.RendererProfile}");
+            Console.WriteLine($"PhysicsTicksPerSecond={result.PhysicsTicksPerSecond}");
+            Console.WriteLine($"DisplaySize={result.DisplaySize}");
+            Console.WriteLine($"Fullscreen={result.Fullscreen}");
+            Console.WriteLine($"InputActions={result.InputActions}");
+            Console.WriteLine($"ExportPresets={result.ExportPresets}");
+            Console.WriteLine($"ProjectSettingsWritten={result.ProjectSettingsWritten}");
+            Console.WriteLine($"InputMapRoundTrip={result.InputMapRoundTrip}");
+            Console.WriteLine($"ExportPresetsRoundTrip={result.ExportPresetsRoundTrip}");
+            Console.WriteLine($"WindowCreated={result.WindowCreated}");
+            Console.WriteLine($"WindowShown={result.WindowShown}");
+            Console.WriteLine($"FramePresented={result.FramePresented}");
+            Console.WriteLine($"EventPumpObserved={result.EventPumpObserved}");
+            Console.WriteLine($"PointerInteractionObserved={result.PointerInteractionObserved}");
+            Console.WriteLine($"KeyboardInteractionObserved={result.KeyboardInteractionObserved}");
+            Console.WriteLine($"TextOverflowCount={result.TextOverflowCount}");
+            Console.WriteLine($"ClickableControlCount={result.ClickableControlCount}");
+            Console.WriteLine($"ForbiddenUiMatches={result.ForbiddenUiMatchCount}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.ProjectSettingsWritten &&
+                result.InputMapRoundTrip &&
+                result.ExportPresetsRoundTrip &&
+                result.WindowCreated &&
+                result.WindowShown &&
+                result.FramePresented &&
+                result.PointerInteractionObserved &&
+                result.KeyboardInteractionObserved &&
+                result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
                 result.ScreenshotReviewed
                 ? 0
                 : 1;

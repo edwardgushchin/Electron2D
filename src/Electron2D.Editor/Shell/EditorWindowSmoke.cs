@@ -127,6 +127,20 @@ internal static class EditorWindowSmoke
         return result.WindowCreated && result.WindowShown && result.FramePresented ? 0 : 1;
     }
 
+    public static EditorWindowRunResult PresentCanvasForSmoke(PixelCanvas canvas, int smokeFrameCount)
+    {
+        ArgumentNullException.ThrowIfNull(canvas);
+        if (smokeFrameCount <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(smokeFrameCount), smokeFrameCount, "Smoke frame count must be positive.");
+        }
+
+        return RunWindow(
+            canvas,
+            smokeFrameCount,
+            stayOpenUntilCloseRequest: false);
+    }
+
     private static EditorWindowRunResult RunWindow(
         PixelCanvas canvas,
         int smokeFrameCount,

@@ -7,7 +7,7 @@
 
 `Electron2D.Editor` является отдельным executable project для desktop-редактора. Базовый shell проверяет, что editor build path существует, использует runtime `Electron2D`, может стартовать без внешнего desktop UI framework, строит стартовый UI root через общий shell layout model и создаёт пользовательское desktop-окно.
 
-Project Manager, docks, viewport interactions, Inspector, run/stop workflow, встроенный редактор кода, C# language services и Agent Workspace panel реализуются отдельными задачами поверх этого проекта. Общий layout shell, persistence и visual harness описаны отдельно: [Editor shell layout и visual harness](editor-shell-layout.md). Центральное рабочее пространство встроенного редактора кода описано отдельно: [Script workspace редактора](script-workspace.md), semantic C# подсказки описаны в [C# language services в Script workspace](../scripting/editor-language-services.md).
+Project Manager, docks, viewport interactions, Inspector, Project Settings UI, run/stop workflow, встроенный редактор кода, C# language services и Agent Workspace panel реализуются отдельными задачами поверх этого проекта. Общий layout shell, persistence и visual harness описаны отдельно: [Editor shell layout и visual harness](editor-shell-layout.md). Экран настроек проекта описан отдельно: [Project Settings UI редактора](project-settings-ui.md). Центральное рабочее пространство встроенного редактора кода описано отдельно: [Script workspace редактора](script-workspace.md), semantic C# подсказки описаны в [C# language services в Script workspace](../scripting/editor-language-services.md).
 
 ## Текущее поведение
 
@@ -74,6 +74,14 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --tasks-b
 
 Она сохраняет board state, PNG screenshot и JSON analysis artifact для проверки центрального `Tasks` workspace, колонок `ProjectTaskManager`, правого `Task Details`, filters, drag-and-drop intent, trusted human actions и отсутствия запрещённых 3D/GDScript/AssetLib UI.
 
+Smoke-команда Project Settings UI:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --project-settings-smoke .temp\project-settings-ui
+```
+
+Она создаёт валидный проект из canonical template, открывает его через Project Manager, сохраняет `project.e2d.json` и `export_presets.e2export.json`, заново загружает оба файла, показывает Project Settings frame в настоящем окне и сохраняет PNG/JSON visual analysis artifact. Проверка фиксирует `mainScene`, display settings, renderer profile, physics tick rate, Input Map, export presets, pointer/keyboard result, отсутствие text overflow и отсутствие запрещённых 3D/GDScript/AssetLib UI.
+
 Smoke-команда Script workspace:
 
 ```powershell
@@ -93,8 +101,8 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-
 ## Ограничения
 
 - `--window-smoke` создаёт управляемый короткий event loop для автоматической проверки, а обычный запуск остаётся в event loop до закрытия окна.
-- Нет Project Manager и файловых операций editor UI.
-- Общий shell layout уже содержит зоны docks. Project Manager, scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace, model-first Agent Workspace content и model-first `Tasks` workspace реализованы отдельными задачами.
+- Нет полноценного Project Manager selection screen для ручного выбора проектов; текущий Project Manager и Project Settings UI доступны как проверяемые Editor smoke workflows.
+- Общий shell layout уже содержит зоны docks. Scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace, model-first Agent Workspace content, model-first `Tasks` workspace и Project Settings UI реализованы отдельными задачами.
 - Editor project не должен добавлять WPF, WinForms, Avalonia или другой внешний UI framework.
 
 ## Проверки
@@ -106,6 +114,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorShellLayoutTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorAgentWorkspacePanelTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectTasksBoardTests"
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectSettingsUiTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptWorkspaceTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptLanguageServicesTests"
 ```

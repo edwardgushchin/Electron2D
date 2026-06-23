@@ -193,6 +193,23 @@ Awaiting Acceptance | Done | Cancelled
 - Фильтры status, priority, labels, assignee, text и linked object находятся в верхней области board.
 - PNG screenshot и JSON analysis фиксируют bounds board/details/actions, количество кликабельных controls, отсутствие text overflow и отсутствие forbidden UI entries.
 
+## Project Settings UI
+
+Project Settings открывается из editor workflow как видимый экран внутри общего shell layout. Для `0.1.0 Preview` он не должен выглядеть как внешний wizard или отдельная утилита: пользователь остаётся в `Electron2D.Editor`, видит docks, bottom panel, workspace switcher и центральную область настроек.
+
+Проверяемый минимум UI для `T-0085`:
+
+- В центральной области виден `Project Settings` panel.
+- Видны sections `Main Scene`, `Display`, `Renderer`, `Physics`, `Input Map` и `Export Presets`.
+- `Main Scene` показывает project-relative путь, который записывается в `project.e2d.json`.
+- `Display` показывает window size, fullscreen state, stretch settings и DPI scale.
+- `Renderer` показывает один из профилей `Automatic`, `Compatibility`, `Standard`.
+- `Physics` показывает `physicsTicksPerSecond`.
+- `Input Map` показывает action rows, deadzone и persistable bindings.
+- `Export Presets` показывает presets для Windows, Linux, macOS, Android, iOS и WebAssembly browser.
+- Видны `Save Apply` и `Revert` как пользовательские действия текущего panel.
+- PNG screenshot и JSON analysis фиксируют bounds sections/actions, pointer hit-test по строке Input Map, keyboard save command, отсутствие text overflow и отсутствие forbidden UI entries.
+
 ## Agent Workspace dock
 
 `Agent Workspace` — постоянная dock-панель, доступная одновременно с любым центральным workspace.
