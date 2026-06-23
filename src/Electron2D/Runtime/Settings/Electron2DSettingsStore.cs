@@ -50,6 +50,11 @@ internal static class Electron2DSettingsStore
         return Load(path, DeserializeProject);
     }
 
+    internal static Electron2DSettingsLoadResult<Electron2DProjectSettings> LoadProjectFromText(string text, string sourcePath)
+    {
+        return LoadText(text, sourcePath, DeserializeProject);
+    }
+
     public static Electron2DSettingsLoadResult<Electron2DProjectSettings> LoadProjectAndApply(string path)
     {
         var result = LoadProject(path);
@@ -85,27 +90,7 @@ internal static class Electron2DSettingsStore
 
         try
         {
-            return Electron2DSettingsLoadResult<TSettings>.Success(deserialize(File.ReadAllText(path)));
-        }
-        catch (JsonException exception)
-        {
-            return Electron2DSettingsLoadResult<TSettings>.Failure(
-                new Electron2DSettingsDiagnostic("settings.malformed_json", exception.Message, path));
-        }
-        catch (FormatException exception)
-        {
-            return Electron2DSettingsLoadResult<TSettings>.Failure(
-                new Electron2DSettingsDiagnostic("settings.invalid_value", exception.Message, path));
-        }
-        catch (InvalidOperationException exception)
-        {
-            return Electron2DSettingsLoadResult<TSettings>.Failure(
-                new Electron2DSettingsDiagnostic("settings.invalid_value", exception.Message, path));
-        }
-        catch (ArgumentException exception)
-        {
-            return Electron2DSettingsLoadResult<TSettings>.Failure(
-                new Electron2DSettingsDiagnostic("settings.invalid_value", exception.Message, path));
+            return LoadText(File.ReadAllText(path), path, deserialize);
         }
         catch (IOException exception)
         {
@@ -116,6 +101,42 @@ internal static class Electron2DSettingsStore
         {
             return Electron2DSettingsLoadResult<TSettings>.Failure(
                 new Electron2DSettingsDiagnostic("settings.io_error", exception.Message, path));
+        }
+    }
+
+    private static Electron2DSettingsLoadResult<TSettings> LoadText<TSettings>(
+        string text,
+        string sourcePath,
+        Func<string, TSettings> deserialize)
+        where TSettings : class
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentException.ThrowIfNullOrWhiteSpace(sourcePath);
+        ArgumentNullException.ThrowIfNull(deserialize);
+
+        try
+        {
+            return Electron2DSettingsLoadResult<TSettings>.Success(deserialize(text));
+        }
+        catch (JsonException exception)
+        {
+            return Electron2DSettingsLoadResult<TSettings>.Failure(
+                new Electron2DSettingsDiagnostic("settings.malformed_json", exception.Message, sourcePath));
+        }
+        catch (FormatException exception)
+        {
+            return Electron2DSettingsLoadResult<TSettings>.Failure(
+                new Electron2DSettingsDiagnostic("settings.invalid_value", exception.Message, sourcePath));
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Electron2DSettingsLoadResult<TSettings>.Failure(
+                new Electron2DSettingsDiagnostic("settings.invalid_value", exception.Message, sourcePath));
+        }
+        catch (ArgumentException exception)
+        {
+            return Electron2DSettingsLoadResult<TSettings>.Failure(
+                new Electron2DSettingsDiagnostic("settings.invalid_value", exception.Message, sourcePath));
         }
     }
 

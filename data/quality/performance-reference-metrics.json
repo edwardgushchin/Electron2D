@@ -119,7 +119,7 @@
     "reductionRatio": 2.0,
     "evidence": [
       "tests/Electron2D.Tests.Integration/CanvasItemRenderQueueTests.cs",
-      "docs/documentation/rendering/canvas-item-render-queue.md"
+      "docs/rendering/canvas-item-render-queue.md"
     ]
   }
 }

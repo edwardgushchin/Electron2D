@@ -3,6 +3,7 @@
   "formatVersion": 1,
   "root": {
     "type": "Node",
-    "name": "Main"
+    "name": "Main",
+    "script": "Scripts/MainScene.cs"
   }
 }

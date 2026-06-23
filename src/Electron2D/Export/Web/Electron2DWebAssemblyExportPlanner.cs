@@ -51,6 +51,15 @@ internal static class Electron2DWebAssemblyExportPlanner
         string projectFilePath,
         Electron2DProjectSettings? projectSettings)
     {
+        return CreatePlan(preset, projectFilePath, projectSettings, string.Empty);
+    }
+
+    internal static Electron2DWebAssemblyExportPlanResult CreatePlan(
+        Electron2DExportPreset preset,
+        string projectFilePath,
+        Electron2DProjectSettings? projectSettings,
+        string projectSettingsPath)
+    {
         ArgumentNullException.ThrowIfNull(preset);
 
         var diagnostics = new List<Electron2DExportDiagnostic>();
@@ -67,9 +76,13 @@ internal static class Electron2DWebAssemblyExportPlanner
         var frameworkDirectory = Path.Combine(webRootDirectory, "_framework");
         var assetsDirectory = Path.Combine(webRootDirectory, "assets");
         var mainScene = NormalizePortablePath(projectSettings.MainScene);
+        var resolvedProjectSettingsPath = ResolveProjectSettingsPath(projectFilePath, projectSettingsPath);
+        var projectSettingsPackagePath = ResolveProjectSettingsPackagePath(projectFilePath, resolvedProjectSettingsPath);
         var plan = new Electron2DWebAssemblyExportPlan
         {
             ProjectFilePath = projectFilePath,
+            ProjectSettingsPath = resolvedProjectSettingsPath,
+            ProjectSettingsPackagePath = projectSettingsPackagePath,
             Configuration = preset.Configuration,
             RuntimeIdentifier = preset.RuntimeIdentifier,
             SelfContained = preset.SelfContained,
@@ -102,7 +115,7 @@ internal static class Electron2DWebAssemblyExportPlanner
                 "electron2d.webmanifest.json",
                 "_framework",
                 "assets",
-                "project.e2d.json",
+                projectSettingsPackagePath,
                 mainScene
             ],
             BrowserPolicies = BrowserPolicies.ToArray(),
@@ -208,6 +221,23 @@ internal static class Electron2DWebAssemblyExportPlanner
     private static string NormalizePortablePath(string path)
     {
         return path.Replace('\\', '/');
+    }
+
+    private static string ResolveProjectSettingsPath(string projectFilePath, string projectSettingsPath)
+    {
+        if (!string.IsNullOrWhiteSpace(projectSettingsPath))
+        {
+            return Path.GetFullPath(projectSettingsPath);
+        }
+
+        var projectDirectory = Path.GetDirectoryName(Path.GetFullPath(projectFilePath)) ?? Directory.GetCurrentDirectory();
+        return Path.Combine(projectDirectory, "project.e2d.json");
+    }
+
+    private static string ResolveProjectSettingsPackagePath(string projectFilePath, string projectSettingsPath)
+    {
+        var projectDirectory = Path.GetDirectoryName(Path.GetFullPath(projectFilePath)) ?? Directory.GetCurrentDirectory();
+        return NormalizePortablePath(Path.GetRelativePath(projectDirectory, projectSettingsPath));
     }
 
     private static Electron2DExportDiagnostic Error(string code, string presetName, string message)

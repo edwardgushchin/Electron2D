@@ -22,7 +22,6 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Text;
 using Electron2D.ProjectSystem;
 
 namespace Electron2D.Editor.ProjectManagement;
@@ -30,7 +29,6 @@ namespace Electron2D.Editor.ProjectManagement;
 internal sealed class EditorProjectManager
 {
     private const int MaxRecentProjects = 10;
-    private const string TemplateProjectName = "Electron2D.Empty";
     private readonly string _templateRoot;
 
     public EditorProjectManager(string templateRoot)
@@ -167,108 +165,13 @@ internal sealed class EditorProjectManager
             throw new InvalidOperationException($"Project template directory was not found: {_templateRoot}");
         }
 
-        var projectSettings = Path.Combine(_templateRoot, "project.e2d.json");
+        var projectSettings = Directory.EnumerateFiles(_templateRoot, "*.e2d", SearchOption.TopDirectoryOnly)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .FirstOrDefault() ?? Path.Combine(_templateRoot, Electron2D.ProjectFileLocator.LegacyProjectFileName);
         if (!File.Exists(projectSettings))
         {
             throw new InvalidOperationException($"Project template manifest was not found: {projectSettings}");
         }
-    }
-
-    private void CopyTemplate(string projectPath)
-    {
-        foreach (var directory in Directory.EnumerateDirectories(_templateRoot, "*", SearchOption.AllDirectories))
-        {
-            var relativePath = Path.GetRelativePath(_templateRoot, directory);
-            if (IsTemplateMetadataPath(relativePath))
-            {
-                continue;
-            }
-
-            Directory.CreateDirectory(Path.Combine(projectPath, relativePath));
-        }
-
-        foreach (var file in Directory.EnumerateFiles(_templateRoot, "*", SearchOption.AllDirectories))
-        {
-            var relativePath = Path.GetRelativePath(_templateRoot, file);
-            if (IsTemplateMetadataPath(relativePath))
-            {
-                continue;
-            }
-
-            var destination = Path.Combine(projectPath, relativePath);
-            Directory.CreateDirectory(Path.GetDirectoryName(destination) ?? projectPath);
-            File.Copy(file, destination, overwrite: false);
-        }
-    }
-
-    private static bool IsTemplateMetadataPath(string relativePath)
-    {
-        return relativePath.Equals(".template.config", StringComparison.OrdinalIgnoreCase) ||
-            relativePath.StartsWith(".template.config" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
-            relativePath.StartsWith(".template.config" + Path.AltDirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static void RewriteProjectFiles(
-        string projectPath,
-        string projectName,
-        Electron2D.Electron2DRendererProfileSetting rendererProfile)
-    {
-        var namespaceName = ToCSharpNamespace(projectName);
-        var sourceProjectPath = Path.Combine(projectPath, TemplateProjectName + ".csproj");
-        var targetProjectPath = Path.Combine(projectPath, projectName + ".csproj");
-        if (File.Exists(sourceProjectPath))
-        {
-            File.Move(sourceProjectPath, targetProjectPath);
-        }
-
-        ReplaceText(Path.Combine(projectPath, "Program.cs"), TemplateProjectName, namespaceName);
-        ReplaceText(Path.Combine(projectPath, "Scripts", "MainScene.cs"), TemplateProjectName, namespaceName);
-        ReplaceText(Path.Combine(projectPath, "README.md"), "Electron2D Empty Project", projectName);
-
-        var projectSettingsPath = Path.Combine(projectPath, "project.e2d.json");
-        var loadResult = Electron2D.Electron2DSettingsStore.LoadProject(projectSettingsPath);
-        if (!loadResult.Succeeded || loadResult.Settings is null)
-        {
-            throw new InvalidOperationException(FormatDiagnostics(loadResult.Diagnostics));
-        }
-
-        loadResult.Settings.Name = projectName;
-        loadResult.Settings.RendererProfile = rendererProfile;
-        Electron2D.Electron2DSettingsStore.SaveProject(projectSettingsPath, loadResult.Settings);
-    }
-
-    private static string ToCSharpNamespace(string projectName)
-    {
-        var builder = new StringBuilder(projectName.Length);
-        foreach (var character in projectName)
-        {
-            if (char.IsLetterOrDigit(character) || character == '_')
-            {
-                builder.Append(character);
-            }
-            else if (char.IsWhiteSpace(character) || character is '-' or '.')
-            {
-                builder.Append('_');
-            }
-        }
-
-        if (builder.Length == 0 || char.IsDigit(builder[0]))
-        {
-            builder.Insert(0, '_');
-        }
-
-        return builder.ToString();
-    }
-
-    private static void ReplaceText(string path, string oldValue, string newValue)
-    {
-        if (!File.Exists(path))
-        {
-            return;
-        }
-
-        var text = File.ReadAllText(path);
-        File.WriteAllText(path, text.Replace(oldValue, newValue, StringComparison.Ordinal));
     }
 
     private static (string ProjectPath, string ProjectSettingsPath) ResolveProjectPaths(string projectPathOrSettingsPath)
@@ -276,15 +179,15 @@ internal sealed class EditorProjectManager
         var fullPath = Path.GetFullPath(projectPathOrSettingsPath);
         if (Directory.Exists(fullPath))
         {
-            return (fullPath, Path.Combine(fullPath, "project.e2d.json"));
+            return (fullPath, Electron2D.ProjectFileLocator.ResolveProjectFilePath(fullPath));
         }
 
-        if (Path.GetFileName(fullPath).Equals("project.e2d.json", StringComparison.OrdinalIgnoreCase))
+        if (Electron2D.ProjectFileLocator.IsProjectFilePath(fullPath))
         {
             return (Path.GetDirectoryName(fullPath) ?? ".", fullPath);
         }
 
-        return (fullPath, Path.Combine(fullPath, "project.e2d.json"));
+        return (fullPath, Electron2D.ProjectFileLocator.ResolveProjectFilePath(fullPath));
     }
 
     private static string ResolveMainScenePath(string projectPath, string mainScene)

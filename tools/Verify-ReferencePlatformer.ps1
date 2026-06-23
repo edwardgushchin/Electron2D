@@ -26,7 +26,7 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $projectRoot = Join-Path $repoRoot 'examples/reference-platformer'
-$projectPath = Join-Path $projectRoot 'Electron2D.ReferencePlatformer.csproj'
+$projectPath = Join-Path $projectRoot 'ReferencePlatformer.csproj'
 $cliProjectPath = Join-Path $repoRoot 'src/Electron2D.Cli/Electron2D.Cli.csproj'
 $workRoot = Join-Path $repoRoot '.temp/reference-platformer'
 $progressPath = Join-Path $workRoot 'progress.json'
@@ -74,6 +74,20 @@ function Assert-Png([string]$path) {
     }
 }
 
+function Assert-PngMinDimensions([string]$path, [int]$minWidth, [int]$minHeight) {
+    Assert-Png $path
+    $bytes = [System.IO.File]::ReadAllBytes($path)
+    if ($bytes.Length -lt 24) {
+        throw "PNG file is too small: $path"
+    }
+
+    $width = ([int]$bytes[16] -shl 24) -bor ([int]$bytes[17] -shl 16) -bor ([int]$bytes[18] -shl 8) -bor [int]$bytes[19]
+    $height = ([int]$bytes[20] -shl 24) -bor ([int]$bytes[21] -shl 16) -bor ([int]$bytes[22] -shl 8) -bor [int]$bytes[23]
+    if ($width -lt $minWidth -or $height -lt $minHeight) {
+        throw "PNG dimensions are too small: $path ($width x $height), expected at least $minWidth x $minHeight."
+    }
+}
+
 function Assert-Ogg([string]$path) {
     $stream = [System.IO.File]::OpenRead($path)
     try {
@@ -105,13 +119,10 @@ function Assert-Ttf([string]$path) {
 }
 
 foreach ($relativePath in @(
-    'Electron2D.ReferencePlatformer.csproj',
-    'Program.cs',
-    'Scripts/PlatformerGame.cs',
-    'project.e2d.json',
-    'electron2d.lock.json',
+    'ReferencePlatformer.csproj',
+    'scripts/PlatformerGame.cs',
+    'ReferencePlatformer.e2d',
     'global.json',
-    'export_presets.e2export.json',
     'scenes/main.scene.json',
     'resources/reference-platformer.manifest.json',
     '.electron2d/tasks/board.e2tasks',
@@ -126,8 +137,8 @@ foreach ($forbiddenPath in @('TASKS.md', 'dev-diary', 'completed-tasks')) {
     }
 }
 
-$settings = Get-Content -LiteralPath (Join-Path $projectRoot 'project.e2d.json') -Raw | ConvertFrom-Json
-if ($settings.format -ne 'Electron2D.ProjectSettings' -or $settings.name -ne 'Electron2D.ReferencePlatformer') {
+$settings = Get-Content -LiteralPath (Join-Path $projectRoot 'ReferencePlatformer.e2d') -Raw | ConvertFrom-Json
+if ($settings.format -ne 'Electron2D.ProjectSettings' -or $settings.name -ne 'ReferencePlatformer') {
     throw 'Reference platformer project settings are invalid.'
 }
 
@@ -137,7 +148,7 @@ if (($actionNames -join ',') -ne ($expectedActions -join ',')) {
     throw "Reference platformer Input Map mismatch. Expected $($expectedActions -join ','), got $($actionNames -join ',')."
 }
 
-$presets = Get-Content -LiteralPath (Join-Path $projectRoot 'export_presets.e2export.json') -Raw | ConvertFrom-Json
+$presets = $settings.exportPresets
 if ($presets.format -ne 'Electron2D.ExportPresets') {
     throw 'Reference platformer export presets format is invalid.'
 }
@@ -159,7 +170,7 @@ if ($task.status -ne 'AwaitingAcceptance' -or $task.acceptanceState -ne 'Awaitin
 }
 
 $resourceManifest = Get-Content -LiteralPath (Join-Path $projectRoot 'resources/reference-platformer.manifest.json') -Raw | ConvertFrom-Json
-if ($resourceManifest.format -ne 'Electron2D.ReferencePlatformer.Resources' -or $resourceManifest.networkRequiredDuringBuild -ne $false) {
+if ($resourceManifest.format -ne 'ReferencePlatformer.Resources' -or $resourceManifest.networkRequiredDuringBuild -ne $false) {
     throw 'Reference platformer resource manifest is invalid.'
 }
 
@@ -198,6 +209,32 @@ foreach ($requiredRole in @(
     }
 }
 
+$programPath = Join-Path $projectRoot 'Program.cs'
+if (Test-Path -LiteralPath $programPath) {
+    throw 'Reference platformer must not provide Program.cs; editor/dev run and export own the launch flow.'
+}
+
+$source = Get-Content -LiteralPath (Join-Path $projectRoot 'scripts/PlatformerGame.cs') -Raw
+foreach ($forbiddenText in @(
+    'Console.ReadKey',
+    'FRAME reference-platformer',
+    'SDL.',
+    'SDL3',
+    'CreateWindow',
+    'RuntimeHost.Run',
+    'ProjectRuntimeRunner'
+)) {
+    if ($source.IndexOf($forbiddenText, [System.StringComparison]::Ordinal) -ge 0) {
+        throw "Reference platformer project script must use only public Electron2D game API. Forbidden text: $forbiddenText"
+    }
+}
+
+foreach ($forbiddenApi in @('Electron2DApplication', 'Electron2DRunOptions', 'Electron2DRunResult')) {
+    if ($source.IndexOf($forbiddenApi, [System.StringComparison]::Ordinal) -ge 0) {
+        throw "Reference platformer must not use out-of-profile public bootstrap API '$forbiddenApi'."
+    }
+}
+
 Remove-Item -LiteralPath $workRoot -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $workRoot | Out-Null
 
@@ -209,7 +246,7 @@ if ($LASTEXITCODE -ne 0) {
 $previousSavePath = [System.Environment]::GetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE')
 [System.Environment]::SetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE', $progressPath)
 try {
-    $runOutput = dotnet run --project $projectPath --no-build -- --verify
+    $runOutput = dotnet run --project $cliProjectPath -- run --project $projectRoot --play-script "right,right,save,quit"
     if ($LASTEXITCODE -ne 0) {
         Write-Host $runOutput
         exit $LASTEXITCODE
@@ -221,19 +258,14 @@ finally {
 
 $joinedRunOutput = $runOutput -join [Environment]::NewLine
 foreach ($requiredText in @(
-    'Reference platformer scene loaded: scenes/main.scene.json',
-    'tilemap=True',
-    'oneWay=True',
-    'character=True',
-    'camera=True',
-    'animation=True',
-    'audio=True',
-    'keyboard=True',
-    'gamepad=True',
-    'touch=True',
-    'pause=True',
-    'save=True',
-    'checkpoint=checkpoint-01,coins=1'
+    'Mode=playable',
+    'Playable=True',
+    'CommandsApplied=4',
+    'Checkpoint=checkpoint-01',
+    'Coins=1',
+    'WindowCreated=True',
+    'WindowShown=True',
+    'FramePresented=True'
 )) {
     if ($joinedRunOutput.IndexOf($requiredText, [System.StringComparison]::Ordinal) -lt 0) {
         Write-Host $runOutput
@@ -244,6 +276,64 @@ foreach ($requiredText in @(
 if (-not (Test-Path -LiteralPath $progressPath -PathType Leaf)) {
     throw 'Reference platformer did not write progress save artifact.'
 }
+
+$playableSavePath = Join-Path $workRoot 'playable-progress.json'
+$playableScreenshotPath = Join-Path $workRoot 'reference-platformer-playable.png'
+$previousSavePath = [System.Environment]::GetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE')
+[System.Environment]::SetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE', $playableSavePath)
+try {
+    $playableOutput = dotnet run --project $cliProjectPath -- run --project $projectRoot --play-script "right,jump,right,pause,save,quit" --screenshot $playableScreenshotPath
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host $playableOutput
+        exit $LASTEXITCODE
+    }
+}
+finally {
+    [System.Environment]::SetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE', $previousSavePath)
+}
+
+$joinedPlayableOutput = $playableOutput -join [Environment]::NewLine
+foreach ($requiredText in @(
+    'Mode=playable',
+    'Playable=True',
+    'FramesAdvanced=5',
+    'CommandsApplied=6',
+    'Checkpoint=checkpoint-01',
+    'Coins=1',
+    'Paused=True',
+    'WindowCreated=True',
+    'WindowShown=True',
+    'FramePresented=True',
+    'InputEventsDispatched=',
+    'DrawCommands=',
+    "ScreenshotPath=$playableScreenshotPath"
+)) {
+    if ($joinedPlayableOutput.IndexOf($requiredText, [System.StringComparison]::Ordinal) -lt 0) {
+        Write-Host $playableOutput
+        throw "Reference platformer playable output does not contain expected text: $requiredText"
+    }
+}
+
+if ($joinedPlayableOutput.IndexOf('FRAME ', [System.StringComparison]::Ordinal) -ge 0) {
+    Write-Host $playableOutput
+    throw 'Reference platformer playable output must not contain ASCII frame output.'
+}
+
+$drawCommandsMatch = [System.Text.RegularExpressions.Regex]::Match($joinedPlayableOutput, 'DrawCommands=(\d+)')
+if (-not $drawCommandsMatch.Success -or [int]$drawCommandsMatch.Groups[1].Value -le 0) {
+    Write-Host $playableOutput
+    throw 'Reference platformer playable output must report DrawCommands greater than zero.'
+}
+
+if (-not (Test-Path -LiteralPath $playableSavePath -PathType Leaf)) {
+    throw 'Reference platformer playable mode did not write progress save artifact.'
+}
+
+if (-not (Test-Path -LiteralPath $playableScreenshotPath -PathType Leaf)) {
+    throw 'Reference platformer playable mode did not write PNG screenshot artifact.'
+}
+
+Assert-PngMinDimensions $playableScreenshotPath 640 360
 
 $validateOutput = dotnet run --project $cliProjectPath -- validate --project $projectRoot --format json
 if ($LASTEXITCODE -ne 0) {

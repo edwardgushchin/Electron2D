@@ -25,9 +25,9 @@
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$releaseSpecPath = Join-Path $repoRoot 'docs/specifications/releases/0.1.0-preview.md'
-$agentNativeWorkflowSpecPath = Join-Path $repoRoot 'docs/specifications/architecture/agent-native-workflow.md'
-$engineStackSpecPath = Join-Path $repoRoot 'docs/specifications/architecture/engine-platform-stack.md'
+$releaseSpecPath = Join-Path $repoRoot 'docs/releases/0.1.0-preview.md'
+$agentNativeWorkflowSpecPath = Join-Path $repoRoot 'docs/architecture/agent-native-workflow.md'
+$engineStackSpecPath = Join-Path $repoRoot 'docs/architecture/engine-platform-stack.md'
 
 foreach ($path in @($releaseSpecPath, $agentNativeWorkflowSpecPath, $engineStackSpecPath)) {
     if (-not (Test-Path -LiteralPath $path)) {
@@ -63,7 +63,7 @@ Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'Windows, Linux, mac
 Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'iOS' -Description 'Agent-native cross-platform 2D game engine platform contract'
 Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'WebAssembly browser' -Description 'Agent-native cross-platform 2D game engine platform contract'
 
-Assert-Contains -Content $engineStackSpec -Fragment 'Synchronized with `docs/specifications/releases/0.1.0-preview.md`' -Description 'Engine platform stack canonical status'
+Assert-Contains -Content $engineStackSpec -Fragment 'Synchronized with `docs/releases/0.1.0-preview.md`' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment 'Windows, Linux, macOS, Android' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment 'iOS' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment 'WebAssembly browser' -Description 'Engine platform stack canonical status'

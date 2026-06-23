@@ -59,7 +59,7 @@ public sealed class WebAssemblyExportTests
                 }
                 """);
 
-            var load = Electron2D.Electron2DExportPresetStore.Load(path);
+            var load = Electron2D.ExportPresetStore.Load(path);
 
             Assert.True(load.Succeeded, FormatDiagnostics(load.Diagnostics));
             Assert.NotNull(load.Document);

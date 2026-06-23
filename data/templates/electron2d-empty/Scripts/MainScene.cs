@@ -22,7 +22,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using Electron2D;
+using global::Electron2D;
 
 namespace Electron2D.Empty.Scripts;
 
@@ -46,8 +46,13 @@ public sealed class MainScene : Node
     public override void _Ready()
     {
         _lifecycle.Add(nameof(_Ready));
-        IsReady = true;
         TreeWasAvailable = GetTree() is not null;
         TextFeatureWasAvailable = RenderingServer.HasFeature(RenderingServer.RenderingFeature.Text);
+        if (!TreeWasAvailable || !TextFeatureWasAvailable)
+        {
+            throw new InvalidOperationException("Electron2D script services were not available during _Ready().");
+        }
+
+        IsReady = true;
     }
 }

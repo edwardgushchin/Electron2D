@@ -111,8 +111,10 @@ internal static partial class Electron2DCommandLine
             "workspace" => RunWorkspace(options, output, error, context),
             "validate" => RunValidate(options, output, error),
             "run" when IsRuntimeDebugCommand(options) => RunRuntimeDebug(options, output, error),
+            "run" when IsProjectRuntimeRun(options) => RunProjectRuntime(options, output, error),
             "run" when HeadlessRuntimeAutomation.HasRuntimeOptions(options) => RunHeadlessRuntime(options, output, error, context),
             "test" when HasSceneTestSuite(options, NormalizeProjectRoot(options.ProjectRoot)) => RunSceneTests(options, output, error, context),
+            "export" when IsWindowsExportCommand(options) => RunWindowsExport(options, output, error),
             "export" when IsWebExportCommand(options) => RunWebExport(options, output, error, context),
             "export" when IsAndroidExportCommand(options) => RunAndroidExport(options, output, error, context),
             "export" when IsIosExportCommand(options) => RunIosExport(options, output, error, context),
@@ -1573,7 +1575,7 @@ internal static partial class Electron2DCommandLine
         out CliResult? failure)
     {
         var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
-        var settingsPath = Path.Combine(projectRoot, "project.e2d.json");
+        var settingsPath = Electron2D.ProjectFileLocator.ResolveProjectFilePath(projectRoot);
         var settingsResult = Electron2D.Electron2DSettingsStore.LoadProject(settingsPath);
         if (!settingsResult.Succeeded || settingsResult.Settings is null)
         {
@@ -1603,7 +1605,7 @@ internal static partial class Electron2DCommandLine
             OutputDirectory = ResolveProjectChildPath(projectRoot, options.GetOption("--output") ?? Path.Combine("exports", "web")),
             IncludeDebugSymbols = ReadBooleanOption(options, "--debug-symbols", defaultValue: false, command)
         };
-        var planResult = Electron2D.Electron2DWebAssemblyExportPlanner.CreatePlan(preset, projectFilePath, settingsResult.Settings);
+        var planResult = Electron2D.Electron2DWebAssemblyExportPlanner.CreatePlan(preset, projectFilePath, settingsResult.Settings, settingsPath);
         if (!planResult.Succeeded || planResult.Plan is null)
         {
             planContext = WebExportPlanContext.Empty;
@@ -1630,7 +1632,7 @@ internal static partial class Electron2DCommandLine
         out CliResult? failure)
     {
         var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
-        var settingsPath = Path.Combine(projectRoot, "project.e2d.json");
+        var settingsPath = Electron2D.ProjectFileLocator.ResolveProjectFilePath(projectRoot);
         var settingsResult = Electron2D.Electron2DSettingsStore.LoadProject(settingsPath);
         if (!settingsResult.Succeeded || settingsResult.Settings is null)
         {
@@ -1707,7 +1709,7 @@ internal static partial class Electron2DCommandLine
         out CliResult? failure)
     {
         var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
-        var settingsPath = Path.Combine(projectRoot, "project.e2d.json");
+        var settingsPath = Electron2D.ProjectFileLocator.ResolveProjectFilePath(projectRoot);
         var settingsResult = Electron2D.Electron2DSettingsStore.LoadProject(settingsPath);
         if (!settingsResult.Succeeded || settingsResult.Settings is null)
         {
@@ -3167,8 +3169,8 @@ internal static partial class Electron2DCommandLine
             return DoctorCheck("signing", "blocked", "signing.mode must be referencesOnly.");
         }
 
-        var exportPresetsPath = Path.Combine(projectRoot, "export_presets.e2export.json");
-        if (!File.Exists(exportPresetsPath))
+        var presets = ReadExportPresetArray(projectRoot);
+        if (presets is null)
         {
             return DoctorCheck(
                 "signing",
@@ -3179,12 +3181,6 @@ internal static partial class Electron2DCommandLine
                     ["presetCount"] = 0,
                     ["credentialReferences"] = new JsonArray()
                 });
-        }
-
-        var presets = TryReadJsonObject(exportPresetsPath)?["presets"] as JsonArray;
-        if (presets is null)
-        {
-            return DoctorCheck("signing", "blocked", "export_presets.e2export.json could not be read as a preset list.");
         }
 
         var requiredSigningCount = 0;
@@ -3235,6 +3231,24 @@ internal static partial class Electron2DCommandLine
                 ["missingRequiredReferences"] = missingRequiredReferences,
                 ["credentialReferences"] = references
             });
+    }
+
+    private static JsonArray? ReadExportPresetArray(string projectRoot)
+    {
+        var exportPresetsPath = Path.Combine(projectRoot, "export_presets.e2export.json");
+        if (File.Exists(exportPresetsPath))
+        {
+            return TryReadJsonObject(exportPresetsPath)?["presets"] as JsonArray;
+        }
+
+        if (!Electron2D.ProjectFileLocator.TryResolveProjectFilePath(projectRoot, out var projectFilePath))
+        {
+            return null;
+        }
+
+        return TryReadJsonObject(projectFilePath)?["exportPresets"] is JsonObject exportPresets
+            ? exportPresets["presets"] as JsonArray
+            : null;
     }
 
     private static JsonObject DoctorCheck(string id, string status, string message, JsonObject? details = null)

@@ -148,7 +148,7 @@ function New-DocumentationEntry {
     $stem = $relative -replace '^docs/', ''
     $stem = $stem -replace '\.md$', ''
     $id = 'doc:' + ($stem -replace '/', '.')
-    if ($relative -eq 'docs/specifications/architecture/agent-native-workflow.md') {
+    if ($relative -eq 'docs/architecture/agent-native-workflow.md') {
         $id = 'doc:architecture.agent-native-workflow'
     }
 
@@ -291,16 +291,11 @@ $apiManifest = Get-Content -LiteralPath $apiManifestPath -Raw | ConvertFrom-Json
 $examples = Get-Content -LiteralPath $examplesPath -Raw | ConvertFrom-Json
 
 $documentationFiles = New-Object System.Collections.Generic.List[string]
-$documentationFiles.Add((Join-Path $repoRoot 'docs/documentation/README.md'))
-Get-ChildItem -LiteralPath (Join-Path $repoRoot 'docs/documentation') -Recurse -File -Filter '*.md' |
+Get-ChildItem -LiteralPath (Join-Path $repoRoot 'docs') -Recurse -File -Filter '*.md' |
     Sort-Object FullName |
     ForEach-Object {
-        if ($_.FullName -ne (Join-Path $repoRoot 'docs/documentation/README.md')) {
-            $documentationFiles.Add($_.FullName)
-        }
+        $documentationFiles.Add($_.FullName)
     }
-$documentationFiles.Add((Join-Path $repoRoot 'docs/specifications/architecture/agent-native-workflow.md'))
-$documentationFiles.Add((Join-Path $repoRoot 'docs/specifications/documentation/local-documentation-pipeline.md'))
 
 $entries = New-Object System.Collections.Generic.List[object]
 foreach ($type in @($apiManifest.types | Sort-Object fullName)) {

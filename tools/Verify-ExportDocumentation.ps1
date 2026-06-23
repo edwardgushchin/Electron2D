@@ -27,17 +27,17 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 
 $requiredFiles = @(
-    'docs/specifications/export/export-user-documentation.md',
-    'docs/documentation/export/export-guide.md',
-    'docs/documentation/export/export-preset-model.md',
-    'docs/documentation/export/windows-x64-export.md',
-    'docs/documentation/export/linux-x64-export.md',
-    'docs/documentation/export/macos-arm64-export.md',
-    'docs/documentation/export/android-arm64-export.md',
-    'docs/documentation/export/ios-arm64-export.md',
-    'docs/documentation/export/webassembly-browser-export.md',
-    'docs/documentation/documentation/user-guide.md',
-    'docs/documentation/README.md'
+    'docs/export/export-guide.md',
+    'docs/export/export-guide.md',
+    'docs/export/export-preset-model.md',
+    'docs/export/windows-x64-export.md',
+    'docs/export/linux-x64-export.md',
+    'docs/export/macos-arm64-export.md',
+    'docs/export/android-arm64-export.md',
+    'docs/export/ios-arm64-export.md',
+    'docs/export/webassembly-browser-export.md',
+    'docs/documentation/user-guide.md',
+    'docs/README.md'
 )
 
 foreach ($relativePath in $requiredFiles) {
@@ -59,15 +59,15 @@ function Assert-ContainsAll([string]$name, [string]$content, [string[]]$fragment
     }
 }
 
-$guide = Read-Doc 'docs/documentation/export/export-guide.md'
-$windows = Read-Doc 'docs/documentation/export/windows-x64-export.md'
-$linux = Read-Doc 'docs/documentation/export/linux-x64-export.md'
-$macos = Read-Doc 'docs/documentation/export/macos-arm64-export.md'
-$android = Read-Doc 'docs/documentation/export/android-arm64-export.md'
-$ios = Read-Doc 'docs/documentation/export/ios-arm64-export.md'
-$web = Read-Doc 'docs/documentation/export/webassembly-browser-export.md'
-$userGuide = Read-Doc 'docs/documentation/documentation/user-guide.md'
-$documentationIndex = Read-Doc 'docs/documentation/README.md'
+$guide = Read-Doc 'docs/export/export-guide.md'
+$windows = Read-Doc 'docs/export/windows-x64-export.md'
+$linux = Read-Doc 'docs/export/linux-x64-export.md'
+$macos = Read-Doc 'docs/export/macos-arm64-export.md'
+$android = Read-Doc 'docs/export/android-arm64-export.md'
+$ios = Read-Doc 'docs/export/ios-arm64-export.md'
+$web = Read-Doc 'docs/export/webassembly-browser-export.md'
+$userGuide = Read-Doc 'docs/documentation/user-guide.md'
+$documentationIndex = Read-Doc 'docs/README.md'
 
 Assert-ContainsAll 'Export guide' $guide @(
     '<!-- export-doc:overview -->',

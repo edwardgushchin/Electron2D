@@ -23,8 +23,8 @@
         "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
         "tests/Electron2D.Tests.Integration/TextureResourceRegistryTests.cs",
         "tests/Electron2D.Tests.Integration/RenderTargetRecoveryTests.cs",
-        "docs/documentation/rendering/texture-resource-baseline.md",
-        "docs/documentation/rendering/offscreen-render-target-recovery-baseline.md"
+        "docs/rendering/texture-resource-baseline.md",
+        "docs/rendering/offscreen-render-target-recovery-baseline.md"
       ]
     },
     {
@@ -38,8 +38,8 @@
       "evidence": [
         "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
         "tests/Electron2D.Tests.Integration/AudioServerVoiceTests.cs",
-        "docs/documentation/audio/audio-server-voice-handles.md",
-        "docs/documentation/audio/audio-stream-player-nodes.md"
+        "docs/audio/audio-server-voice-handles.md",
+        "docs/audio/audio-stream-player-nodes.md"
       ]
     },
     {
@@ -53,7 +53,7 @@
       "evidence": [
         "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
         "tests/Electron2D.Tests.Integration/PhysicsServer2DTests.cs",
-        "docs/documentation/physics/physics-server-2d.md"
+        "docs/physics/physics-server-2d.md"
       ]
     },
     {
@@ -68,8 +68,8 @@
         "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
         "tests/Electron2D.Tests.Integration/PackedSceneTests.cs",
         "tests/Electron2D.Tests.Integration/NodeSceneTreeLifecycleTests.cs",
-        "docs/documentation/object-model/packed-scene.md",
-        "docs/documentation/object-model/node-scene-tree-lifecycle.md"
+        "docs/object-model/packed-scene.md",
+        "docs/object-model/node-scene-tree-lifecycle.md"
       ]
     }
   ]

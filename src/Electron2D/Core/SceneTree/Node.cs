@@ -72,6 +72,7 @@ public class Node : Object
     private Node? _owner;
     private SceneTree? _tree;
     private bool _readyCalled;
+    private ProcessMode _processMode = ProcessMode.Inherit;
 
     /// <summary>
     /// Gets or sets the name value.
@@ -107,6 +108,47 @@ public class Node : Object
             ThrowIfFreed();
             _name = value ?? string.Empty;
             _parent?.MakeChildNameUnique(this);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets how this node participates in process, physics-process and
+    /// input callbacks while its scene tree is paused.
+    /// </summary>
+    ///
+    /// <value>
+    /// The process mode for this node. The default value is
+    /// <see cref="Electron2D.ProcessMode.Inherit" />.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// <see cref="Electron2D.ProcessMode.Inherit" /> follows the effective mode
+    /// of the nearest ancestor. A root node without a concrete ancestor falls
+    /// back to <see cref="Electron2D.ProcessMode.Pausable" />.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="SceneTree.Paused" />
+    public ProcessMode ProcessMode
+    {
+        get
+        {
+            ThrowIfFreed();
+            return _processMode;
+        }
+        set
+        {
+            ThrowIfFreed();
+            _processMode = value;
         }
     }
 
@@ -1124,16 +1166,19 @@ public class Node : Object
             return;
         }
 
-        _tree?.InvokeUserCallback(this, nameof(_Process), () => _Process(delta));
-        if (IsInstanceValid(this) &&
-            _tree is not null &&
-            !IsQueuedForDeletion() &&
-            this is ISceneTreeLifecycleHandler lifecycleHandler)
+        if (CanProcessInCurrentPauseState())
         {
-            _tree.InvokeUserCallback(
-                this,
-                "process lifecycle handler",
-                () => lifecycleHandler.OnProcess(delta));
+            _tree?.InvokeUserCallback(this, nameof(_Process), () => _Process(delta));
+            if (IsInstanceValid(this) &&
+                _tree is not null &&
+                !IsQueuedForDeletion() &&
+                this is ISceneTreeLifecycleHandler lifecycleHandler)
+            {
+                _tree.InvokeUserCallback(
+                    this,
+                    "process lifecycle handler",
+                    () => lifecycleHandler.OnProcess(delta));
+            }
         }
 
         foreach (var child in _children.ToArray())
@@ -1167,13 +1212,16 @@ public class Node : Object
             return;
         }
 
-        _tree?.InvokeUserCallback(this, nameof(_PhysicsProcess), () => _PhysicsProcess(delta));
-        if (IsInstanceValid(this) &&
-            _tree is not null &&
-            !IsQueuedForDeletion() &&
-            this is ISceneTreeLifecycleHandler lifecycleHandler)
+        if (CanProcessInCurrentPauseState())
         {
-            lifecycleHandler.OnPhysicsProcess(delta);
+            _tree?.InvokeUserCallback(this, nameof(_PhysicsProcess), () => _PhysicsProcess(delta));
+            if (IsInstanceValid(this) &&
+                _tree is not null &&
+                !IsQueuedForDeletion() &&
+                this is ISceneTreeLifecycleHandler lifecycleHandler)
+            {
+                lifecycleHandler.OnPhysicsProcess(delta);
+            }
         }
 
         foreach (var child in _children.ToArray())
@@ -1189,10 +1237,13 @@ public class Node : Object
             return viewport.IsInputHandled;
         }
 
-        _tree?.InvokeUserCallback(this, nameof(_Input), () => _Input(inputEvent));
-        if (viewport.IsInputHandled)
+        if (CanProcessInCurrentPauseState())
         {
-            return true;
+            _tree?.InvokeUserCallback(this, nameof(_Input), () => _Input(inputEvent));
+            if (viewport.IsInputHandled)
+            {
+                return true;
+            }
         }
 
         foreach (var child in _children.ToArray())
@@ -1204,6 +1255,33 @@ public class Node : Object
         }
 
         return viewport.IsInputHandled;
+    }
+
+    private bool CanProcessInCurrentPauseState()
+    {
+        if (_tree is null)
+        {
+            return false;
+        }
+
+        return GetEffectiveProcessMode() switch
+        {
+            ProcessMode.Pausable => !_tree.Paused,
+            ProcessMode.WhenPaused => _tree.Paused,
+            ProcessMode.Always => true,
+            ProcessMode.Disabled => false,
+            _ => !_tree.Paused
+        };
+    }
+
+    private ProcessMode GetEffectiveProcessMode()
+    {
+        if (_processMode != ProcessMode.Inherit)
+        {
+            return _processMode;
+        }
+
+        return _parent?.GetEffectiveProcessMode() ?? ProcessMode.Pausable;
     }
 
     internal void ExitTreeRecursive()

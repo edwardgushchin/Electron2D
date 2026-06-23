@@ -83,8 +83,15 @@ public sealed class EditorProjectManagerTests
 
             Assert.True(Directory.Exists(createdProjectPath));
             Assert.True(File.Exists(Path.Combine(createdProjectPath, "ProjectManagerSmoke.csproj")));
+            Assert.True(File.Exists(Path.Combine(createdProjectPath, "ProjectManagerSmoke.e2d")));
+            Assert.False(File.Exists(Path.Combine(createdProjectPath, "project.e2d.json")));
+            Assert.False(File.Exists(Path.Combine(createdProjectPath, "electron2d.lock.json")));
+            Assert.False(File.Exists(Path.Combine(createdProjectPath, "export_presets.e2export.json")));
+            Assert.True(Directory.Exists(Path.Combine(createdProjectPath, "scripts")));
+            Assert.False(ExactDirectoryExists(createdProjectPath, "Scripts"));
             Assert.False(Directory.Exists(Path.Combine(createdProjectPath, ".template.config")));
             Assert.True(File.Exists(projectSettingsPath));
+            Assert.Equal(Path.Combine(createdProjectPath, "ProjectManagerSmoke.e2d"), projectSettingsPath);
             Assert.True(File.Exists(mainScenePath));
             Assert.True(File.Exists(userSettingsPath));
             AssertAgentReadyProject(createdProjectPath, "Compatibility");
@@ -94,6 +101,8 @@ public sealed class EditorProjectManagerTests
             Assert.Equal("ProjectManagerSmoke", projectDocument.RootElement.GetProperty("name").GetString());
             Assert.Equal("Compatibility", projectDocument.RootElement.GetProperty("rendererProfile").GetString());
             Assert.Equal("scenes/main.scene.json", projectDocument.RootElement.GetProperty("mainScene").GetString());
+            Assert.True(projectDocument.RootElement.TryGetProperty("exportPresets", out _));
+            Assert.True(projectDocument.RootElement.TryGetProperty("reproducibilityLock", out _));
 
             using var userDocument = JsonDocument.Parse(File.ReadAllText(userSettingsPath));
             Assert.Equal("Electron2D.UserSettings", userDocument.RootElement.GetProperty("format").GetString());
@@ -108,6 +117,78 @@ public sealed class EditorProjectManagerTests
             Directory.Delete(workRoot, recursive: true);
             Directory.Delete(userDataRoot, recursive: true);
         }
+    }
+
+    [Fact]
+    public async Task EditorOpenProjectSmokeAcceptsNamedE2DFileAndLoadsMainScene()
+    {
+        var root = FindRepositoryRoot();
+        var projectPath = Path.Combine(root, "src", "Electron2D.Editor", "Electron2D.Editor.csproj");
+        var referenceProjectFile = Path.Combine(root, "examples", "reference-platformer", "ReferencePlatformer.e2d");
+        var userDataRoot = CreateTemporaryDirectory("electron2d-editor-open-project-");
+
+        try
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = root,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            startInfo.ArgumentList.Add("run");
+            startInfo.ArgumentList.Add("--project");
+            startInfo.ArgumentList.Add(projectPath);
+            startInfo.ArgumentList.Add("--");
+            startInfo.ArgumentList.Add("--open-project-smoke");
+            startInfo.ArgumentList.Add(referenceProjectFile);
+            startInfo.ArgumentList.Add("--user-data-dir");
+            startInfo.ArgumentList.Add(userDataRoot);
+
+            using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start dotnet run.");
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
+
+            await process.WaitForExitAsync();
+            var output = await outputTask;
+            var error = await errorTask;
+
+            Assert.True(
+                process.ExitCode == 0,
+                $"Editor open project smoke failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
+
+            var lines = ParseMachineReadableOutput(output);
+
+            Assert.Contains("Electron2D.Editor open project smoke passed", output);
+            Assert.Equal("ReferencePlatformer", lines["ProjectName"]);
+            Assert.Equal(referenceProjectFile, lines["ProjectSettingsPath"]);
+            Assert.Equal(Path.Combine(root, "examples", "reference-platformer"), lines["ProjectPath"]);
+            Assert.Equal(Path.Combine(root, "examples", "reference-platformer", "scenes", "main.scene.json"), lines["MainScenePath"]);
+            Assert.Equal("True", lines["MainSceneLoaded"]);
+            Assert.Equal("1", lines["RecentProjects"]);
+        }
+        finally
+        {
+            Directory.Delete(userDataRoot, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void WindowsFileAssociationScriptRegistersPerUserE2DOpenCommand()
+    {
+        var root = FindRepositoryRoot();
+        var scriptPath = Path.Combine(root, "tools", "Register-Electron2DFileAssociation.ps1");
+
+        Assert.True(File.Exists(scriptPath), "Per-user .e2d file association script must exist.");
+
+        var script = File.ReadAllText(scriptPath);
+        Assert.Contains("Software\\Classes\\.e2d", script, StringComparison.Ordinal);
+        Assert.Contains("Software\\Classes\\Electron2D.Project\\shell\\open\\command", script, StringComparison.Ordinal);
+        Assert.Contains("Software\\Classes\\Applications\\Electron2D.Editor.exe\\SupportedTypes", script, StringComparison.Ordinal);
+        Assert.Contains("Software\\Classes\\Applications\\Electron2D.Editor.exe\\shell\\open\\command", script, StringComparison.Ordinal);
+        Assert.Contains("\"%1\"", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("HKEY_LOCAL_MACHINE", script, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("HKLM:", script, StringComparison.OrdinalIgnoreCase);
     }
 
     private static void AssertAgentReadyProject(string projectRoot, string rendererProfile)
@@ -188,6 +269,13 @@ public sealed class EditorProjectManagerTests
         var directory = Path.Combine(Path.GetTempPath(), prefix + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         return directory;
+    }
+
+    private static bool ExactDirectoryExists(string parentDirectory, string directoryName)
+    {
+        return Directory.Exists(parentDirectory) &&
+            Directory.EnumerateDirectories(parentDirectory, "*", SearchOption.TopDirectoryOnly)
+                .Any(path => string.Equals(Path.GetFileName(path), directoryName, StringComparison.Ordinal));
     }
 
     private static string FindRepositoryRoot()

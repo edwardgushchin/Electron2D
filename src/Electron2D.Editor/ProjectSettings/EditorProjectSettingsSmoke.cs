@@ -89,10 +89,10 @@ internal static class EditorProjectSettingsSmoke
 
         Electron2DSettingsStore.SaveProject(creation.ProjectSettingsPath, settings);
         var exportPresetsPath = Path.Combine(creation.ProjectPath, "export_presets.e2export.json");
-        Electron2DExportPresetStore.Save(exportPresetsPath, CreateExportPresetDocument());
+        ExportPresetStore.Save(exportPresetsPath, CreateExportPresetDocument());
 
         var loadedSettings = LoadProjectSettings(creation.ProjectSettingsPath);
-        var loadedPresetsResult = Electron2DExportPresetStore.Load(exportPresetsPath);
+        var loadedPresetsResult = ExportPresetStore.Load(exportPresetsPath);
         if (!loadedPresetsResult.Succeeded || loadedPresetsResult.Document is null)
         {
             throw new InvalidOperationException(FormatExportDiagnostics(loadedPresetsResult.Diagnostics));
@@ -132,7 +132,7 @@ internal static class EditorProjectSettingsSmoke
         var regions = EditorProjectSettingsVisualHarness.CreateVisualRegions(snapshot);
         var pointerInteractionObserved = EditorProjectSettingsVisualHarness.DispatchPointerSelection(regions);
         var keyboardInteractionObserved = EditorProjectSettingsVisualHarness.DispatchKeyboardSave();
-        var window = EditorWindowSmoke.PresentCanvasForSmoke(visual.Canvas, smokeFrameCount: 4);
+        var window = EditorWindowHost.PresentStaticCanvas(visual.Canvas, smokeFrameCount: 4);
         var screenshotReviewed = visual.ScreenshotReviewed &&
             projectSettingsWritten &&
             inputMapRoundTrip &&

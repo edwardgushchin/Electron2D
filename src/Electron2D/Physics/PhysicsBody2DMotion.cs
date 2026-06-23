@@ -126,6 +126,21 @@ internal static class PhysicsBody2DMotion
         var expandedTargetBounds = ExpandTargetBounds(targetBounds, movingBounds.Size, safeMargin);
         var from = movingBounds.GetCenter();
         var to = from + motion;
+        if (PhysicsQuery2D.ContainsPointInclusive(expandedTargetBounds, from) &&
+            TryResolveMarginContact(movingBounds, targetBounds, motion, safeMargin, out var contactNormal))
+        {
+            contactNormal = ResolveTargetNormal(targetShape, motion, contactNormal);
+            if (targetShape.OneWayCollision &&
+                !ShouldCollideWithOneWayShape(movingBounds, targetBounds, motion, contactNormal, targetShape.OneWayCollisionMargin))
+            {
+                hit = MotionHit.None;
+                return false;
+            }
+
+            hit = new MotionHit(true, 0f, from, contactNormal, localShape, targetShape);
+            return true;
+        }
+
         if (!PhysicsQuery2D.TryIntersectSegmentWithBounds(
             from,
             to,
@@ -175,6 +190,55 @@ internal static class PhysicsBody2DMotion
         var halfMovingSize = movingSize / 2f;
         var margin = new Vector2(safeMargin, safeMargin);
         return new Rect2(targetBounds.Position - halfMovingSize - margin, targetBounds.Size + movingSize + (margin * 2f));
+    }
+
+    private static bool TryResolveMarginContact(
+        Rect2 movingBounds,
+        Rect2 targetBounds,
+        Vector2 motion,
+        float safeMargin,
+        out Vector2 normal)
+    {
+        var margin = MathF.Max(0f, safeMargin);
+        if (motion.Y > 0f &&
+            movingBounds.End.Y <= targetBounds.Position.Y + margin &&
+            RangesOverlapInclusive(movingBounds.Position.X, movingBounds.End.X, targetBounds.Position.X, targetBounds.End.X, margin))
+        {
+            normal = new Vector2(0f, -1f);
+            return true;
+        }
+
+        if (motion.Y < 0f &&
+            movingBounds.Position.Y >= targetBounds.End.Y - margin &&
+            RangesOverlapInclusive(movingBounds.Position.X, movingBounds.End.X, targetBounds.Position.X, targetBounds.End.X, margin))
+        {
+            normal = new Vector2(0f, 1f);
+            return true;
+        }
+
+        if (motion.X > 0f &&
+            movingBounds.End.X <= targetBounds.Position.X + margin &&
+            RangesOverlapInclusive(movingBounds.Position.Y, movingBounds.End.Y, targetBounds.Position.Y, targetBounds.End.Y, margin))
+        {
+            normal = new Vector2(-1f, 0f);
+            return true;
+        }
+
+        if (motion.X < 0f &&
+            movingBounds.Position.X >= targetBounds.End.X - margin &&
+            RangesOverlapInclusive(movingBounds.Position.Y, movingBounds.End.Y, targetBounds.Position.Y, targetBounds.End.Y, margin))
+        {
+            normal = new Vector2(1f, 0f);
+            return true;
+        }
+
+        normal = Vector2.Zero;
+        return false;
+    }
+
+    private static bool RangesOverlapInclusive(float firstMinimum, float firstMaximum, float secondMinimum, float secondMaximum, float margin)
+    {
+        return firstMaximum >= secondMinimum - margin && secondMaximum >= firstMinimum - margin;
     }
 
     private static bool ShouldCollideWithOneWayShape(

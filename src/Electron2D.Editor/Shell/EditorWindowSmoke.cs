@@ -22,60 +22,92 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.InteropServices;
 using System.IO.Compression;
 using System.Text.Json.Nodes;
 using Electron2D.Editor.AgentWorkspace;
 using Electron2D.Editor.ProjectTasks;
 using Electron2D.Editor.Scripting;
-using SDL3;
 
 namespace Electron2D.Editor.Shell;
 
 internal static class EditorWindowSmoke
 {
-    private const string WindowTitle = "Electron2D.Editor";
     private const int SmokeFrameCount = 8;
 
     public static EditorWindowSmokeResult RunSmoke(string workRoot)
     {
+        return RunSmoke(
+            workRoot,
+            EditorShellLayout.CreateDefault(),
+            "editor-window-smoke",
+            dispatchPointerSelection: true,
+            runVisibleLayerReattestations: false);
+    }
+
+    public static EditorWindowSmokeResult RunProjectStartupSmoke(string workRoot, EditorShellStartupProject startupProject)
+    {
+        ArgumentNullException.ThrowIfNull(startupProject);
+
+        return RunSmoke(
+            workRoot,
+            EditorShellLayout.CreateForProject(startupProject),
+            "editor-open-project-window-smoke",
+            dispatchPointerSelection: false,
+            runVisibleLayerReattestations: false);
+    }
+
+    private static EditorWindowSmokeResult RunSmoke(
+        string workRoot,
+        EditorShellLayout layout,
+        string artifactName,
+        bool dispatchPointerSelection,
+        bool runVisibleLayerReattestations)
+    {
         ArgumentException.ThrowIfNullOrWhiteSpace(workRoot);
+        ArgumentNullException.ThrowIfNull(layout);
+        ArgumentException.ThrowIfNullOrWhiteSpace(artifactName);
 
         var fullWorkRoot = Path.GetFullPath(workRoot);
         var visualRoot = Path.Combine(fullWorkRoot, "visual");
         Directory.CreateDirectory(visualRoot);
 
-        var layout = EditorShellLayout.CreateDefault();
-        var pointerInteractionObserved = DispatchPointerSelection(layout);
+        var pointerInteractionObserved = !dispatchPointerSelection || DispatchPointerSelection(layout);
         var keyboardInteractionObserved = DispatchKeyboardCommand(layout);
         var regions = layout.CreateVisualRegions();
-        var canvas = EditorShellVisualHarness.RenderCanvas(layout);
-        var screenshotPath = Path.Combine(visualRoot, "editor-window-smoke.png");
-        var analysisPath = Path.Combine(visualRoot, "editor-window-smoke.analysis.json");
+        var frame = EditorRuntimeFrameRenderer.Render(layout);
+        var canvas = frame.Canvas;
+        var screenshotPath = Path.Combine(visualRoot, artifactName + ".png");
+        var analysisPath = Path.Combine(visualRoot, artifactName + ".analysis.json");
         var textOverflowCount = CountTextOverflow(regions);
         var forbiddenUiMatches = layout.FindForbiddenUiMatches();
         var clickableControlCount = regions.Count(region => region.Clickable);
 
         File.WriteAllBytes(screenshotPath, PngEncoder.Encode(canvas.Width, canvas.Height, canvas.Pixels));
 
-        var windowResult = RunWindow(
-            canvas,
+        var windowResult = EditorWindowHost.RunRuntimeLayout(
+            layout,
             smokeFrameCount: SmokeFrameCount,
             stayOpenUntilCloseRequest: false);
-        var reattestations = RunVisibleLayerReattestations(
-            fullWorkRoot,
-            new EditorWindowLayerFrame("T-0157", "Default shell layout", screenshotPath, analysisPath, canvas),
-            windowResult);
+        IReadOnlyList<EditorWindowLayerReattestation> reattestations = runVisibleLayerReattestations
+            ? RunVisibleLayerReattestations(
+                fullWorkRoot,
+                new EditorWindowLayerFrame("T-0157", "Default shell layout", screenshotPath, analysisPath, canvas),
+                windowResult)
+            : Array.Empty<EditorWindowLayerReattestation>();
 
         var screenshotReviewed =
             windowResult.WindowCreated &&
             windowResult.WindowShown &&
             windowResult.FramePresented &&
+            windowResult.RuntimeControlTree &&
+            windowResult.VisualHarnessRemoved &&
+            windowResult.DrawCommands >= 16 &&
+            windowResult.RedDominantPixelRatio < 0.20d &&
             pointerInteractionObserved &&
             keyboardInteractionObserved &&
             textOverflowCount == 0 &&
             forbiddenUiMatches.Count == 0 &&
-            reattestations.All(layer => layer.PresentedInWindow);
+            (!runVisibleLayerReattestations || reattestations.All(layer => layer.PresentedInWindow));
 
         File.WriteAllText(
             analysisPath,
@@ -92,7 +124,7 @@ internal static class EditorWindowSmoke
                 screenshotReviewed).ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }).ReplaceLineEndings("\n") + "\n");
 
         return new EditorWindowSmokeResult(
-            WindowTitle,
+            EditorWindowHost.WindowTitle,
             windowResult.WindowCreated,
             windowResult.WindowShown,
             windowResult.FramePresented,
@@ -100,12 +132,23 @@ internal static class EditorWindowSmoke
             pointerInteractionObserved,
             keyboardInteractionObserved,
             layout.SelectedWorkspace,
+            layout.ProjectLoaded,
+            layout.ProjectName,
+            layout.ProjectPath,
+            layout.ProjectSettingsPath,
+            layout.MainScenePath,
+            layout.DocumentTabs.ToArray(),
+            layout.GetWorkspaceState("Game").OpenDocuments,
             windowResult.WindowWidth,
             windowResult.WindowHeight,
             windowResult.PixelWidth,
             windowResult.PixelHeight,
             windowResult.VideoDriver,
             windowResult.FrameCount,
+            windowResult.RuntimeControlTree,
+            windowResult.VisualHarnessRemoved,
+            windowResult.DrawCommands,
+            windowResult.RedDominantPixelRatio,
             screenshotPath,
             analysisPath,
             textOverflowCount,
@@ -113,171 +156,6 @@ internal static class EditorWindowSmoke
             forbiddenUiMatches.Count,
             reattestations.Select(layer => layer.TaskId).ToArray(),
             screenshotReviewed);
-    }
-
-    public static int RunInteractive()
-    {
-        var layout = EditorShellLayout.CreateDefault();
-        var canvas = EditorShellVisualHarness.RenderCanvas(layout);
-        var result = RunWindow(
-            canvas,
-            smokeFrameCount: 0,
-            stayOpenUntilCloseRequest: true);
-
-        return result.WindowCreated && result.WindowShown && result.FramePresented ? 0 : 1;
-    }
-
-    public static EditorWindowRunResult PresentCanvasForSmoke(PixelCanvas canvas, int smokeFrameCount)
-    {
-        ArgumentNullException.ThrowIfNull(canvas);
-        if (smokeFrameCount <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(smokeFrameCount), smokeFrameCount, "Smoke frame count must be positive.");
-        }
-
-        return RunWindow(
-            canvas,
-            smokeFrameCount,
-            stayOpenUntilCloseRequest: false);
-    }
-
-    private static EditorWindowRunResult RunWindow(
-        PixelCanvas canvas,
-        int smokeFrameCount,
-        bool stayOpenUntilCloseRequest)
-    {
-        ArgumentNullException.ThrowIfNull(canvas);
-
-        var initialized = SDL.Init(SDL.InitFlags.Video | SDL.InitFlags.Events);
-        if (!initialized)
-        {
-            throw new InvalidOperationException("Editor window initialization failed: " + SDL.GetError());
-        }
-
-        var window = IntPtr.Zero;
-        try
-        {
-            window = SDL.CreateWindow(
-                WindowTitle,
-                canvas.Width,
-                canvas.Height,
-                SDL.WindowFlags.Resizable);
-            if (window == IntPtr.Zero)
-            {
-                throw new InvalidOperationException("Editor window creation failed: " + SDL.GetError());
-            }
-
-            var shown = SDL.ShowWindow(window);
-            var frameCount = 0;
-            var eventPumpObserved = false;
-            var framePresented = false;
-            var closeRequested = false;
-            var targetFrames = stayOpenUntilCloseRequest ? int.MaxValue : Math.Max(1, smokeFrameCount);
-
-            while (!closeRequested && frameCount < targetFrames)
-            {
-                eventPumpObserved = PumpEvents();
-                closeRequested = closeRequested || PollCloseRequested();
-                framePresented = PresentFrame(window, canvas) || framePresented;
-                frameCount++;
-                Thread.Sleep(16);
-            }
-
-            var windowWidth = canvas.Width;
-            var windowHeight = canvas.Height;
-            _ = SDL.GetWindowSize(window, out windowWidth, out windowHeight);
-
-            var pixelWidth = canvas.Width;
-            var pixelHeight = canvas.Height;
-            _ = SDL.GetWindowSizeInPixels(window, out pixelWidth, out pixelHeight);
-
-            return new EditorWindowRunResult(
-                WindowCreated: true,
-                WindowShown: shown,
-                FramePresented: framePresented,
-                EventPumpObserved: eventPumpObserved,
-                WindowWidth: windowWidth,
-                WindowHeight: windowHeight,
-                PixelWidth: pixelWidth,
-                PixelHeight: pixelHeight,
-                VideoDriver: SDL.GetCurrentVideoDriver() ?? "unknown",
-                FrameCount: frameCount);
-        }
-        finally
-        {
-            if (window != IntPtr.Zero)
-            {
-                SDL.DestroyWindow(window);
-            }
-
-            SDL.Quit();
-        }
-    }
-
-    private static bool PumpEvents()
-    {
-        SDL.PumpEvents();
-        return true;
-    }
-
-    private static bool PollCloseRequested()
-    {
-        while (SDL.PollEvent(out var windowEvent))
-        {
-            var eventType = (SDL.EventType)windowEvent.Type;
-            if (eventType is SDL.EventType.Quit or SDL.EventType.WindowCloseRequested)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static bool PresentFrame(IntPtr window, PixelCanvas canvas)
-    {
-        var windowSurface = SDL.GetWindowSurface(window);
-        if (windowSurface == IntPtr.Zero)
-        {
-            throw new InvalidOperationException("Editor window surface was not available: " + SDL.GetError());
-        }
-
-        var handle = GCHandle.Alloc(canvas.Pixels, GCHandleType.Pinned);
-        var frameSurface = IntPtr.Zero;
-        try
-        {
-            frameSurface = SDL.CreateSurfaceFrom(
-                canvas.Width,
-                canvas.Height,
-                SDL.PixelFormat.RGBA8888,
-                handle.AddrOfPinnedObject(),
-                canvas.Width * 4);
-            if (frameSurface == IntPtr.Zero)
-            {
-                throw new InvalidOperationException("Editor frame surface creation failed: " + SDL.GetError());
-            }
-
-            if (!SDL.BlitSurface(frameSurface, IntPtr.Zero, windowSurface, IntPtr.Zero))
-            {
-                throw new InvalidOperationException("Editor frame blit failed: " + SDL.GetError());
-            }
-
-            if (!SDL.UpdateWindowSurface(window))
-            {
-                throw new InvalidOperationException("Editor window frame presentation failed: " + SDL.GetError());
-            }
-
-            return true;
-        }
-        finally
-        {
-            if (frameSurface != IntPtr.Zero)
-            {
-                SDL.DestroySurface(frameSurface);
-            }
-
-            handle.Free();
-        }
     }
 
     private static bool DispatchPointerSelection(EditorShellLayout layout)
@@ -344,10 +222,9 @@ internal static class EditorWindowSmoke
 
         foreach (var layer in layers.Skip(1))
         {
-            var result = RunWindow(
+            var result = EditorWindowHost.PresentStaticCanvas(
                 layer.Canvas,
-                smokeFrameCount: 2,
-                stayOpenUntilCloseRequest: false);
+                smokeFrameCount: 2);
             results.Add(CreateReattestation(layer, result));
         }
 
@@ -407,7 +284,7 @@ internal static class EditorWindowSmoke
         IReadOnlyList<EditorWindowLayerReattestation> reattestations,
         bool screenshotReviewed)
     {
-        return new JsonObject
+        var root = new JsonObject
         {
             ["format"] = "Electron2D.EditorWindowSmokeAnalysis",
             ["screenshotPath"] = screenshotPath,
@@ -415,7 +292,7 @@ internal static class EditorWindowSmoke
             ["window"] = new JsonObject
             {
                 ["actualWindow"] = window.WindowCreated,
-                ["title"] = WindowTitle,
+                ["title"] = EditorWindowHost.WindowTitle,
                 ["shown"] = window.WindowShown,
                 ["width"] = window.WindowWidth,
                 ["height"] = window.WindowHeight,
@@ -431,6 +308,10 @@ internal static class EditorWindowSmoke
             ["rendering"] = new JsonObject
             {
                 ["framePresented"] = window.FramePresented,
+                ["source"] = "runtime-control-tree",
+                ["visualHarnessRemoved"] = window.VisualHarnessRemoved,
+                ["drawCommands"] = window.DrawCommands,
+                ["redDominantPixelRatio"] = window.RedDominantPixelRatio,
                 ["screenshotWidth"] = EditorShellLayout.DefaultViewportWidth,
                 ["screenshotHeight"] = EditorShellLayout.DefaultViewportHeight
             },
@@ -446,9 +327,25 @@ internal static class EditorWindowSmoke
                 ["clickableControlCount"] = clickableControlCount,
                 ["forbiddenUiMatches"] = ToJsonArray(forbiddenUiMatches)
             },
-            ["reattestedVisibleLayers"] = ReattestationsToJson(reattestations),
+            ["project"] = new JsonObject
+            {
+                ["loaded"] = layout.ProjectLoaded,
+                ["name"] = layout.ProjectName,
+                ["projectPath"] = layout.ProjectPath,
+                ["projectSettingsPath"] = layout.ProjectSettingsPath,
+                ["mainScenePath"] = layout.MainScenePath,
+                ["documentTabs"] = ToJsonArray(layout.DocumentTabs),
+                ["gameDocuments"] = ToJsonArray(layout.GetWorkspaceState("Game").OpenDocuments)
+            },
             ["screenshotReviewed"] = screenshotReviewed
         };
+
+        if (reattestations.Count > 0)
+        {
+            root["reattestedVisibleLayers"] = ReattestationsToJson(reattestations);
+        }
+
+        return root;
     }
 
     private static JsonArray ReattestationsToJson(IEnumerable<EditorWindowLayerReattestation> reattestations)
@@ -493,12 +390,23 @@ internal sealed record EditorWindowSmokeResult(
     bool PointerInteractionObserved,
     bool KeyboardInteractionObserved,
     string SelectedWorkspace,
+    bool ProjectLoaded,
+    string ProjectName,
+    string ProjectPath,
+    string ProjectSettingsPath,
+    string MainScenePath,
+    string[] DocumentTabs,
+    string[] GameDocuments,
     int WindowWidth,
     int WindowHeight,
     int PixelWidth,
     int PixelHeight,
     string VideoDriver,
     int FrameCount,
+    bool RuntimeControlTree,
+    bool VisualHarnessRemoved,
+    int DrawCommands,
+    double RedDominantPixelRatio,
     string ScreenshotPath,
     string AnalysisPath,
     int TextOverflowCount,
@@ -517,7 +425,11 @@ internal sealed record EditorWindowRunResult(
     int PixelWidth,
     int PixelHeight,
     string VideoDriver,
-    int FrameCount);
+    int FrameCount,
+    bool RuntimeControlTree,
+    bool VisualHarnessRemoved,
+    int DrawCommands,
+    double RedDominantPixelRatio);
 
 internal static class PngDecoder
 {

@@ -45,7 +45,7 @@ public sealed class DiagnosticsCoreTests
         Assert.Equal(DiagnosticSeverity.Error, malformedProject.Severity);
         Assert.Equal(DiagnosticCategory.Project, malformedProject.Category);
         Assert.Equal(
-            "docs/documentation/diagnostics/diagnostics-core.md#e2d-project-0001",
+            "docs/diagnostics/diagnostics-core.md#e2d-project-0001",
             malformedProject.DocumentationUri);
 
         Assert.Contains(definitions, definition => definition.Code == "E2D-DIAG-0001");
@@ -77,7 +77,7 @@ public sealed class DiagnosticsCoreTests
         Assert.Equal(DiagnosticCategory.Project, diagnostic.Category);
         Assert.Equal("Scene JSON cannot be parsed.", diagnostic.Message);
         Assert.Same(location, diagnostic.Location);
-        Assert.Equal("docs/documentation/diagnostics/diagnostics-core.md#e2d-project-0001", diagnostic.DocumentationUri);
+        Assert.Equal("docs/diagnostics/diagnostics-core.md#e2d-project-0001", diagnostic.DocumentationUri);
 
         Assert.Throws<ArgumentException>(() => StructuredDiagnostic.Create(
             "E2D-UNKNOWN-0001",

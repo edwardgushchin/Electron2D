@@ -48,6 +48,11 @@ internal static partial class Electron2DCommandLine
 
         try
         {
+            if (TryRunExportedPlayer(args, output, error, out var exportedPlayerExitCode))
+            {
+                return exportedPlayerExitCode;
+            }
+
             if (args.Length == 0 || IsHelp(args[0]))
             {
                 WriteRootHelp(output);

@@ -1,0 +1,241 @@
+# Machine-readable API manifest
+
+Обновлено: 2026-06-23.
+
+Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
+
+## Ведение документа
+
+- Перед изменением домена обновите раздел с контрактом и ожидаемым поведением.
+- Затем добавьте красные тесты, реализуйте изменение, проверьте зеленые тесты и обновите этот документ, если фактическое поведение или ограничения изменились.
+- Если требования и реализация расходятся, не создавайте второй документ; зафиксируйте решение и актуальное состояние в этом файле.
+
+## Контракт и ожидаемое поведение
+
+Статус: целевая спецификация для `T-0118`.
+Обновлено: 2026-06-22.
+
+## Назначение
+
+Electron2D должен поставлять версионированный JSON manifest публичного runtime API. Manifest нужен AI-агентам, CLI, Inspector, GitHub Wiki verifier-ам, генераторам и будущему language service, чтобы отличать реализованный и parity-verified профиль от API вне текущего профиля без чтения исходников движка.
+
+В этом документе manifest означает машиночитаемый JSON-файл с описанием публичных типов и members. Он не является исходником реализации: файл пересоздаётся генератором из compiled assembly, XML documentation и GitHub Wiki compatibility table.
+
+## Canonical artifact
+
+Canonical tracked artifact:
+
+```text
+data/api/electron2d-api-manifest.json
+```
+
+Файл должен быть stable JSON: UTF-8 без BOM, LF line endings, отсортированные типы и members, deterministic property order. Любое изменение public API, XML documentation или compatibility status должно либо обновить этот файл, либо привести к падению проверки синхронизации.
+
+## Источники данных
+
+Generator обязан читать только проверяемые источники:
+
+- compiled runtime assembly `src/Electron2D/bin/Debug/net10.0/Electron2D.dll`;
+- XML documentation file, полученный при build из текущих C# XML comments;
+- GitHub Wiki compatibility page `API-Compatibility.md` из локального clone `.github/wiki` или явно переданного пути.
+
+Ручной список public API не допускается как основной источник manifest. Ручными данными могут быть только release-level metadata: `schemaVersion`, `manifestVersion`, `engineVersion`, `profileName` и `godotBaseline`.
+
+## Schema shape
+
+Manifest должен содержать:
+
+- `schemaVersion` со значением `1`;
+- `manifestVersion` со значением `0.1.0-preview`;
+- `engineVersion`;
+- `profileName` со значением `Electron2D 0.1.0 2D`;
+- `godotBaseline` со значением `4.7-stable`;
+- `generatedFrom` с путями к assembly, XML documentation и compatibility page;
+- `strictParitySummary` с числовыми полями `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches`, `unexpectedChanges`;
+- `statusSummary` с количеством типов по статусам `supported`, `partial`, `experimental`, `planned`;
+- `types`, отсортированный по `fullName`.
+
+Каждый type entry должен содержать:
+
+- stable `id` в форме `electron2d://api/type/{FullName}`;
+- `fullName`, `namespace`, `name`, `kind`;
+- `baseType` и `interfaces`;
+- `xmlDocId`;
+- `summary`;
+- `category`;
+- `profile` с `name`, `status`, `parity`, `outOfProfile`, `godotReference`, `notes`;
+- `members`, отсортированный по stable member id.
+
+Каждый member entry должен содержать:
+
+- stable `id` в форме `electron2d://api/member/{DeclaringType}/{Kind}/{SignatureKey}`;
+- `declaringType`, `name`, `kind`, `signature`, `returnType`;
+- `parameters`;
+- `xmlDocId`;
+- `summary`;
+- `profile` с тем же status/parity contract, что у declaring type, если member не имеет отдельного compatibility override.
+
+## Статусы и parity
+
+Compatibility status берётся из `API-Compatibility.md` и нормализуется в lowercase:
+
+- `Supported` -> `supported`;
+- `Partial` -> `partial`;
+- `Experimental` -> `experimental`;
+- `Planned` -> `planned`.
+
+Для public types со статусом `supported` поле `profile.parity` должно быть `parity_verified`, а `outOfProfile` должно быть `false`.
+
+Для `partial`, `experimental` и `planned` поле `outOfProfile` должно быть `true`, пока тип не входит в закрытый supported/parity-verified профиль. Это позволяет AI-агенту использовать только поддержанный профиль и видеть, почему остальная public surface недоступна как строгий profile contract.
+
+Для future strict parity verifier-а `e2d api compare-godot <type>` manifest должен хранить нулевой `strictParitySummary` для supported profile и stable per-type parity fields. CLI adapter реализуется отдельной задачей и не является зависимостью generator-а.
+
+## CLI adapter `e2d api compare-godot`
+
+Команда `e2d api compare-godot <type> --format json` должна читать canonical artifact `data/api/electron2d-api-manifest.json`, а не GitHub Wiki Markdown и не ручной список типов. Команда использует общий CLI envelope и не открывает `ProjectWorkspace`, поэтому `route` должен быть `none`.
+
+Для типа внутри утверждённого профиля output должен содержать:
+
+- `data.mode = api.compareGodot`;
+- `data.sourcePath = data/api/electron2d-api-manifest.json`;
+- `data.type` с `fullName`, `id`, `profile.status`, `profile.parity` и `profile.outOfProfile`;
+- `data.result.status = parity_verified`;
+- `data.strictParity` с нулевыми `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches` и `unexpectedChanges`.
+
+Для типа вне утверждённого профиля команда должна завершиться fail-closed: `succeeded = false`, `exitCode = 1`, `data.result.status = out_of_profile`, diagnostics содержит stable code `E2D-CLI-0002`. Output не должен предлагать alternative API или workaround: агент должен видеть, что тип нельзя использовать как часть строгого `0.1.0` профиля.
+
+## Generator и verifier
+
+`tools/Update-ApiManifest.ps1` должен поддерживать:
+
+- обычный режим: пересоздаёт `data/api/electron2d-api-manifest.json`;
+- `-OutputPath <path>`: пишет manifest в заданный файл;
+- `-Check`: генерирует expected manifest во временный каталог и сравнивает с target file;
+- `-WikiPath <path>`: читает compatibility table из указанного Wiki clone или файла.
+
+`-Check` должен завершаться ошибкой, если:
+
+- manifest отсутствует;
+- manifest устарел относительно public API, XML docs или compatibility page;
+- любой public type из compiled assembly отсутствует в manifest;
+- любой public type отсутствует в `API-Compatibility.md`;
+- mandatory stable ids отсутствуют у types, properties, methods, constructors, fields, events или enum values.
+
+`tools/Update-ApiWiki.ps1 -Check` должен использовать manifest verifier или вызывать его как отдельный шаг, чтобы GitHub Wiki/API reference gate проверял один и тот же public API contract.
+
+CI должен запускать manifest check после checkout GitHub Wiki clone и до consolidated public API documentation audit.
+
+## Критерии приёмки
+
+- `data/api/electron2d-api-manifest.json` генерируется из compiled public surface, XML documentation и `API-Compatibility.md`.
+- Manifest содержит stable identifiers для types и members, пригодные для Inspector, signals, runtime-операций и будущего Editor Capability Manifest.
+- Manifest содержит machine-readable Godot `4.7-stable` C# parity fields для future `e2d api compare-godot <type>`.
+- GitHub Wiki/API verifier или CI падает, если manifest не синхронизирован с public API.
+- AI-агент может по manifest отличить `supported` + `parity_verified` профиль от `partial`, `experimental` и `planned` API без чтения исходников.
+
+## Фактическое состояние, ограничения и проверки
+
+Текущая реализация поставляет tracked JSON manifest публичного runtime API:
+
+```text
+data/api/electron2d-api-manifest.json
+```
+
+Manifest создаётся из compiled assembly, XML documentation и GitHub Wiki compatibility table. В этом документе compiled assembly означает собранный `.dll` файл runtime, а XML documentation — файл, который C# build создаёт из XML comments в исходниках. Manifest не редактируется вручную как источник правды: при изменении public API, XML comments или compatibility status его нужно пересоздать генератором.
+
+## Команды
+
+Обновить manifest из текущей сборки и локального Wiki clone:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\Update-ApiManifest.ps1 -WikiPath .github/wiki
+```
+
+Проверить, что tracked manifest синхронизирован:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\Update-ApiManifest.ps1 -WikiPath .github/wiki -Check
+```
+
+Записать manifest во временный файл вместо canonical artifact:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\Update-ApiManifest.ps1 -WikiPath .github/wiki -OutputPath .temp/api-manifest/probe.json
+```
+
+`tools\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check` также вызывает manifest check. Поэтому GitHub Wiki API reference gate теперь проверяет не только Markdown pages, но и JSON API manifest.
+
+## Что содержит manifest
+
+Текущий файл содержит:
+
+- `schemaVersion = 1`;
+- `manifestVersion = 0.1.0-preview`;
+- `engineVersion` из runtime assembly;
+- `profileName = Electron2D 0.1.0 2D`;
+- `godotBaseline = 4.7-stable`;
+- `generatedFrom` с путями к assembly, XML documentation и `API-Compatibility.md`;
+- `strictParitySummary` с нулевыми счётчиками для supported profile boundary;
+- `statusSummary` с количеством public types по compatibility status;
+- `supportedVariantTypes`;
+- `types` с stable identifiers, inheritance, category, summary, profile status и members.
+
+Stable identifiers имеют формы:
+
+```text
+electron2d://api/type/Electron2D.Node
+electron2d://api/member/Electron2D.Node/Property/Name
+electron2d://api/member/Electron2D.Node/Method/AddChild(...)
+```
+
+Эти identifiers предназначены для будущего `Editor Capability Manifest`, Inspector properties, signals и runtime operations. Они позволяют внешнему tooling ссылаться на public API без привязки к имени файла документации.
+
+## Compatibility status
+
+Status берётся из GitHub Wiki `API-Compatibility.md`:
+
+- `Supported` становится `supported` и `parity_verified`;
+- `Partial` становится `partial` и `not_verified`;
+- `Experimental` становится `experimental` и `not_verified`;
+- `Planned` становится `planned` и `not_verified`.
+
+Только `supported` entries считаются частью supported/parity-verified profile. `partial`, `experimental` и `planned` помечаются `outOfProfile = true`, чтобы AI-агент мог fail-closed: не использовать такой API как подтверждённую часть строгого профиля.
+
+## CI и Wiki
+
+CI запускает manifest check после checkout GitHub Wiki clone:
+
+```powershell
+./tools/Update-ApiManifest.ps1 -WikiPath .github/wiki -Check
+```
+
+Затем CI запускает GitHub Wiki API reference check. Wiki generator читает manifest и добавляет на каждую generated type page блок:
+
+```text
+Godot 4.7 C# profile compatibility
+Profile: Electron2D 0.1.0 2D
+Status: Supported / Parity verified
+Out of profile: no
+```
+
+Для `partial`, `experimental` и `planned` API тот же блок показывает непроверенный status и `Out of profile: yes`.
+
+## CLI parity verifier
+
+`e2d api compare-godot <type> --format json` читает tracked manifest и возвращает машинный результат проверки одного типа:
+
+```powershell
+e2d api compare-godot Control --format json
+```
+
+Команда использует общий CLI envelope:
+
+- `command = api compare-godot`;
+- `route = none`, потому что `ProjectWorkspace` не открывается;
+- `data.mode = api.compareGodot`;
+- `data.sourcePath = data/api/electron2d-api-manifest.json`;
+- `data.type` содержит `fullName`, `id` и `profile`;
+- `data.result.status` показывает `parity_verified` или `out_of_profile`;
+- `data.strictParity` содержит шесть counters strict parity.
+
+Для поддержанного profile type все strict parity counters равны `0`, `succeeded = true` и `exitCode = 0`. Для type вне утверждённого профиля команда возвращает `succeeded = false`, `exitCode = 1`, `data.result.status = out_of_profile` и diagnostic `E2D-CLI-0002`.

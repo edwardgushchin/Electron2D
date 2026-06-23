@@ -102,7 +102,7 @@ public sealed class AgentAcceptanceBenchmarkTests
         Assert.True(Covers(visualEvidence, "editor-window-screenshot-analysis"));
         Assert.Contains("--window-smoke", visualEvidence.GetProperty("arguments").EnumerateArray().Select(item => item.GetString()));
         Assert.Equal(
-            "docs/specifications/editor/godot4-editor-reference.md",
+            "docs/editor/godot4-editor-reference.md",
             visualEvidence.GetProperty("visualEvidence").GetProperty("reference").GetString());
         Assert.True(visualEvidence.GetProperty("visualEvidence").GetProperty("requiresActualWindow").GetBoolean());
         Assert.True(visualEvidence.GetProperty("visualEvidence").GetProperty("requiresPointerInteraction").GetBoolean());

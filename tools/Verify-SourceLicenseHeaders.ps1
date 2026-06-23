@@ -133,6 +133,7 @@ finally {
 }
 
 $missing = New-Object System.Collections.Generic.List[string]
+$checkedCount = 0
 foreach ($relativePath in $sourceFiles) {
     if ([string]::IsNullOrWhiteSpace($relativePath)) {
         continue
@@ -143,7 +144,12 @@ foreach ($relativePath in $sourceFiles) {
     }
 
     $path = Join-Path $repoRoot ($relativePath -replace '/', [System.IO.Path]::DirectorySeparatorChar)
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+        continue
+    }
+
     $content = Normalize-LineEndings (Get-Content -LiteralPath $path -Raw)
+    $checkedCount++
 
     if ($relativePath.EndsWith('.cs', [System.StringComparison]::OrdinalIgnoreCase)) {
         $expectedHeader = Normalize-LineEndings $expectedCSharpHeader
@@ -165,4 +171,4 @@ if ($missing.Count -gt 0) {
     throw $message
 }
 
-Write-Host "Source license header verification passed for $($sourceFiles.Count) tracked source files."
+Write-Host "Source license header verification passed for $checkedCount tracked source files."

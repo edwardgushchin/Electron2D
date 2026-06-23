@@ -1,0 +1,24 @@
+<Project>
+
+  <PropertyGroup>
+    <BaseOutputPath>.electron2d\build\bin\</BaseOutputPath>
+    <BaseIntermediateOutputPath>.electron2d\build\obj\</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>.electron2d\build\obj\</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Electron2D\Electron2D.csproj" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+</Project>

@@ -551,7 +551,7 @@ internal static partial class StaticContextPackBuilder
             ["profile"] = "Electron2D 0.1.0 2D",
             ["status"] = "strict-profile-summary",
             ["compareCommand"] = "e2d api compare-godot <type> --format json",
-            ["compatibilityDocumentation"] = "docs/documentation/release-management/api-compatibility.md"
+            ["compatibilityDocumentation"] = "docs/release-management/api-compatibility.md"
         };
     }
 

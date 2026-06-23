@@ -58,7 +58,7 @@ internal static class Electron2DWebAssemblyPackageBuilder
             WriteText(plan.LoaderScriptPath, CreateLoaderScript());
             files.Add("electron2d.loader.js");
 
-            CopyProjectSettings(projectRoot, plan.WebRootDirectory, files, diagnostics);
+            CopyProjectSettings(projectRoot, plan, files, diagnostics);
             CopyMainScene(projectRoot, plan.WebRootDirectory, projectSettings.MainScene, files, diagnostics);
             CopyAssets(projectRoot, plan.AssetsDirectory, files, diagnostics);
 
@@ -205,7 +205,7 @@ internal static class Electron2DWebAssemblyPackageBuilder
                 try {
                   const manifest = await readJson("electron2d.webmanifest.json");
                   state.manifestLoaded = true;
-                  await readJson("project.e2d.json");
+                  await readJson(manifest.projectFile || "project.e2d.json");
                   state.projectLoaded = true;
                   await readJson(manifest.mainScene);
                   state.sceneLoaded = true;
@@ -264,6 +264,7 @@ internal static class Electron2DWebAssemblyPackageBuilder
             ["projectName"] = settings.Name,
             ["projectVersion"] = settings.ProjectVersion,
             ["engineVersion"] = settings.EngineVersion,
+            ["projectFile"] = plan.ProjectSettingsPackagePath,
             ["mainScene"] = NormalizePortablePath(settings.MainScene),
             ["rendererProfile"] = plan.RendererProfile.ToString(),
             ["graphicsBackend"] = plan.GraphicsBackend,
@@ -279,19 +280,34 @@ internal static class Electron2DWebAssemblyPackageBuilder
 
     private static void CopyProjectSettings(
         string projectRoot,
-        string webRootDirectory,
+        Electron2DWebAssemblyExportPlan plan,
         List<string> files,
         List<Electron2DExportDiagnostic> diagnostics)
     {
-        var source = Path.Combine(projectRoot, "project.e2d.json");
-        if (!File.Exists(source))
+        var source = Path.GetFullPath(plan.ProjectSettingsPath);
+        var normalizedRoot = Path.GetFullPath(projectRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) +
+            Path.DirectorySeparatorChar;
+        if (!source.StartsWith(normalizedRoot, StringComparison.OrdinalIgnoreCase))
         {
-            diagnostics.Add(Error("E2D-EXPORT-WEB-0011", "web-package", "Project settings file project.e2d.json was not found."));
+            diagnostics.Add(Error("E2D-EXPORT-WEB-0012", "web-package", "Project settings path must stay inside the project root."));
             return;
         }
 
-        CopyFile(source, Path.Combine(webRootDirectory, "project.e2d.json"));
-        files.Add("project.e2d.json");
+        if (!File.Exists(source))
+        {
+            diagnostics.Add(Error("E2D-EXPORT-WEB-0011", "web-package", $"Project settings file {Path.GetFileName(source)} was not found."));
+            return;
+        }
+
+        if (plan.ProjectSettingsPackagePath.StartsWith("..", StringComparison.Ordinal) ||
+            Path.IsPathRooted(plan.ProjectSettingsPackagePath))
+        {
+            diagnostics.Add(Error("E2D-EXPORT-WEB-0012", "web-package", "Project settings package path must stay inside the web package root."));
+            return;
+        }
+
+        CopyFile(source, Path.Combine(plan.WebRootDirectory, plan.ProjectSettingsPackagePath));
+        files.Add(plan.ProjectSettingsPackagePath);
     }
 
     private static void CopyMainScene(

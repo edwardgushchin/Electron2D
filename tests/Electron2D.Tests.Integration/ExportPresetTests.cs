@@ -70,10 +70,10 @@ public sealed class ExportPresetTests
                 ]
             };
 
-            Electron2D.Electron2DExportPresetStore.Save(path, document);
+            Electron2D.ExportPresetStore.Save(path, document);
 
             var firstWrite = File.ReadAllText(path);
-            var result = Electron2D.Electron2DExportPresetStore.Load(path);
+            var result = Electron2D.ExportPresetStore.Load(path);
 
             Assert.True(result.Succeeded, FormatDiagnostics(result.Diagnostics));
             Assert.NotNull(result.Document);
@@ -85,7 +85,7 @@ public sealed class ExportPresetTests
             Assert.True(result.Document.Presets[0].Signing.Required);
             Assert.Equal("env:E2D_ANDROID_KEYSTORE", result.Document.Presets[0].Signing.CredentialReference);
 
-            Electron2D.Electron2DExportPresetStore.Save(path, result.Document);
+            Electron2D.ExportPresetStore.Save(path, result.Document);
 
             Assert.Equal(firstWrite, File.ReadAllText(path));
         }
@@ -136,7 +136,7 @@ public sealed class ExportPresetTests
                 }
                 """);
 
-            var result = Electron2D.Electron2DExportPresetStore.Load(path);
+            var result = Electron2D.ExportPresetStore.Load(path);
 
             Assert.False(result.Succeeded);
             Assert.Null(result.Document);

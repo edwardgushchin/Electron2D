@@ -52,6 +52,89 @@ public sealed class ViewportPresentationTests
     }
 
     [Fact]
+    public void CanvasSubmissionKeepsCanvasLayerIndependentFromCurrentCamera()
+    {
+        var viewport = new Electron2D.Viewport
+        {
+            Size = new Electron2D.Vector2I(100, 100),
+            CanvasTransform = new Electron2D.Transform2D(0f, new Electron2D.Vector2(5f, 7f))
+        };
+        var camera = new Electron2D.Camera2D { Position = new Electron2D.Vector2(40f, 30f) };
+        var worldSprite = new Electron2D.Sprite2D
+        {
+            Name = "world",
+            Texture = new Electron2D.RuntimeTexture2D(4, 4, hasAlpha: false),
+            Centered = false,
+            Position = new Electron2D.Vector2(40f, 30f)
+        };
+        var hudLayer = new Electron2D.CanvasLayer { Offset = new Electron2D.Vector2(2f, 3f) };
+        var hudSprite = new Electron2D.Sprite2D
+        {
+            Name = "hud",
+            Texture = new Electron2D.RuntimeTexture2D(4, 4, hasAlpha: false),
+            Centered = false,
+            Position = new Electron2D.Vector2(11f, 13f)
+        };
+
+        viewport.AddChild(camera);
+        viewport.AddChild(worldSprite);
+        viewport.AddChild(hudLayer);
+        hudLayer.AddChild(hudSprite);
+        camera.MakeCurrent();
+
+        var commands = new Electron2D.CanvasSubmissionContext().BuildPlan(viewport).Commands;
+
+        var worldCommand = commands.Single(command => command.DebugName == "world");
+        var hudCommand = commands.Single(command => command.DebugName == "hud");
+        Assert.True(worldCommand.Transform.Origin.IsEqualApprox(new Electron2D.Vector2(55f, 57f)));
+        Assert.True(hudCommand.Transform.Origin.IsEqualApprox(new Electron2D.Vector2(18f, 23f)));
+    }
+
+    [Fact]
+    public void CanvasSubmissionCameraFollowsMovingParentWhileCanvasLayerStaysScreenSpace()
+    {
+        var viewport = new Electron2D.Viewport { Size = new Electron2D.Vector2I(100, 100) };
+        var player = new Electron2D.Node2D { Position = Electron2D.Vector2.Zero };
+        var camera = new Electron2D.Camera2D();
+        var worldSprite = new Electron2D.Sprite2D
+        {
+            Name = "world",
+            Texture = new Electron2D.RuntimeTexture2D(4, 4, hasAlpha: false),
+            Centered = false,
+            Position = new Electron2D.Vector2(300f, 0f)
+        };
+        var hudLayer = new Electron2D.CanvasLayer();
+        var hudSprite = new Electron2D.Sprite2D
+        {
+            Name = "hud",
+            Texture = new Electron2D.RuntimeTexture2D(4, 4, hasAlpha: false),
+            Centered = false,
+            Position = new Electron2D.Vector2(7f, 11f)
+        };
+
+        viewport.AddChild(player);
+        player.AddChild(camera);
+        viewport.AddChild(worldSprite);
+        viewport.AddChild(hudLayer);
+        hudLayer.AddChild(hudSprite);
+        camera.MakeCurrent();
+
+        var firstCommands = new Electron2D.CanvasSubmissionContext().BuildPlan(viewport).Commands;
+        var firstWorld = firstCommands.Single(command => command.DebugName == "world");
+        var firstHud = firstCommands.Single(command => command.DebugName == "hud");
+
+        player.Position = new Electron2D.Vector2(100f, 0f);
+        var secondCommands = new Electron2D.CanvasSubmissionContext().BuildPlan(viewport).Commands;
+        var secondWorld = secondCommands.Single(command => command.DebugName == "world");
+        var secondHud = secondCommands.Single(command => command.DebugName == "hud");
+
+        Assert.True(firstWorld.Transform.Origin.IsEqualApprox(new Electron2D.Vector2(350f, 50f)));
+        Assert.True(secondWorld.Transform.Origin.IsEqualApprox(new Electron2D.Vector2(250f, 50f)));
+        Assert.True(firstHud.Transform.Origin.IsEqualApprox(new Electron2D.Vector2(7f, 11f)));
+        Assert.True(secondHud.Transform.Origin.IsEqualApprox(firstHud.Transform.Origin));
+    }
+
+    [Fact]
     public void CanvasSubmissionAppliesViewportPixelSnappingWithoutMutatingNodes()
     {
         var viewport = new Electron2D.Viewport

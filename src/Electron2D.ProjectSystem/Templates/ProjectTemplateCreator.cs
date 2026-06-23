@@ -122,7 +122,7 @@ internal static class ProjectTemplateCreator
         return new ProjectTemplateCreateResult(
             projectName,
             projectPath,
-            Path.Combine(projectPath, "project.e2d.json"),
+            Path.Combine(projectPath, projectName + ".e2d"),
             ResolveProjectPath(projectPath, "scenes/main.scene.json"),
             rendererProfile,
             gitInitialized,
@@ -219,12 +219,40 @@ internal static class ProjectTemplateCreator
             File.Move(sourceProjectPath, targetProjectPath);
         }
 
+        var scriptsDirectory = Directory.EnumerateDirectories(projectPath, "*", SearchOption.TopDirectoryOnly)
+            .FirstOrDefault(path => string.Equals(Path.GetFileName(path), "Scripts", StringComparison.Ordinal));
+        var targetScriptsDirectory = Path.Combine(projectPath, "scripts");
+        if (scriptsDirectory is not null)
+        {
+            var temporaryScriptsDirectory = Path.Combine(projectPath, "__scripts_tmp");
+            if (Directory.Exists(temporaryScriptsDirectory))
+            {
+                Directory.Delete(temporaryScriptsDirectory, recursive: true);
+            }
+
+            Directory.Move(scriptsDirectory, temporaryScriptsDirectory);
+            Directory.Move(temporaryScriptsDirectory, targetScriptsDirectory);
+        }
+
+        var sourceSettingsPath = Path.Combine(projectPath, "project.e2d.json");
+        var targetSettingsPath = Path.Combine(projectPath, projectName + ".e2d");
+        if (File.Exists(sourceSettingsPath))
+        {
+            File.Move(sourceSettingsPath, targetSettingsPath);
+        }
+
         ReplaceText(Path.Combine(projectPath, "Program.cs"), TemplateProjectName, namespaceName);
-        ReplaceText(Path.Combine(projectPath, "Scripts", "MainScene.cs"), TemplateProjectName, namespaceName);
+        ReplaceText(targetProjectPath, "project.e2d.json", projectName + ".e2d");
+        ReplaceText(targetProjectPath, "Scripts", "scripts");
+        ReplaceText(Path.Combine(projectPath, "scripts", "MainScene.cs"), TemplateProjectName, namespaceName);
         ReplaceText(Path.Combine(projectPath, "README.md"), "Electron2D Empty Project", projectName);
-        RewriteJsonProperty(Path.Combine(projectPath, "project.e2d.json"), "name", projectName);
-        RewriteJsonProperty(Path.Combine(projectPath, "project.e2d.json"), "rendererProfile", rendererProfile);
-        RewriteNestedJsonProperty(Path.Combine(projectPath, "electron2d.lock.json"), "project", "rendererProfile", rendererProfile);
+        ReplaceText(Path.Combine(projectPath, "scenes", "main.scene.json"), "Scripts/MainScene.cs", "scripts/MainScene.cs");
+
+        var projectManifest = ReadJsonObject(targetSettingsPath);
+        projectManifest["name"] = projectName;
+        projectManifest["rendererProfile"] = rendererProfile;
+        EmbedProjectSections(projectPath, projectManifest, rendererProfile);
+        WriteJsonObject(targetSettingsPath, projectManifest);
     }
 
     private static void CopyTemplate(string templateRoot, string projectPath)
@@ -237,6 +265,11 @@ internal static class ProjectTemplateCreator
                 continue;
             }
 
+            if (IsGeneratedProjectPath(relativePath))
+            {
+                continue;
+            }
+
             Directory.CreateDirectory(Path.Combine(projectPath, relativePath));
         }
 
@@ -244,6 +277,11 @@ internal static class ProjectTemplateCreator
         {
             var relativePath = Path.GetRelativePath(templateRoot, file);
             if (IsTemplateMetadataPath(relativePath))
+            {
+                continue;
+            }
+
+            if (IsGeneratedProjectPath(relativePath))
             {
                 continue;
             }
@@ -312,25 +350,26 @@ internal static class ProjectTemplateCreator
             suggestedFixes: []);
     }
 
-    private static void RewriteJsonProperty(string path, string propertyName, string value)
+    private static void EmbedProjectSections(string projectPath, JsonObject projectManifest, string rendererProfile)
     {
-        var root = ReadJsonObject(path);
-        root[propertyName] = value;
-        WriteJsonObject(path, root);
-    }
-
-    private static void RewriteNestedJsonProperty(string path, string sectionName, string propertyName, string value)
-    {
-        if (!File.Exists(path))
+        projectManifest["exportPresets"] ??= new JsonObject
         {
-            return;
-        }
+            ["format"] = "Electron2D.ExportPresets",
+            ["formatVersion"] = 1,
+            ["presets"] = new JsonArray()
+        };
 
-        var root = ReadJsonObject(path);
-        if (root[sectionName] is JsonObject section)
+        var lockPath = Path.Combine(projectPath, "electron2d.lock.json");
+        if (File.Exists(lockPath))
         {
-            section[propertyName] = value;
-            WriteJsonObject(path, root);
+            var lockRoot = ReadJsonObject(lockPath);
+            if (lockRoot["project"] is JsonObject project)
+            {
+                project["rendererProfile"] = rendererProfile;
+            }
+
+            projectManifest["reproducibilityLock"] = lockRoot;
+            File.Delete(lockPath);
         }
     }
 
@@ -366,6 +405,7 @@ internal static class ProjectTemplateCreator
         return """
         bin/
         obj/
+        .electron2d/build/
         .electron2d/import-cache/
         .electron2d/workspaces/
         .electron2d/context/
@@ -396,9 +436,9 @@ internal static class ProjectTemplateCreator
 
         Project structure:
 
-        - `project.e2d.json` stores project settings.
+        - `{{projectName}}.e2d` stores project settings, export presets and reproducibility metadata.
         - `scenes/` stores scene files.
-        - `Scripts/` stores C# gameplay code.
+        - `scripts/` stores C# gameplay code.
         - `.electron2d/tasks/` stores ProjectTaskManager task documents.
         - `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/` and `.electron2d/user/` are generated or local-only working directories.
 
@@ -429,7 +469,7 @@ internal static class ProjectTemplateCreator
         var body = skillName switch
         {
             "electron2d-scene" => "Use scene files under `scenes/`, preserve existing UID values, and run `e2d validate --project .` after structural changes.",
-            "electron2d-gameplay-code" => "Use C# files under `Scripts/`, prefer Electron2D APIs from the approved 2D profile, and verify uncertain APIs with `e2d api compare-godot <type>`.",
+            "electron2d-gameplay-code" => "Use C# files under `scripts/`, prefer Electron2D APIs from the approved 2D profile, and verify uncertain APIs with `e2d api compare-godot <type>`.",
             "electron2d-resource-import" => "Add source assets to project folders, let Electron2D rebuild `.electron2d/import-cache/`, and never edit cache artifacts by hand.",
             "electron2d-run-test" => "Run the narrowest useful check first, then `dotnet build`, scene tests or `e2d run --project .` when the change affects runtime behavior.",
             "electron2d-export" => "Use explicit export presets, keep signing credentials out of project files, and confirm `.electron2d/tasks/` is not included in production packages.",
@@ -484,11 +524,25 @@ internal static class ProjectTemplateCreator
             throw new InvalidOperationException($"Project template directory was not found: {templateRoot}");
         }
 
-        var projectSettings = Path.Combine(templateRoot, "project.e2d.json");
-        if (!File.Exists(projectSettings))
+        var projectSettings = ResolveTemplateProjectSettingsPath(templateRoot);
+        if (projectSettings is null)
         {
-            throw new InvalidOperationException($"Project template manifest was not found: {projectSettings}");
+            throw new InvalidOperationException($"Project template manifest was not found in: {templateRoot}");
         }
+    }
+
+    private static string? ResolveTemplateProjectSettingsPath(string templateRoot)
+    {
+        var named = Directory.EnumerateFiles(templateRoot, "*.e2d", SearchOption.TopDirectoryOnly)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .FirstOrDefault();
+        if (named is not null)
+        {
+            return named;
+        }
+
+        var legacy = Path.Combine(templateRoot, "project.e2d.json");
+        return File.Exists(legacy) ? legacy : null;
     }
 
     private static bool IsTemplateMetadataPath(string relativePath)
@@ -496,6 +550,21 @@ internal static class ProjectTemplateCreator
         return relativePath.Equals(".template.config", StringComparison.OrdinalIgnoreCase) ||
             relativePath.StartsWith(".template.config" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
             relativePath.StartsWith(".template.config" + Path.AltDirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsGeneratedProjectPath(string relativePath)
+    {
+        return relativePath.Equals("bin", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("bin" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("bin" + Path.AltDirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+            relativePath.Equals("obj", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("obj" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("obj" + Path.AltDirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+            relativePath.Equals(Path.Combine(".electron2d", "build"), StringComparison.OrdinalIgnoreCase) ||
+            relativePath.Equals(".electron2d" + Path.DirectorySeparatorChar + "build", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.Equals(".electron2d" + Path.AltDirectorySeparatorChar + "build", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith(".electron2d" + Path.DirectorySeparatorChar + "build" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith(".electron2d" + Path.AltDirectorySeparatorChar + "build" + Path.AltDirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string ToCSharpNamespace(string projectName)

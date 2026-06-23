@@ -24,6 +24,7 @@
 */
 using System.Buffers.Binary;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Text.Json;
 using System.Xml.Linq;
 using Xunit;
@@ -45,6 +46,7 @@ public sealed class EditorProjectShellTests
         Assert.Contains("Electron2D.Editor", solutionText);
 
         var project = XDocument.Load(projectPath);
+        Assert.Equal("WinExe", project.Root?.Element("PropertyGroup")?.Element("OutputType")?.Value);
         var packageReferences = project.Descendants("PackageReference")
             .Select(item => item.Attribute("Include")?.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value))
@@ -146,11 +148,14 @@ public sealed class EditorProjectShellTests
             Assert.Equal("True", lines["EventPumpObserved"]);
             Assert.Equal("True", lines["PointerInteractionObserved"]);
             Assert.Equal("True", lines["KeyboardInteractionObserved"]);
+            Assert.Equal("True", lines["RuntimeControlTree"]);
+            Assert.Equal("True", lines["VisualHarnessRemoved"]);
             Assert.Equal("True", lines["ScreenshotReviewed"]);
             Assert.Equal("Tasks", lines["SelectedWorkspace"]);
             Assert.Equal("0", lines["TextOverflowCount"]);
             Assert.Equal("0", lines["ForbiddenUiMatches"]);
-            Assert.Equal("T-0157|T-0150|T-0155|T-0158|T-0159|T-0160|T-0161", lines["ReattestedVisibleLayers"]);
+            Assert.False(lines.ContainsKey("ReattestedVisibleLayers"));
+            Assert.True(int.Parse(lines["DrawCommands"], System.Globalization.CultureInfo.InvariantCulture) >= 16);
 
             var screenshotPath = lines["ScreenshotPath"];
             var analysisPath = lines["AnalysisPath"];
@@ -158,9 +163,12 @@ public sealed class EditorProjectShellTests
             Assert.True(File.Exists(screenshotPath), $"Missing window screenshot artifact: {screenshotPath}");
             Assert.True(File.Exists(analysisPath), $"Missing window visual analysis artifact: {analysisPath}");
 
-            var (width, height) = ReadPngDimensions(File.ReadAllBytes(screenshotPath));
+            var (width, height, rgba) = DecodePngRgba(File.ReadAllBytes(screenshotPath));
             Assert.Equal(1280, width);
             Assert.Equal(720, height);
+            Assert.True(
+                CalculateRedDominantPixelRatio(rgba) < 0.20d,
+                "Editor window screenshot must not be the old red debug frame.");
 
             using var analysis = JsonDocument.Parse(File.ReadAllText(analysisPath));
             var data = analysis.RootElement;
@@ -171,24 +179,147 @@ public sealed class EditorProjectShellTests
             Assert.True(data.GetProperty("window").GetProperty("shown").GetBoolean());
             Assert.True(data.GetProperty("eventLoop").GetProperty("observed").GetBoolean());
             Assert.True(data.GetProperty("rendering").GetProperty("framePresented").GetBoolean());
+            Assert.Equal("runtime-control-tree", data.GetProperty("rendering").GetProperty("source").GetString());
+            Assert.True(data.GetProperty("rendering").GetProperty("visualHarnessRemoved").GetBoolean());
+            Assert.True(data.GetProperty("rendering").GetProperty("drawCommands").GetInt32() >= 16);
+            Assert.True(data.GetProperty("rendering").GetProperty("redDominantPixelRatio").GetDouble() < 0.20d);
             Assert.True(data.GetProperty("input").GetProperty("pointerInteractionObserved").GetBoolean());
             Assert.True(data.GetProperty("input").GetProperty("keyboardInteractionObserved").GetBoolean());
             Assert.Equal("Tasks", data.GetProperty("layout").GetProperty("selectedWorkspace").GetString());
             Assert.Equal(0, data.GetProperty("layout").GetProperty("textOverflowCount").GetInt32());
             Assert.Equal(0, data.GetProperty("layout").GetProperty("forbiddenUiMatches").GetArrayLength());
             Assert.True(data.GetProperty("layout").GetProperty("clickableControlCount").GetInt32() >= 16);
-            var reattestations = data.GetProperty("reattestedVisibleLayers").EnumerateArray().ToArray();
-            Assert.Equal(7, reattestations.Length);
-            Assert.All(reattestations, item => Assert.True(item.GetProperty("presentedInWindow").GetBoolean()));
-            Assert.Equal(
-                new[] { "T-0157", "T-0150", "T-0155", "T-0158", "T-0159", "T-0160", "T-0161" },
-                reattestations.Select(item => item.GetProperty("taskId").GetString()).ToArray());
+            Assert.False(data.TryGetProperty("reattestedVisibleLayers", out _));
             Assert.True(data.GetProperty("screenshotReviewed").GetBoolean());
         }
         finally
         {
             Directory.Delete(workRoot, recursive: true);
         }
+    }
+
+    [Fact]
+    public async Task EditorWindowStartupSmokeLoadsProjectPassedAsE2DFileArgument()
+    {
+        var root = FindRepositoryRoot();
+        var editorProjectPath = Path.Combine(root, "src", "Electron2D.Editor", "Electron2D.Editor.csproj");
+        var referenceProjectFile = Path.Combine(root, "examples", "reference-platformer", "ReferencePlatformer.e2d");
+        var referenceProjectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var referenceMainScene = Path.Combine(referenceProjectRoot, "scenes", "main.scene.json");
+        var workRoot = CreateTemporaryDirectory("electron2d-editor-open-project-window-");
+        var userDataRoot = CreateTemporaryDirectory("electron2d-editor-open-project-window-user-");
+
+        try
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = root,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            startInfo.ArgumentList.Add("run");
+            startInfo.ArgumentList.Add("--project");
+            startInfo.ArgumentList.Add(editorProjectPath);
+            startInfo.ArgumentList.Add("--");
+            startInfo.ArgumentList.Add("--open-project-window-smoke");
+            startInfo.ArgumentList.Add(referenceProjectFile);
+            startInfo.ArgumentList.Add(workRoot);
+            startInfo.ArgumentList.Add("--user-data-dir");
+            startInfo.ArgumentList.Add(userDataRoot);
+
+            using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start dotnet run.");
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
+
+            var waitTask = process.WaitForExitAsync();
+            var completed = await Task.WhenAny(waitTask, Task.Delay(TimeSpan.FromSeconds(45)));
+            if (completed != waitTask)
+            {
+                process.Kill(entireProcessTree: true);
+                throw new TimeoutException("Editor open project window smoke did not exit within the expected time.");
+            }
+
+            var output = await outputTask;
+            var error = await errorTask;
+
+            Assert.True(
+                process.ExitCode == 0,
+                $"Editor open project window smoke failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
+
+            var lines = ParseMachineReadableOutput(output);
+
+            Assert.Contains("Electron2D.Editor open project window smoke passed", output);
+            Assert.Equal("ReferencePlatformer", lines["ProjectName"]);
+            Assert.Equal(referenceProjectRoot, lines["ProjectPath"]);
+            Assert.Equal(referenceProjectFile, lines["ProjectSettingsPath"]);
+            Assert.Equal(referenceMainScene, lines["MainScenePath"]);
+            Assert.Equal("True", lines["ProjectLoaded"]);
+            Assert.Equal("True", lines["MainSceneLoaded"]);
+            Assert.Equal("1", lines["RecentProjects"]);
+            Assert.Equal("2D", lines["SelectedWorkspace"]);
+            Assert.Equal("main.scene.json", lines["DocumentTabs"]);
+            Assert.Equal("res://scenes/main.scene.json", lines["GameDocuments"]);
+            Assert.Equal("True", lines["WindowCreated"]);
+            Assert.Equal("True", lines["WindowShown"]);
+            Assert.Equal("True", lines["FramePresented"]);
+            Assert.Equal("True", lines["ScreenshotReviewed"]);
+            Assert.Equal("0", lines["TextOverflowCount"]);
+            Assert.Equal("0", lines["ForbiddenUiMatches"]);
+            Assert.True(File.Exists(lines["ScreenshotPath"]), $"Missing window screenshot artifact: {lines["ScreenshotPath"]}");
+            Assert.True(File.Exists(lines["AnalysisPath"]), $"Missing window visual analysis artifact: {lines["AnalysisPath"]}");
+        }
+        finally
+        {
+            Directory.Delete(workRoot, recursive: true);
+            Directory.Delete(userDataRoot, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void EditorWindowRuntimePathDoesNotUseShellVisualHarness()
+    {
+        var root = FindRepositoryRoot();
+        var windowSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "EditorWindowSmoke.cs"));
+        var hostSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "EditorWindowHost.cs"));
+        var programSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Program.cs"));
+        var openProjectForWindowSource = ExtractMethodBody(programSource, "OpenProjectForWindow");
+
+        Assert.DoesNotContain("EditorShellVisualHarness", windowSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("PresentCanvasForSmoke", windowSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("EditorWindowSmoke.RunInteractive", programSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("FindRepositoryRoot", openProjectForWindowSource, StringComparison.Ordinal);
+        Assert.Contains("SDL.PixelFormat.ABGR8888", hostSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("SDL.PixelFormat.RGBA8888", hostSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("int.MaxValue", hostSource, StringComparison.Ordinal);
+    }
+
+    private static string ExtractMethodBody(string source, string methodName)
+    {
+        var methodIndex = source.IndexOf(methodName, StringComparison.Ordinal);
+        Assert.True(methodIndex >= 0, $"Method '{methodName}' must exist.");
+
+        var braceIndex = source.IndexOf('{', methodIndex);
+        Assert.True(braceIndex >= 0, $"Method '{methodName}' must have a body.");
+
+        var depth = 0;
+        for (var index = braceIndex; index < source.Length; index++)
+        {
+            if (source[index] == '{')
+            {
+                depth++;
+            }
+            else if (source[index] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                {
+                    return source[braceIndex..(index + 1)];
+                }
+            }
+        }
+
+        throw new InvalidOperationException($"Method '{methodName}' body was not closed.");
     }
 
     private static (int Width, int Height) ReadPngDimensions(byte[] bytes)
@@ -200,6 +331,65 @@ public sealed class EditorProjectShellTests
         return (
             BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(16, 4)),
             BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(20, 4)));
+    }
+
+    private static (int Width, int Height, byte[] Rgba) DecodePngRgba(byte[] bytes)
+    {
+        var (width, height) = ReadPngDimensions(bytes);
+        using var idat = new MemoryStream();
+        var offset = 8;
+        while (offset + 12 <= bytes.Length)
+        {
+            var length = BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(offset, 4));
+            var type = System.Text.Encoding.ASCII.GetString(bytes, offset + 4, 4);
+            offset += 8;
+            if (type == "IDAT")
+            {
+                idat.Write(bytes, offset, length);
+            }
+
+            offset += length + 4;
+            if (type == "IEND")
+            {
+                break;
+            }
+        }
+
+        idat.Position = 0;
+        using var zlib = new ZLibStream(idat, CompressionMode.Decompress);
+        using var raw = new MemoryStream();
+        zlib.CopyTo(raw);
+        var scanlines = raw.ToArray();
+        var stride = width * 4;
+        Assert.Equal(height * (stride + 1), scanlines.Length);
+
+        var rgba = new byte[width * height * 4];
+        for (var row = 0; row < height; row++)
+        {
+            var scanlineOffset = row * (stride + 1);
+            Assert.Equal(0, scanlines[scanlineOffset]);
+            Buffer.BlockCopy(scanlines, scanlineOffset + 1, rgba, row * stride, stride);
+        }
+
+        return (width, height, rgba);
+    }
+
+    private static double CalculateRedDominantPixelRatio(byte[] rgba)
+    {
+        var redDominant = 0;
+        var total = rgba.Length / 4;
+        for (var index = 0; index < rgba.Length; index += 4)
+        {
+            var red = rgba[index];
+            var green = rgba[index + 1];
+            var blue = rgba[index + 2];
+            if (red > 200 && red > green * 2 && red > blue * 2)
+            {
+                redDominant++;
+            }
+        }
+
+        return (double)redDominant / total;
     }
 
     private static Dictionary<string, string> ParseMachineReadableOutput(string output)

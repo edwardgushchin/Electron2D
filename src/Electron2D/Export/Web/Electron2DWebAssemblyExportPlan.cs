@@ -28,6 +28,10 @@ internal sealed class Electron2DWebAssemblyExportPlan
 {
     public string ProjectFilePath { get; init; } = string.Empty;
 
+    public string ProjectSettingsPath { get; init; } = string.Empty;
+
+    public string ProjectSettingsPackagePath { get; init; } = string.Empty;
+
     public Electron2DExportConfiguration Configuration { get; init; }
 
     public string RuntimeIdentifier { get; init; } = "browser-wasm";

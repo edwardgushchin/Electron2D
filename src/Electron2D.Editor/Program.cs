@@ -61,6 +61,21 @@ internal static class Program
             return RunProjectManagerSmoke(workRoot, userDataRoot);
         }
 
+        if (args is ["--open-project-smoke", var projectFilePath, "--user-data-dir", var openProjectUserDataRoot])
+        {
+            return RunOpenProjectSmoke(projectFilePath, openProjectUserDataRoot);
+        }
+
+        if (args is ["--open-project-window-smoke", var openProjectWindowFilePath, var openProjectWindowWorkRoot, "--user-data-dir", var openProjectWindowUserDataRoot])
+        {
+            return RunOpenProjectWindowSmoke(openProjectWindowFilePath, openProjectWindowWorkRoot, openProjectWindowUserDataRoot);
+        }
+
+        if (args.Length == 1 && Electron2D.ProjectFileLocator.IsProjectFilePath(args[0]))
+        {
+            return RunEditorWindow(args[0]);
+        }
+
         if (args is ["--scene-tree-dock-smoke", var sceneTreeDockWorkRoot])
         {
             return RunSceneTreeDockSmoke(sceneTreeDockWorkRoot);
@@ -136,26 +151,64 @@ internal static class Program
             return RunSpecializedEditorsSmoke(specializedEditorsWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--window-smoke <work-root>] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>] [--project-settings-smoke <work-root>] [--specialized-editors-smoke <work-root>]");
+        Console.Error.WriteLine("Usage: Electron2D.Editor [<ProjectName>.e2d] [--smoke] [--window-smoke <work-root>] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--open-project-smoke <ProjectName>.e2d --user-data-dir <user-data-dir>] [--open-project-window-smoke <ProjectName>.e2d <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>] [--project-settings-smoke <work-root>] [--specialized-editors-smoke <work-root>]");
         return 2;
     }
 
-    private static int RunEditorWindow()
+    private static int RunEditorWindow(string? projectFilePath = null)
     {
         try
         {
-            var exitCode = EditorWindowSmoke.RunInteractive();
-            Console.WriteLine(exitCode == 0
-                ? "Electron2D.Editor window closed"
-                : "Electron2D.Editor window failed");
+            EditorShellStartupProject? startupProject = null;
+            if (!string.IsNullOrWhiteSpace(projectFilePath))
+            {
+                startupProject = ToStartupProject(OpenProjectForWindow(projectFilePath));
+            }
 
-            return exitCode;
+            return EditorWindowHost.RunInteractive(startupProject);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         {
             Console.Error.WriteLine(exception.Message);
             return 1;
         }
+    }
+
+    private static EditorProjectOpenResult OpenProjectForWindow(string projectFilePath, string? userSettingsPath = null)
+    {
+        var settingsPath = userSettingsPath ?? GetDefaultUserSettingsPath();
+        var templateRoot = Path.Combine(AppContext.BaseDirectory, "open-existing-project-template-not-used");
+        var manager = new EditorProjectManager(templateRoot);
+        var openResult = manager.OpenProject(projectFilePath, settingsPath);
+        if (!openResult.Succeeded)
+        {
+            throw new InvalidOperationException(string.Join(Environment.NewLine, openResult.Diagnostics));
+        }
+
+        return openResult;
+    }
+
+    private static string GetDefaultUserSettingsPath()
+    {
+        var userDataRoot = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Electron2D",
+            "Editor");
+        return Path.Combine(userDataRoot, "user.e2settings.json");
+    }
+
+    private static EditorShellStartupProject ToStartupProject(EditorProjectOpenResult openResult)
+    {
+        if (!openResult.Succeeded)
+        {
+            throw new InvalidOperationException(string.Join(Environment.NewLine, openResult.Diagnostics));
+        }
+
+        return new EditorShellStartupProject(
+            openResult.ProjectName,
+            openResult.ProjectPath,
+            openResult.ProjectSettingsPath,
+            openResult.MainScenePath);
     }
 
     private static int RunOnce(bool isSmoke)
@@ -385,6 +438,101 @@ internal static class Program
         }
     }
 
+    private static int RunOpenProjectSmoke(string projectFilePath, string userDataRoot)
+    {
+        try
+        {
+            var templateRoot = Path.Combine(FindRepositoryRoot(), "data", "templates", "electron2d-empty");
+            var userSettingsPath = Path.Combine(Path.GetFullPath(userDataRoot), "user.e2settings.json");
+            var manager = new EditorProjectManager(templateRoot);
+            var result = manager.OpenProject(projectFilePath, userSettingsPath);
+            if (!result.Succeeded)
+            {
+                Console.Error.WriteLine(string.Join(Environment.NewLine, result.Diagnostics));
+                return 1;
+            }
+
+            Console.WriteLine("Electron2D.Editor open project smoke passed");
+            Console.WriteLine($"ProjectName={result.ProjectName}");
+            Console.WriteLine($"ProjectPath={result.ProjectPath}");
+            Console.WriteLine($"ProjectSettingsPath={result.ProjectSettingsPath}");
+            Console.WriteLine($"MainScenePath={result.MainScenePath}");
+            Console.WriteLine($"MainSceneLoaded={File.Exists(result.MainScenePath)}");
+            Console.WriteLine($"RecentProjects={result.RecentProjectCount}");
+            return File.Exists(result.MainScenePath) ? 0 : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunOpenProjectWindowSmoke(string projectFilePath, string workRoot, string userDataRoot)
+    {
+        try
+        {
+            var userSettingsPath = Path.Combine(Path.GetFullPath(userDataRoot), "user.e2settings.json");
+            var openResult = OpenProjectForWindow(projectFilePath, userSettingsPath);
+            var result = EditorWindowSmoke.RunProjectStartupSmoke(workRoot, ToStartupProject(openResult));
+
+            Console.WriteLine("Electron2D.Editor open project window smoke passed");
+            Console.WriteLine($"ProjectName={openResult.ProjectName}");
+            Console.WriteLine($"ProjectPath={openResult.ProjectPath}");
+            Console.WriteLine($"ProjectSettingsPath={openResult.ProjectSettingsPath}");
+            Console.WriteLine($"MainScenePath={openResult.MainScenePath}");
+            Console.WriteLine($"ProjectLoaded={result.ProjectLoaded}");
+            Console.WriteLine($"MainSceneLoaded={File.Exists(openResult.MainScenePath)}");
+            Console.WriteLine($"RecentProjects={openResult.RecentProjectCount}");
+            Console.WriteLine($"DocumentTabs={Join(result.DocumentTabs)}");
+            Console.WriteLine($"GameDocuments={Join(result.GameDocuments)}");
+            Console.WriteLine($"WindowTitle={result.WindowTitle}");
+            Console.WriteLine($"WindowCreated={result.WindowCreated}");
+            Console.WriteLine($"WindowShown={result.WindowShown}");
+            Console.WriteLine($"FramePresented={result.FramePresented}");
+            Console.WriteLine($"EventPumpObserved={result.EventPumpObserved}");
+            Console.WriteLine($"PointerInteractionObserved={result.PointerInteractionObserved}");
+            Console.WriteLine($"KeyboardInteractionObserved={result.KeyboardInteractionObserved}");
+            Console.WriteLine($"RuntimeControlTree={result.RuntimeControlTree}");
+            Console.WriteLine($"VisualHarnessRemoved={result.VisualHarnessRemoved}");
+            Console.WriteLine($"DrawCommands={result.DrawCommands}");
+            Console.WriteLine($"RedDominantPixelRatio={result.RedDominantPixelRatio.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+            Console.WriteLine($"SelectedWorkspace={result.SelectedWorkspace}");
+            Console.WriteLine($"WindowSize={result.WindowWidth}x{result.WindowHeight}");
+            Console.WriteLine($"WindowPixelSize={result.PixelWidth}x{result.PixelHeight}");
+            Console.WriteLine($"VideoDriver={result.VideoDriver}");
+            Console.WriteLine($"FrameCount={result.FrameCount}");
+            Console.WriteLine($"TextOverflowCount={result.TextOverflowCount}");
+            Console.WriteLine($"ClickableControlCount={result.ClickableControlCount}");
+            Console.WriteLine($"ForbiddenUiMatches={result.ForbiddenUiMatchCount}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.ProjectLoaded &&
+                result.WindowCreated &&
+                result.WindowShown &&
+                result.FramePresented &&
+                result.EventPumpObserved &&
+                result.RuntimeControlTree &&
+                result.VisualHarnessRemoved &&
+                result.DrawCommands >= 16 &&
+                result.RedDominantPixelRatio < 0.20d &&
+                result.KeyboardInteractionObserved &&
+                result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
+                result.ScreenshotReviewed &&
+                File.Exists(openResult.MainScenePath)
+                    ? 0
+                    : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
     private static int RunWindowSmoke(string workRoot)
     {
         try
@@ -399,6 +547,10 @@ internal static class Program
             Console.WriteLine($"EventPumpObserved={result.EventPumpObserved}");
             Console.WriteLine($"PointerInteractionObserved={result.PointerInteractionObserved}");
             Console.WriteLine($"KeyboardInteractionObserved={result.KeyboardInteractionObserved}");
+            Console.WriteLine($"RuntimeControlTree={result.RuntimeControlTree}");
+            Console.WriteLine($"VisualHarnessRemoved={result.VisualHarnessRemoved}");
+            Console.WriteLine($"DrawCommands={result.DrawCommands}");
+            Console.WriteLine($"RedDominantPixelRatio={result.RedDominantPixelRatio.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
             Console.WriteLine($"SelectedWorkspace={result.SelectedWorkspace}");
             Console.WriteLine($"WindowSize={result.WindowWidth}x{result.WindowHeight}");
             Console.WriteLine($"WindowPixelSize={result.PixelWidth}x{result.PixelHeight}");
@@ -407,7 +559,6 @@ internal static class Program
             Console.WriteLine($"TextOverflowCount={result.TextOverflowCount}");
             Console.WriteLine($"ClickableControlCount={result.ClickableControlCount}");
             Console.WriteLine($"ForbiddenUiMatches={result.ForbiddenUiMatchCount}");
-            Console.WriteLine($"ReattestedVisibleLayers={Join(result.ReattestedVisibleLayers)}");
             Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
             Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
             Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
@@ -416,6 +567,10 @@ internal static class Program
                 result.WindowShown &&
                 result.FramePresented &&
                 result.EventPumpObserved &&
+                result.RuntimeControlTree &&
+                result.VisualHarnessRemoved &&
+                result.DrawCommands >= 16 &&
+                result.RedDominantPixelRatio < 0.20d &&
                 result.PointerInteractionObserved &&
                 result.KeyboardInteractionObserved &&
                 result.TextOverflowCount == 0 &&
@@ -576,6 +731,7 @@ internal static class Program
 
             Console.WriteLine("Electron2D.Editor specialized editors smoke passed");
             Console.WriteLine($"ProjectPath={result.ProjectPath}");
+            Console.WriteLine($"ProjectSettingsPath={result.ProjectSettingsPath}");
             Console.WriteLine($"SpriteFramesPath={result.SpriteFramesPath}");
             Console.WriteLine($"TileSetPath={result.TileSetPath}");
             Console.WriteLine($"AnimationPath={result.AnimationPath}");

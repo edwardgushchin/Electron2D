@@ -25,6 +25,10 @@
         "version": "3.4.10.3"
       },
       {
+        "id": "SDL3-CS.Native",
+        "version": "3.5.0-preview.20260205-174353"
+      },
+      {
         "id": "SDL3-CS.Native.Shadercross",
         "version": "3.0.0"
       },

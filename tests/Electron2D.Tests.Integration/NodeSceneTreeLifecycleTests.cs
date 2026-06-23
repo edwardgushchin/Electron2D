@@ -96,6 +96,67 @@ public sealed class NodeSceneTreeLifecycleTests
     }
 
     [Fact]
+    public void PausedSceneTreeUsesProcessModeForProcessPhysicsAndInput()
+    {
+        var events = new List<string>();
+        var tree = new Electron2D.SceneTree();
+        var inputEvent = new Electron2D.InputEvent();
+        var pausable = new RecordingNode("Pausable", events, inputEvent);
+        var whenPaused = new RecordingNode("WhenPaused", events, inputEvent)
+        {
+            ProcessMode = Electron2D.ProcessMode.WhenPaused
+        };
+        var always = new RecordingNode("Always", events, inputEvent)
+        {
+            ProcessMode = Electron2D.ProcessMode.Always
+        };
+        var disabled = new RecordingNode("Disabled", events, inputEvent)
+        {
+            ProcessMode = Electron2D.ProcessMode.Disabled
+        };
+        tree.Root.AddChild(pausable);
+        tree.Root.AddChild(whenPaused);
+        tree.Root.AddChild(always);
+        tree.Root.AddChild(disabled);
+        events.Clear();
+
+        tree.Paused = true;
+        tree.ProcessFrame(0.25d);
+        tree.PhysicsFrame(1d / 60d);
+        tree.DispatchInput(inputEvent);
+
+        Assert.Equal(
+            new[]
+            {
+                "WhenPaused:_Process:0.25",
+                "Always:_Process:0.25",
+                "WhenPaused:_PhysicsProcess:0.02",
+                "Always:_PhysicsProcess:0.02",
+                "WhenPaused:_Input:True",
+                "Always:_Input:True"
+            },
+            events);
+
+        events.Clear();
+        tree.Paused = false;
+        tree.ProcessFrame(0.5d);
+        tree.PhysicsFrame(1d / 60d);
+        tree.DispatchInput(inputEvent);
+
+        Assert.Equal(
+            new[]
+            {
+                "Pausable:_Process:0.50",
+                "Always:_Process:0.50",
+                "Pausable:_PhysicsProcess:0.02",
+                "Always:_PhysicsProcess:0.02",
+                "Pausable:_Input:True",
+                "Always:_Input:True"
+            },
+            events);
+    }
+
+    [Fact]
     public void RemoveChildExitsTreeAndClearsTreeState()
     {
         var events = new List<string>();

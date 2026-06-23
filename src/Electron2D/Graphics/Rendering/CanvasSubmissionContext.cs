@@ -39,6 +39,7 @@ internal sealed class CanvasSubmissionContext
             Layer: 0,
             LayerVisible: true,
             LayerTransform: Transform2D.Identity,
+            CanvasLayerBaseTransform: Transform2D.Identity,
             ParentCanvasItemActive: false,
             InheritedVisible: true,
             InheritedModulate: Color.White,
@@ -54,8 +55,10 @@ internal sealed class CanvasSubmissionContext
         var currentState = state;
         if (node is Viewport viewport)
         {
+            var viewportCanvasTransform = state.LayerTransform * viewport.CanvasTransform;
             currentState = state with
             {
+                CanvasLayerBaseTransform = viewportCanvasTransform,
                 LayerTransform = state.LayerTransform * viewport.GetFinalCanvasTransform(),
                 ParentCanvasItemActive = false,
                 InheritedVisible = state.LayerVisible,
@@ -69,7 +72,8 @@ internal sealed class CanvasSubmissionContext
             currentState = new SubmissionState(
                 layer.Layer,
                 state.LayerVisible && layer.Visible,
-                state.LayerTransform * layer.GetFinalTransform(),
+                state.CanvasLayerBaseTransform * layer.GetFinalTransform(),
+                state.CanvasLayerBaseTransform,
                 ParentCanvasItemActive: false,
                 InheritedVisible: state.LayerVisible && layer.Visible,
                 InheritedModulate: Color.White,
@@ -365,6 +369,7 @@ internal sealed class CanvasSubmissionContext
         int Layer,
         bool LayerVisible,
         Transform2D LayerTransform,
+        Transform2D CanvasLayerBaseTransform,
         bool ParentCanvasItemActive,
         bool InheritedVisible,
         Color InheritedModulate,

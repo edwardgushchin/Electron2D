@@ -86,6 +86,7 @@ $requiredNestedDomains = @{
         'UI'
     )
     'Runtime' = @(
+        'Application',
         'Animation',
         'Audio',
         'Input',

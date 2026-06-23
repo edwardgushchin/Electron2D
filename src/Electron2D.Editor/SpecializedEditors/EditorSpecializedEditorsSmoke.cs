@@ -107,7 +107,7 @@ internal static class EditorSpecializedEditorsSmoke
         var regions = EditorSpecializedEditorsVisualHarness.CreateVisualRegions(snapshot);
         var pointerInteractionObserved = EditorSpecializedEditorsVisualHarness.DispatchPalettePointer(regions);
         var keyboardInteractionObserved = EditorSpecializedEditorsVisualHarness.DispatchKeyboardSave();
-        var window = EditorWindowSmoke.PresentCanvasForSmoke(visual.Canvas, smokeFrameCount: 4);
+        var window = EditorWindowHost.PresentStaticCanvas(visual.Canvas, smokeFrameCount: 4);
         var screenshotReviewed = visual.ScreenshotReviewed &&
             spriteFramesRoundTrip &&
             tileMapRoundTrip &&
@@ -130,6 +130,7 @@ internal static class EditorSpecializedEditorsSmoke
 
         return new EditorSpecializedEditorsSmokeResult(
             creation.ProjectPath,
+            creation.ProjectSettingsPath,
             spriteFramesPath,
             tileSetPath,
             animationPath,

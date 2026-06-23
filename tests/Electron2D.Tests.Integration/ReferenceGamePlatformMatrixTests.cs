@@ -129,7 +129,7 @@ public sealed class ReferenceGamePlatformMatrixTests
         foreach (var projectId in ProjectIds)
         {
             var presetPath = Path.Combine(root, "examples", projectId, "export_presets.e2export.json");
-            var exportPresets = Electron2D.Electron2DExportPresetStore.Load(presetPath);
+            var exportPresets = Electron2D.ExportPresetStore.Load(presetPath);
 
             Assert.True(exportPresets.Succeeded, FormatExportDiagnostics(exportPresets.Diagnostics));
             Assert.NotNull(exportPresets.Document);

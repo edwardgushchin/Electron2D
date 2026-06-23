@@ -37,7 +37,7 @@ internal sealed class EditorApplication
         var viewport = (Electron2D.Viewport)tree.Root;
         viewport.Size = new Electron2D.Vector2I(DefaultViewportWidth, DefaultViewportHeight);
 
-        var shell = CreateShell();
+        var shell = CreateShell(EditorShellLayout.CreateDefault());
         viewport.AddChild(shell);
 
         return new EditorStartupResult(
@@ -49,9 +49,10 @@ internal sealed class EditorApplication
             Electron2D.RenderingServer.CurrentProfile.ToString());
     }
 
-    private static Electron2D.Panel CreateShell()
+    internal static Electron2D.Panel CreateShell(EditorShellLayout layout)
     {
-        var layout = EditorShellLayout.CreateDefault();
+        ArgumentNullException.ThrowIfNull(layout);
+
         var shell = new Electron2D.Panel
         {
             Name = "EditorRoot",

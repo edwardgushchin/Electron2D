@@ -93,6 +93,7 @@ public sealed class EditorSpecializedEditorsTests
             Assert.Equal("True", lines["ScreenshotReviewed"]);
 
             var projectRoot = lines["ProjectPath"];
+            var projectSettingsPath = lines["ProjectSettingsPath"];
             var spriteFramesPath = lines["SpriteFramesPath"];
             var tileSetPath = lines["TileSetPath"];
             var animationPath = lines["AnimationPath"];
@@ -100,7 +101,8 @@ public sealed class EditorSpecializedEditorsTests
             var screenshotPath = lines["ScreenshotPath"];
             var analysisPath = lines["AnalysisPath"];
 
-            Assert.True(File.Exists(Path.Combine(projectRoot, "project.e2d.json")), $"Missing project settings in {projectRoot}");
+            Assert.True(File.Exists(projectSettingsPath), $"Missing project settings: {projectSettingsPath}");
+            Assert.Equal(projectRoot, Path.GetDirectoryName(projectSettingsPath));
             Assert.True(File.Exists(spriteFramesPath), $"Missing SpriteFrames resource: {spriteFramesPath}");
             Assert.True(File.Exists(tileSetPath), $"Missing TileSet resource: {tileSetPath}");
             Assert.True(File.Exists(animationPath), $"Missing Animation resource: {animationPath}");

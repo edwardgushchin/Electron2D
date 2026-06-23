@@ -33,8 +33,8 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $repoRoot 'tests/Electron2D.Tests.PhysicsBox2DSmoke/Electron2D.Tests.PhysicsBox2DSmoke.csproj'
-$specPath = Join-Path $repoRoot 'docs/specifications/physics/box2d-net-validation.md'
-$docPath = Join-Path $repoRoot 'docs/documentation/physics/box2d-net-validation.md'
+$specPath = Join-Path $repoRoot 'docs/physics/box2d-net-validation.md'
+$docPath = Join-Path $repoRoot 'docs/physics/box2d-net-validation.md'
 $publishRoot = Join-Path $repoRoot '.temp/box2d-physics-candidate'
 
 if (-not (Test-Path -LiteralPath $projectPath)) {

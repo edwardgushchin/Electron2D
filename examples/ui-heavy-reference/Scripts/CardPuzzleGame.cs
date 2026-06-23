@@ -31,6 +31,7 @@ internal sealed class CardPuzzleGame : Control
     private readonly JsonSerializerOptions jsonOptions = new() { PropertyNameCaseInsensitive = true, WriteIndented = true };
     private readonly List<CardData> cards = new();
     private readonly List<TextureButton> cardButtons = new();
+    private readonly ReferenceFont font = new();
 
     private Panel shellPanel = null!;
     private NinePatchRect cardFrame = null!;
@@ -93,6 +94,41 @@ internal sealed class CardPuzzleGame : Control
             TouchInputUsed = true;
             selectedIndex = Math.Clamp((int)MathF.Floor(touch.Position.X * Math.Max(1, cards.Count)), 0, Math.Max(0, cards.Count - 1));
             RevealSelectedCard();
+            QueueRedraw();
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        _ = delta;
+        if (!configured)
+        {
+            return;
+        }
+
+        if (Input.IsActionJustPressed("next_card"))
+        {
+            SelectNextCard();
+        }
+
+        if (Input.IsActionJustPressed("previous_card"))
+        {
+            SelectPreviousCard();
+        }
+
+        if (Input.IsActionJustPressed("switch_locale"))
+        {
+            SwitchLocale(currentLocale == "en" ? "ru" : "en");
+        }
+
+        if (Input.IsActionJustPressed("cancel"))
+        {
+            ShowMenuScene();
+        }
+
+        if (Input.IsActionJustPressed("accept"))
+        {
+            ActivateSelectedAction();
         }
     }
 
@@ -147,6 +183,128 @@ internal sealed class CardPuzzleGame : Control
             savePath);
     }
 
+    public UiHeavyPlayableResult RunPlayableScript(IReadOnlyList<string> commands, string savePath)
+    {
+        ArgumentNullException.ThrowIfNull(commands);
+        ArgumentException.ThrowIfNullOrWhiteSpace(savePath);
+
+        ConfigureScene();
+        var framesAdvanced = 0;
+        var commandsApplied = 0;
+
+        foreach (var rawCommand in commands)
+        {
+            var command = NormalizePlayableCommand(rawCommand);
+            if (command.Length == 0)
+            {
+                continue;
+            }
+
+            commandsApplied++;
+            if (command == "quit")
+            {
+                break;
+            }
+
+            ApplyPlayableCommand(command, savePath);
+            framesAdvanced++;
+        }
+
+        return CreatePlayableResult(framesAdvanced, commandsApplied, savePath);
+    }
+
+    public override void _Draw()
+    {
+        ConfigureScene();
+
+        DrawRect(new Rect2(0f, 0f, 960f, 540f), new Color(0.05f, 0.06f, 0.08f, 1f));
+        DrawRect(new Rect2(28f, 24f, 904f, 74f), new Color(0.13f, 0.15f, 0.19f, 1f));
+        DrawRect(new Rect2(28f, 24f, 904f, 74f), new Color(0.36f, 0.43f, 0.54f, 1f), filled: false, width: 2f);
+        DrawString(font, new Vector2(48f, 56f), "ELECTRON2D UI-HEAVY REFERENCE", fontSize: 18, modulate: Color.White);
+        DrawString(font, new Vector2(48f, 84f), $"SCENE {currentScene}  LOCALE {currentLocale}  SCORE {score}  MOVES {moves}", fontSize: 13, modulate: new Color(0.72f, 0.83f, 0.96f, 1f));
+
+        DrawNavigationRail();
+        if (currentScene == "menu")
+        {
+            DrawMenuScene();
+        }
+        else if (currentScene == "game")
+        {
+            DrawGameScene();
+        }
+        else
+        {
+            DrawResultScene();
+        }
+    }
+
+    private void DrawNavigationRail()
+    {
+        DrawRect(new Rect2(28f, 118f, 170f, 390f), new Color(0.10f, 0.11f, 0.14f, 1f));
+        DrawString(font, new Vector2(52f, 154f), "ORBIT CARDS", fontSize: 18, modulate: Color.White);
+        DrawButtonFrame(new Rect2(52f, 182f, 120f, 38f), currentScene == "menu", "MENU");
+        DrawButtonFrame(new Rect2(52f, 232f, 120f, 38f), currentScene == "game", "GAME");
+        DrawButtonFrame(new Rect2(52f, 282f, 120f, 38f), currentScene == "result", "RESULT");
+        DrawString(font, new Vector2(52f, 360f), "A/ENTER ACCEPT", fontSize: 11, modulate: new Color(0.72f, 0.76f, 0.82f, 1f));
+        DrawString(font, new Vector2(52f, 384f), "LEFT/RIGHT SELECT", fontSize: 11, modulate: new Color(0.72f, 0.76f, 0.82f, 1f));
+        DrawString(font, new Vector2(52f, 408f), "L SWITCH LOCALE", fontSize: 11, modulate: new Color(0.72f, 0.76f, 0.82f, 1f));
+    }
+
+    private void DrawMenuScene()
+    {
+        DrawRect(new Rect2(230f, 120f, 680f, 388f), new Color(0.12f, 0.14f, 0.18f, 1f));
+        DrawString(font, new Vector2(272f, 184f), titleLabel.Text, fontSize: 28, modulate: Color.White);
+        DrawString(font, new Vector2(274f, 228f), "TACTICAL CARD MATCHING", fontSize: 15, modulate: new Color(0.74f, 0.84f, 0.96f, 1f));
+        DrawButtonFrame(new Rect2(276f, 272f, 220f, 54f), true, playButton.Text);
+        DrawButtonFrame(new Rect2(276f, 344f, 220f, 54f), false, localeButton.Text);
+        DrawRect(new Rect2(552f, 254f, 260f, 130f), new Color(0.08f, 0.09f, 0.12f, 1f));
+        DrawString(font, new Vector2(584f, 300f), "REFERENCE UI", fontSize: 20, modulate: new Color(0.95f, 0.80f, 0.32f, 1f));
+        DrawString(font, new Vector2(584f, 340f), "CARDS  OBJECTIVES  SAVE", fontSize: 12, modulate: Color.White);
+    }
+
+    private void DrawGameScene()
+    {
+        DrawRect(new Rect2(230f, 118f, 460f, 390f), new Color(0.12f, 0.14f, 0.18f, 1f));
+        DrawRect(new Rect2(710f, 118f, 200f, 390f), new Color(0.10f, 0.11f, 0.14f, 1f));
+
+        for (var index = 0; index < cards.Count; index++)
+        {
+            var column = index % 4;
+            var row = index / 4;
+            var x = 258f + (column * 100f);
+            var y = 154f + (row * 126f);
+            var selected = index == selectedIndex;
+            DrawRect(new Rect2(x, y, 78f, 104f), selected ? new Color(0.35f, 0.56f, 0.92f, 1f) : new Color(0.20f, 0.23f, 0.29f, 1f));
+            DrawRect(new Rect2(x + 7f, y + 8f, 64f, 88f), new Color(0.86f, 0.88f, 0.92f, 1f));
+            DrawString(font, new Vector2(x + 24f, y + 50f), $"{cards[index].Rank}{cards[index].Suit[0]}", fontSize: 18, modulate: new Color(0.10f, 0.12f, 0.15f, 1f));
+        }
+
+        DrawString(font, new Vector2(734f, 154f), "OBJECTIVES", fontSize: 16, modulate: Color.White);
+        DrawString(font, new Vector2(734f, 196f), "MATCH ORBIT", fontSize: 12, modulate: new Color(0.75f, 0.86f, 1f, 1f));
+        DrawString(font, new Vector2(734f, 226f), "SCORE 60", fontSize: 12, modulate: new Color(0.75f, 0.86f, 1f, 1f));
+        DrawString(font, new Vector2(734f, 256f), "FINISH RESULT", fontSize: 12, modulate: new Color(0.75f, 0.86f, 1f, 1f));
+        DrawRect(new Rect2(734f, 330f, 140f, 18f), new Color(0.22f, 0.24f, 0.28f, 1f));
+        DrawRect(new Rect2(734f, 330f, Math.Clamp(score, 0, 100) * 1.4f, 18f), new Color(0.36f, 0.58f, 0.96f, 1f));
+        DrawString(font, new Vector2(734f, 386f), scoreLabel.Text, fontSize: 11, modulate: Color.White);
+    }
+
+    private void DrawResultScene()
+    {
+        DrawRect(new Rect2(230f, 118f, 680f, 390f), new Color(0.12f, 0.14f, 0.18f, 1f));
+        DrawRect(new Rect2(342f, 178f, 456f, 214f), new Color(0.08f, 0.10f, 0.13f, 1f));
+        DrawRect(new Rect2(342f, 178f, 456f, 214f), new Color(0.38f, 0.48f, 0.66f, 1f), filled: false, width: 2f);
+        DrawString(font, new Vector2(452f, 242f), "RESULT", fontSize: 30, modulate: Color.White);
+        DrawString(font, new Vector2(414f, 292f), $"SCORE {score}  MOVES {moves}", fontSize: 18, modulate: new Color(0.95f, 0.80f, 0.32f, 1f));
+        DrawString(font, new Vector2(414f, 336f), $"SELECTED {SelectedCardId()}", fontSize: 14, modulate: new Color(0.75f, 0.86f, 1f, 1f));
+    }
+
+    private void DrawButtonFrame(Rect2 rect, bool active, string label)
+    {
+        DrawRect(rect, active ? new Color(0.35f, 0.56f, 0.92f, 1f) : new Color(0.20f, 0.23f, 0.29f, 1f));
+        DrawRect(rect, new Color(0.78f, 0.82f, 0.90f, 1f), filled: false, width: 1f);
+        DrawString(font, rect.Position + new Vector2(14f, 25f), label, fontSize: 13, modulate: Color.White);
+    }
+
     private void ConfigureScene()
     {
         if (configured)
@@ -161,7 +319,8 @@ internal sealed class CardPuzzleGame : Control
         {
             Name = "ShellPanel",
             Size = new Vector2(1280f, 720f),
-            CustomMinimumSize = new Vector2(320f, 480f)
+            CustomMinimumSize = new Vector2(320f, 480f),
+            Visible = false
         };
         cardFrame = new NinePatchRect
         {
@@ -318,6 +477,7 @@ internal sealed class CardPuzzleGame : Control
         TranslationServer.SetLocale(locale);
         UpdateLocalizedText();
         LocalizationReady = LocalizationReady && TranslationServer.GetLocale() == locale;
+        QueueRedraw();
     }
 
     private void ApplyResponsiveLayout(Vector2 resolution)
@@ -330,6 +490,7 @@ internal sealed class CardPuzzleGame : Control
         objectiveList.Size = portrait ? new Vector2(300f, 120f) : new Vector2(260f, 180f);
         matchProgress.Size = portrait ? new Vector2(300f, 20f) : new Vector2(420f, 20f);
         ResponsiveLayoutReady = true;
+        QueueRedraw();
     }
 
     private void ShowMenuScene()
@@ -340,6 +501,7 @@ internal sealed class CardPuzzleGame : Control
         objectiveList.Visible = false;
         matchProgress.Visible = false;
         SceneTransitionReady = true;
+        QueueRedraw();
     }
 
     private void ShowGameScene()
@@ -350,6 +512,7 @@ internal sealed class CardPuzzleGame : Control
         objectiveList.Visible = true;
         matchProgress.Visible = true;
         SceneTransitionReady = SceneTransitionReady && cardGrid.Visible;
+        QueueRedraw();
     }
 
     private void ShowResultScene()
@@ -361,6 +524,7 @@ internal sealed class CardPuzzleGame : Control
         matchProgress.Visible = true;
         rewardAudio.Play();
         SceneTransitionReady = SceneTransitionReady && objectiveList.Visible;
+        QueueRedraw();
     }
 
     private void RevealSelectedCard()
@@ -377,6 +541,39 @@ internal sealed class CardPuzzleGame : Control
         objectiveList.Select(Math.Min(1, objectiveList.GetItemCount() - 1));
         flipAudio.Play();
         UpdateLocalizedText();
+        QueueRedraw();
+    }
+
+    private void SelectNextCard()
+    {
+        selectedIndex = cards.Count == 0 ? 0 : (selectedIndex + 1) % cards.Count;
+        QueueRedraw();
+    }
+
+    private void SelectPreviousCard()
+    {
+        selectedIndex = cards.Count == 0 ? 0 : (selectedIndex + cards.Count - 1) % cards.Count;
+        QueueRedraw();
+    }
+
+    private void ActivateSelectedAction()
+    {
+        if (currentScene == "menu")
+        {
+            ShowGameScene();
+        }
+        else if (currentScene == "game")
+        {
+            RevealSelectedCard();
+            if (score >= 60)
+            {
+                ShowResultScene();
+            }
+        }
+        else
+        {
+            ShowMenuScene();
+        }
     }
 
     private string ReadAndroidRendererProfile()
@@ -414,6 +611,74 @@ internal sealed class CardPuzzleGame : Control
         };
         File.WriteAllText(fullPath, JsonSerializer.Serialize(payload, jsonOptions));
         SaveProgressUsed = true;
+        QueueRedraw();
+    }
+
+    private void ApplyPlayableCommand(string command, string savePath)
+    {
+        switch (command)
+        {
+            case "play":
+                ShowGameScene();
+                break;
+            case "next":
+            case "right":
+                SelectNextCard();
+                break;
+            case "previous":
+            case "left":
+                SelectPreviousCard();
+                break;
+            case "accept":
+            case "space":
+                ActivateSelectedAction();
+                break;
+            case "locale":
+            case "l":
+                SwitchLocale(currentLocale == "en" ? "ru" : "en");
+                break;
+            case "result":
+                ShowResultScene();
+                break;
+            case "save":
+            case "s":
+                SaveProgress(savePath);
+                break;
+            default:
+                break;
+        }
+
+        QueueRedraw();
+    }
+
+    private UiHeavyPlayableResult CreatePlayableResult(int framesAdvanced, int commandsApplied, string savePath)
+    {
+        if (!SaveProgressUsed)
+        {
+            SaveProgress(savePath);
+        }
+
+        var selectedCard = cards.Count == 0 ? string.Empty : cards[Math.Clamp(selectedIndex, 0, cards.Count - 1)].Id;
+        return new UiHeavyPlayableResult(
+            Playable: framesAdvanced > 0 && commandsApplied > 0 && SceneTransitionReady && score > 0,
+            framesAdvanced,
+            commandsApplied,
+            currentScene,
+            currentLocale,
+            score,
+            moves,
+            selectedCard,
+            savePath);
+    }
+
+    private string SelectedCardId()
+    {
+        return cards.Count == 0 ? "none" : cards[Math.Clamp(selectedIndex, 0, cards.Count - 1)].Id;
+    }
+
+    private static string NormalizePlayableCommand(string command)
+    {
+        return command.Trim().ToLowerInvariant();
     }
 
     private sealed class ReferenceTexture2D(int width, int height, bool hasAlpha) : Texture2D
@@ -441,6 +706,8 @@ internal sealed class CardPuzzleGame : Control
             return length;
         }
     }
+
+    private sealed class ReferenceFont : Font;
 
     private sealed record LocalizationDocument(string Locale, Dictionary<string, string> Entries);
 
@@ -503,3 +770,14 @@ internal sealed record UiHeavyVerificationResult(
             ]);
     }
 }
+
+internal sealed record UiHeavyPlayableResult(
+    bool Playable,
+    int FramesAdvanced,
+    int CommandsApplied,
+    string Scene,
+    string Locale,
+    int Score,
+    int Moves,
+    string SelectedCard,
+    string SavePath);

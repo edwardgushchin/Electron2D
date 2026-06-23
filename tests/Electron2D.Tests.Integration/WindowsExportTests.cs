@@ -48,7 +48,7 @@ public sealed class WindowsExportTests
             fullscreen: true,
             new Electron2D.Vector2I(1920, 1080));
 
-        var result = Electron2D.Electron2DWindowsExportPlanner.CreatePlan(preset, projectFilePath, settings);
+        var result = Electron2D.WindowsExportPlanner.CreatePlan(preset, projectFilePath, settings);
 
         Assert.True(result.Succeeded, FormatDiagnostics(result.Diagnostics));
         Assert.NotNull(result.Plan);
@@ -59,12 +59,26 @@ public sealed class WindowsExportTests
         Assert.False(result.Plan.IncludeDebugSymbols);
         Assert.Equal(Electron2D.Electron2DRendererProfileSetting.Standard, result.Plan.RendererProfile);
         Assert.Equal("standard", result.Plan.GraphicsBackend);
-        Assert.Equal(Electron2D.Electron2DWindowsDisplayMode.Fullscreen, result.Plan.DisplayMode);
+        Assert.Equal(Electron2D.WindowsDisplayMode.Fullscreen, result.Plan.DisplayMode);
         Assert.Equal(new Electron2D.Vector2I(1920, 1080), result.Plan.WindowSize);
         Assert.Equal(Path.Combine("exports", "windows", "release"), result.Plan.OutputDirectory);
         Assert.Equal(Path.Combine("exports", "windows", "release", "Electron2D.Empty.exe"), result.Plan.ExecutablePath);
-        Assert.Contains("project.e2d.json", result.Plan.RequiredFiles);
-        Assert.Contains("scenes/main.scene.json", result.Plan.RequiredFiles);
+        Assert.DoesNotContain("project.e2d.json", result.Plan.RequiredFiles);
+        Assert.DoesNotContain("scenes/main.scene.json", result.Plan.RequiredFiles);
+        Assert.Equal(
+            Path.Combine("exports", "windows", "release", "electron2d.pack.json"),
+            ReadStringPlanProperty(result.Plan, "ResourceManifestPath"));
+        Assert.Contains(
+            Path.Combine("exports", "windows", "release", "packs", "project.e2dpkg"),
+            ReadStringArrayPlanProperty(result.Plan, "ResourcePackPaths"));
+        Assert.Contains(
+            Path.Combine("exports", "windows", "release", "packs", "scenes", "main.e2dpkg"),
+            ReadStringArrayPlanProperty(result.Plan, "ResourcePackPaths"));
+        Assert.Contains("packs/project.e2dpkg::project.e2d.json", ReadStringArrayPlanProperty(result.Plan, "ResourcePackEntries"));
+        Assert.Contains("packs/scenes/main.e2dpkg::scenes/main.scene.json", ReadStringArrayPlanProperty(result.Plan, "ResourcePackEntries"));
+        Assert.Contains("project.e2d.json", ReadStringArrayPlanProperty(result.Plan, "ForbiddenLooseFiles"));
+        Assert.Contains("assets/", ReadStringArrayPlanProperty(result.Plan, "ForbiddenLooseFiles"));
+        Assert.Contains(".electron2d/tasks/", ReadStringArrayPlanProperty(result.Plan, "ForbiddenLooseFiles"));
         Assert.Equal(
             new[]
             {
@@ -102,14 +116,14 @@ public sealed class WindowsExportTests
             fullscreen: false,
             new Electron2D.Vector2I(1280, 720));
 
-        var result = Electron2D.Electron2DWindowsExportPlanner.CreatePlan(preset, projectFilePath, settings);
+        var result = Electron2D.WindowsExportPlanner.CreatePlan(preset, projectFilePath, settings);
 
         Assert.True(result.Succeeded, FormatDiagnostics(result.Diagnostics));
         Assert.NotNull(result.Plan);
         Assert.True(result.Plan.IncludeDebugSymbols);
         Assert.Equal(Electron2D.Electron2DRendererProfileSetting.Compatibility, result.Plan.RendererProfile);
         Assert.Equal("compatibility", result.Plan.GraphicsBackend);
-        Assert.Equal(Electron2D.Electron2DWindowsDisplayMode.Windowed, result.Plan.DisplayMode);
+        Assert.Equal(Electron2D.WindowsDisplayMode.Windowed, result.Plan.DisplayMode);
         Assert.Equal(new Electron2D.Vector2I(1280, 720), result.Plan.WindowSize);
         Assert.Contains("Debug", result.Plan.PublishArguments);
     }
@@ -132,7 +146,7 @@ public sealed class WindowsExportTests
             fullscreen: false,
             new Electron2D.Vector2I(1280, 720));
 
-        var result = Electron2D.Electron2DWindowsExportPlanner.CreatePlan(
+        var result = Electron2D.WindowsExportPlanner.CreatePlan(
             preset,
             Path.Combine("projects", "ReferenceGame", "Electron2D.Empty.csproj"),
             settings);
@@ -172,5 +186,19 @@ public sealed class WindowsExportTests
     private static string FormatDiagnostics(IEnumerable<Electron2D.Electron2DExportDiagnostic> diagnostics)
     {
         return string.Join(Environment.NewLine, diagnostics.Select(diagnostic => $"{diagnostic.Code}: {diagnostic.Message}"));
+    }
+
+    private static string ReadStringPlanProperty(object plan, string propertyName)
+    {
+        var property = plan.GetType().GetProperty(propertyName);
+        Assert.NotNull(property);
+        return Assert.IsType<string>(property.GetValue(plan));
+    }
+
+    private static string[] ReadStringArrayPlanProperty(object plan, string propertyName)
+    {
+        var property = plan.GetType().GetProperty(propertyName);
+        Assert.NotNull(property);
+        return Assert.IsType<string[]>(property.GetValue(plan));
     }
 }

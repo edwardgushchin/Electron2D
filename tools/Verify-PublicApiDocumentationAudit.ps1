@@ -213,8 +213,7 @@ if ($null -ne $apiCompatibilityPage) {
 }
 
 $documentationRoots = @(
-    (Join-Path $repoRoot 'docs/specifications/documentation'),
-    (Join-Path $repoRoot 'docs/documentation/documentation'),
+    (Join-Path $repoRoot 'docs/documentation'),
     $resolvedWikiPath
 )
 

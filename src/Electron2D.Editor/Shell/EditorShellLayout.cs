@@ -39,7 +39,8 @@ internal sealed class EditorShellLayout
         int rightDockWidth,
         int bottomPanelHeight,
         IReadOnlyList<string> documentTabs,
-        Dictionary<string, EditorShellWorkspaceState> workspaceStates)
+        Dictionary<string, EditorShellWorkspaceState> workspaceStates,
+        EditorShellStartupProject? startupProject)
     {
         SelectedWorkspace = selectedWorkspace;
         BottomPanelCollapsed = bottomPanelCollapsed;
@@ -48,6 +49,7 @@ internal sealed class EditorShellLayout
         BottomPanelHeight = bottomPanelHeight;
         DocumentTabs = documentTabs;
         this.workspaceStates = workspaceStates;
+        StartupProject = startupProject;
     }
 
     public IReadOnlyList<string> MenuItems { get; } = ["Scene", "Project", "Debug", "Editor", "Help"];
@@ -90,6 +92,18 @@ internal sealed class EditorShellLayout
 
     public IReadOnlyDictionary<string, EditorShellWorkspaceState> WorkspaceStates => workspaceStates;
 
+    public EditorShellStartupProject? StartupProject { get; }
+
+    public bool ProjectLoaded => StartupProject is not null;
+
+    public string ProjectName => StartupProject?.ProjectName ?? string.Empty;
+
+    public string ProjectPath => StartupProject?.ProjectPath ?? string.Empty;
+
+    public string ProjectSettingsPath => StartupProject?.ProjectSettingsPath ?? string.Empty;
+
+    public string MainScenePath => StartupProject?.MainScenePath ?? string.Empty;
+
     public static EditorShellLayout CreateDefault()
     {
         var workspaceStates = new Dictionary<string, EditorShellWorkspaceState>(StringComparer.Ordinal)
@@ -107,7 +121,37 @@ internal sealed class EditorShellLayout
             rightDockWidth: 300,
             bottomPanelHeight: 128,
             documentTabs: ["main.e2scene.json", "PlayerController.cs", "T-0157"],
-            workspaceStates);
+            workspaceStates,
+            startupProject: null);
+    }
+
+    public static EditorShellLayout CreateForProject(EditorShellStartupProject project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentException.ThrowIfNullOrWhiteSpace(project.ProjectName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(project.ProjectPath);
+        ArgumentException.ThrowIfNullOrWhiteSpace(project.ProjectSettingsPath);
+        ArgumentException.ThrowIfNullOrWhiteSpace(project.MainScenePath);
+
+        var mainSceneDocument = Path.GetFileName(project.MainScenePath);
+        var mainSceneResourcePath = ToProjectResourcePath(project.ProjectPath, project.MainScenePath);
+        var workspaceStates = new Dictionary<string, EditorShellWorkspaceState>(StringComparer.Ordinal)
+        {
+            ["2D"] = new("2D", mainSceneDocument, 0, 0, 1d, [mainSceneResourcePath]),
+            ["Script"] = new("Script", project.ProjectName, 0, 0, 1d, []),
+            ["Game"] = new("Game", project.ProjectName, 0, 0, 1d, [mainSceneResourcePath]),
+            ["Tasks"] = new("Tasks", project.ProjectName, 0, 0, 1d, [])
+        };
+
+        return new EditorShellLayout(
+            "2D",
+            bottomPanelCollapsed: false,
+            leftDockWidth: 250,
+            rightDockWidth: 300,
+            bottomPanelHeight: 128,
+            documentTabs: [mainSceneDocument],
+            workspaceStates,
+            project);
     }
 
     public static EditorShellLayout FromState(EditorShellLayoutState state)
@@ -133,7 +177,8 @@ internal sealed class EditorShellLayout
             state.RightDockWidth > 0 ? state.RightDockWidth : defaults.RightDockWidth,
             state.BottomPanelHeight > 0 ? state.BottomPanelHeight : defaults.BottomPanelHeight,
             state.DocumentTabs.Length > 0 ? state.DocumentTabs : defaults.DocumentTabs,
-            workspaces);
+            workspaces,
+            startupProject: null);
     }
 
     public void SwitchWorkspace(string workspace)
@@ -251,6 +296,14 @@ internal sealed class EditorShellLayout
         return FindForbiddenMatches(Shortcuts.SelectMany(shortcut => new[] { shortcut.Action, shortcut.Description })).ToArray();
     }
 
+    private static string ToProjectResourcePath(string projectPath, string filePath)
+    {
+        var relativePath = Path.GetRelativePath(projectPath, filePath)
+            .Replace(Path.DirectorySeparatorChar, '/')
+            .Replace(Path.AltDirectorySeparatorChar, '/');
+        return "res://" + relativePath;
+    }
+
     private static IEnumerable<string> FindForbiddenMatches(IEnumerable<string> values)
     {
         foreach (var value in values)
@@ -265,6 +318,12 @@ internal sealed class EditorShellLayout
         }
     }
 }
+
+internal sealed record EditorShellStartupProject(
+    string ProjectName,
+    string ProjectPath,
+    string ProjectSettingsPath,
+    string MainScenePath);
 
 internal sealed record EditorShellRegion(
     string Area,

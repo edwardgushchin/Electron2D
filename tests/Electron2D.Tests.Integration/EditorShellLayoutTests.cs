@@ -32,7 +32,7 @@ namespace Electron2D.Tests.Integration;
 public sealed class EditorShellLayoutTests
 {
     [Fact]
-    public async Task ShellLayoutSmokeRunPersistsLayoutAndWritesVisualArtifacts()
+    public async Task ShellLayoutSmokeRunPersistsLayoutWithoutVisualHarnessArtifacts()
     {
         var root = FindRepositoryRoot();
         var projectPath = Path.Combine(root, "src", "Electron2D.Editor", "Electron2D.Editor.csproj");
@@ -80,7 +80,7 @@ public sealed class EditorShellLayoutTests
             Assert.Equal("True", lines["WorkspaceStateRoundTripStable"]);
             Assert.Equal("0", lines["ForbiddenUiMatches"]);
             Assert.Equal("0", lines["ForbiddenShortcutMatches"]);
-            Assert.Equal("True", lines["ScreenshotReviewed"]);
+            Assert.Equal("False", lines["VisualHarnessPresent"]);
             Assert.Equal("Player", lines["TwoDSelection"]);
             Assert.Equal("64,96", lines["TwoDScroll"]);
             Assert.Equal("1.5", lines["TwoDZoom"]);
@@ -89,28 +89,23 @@ public sealed class EditorShellLayoutTests
             Assert.Equal("T-0157", lines["TasksDocuments"]);
 
             var statePath = lines["StatePath"];
-            var screenshotPath = lines["ScreenshotPath"];
             var analysisPath = lines["AnalysisPath"];
 
             Assert.True(File.Exists(statePath), $"Missing shell state artifact: {statePath}");
-            Assert.True(File.Exists(screenshotPath), $"Missing shell screenshot artifact: {screenshotPath}");
-            Assert.True(File.Exists(analysisPath), $"Missing shell visual analysis artifact: {analysisPath}");
-
-            var (width, height) = ReadPngDimensions(File.ReadAllBytes(screenshotPath));
-            Assert.Equal(1280, width);
-            Assert.Equal(720, height);
+            Assert.True(File.Exists(analysisPath), $"Missing shell layout analysis artifact: {analysisPath}");
+            Assert.False(lines.ContainsKey("ScreenshotPath"));
+            Assert.False(Directory.Exists(Path.Combine(workRoot, "visual")), "Shell layout smoke must not create synthetic visual harness artifacts.");
 
             using var analysis = JsonDocument.Parse(File.ReadAllText(analysisPath));
             var data = analysis.RootElement;
 
-            Assert.Equal("Electron2D.EditorShellVisualAnalysis", data.GetProperty("format").GetString());
-            Assert.Equal("automated-shell-layout-harness", data.GetProperty("harness").GetString());
+            Assert.Equal("Electron2D.EditorShellLayoutAnalysis", data.GetProperty("format").GetString());
+            Assert.False(data.GetProperty("visualHarnessPresent").GetBoolean());
             Assert.Equal(1280, data.GetProperty("viewport").GetProperty("width").GetInt32());
             Assert.Equal(720, data.GetProperty("viewport").GetProperty("height").GetInt32());
             Assert.Equal(0, data.GetProperty("textOverflowCount").GetInt32());
             Assert.Equal(0, data.GetProperty("forbiddenUiMatches").GetArrayLength());
             Assert.True(data.GetProperty("clickableControlCount").GetInt32() >= 16);
-            Assert.True(data.GetProperty("screenshotReviewed").GetBoolean());
             Assert.Equal(
                 new[] { "2D", "Script", "Game", "Tasks" },
                 data.GetProperty("workspaceSwitcher").GetProperty("labels").EnumerateArray().Select(item => item.GetString()).ToArray());
@@ -128,17 +123,6 @@ public sealed class EditorShellLayoutTests
         {
             Directory.Delete(workRoot, recursive: true);
         }
-    }
-
-    private static (int Width, int Height) ReadPngDimensions(byte[] bytes)
-    {
-        Assert.True(bytes.Length >= 24, "PNG must contain a signature and IHDR chunk.");
-        Assert.Equal(new byte[] { 0x89, 0x50, 0x4e, 0x47 }, bytes.Take(4).ToArray());
-        Assert.Equal("IHDR", System.Text.Encoding.ASCII.GetString(bytes, 12, 4));
-
-        return (
-            BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(16, 4)),
-            BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(20, 4)));
     }
 
     private static Dictionary<string, string> ParseMachineReadableOutput(string output)

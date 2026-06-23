@@ -30,7 +30,7 @@ $updateScript = Join-Path $PSScriptRoot 'Update-LocalDocumentationIndex.ps1'
 $solutionPath = Join-Path $repoRoot 'src/Electron2D.sln'
 $cliProject = Join-Path $repoRoot 'src/Electron2D.Cli/Electron2D.Cli.csproj'
 $indexPath = Join-Path $repoRoot 'data/documentation/electron2d-local-docs-index.json'
-$implementationDocPath = Join-Path $repoRoot 'docs/documentation/documentation/local-documentation-pipeline.md'
+$implementationDocPath = Join-Path $repoRoot 'docs/documentation/local-documentation-pipeline.md'
 
 if (-not (Test-Path -LiteralPath $updateScript)) {
     throw "Local documentation index updater was not found: $updateScript"

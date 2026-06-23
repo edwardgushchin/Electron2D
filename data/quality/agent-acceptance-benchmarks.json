@@ -10,9 +10,9 @@
       "releaseRequired": true,
       "targetSuccessRatio": 1.0,
       "documentation": [
-        "docs/specifications/testing/agent-acceptance-benchmarks.md",
-        "docs/documentation/testing/agent-acceptance-benchmarks.md",
-        "docs/specifications/editor/godot4-editor-reference.md"
+        "docs/testing/agent-acceptance-benchmarks.md",
+        "docs/testing/agent-acceptance-benchmarks.md",
+        "docs/editor/godot4-editor-reference.md"
       ],
       "scenarios": [
         { "id": "active-editor-route", "title": "CLI and MCP route mutating commands into the active Editor workspace." },
@@ -58,7 +58,7 @@
             "editor-without-mcp"
           ],
           "visualEvidence": {
-            "reference": "docs/specifications/editor/godot4-editor-reference.md",
+            "reference": "docs/editor/godot4-editor-reference.md",
             "requiresActualWindow": true,
             "requiresPointerInteraction": true,
             "requiresKeyboardInteraction": true,
@@ -267,10 +267,10 @@
       "releaseRequired": true,
       "targetSuccessRatio": 0.8,
       "documentation": [
-        "docs/specifications/testing/agent-acceptance-benchmarks.md",
-        "docs/documentation/testing/agent-acceptance-benchmarks.md",
-        "docs/documentation/project-system/static-context-pack.md",
-        "docs/documentation/runtime/headless-runtime-automation.md"
+        "docs/testing/agent-acceptance-benchmarks.md",
+        "docs/testing/agent-acceptance-benchmarks.md",
+        "docs/project-system/static-context-pack.md",
+        "docs/runtime/headless-runtime-automation.md"
       ],
       "scenarios": [
         { "id": "headless-installed-engine", "title": "Agent works from installed Electron2D, docs, CLI and MCP without engine source as input." },
@@ -336,7 +336,7 @@
           "kind": "documentedManualHarness",
           "required": true,
           "sourceFiles": [
-            "docs/documentation/testing/agent-acceptance-benchmarks.md"
+            "docs/testing/agent-acceptance-benchmarks.md"
           ],
           "covers": [
             "headless-five-tasks",
@@ -347,7 +347,7 @@
       ],
       "successConditions": {
         "minimumAgentProfiles": 2,
-        "documentedManualHarness": "docs/documentation/testing/agent-acceptance-benchmarks.md#headless-manual-harness",
+        "documentedManualHarness": "docs/testing/agent-acceptance-benchmarks.md#headless-manual-harness",
         "forbidGeneratedCacheEdits": true,
         "forbidUnsupportedApi": true,
         "forbiddenGeneratedCachePaths": [

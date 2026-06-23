@@ -32,6 +32,7 @@ if (-not $isWindowsHost) {
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $templateRoot = Join-Path $repoRoot 'data/templates/electron2d-empty'
+$cliProjectPath = Join-Path $repoRoot 'src/Electron2D.Cli/Electron2D.Cli.csproj'
 $packageOutput = Join-Path $repoRoot '.temp/windows-export-package'
 $workRoot = Join-Path $repoRoot '.temp/windows-export-check'
 $createdProject = Join-Path $workRoot 'Electron2D.Empty'
@@ -41,6 +42,33 @@ $nugetConfig = Join-Path $workRoot 'NuGet.Config'
 
 if (-not (Test-Path -LiteralPath $templateRoot)) {
     throw 'Template directory data/templates/electron2d-empty was not found.'
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+function Assert-PackEntry([string]$packagePath, [string]$entryName) {
+    if (-not (Test-Path -LiteralPath $packagePath -PathType Leaf)) {
+        throw "Windows export package was not found: $packagePath"
+    }
+
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($packagePath)
+    try {
+        $entries = @($archive.Entries | ForEach-Object { $_.FullName.Replace('\', '/') })
+        if ($entries -notcontains $entryName) {
+            throw "Windows export package '$packagePath' does not contain expected entry: $entryName"
+        }
+    }
+    finally {
+        $archive.Dispose()
+    }
+}
+
+function Assert-NoLooseOutput([string]$publishOutput) {
+    foreach ($forbiddenPath in @('project.e2d.json', 'assets', 'resources', 'scenes', '.electron2d')) {
+        if (Test-Path -LiteralPath (Join-Path $publishOutput $forbiddenPath)) {
+            throw "Windows export output must not contain loose project source path: $forbiddenPath"
+        }
+    }
 }
 
 Remove-Item -LiteralPath $packageOutput -Recurse -Force -ErrorAction SilentlyContinue
@@ -56,6 +84,8 @@ if ($LASTEXITCODE -ne 0) {
 Copy-Item -Path (Join-Path $templateRoot '*') -Destination $createdProject -Recurse -Force
 Remove-Item -LiteralPath (Join-Path $createdProject '.template.config') -Recurse -Force
 
+$env:NUGET_PACKAGES = $packagesRoot
+
 @"
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
@@ -64,6 +94,9 @@ Remove-Item -LiteralPath (Join-Path $createdProject '.template.config') -Recurse
     <add key="electron2d-local" value="$packageOutput" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
+  <config>
+    <add key="globalPackagesFolder" value="$packagesRoot" />
+  </config>
 </configuration>
 "@ | Set-Content -LiteralPath $nugetConfig -Encoding UTF8
 
@@ -72,18 +105,24 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-$expectedSceneOutput = 'Electron2D empty scene loaded: scenes/main.scene.json'
-$expectedLifecycleOutput = 'Electron2D C# script lifecycle: _EnterTree,_Ready'
-$expectedServiceOutput = 'Electron2D C# script services: tree=True,text=True'
+$expectedRunOutput = @(
+    'Mode=run',
+    'Project=Electron2D.Empty',
+    'WindowCreated=True',
+    'FramePresented=True',
+    'ScreenshotSaved=True',
+    'RuntimeSucceeded=True'
+)
 
 foreach ($configuration in @('Debug', 'Release')) {
     $publishOutput = Join-Path $workRoot "publish-$configuration"
-    dotnet publish $projectPath `
-        --no-restore `
+    dotnet run --project $cliProjectPath -- `
+        export build-windows `
+        --project $createdProject `
+        --project-file $projectPath `
         --configuration $configuration `
-        --runtime win-x64 `
-        --self-contained true `
-        --output $publishOutput | Out-Host
+        --output $publishOutput `
+        --format json | Out-Host
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
@@ -93,24 +132,38 @@ foreach ($configuration in @('Debug', 'Release')) {
         throw "Windows export executable was not found: $executablePath"
     }
 
-    $projectSettingsPath = Join-Path $publishOutput 'project.e2d.json'
-    if (-not (Test-Path -LiteralPath $projectSettingsPath)) {
-        throw "Windows export project settings were not found: $projectSettingsPath"
+    $manifestPath = Join-Path $publishOutput 'electron2d.pack.json'
+    if (-not (Test-Path -LiteralPath $manifestPath)) {
+        throw "Windows export resource pack manifest was not found: $manifestPath"
     }
 
-    $scenePath = Join-Path $publishOutput 'scenes/main.scene.json'
-    if (-not (Test-Path -LiteralPath $scenePath)) {
-        throw "Windows export reference scene was not found: $scenePath"
+    $projectPackPath = Join-Path $publishOutput 'packs/project.e2dpkg'
+    $scenePackPath = Join-Path $publishOutput 'packs/scenes/main.e2dpkg'
+    Assert-PackEntry $projectPackPath 'project.e2d.json'
+    Assert-PackEntry $scenePackPath 'scenes/main.scene.json'
+    Assert-NoLooseOutput $publishOutput
+
+    $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+    $packPaths = @($manifest.packs | ForEach-Object { [string]$_.path })
+    foreach ($expectedPack in @('packs/project.e2dpkg', 'packs/scenes/main.e2dpkg')) {
+        if ($packPaths -notcontains $expectedPack) {
+            throw "Windows export manifest does not list expected package: $expectedPack"
+        }
     }
 
-    $runOutput = & $executablePath
+    $screenshotPath = Join-Path $publishOutput 'empty-export.png'
+    $runOutput = & $executablePath --screenshot $screenshotPath
     if ($LASTEXITCODE -ne 0) {
         Write-Host $runOutput
         exit $LASTEXITCODE
     }
 
+    if (-not (Test-Path -LiteralPath $screenshotPath -PathType Leaf)) {
+        throw "Windows exported player did not write a screenshot: $screenshotPath"
+    }
+
     $joinedOutput = $runOutput -join [Environment]::NewLine
-    foreach ($expectedOutput in @($expectedSceneOutput, $expectedLifecycleOutput, $expectedServiceOutput)) {
+    foreach ($expectedOutput in $expectedRunOutput) {
         if ($joinedOutput.IndexOf($expectedOutput, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
             Write-Host $runOutput
             throw "Windows export run output does not contain expected line: $expectedOutput"

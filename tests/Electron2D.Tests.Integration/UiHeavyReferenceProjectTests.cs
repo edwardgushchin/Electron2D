@@ -23,10 +23,12 @@
     SOFTWARE.
 */
 using System.Text.Json;
+using System.Diagnostics;
 using Xunit;
 
 namespace Electron2D.Tests.Integration;
 
+[Collection(RuntimeWindowCollection.Name)]
 public sealed class UiHeavyReferenceProjectTests
 {
     [Fact]
@@ -51,7 +53,7 @@ public sealed class UiHeavyReferenceProjectTests
             new[] { "accept", "cancel", "next_card", "previous_card", "switch_locale" },
             settings.Settings.InputActions.Select(action => action.Name).OrderBy(name => name, StringComparer.Ordinal).ToArray());
 
-        var exportPresets = Electron2D.Electron2DExportPresetStore.Load(Path.Combine(projectRoot, "export_presets.e2export.json"));
+        var exportPresets = Electron2D.ExportPresetStore.Load(Path.Combine(projectRoot, "export_presets.e2export.json"));
         Assert.True(exportPresets.Succeeded, FormatExportDiagnostics(exportPresets.Diagnostics));
         Assert.NotNull(exportPresets.Document);
         Assert.Equal(
@@ -102,9 +104,15 @@ public sealed class UiHeavyReferenceProjectTests
             "ProgressBar",
             "TextureRect",
             "NinePatchRect",
+            "ImageTexture.LoadFromFile",
             "ItemList",
             "Translation",
             "TranslationServer",
+            "Input.IsActionJustPressed(\"accept\")",
+            "Input.IsActionJustPressed(\"cancel\")",
+            "Input.IsActionJustPressed(\"next_card\")",
+            "Input.IsActionJustPressed(\"previous_card\")",
+            "Input.IsActionJustPressed(\"switch_locale\")",
             "InputEventScreenTouch",
             "SaveProgress",
             "ShowMenuScene",
@@ -115,6 +123,8 @@ public sealed class UiHeavyReferenceProjectTests
         {
             Assert.Contains(requiredText, script, StringComparison.Ordinal);
         }
+
+        Assert.DoesNotContain("ReferenceTexture2D", script, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -128,16 +138,103 @@ public sealed class UiHeavyReferenceProjectTests
         var verifier = File.ReadAllText(verifierPath);
         Assert.Contains("Electron2D.UiHeavyReference.csproj", verifier, StringComparison.Ordinal);
         Assert.Contains("dotnet build", verifier, StringComparison.Ordinal);
-        Assert.Contains("dotnet run", verifier, StringComparison.Ordinal);
+        Assert.Contains("e2d run", verifier, StringComparison.Ordinal);
         Assert.Contains("e2d validate", verifier, StringComparison.Ordinal);
         Assert.Contains("Compatibility", verifier, StringComparison.Ordinal);
         Assert.Contains(".electron2d/tasks", verifier, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void UiHeavyReferencePlayableUsesOnlyElectron2DApi()
+    {
+        var root = FindRepositoryRoot();
+        var projectRoot = Path.Combine(root, "examples", "ui-heavy-reference");
+        var programPath = Path.Combine(projectRoot, "Program.cs");
+        var source = File.ReadAllText(Path.Combine(projectRoot, "Scripts", "CardPuzzleGame.cs"));
+
+        Assert.False(File.Exists(programPath), "UI-heavy reference must be launched by e2d run, not by a user Program.cs bootstrap.");
+        Assert.DoesNotContain("Electron2DRuntimeHost", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("ProjectRuntimeRunner", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Electron2DApplication", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Electron2DRunOptions", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Electron2DRunResult", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Console.ReadKey", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("SDL.", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("SDL3", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("CreateWindow", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FRAME ui-heavy-reference", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UiHeavyReferencePlayableScriptRunsGameLoop()
+    {
+        var root = FindRepositoryRoot();
+        var projectRoot = Path.Combine(root, "examples", "ui-heavy-reference");
+        var screenshotPath = Path.Combine(
+            Path.GetTempPath(),
+            "Electron2D-UiHeavyReferencePlayableTests",
+            Guid.NewGuid().ToString("N"),
+            "ui-heavy-reference-playable.png");
+
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = "dotnet",
+            WorkingDirectory = root,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+        startInfo.ArgumentList.Add("run");
+        startInfo.ArgumentList.Add("--project");
+        startInfo.ArgumentList.Add(Path.Combine(root, "src", "Electron2D.Cli", "Electron2D.Cli.csproj"));
+        startInfo.ArgumentList.Add("--");
+        startInfo.ArgumentList.Add("run");
+        startInfo.ArgumentList.Add("--project");
+        startInfo.ArgumentList.Add(projectRoot);
+        startInfo.ArgumentList.Add("--play-script");
+        startInfo.ArgumentList.Add("play,next,accept,locale,next,accept,result,save,quit");
+        startInfo.ArgumentList.Add("--screenshot");
+        startInfo.ArgumentList.Add(screenshotPath);
+
+        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start UI-heavy reference playable script.");
+        var outputTask = process.StandardOutput.ReadToEndAsync();
+        var errorTask = process.StandardError.ReadToEndAsync();
+
+        await WaitForExitAsync(process, TimeSpan.FromSeconds(60));
+        var output = await outputTask;
+        var error = await errorTask;
+
+        Assert.True(
+            process.ExitCode == 0,
+            $"UI-heavy reference playable script failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
+
+        var lines = ParseMachineReadableOutput(output);
+        Assert.Equal("playable", lines["Mode"]);
+        Assert.Equal("True", lines["Playable"]);
+        Assert.True(int.Parse(lines["FramesAdvanced"], System.Globalization.CultureInfo.InvariantCulture) >= 6);
+        Assert.Equal("9", lines["CommandsApplied"]);
+        Assert.Equal("result", lines["Scene"]);
+        Assert.Equal("ru", lines["Locale"]);
+        Assert.True(int.Parse(lines["Score"], System.Globalization.CultureInfo.InvariantCulture) > 0);
+        Assert.True(int.Parse(lines["Moves"], System.Globalization.CultureInfo.InvariantCulture) >= 2);
+        Assert.False(string.IsNullOrWhiteSpace(lines["SelectedCard"]));
+        Assert.True(File.Exists(lines["SavePath"]), $"Missing playable save path: {lines["SavePath"]}");
+        Assert.Equal("True", lines["WindowCreated"]);
+        Assert.Equal("True", lines["WindowShown"]);
+        Assert.Equal("True", lines["FramePresented"]);
+        Assert.True(int.Parse(lines["InputEventsDispatched"], System.Globalization.CultureInfo.InvariantCulture) >= 0);
+        Assert.True(int.Parse(lines["DrawCommands"], System.Globalization.CultureInfo.InvariantCulture) > 0);
+        Assert.Equal(screenshotPath, lines["ScreenshotPath"]);
+        Assert.True(File.Exists(screenshotPath), $"Missing playable screenshot path: {screenshotPath}");
+        Assert.DoesNotContain("FRAME", output, StringComparison.Ordinal);
+
+        var (width, height) = ReadPngDimensions(File.ReadAllBytes(screenshotPath));
+        Assert.True(width >= 640, $"Expected a normal playable screenshot width, got {width}.");
+        Assert.True(height >= 360, $"Expected a normal playable screenshot height, got {height}.");
+    }
+
     private static readonly string[] RequiredFiles =
     [
         "Electron2D.UiHeavyReference.csproj",
-        "Program.cs",
         "Scripts/CardPuzzleGame.cs",
         "project.e2d.json",
         "electron2d.lock.json",
@@ -155,6 +252,44 @@ public sealed class UiHeavyReferenceProjectTests
     {
         Assert.True(File.Exists(path), $"JSON file is missing: {path}");
         return JsonDocument.Parse(File.ReadAllText(path));
+    }
+
+    private static Dictionary<string, string> ParseMachineReadableOutput(string output)
+    {
+        return output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+            .Select(line => line.Split('=', 2))
+            .Where(parts => parts.Length == 2)
+            .ToDictionary(parts => parts[0], parts => parts[1], StringComparer.Ordinal);
+    }
+
+    private static async Task WaitForExitAsync(Process process, TimeSpan timeout)
+    {
+        using var cancellation = new CancellationTokenSource(timeout);
+        try
+        {
+            await process.WaitForExitAsync(cancellation.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch (InvalidOperationException)
+            {
+            }
+
+            throw new TimeoutException($"Process did not exit within {timeout.TotalSeconds:0} seconds.");
+        }
+    }
+
+    private static (int Width, int Height) ReadPngDimensions(byte[] bytes)
+    {
+        Assert.True(bytes.Length >= 24, "PNG is too small.");
+        Assert.Equal(new byte[] { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a }, bytes[..8]);
+        var width = System.Buffers.Binary.BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(16, 4));
+        var height = System.Buffers.Binary.BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(20, 4));
+        return (width, height);
     }
 
     private static string FormatSettingsDiagnostics(IEnumerable<Electron2D.Electron2DSettingsDiagnostic> diagnostics)

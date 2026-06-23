@@ -74,6 +74,20 @@ function Assert-Png([string]$path) {
     }
 }
 
+function Assert-PngMinDimensions([string]$path, [int]$minWidth, [int]$minHeight) {
+    Assert-Png $path
+    $bytes = [System.IO.File]::ReadAllBytes($path)
+    if ($bytes.Length -lt 24) {
+        throw "PNG file is too small: $path"
+    }
+
+    $width = ($bytes[16] -shl 24) -bor ($bytes[17] -shl 16) -bor ($bytes[18] -shl 8) -bor $bytes[19]
+    $height = ($bytes[20] -shl 24) -bor ($bytes[21] -shl 16) -bor ($bytes[22] -shl 8) -bor $bytes[23]
+    if ($width -lt $minWidth -or $height -lt $minHeight) {
+        throw "PNG dimensions are too small: $path ($width x $height), expected at least $minWidth x $minHeight."
+    }
+}
+
 function Assert-Ogg([string]$path) {
     $stream = [System.IO.File]::OpenRead($path)
     try {
@@ -204,6 +218,32 @@ foreach ($requiredRole in @(
     }
 }
 
+$programPath = Join-Path $projectRoot 'Program.cs'
+if (Test-Path -LiteralPath $programPath) {
+    throw 'UI-heavy reference must not provide Program.cs; editor/dev run and export own the launch flow.'
+}
+
+$source = Get-Content -LiteralPath (Join-Path $projectRoot 'Scripts/CardPuzzleGame.cs') -Raw
+foreach ($forbiddenText in @(
+    'Console.ReadKey',
+    'FRAME ui-heavy-reference',
+    'SDL.',
+    'SDL3',
+    'CreateWindow',
+    'RuntimeHost.Run',
+    'ProjectRuntimeRunner'
+)) {
+    if ($source.IndexOf($forbiddenText, [System.StringComparison]::Ordinal) -ge 0) {
+        throw "UI-heavy reference project script must use only public Electron2D game API. Forbidden text: $forbiddenText"
+    }
+}
+
+foreach ($forbiddenApi in @('Electron2DApplication', 'Electron2DRunOptions', 'Electron2DRunResult')) {
+    if ($source.IndexOf($forbiddenApi, [System.StringComparison]::Ordinal) -ge 0) {
+        throw "UI-heavy reference must not use out-of-profile public bootstrap API '$forbiddenApi'."
+    }
+}
+
 Remove-Item -LiteralPath $workRoot -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $workRoot | Out-Null
 
@@ -251,6 +291,63 @@ foreach ($requiredText in @(
 if (-not (Test-Path -LiteralPath $progressPath -PathType Leaf)) {
     throw 'UI-heavy reference did not write progress save artifact.'
 }
+
+$playableSavePath = Join-Path $workRoot 'playable-progress.json'
+$playableScreenshotPath = Join-Path $workRoot 'ui-heavy-playable.png'
+$previousSavePath = [System.Environment]::GetEnvironmentVariable('ELECTRON2D_UI_HEAVY_REFERENCE_SAVE')
+[System.Environment]::SetEnvironmentVariable('ELECTRON2D_UI_HEAVY_REFERENCE_SAVE', $playableSavePath)
+try {
+    $playableOutput = dotnet run --project $projectPath --no-build -- --play-script "play,next,accept,locale,next,accept,result,save,quit" --screenshot $playableScreenshotPath
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host $playableOutput
+        exit $LASTEXITCODE
+    }
+}
+finally {
+    [System.Environment]::SetEnvironmentVariable('ELECTRON2D_UI_HEAVY_REFERENCE_SAVE', $previousSavePath)
+}
+
+$joinedPlayableOutput = $playableOutput -join [Environment]::NewLine
+foreach ($requiredText in @(
+    'Mode=playable',
+    'Playable=True',
+    'FramesAdvanced=8',
+    'CommandsApplied=9',
+    'Scene=result',
+    'Locale=ru',
+    'WindowCreated=True',
+    'WindowShown=True',
+    'FramePresented=True',
+    'InputEventsDispatched=',
+    'DrawCommands=',
+    "ScreenshotPath=$playableScreenshotPath"
+)) {
+    if ($joinedPlayableOutput.IndexOf($requiredText, [System.StringComparison]::Ordinal) -lt 0) {
+        Write-Host $playableOutput
+        throw "UI-heavy reference playable output does not contain expected text: $requiredText"
+    }
+}
+
+if ($joinedPlayableOutput.IndexOf('FRAME ', [System.StringComparison]::Ordinal) -ge 0) {
+    Write-Host $playableOutput
+    throw 'UI-heavy reference playable output must not contain ASCII frame output.'
+}
+
+$drawCommandsMatch = [System.Text.RegularExpressions.Regex]::Match($joinedPlayableOutput, 'DrawCommands=(\d+)')
+if (-not $drawCommandsMatch.Success -or [int]$drawCommandsMatch.Groups[1].Value -le 0) {
+    Write-Host $playableOutput
+    throw 'UI-heavy reference playable output must report DrawCommands greater than zero.'
+}
+
+if (-not (Test-Path -LiteralPath $playableSavePath -PathType Leaf)) {
+    throw 'UI-heavy reference playable mode did not write progress save artifact.'
+}
+
+if (-not (Test-Path -LiteralPath $playableScreenshotPath -PathType Leaf)) {
+    throw 'UI-heavy reference playable mode did not write PNG screenshot artifact.'
+}
+
+Assert-PngMinDimensions $playableScreenshotPath 640 360
 
 $validateOutput = dotnet run --project $cliProjectPath -- validate --project $projectRoot --format json
 if ($LASTEXITCODE -ne 0) {

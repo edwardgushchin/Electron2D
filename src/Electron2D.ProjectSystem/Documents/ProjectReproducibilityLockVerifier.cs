@@ -85,7 +85,7 @@ internal static class ProjectReproducibilityLockVerifier
         var lockPath = Path.Combine(fullRoot, LockFileName);
 
         var globalJson = ReadRequiredJson(globalJsonPath, GlobalJsonFileName, diagnostics);
-        var lockJson = ReadRequiredJson(lockPath, LockFileName, diagnostics);
+        var lockJson = ReadLockJson(fullRoot, lockPath, diagnostics);
         if (globalJson is null || lockJson is null)
         {
             return new ProjectReproducibilityLockVerificationResult(diagnostics);
@@ -98,6 +98,62 @@ internal static class ProjectReproducibilityLockVerifier
         ValidateProjectPackageReference(fullRoot, lockJson, diagnostics);
 
         return new ProjectReproducibilityLockVerificationResult(diagnostics);
+    }
+
+    private static JsonObject? ReadLockJson(
+        string projectRoot,
+        string legacyLockPath,
+        List<StructuredDiagnostic> diagnostics)
+    {
+        if (File.Exists(legacyLockPath))
+        {
+            return ReadRequiredJson(legacyLockPath, LockFileName, diagnostics);
+        }
+
+        var projectFile = ResolveProjectFile(projectRoot);
+        if (projectFile is null)
+        {
+            diagnostics.Add(CreateDiagnostic(
+                "Project reproducibility metadata is required either in electron2d.lock.json or in the main .e2d file.",
+                LockFileName));
+            return null;
+        }
+
+        var relativeProjectFile = Path.GetRelativePath(projectRoot, projectFile).Replace(Path.DirectorySeparatorChar, '/');
+        try
+        {
+            var projectJson = JsonNode.Parse(File.ReadAllText(projectFile)) as JsonObject ??
+                throw new FormatException($"{relativeProjectFile} root must be a JSON object.");
+            if (projectJson["reproducibilityLock"] is JsonObject lockJson)
+            {
+                return lockJson;
+            }
+
+            diagnostics.Add(CreateDiagnostic(
+                $"{relativeProjectFile} must contain reproducibilityLock when electron2d.lock.json is not present.",
+                relativeProjectFile));
+            return null;
+        }
+        catch (Exception exception) when (exception is JsonException or FormatException or IOException or UnauthorizedAccessException)
+        {
+            diagnostics.Add(CreateDiagnostic(
+                $"{relativeProjectFile} could not be read as a valid JSON object: {exception.Message}",
+                relativeProjectFile));
+            return null;
+        }
+    }
+
+    private static string? ResolveProjectFile(string projectRoot)
+    {
+        var named = Path.Combine(projectRoot, Path.GetFileName(projectRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)) + ".e2d");
+        if (File.Exists(named))
+        {
+            return named;
+        }
+
+        return Directory.EnumerateFiles(projectRoot, "*.e2d", SearchOption.TopDirectoryOnly)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .FirstOrDefault();
     }
 
     private static JsonObject? ReadRequiredJson(

@@ -25,12 +25,12 @@
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$specPath = Join-Path $repoRoot 'docs/specifications/documentation/user-documentation.md'
-$rendererSpecPath = Join-Path $repoRoot 'docs/specifications/documentation/renderer-profiles-user-documentation.md'
-$troubleshootingSpecPath = Join-Path $repoRoot 'docs/specifications/documentation/troubleshooting-release-checklist.md'
-$guidePath = Join-Path $repoRoot 'docs/documentation/documentation/user-guide.md'
-$rendererGuidePath = Join-Path $repoRoot 'docs/documentation/documentation/renderer-profiles.md'
-$troubleshootingGuidePath = Join-Path $repoRoot 'docs/documentation/documentation/troubleshooting-release-checklist.md'
+$specPath = Join-Path $repoRoot 'docs/documentation/user-guide.md'
+$rendererSpecPath = Join-Path $repoRoot 'docs/documentation/renderer-profiles.md'
+$troubleshootingSpecPath = Join-Path $repoRoot 'docs/documentation/troubleshooting-release-checklist.md'
+$guidePath = Join-Path $repoRoot 'docs/documentation/user-guide.md'
+$rendererGuidePath = Join-Path $repoRoot 'docs/documentation/renderer-profiles.md'
+$troubleshootingGuidePath = Join-Path $repoRoot 'docs/documentation/troubleshooting-release-checklist.md'
 
 foreach ($path in @($specPath, $rendererSpecPath, $troubleshootingSpecPath, $guidePath, $rendererGuidePath, $troubleshootingGuidePath)) {
     if (-not (Test-Path -LiteralPath $path)) {

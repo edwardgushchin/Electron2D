@@ -2,7 +2,7 @@
 
 This is the Electron2D 0.1.0-preview reference platformer project.
 
-- Project name: `Electron2D.ReferencePlatformer`
+- Project name: `ReferencePlatformer`
 - .NET SDK: `.NET 10.0.101`
 - Renderer profile: `Automatic`
 
@@ -10,15 +10,14 @@ Use these commands from the project root:
 
 - `e2d validate --project .`
 - `dotnet build`
-- `dotnet run -- --verify`
+- `e2d run --project .`
 - `e2d export --project .`
 
 Project structure:
 
-- `project.e2d.json` stores project settings and Input Map.
-- `export_presets.e2export.json` stores platform export presets.
+- `ReferencePlatformer.e2d` stores project settings, Input Map, export presets and reproducibility metadata.
 - `scenes/` stores scene files.
-- `Scripts/` stores C# gameplay code.
+- `scripts/` stores C# gameplay code.
 - `assets/` stores imported game assets copied from the checked reference asset pack.
 - `resources/reference-platformer.manifest.json` maps imported files to gameplay roles.
 - `.electron2d/tasks/` stores ProjectTaskManager task documents.

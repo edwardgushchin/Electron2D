@@ -4,23 +4,425 @@
   "root": {
     "type": "Node2D",
     "name": "ReferencePlatformer",
-    "script": "Scripts/PlatformerGame.cs",
+    "script": "scripts/PlatformerGame.cs",
+    "scriptProperties": {
+      "Ground": "World/PlatformTileMap",
+      "Player": "World/Player",
+      "Camera": "World/Player/PlayerCamera",
+      "PlayerSprite": "World/Player/PlayerSprite",
+      "PlayerTimeline": "World/Player/PlayerTimeline",
+      "JumpAudio": "JumpAudio",
+      "CheckpointAudio": "CheckpointAudio",
+      "PauseMenu": "Hud/PauseMenu",
+      "StatusLabel": "Hud/HudPanel/StatusLabel",
+      "ResumeButton": "Hud/PauseMenu/ResumeButton"
+    },
     "children": [
       {
-        "type": "TileMapLayer",
-        "name": "PlatformTileMap"
+        "type": "Panel",
+        "name": "BackgroundFill",
+        "position": [0, 0],
+        "size": [1280, 720],
+        "zIndex": -100,
+        "themeColors": {
+          "panel": [0.03, 0.04, 0.06, 1.0]
+        }
       },
       {
-        "type": "CharacterBody2D",
-        "name": "Player"
+        "type": "Panel",
+        "name": "SkyBand",
+        "position": [0, 0],
+        "size": [1280, 340],
+        "zIndex": -99,
+        "themeColors": {
+          "panel": [0.05, 0.10, 0.16, 1.0]
+        }
       },
       {
-        "type": "Camera2D",
-        "name": "PlayerCamera"
+        "type": "Panel",
+        "name": "GroundBand",
+        "position": [0, 610],
+        "size": [1280, 110],
+        "zIndex": -98,
+        "themeColors": {
+          "panel": [0.12, 0.16, 0.12, 1.0]
+        }
       },
       {
-        "type": "Control",
-        "name": "PauseMenu"
+        "type": "TextureRect",
+        "name": "BackgroundTexture",
+        "position": [900, 120],
+        "size": [180, 120],
+        "zIndex": -80,
+        "texture": "res://assets/platformer/graphics/tilemap-backgrounds.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile00",
+        "position": [0, 600],
+        "size": [128, 72],
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile01",
+        "position": [128, 600],
+        "size": [128, 72],
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile02",
+        "position": [256, 600],
+        "size": [128, 72],
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile03",
+        "position": [384, 600],
+        "size": [128, 72],
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile04",
+        "position": [512, 600],
+        "size": [128, 72],
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile05",
+        "position": [640, 600],
+        "size": [128, 72],
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile06",
+        "position": [768, 600],
+        "size": [128, 72],
+        "visible": false,
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile07",
+        "position": [896, 600],
+        "size": [128, 72],
+        "visible": false,
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile08",
+        "position": [1024, 600],
+        "size": [128, 72],
+        "visible": false,
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "TerrainTile09",
+        "position": [1152, 600],
+        "size": [128, 72],
+        "visible": false,
+        "zIndex": -50,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "FloatingPlatformA",
+        "position": [330, 455],
+        "size": [128, 72],
+        "zIndex": -45,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "TextureRect",
+        "name": "FloatingPlatformB",
+        "position": [600, 395],
+        "size": [128, 72],
+        "zIndex": -45,
+        "texture": "res://assets/platformer/graphics/terrain-solid.png"
+      },
+      {
+        "type": "Sprite2D",
+        "name": "CheckpointStar",
+        "position": [900, 340],
+        "zIndex": -20,
+        "texture": "res://assets/shared/ui/star.png"
+      },
+      {
+        "type": "Panel",
+        "name": "GoalPost",
+        "position": [1010, 438],
+        "size": [18, 132],
+        "zIndex": -30,
+        "themeColors": {
+          "panel": [0.28, 0.48, 0.70, 1.0]
+        }
+      },
+      {
+        "type": "Panel",
+        "name": "GoalBanner",
+        "position": [1028, 438],
+        "size": [84, 36],
+        "zIndex": -29,
+        "themeColors": {
+          "panel": [0.35, 0.76, 0.96, 1.0]
+        }
+      },
+      {
+        "type": "Node2D",
+        "name": "World",
+        "position": [120, 392],
+        "children": [
+          {
+            "type": "TileMapLayer",
+            "name": "PlatformTileMap",
+            "visible": false,
+            "tileSet": {
+              "tileSize": [120, 10],
+              "sources": [
+                {
+                  "id": 1,
+                  "texture": "res://assets/platformer/graphics/terrain-solid.png",
+                  "tiles": [
+                    {
+                      "atlas": [0, 0],
+                      "collision": [
+                        {
+                          "points": [[0, 0], [120, 0], [120, 10], [0, 10]],
+                          "oneWay": true,
+                          "oneWayMargin": 1.0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "texture": "res://assets/platformer/graphics/terrain-solid.png",
+                  "tiles": [
+                    {
+                      "atlas": [0, 0],
+                      "collision": [
+                        {
+                          "points": [[0, 0], [120, 0], [120, 10], [0, 10]],
+                          "oneWay": false,
+                          "oneWayMargin": 1.0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "cells": [
+              {
+                "coords": [0, 1],
+                "sourceId": 2,
+                "atlas": [0, 0]
+              },
+              {
+                "coords": [0, 5],
+                "sourceId": 1,
+                "atlas": [0, 0]
+              }
+            ]
+          },
+          {
+            "type": "CharacterBody2D",
+            "name": "Player",
+            "floorSnapLength": 4.0,
+            "children": [
+              {
+                "type": "CollisionShape2D",
+                "name": "PlayerCollider",
+                "shape": {
+                  "type": "RectangleShape2D",
+                  "size": [10, 10]
+                }
+              },
+              {
+                "type": "AnimatedSprite2D",
+                "name": "PlayerSprite",
+                "animation": "idle",
+                "autoplay": "idle",
+                "spriteFrames": {
+                  "animations": [
+                    {
+                      "name": "default",
+                      "speed": 4.0,
+                      "frames": ["res://assets/platformer/graphics/player-idle.png"]
+                    },
+                    {
+                      "name": "idle",
+                      "speed": 4.0,
+                      "frames": ["res://assets/platformer/graphics/player-idle.png"]
+                    },
+                    {
+                      "name": "walk",
+                      "speed": 8.0,
+                      "frames": [
+                        "res://assets/platformer/graphics/player-idle.png",
+                        "res://assets/platformer/graphics/player-idle.png"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "AnimationPlayer",
+                "name": "PlayerTimeline"
+              },
+              {
+                "type": "Camera2D",
+                "name": "PlayerCamera",
+                "position": [0, -24]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "AudioStreamPlayer",
+        "name": "JumpAudio",
+        "stream": {
+          "source": "res://assets/platformer/audio/jump-cloth1.ogg",
+          "length": 0.25,
+          "sampleRate": 44100,
+          "channelCount": 2,
+          "bitsPerSample": 16
+        }
+      },
+      {
+        "type": "AudioStreamPlayer",
+        "name": "CheckpointAudio",
+        "stream": {
+          "source": "res://assets/platformer/audio/checkpoint-door-open.ogg",
+          "length": 0.5,
+          "sampleRate": 44100,
+          "channelCount": 2,
+          "bitsPerSample": 16
+        }
+      },
+      {
+        "type": "CanvasLayer",
+        "name": "Hud",
+        "children": [
+          {
+            "type": "Panel",
+            "name": "HudPanel",
+            "position": [20, 18],
+            "size": [520, 86],
+            "themeColors": {
+              "panel": [0.05, 0.06, 0.08, 0.92]
+            },
+            "children": [
+              {
+                "type": "Label",
+                "name": "TitleLabel",
+                "position": [16, 14],
+                "size": [480, 26],
+                "text": "ELECTRON2D REFERENCE PLATFORMER",
+                "font": "res://assets/shared/fonts/kenney-future.ttf",
+                "fontSize": 18,
+                "horizontalAlignment": "Left",
+                "verticalAlignment": "Center"
+              },
+              {
+                "type": "Label",
+                "name": "StatusLabel",
+                "position": [16, 50],
+                "size": [488, 22],
+                "font": "res://assets/shared/fonts/kenney-future.ttf",
+                "fontSize": 13,
+                "horizontalAlignment": "Left",
+                "verticalAlignment": "Center"
+              }
+            ]
+          },
+          {
+            "type": "Label",
+            "name": "HelpLabel",
+            "position": [118, 400],
+            "size": [360, 24],
+            "text": "A/D MOVE  SPACE JUMP  P PAUSE",
+            "font": "res://assets/shared/fonts/kenney-future.ttf",
+            "fontSize": 13,
+            "horizontalAlignment": "Left",
+            "verticalAlignment": "Center"
+          },
+          {
+            "type": "Panel",
+            "name": "PauseMenu",
+            "position": [425, 250],
+            "size": [430, 190],
+            "visible": false,
+            "processMode": "WhenPaused",
+            "themeColors": {
+              "panel": [0.02, 0.02, 0.03, 0.92]
+            },
+            "children": [
+              {
+                "type": "Label",
+                "name": "PauseTitle",
+                "position": [0, 30],
+                "size": [430, 42],
+                "text": "PAUSE MENU",
+                "font": "res://assets/shared/fonts/kenney-future.ttf",
+                "fontSize": 24,
+                "horizontalAlignment": "Center",
+                "verticalAlignment": "Center"
+              },
+              {
+                "type": "TextureRect",
+                "name": "ResumeButtonArt",
+                "position": [98, 88],
+                "size": [234, 58],
+                "texture": "res://assets/shared/ui/button-rectangle-depth-flat.png"
+              },
+              {
+                "type": "Button",
+                "name": "ResumeButton",
+                "position": [105, 92],
+                "size": [220, 48],
+                "text": "RESUME",
+                "font": "res://assets/shared/fonts/kenney-future.ttf",
+                "fontSize": 14,
+                "themeColors": {
+                  "normal_color": [0.06, 0.55, 0.76, 0.72],
+                  "focus_color": [0.08, 0.64, 0.88, 0.88],
+                  "pressed_color": [0.03, 0.42, 0.62, 0.9],
+                  "font_color": [1.0, 1.0, 1.0, 1.0]
+                }
+              },
+              {
+                "type": "Label",
+                "name": "ResumeHint",
+                "position": [0, 148],
+                "size": [430, 24],
+                "text": "PRESS P TO RESUME",
+                "font": "res://assets/shared/fonts/kenney-future.ttf",
+                "fontSize": 12,
+                "horizontalAlignment": "Center",
+                "verticalAlignment": "Center"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

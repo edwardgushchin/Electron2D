@@ -35,13 +35,11 @@ public sealed class PublicApiDocumentationAuditInfrastructureTests
         var xmlVerifierPath = Path.Combine(root, "tools", "Verify-PublicApiXmlDocs.ps1");
         var auditVerifierPath = Path.Combine(root, "tools", "Verify-PublicApiDocumentationAudit.ps1");
         var workflowPath = Path.Combine(root, ".github", "workflows", "ci.yml");
-        var specPath = Path.Combine(root, "docs", "specifications", "documentation", "public-api-xml-documentation.md");
-        var docPath = Path.Combine(root, "docs", "documentation", "documentation", "public-api-xml-documentation.md");
+        var docPath = Path.Combine(root, "docs", "documentation", "public-api-xml-documentation.md");
 
         Assert.True(File.Exists(xmlVerifierPath), $"Missing XML documentation verifier: {xmlVerifierPath}");
         Assert.True(File.Exists(auditVerifierPath), $"Missing public API documentation audit verifier: {auditVerifierPath}");
-        Assert.True(File.Exists(specPath), $"Missing public API documentation specification: {specPath}");
-        Assert.True(File.Exists(docPath), $"Missing public API documentation implementation guide: {docPath}");
+        Assert.True(File.Exists(docPath), $"Missing public API documentation domain document: {docPath}");
 
         var xmlVerifier = File.ReadAllText(xmlVerifierPath);
         foreach (var requiredIssueCode in new[]
@@ -72,8 +70,7 @@ public sealed class PublicApiDocumentationAuditInfrastructureTests
             "-FailOnIssues",
             "Update-ApiWiki.ps1",
             ".github/wiki",
-            "docs/specifications/documentation",
-            "docs/documentation/documentation",
+            "docs/documentation",
             "SDL_shadercross",
             "Godot-like"
         })

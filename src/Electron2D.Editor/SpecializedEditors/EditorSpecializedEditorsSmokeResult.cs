@@ -26,6 +26,7 @@ namespace Electron2D.Editor.SpecializedEditors;
 
 internal sealed record EditorSpecializedEditorsSmokeResult(
     string ProjectPath,
+    string ProjectSettingsPath,
     string SpriteFramesPath,
     string TileSetPath,
     string AnimationPath,

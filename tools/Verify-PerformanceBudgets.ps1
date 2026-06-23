@@ -25,8 +25,8 @@
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$specPath = Join-Path $repoRoot 'docs/specifications/release-management/performance-budgets.md'
-$docPath = Join-Path $repoRoot 'docs/documentation/release-management/performance-budgets.md'
+$specPath = Join-Path $repoRoot 'docs/release-management/performance-budgets.md'
+$docPath = Join-Path $repoRoot 'docs/release-management/performance-budgets.md'
 
 foreach ($path in @($specPath, $docPath)) {
     if (-not (Test-Path -LiteralPath $path)) {

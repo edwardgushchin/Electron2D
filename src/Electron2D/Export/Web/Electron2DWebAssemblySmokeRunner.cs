@@ -49,6 +49,7 @@ internal static class Electron2DWebAssemblySmokeRunner
         var index = TryReadText(plan.IndexHtmlPath, diagnostics);
         var loader = TryReadText(plan.LoaderScriptPath, diagnostics);
         var mainScene = manifest?["mainScene"]?.GetValue<string>() ?? string.Empty;
+        var projectFile = manifest?["projectFile"]?.GetValue<string>() ?? "project.e2d.json";
         var criteria = new Dictionary<string, bool>(StringComparer.Ordinal)
         {
             ["startup"] = File.Exists(plan.IndexHtmlPath) && File.Exists(plan.LoaderScriptPath),
@@ -60,7 +61,7 @@ internal static class Electron2DWebAssemblySmokeRunner
             ["audioPolicyState"] = string.Equals(manifest?["audioPolicy"]?.GetValue<string>(), "userGestureRequired", StringComparison.Ordinal) &&
                 loader.Contains("userGestureRequired", StringComparison.Ordinal),
             ["resourceLoading"] = File.Exists(plan.WebManifestPath) &&
-                File.Exists(Path.Combine(plan.WebRootDirectory, "project.e2d.json")) &&
+                File.Exists(Path.Combine(plan.WebRootDirectory, projectFile)) &&
                 !string.IsNullOrWhiteSpace(mainScene),
             ["saveDataPolicy"] = string.Equals(manifest?["filesystemPolicy"]?.GetValue<string>(), "browserSandbox", StringComparison.Ordinal) &&
                 loader.Contains("localStorage", StringComparison.Ordinal)

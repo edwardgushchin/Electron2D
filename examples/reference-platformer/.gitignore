@@ -1,5 +1,6 @@
 bin/
 obj/
+.electron2d/build/
 .electron2d/import-cache/
 .electron2d/workspaces/
 .electron2d/context/

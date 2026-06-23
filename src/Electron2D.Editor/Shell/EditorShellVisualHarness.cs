@@ -89,10 +89,17 @@ internal static class EditorShellVisualHarness
         var center = regions.Single(region => region.Area == "CenterWorkspace");
         canvas.FillRectangle(center.X, center.Y, center.Width, center.Height, new Rgba(31, 35, 39));
         canvas.DrawRectangle(center.X, center.Y, center.Width, center.Height, new Rgba(83, 94, 106));
-        canvas.DrawText("ACTIVE WORKSPACE", center.X + 24, center.Y + 26, new Rgba(156, 169, 181), scale: 2);
-        canvas.DrawText(layout.SelectedWorkspace.ToUpperInvariant(), center.X + 24, center.Y + 58, new Rgba(248, 250, 252), scale: 4);
-        canvas.DrawText("SELECTION " + layout.GetWorkspaceState(layout.SelectedWorkspace).Selection.ToUpperInvariant(), center.X + 24, center.Y + 126, new Rgba(184, 204, 190), scale: 2);
-        canvas.DrawText("OPEN DOCUMENTS PRESERVED", center.X + 24, center.Y + 160, new Rgba(184, 204, 190), scale: 2);
+        var contentY = center.Y + 26;
+        if (layout.ProjectLoaded)
+        {
+            canvas.DrawText("PROJECT " + layout.ProjectName.ToUpperInvariant(), center.X + 24, contentY, new Rgba(156, 169, 181), scale: 2);
+            contentY += 32;
+        }
+
+        canvas.DrawText("ACTIVE WORKSPACE", center.X + 24, contentY, new Rgba(156, 169, 181), scale: 2);
+        canvas.DrawText(layout.SelectedWorkspace.ToUpperInvariant(), center.X + 24, contentY + 32, new Rgba(248, 250, 252), scale: 4);
+        canvas.DrawText("SELECTION " + layout.GetWorkspaceState(layout.SelectedWorkspace).Selection.ToUpperInvariant(), center.X + 24, contentY + 100, new Rgba(184, 204, 190), scale: 2);
+        canvas.DrawText("OPEN DOCUMENTS PRESERVED", center.X + 24, contentY + 134, new Rgba(184, 204, 190), scale: 2);
 
         return canvas;
     }

@@ -1,0 +1,265 @@
+{
+  "format": "Electron2D.ProjectSettings",
+  "formatVersion": 1,
+  "name": "ReferencePlatformer",
+  "version": "0.1.0",
+  "engineVersion": "0.1.0-preview",
+  "mainScene": "scenes/main.scene.json",
+  "rendererProfile": "Automatic",
+  "physicsTicksPerSecond": 60,
+  "input": {
+    "actions": [
+      {
+        "name": "jump",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "A"
+          },
+          {
+            "type": "key",
+            "keycode": "Space",
+            "physical_keycode": "Space"
+          }
+        ]
+      },
+      {
+        "name": "move_left",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "DpadLeft"
+          },
+          {
+            "type": "joy_motion",
+            "axis": "LeftX",
+            "axis_value": -1
+          },
+          {
+            "type": "key",
+            "keycode": "A",
+            "physical_keycode": "A"
+          },
+          {
+            "type": "key",
+            "keycode": "Left",
+            "physical_keycode": "Left"
+          }
+        ]
+      },
+      {
+        "name": "move_right",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "DpadRight"
+          },
+          {
+            "type": "joy_motion",
+            "axis": "LeftX",
+            "axis_value": 1
+          },
+          {
+            "type": "key",
+            "keycode": "D",
+            "physical_keycode": "D"
+          },
+          {
+            "type": "key",
+            "keycode": "Right",
+            "physical_keycode": "Right"
+          }
+        ]
+      },
+      {
+        "name": "pause",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "Start"
+          },
+          {
+            "type": "key",
+            "keycode": "Escape",
+            "physical_keycode": "Escape"
+          }
+        ]
+      }
+    ]
+  },
+  "display": {
+    "windowWidth": 1280,
+    "windowHeight": 720,
+    "fullscreen": false,
+    "dpiScale": 1,
+    "stretchMode": "Viewport",
+    "stretchAspect": "Keep",
+    "stretchScaleMode": "Fractional",
+    "stretchScale": 1,
+    "orientation": "Landscape",
+    "safeArea": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  },
+  "exportPresets": {
+    "format": "Electron2D.ExportPresets",
+    "formatVersion": 1,
+    "presets": [
+      {
+        "name": "android-arm64-debug",
+        "target": "AndroidArm64",
+        "configuration": "Debug",
+        "runtimeIdentifier": "android-arm64",
+        "selfContained": true,
+        "rendererProfile": "Automatic",
+        "outputDirectory": "exports/android",
+        "includeDebugSymbols": true,
+        "signing": {
+          "required": false,
+          "identity": "",
+          "credentialReference": ""
+        }
+      },
+      {
+        "name": "browser-wasm-release",
+        "target": "WebAssemblyBrowser",
+        "configuration": "Release",
+        "runtimeIdentifier": "browser-wasm",
+        "selfContained": true,
+        "rendererProfile": "Automatic",
+        "outputDirectory": "exports/web",
+        "includeDebugSymbols": false,
+        "signing": {
+          "required": false,
+          "identity": "",
+          "credentialReference": ""
+        }
+      },
+      {
+        "name": "ios-arm64-release",
+        "target": "IosArm64",
+        "configuration": "Release",
+        "runtimeIdentifier": "ios-arm64",
+        "selfContained": true,
+        "rendererProfile": "Automatic",
+        "outputDirectory": "exports/ios",
+        "includeDebugSymbols": false,
+        "signing": {
+          "required": true,
+          "identity": "ios-developer",
+          "credentialReference": "env:E2D_IOS_SIGNING_IDENTITY"
+        }
+      },
+      {
+        "name": "linux-x64-release",
+        "target": "LinuxX64",
+        "configuration": "Release",
+        "runtimeIdentifier": "linux-x64",
+        "selfContained": true,
+        "rendererProfile": "Automatic",
+        "outputDirectory": "exports/linux",
+        "includeDebugSymbols": false,
+        "signing": {
+          "required": false,
+          "identity": "",
+          "credentialReference": ""
+        }
+      },
+      {
+        "name": "macos-arm64-release",
+        "target": "MacOSArm64",
+        "configuration": "Release",
+        "runtimeIdentifier": "osx-arm64",
+        "selfContained": true,
+        "rendererProfile": "Automatic",
+        "outputDirectory": "exports/macos",
+        "includeDebugSymbols": false,
+        "signing": {
+          "required": true,
+          "identity": "developer-id",
+          "credentialReference": "env:E2D_MACOS_SIGNING_IDENTITY"
+        }
+      },
+      {
+        "name": "windows-x64-debug",
+        "target": "WindowsX64",
+        "configuration": "Debug",
+        "runtimeIdentifier": "win-x64",
+        "selfContained": true,
+        "rendererProfile": "Automatic",
+        "outputDirectory": "exports/windows",
+        "includeDebugSymbols": true,
+        "signing": {
+          "required": false,
+          "identity": "",
+          "credentialReference": ""
+        }
+      }
+    ]
+  },
+  "reproducibilityLock": {
+    "$schema": "https://electron2d.dev/schemas/project-system/electron2d-lock.schema.json",
+    "format": "Electron2D.ReproducibilityLock",
+    "schemaVersion": 1,
+    "engine": {
+      "version": "0.1.0-preview"
+    },
+    "dotnet": {
+      "sdkVersion": "10.0.101",
+      "rollForward": "latestFeature",
+      "targetFramework": "net10.0"
+    },
+    "nuget": {
+      "packages": [
+        {
+          "id": "Electron2D",
+          "version": "0.1.0-preview"
+        }
+      ]
+    },
+    "nativeRuntime": {
+      "packages": [
+        {
+          "id": "SDL3-CS",
+          "version": "3.4.10.3"
+        },
+        {
+          "id": "SDL3-CS.Native",
+          "version": "3.5.0-preview.20260205-174353"
+        },
+        {
+          "id": "SDL3-CS.Native.Shadercross",
+          "version": "3.0.0"
+        },
+        {
+          "id": "SDL3-CS.Native.TTF",
+          "version": "3.3.0"
+        }
+      ]
+    },
+    "assetImporters": {
+      "texture": "0.1.0-preview",
+      "font": "0.1.0-preview",
+      "audio": "0.1.0-preview",
+      "shader": "0.1.0-preview"
+    },
+    "project": {
+      "rendererProfile": "Automatic",
+      "physicsBackendVersion": "physics-2d-preview-0.1.0",
+      "serializationSchemaVersion": "1"
+    },
+    "exportTemplates": {
+      "version": "0.1.0-preview"
+    },
+    "signing": {
+      "mode": "referencesOnly"
+    }
+  }
+}

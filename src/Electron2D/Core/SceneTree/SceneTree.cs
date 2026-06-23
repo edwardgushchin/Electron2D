@@ -202,6 +202,36 @@ public class SceneTree : Object
     public Node? CurrentScene { get; private set; }
 
     /// <summary>
+    /// Gets or sets whether ordinary scene processing is paused.
+    /// </summary>
+    ///
+    /// <value>
+    /// <c>true</c> when pausable nodes are skipped and paused-mode nodes are
+    /// allowed to process; otherwise, <c>false</c>.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This property affects <see cref="Node._Process(double)" />,
+    /// <see cref="Node._PhysicsProcess(double)" /> and
+    /// <see cref="Node._Input(InputEvent)" /> according to
+    /// <see cref="Node.ProcessMode" />. Drawing is still performed so paused
+    /// UI can remain visible.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Mutate it on the main scene thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="Node.ProcessMode" />
+    public bool Paused { get; set; }
+
+    /// <summary>
     /// Gets the first node in group value.
     /// </summary>
     ///

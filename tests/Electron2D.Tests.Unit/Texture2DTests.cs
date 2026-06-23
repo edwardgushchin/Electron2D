@@ -28,6 +28,9 @@ namespace Electron2D.Tests.Unit;
 
 public sealed class Texture2DTests
 {
+    private const string RgbaPng2x2Base64 = "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFUlEQVR4nGP4z8DwHwhB4D8QMDQAAD1VB3peF7pjAAAAAElFTkSuQmCC";
+    private const string IndexedPng4Bit24x24Base64 = "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYBAMAAAASWSDLAAAABGdBTUEAALGPC/xhBQAAABhQTFRFAAAANJleQ0pfhva7////WtKMNGVHvt7xFlk/CQAAAAF0Uk5TAEDm2GYAAACESURBVBjTbdAxDsIwDAXQTGXuwgF6BSROgOQTODMIxV0ZrPr62P7xUMSf8mQr+klrP7HMPOvDQ6mLUgyUPgHCmgasEHtqh3h2o4RkgENuHtmBd+BeYE9hBPpfbLwVDMirjbCWDbybDxjdTq1P72kLWj8BXDAh6/W1yvwQ4T64sIw+cusLm7JKEh9ouLwAAAAASUVORK5CYII=";
+
     [Fact]
     public void Texture2DReportsElectron2DSizeAlphaMipmapsAndOpacity()
     {
@@ -112,6 +115,46 @@ public sealed class Texture2DTests
         Assert.False(texture.HasMipmaps());
         Assert.Equal(0, texture.GetMipmapCount());
         Assert.False(texture.IsPixelOpaque(0, 0));
+    }
+
+    [Fact]
+    public void ImageTextureLoadFromFileReadsPngSizeAlphaAndOpacity()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "Electron2D-ImageTextureTests", Guid.NewGuid().ToString("N"), "texture.png");
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllBytes(path, Convert.FromBase64String(RgbaPng2x2Base64));
+
+        var texture = Electron2D.ImageTexture.LoadFromFile(path);
+
+        Assert.Equal(2, texture.GetWidth());
+        Assert.Equal(2, texture.GetHeight());
+        Assert.Equal(new Electron2D.Vector2(2f, 2f), texture.GetSize());
+        Assert.True(texture.HasAlpha());
+        Assert.False(texture.HasMipmaps());
+        Assert.Equal(0, texture.GetMipmapCount());
+        Assert.True(texture.IsPixelOpaque(0, 0));
+        Assert.False(texture.IsPixelOpaque(1, 0));
+        Assert.True(texture.IsPixelOpaque(0, 1));
+        Assert.False(texture.IsPixelOpaque(1, 1));
+        Assert.False(texture.IsPixelOpaque(-1, 0));
+        Assert.False(texture.IsPixelOpaque(2, 0));
+    }
+
+    [Fact]
+    public void ImageTextureLoadFromFileReadsFourBitIndexedPng()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "Electron2D-ImageTextureTests", Guid.NewGuid().ToString("N"), "indexed.png");
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllBytes(path, Convert.FromBase64String(IndexedPng4Bit24x24Base64));
+
+        var texture = Electron2D.ImageTexture.LoadFromFile(path);
+
+        Assert.Equal(24, texture.GetWidth());
+        Assert.Equal(24, texture.GetHeight());
+        Assert.Equal(new Electron2D.Vector2(24f, 24f), texture.GetSize());
+        Assert.True(texture.HasAlpha());
+        Assert.False(texture.IsPixelOpaque(0, 0));
+        Assert.True(texture.IsPixelOpaque(8, 8));
     }
 
     private sealed class TestTexture2D : Electron2D.Texture2D

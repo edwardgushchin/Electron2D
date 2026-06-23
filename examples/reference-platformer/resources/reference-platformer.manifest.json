@@ -1,5 +1,5 @@
 {
-  "format": "Electron2D.ReferencePlatformer.Resources",
+  "format": "ReferencePlatformer.Resources",
   "formatVersion": 1,
   "source": "data/assets/reference-games",
   "networkRequiredDuringBuild": false,

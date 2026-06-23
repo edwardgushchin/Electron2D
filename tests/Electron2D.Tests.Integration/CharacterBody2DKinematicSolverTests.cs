@@ -142,6 +142,26 @@ public sealed class CharacterBody2DKinematicSolverTests
     }
 
     [Fact]
+    public void MoveAndSlideKeepsFloorContactAcrossRepeatedFrames()
+    {
+        var tree = new Electron2D.SceneTree();
+        var platform = CreateStaticBody("Platform", new Electron2D.Vector2(0f, 50f), new Electron2D.Vector2(120f, 10f));
+        var character = CreateCharacter("Character", new Electron2D.Vector2(0f, 39.92f), new Electron2D.Vector2(10f, 10f));
+        character.FloorSnapLength = 4f;
+        tree.Root.AddChild(platform);
+        tree.Root.AddChild(character);
+
+        for (var frame = 0; frame < 3; frame++)
+        {
+            character.Velocity = new Electron2D.Vector2(60f, 40f);
+
+            Assert.True(character.MoveAndSlide());
+            Assert.True(character.IsOnFloor());
+            AssertVectorEqual(new Electron2D.Vector2(frame + 1f, 39.92f), character.Position);
+        }
+    }
+
+    [Fact]
     public void MoveAndSlideClassifiesSegmentSlopeAsFloor()
     {
         var tree = new Electron2D.SceneTree();
