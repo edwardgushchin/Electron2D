@@ -24,12 +24,19 @@
 */
 namespace Electron2D;
 
-internal enum Electron2DExportTarget
+internal sealed class Electron2DWebAssemblyPackageBuildResult
 {
-    WindowsX64 = 0,
-    LinuxX64 = 1,
-    MacOSArm64 = 2,
-    AndroidArm64 = 3,
-    IosArm64 = 4,
-    WebAssemblyBrowser = 5
+    public Electron2DWebAssemblyPackageBuildResult(
+        IEnumerable<string> files,
+        IEnumerable<Electron2DExportDiagnostic> diagnostics)
+    {
+        Files = files.OrderBy(path => path, StringComparer.Ordinal).ToArray();
+        Diagnostics = diagnostics.ToArray();
+    }
+
+    public bool Succeeded => Diagnostics.All(diagnostic => diagnostic.Severity != Electron2DExportDiagnosticSeverity.Error);
+
+    public string[] Files { get; }
+
+    public Electron2DExportDiagnostic[] Diagnostics { get; }
 }

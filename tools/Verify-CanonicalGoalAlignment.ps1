@@ -53,6 +53,7 @@ function Assert-Contains {
 
 Assert-Contains -Content $releaseSpec -Fragment 'Windows, Linux, macOS, Android' -Description 'Release canonical contract'
 Assert-Contains -Content $releaseSpec -Fragment 'iOS' -Description 'Release canonical contract'
+Assert-Contains -Content $releaseSpec -Fragment 'WebAssembly browser' -Description 'Release canonical contract'
 Assert-Contains -Content $releaseSpec -Fragment 'node/resource' -Description 'Release canonical contract'
 Assert-Contains -Content $releaseSpec -Fragment 'SpriteRenderer' -Description 'Release legacy exclusion record'
 Assert-Contains -Content $agentNativeWorkflowSpec -Fragment '`Node2D`' -Description 'Agent-native cross-platform 2D game engine canonical architecture'
@@ -60,10 +61,12 @@ Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'transform' -Descrip
 Assert-Contains -Content $agentNativeWorkflowSpec -Fragment '`scene_attach_script`' -Description 'Agent-native cross-platform 2D game engine canonical architecture'
 Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'Windows, Linux, macOS, Android' -Description 'Agent-native cross-platform 2D game engine platform contract'
 Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'iOS' -Description 'Agent-native cross-platform 2D game engine platform contract'
+Assert-Contains -Content $agentNativeWorkflowSpec -Fragment 'WebAssembly browser' -Description 'Agent-native cross-platform 2D game engine platform contract'
 
 Assert-Contains -Content $engineStackSpec -Fragment 'Synchronized with `docs/specifications/releases/0.1.0-preview.md`' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment 'Windows, Linux, macOS, Android' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment 'iOS' -Description 'Engine platform stack canonical status'
+Assert-Contains -Content $engineStackSpec -Fragment 'WebAssembly browser' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment 'specialized node/resource model' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment '`Node2D` transform' -Description 'Engine platform stack canonical status'
 Assert-Contains -Content $engineStackSpec -Fragment '`scene_attach_script`' -Description 'Engine platform stack canonical status'

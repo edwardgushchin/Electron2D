@@ -4,7 +4,7 @@
 Задача: `T-0114`.
 Статус задачи: completed.
 Архив: `completed-tasks/2026/06 Июнь.md#T-0114`.
-Обновлено: 2026-06-22.
+Обновлено: 2026-06-23.
 
 ## Позиционирование
 
@@ -117,14 +117,14 @@ OpenAI/Anthropic/Gemini integration, зашитая напрямую в реда
 
 Проверяемый контракт этой core-части вынесен в [Canonical document model, revision model и structural diff](../project-system/canonical-document-model.md). Он фиксирует classification документов, стабильный `DocumentId`, object UID, revision transitions и минимальный structural diff до formatter/migrations/schemas.
 
-Старые документы целей, если они описывают компонентную модель `SpriteRenderer`/`Rigidbody`/`AudioSource`, обязательный `Transform` у каждого `Node`, отсутствие script-binding или только четыре платформы без iOS, считаются историческими, пока не синхронизированы с этой спецификацией и `docs/specifications/releases/0.1.0-preview.md`.
+Старые документы целей, если они описывают компонентную модель `SpriteRenderer`/`Rigidbody`/`AudioSource`, обязательный `Transform` у каждого `Node`, отсутствие script-binding, только четыре платформы без iOS или native-only contract без WebAssembly browser, считаются историческими, пока не синхронизированы с этой спецификацией и `docs/specifications/releases/0.1.0-preview.md`.
 
 Canonical architecture для `0.1.0 Preview`:
 
 - специализированная node/resource модель Electron2D, совместимая с выбранным API-подмножеством Godot;
 - `Node2D` и его наследники имеют 2D transform; базовый `Node` не получает обязательный transform;
 - `scene_attach_script` не добавляет отдельный Script-компонент. Операция связывает сериализованный узел с пользовательским C#-типом, наследующим подходящий Electron2D node type, и после сборки создаётся единый экземпляр этого типа;
-- поддерживаемые платформы релизного контракта включают Windows, Linux, macOS, Android и iOS, но mobile export может оставаться заблокированным до закрытия соответствующих platform tasks и проверок.
+- поддерживаемые платформы релизного контракта включают Windows, Linux, macOS, Android, iOS и WebAssembly browser, но mobile/web export может оставаться заблокированным до закрытия соответствующих platform tasks и проверок.
 
 ## Единое ядро инструментов
 
@@ -1413,7 +1413,7 @@ MCP-сервер не должен автоматически подписыва
 - `global.json`;
 - `electron2d.lock.json`.
 
-`e2d doctor --format json` проверяет установленный .NET SDK, версию Electron2D, native runtime, Android SDK/NDK, Xcode, export templates, Vulkan/Metal capabilities и доступность signing configuration без раскрытия секретов.
+`e2d doctor --format json` проверяет установленный .NET SDK, версию Electron2D, native runtime, Android SDK/NDK, Xcode, .NET WebAssembly build tools, export templates, graphics capabilities и доступность signing configuration без раскрытия секретов.
 
 ## Документация, пригодная для AI
 
@@ -1489,7 +1489,7 @@ High для 0.1:
 - visual regression UX в Editor;
 - runtime metrics panel.
 
-Можно отложить: Hot Reload, Edit and Continue, remote debugger для Android/iOS, сложные solution-wide refactorings, visual shader editor, сложный `AnimationTree`, skeletal animation, расширенный particle editor, полноценный profiler UI, plugin marketplace, расширенная dock-система сверх Godot 4 baseline, встроенный AI-chat и автоматическая публикация в магазины.
+Можно отложить: Hot Reload, Edit and Continue, remote debugger для Android/iOS/WebAssembly, сложные solution-wide refactorings, visual shader editor, сложный `AnimationTree`, skeletal animation, расширенный particle editor, полноценный profiler UI, plugin marketplace, расширенная dock-система сверх Godot 4 baseline, встроенный AI-chat, автоматическая публикация в магазины и remote browser hosting deploy.
 
 ## Критерии приёмки Agent-native cross-platform 2D game engine
 

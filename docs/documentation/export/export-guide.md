@@ -3,7 +3,7 @@
 <!-- export-doc:overview -->
 ## Overview
 
-Electron2D `0.1.0 Preview` has a verified desktop export baseline and explicit mobile export gaps. This page is the user-facing entry point for export documentation: it explains which targets are currently verified, which toolchains are required, how signing references are represented, and which commands prove the current repository state.
+Electron2D `0.1.0 Preview` has a verified desktop export baseline, a WebAssembly browser package/smoke baseline, and explicit mobile export gaps. This page is the user-facing entry point for export documentation: it explains which targets are currently verified, which toolchains are required, how signing references are represented, and which commands prove the current repository state.
 
 The export layer is intentionally fail-closed. A missing SDK, unsupported runtime identifier, missing signing identity, or missing project setting must produce diagnostics instead of a partial package.
 
@@ -17,8 +17,9 @@ The export layer is intentionally fail-closed. A missing SDK, unsupported runtim
 | `MacOSArm64` | `osx-arm64` | Verified desktop baseline | `tools\Verify-MacOSExport.ps1` on macOS arm64 |
 | `AndroidArm64` | `android-arm64` | Blocked mobile status | [Android arm64 export](android-arm64-export.md) |
 | `IosArm64` | `ios-arm64` | Blocked mobile status | [iOS arm64 export](ios-arm64-export.md) |
+| `WebAssemblyBrowser` | `browser-wasm` | Package and smoke baseline | [WebAssembly browser export](webassembly-browser-export.md) |
 
-Desktop export means the repository can create, publish, and run the empty project package on the matching host. Mobile status pages describe required SDK/signing inputs and limitations, but mobile export is not a supported release route yet.
+Desktop export means the repository can create, publish, and run the empty project package on the matching host. The WebAssembly browser baseline can plan the static package layout, create host/loader/manifest files, copy project resources, and write a structured smoke artifact. Mobile status pages describe required SDK/signing inputs and limitations, but mobile export is not a supported release route yet.
 
 <!-- export-doc:preset-file -->
 ## Preset file
@@ -49,6 +50,19 @@ The macOS verifier must run on macOS arm64. The Linux verifier runs on Linux dir
 
 Mobile export remains blocked until the corresponding platform tasks provide real-device or simulator smoke checks and CI/reporting evidence.
 
+<!-- export-doc:web-status -->
+## WebAssembly browser status
+
+`WebAssemblyBrowser` with runtime identifier `browser-wasm` has planner, package and smoke commands:
+
+```powershell
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-web --project <project-root> --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --skip-publish true --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json
+```
+
+`plan-web` returns a JSON plan for `wwwroot`, `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `_framework`, `assets`, `project.e2d.json`, the main scene path, browser policies and smoke criteria. `build-web --skip-publish true` creates the static files without invoking external publish; normal `build-web` first validates matching WebAssembly build tools and then runs `dotnet publish`. `run-web` checks the generated package and writes a structured smoke artifact with launch instructions. These commands do not queue workspace jobs, deploy to hosting, or publish remote artifacts.
+
 <!-- export-doc:signing-credentials -->
 ## Signing and credentials
 
@@ -66,7 +80,8 @@ Verifier scripts do not read real secrets and do not publish artifacts.
 
 - Desktop export is verified against the empty project template, not finished reference games.
 - Windows x64, Linux x64 glibc, and macOS arm64 are the only verified desktop targets.
-- Linux musl, Linux ARM, Windows ARM, macOS x64, Android, and iOS are outside the current verified export baseline.
+- Linux musl, Linux ARM, Windows ARM, macOS x64, Android, and iOS are outside the current verified native export baseline.
+- Automated browser launch, remote hosting deploy, PWA installation and service worker caching are outside the current WebAssembly baseline.
 - Mobile lifecycle, orientation, safe area, touch, virtual keyboard, package signing, store packaging, deployment, and runtime smoke are not complete release paths.
 - GitHub Release publication is intentionally outside these verifier commands and requires a separate user command.
 

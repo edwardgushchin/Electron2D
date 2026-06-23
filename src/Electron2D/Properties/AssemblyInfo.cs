@@ -29,3 +29,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Electron2D.Tests.RuntimeSmoke")]
 [assembly: InternalsVisibleTo("Electron2D.Tests.AotSmoke")]
 [assembly: InternalsVisibleTo("Electron2D.Editor")]
+[assembly: InternalsVisibleTo("e2d")]

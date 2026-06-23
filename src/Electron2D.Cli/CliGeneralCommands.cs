@@ -110,6 +110,7 @@ internal static partial class Electron2DCommandLine
             "run" when IsRuntimeDebugCommand(options) => RunRuntimeDebug(options, output, error),
             "run" when HeadlessRuntimeAutomation.HasRuntimeOptions(options) => RunHeadlessRuntime(options, output, error, context),
             "test" when HasSceneTestSuite(options, NormalizeProjectRoot(options.ProjectRoot)) => RunSceneTests(options, output, error, context),
+            "export" when IsWebExportCommand(options) => RunWebExport(options, output, error, context),
             "import" or "build" or "run" or "test" or "export" => RunJob(group, options, output, error, context),
             _ => WriteResult(
                 CliResult.Blocked(
@@ -466,6 +467,226 @@ internal static partial class Electron2DCommandLine
         return WriteResult(CliResult.FromSceneTests(options, projectRoot, result), output, error);
     }
 
+    private static bool IsWebExportCommand(CliOptions options)
+    {
+        return options.Values.Count > 0 &&
+            (string.Equals(options.Values[0], "plan-web", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(options.Values[0], "build-web", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(options.Values[0], "run-web", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static int RunWebExport(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        return options.Values[0].ToLowerInvariant() switch
+        {
+            "plan-web" => RunWebExportPlan(options, output, error),
+            "build-web" => RunWebExportBuild(options, output, error),
+            "run-web" => RunWebExportSmoke(options, output, error, context),
+            _ => WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "Use `e2d export plan-web`, `e2d export build-web` or `e2d export run-web`.")),
+                output,
+                error)
+        };
+    }
+
+    private static int RunWebExportPlan(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export plan-web` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateWebExportPlanContext("export plan-web", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "export plan-web",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "WebAssembly browser export plan created.",
+                changedFiles: [],
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: BuildWebExportPlanData(planContext.Plan)),
+            output,
+            error);
+    }
+
+    private static int RunWebExportBuild(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export build-web` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateWebExportPlanContext("export build-web", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        var skipPublish = ReadBooleanOption(options, "--skip-publish", defaultValue: false, "export build-web");
+        if (!skipPublish)
+        {
+            var environment = DetectWebExportToolchainEnvironment();
+            var validation = Electron2D.Electron2DExportToolchainValidator.Validate(planContext.Preset, environment);
+            if (!validation.Succeeded)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export build-web",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "WebAssembly browser export build failed before publish.",
+                        MapExportDiagnostics(validation.Diagnostics),
+                        BuildWebExportFailureData("export.web.build", "toolchain_failed")),
+                    output,
+                    error);
+            }
+
+            var publishDiagnostics = RunDotnetPublish(planContext.Plan);
+            if (publishDiagnostics.Count > 0)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export build-web",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "WebAssembly browser export publish failed.",
+                        publishDiagnostics,
+                        BuildWebExportFailureData("export.web.build", "publish_failed")),
+                    output,
+                    error);
+            }
+        }
+
+        var packageResult = Electron2D.Electron2DWebAssemblyPackageBuilder.Build(
+            planContext.Plan,
+            planContext.ProjectRoot,
+            planContext.Settings);
+        if (!packageResult.Succeeded)
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "export build-web",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "WebAssembly browser package build failed.",
+                    MapExportDiagnostics(packageResult.Diagnostics),
+                    BuildWebExportFailureData("export.web.build", "package_failed")),
+                output,
+                error);
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "export build-web",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "WebAssembly browser package created.",
+                changedFiles: ToProjectRelativeWebFiles(planContext.ProjectRoot, planContext.Plan.WebRootDirectory, packageResult.Files),
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: BuildWebExportBuildData(planContext.Plan, packageResult, skipPublish)),
+            output,
+            error);
+    }
+
+    private static int RunWebExportSmoke(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export run-web` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateWebExportPlanContext("export run-web", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        var launchUrl = new Uri(options.GetOption("--url") ?? "http://127.0.0.1:8080/index.html", UriKind.Absolute);
+        var smokeOutput = ResolveProjectChildPath(
+            planContext.ProjectRoot,
+            options.GetOption("--smoke-output") ?? Path.Combine(".electron2d", "export-smoke", "web-smoke.json"));
+        var smokeResult = Electron2D.Electron2DWebAssemblySmokeRunner.Run(
+            planContext.Plan,
+            smokeOutput,
+            launchUrl,
+            context.NowUtc);
+
+        if (!smokeResult.Succeeded)
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "export run-web",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "WebAssembly browser smoke failed.",
+                    MapExportDiagnostics(smokeResult.Diagnostics),
+                    BuildWebExportRunData(planContext.Plan, smokeResult)),
+                output,
+                error);
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "export run-web",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "WebAssembly browser smoke artifact created.",
+                changedFiles: [Path.GetRelativePath(planContext.ProjectRoot, smokeOutput).Replace('\\', '/')],
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: BuildWebExportRunData(planContext.Plan, smokeResult)),
+            output,
+            error);
+    }
+
     private static int RunJob(
         string command,
         CliOptions options,
@@ -789,6 +1010,358 @@ internal static partial class Electron2DCommandLine
         }
 
         return fullPath;
+    }
+
+    private static bool TryCreateWebExportPlanContext(
+        string command,
+        CliOptions options,
+        out WebExportPlanContext planContext,
+        out CliResult? failure)
+    {
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        var settingsPath = Path.Combine(projectRoot, "project.e2d.json");
+        var settingsResult = Electron2D.Electron2DSettingsStore.LoadProject(settingsPath);
+        if (!settingsResult.Succeeded || settingsResult.Settings is null)
+        {
+            planContext = WebExportPlanContext.Empty;
+            failure = CliResult.Failure(
+                command,
+                options,
+                projectRoot,
+                CliRoute.None,
+                "WebAssembly browser export planning failed.",
+                settingsResult.Diagnostics.Select(diagnostic => CreateCliDiagnostic(
+                    "E2D-CLI-0002",
+                    $"{diagnostic.Code}: {diagnostic.Message}")).ToArray(),
+                BuildWebExportFailureData(ModeForWebCommand(command), "settings_load_failed"));
+            return false;
+        }
+
+        var projectFilePath = ResolveProjectFilePath(projectRoot, options.GetOption("--project-file"));
+        var preset = new Electron2D.Electron2DExportPreset
+        {
+            Name = options.GetOption("--preset-name") ?? "web-release",
+            Target = Electron2D.Electron2DExportTarget.WebAssemblyBrowser,
+            Configuration = ReadExportConfiguration(options.GetOption("--configuration") ?? "Release", options, command),
+            RuntimeIdentifier = "browser-wasm",
+            SelfContained = true,
+            RendererProfile = ReadRendererProfile(options.GetOption("--renderer-profile") ?? settingsResult.Settings.RendererProfile.ToString(), options, command),
+            OutputDirectory = ResolveProjectChildPath(projectRoot, options.GetOption("--output") ?? Path.Combine("exports", "web")),
+            IncludeDebugSymbols = ReadBooleanOption(options, "--debug-symbols", defaultValue: false, command)
+        };
+        var planResult = Electron2D.Electron2DWebAssemblyExportPlanner.CreatePlan(preset, projectFilePath, settingsResult.Settings);
+        if (!planResult.Succeeded || planResult.Plan is null)
+        {
+            planContext = WebExportPlanContext.Empty;
+            failure = CliResult.Failure(
+                command,
+                options,
+                projectRoot,
+                CliRoute.None,
+                "WebAssembly browser export planning failed.",
+                MapExportDiagnostics(planResult.Diagnostics),
+                BuildWebExportFailureData(ModeForWebCommand(command), "plan_failed"));
+            return false;
+        }
+
+        planContext = new WebExportPlanContext(projectRoot, settingsResult.Settings, preset, planResult.Plan);
+        failure = null;
+        return true;
+    }
+
+    private static string ResolveProjectChildPath(string projectRoot, string path)
+    {
+        var fullPath = Path.IsPathRooted(path)
+            ? Path.GetFullPath(path)
+            : Path.GetFullPath(Path.Combine(projectRoot, path));
+        if (!Path.IsPathRooted(path))
+        {
+            WorkspaceSnapshotMaterializer.EnsureChildPath(projectRoot, fullPath);
+        }
+
+        return fullPath;
+    }
+
+    private static string ResolveProjectFilePath(string projectRoot, string? projectFilePath)
+    {
+        if (!string.IsNullOrWhiteSpace(projectFilePath))
+        {
+            return Path.IsPathRooted(projectFilePath)
+                ? Path.GetFullPath(projectFilePath)
+                : Path.GetFullPath(Path.Combine(projectRoot, projectFilePath));
+        }
+
+        var projectFiles = Directory.Exists(projectRoot)
+            ? Directory.EnumerateFiles(projectRoot, "*.csproj", SearchOption.TopDirectoryOnly)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray()
+            : [];
+        return projectFiles.Length > 0
+            ? projectFiles[0]
+            : Path.Combine(projectRoot, "Electron2D.Game.csproj");
+    }
+
+    private static Electron2D.Electron2DExportConfiguration ReadExportConfiguration(
+        string value,
+        CliOptions options,
+        string command)
+    {
+        if (Enum.TryParse<Electron2D.Electron2DExportConfiguration>(value, ignoreCase: false, out var result) &&
+            Enum.IsDefined(result))
+        {
+            return result;
+        }
+
+        throw new CliCommandException(
+            command,
+            options,
+            "Web export configuration must be Debug or Release.",
+            CreateCliDiagnostic("E2D-CLI-0002", "Web export configuration must be Debug or Release."));
+    }
+
+    private static Electron2D.Electron2DRendererProfileSetting ReadRendererProfile(
+        string value,
+        CliOptions options,
+        string command)
+    {
+        if (Enum.TryParse<Electron2D.Electron2DRendererProfileSetting>(value, ignoreCase: false, out var result) &&
+            Enum.IsDefined(result))
+        {
+            return result;
+        }
+
+        throw new CliCommandException(
+            command,
+            options,
+            "Web export renderer profile must be Automatic, Compatibility or Standard.",
+            CreateCliDiagnostic("E2D-CLI-0002", "Web export renderer profile must be Automatic, Compatibility or Standard."));
+    }
+
+    private static bool ReadBooleanOption(CliOptions options, string optionName, bool defaultValue, string command)
+    {
+        var value = options.GetOption(optionName);
+        if (value is null)
+        {
+            return defaultValue;
+        }
+
+        if (bool.TryParse(value, out var result))
+        {
+            return result;
+        }
+
+        throw new CliCommandException(
+            command,
+            options,
+            $"{optionName} must be true or false.",
+            CreateCliDiagnostic("E2D-CLI-0002", $"{optionName} must be true or false."));
+    }
+
+    private static Electron2D.Electron2DExportToolchainEnvironment DetectWebExportToolchainEnvironment()
+    {
+        return new Electron2D.Electron2DExportToolchainEnvironment
+        {
+            DotnetSdkAvailable = ReadDotnetSdkVersion() is not null,
+            WebAssemblyBuildToolsAvailable = IsWebAssemblyBuildToolsAvailable()
+        };
+    }
+
+    private static bool IsWebAssemblyBuildToolsAvailable()
+    {
+        var sdkVersion = ReadDotnetSdkVersion();
+        var sdkMajor = sdkVersion?.Split('.', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        var workloadList = ReadCommandOutput("dotnet", "workload list");
+        if (workloadList is null)
+        {
+            return false;
+        }
+
+        return workloadList.Contains("wasm-tools ", StringComparison.Ordinal) ||
+            (!string.IsNullOrWhiteSpace(sdkMajor) &&
+            workloadList.Contains($"wasm-tools-net{sdkMajor}", StringComparison.Ordinal));
+    }
+
+    private static IReadOnlyList<StructuredDiagnostic> RunDotnetPublish(Electron2D.Electron2DWebAssemblyExportPlan plan)
+    {
+        try
+        {
+            using var process = new Process();
+            process.StartInfo = new ProcessStartInfo("dotnet")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            foreach (var argument in plan.PublishArguments)
+            {
+                process.StartInfo.ArgumentList.Add(argument);
+            }
+
+            if (!process.Start())
+            {
+                return [CreateCliDiagnostic("E2D-CLI-0002", "E2D-EXPORT-WEB-0009: dotnet publish could not start.")];
+            }
+
+            var stdout = process.StandardOutput.ReadToEnd();
+            var stderr = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            if (process.ExitCode == 0)
+            {
+                return [];
+            }
+
+            var message = string.IsNullOrWhiteSpace(stderr)
+                ? stdout.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).LastOrDefault() ?? "dotnet publish failed."
+                : stderr.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).LastOrDefault() ?? "dotnet publish failed.";
+            return [CreateCliDiagnostic("E2D-CLI-0002", $"E2D-EXPORT-WEB-0009: {message}")];
+        }
+        catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            return [CreateCliDiagnostic("E2D-CLI-0002", $"E2D-EXPORT-WEB-0009: dotnet publish could not run: {exception.Message}")];
+        }
+    }
+
+    private static JsonObject BuildWebExportFailureData(string mode, string status)
+    {
+        return new JsonObject
+        {
+            ["mode"] = mode,
+            ["target"] = "WebAssemblyBrowser",
+            ["runtimeIdentifier"] = "browser-wasm",
+            ["result"] = new JsonObject
+            {
+                ["status"] = status
+            }
+        };
+    }
+
+    private static JsonObject BuildWebExportPlanData(Electron2D.Electron2DWebAssemblyExportPlan plan)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.web.plan",
+            ["target"] = "WebAssemblyBrowser",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = "planned"
+            },
+            ["plan"] = new JsonObject
+            {
+                ["projectFilePath"] = plan.ProjectFilePath,
+                ["configuration"] = plan.Configuration.ToString(),
+                ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+                ["selfContained"] = plan.SelfContained,
+                ["outputDirectory"] = plan.OutputDirectory,
+                ["webRootDirectory"] = plan.WebRootDirectory,
+                ["frameworkDirectory"] = plan.FrameworkDirectory,
+                ["assetsDirectory"] = plan.AssetsDirectory,
+                ["indexHtmlPath"] = plan.IndexHtmlPath,
+                ["loaderScriptPath"] = plan.LoaderScriptPath,
+                ["webManifestPath"] = plan.WebManifestPath,
+                ["publishArguments"] = WriteStringArray(plan.PublishArguments),
+                ["rendererProfile"] = plan.RendererProfile.ToString(),
+                ["graphicsBackend"] = plan.GraphicsBackend,
+                ["requiredFiles"] = WriteStringArray(plan.RequiredFiles),
+                ["browserPolicies"] = WriteStringArray(plan.BrowserPolicies),
+                ["smokeCriteria"] = WriteStringArray(plan.SmokeCriteria),
+                ["includeDebugSymbols"] = plan.IncludeDebugSymbols,
+                ["signingRequired"] = plan.SigningRequired,
+                ["audioPolicy"] = plan.AudioPolicy,
+                ["filesystemPolicy"] = plan.FilesystemPolicy
+            }
+        };
+    }
+
+    private static JsonObject BuildWebExportBuildData(
+        Electron2D.Electron2DWebAssemblyExportPlan plan,
+        Electron2D.Electron2DWebAssemblyPackageBuildResult packageResult,
+        bool publishSkipped)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.web.build",
+            ["target"] = "WebAssemblyBrowser",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = "packaged",
+                ["publishSkipped"] = publishSkipped
+            },
+            ["plan"] = BuildWebExportPlanData(plan)["plan"]?.DeepClone(),
+            ["package"] = new JsonObject
+            {
+                ["webRootDirectory"] = plan.WebRootDirectory,
+                ["files"] = WriteStringArray(packageResult.Files),
+                ["launchUrl"] = "http://127.0.0.1:8080/index.html",
+                ["serveCommand"] = $"python -m http.server 8080 --directory \"{plan.WebRootDirectory}\"",
+                ["smokeCommand"] = "e2d export run-web --project <project-root> --output <output-directory> --format json"
+            }
+        };
+    }
+
+    private static JsonObject BuildWebExportRunData(
+        Electron2D.Electron2DWebAssemblyExportPlan plan,
+        Electron2D.Electron2DWebAssemblySmokeResult smokeResult)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.web.run",
+            ["target"] = "WebAssemblyBrowser",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = smokeResult.Succeeded ? "smoke-passed" : "smoke-failed"
+            },
+            ["smoke"] = new JsonObject
+            {
+                ["artifactPath"] = smokeResult.ArtifactPath,
+                ["launchUrl"] = smokeResult.LaunchUrl.ToString(),
+                ["status"] = smokeResult.Status,
+                ["criteria"] = WriteSmokeCriteria(smokeResult.Criteria)
+            }
+        };
+    }
+
+    private static JsonObject WriteSmokeCriteria(IReadOnlyDictionary<string, bool> criteria)
+    {
+        var result = new JsonObject();
+        foreach (var item in criteria.OrderBy(item => item.Key, StringComparer.Ordinal))
+        {
+            result[item.Key] = new JsonObject
+            {
+                ["passed"] = item.Value
+            };
+        }
+
+        return result;
+    }
+
+    private static IReadOnlyList<StructuredDiagnostic> MapExportDiagnostics(
+        IEnumerable<Electron2D.Electron2DExportDiagnostic> diagnostics)
+    {
+        return diagnostics
+            .Select(diagnostic => CreateCliDiagnostic("E2D-CLI-0002", $"{diagnostic.Code}: {diagnostic.Message}"))
+            .ToArray();
+    }
+
+    private static string[] ToProjectRelativeWebFiles(string projectRoot, string webRootDirectory, IEnumerable<string> packageFiles)
+    {
+        return packageFiles
+            .Select(file => Path.GetRelativePath(projectRoot, Path.Combine(webRootDirectory, file)).Replace('\\', '/'))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    private static string ModeForWebCommand(string command)
+    {
+        return command switch
+        {
+            "export build-web" => "export.web.build",
+            "export run-web" => "export.web.run",
+            _ => "export.web.plan"
+        };
     }
 
     internal static JsonArray WriteDiagnostics(IEnumerable<StructuredDiagnostic> diagnostics)
@@ -1179,6 +1752,46 @@ internal static partial class Electron2DCommandLine
         }
     }
 
+    private static string? ReadCommandOutput(string fileName, string arguments)
+    {
+        try
+        {
+            using var process = new Process();
+            process.StartInfo = new ProcessStartInfo(fileName, arguments)
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            if (!process.Start())
+            {
+                return null;
+            }
+
+            if (!process.WaitForExit(5000))
+            {
+                try
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+                catch (InvalidOperationException)
+                {
+                }
+
+                return null;
+            }
+
+            return process.ExitCode == 0
+                ? process.StandardOutput.ReadToEnd()
+                : null;
+        }
+        catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
     private static string SanitizeSigningReference(string credentialReference)
     {
         return credentialReference.StartsWith("env:", StringComparison.Ordinal)
@@ -1223,6 +1836,35 @@ internal static partial class Electron2DCommandLine
             McpRoute.Blocked => CliRoute.Blocked,
             _ => CliRoute.Blocked
         };
+    }
+
+    private sealed class WebExportPlanContext
+    {
+        public static readonly WebExportPlanContext Empty = new(
+            string.Empty,
+            new Electron2D.Electron2DProjectSettings(),
+            new Electron2D.Electron2DExportPreset(),
+            new Electron2D.Electron2DWebAssemblyExportPlan());
+
+        public WebExportPlanContext(
+            string projectRoot,
+            Electron2D.Electron2DProjectSettings settings,
+            Electron2D.Electron2DExportPreset preset,
+            Electron2D.Electron2DWebAssemblyExportPlan plan)
+        {
+            ProjectRoot = projectRoot;
+            Settings = settings;
+            Preset = preset;
+            Plan = plan;
+        }
+
+        public string ProjectRoot { get; }
+
+        public Electron2D.Electron2DProjectSettings Settings { get; }
+
+        public Electron2D.Electron2DExportPreset Preset { get; }
+
+        public Electron2D.Electron2DWebAssemblyExportPlan Plan { get; }
     }
 }
 
@@ -1580,6 +2222,31 @@ internal sealed class CliResult
             route,
             message,
             [diagnostic],
+            changedFiles: [],
+            dirtyDocuments: [],
+            operation: null,
+            job: null,
+            data);
+    }
+
+    public static CliResult Failure(
+        string command,
+        CliOptions options,
+        string projectRoot,
+        CliRoute route,
+        string message,
+        IReadOnlyList<StructuredDiagnostic> diagnostics,
+        JsonObject data)
+    {
+        return new CliResult(
+            command,
+            options,
+            succeeded: false,
+            exitCode: 1,
+            projectRoot,
+            route,
+            message,
+            diagnostics,
             changedFiles: [],
             dirtyDocuments: [],
             operation: null,

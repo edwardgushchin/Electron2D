@@ -76,7 +76,9 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-ProjectTemplate.ps1
 - desktop package не публикуется;
 - package запускается на host OS, но не переносится на целевую систему;
 - signing configuration отсутствует или раскрывает секреты;
-- runtime identifier указан неверно.
+- runtime identifier указан неверно;
+- WebAssembly browser plan/package не содержит ожидаемый `wwwroot` layout;
+- WebAssembly browser smoke artifact показывает failed criteria.
 
 Проверки:
 
@@ -84,11 +86,16 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-ProjectTemplate.ps1
 powershell -ExecutionPolicy Bypass -File tools\Verify-WindowsExport.ps1
 powershell -ExecutionPolicy Bypass -File tools\Verify-LinuxExport.ps1
 powershell -ExecutionPolicy Bypass -File tools\Verify-MacOSExport.ps1
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-web --project <project-root> --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --skip-publish true --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json
 ```
 
-Запускайте platform-specific verifier на подходящей host OS. Desktop baseline ожидает runtime identifiers `win-x64`, `linux-x64` и `osx-arm64`, а package должен быть self-contained.
+Запускайте platform-specific verifier на подходящей host OS. Desktop baseline ожидает runtime identifiers `win-x64`, `linux-x64` и `osx-arm64`, а package должен быть self-contained. WebAssembly browser workflow ожидает runtime identifier `browser-wasm`, static `wwwroot` package layout, loader/manifest files и smoke criteria в JSON artifact.
 
 Не записывайте реальные signing secrets, private keys, passwords или account credentials в repository files. В документации и примерах допустимы только non-secret placeholders.
+
+`build-web --skip-publish true` не запускает внешний publish и предназначен для deterministic package checks. Обычный `build-web` требует WebAssembly build tools, соответствующие активному SDK. `run-web` сохраняет structured smoke artifact и launch URL; remote hosting deploy не выполняется.
 
 ## Mobile lifecycle issues
 
@@ -142,6 +149,7 @@ Runtime diagnostics в текущем baseline означает внутренн
 
 - Android APK/AAB release smoke;
 - iOS project/signing/simulator or device smoke;
+- WebAssembly browser publish/smoke artifact;
 - reference games performance metrics;
 - leak verification для graphics, audio, physics и scene load/unload cycles;
 - GitHub Release publication.

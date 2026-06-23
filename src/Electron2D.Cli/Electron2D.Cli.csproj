@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Electron2D\Electron2D.csproj" />
     <ProjectReference Include="..\Electron2D.ProjectSystem\Electron2D.ProjectSystem.csproj" />
     <ProjectReference Include="..\Electron2D.Mcp\Electron2D.Mcp.csproj" />
     <ProjectReference Include="..\Electron2D.Testing\Electron2D.Testing.csproj" />

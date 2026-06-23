@@ -24,12 +24,19 @@
 */
 namespace Electron2D;
 
-internal enum Electron2DExportTarget
+internal sealed class Electron2DWebAssemblyExportPlanResult
 {
-    WindowsX64 = 0,
-    LinuxX64 = 1,
-    MacOSArm64 = 2,
-    AndroidArm64 = 3,
-    IosArm64 = 4,
-    WebAssemblyBrowser = 5
+    public Electron2DWebAssemblyExportPlanResult(
+        Electron2DWebAssemblyExportPlan? plan,
+        IEnumerable<Electron2DExportDiagnostic> diagnostics)
+    {
+        Plan = plan;
+        Diagnostics = diagnostics.ToArray();
+    }
+
+    public bool Succeeded => Plan is not null && Diagnostics.All(diagnostic => diagnostic.Severity != Electron2DExportDiagnosticSeverity.Error);
+
+    public Electron2DWebAssemblyExportPlan? Plan { get; }
+
+    public Electron2DExportDiagnostic[] Diagnostics { get; }
 }

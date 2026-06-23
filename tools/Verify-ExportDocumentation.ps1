@@ -35,6 +35,7 @@ $requiredFiles = @(
     'docs/documentation/export/macos-arm64-export.md',
     'docs/documentation/export/android-arm64-export.md',
     'docs/documentation/export/ios-arm64-export.md',
+    'docs/documentation/export/webassembly-browser-export.md',
     'docs/documentation/documentation/user-guide.md',
     'docs/documentation/README.md'
 )
@@ -64,6 +65,7 @@ $linux = Read-Doc 'docs/documentation/export/linux-x64-export.md'
 $macos = Read-Doc 'docs/documentation/export/macos-arm64-export.md'
 $android = Read-Doc 'docs/documentation/export/android-arm64-export.md'
 $ios = Read-Doc 'docs/documentation/export/ios-arm64-export.md'
+$web = Read-Doc 'docs/documentation/export/webassembly-browser-export.md'
 $userGuide = Read-Doc 'docs/documentation/documentation/user-guide.md'
 $documentationIndex = Read-Doc 'docs/documentation/README.md'
 
@@ -80,6 +82,11 @@ Assert-ContainsAll 'Export guide' $guide @(
     'MacOSArm64',
     'AndroidArm64',
     'IosArm64',
+    'WebAssemblyBrowser',
+    'browser-wasm',
+    'export-doc:web-status',
+    'export build-web',
+    'export run-web',
     'tools\Verify-WindowsExport.ps1',
     'tools\Verify-LinuxExport.ps1',
     'tools\Verify-MacOSExport.ps1'
@@ -135,20 +142,42 @@ Assert-ContainsAll 'iOS export documentation' $ios @(
     'not a ready release path'
 )
 
+Assert-ContainsAll 'WebAssembly browser export documentation' $web @(
+    'WebAssemblyBrowser',
+    'browser-wasm',
+    'Host requirements',
+    'SDK and toolchain',
+    'Signing and credentials',
+    'Package layout',
+    'Browser runtime policy',
+    'CLI plan',
+    'CLI build',
+    'CLI run',
+    'Known limitations',
+    'e2d export plan-web',
+    'e2d export build-web',
+    'e2d export run-web',
+    'Electron2D.WebAssemblySmokeArtifact'
+)
+
 Assert-ContainsAll 'User guide export section' $userGuide @(
     'export/export-guide.md',
     'android-arm64-export.md',
     'ios-arm64-export.md',
+    'webassembly-browser-export.md',
+    'export build-web',
+    'export run-web',
     'tools\Verify-ExportDocumentation.ps1'
 )
 
 Assert-ContainsAll 'Documentation index' $documentationIndex @(
     'export/export-guide.md',
     'export/android-arm64-export.md',
-    'export/ios-arm64-export.md'
+    'export/ios-arm64-export.md',
+    'export/webassembly-browser-export.md'
 )
 
-$combined = $guide + "`n" + $windows + "`n" + $linux + "`n" + $macos + "`n" + $android + "`n" + $ios + "`n" + $userGuide
+$combined = $guide + "`n" + $windows + "`n" + $linux + "`n" + $macos + "`n" + $android + "`n" + $ios + "`n" + $web + "`n" + $userGuide
 $forbiddenPatterns = @(
     '(?i)password\s*[:=]\s*["''][^"'']+["'']',
     '(?i)token\s*[:=]\s*["''][^"'']+["'']',
@@ -157,6 +186,7 @@ $forbiddenPatterns = @(
     '(?i)BEGIN CERTIFICATE',
     '(?i)Android.*is a ready release path',
     '(?i)iOS.*is a ready release path',
+    '(?i)WebAssembly.*is a ready release path',
     '\bSDL\b',
     'Godot-like',
     'godot-like'

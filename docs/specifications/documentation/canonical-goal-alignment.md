@@ -2,7 +2,7 @@
 
 Статус: целевая спецификация.
 Задача: `T-0152`.
-Обновлено: 2026-06-22.
+Обновлено: 2026-06-23.
 Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Архитектура и платформенный стек Electron2D](../architecture/engine-platform-stack.md).
 
 ## Назначение
@@ -11,7 +11,7 @@
 
 Audit должен защищать от регрессий в tracked documentation:
 
-- release contract включает Windows, Linux, macOS, Android и iOS;
+- release contract включает Windows, Linux, macOS, Android, iOS и WebAssembly browser;
 - engine architecture описывает specialized node/resource model, а не прежнюю component model;
 - `Node2D` владеет 2D transform, базовый `Node` не получает обязательный transform;
 - `scene_attach_script` связывает serialized node с пользовательским C# node type, а не добавляет отдельный Script-компонент;

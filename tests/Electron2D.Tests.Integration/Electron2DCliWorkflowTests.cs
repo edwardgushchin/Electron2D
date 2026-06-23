@@ -285,6 +285,142 @@ public sealed class Electron2DCliWorkflowTests
     }
 
     [Fact]
+    public void ExportPlanWebReturnsWebAssemblyBrowserPlanWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("web-plan-cli");
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "plan-web",
+            "--project",
+            projectRoot,
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var plan = data.GetProperty("plan");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export plan-web", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.Equal("export.web.plan", data.GetProperty("mode").GetString());
+        Assert.Equal("WebAssemblyBrowser", data.GetProperty("target").GetString());
+        Assert.Equal("browser-wasm", data.GetProperty("runtimeIdentifier").GetString());
+        Assert.Equal("browser-wasm", plan.GetProperty("runtimeIdentifier").GetString());
+        Assert.EndsWith("exports/web/wwwroot", plan.GetProperty("webRootDirectory").GetString()?.Replace('\\', '/'), StringComparison.Ordinal);
+        Assert.Contains("renderingReadiness", plan.GetProperty("smokeCriteria").EnumerateArray().Select(item => item.GetString()));
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+    }
+
+    [Fact]
+    public void ExportBuildWebCreatesBrowserPackageWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("web-build-cli");
+        Directory.CreateDirectory(Path.Combine(projectRoot, "assets"));
+        File.WriteAllText(Path.Combine(projectRoot, "assets", "sprite.txt"), "sprite");
+        Directory.CreateDirectory(Path.Combine(projectRoot, ".electron2d", "tasks"));
+        File.WriteAllText(Path.Combine(projectRoot, ".electron2d", "tasks", "welcome.e2task"), "local task metadata");
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "build-web",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/web",
+            "--skip-publish",
+            "true",
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var package = data.GetProperty("package");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export build-web", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+        Assert.Equal("export.web.build", data.GetProperty("mode").GetString());
+        Assert.Equal("packaged", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.True(data.GetProperty("result").GetProperty("publishSkipped").GetBoolean());
+        Assert.Contains("index.html", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("electron2d.loader.js", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("electron2d.webmanifest.json", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("assets/sprite.txt", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "web", "wwwroot", "index.html")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "web", "wwwroot", "electron2d.loader.js")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "web", "wwwroot", "electron2d.webmanifest.json")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "web", "wwwroot", "assets", "sprite.txt")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "exports", "web", "wwwroot", ".electron2d")));
+    }
+
+    [Fact]
+    public void ExportRunWebWritesBrowserSmokeArtifactWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("web-run-cli");
+        var build = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "build-web",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/web",
+            "--skip-publish",
+            "true",
+            "--format",
+            "json");
+        Assert.Equal(0, build.ExitCode);
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "run-web",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/web",
+            "--url",
+            "http://127.0.0.1:8080/index.html",
+            "--smoke-output",
+            ".electron2d/export-smoke/web-smoke.json",
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var smoke = data.GetProperty("smoke");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export run-web", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+        Assert.Equal("export.web.run", data.GetProperty("mode").GetString());
+        Assert.Equal("smoke-passed", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal("http://127.0.0.1:8080/index.html", smoke.GetProperty("launchUrl").GetString());
+        Assert.True(File.Exists(Path.Combine(projectRoot, ".electron2d", "export-smoke", "web-smoke.json")));
+        Assert.Contains("startup", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("sceneLoad", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("renderingReadiness", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("inputEventPath", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("audioPolicyState", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("resourceLoading", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("saveDataPolicy", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+    }
+
+    [Fact]
     public void UnknownCommandGroupReturnsStableJsonDiagnostic()
     {
         var result = RunCli(
@@ -329,6 +465,28 @@ public sealed class Electron2DCliWorkflowTests
         var root = Path.Combine(Path.GetTempPath(), "Electron2D-CliWorkflowTests", name, Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(Path.Combine(root, "scenes"));
         File.WriteAllText(Path.Combine(root, "scenes", "main.scene.json"), sceneText);
+        return root;
+    }
+
+    private static string CreateExportProjectRoot(string name)
+    {
+        var root = CreateProjectRoot(name, SceneText(speed: 10));
+        var settings = Electron2D.Electron2DProjectSettings.Capture(
+            "ReferenceGame",
+            "0.1.0",
+            "0.1.0-preview",
+            "scenes/main.scene.json");
+        Electron2D.Electron2DSettingsStore.SaveProject(Path.Combine(root, "project.e2d.json"), settings);
+        File.WriteAllText(
+            Path.Combine(root, "Electron2D.Empty.csproj"),
+            """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+              </PropertyGroup>
+            </Project>
+            """);
         return root;
     }
 

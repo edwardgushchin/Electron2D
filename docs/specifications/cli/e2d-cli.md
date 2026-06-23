@@ -129,7 +129,7 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 
 ## Job commands и JSONL
 
-`import`, `build`, `run`, `test`, `export` используют `WorkspaceJob` через `Electron2D.Tooling`.
+`import`, `build`, `run`, `test`, `export` используют `WorkspaceJob` через `Electron2D.Tooling`, кроме явно реализованных specialized routes вроде WebAssembly browser `export plan-web`, `export build-web` и `export run-web`.
 
 `--format jsonl` пишет по одной JSON object строке. Минимальный `T-0116` stream обязан содержать queued event с:
 
@@ -148,6 +148,14 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 - `stale`;
 - `diagnostics`;
 - `artifacts`.
+
+## WebAssembly browser export routes
+
+`export plan-web`, `export build-web` и `export run-web` являются specialized routes для `WebAssemblyBrowser` и возвращают `route = none`, потому что не изменяют active Editor workspace и не ставят generic job в очередь.
+
+- `export plan-web --format json` возвращает `data.mode = "export.web.plan"`, `browser-wasm`, publish arguments, package layout, browser policies и smoke criteria.
+- `export build-web --format json` возвращает `data.mode = "export.web.build"` и создаёт static package files. Без `--skip-publish true` команда сначала проверяет WebAssembly build tools и запускает внешний `dotnet publish`.
+- `export run-web --format json` возвращает `data.mode = "export.web.run"` и пишет `Electron2D.WebAssemblySmokeArtifact` с launch URL, runtime policies, diagnostics и criteria results.
 
 Поскольку `T-0116` ещё не запускает реальные toolchains, progress/completion появляются позже. CLI уже должен сериализовать same identity fields, чтобы будущий real runner не менял schema.
 

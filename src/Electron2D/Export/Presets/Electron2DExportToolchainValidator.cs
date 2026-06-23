@@ -79,6 +79,14 @@ internal static class Electron2DExportToolchainValidator
                 $"Xcode is required before export preset '{preset.Name}' can run."));
         }
 
+        if (preset.Target == Electron2DExportTarget.WebAssemblyBrowser && !environment.WebAssemblyBuildToolsAvailable)
+        {
+            diagnostics.Add(Error(
+                "E2D-EXPORT-WEB-0001",
+                preset.Name,
+                $"WebAssembly build tools are required before export preset '{preset.Name}' can run."));
+        }
+
         if (preset.Signing.Required)
         {
             if (!environment.SigningIdentityAvailable)

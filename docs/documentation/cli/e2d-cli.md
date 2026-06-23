@@ -163,6 +163,18 @@ e2d build --project <path> --format jsonl --input-build-configuration-hash sha25
 
 Реальные toolchain progress/completion events появятся в соответствующих import/build/run/test/export задачах. Schema уже фиксирует identity fields, чтобы будущий runner не менял CLI contract.
 
+### `export plan-web`, `export build-web`, `export run-web`
+
+WebAssembly browser export имеет отдельные CLI routes и не queue generic `WorkspaceJob`.
+
+```powershell
+e2d export plan-web --project <path> --format json
+e2d export build-web --project <path> --output exports/web --skip-publish true --format json
+e2d export run-web --project <path> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json
+```
+
+`plan-web` возвращает `data.mode = "export.web.plan"` и deterministic `wwwroot` layout. `build-web` создаёт `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `project.e2d.json`, main scene и `assets/**`; без `--skip-publish true` команда сначала проверяет WebAssembly build tools и запускает внешний `dotnet publish`. `run-web` проверяет package contract и пишет `Electron2D.WebAssemblySmokeArtifact`.
+
 ### `run debug`
 
 `e2d run debug` подключает preview runtime debug bridge. Он не запускает настоящий видимый game process; текущий route создаёт deterministic debug session по scene JSON и возвращает machine-readable runtime state.

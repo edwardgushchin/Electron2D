@@ -24,12 +24,32 @@
 */
 namespace Electron2D;
 
-internal enum Electron2DExportTarget
+internal sealed class Electron2DWebAssemblySmokeResult
 {
-    WindowsX64 = 0,
-    LinuxX64 = 1,
-    MacOSArm64 = 2,
-    AndroidArm64 = 3,
-    IosArm64 = 4,
-    WebAssemblyBrowser = 5
+    public Electron2DWebAssemblySmokeResult(
+        string artifactPath,
+        Uri launchUrl,
+        string status,
+        IReadOnlyDictionary<string, bool> criteria,
+        IEnumerable<Electron2DExportDiagnostic> diagnostics)
+    {
+        ArtifactPath = artifactPath;
+        LaunchUrl = launchUrl;
+        Status = status;
+        Criteria = criteria.ToDictionary(item => item.Key, item => item.Value, StringComparer.Ordinal);
+        Diagnostics = diagnostics.ToArray();
+    }
+
+    public bool Succeeded => Diagnostics.All(diagnostic => diagnostic.Severity != Electron2DExportDiagnosticSeverity.Error) &&
+        Criteria.Values.All(passed => passed);
+
+    public string ArtifactPath { get; }
+
+    public Uri LaunchUrl { get; }
+
+    public string Status { get; }
+
+    public IReadOnlyDictionary<string, bool> Criteria { get; }
+
+    public Electron2DExportDiagnostic[] Diagnostics { get; }
 }

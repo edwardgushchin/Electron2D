@@ -165,6 +165,9 @@ Desktop export baseline:
 - Windows x64: `tools\Verify-WindowsExport.ps1`;
 - Linux x64 glibc: `tools\Verify-LinuxExport.ps1`;
 - macOS arm64: `tools\Verify-MacOSExport.ps1` на macOS arm64 host.
+- WebAssembly browser planning: `e2d export plan-web --project <project-root> --format json`.
+- WebAssembly browser package: `e2d export build-web --project <project-root> --output exports/web --skip-publish true --format json`.
+- WebAssembly browser smoke artifact: `e2d export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json`.
 
 Подробный entry point: [Export guide](../export/export-guide.md).
 
@@ -172,6 +175,8 @@ Android и iOS export сейчас заблокированы окружение
 
 - [Android arm64 export](../export/android-arm64-export.md);
 - [iOS arm64 export](../export/ios-arm64-export.md).
+
+WebAssembly browser export имеет planner, package builder и локальный smoke artifact. `build-web --skip-publish true` создаёт host page, loader, manifest и runtime resources без внешнего publish; обычный `build-web` пытается выполнить `dotnet publish` только при подходящих WebAssembly build tools. `run-web` сохраняет structured smoke artifact и launch URL; remote hosting deploy не выполняется. Подробности: [WebAssembly browser export](../export/webassembly-browser-export.md).
 
 После правки export-документации запускайте:
 
@@ -223,5 +228,6 @@ Verifier проверяет обязательные разделы, ключе�
 - `tools\Verify-MacOSExport.ps1`.
 
 Android/iOS export smoke, reference games performance metrics, leak verification и GitHub Release publication не считаются закрытыми без отдельных задач и явной команды пользователя.
+WebAssembly browser release acceptance требует свежий browser smoke artifact для проверяемого project package.
 
 Подробный список: [Troubleshooting guide и release checklist](troubleshooting-release-checklist.md).

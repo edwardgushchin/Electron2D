@@ -140,6 +140,7 @@
 - [macOS arm64 export](export/macos-arm64-export.md) - текущий internal package plan, `.app` bundle и проверка `osx-arm64` self-contained publish/run на macOS arm64.
 - [Android arm64 export](export/android-arm64-export.md) - текущий заблокированный статус mobile export, будущие требования SDK/signing и запрет считать Android export готовым release path.
 - [iOS arm64 export](export/ios-arm64-export.md) - текущий заблокированный статус mobile export, будущие требования Xcode/signing и запрет считать iOS export готовым release path.
+- [WebAssembly browser export](export/webassembly-browser-export.md) - текущий internal planner, package builder, CLI plan/build/run commands для `browser-wasm`, static package layout, browser policies и smoke artifact.
 
 ## Примеры и reference games
 

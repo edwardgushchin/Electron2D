@@ -34,6 +34,8 @@ internal sealed class Electron2DExportToolchainEnvironment
 
     public string XcodePath { get; set; } = string.Empty;
 
+    public bool WebAssemblyBuildToolsAvailable { get; set; }
+
     public bool SigningIdentityAvailable { get; set; }
 
     public bool SigningCredentialReferenceAvailable { get; set; }
