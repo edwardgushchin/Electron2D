@@ -1,0 +1,147 @@
+{
+  "format": "Electron2D.ReferenceGamePlatformMatrix",
+  "version": 1,
+  "release": "0.1.0-preview",
+  "targetSet": [
+    "AndroidArm64",
+    "IosArm64",
+    "LinuxX64",
+    "MacOSArm64",
+    "WebAssemblyBrowser",
+    "WindowsX64"
+  ],
+  "allowedDifferences": [
+    "export preset target/configuration/runtime identifier/output directory",
+    "renderer profile",
+    "application icon and branding metadata",
+    "signing references without secrets",
+    "storefront metadata",
+    "browser hosting metadata"
+  ],
+  "projects": [
+    {
+      "id": "reference-platformer",
+      "name": "Electron2D.ReferencePlatformer",
+      "projectPath": "examples/reference-platformer",
+      "projectFile": "Electron2D.ReferencePlatformer.csproj",
+      "settingsFile": "project.e2d.json",
+      "exportPresetFile": "export_presets.e2export.json",
+      "mainScene": "scenes/main.scene.json",
+      "scriptRoots": [
+        "Scripts"
+      ],
+      "sceneRoots": [
+        "scenes"
+      ],
+      "resourceRoots": [
+        "assets",
+        "resources"
+      ],
+      "editorMetadataRoots": [
+        ".electron2d/tasks"
+      ],
+      "verifier": "tools/Verify-ReferencePlatformer.ps1",
+      "expectedTargets": [
+        "AndroidArm64",
+        "IosArm64",
+        "LinuxX64",
+        "MacOSArm64",
+        "WebAssemblyBrowser",
+        "WindowsX64"
+      ],
+      "forbiddenPlatformSpecificRoots": [
+        "Scripts/Android",
+        "Scripts/Ios",
+        "Scripts/Linux",
+        "Scripts/MacOS",
+        "Scripts/WebAssembly",
+        "Scripts/Windows",
+        "scenes/android",
+        "scenes/ios",
+        "scenes/linux",
+        "scenes/macos",
+        "scenes/webassembly",
+        "scenes/windows",
+        "resources/android",
+        "resources/ios",
+        "resources/linux",
+        "resources/macos",
+        "resources/webassembly",
+        "resources/windows",
+        "assets/android",
+        "assets/ios",
+        "assets/linux",
+        "assets/macos",
+        "assets/webassembly",
+        "assets/windows"
+      ],
+      "evidence": [
+        "tools/Verify-ReferencePlatformer.ps1",
+        "examples/reference-platformer/project.e2d.json",
+        "examples/reference-platformer/export_presets.e2export.json"
+      ]
+    },
+    {
+      "id": "ui-heavy-reference",
+      "name": "Electron2D.UiHeavyReference",
+      "projectPath": "examples/ui-heavy-reference",
+      "projectFile": "Electron2D.UiHeavyReference.csproj",
+      "settingsFile": "project.e2d.json",
+      "exportPresetFile": "export_presets.e2export.json",
+      "mainScene": "scenes/menu.scene.json",
+      "scriptRoots": [
+        "Scripts"
+      ],
+      "sceneRoots": [
+        "scenes"
+      ],
+      "resourceRoots": [
+        "assets",
+        "resources"
+      ],
+      "editorMetadataRoots": [
+        ".electron2d/tasks"
+      ],
+      "verifier": "tools/Verify-UiHeavyReference.ps1",
+      "expectedTargets": [
+        "AndroidArm64",
+        "IosArm64",
+        "LinuxX64",
+        "MacOSArm64",
+        "WebAssemblyBrowser",
+        "WindowsX64"
+      ],
+      "forbiddenPlatformSpecificRoots": [
+        "Scripts/Android",
+        "Scripts/Ios",
+        "Scripts/Linux",
+        "Scripts/MacOS",
+        "Scripts/WebAssembly",
+        "Scripts/Windows",
+        "scenes/android",
+        "scenes/ios",
+        "scenes/linux",
+        "scenes/macos",
+        "scenes/webassembly",
+        "scenes/windows",
+        "resources/android",
+        "resources/ios",
+        "resources/linux",
+        "resources/macos",
+        "resources/webassembly",
+        "resources/windows",
+        "assets/android",
+        "assets/ios",
+        "assets/linux",
+        "assets/macos",
+        "assets/webassembly",
+        "assets/windows"
+      ],
+      "evidence": [
+        "tools/Verify-UiHeavyReference.ps1",
+        "examples/ui-heavy-reference/project.e2d.json",
+        "examples/ui-heavy-reference/export_presets.e2export.json"
+      ]
+    }
+  ]
+}

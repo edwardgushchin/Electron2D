@@ -83,9 +83,8 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 
 ## Текущие границы
 
-`T-0095` закрывает наличие законченного UI-heavy project и локального verifier-а. Она не закрывает:
+`T-0095` закрывает наличие законченного UI-heavy project и локального verifier-а. Общая матрица `T-0096` проверяет, что этот проект вместе с reference platformer использует один набор export targets из обычной структуры проекта. Эти задачи не закрывают:
 
-- сборку обеих reference games на всех целевых платформах (`T-0096`);
 - Tier 1 smoke/soak на reference projects (`T-0093`);
 - performance gate на reference games (`T-0102`);
 - leak verification и полный release candidate gate (`T-0103`, `T-0104`).

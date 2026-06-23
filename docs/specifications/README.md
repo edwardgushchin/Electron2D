@@ -153,6 +153,7 @@
 - [Ассеты reference games](examples/reference-game-assets.md) - локальный licensed asset pack, manifest, роли, hash-verification и запрет сетевых download steps во время build.
 - [Reference platformer](examples/reference-platformer.md) - валидный проект `Electron2D.Editor`, gameplay contract, export presets и verifier для законченного platformer example.
 - [UI-heavy reference game](examples/ui-heavy-reference.md) - валидный проект `Electron2D.Editor`, карточный UI-gameplay contract, локализация, mobile layout, Android compatibility preset и verifier.
+- [Reference game platform matrix](examples/reference-game-platform-matrix.md) - общий gate, который проверяет, что обе reference games остаются валидными Editor-проектами и собираются из одной кодовой базы под Windows, Linux, macOS, Android, iOS и WebAssembly browser.
 
 ## Физика 2D
 
