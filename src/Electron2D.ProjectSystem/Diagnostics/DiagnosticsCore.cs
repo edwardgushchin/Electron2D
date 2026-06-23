@@ -221,6 +221,12 @@ internal static class DiagnosticCodeRegistry
             "Runtime debug bridge rejected the request.",
             "docs/documentation/diagnostics/diagnostics-core.md#e2d-runtime-0001"),
         new(
+            "E2D-SCRIPT-0003",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Script,
+            "C# script language service semantic model failed.",
+            "docs/documentation/scripting/editor-language-services.md#e2d-script-0003"),
+        new(
             "E2D-TEST-0001",
             DiagnosticSeverity.Error,
             DiagnosticCategory.Tooling,

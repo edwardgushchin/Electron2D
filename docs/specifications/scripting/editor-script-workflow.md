@@ -249,6 +249,25 @@ ConfigurationHash
 
 Если buffer изменился до получения ответа, старый completion, hover, signature help или diagnostic отбрасывается. Обязательны cancellation предыдущих запросов, debounce live diagnostics, reload после изменения `.csproj`, `Directory.Build.props`, `Directory.Build.targets`, `global.json` и package references, а также structured diagnostic, если semantic model не удалось построить.
 
+Проверяемый минимум `T-0159` для language services:
+
+- создан отдельный project/assembly `Electron2D.CSharpLanguageServices`, который не входит в runtime assembly, не зависит от Editor UI и использует Roslyn semantic model;
+- `Electron2D.Editor` подключает language-services assembly как внутренний сервис `Script` workspace; отдельный language-service process не создаётся;
+- smoke model принимает in-memory `CodeDocument` с unsaved text и request identity: `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion`, `ConfigurationHash`;
+- IDE-операции completion, signature help, hover/Quick Info, live diagnostics, definition, references, rename, formatting и code action работают по live document state, а не через `WorkspaceSnapshot`;
+- completion возвращает Electron2D API symbols из текущей referenced `Electron2D` assembly, локальные symbols текущего document и properties/methods resolved через Roslyn semantic model;
+- signature help возвращает overload display, active parameter index, parameter names и documentation/source summary для вызова в unsaved buffer;
+- hover/Quick Info возвращает symbol display string и XML documentation для documented symbol в текущем C# document;
+- live diagnostics возвращает compiler diagnostics с file, 1-based line/column, severity, code и message без ручного build;
+- go to definition и find references возвращают stable source spans с `DocumentId`, file path, line/column и `DocumentRevision`;
+- rename symbol возвращает deterministic text edits с expected revision и не применяет их напрямую;
+- document formatting возвращает text edit или formatted text, полученный через Roslyn syntax formatting;
+- basic code action добавляет недостающий `using` для известного framework type и возвращает проверяемый edit;
+- stale result проверяется явно: ответ с устаревшим `DocumentRevision` помечается как discarded/stale и не применяется к новому buffer state;
+- cancellation/debounce/reload представлены в model как machine-readable flags: предыдущий request cancellation, diagnostics debounce interval и reload trigger для `.csproj`/package reference changes;
+- semantic model failure возвращает structured diagnostic `E2D-SCRIPT-0003`, а не exception наружу;
+- UI smoke harness создаёт PNG screenshot и JSON analysis с видимыми completion popup, hover/Quick Info panel и diagnostics panel. Acceptance требует открыть screenshot, проверить placement, читаемость, отсутствие text overflow, keyboard/current-selection state и отсутствие GDScript/3D/AssetLib UI.
+
 ## Attach к узлу
 
 Attach script к node работает с текущей scene serialization:

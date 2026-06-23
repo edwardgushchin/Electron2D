@@ -1,13 +1,13 @@
 # Script workspace редактора
 
-Статус: реализовано для `T-0158`.
+Статус: реализовано для `T-0158` и дополнено language services для `T-0159`.
 Обновлено: 2026-06-23.
 
 ## Назначение
 
-`Script` — центральное рабочее пространство `Electron2D.Editor` для встроенного редактирования C# scripts проекта. Оно показывает файлы script-ов, вкладки открытых документов, область кода, поиск/замену, навигацию по строкам, диагностику и правую панель сведений о текущем `CodeDocument`.
+`Script` — центральное рабочее пространство `Electron2D.Editor` для встроенного редактирования C# scripts проекта. Оно показывает файлы script-ов, вкладки открытых документов, область кода, поиск/замену, навигацию по строкам, диагностику, правую панель сведений о текущем `CodeDocument` и UI-состояния C# language services.
 
-Текущая реализация model-first: `EditorScriptWorkspaceSnapshot` описывает состояние UI и visual harness. Постоянный desktop event loop, live text input, IME, clipboard integration и полная привязка к реальному окну добавляются следующими задачами поверх этого snapshot-контракта.
+Текущая реализация model-first: сначала создаётся проверяемая модель состояния UI, а не постоянное окно с циклом ввода. `EditorScriptWorkspaceSnapshot` описывает состояние базового editor UI, а отдельный smoke path `EditorScriptLanguageServicesSmoke` проверяет completion, hover, signature help и diagnostics overlay. Постоянный desktop event loop, то есть цикл обработки окна, pointer/keyboard input и repaint, добавляется следующими задачами поверх этих snapshot-контрактов.
 
 ## Предварительный UI-контракт
 
@@ -30,6 +30,17 @@ Snapshot рабочего пространства содержит:
 - grouped undo id для действий AI/refactoring, которые должны откатываться одной операцией на уровне workspace;
 - agent save conflict diagnostic и external file change result;
 - `WorkspaceJobInputIdentity` для build/test/run jobs, которые используют тот же snapshot identity, что и остальной project system.
+
+Language services UI поверх `Script` workspace показывает:
+
+- completion popup рядом с caret/current line;
+- selected completion item и keyboard focus state;
+- hover/Quick Info panel рядом с symbol;
+- signature help с active parameter;
+- live diagnostics panel с code, severity и source location;
+- правую секцию `Language Services` с document identity, semantic state, stale response marker и configuration hash.
+
+Фактическая C# semantic model описана отдельно: [C# language services в Script workspace](../scripting/editor-language-services.md).
 
 ## Visual harness
 
@@ -69,6 +80,12 @@ Smoke-команда:
 
 ```powershell
 dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-workspace-smoke .temp\script-workspace
+```
+
+Language services smoke-команда:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-language-services-smoke .temp\script-language-services
 ```
 
 Документационный verifier после изменения справки:

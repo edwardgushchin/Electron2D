@@ -84,6 +84,11 @@ internal static class Program
             return RunScriptWorkspaceSmoke(scriptWorkspaceWorkRoot);
         }
 
+        if (args is ["--script-language-services-smoke", var scriptLanguageServicesWorkRoot])
+        {
+            return RunScriptLanguageServicesSmoke(scriptLanguageServicesWorkRoot);
+        }
+
         if (args is ["--run-workflow-smoke", var runWorkflowWorkRoot])
         {
             return RunRunWorkflowSmoke(runWorkflowWorkRoot);
@@ -104,7 +109,7 @@ internal static class Program
             return RunProjectTasksBoardSmoke(tasksBoardWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
         return 2;
     }
 
@@ -410,6 +415,73 @@ internal static class Program
                 result.ScreenshotReviewed
                 ? 0
                 : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunScriptLanguageServicesSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorScriptLanguageServicesSmoke.Run(workRoot);
+            var language = result.LanguageServices;
+            var diagnostic = language.LiveDiagnostic;
+
+            Console.WriteLine("Electron2D.Editor script language services smoke passed");
+            Console.WriteLine($"AssemblyBoundary={typeof(Electron2D.CSharpLanguageServices.CSharpLanguageService).Assembly.GetName().Name}");
+            Console.WriteLine($"RoslynSemanticModel={language.RoslynSemanticModel}");
+            Console.WriteLine($"RuntimeAssemblyContainsLanguageServices={language.RuntimeAssemblyContainsLanguageServices}");
+            Console.WriteLine($"EditorUiContainsLanguageServices={language.EditorUiContainsLanguageServices}");
+            Console.WriteLine($"WorkspaceSnapshotUsedForIde={language.WorkspaceSnapshotUsedForIde}");
+            Console.WriteLine($"ProjectId={language.Identity.ProjectId}");
+            Console.WriteLine($"DocumentId={language.Identity.DocumentId}");
+            Console.WriteLine($"DocumentRevision={language.Identity.DocumentRevision}");
+            Console.WriteLine($"SemanticVersion={language.Identity.SemanticVersion}");
+            Console.WriteLine($"ConfigurationHash={language.Identity.ConfigurationHash}");
+            Console.WriteLine($"CompletionContainsElectron2DApi={language.Completion.Electron2DApiAvailable}");
+            Console.WriteLine($"CompletionContainsLocalSymbol={language.Completion.LocalSymbolAvailable}");
+            Console.WriteLine($"CompletionSelectedItem={language.Completion.SelectedItem}");
+            Console.WriteLine($"SignatureHelpDisplay={language.SignatureHelp.Display}");
+            Console.WriteLine($"SignatureHelpActiveParameter={language.SignatureHelp.ActiveParameter}");
+            Console.WriteLine($"HoverSymbol={language.Hover.SymbolDisplay}");
+            Console.WriteLine($"HoverDocumentationContainsXmlSummary={language.Hover.DocumentationSummary.Contains("Moves hero", StringComparison.Ordinal)}");
+            Console.WriteLine($"LiveDiagnosticCode={diagnostic.Code}");
+            Console.WriteLine($"LiveDiagnosticSeverity={diagnostic.Severity}");
+            Console.WriteLine($"LiveDiagnosticPath={diagnostic.Path}");
+            Console.WriteLine($"LiveDiagnosticLine={diagnostic.Line}");
+            Console.WriteLine($"LiveDiagnosticColumn={diagnostic.Column}");
+            Console.WriteLine($"DefinitionTarget={language.Definition}");
+            Console.WriteLine($"ReferencesCount={language.References.References.Count}");
+            Console.WriteLine($"RenameEditCount={language.Rename.Edits.Count}");
+            Console.WriteLine($"RenameExpectedRevision={language.Rename.ExpectedRevision}");
+            Console.WriteLine($"FormattingChanged={language.Formatting.Changed}");
+            Console.WriteLine($"CodeActionTitle={language.CodeAction.Title}");
+            Console.WriteLine($"StaleResponseDiscarded={language.StaleResponseDiscarded}");
+            Console.WriteLine($"PreviousRequestCancelled={language.PreviousRequestCancelled}");
+            Console.WriteLine($"DiagnosticsDebounceMs={language.DiagnosticsDebounceMs}");
+            Console.WriteLine($"ReloadTrigger={language.ReloadTrigger}");
+            Console.WriteLine($"SemanticFailureDiagnosticCode={language.SemanticFailureDiagnostic.Code}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"StatePath={result.StatePath}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return language.RoslynSemanticModel &&
+                language.Completion.Electron2DApiAvailable &&
+                language.Completion.LocalSymbolAvailable &&
+                string.Equals(language.Completion.SelectedItem, "Sprite2D", StringComparison.Ordinal) &&
+                string.Equals(diagnostic.Code, "CS0103", StringComparison.Ordinal) &&
+                language.StaleResponseDiscarded &&
+                result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
+                result.ClickableControlCount >= 16 &&
+                result.ScreenshotReviewed
+                    ? 0
+                    : 1;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
         {

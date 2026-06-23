@@ -113,6 +113,16 @@ Default docks:
 - External-change conflict marker и `WorkspaceSnapshot` input identity видны в model/analysis, если harness использует synthetic conflict.
 - PNG screenshot и JSON analysis фиксируют bounds tabs/gutter/editor/search/actions, caret/selection state, text overflow result и отсутствие GDScript/3D/AssetLib UI.
 
+Проверяемый минимум UI для `T-0159`:
+
+- `Script` workspace остаётся выбранным в общем workspace switcher и не открывает внешнюю IDE.
+- В central editor surface виден unsaved C# buffer, для которого запрошены language services.
+- Completion popup находится рядом с caret/current line, содержит Electron2D API entries, local symbols и selected item, текст popup не выходит за bounds.
+- Hover/Quick Info panel виден рядом с символом и показывает symbol display plus XML documentation summary.
+- Diagnostics panel или inline diagnostics strip виден в нижней/правой зоне, содержит live compiler diagnostic code, severity и project-relative source location.
+- Signature help state, current active parameter, go-to-definition target, references count, rename preview, formatting/code-action result и stale-response marker присутствуют в JSON analysis.
+- Screenshot и analysis фиксируют keyboard selection/focus state для completion popup, отсутствие text overflow и отсутствие GDScript/3D/AssetLib UI.
+
 ### `Game`
 
 Видимый тестовый запуск проекта:
