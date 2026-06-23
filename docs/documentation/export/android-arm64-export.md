@@ -1,19 +1,19 @@
 # Android arm64 export
 
-## Status
+## Статус
 
-`AndroidArm64` с runtime identifier `android-arm64` теперь имеет зафиксированный в репозитории baseline экспорта для Electron2D `0.1.0 Preview`:
+`AndroidArm64` с runtime identifier `android-arm64` имеет рабочий export baseline для Electron2D `0.1.0 Preview`:
 
 - planner для debug APK и release AAB workflow;
 - transient Android staging project в выбранной папке export output;
-- команда `build-android --skip-publish true` для deterministic staging checks;
-- обычная команда `build-android`, которая собирает debug APK при наличии Android SDK, NDK и JDK 17+;
+- `build-android --skip-publish true` для deterministic staging checks;
+- обычный `build-android`, который собирает debug APK при наличии Android SDK, NDK и JDK 17+;
 - release AAB signing plan с не-секретными signing references;
-- structured device-smoke artifact со статусом blocked, если подключённое устройство или emulator недоступны.
+- `run-android`, который устанавливает debug APK на выбранное Android-устройство или emulator, запускает activity и пишет structured smoke artifact.
 
-Цель **ещё не принята как полный Tier 1 runtime path** и is not a ready release path, потому что на текущей рабочей станции нет подключённого Android device и не установлен emulator package/AVD. Release-критерий с real-device или emulator smoke остаётся открытым.
+Основной production preset остаётся `AndroidArm64`/`android-arm64`/`arm64-v8a`. Если `run-android` выбран на emulator с ABI `x86_64`, команда собирает временный smoke package с runtime identifier `android-x64`; это нужно только для AVD-проверки и не заменяет arm64 APK/AAB.
 
-## Commands
+## Команды
 
 Сформировать план debug APK export:
 
@@ -39,13 +39,13 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-an
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-android --project <project-root> --configuration Release --output exports/android/release --signing-identity <alias> --signing-credential-reference env:E2D_ANDROID_KEYSTORE --skip-publish true --format json
 ```
 
-Запустить device-smoke command:
+Запустить device или emulator smoke:
 
 ```powershell
-dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-android --project <project-root> --output exports/android/debug --smoke-output .electron2d/export-smoke/android-smoke.json --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-android --project <project-root> --output exports/android/debug --smoke-output .electron2d/export-smoke/android-smoke.json --adb-path <path-to-adb> --adb-serial <serial> --format json
 ```
 
-На текущей рабочей станции эта команда записывает blocked smoke artifact с `E2D-EXPORT-ANDROID-0014`, потому что `adb devices -l` не возвращает подключённых устройств.
+`--adb-path` необязателен, если `adb` находится через Android SDK или `PATH`. `--adb-serial` рекомендуется всегда, когда к host подключено больше одного Android-устройства или emulator. Если выбранный serial отсутствует, не авторизован или не находится в состоянии `device`, команда пишет blocked artifact с diagnostic `E2D-EXPORT-ANDROID-0014` и не переключается на другое устройство.
 
 ## Staging layout
 
@@ -62,7 +62,11 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-andr
         project.e2d.json
         <main scene path>
         assets/
+        branding/
+          electron2d_logo_dark.png
     Resources/
+      drawable/
+        electron2d_icon.png
       values/
         electron2d_export.xml
   artifacts/
@@ -73,31 +77,48 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-andr
 
 Staging project является generated output. Он не становится canonical game project и не записывается обратно в исходный project root.
 
-`Assets/electron2d/**` включает project settings, main scene и пользовательские game assets. Editor metadata вроде `.electron2d/tasks/**`, локальные task trackers, дневники и completed-task archives не копируются в Android package staging tree.
+`Assets/electron2d/**` включает project settings, main scene, пользовательские game assets и smoke-логотип. Editor metadata вроде `.electron2d/tasks/**`, локальные task trackers, дневники и completed-task archives не копируются в Android package staging tree.
 
-## Runtime policy captured by the staging project
+## Runtime policy
 
-Generated Android host фиксирует mobile runtime contract, который будущий device smoke должен проверить:
+Generated Android host фиксирует mobile runtime contract, который проверяет device/emulator smoke:
 
-- touch input path через `OnTouchEvent`;
-- lifecycle markers для pause, resume, stop и destroy;
-- requested screen orientation из project display settings;
-- immersive fullscreen flags;
-- safe-area readiness marker;
-- packaged project resources внутри Android assets;
-- mobile graphics profile metadata;
-- compatibility renderer fallback policy.
+- application label берётся из project settings; тестовый проект `Electron2D` устанавливается как приложение `Electron2D`;
+- launcher icon берётся из engine branding asset `electron2d_icon.png`;
+- black smoke scene рисует контрастный логотип `electron2d_logo_dark.png` на черном фоне;
+- activity включает fullscreen/immersive mode, черные status/navigation bars, cutout mode `ShortEdges`, `targetSdkVersion=34`, `resizeableActivity=true` и `maxAspectRatio=3.0`;
+- touch input фиксируется через `DispatchTouchEvent` activity и основной view;
+- lifecycle markers пишутся для pause, resume, stop и destroy;
+- requested screen orientation берётся из project display settings;
+- safe-area readiness, packaged resources, app sandbox filesystem, audio route и renderer fallback фиксируются smoke markers.
 
-Runtime data model для touch, orientation и safe area покрыта существующими mobile input и display tests. Package smoke на реальном устройстве или emulator всё ещё обязателен до принятия target как завершённого.
+## Device и emulator smoke
+
+`run-android` выполняет такой порядок:
+
+1. выбирает `adb` и Android serial;
+2. если выбранный serial имеет ABI `x86_64`, создаёт временный `android-x64` smoke package;
+3. собирает debug APK, если в output ещё нет APK;
+4. устанавливает APK через `adb install -r -t`;
+5. запускает activity через deterministic component name;
+6. отправляет deterministic center tap и затем touch-only `monkey` fallback;
+7. выполняет background/foreground cycle;
+8. читает filtered logcat только по tag `Electron2D`;
+9. force-stop приложения и пишет artifact.
+
+Smoke artifact проверяет `install`, `launch`, `render`, `input`, `pauseResume`, `orientation`, `safeArea`, `audio`, `resources`, `filesystem`, `logoOnBlack`, `rendererFallback` и `shutdown`.
+
+На некоторых физических прошивках shell input может быть запрещён даже при разблокированном экране. В этом случае real-device run честно падает по `input`; для полного automated smoke нужен emulator или устройство, где USB input injection разрешён настройками разработчика.
 
 ## SDK and toolchain
 
-`build-android` обнаруживает:
+`build-android` и `run-android` обнаруживают:
 
 - .NET SDK через существующую SDK probe;
 - Android SDK из `ANDROID_HOME`, `ANDROID_SDK_ROOT`, `G:\Android\Sdk` или стандартной пользовательской папки SDK;
 - Android NDK из `ANDROID_NDK_HOME` или первой папки SDK `ndk/**`;
-- JDK 17+ из `JAVA_HOME` или `G:\Dev\jdk17`.
+- JDK 17+ из `JAVA_HOME` или `G:\Dev\jdk17`;
+- `adb` из `--adb-path`, Android SDK `platform-tools` или `PATH`.
 
 Если `JAVA_HOME` указывает на более старый JDK, CLI пропускает его и использует первый найденный путь JDK 17+. Это защищает Android manifest tooling от падения из-за несовместимой версии Java class files.
 
@@ -110,19 +131,20 @@ Release AAB planning требует:
 
 Plan хранит только не-секретные labels и references. Он не хранит keystore contents, passwords, private keys, certificates или tokens. Полный release publish с реальными signing credentials остаётся заблокированным до появления пользовательского keystore и механизма доставки secret values.
 
-## Current verification
+## Текущая проверка
 
-Текущие проверки, выполненные 2026-06-23:
+Проверки, выполненные 2026-06-23:
 
-- focused integration tests для Android planner, package builder, device-smoke artifact и CLI Android export routes прошли;
-- `e2d export build-android --project .temp/android-export-smoke/project --output exports/android/debug --format json` собрал debug Android package из empty project template;
-- generated APK files найдены в `exports/android/debug/android/bin/Debug/net10.0-android/android-arm64/`;
-- `e2d export build-android --configuration Release --skip-publish true` создал release AAB staging и signing plan без чтения секретов;
-- `e2d export run-android` записал blocked smoke artifact, потому что device/emulator недоступен.
+- focused integration tests для Android planner, package builder, CLI `run-android`, `--adb-serial`, fullscreen/logo/icon/label и touch driver прошли;
+- real Android phone `641d225b0510` собрал и установил arm64 APK, запустил `Electron2D`, показал black fullscreen scene с контрастным engine logo без боковых полей, подтвердил `install`, `launch`, `render`, `pauseResume`, `orientation`, `safeArea`, `audio`, `resources`, `filesystem`, `logoOnBlack`, `rendererFallback` и `shutdown`;
+- тот же real phone запретил shell touch injection с `SecurityException: INJECT_EVENTS`, поэтому `input` на нём остался честным failed criterion;
+- emulator `emulator-5554` прошёл полный automated `run-android` smoke со статусом `passed`, включая `input`;
+- arm64 APK badging подтвердил `application-label='Electron2D'`, `application-icon='res/drawable/electron2d_icon.png'`, package id `dev.electron2d.electron2d` и `targetSdkVersion='34'`;
+- screenshots физического телефона и emulator имеют размер `2400 x 1080`, черные edge samples `#000000` на левой, правой, верхней и нижней границе, контрастный логотип расположен по центру.
 
 ## Known limitations
 
-- Real-device/emulator smoke не завершён на этой рабочей станции.
-- `run-android` сейчас записывает blocked artifact вместо установки и запуска APK.
 - Release AAB publish с реальными signing credentials не выполняется без пользовательской доставки keystore/password.
-- Device lifecycle, render, input, audio, resources, filesystem и shutdown остаются непринятыми, пока не будет получен реальный Android smoke run.
+- Физические устройства с запретом shell input injection требуют ручного включения соответствующей настройки разработчика или проверяются через emulator для automated input criterion.
+- Emulator smoke для `x86_64` использует temporary `android-x64` package и не заменяет обязательный `android-arm64` production preset.
+- Android reference-game coverage, long soak и release signing остаются отдельными release-gate проверками более высокого уровня; эти шаги пока are not a ready release path.

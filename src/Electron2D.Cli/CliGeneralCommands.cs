@@ -874,23 +874,143 @@ internal static partial class Electron2DCommandLine
         var smokeOutput = ResolveProjectChildPath(
             planContext.ProjectRoot,
             options.GetOption("--smoke-output") ?? Path.Combine(".electron2d", "export-smoke", "android-smoke.json"));
+        var adbPath = ResolveAndroidAdbPath(options, FindAndroidSdkPath());
+        if (string.IsNullOrWhiteSpace(adbPath))
+        {
+            return WriteBlockedAndroidSmoke(
+                options,
+                output,
+                error,
+                context,
+                planContext,
+                smokeOutput,
+                "No Android adb executable is available for Android export smoke.");
+        }
+
+        var preferredAdbSerial = options.GetOption("--adb-serial") ?? string.Empty;
+        var device = DiscoverAndroidDevice(adbPath, preferredAdbSerial);
+        if (string.IsNullOrWhiteSpace(device.Serial))
+        {
+            var blockReason = string.IsNullOrWhiteSpace(preferredAdbSerial)
+                ? "No connected Android device or emulator is available for Android export smoke."
+                : $"Android adb serial '{preferredAdbSerial}' is not connected, authorized or in device state.";
+            return WriteBlockedAndroidSmoke(
+                options,
+                output,
+                error,
+                context,
+                planContext,
+                smokeOutput,
+                blockReason);
+        }
+
+        var apkPath = FindAndroidApk(planContext.Plan);
+        var smokePlan = CreateAndroidSmokePlan(planContext.Plan, device.Abi);
+        if (string.IsNullOrWhiteSpace(apkPath))
+        {
+            var packageResult = Electron2D.Electron2DAndroidPackageBuilder.Build(
+                smokePlan,
+                planContext.ProjectRoot,
+                planContext.Settings);
+            if (!packageResult.Succeeded)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export run-android",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "Android export staging failed before device smoke.",
+                        MapExportDiagnostics(packageResult.Diagnostics),
+                        BuildAndroidExportFailureData("export.android.run", "package_failed", smokePlan)),
+                    output,
+                    error);
+            }
+
+            var environment = DetectAndroidExportToolchainEnvironment();
+            var validation = Electron2D.Electron2DExportToolchainValidator.Validate(planContext.Preset, environment);
+            if (!validation.Succeeded)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export run-android",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "Android export smoke failed before build.",
+                        MapExportDiagnostics(validation.Diagnostics),
+                        BuildAndroidExportFailureData("export.android.run", "toolchain_failed", smokePlan)),
+                    output,
+                    error);
+            }
+
+            var buildDiagnostics = RunDotnetAndroidBuild(smokePlan, environment);
+            if (buildDiagnostics.Count > 0)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export run-android",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "Android export smoke build failed.",
+                        buildDiagnostics,
+                        BuildAndroidExportFailureData("export.android.run", "build_failed", smokePlan)),
+                    output,
+                    error);
+            }
+
+            apkPath = FindAndroidApk(smokePlan);
+        }
+
+        if (string.IsNullOrWhiteSpace(apkPath))
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "export run-android",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "Android export smoke failed because no debug APK was found.",
+                    [CreateCliDiagnostic("E2D-CLI-0002", "E2D-EXPORT-ANDROID-0012: debug APK was not found in the Android export output.")],
+                    BuildAndroidExportFailureData("export.android.run", "apk_missing", smokePlan)),
+                output,
+                error);
+        }
+
+        var observation = RunAndroidDeviceSmoke(adbPath, device, apkPath, planContext.Settings);
         var smokeResult = Electron2D.Electron2DAndroidDeviceSmokeRunner.Run(
-            planContext.Plan,
+            smokePlan,
             smokeOutput,
-            Electron2D.Electron2DAndroidDeviceSmokeObservation.Blocked("No connected Android device or emulator is available for Android export smoke."),
+            observation,
             context.NowUtc);
 
-        return WriteResult(
-            CliResult.Failure(
-                "export run-android",
-                options,
-                planContext.ProjectRoot,
-                CliRoute.None,
-                "Android device smoke is blocked.",
-                MapExportDiagnostics(smokeResult.Diagnostics),
-                BuildAndroidExportRunData(planContext.Plan, smokeResult)),
-            output,
-            error);
+        return smokeResult.Succeeded
+            ? WriteResult(
+                CliResult.Success(
+                    "export run-android",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "Android device smoke passed.",
+                    changedFiles: [Path.GetRelativePath(planContext.ProjectRoot, smokeResult.ArtifactPath).Replace('\\', '/')],
+                    dirtyDocuments: [],
+                    operation: null,
+                    job: null,
+                    data: BuildAndroidExportRunData(smokePlan, smokeResult)),
+                output,
+                error)
+            : WriteResult(
+                CliResult.Failure(
+                    "export run-android",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    smokeResult.Status == "blocked" ? "Android device smoke is blocked." : "Android device smoke failed.",
+                    MapExportDiagnostics(smokeResult.Diagnostics),
+                    BuildAndroidExportRunData(smokePlan, smokeResult)),
+                output,
+                error);
     }
 
     private static int RunJob(
@@ -1673,6 +1793,380 @@ internal static partial class Electron2DCommandLine
             return [CreateCliDiagnostic("E2D-CLI-0002", $"E2D-EXPORT-ANDROID-0010: dotnet Android build could not run: {exception.Message}")];
         }
     }
+
+    private static int WriteBlockedAndroidSmoke(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context,
+        AndroidExportPlanContext planContext,
+        string smokeOutput,
+        string reason)
+    {
+        var smokeResult = Electron2D.Electron2DAndroidDeviceSmokeRunner.Run(
+            planContext.Plan,
+            smokeOutput,
+            Electron2D.Electron2DAndroidDeviceSmokeObservation.Blocked(reason),
+            context.NowUtc);
+
+        return WriteResult(
+            CliResult.Failure(
+                "export run-android",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "Android device smoke is blocked.",
+                MapExportDiagnostics(smokeResult.Diagnostics),
+                BuildAndroidExportRunData(planContext.Plan, smokeResult)),
+            output,
+            error);
+    }
+
+    private static string ResolveAndroidAdbPath(CliOptions options, string androidSdkPath)
+    {
+        var explicitPath = options.GetOption("--adb-path");
+        if (!string.IsNullOrWhiteSpace(explicitPath))
+        {
+            var fullPath = Path.GetFullPath(explicitPath);
+            return File.Exists(fullPath) ? fullPath : string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(androidSdkPath))
+        {
+            var platformTools = Path.Combine(androidSdkPath, "platform-tools");
+            foreach (var name in new[] { "adb.exe", "adb.cmd", "adb.bat" })
+            {
+                var candidate = Path.Combine(platformTools, name);
+                if (File.Exists(candidate))
+                {
+                    return candidate;
+                }
+            }
+        }
+
+        return ReadCommandFirstLine("adb", "version") is null ? string.Empty : "adb";
+    }
+
+    private static AndroidDeviceInfo DiscoverAndroidDevice(string adbPath, string preferredSerial)
+    {
+        var devices = RunProcess(adbPath, ["devices", "-l"], timeoutMilliseconds: 10000);
+        if (devices.ExitCode != 0)
+        {
+            return AndroidDeviceInfo.None;
+        }
+
+        var availableSerials = devices.Stdout
+            .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(line => line.Trim())
+            .Where(line => !line.StartsWith("List of devices", StringComparison.OrdinalIgnoreCase))
+            .Select(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            .Where(parts => parts.Length >= 2 && string.Equals(parts[1], "device", StringComparison.Ordinal))
+            .Select(parts => parts[0])
+            .ToArray();
+        var requestedSerial = preferredSerial.Trim();
+        var serial = string.IsNullOrWhiteSpace(requestedSerial)
+            ? availableSerials.FirstOrDefault() ?? string.Empty
+            : availableSerials.FirstOrDefault(
+                candidate => string.Equals(candidate, requestedSerial, StringComparison.Ordinal)) ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(serial))
+        {
+            return AndroidDeviceInfo.None;
+        }
+
+        var abi = RunAdb(adbPath, serial, ["shell", "getprop", "ro.product.cpu.abi"], timeoutMilliseconds: 10000)
+            .Stdout
+            .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(line => line.Trim())
+            .FirstOrDefault() ?? string.Empty;
+        return new AndroidDeviceInfo(serial, abi);
+    }
+
+    private static string FindAndroidApk(Electron2D.Electron2DAndroidExportPlan plan)
+    {
+        if (!Directory.Exists(plan.OutputDirectory))
+        {
+            return string.Empty;
+        }
+
+        return Directory.EnumerateFiles(plan.OutputDirectory, "*.apk", SearchOption.AllDirectories)
+            .OrderByDescending(path => path.EndsWith("-Signed.apk", StringComparison.OrdinalIgnoreCase))
+            .ThenBy(path => path, StringComparer.Ordinal)
+            .FirstOrDefault() ?? string.Empty;
+    }
+
+    private static Electron2D.Electron2DAndroidExportPlan CreateAndroidSmokePlan(
+        Electron2D.Electron2DAndroidExportPlan plan,
+        string deviceAbi)
+    {
+        if (!string.Equals(deviceAbi, "x86_64", StringComparison.OrdinalIgnoreCase))
+        {
+            return plan;
+        }
+
+        var buildArguments = plan.BuildArguments
+            .Select(argument => argument switch
+            {
+                "-p:RuntimeIdentifier=android-arm64" => "-p:RuntimeIdentifier=android-x64",
+                "-p:RuntimeIdentifiers=android-arm64" => "-p:RuntimeIdentifiers=android-x64",
+                _ => argument
+            })
+            .Append("-p:AndroidSupportedAbis=x86_64")
+            .ToArray();
+
+        return new Electron2D.Electron2DAndroidExportPlan
+        {
+            ProjectFilePath = plan.ProjectFilePath,
+            Configuration = plan.Configuration,
+            RuntimeIdentifier = "android-x64",
+            Abi = "x86_64",
+            PackageFormat = plan.PackageFormat,
+            DotnetCommand = plan.DotnetCommand,
+            SelfContained = plan.SelfContained,
+            OutputDirectory = plan.OutputDirectory,
+            StagingDirectory = plan.StagingDirectory,
+            ArtifactsDirectory = plan.ArtifactsDirectory,
+            SmokeDirectory = plan.SmokeDirectory,
+            AndroidProjectFilePath = plan.AndroidProjectFilePath,
+            MainActivityPath = plan.MainActivityPath,
+            ManifestPath = plan.ManifestPath,
+            ExportMetadataPath = plan.ExportMetadataPath,
+            ProjectAssetsDirectory = plan.ProjectAssetsDirectory,
+            BuildArguments = buildArguments,
+            RendererProfile = plan.RendererProfile,
+            GraphicsBackend = plan.GraphicsBackend,
+            MobileGraphicsProfile = plan.MobileGraphicsProfile,
+            FallbackPolicy = plan.FallbackPolicy,
+            RequiredFiles = plan.RequiredFiles.ToArray(),
+            MobilePolicies = plan.MobilePolicies.ToArray(),
+            SmokeCriteria = plan.SmokeCriteria.ToArray(),
+            IncludeDebugSymbols = plan.IncludeDebugSymbols,
+            SigningRequired = plan.SigningRequired,
+            SigningIdentity = plan.SigningIdentity,
+            SigningCredentialReference = plan.SigningCredentialReference,
+            Orientation = plan.Orientation
+        };
+    }
+
+    private static Electron2D.Electron2DAndroidDeviceSmokeObservation RunAndroidDeviceSmoke(
+        string adbPath,
+        AndroidDeviceInfo device,
+        string apkPath,
+        Electron2D.Electron2DProjectSettings settings)
+    {
+        var packageId = CreateAndroidApplicationId(settings);
+        WakeAndroidDevice(adbPath, device.Serial);
+        _ = RunAdb(adbPath, device.Serial, ["shell", "am", "force-stop", packageId], timeoutMilliseconds: 10000);
+        _ = RunAdb(adbPath, device.Serial, ["logcat", "-c"], timeoutMilliseconds: 10000);
+        var install = RunAdb(adbPath, device.Serial, ["install", "-r", "-t", apkPath], timeoutMilliseconds: 120000);
+        var activityComponent = ResolveAndroidActivityComponent(adbPath, device.Serial, packageId);
+        var launch = StartAndroidActivity(adbPath, device.Serial, activityComponent);
+        Thread.Sleep(2500);
+        TapAndroidScreenCenter(adbPath, device.Serial);
+        Thread.Sleep(250);
+        var touch = RunAdb(
+            adbPath,
+            device.Serial,
+            [
+                "shell",
+                "monkey",
+                "-p",
+                packageId,
+                "--pct-touch",
+                "100",
+                "--pct-motion",
+                "0",
+                "--pct-nav",
+                "0",
+                "--pct-majornav",
+                "0",
+                "--pct-syskeys",
+                "0",
+                "--pct-appswitch",
+                "0",
+                "--pct-anyevent",
+                "0",
+                "1"
+            ],
+            timeoutMilliseconds: 30000);
+        Thread.Sleep(500);
+        var pause = RunAdb(
+            adbPath,
+            device.Serial,
+            ["shell", "am", "start", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.HOME"],
+            timeoutMilliseconds: 10000);
+        Thread.Sleep(750);
+        var resume = StartAndroidActivity(adbPath, device.Serial, activityComponent);
+        Thread.Sleep(2500);
+        var firstLogcat = ReadElectron2DLogcat(adbPath, device.Serial);
+        var shutdown = RunAdb(adbPath, device.Serial, ["shell", "am", "force-stop", packageId], timeoutMilliseconds: 10000);
+        Thread.Sleep(250);
+        var finalLogcat = ReadElectron2DLogcat(adbPath, device.Serial);
+        var logs = firstLogcat.Stdout + "\n" + finalLogcat.Stdout;
+
+        var criteria = new Dictionary<string, bool>(StringComparer.Ordinal)
+        {
+            ["install"] = install.ExitCode == 0 && install.Stdout.Contains("Success", StringComparison.OrdinalIgnoreCase),
+            ["launch"] = launch.ExitCode == 0 && ContainsMarker(logs, "E2D_SMOKE_LAUNCH_READY"),
+            ["render"] = ContainsMarker(logs, "E2D_SMOKE_RENDER_READY"),
+            ["input"] = ContainsMarker(logs, "E2D_SMOKE_TOUCH_READY"),
+            ["pauseResume"] = ContainsMarker(logs, "E2D_SMOKE_PAUSE_READY") &&
+                ContainsMarker(logs, "E2D_SMOKE_RESUME_READY"),
+            ["orientation"] = ContainsMarker(logs, "E2D_SMOKE_ORIENTATION_READY"),
+            ["safeArea"] = ContainsMarker(logs, "E2D_SMOKE_SAFE_AREA_READY"),
+            ["audio"] = ContainsMarker(logs, "E2D_SMOKE_AUDIO_READY"),
+            ["resources"] = ContainsMarker(logs, "E2D_SMOKE_RESOURCES_READY"),
+            ["filesystem"] = ContainsMarker(logs, "E2D_SMOKE_FILESYSTEM_READY"),
+            ["logoOnBlack"] = ContainsMarker(logs, "E2D_SMOKE_LOGO_BLACK_READY"),
+            ["rendererFallback"] = ContainsMarker(logs, "E2D_SMOKE_RENDERER_FALLBACK_READY"),
+            ["shutdown"] = shutdown.ExitCode == 0 || ContainsMarker(logs, "E2D_SMOKE_SHUTDOWN_READY")
+        };
+
+        return Electron2D.Electron2DAndroidDeviceSmokeObservation.Observed(device.Serial, criteria);
+    }
+
+    private static void TapAndroidScreenCenter(string adbPath, string serial)
+    {
+        var (width, height) = ReadAndroidWindowSize(adbPath, serial);
+        var points = new List<(int X, int Y)>
+        {
+            (Math.Max(width, 1) / 2, Math.Max(height, 1) / 2)
+        };
+        var landscapeWidth = Math.Max(width, height);
+        var landscapeHeight = Math.Min(width, height);
+        points.Add((landscapeWidth / 2, landscapeHeight / 2));
+
+        foreach (var (x, y) in points.Distinct())
+        {
+            _ = RunAdb(adbPath, serial, ["shell", "input", "tap", x.ToString(), y.ToString()], timeoutMilliseconds: 10000);
+        }
+    }
+
+    private static (int Width, int Height) ReadAndroidWindowSize(string adbPath, string serial)
+    {
+        var result = RunAdb(adbPath, serial, ["shell", "wm", "size"], timeoutMilliseconds: 10000);
+        foreach (var line in result.Stdout.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).Reverse())
+        {
+            var separator = line.LastIndexOf(':');
+            var size = separator >= 0 ? line[(separator + 1)..].Trim() : line.Trim();
+            var parts = size.Split('x', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length == 2 &&
+                int.TryParse(parts[0], out var width) &&
+                int.TryParse(parts[1], out var height) &&
+                width > 0 &&
+                height > 0)
+            {
+                return (width, height);
+            }
+        }
+
+        return (1080, 1920);
+    }
+
+    private static string ResolveAndroidActivityComponent(string adbPath, string serial, string packageId)
+    {
+        var result = RunAdb(
+            adbPath,
+            serial,
+            ["shell", "cmd", "package", "resolve-activity", "--brief", packageId],
+            timeoutMilliseconds: 10000);
+        var component = result.Stdout
+            .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(line => line.Trim())
+            .LastOrDefault(line => line.Contains('/', StringComparison.Ordinal));
+        return string.IsNullOrWhiteSpace(component)
+            ? packageId + "/crc644abc767ad8be2900.MainActivity"
+            : component;
+    }
+
+    private static ProcessRunResult StartAndroidActivity(string adbPath, string serial, string activityComponent)
+    {
+        return RunAdb(adbPath, serial, ["shell", "am", "start", "-n", activityComponent], timeoutMilliseconds: 30000);
+    }
+
+    private static void WakeAndroidDevice(string adbPath, string serial)
+    {
+        _ = RunAdb(adbPath, serial, ["shell", "input", "keyevent", "KEYCODE_WAKEUP"], timeoutMilliseconds: 10000);
+        _ = RunAdb(adbPath, serial, ["shell", "wm", "dismiss-keyguard"], timeoutMilliseconds: 10000);
+        Thread.Sleep(500);
+    }
+
+    private static ProcessRunResult ReadElectron2DLogcat(string adbPath, string serial)
+    {
+        return RunAdb(adbPath, serial, ["logcat", "-d", "-s", "Electron2D:I", "*:S"], timeoutMilliseconds: 10000);
+    }
+
+    private static bool ContainsMarker(string logs, string marker)
+    {
+        return logs.Contains(marker, StringComparison.Ordinal);
+    }
+
+    private static ProcessRunResult RunAdb(
+        string adbPath,
+        string serial,
+        IReadOnlyList<string> arguments,
+        int timeoutMilliseconds)
+    {
+        return RunProcess(adbPath, ["-s", serial, .. arguments], timeoutMilliseconds);
+    }
+
+    private static ProcessRunResult RunProcess(
+        string fileName,
+        IReadOnlyList<string> arguments,
+        int timeoutMilliseconds)
+    {
+        try
+        {
+            using var process = new Process();
+            process.StartInfo = new ProcessStartInfo(fileName)
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            foreach (var argument in arguments)
+            {
+                process.StartInfo.ArgumentList.Add(argument);
+            }
+
+            if (!process.Start())
+            {
+                return new ProcessRunResult(-1, string.Empty, "process did not start");
+            }
+
+            if (!process.WaitForExit(timeoutMilliseconds))
+            {
+                try
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+                catch (InvalidOperationException)
+                {
+                }
+
+                return new ProcessRunResult(-1, process.StandardOutput.ReadToEnd(), "process timed out");
+            }
+
+            return new ProcessRunResult(process.ExitCode, process.StandardOutput.ReadToEnd(), process.StandardError.ReadToEnd());
+        }
+        catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            return new ProcessRunResult(-1, string.Empty, exception.Message);
+        }
+    }
+
+    private static string CreateAndroidApplicationId(Electron2D.Electron2DProjectSettings settings)
+    {
+        var suffix = new string(settings.Name.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+        return "dev.electron2d." + (suffix.Length == 0 ? "game" : suffix);
+    }
+
+    private sealed record AndroidDeviceInfo(string Serial, string Abi)
+    {
+        public static AndroidDeviceInfo None { get; } = new(string.Empty, string.Empty);
+    }
+
+    private sealed record ProcessRunResult(int ExitCode, string Stdout, string Stderr);
 
     private static string ExtractDotnetFailureMessage(string stdout, string stderr, int exitCode, string fallback)
     {

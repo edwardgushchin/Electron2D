@@ -63,4 +63,21 @@ internal sealed class Electron2DAndroidDeviceSmokeObservation
             string.Empty,
             Electron2DAndroidDeviceSmokeRunner.RequiredCriteria.ToDictionary(criteria => criteria, _ => true, StringComparer.Ordinal));
     }
+
+    public static Electron2DAndroidDeviceSmokeObservation Observed(
+        string deviceSerial,
+        IReadOnlyDictionary<string, bool> criteria)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(deviceSerial);
+        ArgumentNullException.ThrowIfNull(criteria);
+
+        return new Electron2DAndroidDeviceSmokeObservation(
+            "observed",
+            deviceSerial,
+            string.Empty,
+            Electron2DAndroidDeviceSmokeRunner.RequiredCriteria.ToDictionary(
+                criterion => criterion,
+                criterion => criteria.TryGetValue(criterion, out var passed) && passed,
+                StringComparer.Ordinal));
+    }
 }

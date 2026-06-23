@@ -18,6 +18,7 @@ Android export в этой спецификации означает:
 - mobile runtime policy для touch, lifecycle, orientation, safe area, audio, resources, filesystem и renderer fallback.
 
 `x86_64` разрешён только как дополнительный emulator ABI. Он не заменяет обязательный `arm64-v8a`.
+Если `run-android` выбран на emulator с ABI `x86_64`, команда может собрать временный smoke package с runtime identifier `android-x64`; это не меняет production preset `AndroidArm64` и не считается заменой arm64 APK/AAB.
 
 ## Export target
 
@@ -101,6 +102,16 @@ Planner должен возвращать deterministic Android staging layout:
 
 `Assets/electron2d/**` содержит project settings, main scene и игровые resources. Служебные файлы редактора, включая `.electron2d/tasks/**`, local-only task tracker, дневник и completed archives, не входят в APK/AAB staging.
 
+Сгенерированный Android host должен использовать брендинг движка как проверяемую часть smoke-сцены:
+
+- launcher icon берётся из ассетов Electron2D и указывается в manifest как `android:icon`/`android:roundIcon`;
+- application label берётся из имени проекта, поэтому тестовый проект с именем `Electron2D` устанавливается как приложение `Electron2D`, а не как имя шаблона или IDE;
+- первая сцена smoke рисует контрастный логотип Electron2D на чистом черном фоне;
+- для черного фона используется светлая визуальная версия логотипа из файла `electron2d_logo_dark.png`, потому что dark variant в текущем brand pack означает вариант для темного фона;
+- game activity занимает весь экран, скрывает status/navigation bars, задаёт им черный цвет и не оставляет видимых системных бордеров вокруг game view.
+- manifest использует современный `targetSdkVersion` вместе с `android:resizeableActivity="true"` и высоким `android:maxAspectRatio`, чтобы Android не помещал game view в compatibility letterbox на широких телефонах.
+- smoke activity удерживает экран включенным на время проверки через стандартные window flags и современные activity methods, потому что real-device smoke не должен проваливаться только из-за короткого screen timeout.
+
 ## Build workflow
 
 `e2d export plan-android` должен формировать workflow без выполнения внешних процессов.
@@ -126,10 +137,12 @@ dotnet publish <android csproj> --configuration Release --framework net10.0-andr
 Android runtime должен явно фиксировать:
 
 - touch events проходят через существующие `InputEventScreenTouch` и `InputEventScreenDrag`;
+- generated Android host фиксирует touch на уровне `DispatchTouchEvent` activity и основного view, чтобы smoke видел событие независимо от того, какой слой получил первый callback;
 - lifecycle `pause`, `resume`, `stop` и `destroy` мапится в runtime pause/resume/shutdown state;
 - requested orientation берётся из project display settings;
 - safe area snapshot доступен через `DisplayServer`;
-- immersive fullscreen mode включается для game activity;
+- immersive fullscreen mode включается для game activity до установки основного view, а status/navigation bars остаются черными, если платформа временно показывает системные области;
+- первая frame smoke-сцены показывает контрастный логотип Electron2D на черном полноэкранном фоне;
 - audio starts unlocked only after platform focus is ready; smoke проверяет play/pause route, а не secret device logs;
 - save data использует app sandbox storage;
 - resource loading идёт из package assets;
@@ -138,6 +151,10 @@ Android runtime должен явно фиксировать:
 ## Device smoke
 
 `e2d export run-android` должен установить debug APK на connected device/emulator, запустить activity, собрать smoke artifact и вернуть failure, если device/emulator отсутствует.
+
+Если к host одновременно подключены несколько Android-устройств или emulator, команда должна поддерживать явный выбор через `--adb-serial <serial>`. При заданном serial все `adb`-операции smoke используют только этот serial. Если выбранный serial отсутствует, находится не в состоянии `device` или не авторизован, команда сохраняет blocked artifact с diagnostic `E2D-EXPORT-ANDROID-0014` и не переключается на другое доступное устройство.
+
+Smoke-driver должен перед проверкой logcat отправить deterministic tap в центр текущего экрана и центр landscape-координат, затем может использовать `monkey` как дополнительный fallback. Если физическая прошивка запрещает shell-инъекцию touch-событий даже при разблокированном экране, такой real-device run фиксируется как failed по `input`, а полный automated smoke должен выполняться на устройстве или emulator, где input injection разрешён.
 
 Минимальный smoke artifact проверяет:
 
@@ -152,7 +169,8 @@ Android runtime должен явно фиксировать:
 9. resource loading;
 10. filesystem save data;
 11. renderer fallback policy;
-12. clean shutdown.
+12. engine logo on black fullscreen scene;
+13. clean shutdown.
 
 Если automated device smoke невозможен, команда обязана сохранить blocked artifact с diagnostics и не объявлять задачу успешной.
 
@@ -163,8 +181,10 @@ Android runtime должен явно фиксировать:
 - Android planner создаёт deterministic debug APK и release AAB build plans, ABI policy, orientation/safe-area policy, mobile graphics profile, fallback policy и smoke criteria.
 - Android planner fail closed для неправильного target, runtime identifier, deployment mode, release signing gaps и отсутствующих project settings.
 - Android package builder создаёт Android staging project, manifest, activity host, export metadata, project settings, main scene и `assets/**`, но не копирует `.electron2d/tasks/**`.
+- Android package builder добавляет engine launcher icon, application label из project settings и контрастный логотип `electron2d_logo_dark.png` для полноэкранной black smoke scene без видимых системных бордеров.
 - CLI `export build-android --skip-publish true` создаёт проверяемый staging layout без workspace job, а обычный `export build-android` fail closed, если Android toolchain не соответствует текущему SDK.
 - CLI `export run-android` создаёт structured device smoke artifact; при отсутствии device/emulator он возвращает blocked/failure с `E2D-EXPORT-ANDROID-0014` и не объявляет smoke успешным.
-- На connected Android arm64 device или emulator выполнен real-device smoke для pause/resume, render, input, audio, resources и filesystem.
+- CLI `export run-android --adb-serial <serial>` запускает install/run/smoke только на выбранном Android serial и fail closed, если этот serial недоступен.
+- На connected Android arm64 device или emulator выполнен real-device smoke для pause/resume, render, input, audio, resources, filesystem и полноэкранной black scene с логотипом Electron2D.
 - Implementation documentation описывает фактический target, layout, diagnostics, limitations и команды проверки.
 - Focused export tests, source license/header checks и documentation verifiers проходят.

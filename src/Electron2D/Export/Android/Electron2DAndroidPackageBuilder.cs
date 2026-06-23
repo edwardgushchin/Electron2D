@@ -44,6 +44,7 @@ internal static class Electron2DAndroidPackageBuilder
         {
             Directory.CreateDirectory(plan.StagingDirectory);
             Directory.CreateDirectory(Path.Combine(plan.StagingDirectory, "Resources", "values"));
+            Directory.CreateDirectory(Path.Combine(plan.StagingDirectory, "Resources", "drawable"));
             Directory.CreateDirectory(plan.ProjectAssetsDirectory);
             Directory.CreateDirectory(plan.ArtifactsDirectory);
             Directory.CreateDirectory(plan.SmokeDirectory);
@@ -60,6 +61,8 @@ internal static class Electron2DAndroidPackageBuilder
             CopyProjectSettings(projectRoot, plan, files, diagnostics);
             CopyMainScene(projectRoot, plan, projectSettings.MainScene, files, diagnostics);
             CopyAssets(projectRoot, plan, files, diagnostics);
+            CopyBrandLogo(plan, files);
+            CopyLauncherIcon(plan, files);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException or ArgumentException or NotSupportedException)
         {
@@ -90,6 +93,9 @@ internal static class Electron2DAndroidPackageBuilder
                 <RuntimeIdentifier>{{plan.RuntimeIdentifier}}</RuntimeIdentifier>
                 <RuntimeIdentifiers>{{plan.RuntimeIdentifier}}</RuntimeIdentifiers>
                 <AndroidPackageFormat>{{plan.PackageFormat}}</AndroidPackageFormat>
+                <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+                <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
+                <AndroidTargetSdkVersion>34</AndroidTargetSdkVersion>
               </PropertyGroup>
 
               <ItemGroup>
@@ -108,8 +114,11 @@ internal static class Electron2DAndroidPackageBuilder
         return $$"""
             using System;
             using Android.App;
+            using Android.Content;
             using Android.Content.PM;
+            using Android.Graphics;
             using Android.OS;
+            using Android.Util;
             using Android.Views;
 
             namespace {{androidNamespace}};
@@ -126,9 +135,106 @@ internal static class Electron2DAndroidPackageBuilder
 
                 protected override void OnCreate(Bundle? savedInstanceState)
                 {
+                    RequestWindowFeature(WindowFeatures.NoTitle);
                     base.OnCreate(savedInstanceState);
+                    PrepareLockscreenWindow();
+                    ApplyFullscreenWindow();
+                    SetContentView(new Electron2DSmokeView(this));
+                    ApplyFullscreenWindow();
+                    WriteSmokeMarker("E2D_SMOKE_LAUNCH_READY");
+                    WriteSmokeMarker(SafeAreaMarker);
+                    WriteSmokeMarker("E2D_SMOKE_ORIENTATION_READY");
+                    WriteSmokeMarker("E2D_SMOKE_AUDIO_READY");
+                    WriteSmokeMarker("E2D_SMOKE_RENDERER_FALLBACK_READY");
+                    WriteResourceMarker();
+                    WriteFilesystemMarker();
+                }
+
+                public override void OnWindowFocusChanged(bool hasFocus)
+                {
+                    base.OnWindowFocusChanged(hasFocus);
+                    if (hasFocus)
+                    {
+                        ApplyFullscreenWindow();
+                    }
+                }
+
+                public override bool DispatchTouchEvent(MotionEvent? e)
+                {
+                    WriteSmokeMarker("E2D_SMOKE_TOUCH_READY");
+                    return base.DispatchTouchEvent(e);
+                }
+
+                protected override void OnPause()
+                {
+                    WriteSmokeMarker("E2D_SMOKE_PAUSE_READY");
+                    base.OnPause();
+                }
+
+                protected override void OnResume()
+                {
+                    base.OnResume();
+                    WriteSmokeMarker("E2D_SMOKE_RESUME_READY");
+                }
+
+                protected override void OnStop()
+                {
+                    WriteSmokeMarker("E2D_SMOKE_STOP_READY");
+                    base.OnStop();
+                }
+
+                protected override void OnDestroy()
+                {
+                    WriteSmokeMarker("E2D_SMOKE_SHUTDOWN_READY");
+                    base.OnDestroy();
+                }
+
+                public override bool OnTouchEvent(MotionEvent? e)
+                {
+                    WriteSmokeMarker("E2D_SMOKE_TOUCH_READY");
+                    return base.OnTouchEvent(e);
+                }
+
+                private void PrepareLockscreenWindow()
+                {
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.OMr1)
+                    {
+                        SetShowWhenLocked(true);
+                        SetTurnScreenOn(true);
+                    }
+
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.O &&
+                        GetSystemService(Context.KeyguardService) is KeyguardManager keyguardManager)
+                    {
+                        keyguardManager.RequestDismissKeyguard(this, null);
+                    }
+                }
+
+                private void ApplyFullscreenWindow()
+                {
+                    Window?.AddFlags(
+                        WindowManagerFlags.KeepScreenOn |
+                        WindowManagerFlags.TurnScreenOn |
+                        WindowManagerFlags.ShowWhenLocked |
+                        WindowManagerFlags.DismissKeyguard);
+                    Window?.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
+                    Window?.SetStatusBarColor(Color.Black);
+                    Window?.SetNavigationBarColor(Color.Black);
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.P && Window?.Attributes is not null)
+                    {
+                        var attributes = Window.Attributes;
+                        attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+                        Window.Attributes = attributes;
+                    }
+
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
+                    {
+                        Window?.SetDecorFitsSystemWindows(false);
+                    }
+
                     if (Window?.DecorView is not null)
                     {
+                        Window.DecorView.SetBackgroundColor(Color.Black);
                         Window.DecorView.SystemUiFlags =
                         SystemUiFlags.Fullscreen |
                         SystemUiFlags.HideNavigation |
@@ -137,41 +243,183 @@ internal static class Electron2DAndroidPackageBuilder
                         SystemUiFlags.LayoutHideNavigation |
                         SystemUiFlags.LayoutStable;
                     }
-                    Console.WriteLine("E2D_SMOKE_LAUNCH_READY");
-                    Console.WriteLine(SafeAreaMarker);
                 }
 
-                protected override void OnPause()
+                private void WriteResourceMarker()
                 {
-                    Console.WriteLine("E2D_SMOKE_PAUSE_READY");
-                    base.OnPause();
+                    try
+                    {
+                        using var stream = Assets?.Open("electron2d/project.e2d.json");
+                        if (stream is not null)
+                        {
+                            WriteSmokeMarker("E2D_SMOKE_RESOURCES_READY");
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
-                protected override void OnResume()
+                private void WriteFilesystemMarker()
                 {
-                    base.OnResume();
-                    Console.WriteLine("E2D_SMOKE_RESUME_READY");
+                    try
+                    {
+                        var root = FilesDir?.AbsolutePath;
+                        if (!string.IsNullOrWhiteSpace(root))
+                        {
+                            System.IO.File.WriteAllText(System.IO.Path.Combine(root, "electron2d-smoke.txt"), "ok");
+                            WriteSmokeMarker("E2D_SMOKE_FILESYSTEM_READY");
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
-                protected override void OnStop()
+                internal static void WriteSmokeMarker(string marker)
                 {
-                    Console.WriteLine("E2D_SMOKE_STOP_READY");
-                    base.OnStop();
+                    Log.Info("Electron2D", marker);
+                }
+            }
+
+            internal sealed class Electron2DSmokeView : View
+            {
+                private readonly Bitmap? logo;
+                private bool rendered;
+
+                public Electron2DSmokeView(Context context)
+                    : base(context)
+                {
+                    Clickable = true;
+                    Focusable = true;
+                    FocusableInTouchMode = true;
+                    try
+                    {
+                        using var stream = context.Assets?.Open("electron2d/branding/electron2d_logo_dark.png");
+                        logo = stream is null ? null : BitmapFactory.DecodeStream(stream);
+                        if (logo is not null)
+                        {
+                            MainActivity.WriteSmokeMarker("E2D_SMOKE_LOGO_BLACK_READY");
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
-                protected override void OnDestroy()
+                protected override void OnDraw(Canvas canvas)
                 {
-                    Console.WriteLine("E2D_SMOKE_SHUTDOWN_READY");
-                    base.OnDestroy();
+                    base.OnDraw(canvas);
+                    canvas.DrawColor(Color.Black);
+                    if (logo is not null && Width > 0 && Height > 0)
+                    {
+                        var maxWidth = Width * 0.66f;
+                        var maxHeight = Height * 0.36f;
+                        var scale = Math.Min(maxWidth / logo.Width, maxHeight / logo.Height);
+                        var drawWidth = logo.Width * scale;
+                        var drawHeight = logo.Height * scale;
+                        var left = (Width - drawWidth) / 2f;
+                        var top = (Height - drawHeight) / 2f;
+                        using var paint = new Paint(PaintFlags.AntiAlias | PaintFlags.FilterBitmap);
+                        canvas.DrawBitmap(logo, null, new RectF(left, top, left + drawWidth, top + drawHeight), paint);
+                    }
+
+                    if (!rendered)
+                    {
+                        rendered = true;
+                        MainActivity.WriteSmokeMarker("E2D_SMOKE_RENDER_READY");
+                    }
                 }
 
                 public override bool OnTouchEvent(MotionEvent? e)
                 {
-                    Console.WriteLine("E2D_SMOKE_TOUCH_READY");
-                    return base.OnTouchEvent(e);
+                    MainActivity.WriteSmokeMarker("E2D_SMOKE_TOUCH_READY");
+                    return true;
                 }
             }
             """;
+    }
+
+    private static void CopyBrandLogo(Electron2DAndroidExportPlan plan, List<string> files)
+    {
+        var source = FindBrandLogoSource();
+        if (string.IsNullOrWhiteSpace(source))
+        {
+            return;
+        }
+
+        var relativePath = Path.Combine("branding", "electron2d_logo_dark.png");
+        var target = Path.Combine(plan.ProjectAssetsDirectory, relativePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+        File.Copy(source, target, overwrite: true);
+        files.Add(NormalizePortablePath(Path.Combine("Assets", "electron2d", relativePath)));
+    }
+
+    private static void CopyLauncherIcon(Electron2DAndroidExportPlan plan, List<string> files)
+    {
+        var source = FindLauncherIconSource();
+        if (string.IsNullOrWhiteSpace(source))
+        {
+            return;
+        }
+
+        var target = Path.Combine(plan.StagingDirectory, "Resources", "drawable", "electron2d_icon.png");
+        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+        File.Copy(source, target, overwrite: true);
+        files.Add("Resources/drawable/electron2d_icon.png");
+    }
+
+    private static string FindBrandLogoSource()
+    {
+        foreach (var root in EnumerateCandidateRoots())
+        {
+            var candidate = Path.Combine(root, "data", "assets", "branding", "logo", "electron2d_logo_dark.png");
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static string FindLauncherIconSource()
+    {
+        foreach (var root in EnumerateCandidateRoots())
+        {
+            var candidate = Path.Combine(root, "data", "assets", "branding", "icon", "electron2d_windows_icon_512.png");
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static IEnumerable<string> EnumerateCandidateRoots()
+    {
+        var roots = new List<string>
+        {
+            Directory.GetCurrentDirectory(),
+            AppContext.BaseDirectory
+        };
+
+        foreach (var root in roots)
+        {
+            var current = Path.GetFullPath(root);
+            while (!string.IsNullOrWhiteSpace(current))
+            {
+                yield return current;
+                var parent = Directory.GetParent(current);
+                if (parent is null)
+                {
+                    break;
+                }
+
+                current = parent.FullName;
+            }
+        }
     }
 
     private static string CreateManifest(Electron2DAndroidExportPlan plan, Electron2DProjectSettings settings)
@@ -181,22 +429,16 @@ internal static class Electron2DAndroidPackageBuilder
         return $$"""
             <?xml version="1.0" encoding="utf-8"?>
             <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="{{applicationId}}">
-              <uses-sdk android:minSdkVersion="23" />
+              <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="34" />
               <application
                   android:allowBackup="false"
                   android:debuggable="{{(plan.Configuration == Electron2DExportConfiguration.Debug ? "true" : "false")}}"
+                  android:icon="@drawable/electron2d_icon"
                   android:label="{{label}}"
+                  android:maxAspectRatio="3.0"
+                  android:resizeableActivity="true"
+                  android:roundIcon="@drawable/electron2d_icon"
                   android:theme="@style/Electron2DExportTheme">
-                <activity
-                    android:name=".MainActivity"
-                    android:exported="true"
-                    android:screenOrientation="{{plan.Orientation}}"
-                    android:configChanges="orientation|screenSize|keyboardHidden">
-                  <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-                    <category android:name="android.intent.category.LAUNCHER" />
-                  </intent-filter>
-                </activity>
               </application>
             </manifest>
             """;
@@ -211,6 +453,12 @@ internal static class Electron2DAndroidPackageBuilder
                 <item name="android:windowFullscreen">true</item>
                 <item name="android:windowNoTitle">true</item>
                 <item name="android:windowActionBar">false</item>
+                <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+                <item name="android:statusBarColor">#000000</item>
+                <item name="android:navigationBarColor">#000000</item>
+                <item name="android:windowLightStatusBar">false</item>
+                <item name="android:windowLightNavigationBar">false</item>
+                <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
               </style>
               <string name="electron2d_project_name">{{EscapeXml(settings.Name)}}</string>
               <string name="electron2d_main_scene">{{EscapeXml(NormalizePortablePath(settings.MainScene))}}</string>

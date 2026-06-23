@@ -516,6 +516,7 @@ public sealed class Electron2DCliWorkflowTests
             "--format",
             "json");
         Assert.Equal(0, build.ExitCode);
+        var adbPath = CreateFakeAdbWithoutDevices(projectRoot);
 
         var result = RunCli(
             CliExecutionContext.ForTests(FixedInstant),
@@ -527,6 +528,8 @@ public sealed class Electron2DCliWorkflowTests
             "exports/android/debug",
             "--smoke-output",
             ".electron2d/export-smoke/android-smoke.json",
+            "--adb-path",
+            adbPath,
             "--format",
             "json");
 
@@ -553,6 +556,158 @@ public sealed class Electron2DCliWorkflowTests
         Assert.Contains("audio", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
         Assert.Contains("resources", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
         Assert.Contains("filesystem", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+    }
+
+    [Fact]
+    public void ExportRunAndroidWithDeviceInstallsLaunchesAndWritesPassedSmokeArtifact()
+    {
+        var projectRoot = CreateExportProjectRoot("android-run-cli-device");
+        var build = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "build-android",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/android/debug",
+            "--skip-publish",
+            "true",
+            "--format",
+            "json");
+        Assert.Equal(0, build.ExitCode);
+
+        var apkDirectory = Path.Combine(
+            projectRoot,
+            "exports",
+            "android",
+            "debug",
+            "android",
+            "bin",
+            "Debug",
+            "net10.0-android",
+            "android-arm64");
+        Directory.CreateDirectory(apkDirectory);
+        File.WriteAllText(Path.Combine(apkDirectory, "electron2d.androidexport-Signed.apk"), "fake apk");
+        var adbPath = CreateFakeAdb(projectRoot);
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "run-android",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/android/debug",
+            "--smoke-output",
+            ".electron2d/export-smoke/android-smoke.json",
+            "--adb-path",
+            adbPath,
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var smoke = data.GetProperty("smoke");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export run-android", root.GetProperty("command").GetString());
+        Assert.Equal("export.android.run", data.GetProperty("mode").GetString());
+        Assert.Equal("smoke-passed", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal("emulator-5554", smoke.GetProperty("deviceSerial").GetString());
+        Assert.All(
+            smoke.GetProperty("criteria").EnumerateObject(),
+            criterion => Assert.True(criterion.Value.GetProperty("passed").GetBoolean(), criterion.Name));
+        Assert.Contains(
+            "logcat -d -s Electron2D:I *:S",
+            File.ReadAllText(Path.Combine(projectRoot, "fake-adb-args.txt")),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "shell input keyevent KEYCODE_WAKEUP",
+            File.ReadAllText(Path.Combine(projectRoot, "fake-adb-args.txt")),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "shell wm dismiss-keyguard",
+            File.ReadAllText(Path.Combine(projectRoot, "fake-adb-args.txt")),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "shell input tap",
+            File.ReadAllText(Path.Combine(projectRoot, "fake-adb-args.txt")),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "shell am start -n dev.electron2d.referencegame/crc644abc767ad8be2900.MainActivity",
+            File.ReadAllText(Path.Combine(projectRoot, "fake-adb-args.txt")),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "shell monkey -p dev.electron2d.referencegame --pct-touch 100",
+            File.ReadAllText(Path.Combine(projectRoot, "fake-adb-args.txt")),
+            StringComparison.Ordinal);
+        var artifactPath = Path.Combine(projectRoot, ".electron2d", "export-smoke", "android-smoke.json");
+        Assert.True(File.Exists(artifactPath));
+        Assert.Contains("\"status\": \"passed\"", File.ReadAllText(artifactPath), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ExportRunAndroidUsesRequestedAdbSerialWhenMultipleDevicesAreAvailable()
+    {
+        var projectRoot = CreateExportProjectRoot("android-run-cli-adb-serial");
+        var build = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "build-android",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/android/debug",
+            "--skip-publish",
+            "true",
+            "--format",
+            "json");
+        Assert.Equal(0, build.ExitCode);
+
+        var apkDirectory = Path.Combine(
+            projectRoot,
+            "exports",
+            "android",
+            "debug",
+            "android",
+            "bin",
+            "Debug",
+            "net10.0-android",
+            "android-arm64");
+        Directory.CreateDirectory(apkDirectory);
+        File.WriteAllText(Path.Combine(apkDirectory, "electron2d.androidexport-Signed.apk"), "fake apk");
+        var adbPath = CreateFakeAdbWithPhoneAndEmulator(projectRoot);
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "run-android",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/android/debug",
+            "--smoke-output",
+            ".electron2d/export-smoke/android-smoke.json",
+            "--adb-path",
+            adbPath,
+            "--adb-serial",
+            "emulator-5554",
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var smoke = root.GetProperty("data").GetProperty("smoke");
+        var adbLog = File.ReadAllText(Path.Combine(projectRoot, "fake-adb-args.txt"));
+
+        Assert.Equal("emulator-5554", smoke.GetProperty("deviceSerial").GetString());
+        Assert.Contains("-s emulator-5554 shell getprop ro.product.cpu.abi", adbLog, StringComparison.Ordinal);
+        Assert.Contains("-s emulator-5554 install -r -t", adbLog, StringComparison.Ordinal);
+        Assert.DoesNotContain("-s 641d225b0510 install -r -t", adbLog, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -630,6 +785,132 @@ public sealed class Electron2DCliWorkflowTests
         var directory = Path.Combine(Path.GetTempPath(), prefix + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         return directory;
+    }
+
+    private static string CreateFakeAdb(string projectRoot)
+    {
+        var path = Path.Combine(projectRoot, "fake-adb.cmd");
+        var logPath = Path.Combine(projectRoot, "fake-adb-args.txt");
+        File.WriteAllText(
+            path,
+            $$"""
+            @echo off
+            echo %*>>"{{logPath}}"
+            set ARGS=%*
+            if "%1"=="devices" (
+              echo List of devices attached
+              echo emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:1
+              exit /b 0
+            )
+            if "%1"=="-s" (
+              if "%3"=="install" (
+                echo Success
+                exit /b 0
+              )
+              if "%3"=="logcat" (
+                echo I/Electron2D: E2D_SMOKE_LAUNCH_READY
+                echo I/Electron2D: E2D_SMOKE_RENDER_READY
+                echo I/Electron2D: E2D_SMOKE_TOUCH_READY
+                echo I/Electron2D: E2D_SMOKE_PAUSE_READY
+                echo I/Electron2D: E2D_SMOKE_RESUME_READY
+                echo I/Electron2D: E2D_SMOKE_ORIENTATION_READY
+                echo I/Electron2D: E2D_SMOKE_SAFE_AREA_READY
+                echo I/Electron2D: E2D_SMOKE_AUDIO_READY
+                echo I/Electron2D: E2D_SMOKE_RESOURCES_READY
+                echo I/Electron2D: E2D_SMOKE_FILESYSTEM_READY
+                echo I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY
+                echo I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY
+                echo I/Electron2D: E2D_SMOKE_SHUTDOWN_READY
+                exit /b 0
+              )
+              if "%3"=="shell" (
+                if "%4"=="getprop" (
+                  echo x86_64
+                  exit /b 0
+                )
+                if "%4"=="input" (
+                  exit /b 1
+                )
+                exit /b 0
+              )
+            )
+            echo OK
+            exit /b 0
+            """,
+            System.Text.Encoding.ASCII);
+        return path;
+    }
+
+    private static string CreateFakeAdbWithPhoneAndEmulator(string projectRoot)
+    {
+        var path = Path.Combine(projectRoot, "fake-adb-multiple.cmd");
+        var logPath = Path.Combine(projectRoot, "fake-adb-args.txt");
+        File.WriteAllText(
+            path,
+            $$"""
+            @echo off
+            echo %*>>"{{logPath}}"
+            if "%1"=="devices" (
+              echo List of devices attached
+              echo 641d225b0510 device product:eos model:22011119UY device:eos transport_id:1
+              echo emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:2
+              exit /b 0
+            )
+            if "%1"=="-s" (
+              if "%3"=="install" (
+                echo Success
+                exit /b 0
+              )
+              if "%3"=="logcat" (
+                echo I/Electron2D: E2D_SMOKE_LAUNCH_READY
+                echo I/Electron2D: E2D_SMOKE_RENDER_READY
+                echo I/Electron2D: E2D_SMOKE_TOUCH_READY
+                echo I/Electron2D: E2D_SMOKE_PAUSE_READY
+                echo I/Electron2D: E2D_SMOKE_RESUME_READY
+                echo I/Electron2D: E2D_SMOKE_ORIENTATION_READY
+                echo I/Electron2D: E2D_SMOKE_SAFE_AREA_READY
+                echo I/Electron2D: E2D_SMOKE_AUDIO_READY
+                echo I/Electron2D: E2D_SMOKE_RESOURCES_READY
+                echo I/Electron2D: E2D_SMOKE_FILESYSTEM_READY
+                echo I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY
+                echo I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY
+                echo I/Electron2D: E2D_SMOKE_SHUTDOWN_READY
+                exit /b 0
+              )
+              if "%3"=="shell" (
+                if "%4"=="getprop" (
+                  if "%2"=="emulator-5554" (
+                    echo x86_64
+                  ) else (
+                    echo arm64-v8a
+                  )
+                  exit /b 0
+                )
+                exit /b 0
+              )
+            )
+            echo OK
+            exit /b 0
+            """,
+            System.Text.Encoding.ASCII);
+        return path;
+    }
+
+    private static string CreateFakeAdbWithoutDevices(string projectRoot)
+    {
+        var path = Path.Combine(projectRoot, "fake-adb-empty.cmd");
+        File.WriteAllText(
+            path,
+            """
+            @echo off
+            if "%1"=="devices" (
+              echo List of devices attached
+              exit /b 0
+            )
+            exit /b 0
+            """,
+            System.Text.Encoding.ASCII);
+        return path;
     }
 
     private static void AssertAgentReadyProject(string projectRoot, string rendererProfile)

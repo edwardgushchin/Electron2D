@@ -161,11 +161,11 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/android-arm64-export.md",
-                                                    "sha256":  "cca5fde79170c3738fb65739b78f2f99f5c0fc1d702ce86cf1f3c29c1c2b8b85"
+                                                    "sha256":  "66ce7ad19e738e6906f73341b16c392fc7efcd15ba6bcad3d9a96c1c8996ebda"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/export-guide.md",
-                                                    "sha256":  "4da9d4872917400fd97413ca8fdeba2676f06ef0e82fd707abeb2a982886b09d"
+                                                    "sha256":  "2b4b1bef6d4635b95867404a2ed711e82bf409d8114da1951bf80c3534f31eb4"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/export-preset-model.md",
@@ -333,7 +333,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/README.md",
-                                                    "sha256":  "b398ba268c963a9568c74b16b1a00034307b3065e17c3f08aadbc9b7f0194897"
+                                                    "sha256":  "a018f9d0bf88d0c8277b7d139796c5af0ad7ff023225ac9f8134cfe4f5dbb5dc"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/release-management/api-compatibility.md",
@@ -27305,7 +27305,7 @@
                         "id":  "doc:documentation.export.android-arm64-export",
                         "kind":  "documentation",
                         "title":  "Android arm64 export",
-                        "summary":  "`AndroidArm64` с runtime identifier `android-arm64` теперь имеет зафиксированный в репозитории baseline экспорта для Electron2D `0.1.0 Preview`:",
+                        "summary":  "`AndroidArm64` с runtime identifier `android-arm64` имеет рабочий export baseline для Electron2D `0.1.0 Preview`:",
                         "keywords":  [
                                          "0",
                                          "1",
@@ -27402,7 +27402,7 @@
                         "id":  "doc:documentation.export.export-guide",
                         "kind":  "documentation",
                         "title":  "Export guide",
-                        "summary":  "Electron2D `0.1.0 Preview` has a verified desktop export baseline, a WebAssembly browser package/smoke baseline, and an Android arm64 staging/debug APK baseline with an open device-smoke blocker. This page is the user-facing entry point for export documentation: it explains which targets are currently verified, which toolchains are required, how signing references are represented, and which commands prove the current repository state.",
+                        "summary":  "Electron2D `0.1.0 Preview` has a verified desktop export baseline, a WebAssembly browser package/smoke baseline, and an Android arm64 debug APK baseline with emulator smoke evidence. This page is the user-facing entry point for export documentation: it explains which targets are currently verified, which toolchains are required, how signing references are represented, and which commands prove the current repository state.",
                         "keywords":  [
                                          "0",
                                          "1",
@@ -27418,7 +27418,6 @@
                                          "arm64",
                                          "assembly",
                                          "baseline",
-                                         "blocker",
                                          "browser",
                                          "commands",
                                          "current",
@@ -27426,12 +27425,13 @@
                                          "d",
                                          "debug",
                                          "desktop",
-                                         "device",
                                          "docs",
                                          "documentation",
                                          "electron",
                                          "electron2d",
+                                         "emulator",
                                          "entry",
+                                         "evidence",
                                          "explains",
                                          "export",
                                          "facing",
@@ -27442,7 +27442,6 @@
                                          "is",
                                          "it",
                                          "md",
-                                         "open",
                                          "package",
                                          "page",
                                          "point",
@@ -27454,7 +27453,6 @@
                                          "required",
                                          "signing",
                                          "smoke",
-                                         "staging",
                                          "state",
                                          "targets",
                                          "the",

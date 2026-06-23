@@ -52,6 +52,7 @@ internal static class Electron2DAndroidExportPlanner
         "audio",
         "resources",
         "filesystem",
+        "logoOnBlack",
         "rendererFallback",
         "shutdown"
     ];

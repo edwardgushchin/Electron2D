@@ -41,6 +41,7 @@ internal static class Electron2DAndroidDeviceSmokeRunner
         "audio",
         "resources",
         "filesystem",
+        "logoOnBlack",
         "rendererFallback",
         "shutdown"
     ];
