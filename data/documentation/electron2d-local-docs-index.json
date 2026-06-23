@@ -37,7 +37,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/cli/e2d-cli.md",
-                                                    "sha256":  "78b4da11bfdb8265fe2419144f057429eb80463eeeb5286472243cbe1ebd7faa"
+                                                    "sha256":  "60c5fe7dce2518dc76fb0748fe2f1905595393a23a4a4eeb0f5d9417d31c56b2"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/core-types/2d-math-baseline.md",
@@ -309,7 +309,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/project-system/project-task-manager.md",
-                                                    "sha256":  "18e2fb646a43ea70a3035f9e61a917d4761aaee663f886b3155497a1547d2af5"
+                                                    "sha256":  "efecad066ae6c45391dc7c6bdd9ad9bd14308b953f988c83603bc5c50cb72ad6"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/project-system/project-text-formats.md",
@@ -333,7 +333,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/README.md",
-                                                    "sha256":  "a018f9d0bf88d0c8277b7d139796c5af0ad7ff023225ac9f8134cfe4f5dbb5dc"
+                                                    "sha256":  "d9ee26b9777ca8e14855657fea1376c416874352adf28181c704a78d5f70d841"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/release-management/api-compatibility.md",

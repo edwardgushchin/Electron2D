@@ -60,6 +60,12 @@ AI-агент не может поставить `Done` или принять з
 
 Новый проект из шаблона получает стартовую доску `.electron2d/tasks/board.e2tasks` и задачу `.electron2d/tasks/welcome.e2task`. Эти файлы создаёт `ProjectTemplateCreator`; дальнейшие изменения должны идти через Editor, Tooling или MCP, а не через прямую ручную правку JSON.
 
+## Markdown report export
+
+`e2d tasks export` реализует внешний Markdown-отчёт поверх текущего task storage. Команда читает `.electron2d/tasks/*.e2task`, фильтрует задачи по status, labels/conventions для milestone, version, epic и agent session, а также по assignee, и пишет deterministic Markdown в stdout.
+
+Отчёт не является хранилищем задач. `.electron2d/tasks/*.e2task` и `.electron2d/tasks/board.e2tasks` остаются canonical storage, то есть единственным проектным источником истины. `tasks export` не создаёт и не обновляет `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте.
+
 Task mutations:
 
 - используют `WorkspaceTransactionEngine` в режиме `WorkspaceOnly`;
@@ -94,8 +100,7 @@ Dependency-related блокировка обновляет только `Readine
 Реализация закрывает core/domain/storage слой. Она не добавляет:
 
 - Tooling-команды;
-- MCP tools/resources;
-- Markdown-report export.
+- MCP tools/resources.
 
 Визуальная доска `Tasks` и Agent Workspace current task UI уже существуют как model-first UI snapshot и visual harness в `Electron2D.Editor`; постоянная live-привязка к desktop event loop и MCP-проверка остаются следующими слоями поверх текущего core contract.
 
@@ -108,3 +113,11 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 ```
 
 Проверка покрывает статусы и приёмку, request changes, reopen, audit-поля activity, storage round-trip, document classification, dependency graph, external import guard, workspace transaction semantics и сохранение dirty task document через `SaveAffectedDocuments`.
+
+Focused проверка Markdown report export:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~TasksExportWritesStableMarkdownReportWithoutCreatingWorkflowFiles
+```
+
+Проверка покрывает exact Markdown output, фильтры `status`/`milestone`/`version`/`epic`/`assignee`/`agent-session` и отсутствие `TASKS.md`, `completed-tasks/`, `dev-diary/` в пользовательском проекте.

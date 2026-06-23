@@ -27,6 +27,7 @@ Root help показывает группы:
 - `docs`;
 - `api`;
 - `mcp`;
+- `tasks`;
 - `context`;
 - `doctor`.
 
@@ -120,6 +121,20 @@ e2d doctor --project <path> --format json
 `data.checks[]` содержит `dotnetSdk`, `electron2d`, `nativeRuntime`, `androidSdk`, `androidNdk`, `xcode`, `exportTemplates`, `graphicsCapabilities` и `signing`. Optional mobile toolchains могут иметь status `missing` без failed exit code. Missing или malformed reproducibility files дают summary `blocked` и diagnostic `E2D-DOCTOR-0001`.
 
 Signing check читает только references из `export_presets.e2export.json`. Значения environment variables, certificate files, keystore files и private paths не читаются и не выводятся. `env:NAME` может появиться в output как форма ссылки, но значение `NAME` не раскрывается.
+
+### `tasks export`
+
+`tasks export` создаёт read-only Markdown-отчёт по встроенным задачам пользовательского проекта:
+
+```powershell
+e2d tasks export --project <path> --status done --format markdown
+```
+
+Если `--format` не указан, команда пишет тот же Markdown в stdout. Команда читает `.electron2d/tasks/*.e2task`, может использовать `.electron2d/tasks/board.e2tasks` только для порядка, но не меняет task storage, не открывает `ProjectWorkspace` на запись, не создаёт Undo group и не пишет отчёт в проектные файлы.
+
+Поддержаны фильтры `--status`, `--milestone`, `--version`, `--epic`, `--assignee` и `--agent-session`. `status` сравнивается со статусом задачи. `milestone`, `version`, `epic` и `agent-session` сейчас читаются из labels вида `milestone:<value>`, `version:<value>`, `epic:<value>`, `agent-session:<value>`; agent session также может быть найден в activity payload с `AgentSessionId=<id>` или `agentSession=<id>`.
+
+Markdown output содержит явное предупреждение, что это report only. Он не заменяет `.electron2d/tasks/*.e2task` и `.electron2d/tasks/board.e2tasks`, не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте.
 
 ### `workspace transaction`
 
@@ -296,7 +311,7 @@ Focused проверка:
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests
 ```
 
-Проверка покрывает root/group help, common flags, `project create`, `workspace transaction` JSON, dry-run headless fallback, active Editor routing, JSONL job identity и stable unsupported-command diagnostic.
+Проверка покрывает root/group help, common flags, `project create`, `tasks export` Markdown golden output, `workspace transaction` JSON, dry-run headless fallback, active Editor routing, JSONL job identity и stable unsupported-command diagnostic.
 
 Headless runtime проверка:
 

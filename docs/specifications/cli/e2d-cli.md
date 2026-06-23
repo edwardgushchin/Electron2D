@@ -27,6 +27,7 @@ Root help должен показывать группы:
 - `docs`;
 - `api`;
 - `mcp`;
+- `tasks`;
 - `context`;
 - `doctor`.
 
@@ -40,6 +41,7 @@ Root help должен показывать группы:
 - help и stable unsupported-command diagnostics для групп, реализация которых закреплена отдельными задачами.
 
 `project create`, детальные scene/resource команды, `api compare-godot`, `mcp serve`, `context build` и `doctor` расширяются отдельными задачами, но уже должны использовать общий parser, common flags и result envelope.
+`tasks export` является read-only report route для встроенного `ProjectTaskManager`.
 
 ## Common flags
 
@@ -61,6 +63,8 @@ Root help должен показывать группы:
 `--headless` означает: не использовать active Editor route даже если discovery нашёл Editor. Без `--headless` `workspace transaction` выбирает active Editor, если registry/gateway доступен.
 
 `sarif` является форматом diagnostics/validation output. Documentation commands `docs search/type/member/example` остаются отдельной веткой и принимают только `--format text|json`.
+
+`tasks export` принимает `--format markdown`; если format не указан, команда пишет тот же Markdown в stdout. `jsonl` и `sarif` для этого отчёта не поддерживаются.
 
 ## Result envelope
 
@@ -182,11 +186,33 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 
 `docs search/type/member/example` сохраняют существующее поведение. Они должны поддерживать `--project`, `--quiet`, `--verbose` и `--format text|json`, но `jsonl` и `sarif` для docs недопустимы и возвращают ошибку формата.
 
+## Project Tasks report command
+
+`tasks export` читает `.electron2d/tasks/*.e2task` и пишет Markdown-отчёт:
+
+```powershell
+e2d tasks export --project <path> --status done --format markdown
+```
+
+Команда не открывает workspace на запись, не создаёт Undo group и не пишет отчёт в проектные файлы. `TASKS.md`, `completed-tasks/` и `dev-diary/` не создаются и не обновляются. Markdown является внешним отчётом, а не canonical task storage.
+
+Фильтры:
+
+- `--status`;
+- `--milestone`;
+- `--version`;
+- `--epic`;
+- `--assignee`;
+- `--agent-session`.
+
+`status` сравнивается с `ProjectTask.Status`. `milestone`, `version`, `epic` и `agent-session` читаются из task labels вида `milestone:<value>`, `version:<value>`, `epic:<value>`, `agent-session:<value>`; agent session также может быть найден в activity payload с `AgentSessionId=<id>` или `agentSession=<id>`.
+
 ## Acceptance criteria
 
 - Root help и group help показывают обязательные command groups и common flags.
 - `project validate`, `validate`, `workspace transaction`, `import`, `build`, `run`, `test`, `export` принимают `--project`, `--format text|json|jsonl|sarif`, `--quiet`, `--verbose`; mutating/job commands принимают `--dry-run`.
 - `docs` принимает `--project`, `--format text|json`, `--quiet`, `--verbose`, но отклоняет `jsonl` и `sarif`.
+- `tasks export` принимает `--project`, `--format markdown`, `--quiet`, `--verbose` и read-only filters, а Markdown output покрыт exact golden test.
 - `workspace transaction --format json` возвращает stable result envelope с route, diagnostics, changed files, dirty documents и operation metadata.
 - При active Editor registry command routed в active `ProjectWorkspace` и не создаёт independent writer.
 - При отсутствии active Editor command использует explicit headless fallback.

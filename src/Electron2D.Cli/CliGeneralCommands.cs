@@ -54,6 +54,7 @@ internal static partial class Electron2DCommandLine
         "docs",
         "api",
         "mcp",
+        "tasks",
         "context",
         "doctor"
     ];
@@ -104,6 +105,7 @@ internal static partial class Electron2DCommandLine
             "project" => RunProject(options, output, error),
             "api" => RunApi(options, output, error),
             "mcp" => RunMcp(options, output, error, context),
+            "tasks" => RunTasks(options, output, error),
             "doctor" => RunDoctor(options, output, error),
             "workspace" => RunWorkspace(options, output, error, context),
             "validate" => RunValidate(options, output, error),
@@ -1177,7 +1179,10 @@ internal static partial class Electron2DCommandLine
     {
         output.WriteLine($"Usage: e2d {group} [command] [options]");
         output.WriteLine();
-        output.WriteLine("Common options: --project <path> --format text|json|jsonl|sarif --quiet --verbose");
+        var formatHelp = string.Equals(group, "tasks", StringComparison.Ordinal)
+            ? "--format text|markdown"
+            : "--format text|json|jsonl|sarif";
+        output.WriteLine($"Common options: --project <path> {formatHelp} --quiet --verbose");
         if (MutatingOrJobGroups.Contains(group, StringComparer.Ordinal))
         {
             output.WriteLine("Mutation/job options: --dry-run --headless");
@@ -1197,6 +1202,7 @@ internal static partial class Electron2DCommandLine
             "validate" => "  <default>             Validate a project and emit text, JSON or SARIF diagnostics.",
             "docs" => "  search|type|member|example",
             "api" => "  compare-godot <type>  Compare one API type against the approved Electron2D 0.1.0 2D profile.",
+            "tasks" => "  export                Write a Markdown report from `.electron2d/tasks/*.e2task`.",
             _ => "  Reserved for a later Preview task."
         };
         output.WriteLine(commands);
@@ -3032,7 +3038,8 @@ internal enum CliOutputFormat
     Text,
     Json,
     Jsonl,
-    Sarif
+    Sarif,
+    Markdown
 }
 
 internal enum CliRoute
@@ -3143,10 +3150,13 @@ internal sealed class CliOptions
                     "json" => CliOutputFormat.Json,
                     "jsonl" => CliOutputFormat.Jsonl,
                     "sarif" => CliOutputFormat.Sarif,
+                    "markdown" when string.Equals(group, "tasks", StringComparison.Ordinal) => CliOutputFormat.Markdown,
                     _ => throw new CliCommandException(
                         group,
                         Placeholder(group),
-                        "Unsupported output format. Use text, json, jsonl or sarif.",
+                        string.Equals(group, "tasks", StringComparison.Ordinal)
+                            ? "Unsupported output format. Use text or markdown."
+                            : "Unsupported output format. Use text, json, jsonl or sarif.",
                         Electron2DCommandLine.CreateCliDiagnostic("E2D-CLI-0002", "Unsupported output format."))
                 };
                 continue;

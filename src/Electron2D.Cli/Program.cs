@@ -275,6 +275,7 @@ internal static partial class Electron2DCommandLine
         output.WriteLine("  docs       Search local documentation and API manifest.");
         output.WriteLine("  api        API comparison commands.");
         output.WriteLine("  mcp        MCP server commands.");
+        output.WriteLine("  tasks      Project Tasks report commands.");
         output.WriteLine("  context    Static context pack commands.");
         output.WriteLine("  doctor     Environment diagnostics.");
     }

@@ -49,6 +49,8 @@ public sealed class Electron2DCliWorkflowTests
             var help = RunCli(CliExecutionContext.ForTests(FixedInstant), group, "--help");
             var expectedFormats = string.Equals(group, "docs", StringComparison.Ordinal)
                 ? "--format text|json"
+                : string.Equals(group, "tasks", StringComparison.Ordinal)
+                    ? "--format text|markdown"
                 : "--format text|json|jsonl|sarif";
 
             Assert.Equal(0, help.ExitCode);
@@ -61,6 +63,103 @@ public sealed class Electron2DCliWorkflowTests
                 Assert.Contains("--dry-run", help.Output, StringComparison.Ordinal);
             }
         }
+    }
+
+    [Fact]
+    public void TasksExportWritesStableMarkdownReportWithoutCreatingWorkflowFiles()
+    {
+        var projectRoot = CreateProjectRoot("tasks-export-markdown", SceneText(speed: 10));
+        WriteTaskDocuments(
+            projectRoot,
+            CreateReportTask(
+                "task-alpha",
+                "Ship alpha feature",
+                ProjectTaskStatus.Done,
+                rank: "0200",
+                completedAt: FixedInstant.AddHours(1)),
+            CreateReportTask(
+                "task-beta",
+                "Ship beta feature",
+                ProjectTaskStatus.Done,
+                rank: "0100",
+                completedAt: FixedInstant.AddHours(2)),
+            CreateReportTask(
+                "task-ready",
+                "Prepare ready feature",
+                ProjectTaskStatus.Ready,
+                rank: "0300",
+                completedAt: null));
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "tasks",
+            "export",
+            "--project",
+            projectRoot,
+            "--status",
+            "done",
+            "--milestone",
+            "preview",
+            "--version",
+            "0.1.0-preview",
+            "--epic",
+            "editor",
+            "--assignee",
+            "agent-1",
+            "--agent-session",
+            "agent-session-1",
+            "--format",
+            "markdown");
+
+        const string expected = """
+        # Project Tasks Report
+
+        > Markdown report only. Canonical task storage stays in `.electron2d/tasks/*.e2task` and `.electron2d/tasks/board.e2tasks`.
+
+        - Source: `.electron2d/tasks/*.e2task`
+        - Filters: status=Done, milestone=preview, version=0.1.0-preview, epic=editor, assignee=agent-1, agent-session=agent-session-1
+        - Task count: 2
+
+        ## Done
+
+        ### task-beta - Ship beta feature
+
+        - Status: Done
+        - Priority: P0
+        - Rank: 0100
+        - Assignee: agent-1
+        - Labels: agent-session:agent-session-1, epic:editor, milestone:preview, version:0.1.0-preview
+        - Created: 2026-06-22T12:00:00.0000000+00:00
+        - Completed: 2026-06-22T14:00:00.0000000+00:00
+        - Accepted: 2026-06-22T14:00:00.0000000+00:00 by user-1
+        - Criteria:
+          - [x] criterion-task-beta: Golden output is stable.
+        - Activity:
+          - 2026-06-22T13:30:00.0000000+00:00 Agent agent-1: TestResult - AgentSessionId=agent-session-1; focused tests green.
+
+        ### task-alpha - Ship alpha feature
+
+        - Status: Done
+        - Priority: P0
+        - Rank: 0200
+        - Assignee: agent-1
+        - Labels: agent-session:agent-session-1, epic:editor, milestone:preview, version:0.1.0-preview
+        - Created: 2026-06-22T12:00:00.0000000+00:00
+        - Completed: 2026-06-22T13:00:00.0000000+00:00
+        - Accepted: 2026-06-22T13:00:00.0000000+00:00 by user-1
+        - Criteria:
+          - [x] criterion-task-alpha: Golden output is stable.
+        - Activity:
+          - 2026-06-22T12:30:00.0000000+00:00 Agent agent-1: TestResult - AgentSessionId=agent-session-1; focused tests green.
+
+        """;
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        Assert.Equal(expected.ReplaceLineEndings(Environment.NewLine), result.Output);
+        Assert.False(File.Exists(Path.Combine(projectRoot, "TASKS.md")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "completed-tasks")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "dev-diary")));
     }
 
     [Fact]
@@ -787,6 +886,80 @@ public sealed class Electron2DCliWorkflowTests
         return directory;
     }
 
+    private static void WriteTaskDocuments(string projectRoot, params ProjectTask[] tasks)
+    {
+        var tasksRoot = Path.Combine(projectRoot, ".electron2d", "tasks");
+        Directory.CreateDirectory(tasksRoot);
+        foreach (var task in tasks)
+        {
+            File.WriteAllText(
+                Path.Combine(tasksRoot, $"{task.TaskId}.e2task"),
+                ProjectTaskSerializer.Serialize(task));
+        }
+
+        var board = new TaskBoard(
+            "board-main",
+            [
+                new TaskBoardColumn(ProjectTaskStatus.Backlog, []),
+                new TaskBoardColumn(ProjectTaskStatus.Ready, tasks.Where(task => task.Status == ProjectTaskStatus.Ready).Select(task => task.TaskId)),
+                new TaskBoardColumn(ProjectTaskStatus.InProgress, []),
+                new TaskBoardColumn(ProjectTaskStatus.Blocked, []),
+                new TaskBoardColumn(ProjectTaskStatus.Review, []),
+                new TaskBoardColumn(ProjectTaskStatus.AwaitingAcceptance, []),
+                new TaskBoardColumn(ProjectTaskStatus.Done, tasks.Where(task => task.Status == ProjectTaskStatus.Done).Select(task => task.TaskId)),
+                new TaskBoardColumn(ProjectTaskStatus.Cancelled, [])
+            ]);
+        File.WriteAllText(
+            Path.Combine(tasksRoot, "board.e2tasks"),
+            ProjectTaskSerializer.SerializeBoard(board));
+    }
+
+    private static ProjectTask CreateReportTask(
+        string taskId,
+        string title,
+        ProjectTaskStatus status,
+        string rank,
+        DateTimeOffset? completedAt)
+    {
+        var task = new ProjectTask
+        {
+            TaskId = taskId,
+            Title = title,
+            Description = "Exercise Project Tasks report export.",
+            Status = status,
+            Readiness = TaskReadiness.Ready,
+            Priority = "P0",
+            Rank = rank,
+            Assignee = "agent-1",
+            CreatedBy = "user-1",
+            CreatedAt = FixedInstant,
+            UpdatedAt = FixedInstant,
+            CompletedAt = completedAt,
+            AcceptedAt = completedAt,
+            AcceptedBy = completedAt is null ? null : "user-1",
+            AcceptanceState = completedAt is null
+                ? ProjectTaskAcceptanceState.Open
+                : ProjectTaskAcceptanceState.Accepted
+        };
+        task.Labels.Add("milestone:preview");
+        task.Labels.Add("version:0.1.0-preview");
+        task.Labels.Add("epic:editor");
+        task.Labels.Add("agent-session:agent-session-1");
+        task.AcceptanceCriteria.Add(new AcceptanceCriterion(
+            $"criterion-{taskId}",
+            "Golden output is stable.",
+            completedAt is null ? AcceptanceCriterionState.Open : AcceptanceCriterionState.Passed,
+            []));
+        task.Activity.Add(new TaskActivityEntry(
+            $"activity-{taskId}",
+            "agent-1",
+            PrincipalKind.Agent,
+            completedAt?.AddMinutes(-30) ?? FixedInstant.AddMinutes(10),
+            TaskActivityKind.TestResult,
+            "AgentSessionId=agent-session-1; focused tests green."));
+        return task;
+    }
+
     private static string CreateFakeAdb(string projectRoot)
     {
         var path = Path.Combine(projectRoot, "fake-adb.cmd");
@@ -987,6 +1160,7 @@ public sealed class Electron2DCliWorkflowTests
         "docs",
         "api",
         "mcp",
+        "tasks",
         "context",
         "doctor"
     ];
