@@ -8,7 +8,7 @@
 
 `EditorAgentProcessBootstrapper` реализован в `Electron2D.Tooling` как internal contract для запуска локальных агентских клиентов из открытого Editor. Это не встроенный чат и не интеграция с конкретным облачным поставщиком: слой создаёт session-scoped MCP configuration, план запуска процесса и проверяемый handshake с active Editor session.
 
-Реальный dock UI `Agent Workspace` подключается отдельной задачей. Текущий слой уже возвращает model-only state, который будущий dock может показывать без повторного определения статусов.
+Dock UI `Agent Workspace` описан отдельно в [Agent Workspace panel редактора](agent-workspace-panel.md). Bootstrapper остаётся источником agent session state, а панель показывает это состояние вместе с task, diagnostics, artifacts и jobs без повторного определения статусов.
 
 ## Профили
 
@@ -85,11 +85,12 @@ codex
 
 Текущий слой:
 
-- не рисует Agent Workspace dock;
 - не открывает реальный named pipe или Unix socket transport;
 - не запускает облачного AI-провайдера в тестах;
 - не выполняет arbitrary shell;
 - не сохраняет agent config в проект.
+
+Agent Workspace dock уже имеет model-first UI snapshot и visual harness, но live binding к реальному MCP transport остаётся следующим слоем поверх текущего bootstrapper-а.
 
 `IAgentProcessLauncher` позволяет production path запускать реальный процесс, а tests используют fake launcher без внешнего AI-клиента.
 

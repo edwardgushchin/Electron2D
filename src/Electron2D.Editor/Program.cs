@@ -23,6 +23,7 @@
     SOFTWARE.
 */
 using Electron2D.Editor.Inspector;
+using Electron2D.Editor.AgentWorkspace;
 using Electron2D.Editor.FileSystemDock;
 using Electron2D.Editor.ProjectManagement;
 using Electron2D.Editor.Run;
@@ -87,7 +88,12 @@ internal static class Program
             return RunShellLayoutSmoke(shellLayoutWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>]");
+        if (args is ["--agent-workspace-panel-smoke", var agentWorkspacePanelWorkRoot])
+        {
+            return RunAgentWorkspacePanelSmoke(agentWorkspacePanelWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>]");
         return 2;
     }
 
@@ -425,6 +431,68 @@ internal static class Program
         }
     }
 
+    private static int RunAgentWorkspacePanelSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorAgentWorkspacePanelSmoke.Run(workRoot);
+            var snapshot = result.Snapshot;
+            var job = snapshot.ActiveJob;
+            var input = job.InputIdentity;
+
+            Console.WriteLine("Electron2D.Editor agent workspace panel smoke passed");
+            Console.WriteLine($"AgentSessionId={snapshot.Session.AgentSessionId}");
+            Console.WriteLine($"ProfileId={snapshot.Session.ProfileId}");
+            Console.WriteLine($"ConnectionState={snapshot.Session.ConnectionState}");
+            Console.WriteLine($"HandshakeState={snapshot.Session.HandshakeState}");
+            Console.WriteLine($"Route={snapshot.Session.Route}");
+            Console.WriteLine($"LastAction={snapshot.Session.LastAction}");
+            Console.WriteLine($"CurrentTask={snapshot.Task.TaskId}");
+            Console.WriteLine($"TaskStatus={snapshot.Task.Status}");
+            Console.WriteLine($"AcceptanceState={snapshot.Task.AcceptanceState}");
+            Console.WriteLine($"LinkedTransactions={Join(snapshot.Task.LinkedTransactions)}");
+            Console.WriteLine($"LinkedJobs={Join(snapshot.Task.LinkedJobs)}");
+            Console.WriteLine($"LinkedDiagnostics={Join(snapshot.Task.LinkedDiagnostics)}");
+            Console.WriteLine($"LinkedArtifacts={Join(snapshot.Task.LinkedArtifacts)}");
+            Console.WriteLine($"ChangedObjects={Join(snapshot.ChangedObjects.Select(FormatChangedObject))}");
+            Console.WriteLine($"DiagnosticFields={Join(snapshot.DiagnosticFields)}");
+            Console.WriteLine($"JobKind={job.Kind}");
+            Console.WriteLine($"JobState={job.State}");
+            Console.WriteLine($"JobProgressPercent={job.ProgressPercent}");
+            Console.WriteLine($"CanCancel={job.CanCancel}");
+            Console.WriteLine($"InputSnapshotId={input.InputSnapshotId}");
+            Console.WriteLine($"InputWorkspaceRevision={input.InputWorkspaceRevision.Value}");
+            Console.WriteLine($"InputContentRevision={input.InputContentRevision.Value}");
+            Console.WriteLine($"InputBuildConfigurationHash={input.InputBuildConfigurationHash}");
+            Console.WriteLine($"StaleMarkers={Join(job.StaleMarkers)}");
+            Console.WriteLine($"GroupedUndoAvailable={snapshot.GroupedUndoAvailable}");
+            Console.WriteLine($"UndoGroupId={snapshot.UndoGroupId}");
+            Console.WriteLine($"AwaitingAcceptanceActionAvailable={snapshot.AwaitingAcceptanceActionAvailable}");
+            Console.WriteLine($"DoneActionAvailable={snapshot.DoneActionAvailable}");
+            Console.WriteLine($"DockPlacement={snapshot.DockState.Placement}");
+            Console.WriteLine($"DockPersisted={snapshot.DockState.Persisted}");
+            Console.WriteLine($"VisibleWorkspaces={Join(snapshot.DockState.VisibleWorkspaces)}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"StatePath={result.StatePath}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.TextOverflowCount == 0 &&
+                result.ForbiddenActionMatchCount == 0 &&
+                snapshot.AwaitingAcceptanceActionAvailable &&
+                !snapshot.DoneActionAvailable &&
+                snapshot.GroupedUndoAvailable &&
+                result.ScreenshotReviewed
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
     private static string Format(Electron2D.Vector2 value)
     {
         return string.Create(
@@ -452,6 +520,11 @@ internal static class Program
     private static string Join(IEnumerable<string> values)
     {
         return string.Join('|', values);
+    }
+
+    private static string FormatChangedObject(EditorAgentWorkspaceChangedObject changedObject)
+    {
+        return $"{EditorAgentWorkspaceVisualHarness.KindPrefix(changedObject.Kind)}:{changedObject.NavigationTarget}";
     }
 
     private static string FindRepositoryRoot()

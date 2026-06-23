@@ -29,11 +29,19 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --shell-l
 
 Она сохраняет layout state, PNG screenshot и JSON analysis artifact для проверки default layout, workspace switcher, docks, bottom panel, persistence и отсутствия 3D/GDScript/AssetLib UI.
 
+Smoke-команда Agent Workspace panel:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --agent-workspace-panel-smoke .temp\agent-workspace-panel
+```
+
+Она сохраняет dock state, PNG screenshot и JSON analysis artifact для проверки правого размещения Agent Workspace, session/task/job/actions model, полного diagnostics payload, artifacts с snapshot identity, grouped Undo и отсутствия AI action для human acceptance.
+
 ## Ограничения
 
 - В этой задаче нет постоянного desktop window event loop.
 - Нет Project Manager и файловых операций editor UI.
-- Общий shell layout уже содержит зоны docks, но содержательное scene editing, Inspector UI, 2D viewport tools, code editor и Agent Workspace content реализуются отдельными задачами.
+- Общий shell layout уже содержит зоны docks. Project Manager, scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace и model-first Agent Workspace content реализованы отдельными задачами, а постоянный desktop event loop остаётся следующим слоем.
 - Editor project не должен добавлять WPF, WinForms, Avalonia или другой внешний UI framework.
 
 ## Проверки
@@ -43,6 +51,7 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --shell-l
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectShellTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorShellLayoutTests"
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorAgentWorkspacePanelTests"
 ```
 
 Полные проверки:
