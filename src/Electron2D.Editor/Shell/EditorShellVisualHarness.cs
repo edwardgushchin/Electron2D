@@ -46,7 +46,8 @@ internal static class EditorShellVisualHarness
         var forbiddenUiMatches = layout.FindForbiddenUiMatches();
         var clickableControlCount = regions.Count(region => region.Clickable);
 
-        File.WriteAllBytes(screenshotPath, Render(layout, regions));
+        var canvas = RenderCanvas(layout, regions);
+        File.WriteAllBytes(screenshotPath, PngEncoder.Encode(canvas.Width, canvas.Height, canvas.Pixels));
         File.WriteAllText(analysisPath, CreateAnalysisJson(
             layout,
             regions,
@@ -64,7 +65,13 @@ internal static class EditorShellVisualHarness
             ScreenshotReviewed: true);
     }
 
-    private static byte[] Render(EditorShellLayout layout, IReadOnlyList<EditorShellRegion> regions)
+    public static PixelCanvas RenderCanvas(EditorShellLayout layout)
+    {
+        ArgumentNullException.ThrowIfNull(layout);
+        return RenderCanvas(layout, layout.CreateVisualRegions());
+    }
+
+    private static PixelCanvas RenderCanvas(EditorShellLayout layout, IReadOnlyList<EditorShellRegion> regions)
     {
         var canvas = new PixelCanvas(EditorShellLayout.DefaultViewportWidth, EditorShellLayout.DefaultViewportHeight);
         canvas.Clear(new Rgba(27, 31, 37));
@@ -87,7 +94,7 @@ internal static class EditorShellVisualHarness
         canvas.DrawText("SELECTION " + layout.GetWorkspaceState(layout.SelectedWorkspace).Selection.ToUpperInvariant(), center.X + 24, center.Y + 126, new Rgba(184, 204, 190), scale: 2);
         canvas.DrawText("OPEN DOCUMENTS PRESERVED", center.X + 24, center.Y + 160, new Rgba(184, 204, 190), scale: 2);
 
-        return PngEncoder.Encode(canvas.Width, canvas.Height, canvas.Pixels);
+        return canvas;
     }
 
     private static JsonObject CreateAnalysisJson(

@@ -1,8 +1,8 @@
 # Референс интерфейса редактора Godot 4
 
 Статус: целевая спецификация для `0.1.0 Preview`.
-Задача: `T-0157`.
-Дата: 2026-06-22.
+Задача: `T-0157`, дополнена gate-задачей `T-0165`.
+Дата: 2026-06-23.
 
 ## Цель
 
@@ -307,7 +307,9 @@ Workspace switching не должен сбрасывать:
 
 ## Visual acceptance reference
 
-Каждая задача `Electron2D.Editor`, которая создаёт или меняет видимый UI, должна включать screenshot/golden acceptance: исполнитель открывает реальное окно редактора или documented automated harness, сохраняет screenshot как артефакт задачи и явно анализирует layout до передачи на приёмку. Одной сборки, model test или headless smoke-команды недостаточно, если UI должен быть видимым пользователю.
+Каждая задача `Electron2D.Editor`, которая создаёт или меняет видимый UI, должна включать screenshot/golden acceptance: исполнитель открывает реальное окно редактора, сохраняет screenshot как артефакт задачи и явно анализирует layout до передачи на приёмку. Одной сборки, model test или headless smoke-команды недостаточно, если UI должен быть видимым пользователю.
+
+До появления real-window host documented automated harness мог использоваться как подготовительная проверка layout model. После `T-0165` такой harness больше не является финальной приёмкой visible UI: он может дополнять real-window artifact, но не заменять screenshot окна `Electron2D.Editor`.
 
 Минимальный visual checklist для таких задач:
 
@@ -327,7 +329,9 @@ Workspace switching не должен сбрасывать:
 
 ## T-0157 shell layout harness
 
-До появления постоянного desktop event loop задача `T-0157` закрывает default shell через документированный automated harness. Harness является проверяемым способом построить тот же layout model, который создаёт стартовый `EditorApplication`, сохранить визуальный PNG-артефакт и машинно-читаемый JSON-анализ.
+Исторически `T-0157` закрывала default shell через документированный automated harness до появления постоянного desktop event loop. Harness остаётся проверяемым способом построить тот же layout model, который создаёт стартовый `EditorApplication`, сохранить визуальный PNG-артефакт и машинно-читаемый JSON-анализ.
+
+Для релизной приёмки `0.1.0 Preview` этот harness должен быть переаттестован через `--window-smoke <work-root>` или отдельный real-window сценарий: screenshot должен подтверждать, что пользователь видит тот же layout в окне `Electron2D.Editor`.
 
 Harness должен:
 

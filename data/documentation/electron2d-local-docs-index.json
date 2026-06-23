@@ -109,11 +109,11 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/editor-project-shell.md",
-                                                    "sha256":  "40feddb65564cb5dcc5a08955afcc4b8089bb2c0806dc82908b9dcda3ac3617a"
+                                                    "sha256":  "a614913b8eacc90c099e34d16bf8372e36d014ba463382409388937116634d69"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/editor-shell-layout.md",
-                                                    "sha256":  "2ca7725187ec21723b71169dbd382b7e5b6effe8b2c4c29c77a40d634b1f4960"
+                                                    "sha256":  "2751beb5935a932c1c8ac25b1a75973ee42a45b0968b759880159d57e5383b32"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/file-system-dock.md",
@@ -27251,9 +27251,10 @@
                         "id":  "doc:documentation.editor.editor-shell-layout",
                         "kind":  "documentation",
                         "title":  "Editor shell layout и visual harness",
-                        "summary":  "Статус: реализовано для `T-0157`.",
+                        "summary":  "Статус: реализовано для `T-0157`, переаттестация через окно добавлена в `T-0165`.",
                         "keywords":  [
                                          "0157",
+                                         "0165",
                                          "docs",
                                          "documentation",
                                          "editor",
@@ -27277,9 +27278,10 @@
                         "id":  "doc:documentation.editor.editor-project-shell",
                         "kind":  "documentation",
                         "title":  "Electron2D.Editor project shell",
-                        "summary":  "Статус: документация реализации для `T-0078`.",
+                        "summary":  "Статус: документация реализации для `T-0078`, обновлено для `T-0165`.",
                         "keywords":  [
                                          "0078",
+                                         "0165",
                                          "2",
                                          "d",
                                          "docs",

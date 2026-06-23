@@ -1,23 +1,52 @@
 # Electron2D.Editor project shell
 
-Статус: документация реализации для `T-0078`.
-Дата: 2026-06-22.
+Статус: документация реализации для `T-0078`, обновлено для `T-0165`.
+Дата: 2026-06-23.
 
 ## Назначение
 
-`Electron2D.Editor` является отдельным executable project для desktop-редактора. Базовый shell проверяет, что editor build path существует, использует runtime `Electron2D`, может стартовать без внешнего desktop UI framework и строит стартовый UI root через общий shell layout model.
+`Electron2D.Editor` является отдельным executable project для desktop-редактора. Базовый shell проверяет, что editor build path существует, использует runtime `Electron2D`, может стартовать без внешнего desktop UI framework, строит стартовый UI root через общий shell layout model и создаёт пользовательское desktop-окно.
 
-Это ещё не полноценный редактор с постоянным desktop event loop. Project Manager, docks, viewport interactions, Inspector, run/stop workflow, встроенный редактор кода, C# language services и Agent Workspace panel реализуются отдельными задачами поверх этого проекта. Общий layout shell, persistence и visual harness описаны отдельно: [Editor shell layout и visual harness](editor-shell-layout.md). Центральное рабочее пространство встроенного редактора кода описано отдельно: [Script workspace редактора](script-workspace.md), semantic C# подсказки описаны в [C# language services в Script workspace](../scripting/editor-language-services.md).
+Project Manager, docks, viewport interactions, Inspector, run/stop workflow, встроенный редактор кода, C# language services и Agent Workspace panel реализуются отдельными задачами поверх этого проекта. Общий layout shell, persistence и visual harness описаны отдельно: [Editor shell layout и visual harness](editor-shell-layout.md). Центральное рабочее пространство встроенного редактора кода описано отдельно: [Script workspace редактора](script-workspace.md), semantic C# подсказки описаны в [C# language services в Script workspace](../scripting/editor-language-services.md).
 
 ## Текущее поведение
 
-Editor executable поддерживает smoke-режим:
+Editor executable поддерживает быстрый bootstrap smoke-режим:
 
 ```powershell
 dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --smoke
 ```
 
 Smoke-режим создаёт `SceneTree`, настраивает root `Viewport`, строит первый UI root через runtime controls и выводит machine-readable строки с результатом. Проверка используется тестами и CI, чтобы подтвердить, что editor shell запускается на Electron2D runtime.
+
+Обычный запуск без smoke-флагов теперь создаёт desktop window `Electron2D.Editor`, показывает стартовый shell frame и остаётся в event loop до закрытия окна пользователем. Этот режим предназначен для ручного запуска редактора.
+
+Автоматическая проверка реального окна:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-smoke .temp\editor-window-smoke
+```
+
+Команда создаёт desktop window `Electron2D.Editor`, показывает окно, прокачивает event loop, отрисовывает shell frame, проверяет pointer hit-test по workspace switcher и keyboard command dispatch для baseline shortcut map, затем завершает smoke без зависания. Дополнительно команда запускает существующие visible UI harnesses и последовательно показывает их frames в настоящем окне, чтобы переаттестовать ранее закрытые model-first слои через real-window presenter.
+
+Основной результат сохраняется в:
+
+- `.temp/editor-window-smoke/visual/editor-window-smoke.png`;
+- `.temp/editor-window-smoke/visual/editor-window-smoke.analysis.json`.
+
+Layer reattestation artifacts сохраняются под `.temp/editor-window-smoke/visible-layer-reattestation/`:
+
+| Task | Layer |
+| --- | --- |
+| `T-0157` | default shell layout |
+| `T-0150` | Agent Workspace panel |
+| `T-0155` | Project Tasks board |
+| `T-0158` | Script workspace |
+| `T-0159` | Script language services |
+| `T-0160` | Managed debugger |
+| `T-0161` | Script/debugger tooling |
+
+PNG является screenshot frame, отправленным в созданное окно, а JSON analysis фиксирует `WindowCreated`, `WindowShown`, `FramePresented`, `EventPumpObserved`, selected workspace, размер окна, размер screenshot, pointer/keyboard result, text overflow count, clickable controls, forbidden UI matches и `reattestedVisibleLayers` со статусом `presentedInWindow=True` для каждого visible UI layer.
 
 `Electron2D.Editor` подключает `data/assets/branding/icon/electron2d.ico` как `ApplicationIcon`, поэтому собираемый desktop executable получает брендовую иконку из поставляемого asset pack.
 
@@ -63,9 +92,9 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-
 
 ## Ограничения
 
-- В этой задаче нет постоянного desktop window event loop.
+- `--window-smoke` создаёт управляемый короткий event loop для автоматической проверки, а обычный запуск остаётся в event loop до закрытия окна.
 - Нет Project Manager и файловых операций editor UI.
-- Общий shell layout уже содержит зоны docks. Project Manager, scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace, model-first Agent Workspace content и model-first `Tasks` workspace реализованы отдельными задачами, а постоянный desktop event loop остаётся следующим слоем.
+- Общий shell layout уже содержит зоны docks. Project Manager, scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace, model-first Agent Workspace content и model-first `Tasks` workspace реализованы отдельными задачами.
 - Editor project не должен добавлять WPF, WinForms, Avalonia или другой внешний UI framework.
 
 ## Проверки
@@ -80,6 +109,14 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptWorkspaceTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptLanguageServicesTests"
 ```
+
+Ручная visual acceptance проверка после `T-0165`:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-smoke .temp\editor-window-smoke
+```
+
+После запуска агент должен открыть `.temp/editor-window-smoke/visual/editor-window-smoke.png` и проверить, что layout читаем, `Tasks` workspace выбран, docks и bottom panel размещены ожидаемо, текст не выходит за контейнеры и запрещённые `3D`/`AssetLib`/GDScript элементы отсутствуют.
 
 Полные проверки:
 

@@ -41,12 +41,17 @@ internal static class Program
     {
         if (args.Length == 0)
         {
-            return RunOnce(isSmoke: false);
+            return RunEditorWindow();
         }
 
         if (args is ["--smoke"])
         {
             return RunOnce(isSmoke: true);
+        }
+
+        if (args is ["--window-smoke", var windowSmokeWorkRoot])
+        {
+            return RunWindowSmoke(windowSmokeWorkRoot);
         }
 
         if (args is ["--project-manager-smoke", var workRoot, "--user-data-dir", var userDataRoot])
@@ -119,8 +124,26 @@ internal static class Program
             return RunProjectTasksBoardSmoke(tasksBoardWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--window-smoke <work-root>] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
         return 2;
+    }
+
+    private static int RunEditorWindow()
+    {
+        try
+        {
+            var exitCode = EditorWindowSmoke.RunInteractive();
+            Console.WriteLine(exitCode == 0
+                ? "Electron2D.Editor window closed"
+                : "Electron2D.Editor window failed");
+
+            return exitCode;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
     }
 
     private static int RunOnce(bool isSmoke)
@@ -340,6 +363,52 @@ internal static class Program
                 result.FixedBuildSucceeded &&
                 result.RerunAfterRebuild &&
                 result.SceneRoundTripStable
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunWindowSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorWindowSmoke.RunSmoke(workRoot);
+
+            Console.WriteLine("Electron2D.Editor window smoke passed");
+            Console.WriteLine($"WindowTitle={result.WindowTitle}");
+            Console.WriteLine($"WindowCreated={result.WindowCreated}");
+            Console.WriteLine($"WindowShown={result.WindowShown}");
+            Console.WriteLine($"FramePresented={result.FramePresented}");
+            Console.WriteLine($"EventPumpObserved={result.EventPumpObserved}");
+            Console.WriteLine($"PointerInteractionObserved={result.PointerInteractionObserved}");
+            Console.WriteLine($"KeyboardInteractionObserved={result.KeyboardInteractionObserved}");
+            Console.WriteLine($"SelectedWorkspace={result.SelectedWorkspace}");
+            Console.WriteLine($"WindowSize={result.WindowWidth}x{result.WindowHeight}");
+            Console.WriteLine($"WindowPixelSize={result.PixelWidth}x{result.PixelHeight}");
+            Console.WriteLine($"VideoDriver={result.VideoDriver}");
+            Console.WriteLine($"FrameCount={result.FrameCount}");
+            Console.WriteLine($"TextOverflowCount={result.TextOverflowCount}");
+            Console.WriteLine($"ClickableControlCount={result.ClickableControlCount}");
+            Console.WriteLine($"ForbiddenUiMatches={result.ForbiddenUiMatchCount}");
+            Console.WriteLine($"ReattestedVisibleLayers={Join(result.ReattestedVisibleLayers)}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.WindowCreated &&
+                result.WindowShown &&
+                result.FramePresented &&
+                result.EventPumpObserved &&
+                result.PointerInteractionObserved &&
+                result.KeyboardInteractionObserved &&
+                result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
+                result.ScreenshotReviewed
                 ? 0
                 : 1;
         }
