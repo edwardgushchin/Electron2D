@@ -177,7 +177,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/export-guide.md",
-                                                    "sha256":  "2b4b1bef6d4635b95867404a2ed711e82bf409d8114da1951bf80c3534f31eb4"
+                                                    "sha256":  "1fa5181b43f847f125b28e182e9a3f483d37bd4660812d95f4416a6b4ce9680c"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/export-preset-model.md",
@@ -185,7 +185,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/ios-arm64-export.md",
-                                                    "sha256":  "a58c4018ebb3ba23d725347bdefc436ff42000b6e8bb0a9da867d1a32e7dc9c2"
+                                                    "sha256":  "df96154cdf03bee096ab6b95789606ad7f7bfe2751656d2f5a0dfce63cb9973d"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/linux-x64-export.md",
@@ -27390,7 +27390,7 @@
                         "id":  "doc:documentation.export.ios-arm64-export",
                         "kind":  "documentation",
                         "title":  "iOS arm64 export",
-                        "summary":  "`IosArm64` with runtime identifier `ios-arm64` is documented as a blocked mobile target for Electron2D `0.1.0 Preview`. It is not a ready release path in the current repository state.",
+                        "summary":  "`IosArm64` with runtime identifier `ios-arm64` is still a blocked mobile release target for Electron2D `0.1.0 Preview`. It is not a ready release path in the current repository state because the required macOS/Xcode simulator or device smoke has not been run.",
                         "keywords":  [
                                          "0",
                                          "1",
@@ -27399,17 +27399,19 @@
                                          "a",
                                          "arm",
                                          "arm64",
-                                         "as",
+                                         "because",
+                                         "been",
                                          "blocked",
                                          "current",
                                          "d",
+                                         "device",
                                          "docs",
                                          "documentation",
-                                         "documented",
                                          "electron",
                                          "electron2d",
                                          "export",
                                          "for",
+                                         "has",
                                          "i",
                                          "identifier",
                                          "in",
@@ -27417,20 +27419,29 @@
                                          "iosarm64",
                                          "is",
                                          "it",
+                                         "mac",
+                                         "macos",
                                          "md",
                                          "mobile",
                                          "not",
+                                         "or",
                                          "os",
                                          "path",
                                          "preview",
                                          "ready",
                                          "release",
                                          "repository",
+                                         "required",
+                                         "run",
                                          "runtime",
+                                         "simulator",
+                                         "smoke",
                                          "state",
+                                         "still",
                                          "target",
                                          "the",
-                                         "with"
+                                         "with",
+                                         "xcode"
                                      ],
                         "sourcePath":  "docs/documentation/export/ios-arm64-export.md",
                         "sourceId":  "doc:documentation.export.ios-arm64-export",

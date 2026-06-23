@@ -30,6 +30,18 @@ $sourceRoot = Join-Path $repoRoot 'src/Electron2D'
 $coreRoot = Join-Path $sourceRoot 'Core'
 $exportPresetRoot = Join-Path $sourceRoot 'Export/Presets'
 
+function Get-RepositoryRelativePath([string]$basePath, [string]$path) {
+    $baseFullPath = [System.IO.Path]::GetFullPath($basePath)
+    if (-not $baseFullPath.EndsWith([System.IO.Path]::DirectorySeparatorChar.ToString(), [System.StringComparison]::Ordinal)) {
+        $baseFullPath += [System.IO.Path]::DirectorySeparatorChar
+    }
+
+    $baseUri = [System.Uri]::new($baseFullPath)
+    $pathUri = [System.Uri]::new([System.IO.Path]::GetFullPath($path))
+
+    return [System.Uri]::UnescapeDataString($baseUri.MakeRelativeUri($pathUri).ToString()) -replace '/', [System.IO.Path]::DirectorySeparatorChar
+}
+
 if (-not (Test-Path -LiteralPath $sourceRoot)) {
     throw 'Runtime source root src/Electron2D was not found.'
 }
@@ -140,7 +152,7 @@ foreach ($file in $sourceFiles) {
         if ($line -match $namespacePattern) {
             $namespace = $Matches[1]
             if ($allowedNamespaces -notcontains $namespace) {
-                $relativePath = [System.IO.Path]::GetRelativePath($repoRoot, $file.FullName).Replace('\', '/')
+                $relativePath = (Get-RepositoryRelativePath $repoRoot $file.FullName).Replace('\', '/')
                 throw "Unsupported namespace '$namespace' in ${relativePath}:$lineNumber. Source folders do not define namespaces."
             }
         }

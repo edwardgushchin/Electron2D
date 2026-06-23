@@ -16,10 +16,10 @@ The export layer is intentionally fail-closed. A missing SDK, unsupported runtim
 | `LinuxX64` | `linux-x64` | Verified desktop baseline | `tools\Verify-LinuxExport.ps1` on Linux or WSL |
 | `MacOSArm64` | `osx-arm64` | Verified desktop baseline | `tools\Verify-MacOSExport.ps1` on macOS arm64 |
 | `AndroidArm64` | `android-arm64` | Debug APK baseline with emulator smoke; release AAB signing plan | [Android arm64 export](android-arm64-export.md) |
-| `IosArm64` | `ios-arm64` | Blocked mobile status | [iOS arm64 export](ios-arm64-export.md) |
+| `IosArm64` | `ios-arm64` | Planner/staging baseline; blocked simulator/device smoke | [iOS arm64 export](ios-arm64-export.md) |
 | `WebAssemblyBrowser` | `browser-wasm` | Package and smoke baseline | [WebAssembly browser export](webassembly-browser-export.md) |
 
-Desktop export means the repository can create, publish, and run the empty project package on the matching host. The WebAssembly browser baseline can plan the static package layout, create host/loader/manifest files, copy project resources, and write a structured smoke artifact. Android can now plan/stage debug APK and release AAB workflows, build a debug APK when the local Android toolchain is available, install/run it through `adb`, and produce a structured smoke artifact. iOS remains a documented mobile gap.
+Desktop export means the repository can create, publish, and run the empty project package on the matching host. The WebAssembly browser baseline can plan the static package layout, create host/loader/manifest files, copy project resources, and write a structured smoke artifact. Android can now plan/stage debug APK and release AAB workflows, build a debug APK when the local Android toolchain is available, install/run it through `adb`, and produce a structured smoke artifact. iOS can now plan and stage a transient Xcode project and write a blocked smoke artifact, but remains blocked as a release path until a macOS/Xcode simulator or device smoke run passes.
 
 <!-- export-doc:preset-file -->
 ## Preset file
@@ -54,7 +54,9 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-an
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-android --project <project-root> --output exports/android/debug --smoke-output .electron2d/export-smoke/android-smoke.json --adb-path <path-to-adb> --adb-serial <serial> --format json
 ```
 
-`run-android` is intentionally fail-closed until a connected authorized device or emulator is available. Use `--adb-serial` when more than one Android target is connected. For `x86_64` emulators, the command builds a temporary `android-x64` smoke package; this does not replace the `android-arm64` production preset. `IosArm64` is still a documented mobile gap. Mobile export remains a release gate until each platform task provides device/simulator smoke checks, reference-game evidence and CI/reporting evidence.
+`run-android` is intentionally fail-closed until a connected authorized device or emulator is available. Use `--adb-serial` when more than one Android target is connected. For `x86_64` emulators, the command builds a temporary `android-x64` smoke package; this does not replace the `android-arm64` production preset.
+
+`IosArm64` currently has an internal planner, transient Xcode project staging builder and blocked smoke artifact writer. It does not run `xcodebuild`, signing, install, launch or simulator/device smoke from this repository state. Mobile export remains a release gate until each platform task provides device/simulator smoke checks, reference-game evidence and CI/reporting evidence.
 
 <!-- export-doc:web-status -->
 ## WebAssembly browser status
@@ -86,7 +88,7 @@ Verifier scripts do not read real secrets and do not publish artifacts.
 
 - Desktop export is verified against the empty project template, not finished reference games.
 - Windows x64, Linux x64 glibc, and macOS arm64 are the only verified desktop targets.
-- Linux musl, Linux ARM, Windows ARM, macOS x64, Android release signing with real credentials, and iOS are outside the current verified native export baseline.
+- Linux musl, Linux ARM, Windows ARM, macOS x64, Android release signing with real credentials, and iOS simulator/device smoke are outside the current verified native export baseline.
 - Automated browser launch, remote hosting deploy, PWA installation and service worker caching are outside the current WebAssembly baseline.
 - Android lifecycle, orientation, safe area, touch, package staging, debug APK build and emulator deployment/runtime smoke have a repository baseline, but release signing publish and long reference-game soak are not complete release paths.
 - GitHub Release publication is intentionally outside these verifier commands and requires a separate user command.
