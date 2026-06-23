@@ -1,0 +1,27 @@
+{
+  "type": "Scene",
+  "formatVersion": 1,
+  "root": {
+    "type": "Control",
+    "name": "UiHeavyReferenceMenu",
+    "script": "Scripts/CardPuzzleGame.cs",
+    "children": [
+      {
+        "type": "Panel",
+        "name": "MenuPanel"
+      },
+      {
+        "type": "VBoxContainer",
+        "name": "MenuLayout"
+      },
+      {
+        "type": "Button",
+        "name": "StartButton"
+      },
+      {
+        "type": "Button",
+        "name": "LocaleButton"
+      }
+    ]
+  }
+}

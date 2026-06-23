@@ -1,0 +1,15 @@
+{
+  "id": "orbit-cards-preview",
+  "version": 1,
+  "cards": [
+    { "id": "sun", "rank": 1, "suit": "star", "score": 10 },
+    { "id": "moon", "rank": 2, "suit": "orbit", "score": 20 },
+    { "id": "comet", "rank": 3, "suit": "orbit", "score": 30 },
+    { "id": "station", "rank": 4, "suit": "metal", "score": 40 }
+  ],
+  "rules": {
+    "handSize": 4,
+    "matchBy": "suit",
+    "allowUndo": true
+  }
+}

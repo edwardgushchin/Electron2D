@@ -47,4 +47,6 @@ Verifier проверяет:
 
 `T-0136` закрыл asset blocker для `T-0094` и `T-0095`: оба reference examples получили локальные визуальные, звуковые, font/UI и data/localization resources.
 
-`T-0094` реализовал `examples/reference-platformer/` как валидный проект `Electron2D.Editor` поверх этих ассетов. `T-0095`, `T-0093` и `T-0102` остаются отдельными задачами: UI-heavy reference game, smoke/soak checks и performance gate должны проверяться поверх настоящих reference projects, а не временных fixtures.
+`T-0094` реализовал `examples/reference-platformer/` как валидный проект `Electron2D.Editor` поверх этих ассетов.
+
+`T-0095` реализовал `examples/ui-heavy-reference/` как валидный проект `Electron2D.Editor` поверх `ui-heavy/` и `shared/` ассетов. `T-0093` и `T-0102` остаются отдельными задачами: smoke/soak checks и performance gate должны проверяться поверх настоящих reference projects, а не временных fixtures.

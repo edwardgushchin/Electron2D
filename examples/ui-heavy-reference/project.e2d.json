@@ -1,0 +1,111 @@
+{
+  "format": "Electron2D.ProjectSettings",
+  "formatVersion": 1,
+  "name": "Electron2D.UiHeavyReference",
+  "version": "0.1.0",
+  "engineVersion": "0.1.0-preview",
+  "mainScene": "scenes/menu.scene.json",
+  "rendererProfile": "Compatibility",
+  "physicsTicksPerSecond": 60,
+  "input": {
+    "actions": [
+      {
+        "name": "accept",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "A"
+          },
+          {
+            "type": "key",
+            "keycode": "Enter",
+            "physical_keycode": "Enter"
+          },
+          {
+            "type": "key",
+            "keycode": "Space",
+            "physical_keycode": "Space"
+          }
+        ]
+      },
+      {
+        "name": "cancel",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "B"
+          },
+          {
+            "type": "key",
+            "keycode": "Escape",
+            "physical_keycode": "Escape"
+          }
+        ]
+      },
+      {
+        "name": "next_card",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "DpadRight"
+          },
+          {
+            "type": "key",
+            "keycode": "Right",
+            "physical_keycode": "Right"
+          }
+        ]
+      },
+      {
+        "name": "previous_card",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "DpadLeft"
+          },
+          {
+            "type": "key",
+            "keycode": "Left",
+            "physical_keycode": "Left"
+          }
+        ]
+      },
+      {
+        "name": "switch_locale",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "Y"
+          },
+          {
+            "type": "key",
+            "keycode": "L",
+            "physical_keycode": "L"
+          }
+        ]
+      }
+    ]
+  },
+  "display": {
+    "windowWidth": 1280,
+    "windowHeight": 720,
+    "fullscreen": false,
+    "dpiScale": 1,
+    "stretchMode": "Viewport",
+    "stretchAspect": "Keep",
+    "stretchScaleMode": "Fractional",
+    "stretchScale": 1,
+    "orientation": "Sensor",
+    "safeArea": {
+      "x": 0,
+      "y": 24,
+      "width": 0,
+      "height": 0
+    }
+  }
+}

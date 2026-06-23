@@ -1,0 +1,74 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 1,
+  "taskId": "ui-heavy-acceptance",
+  "title": "Verify the 0.1.0 Preview UI-heavy reference game",
+  "description": "Open the project in Electron2D.Editor, inspect menu/game/result scenes, resources, localization and tasks, run the card puzzle and verify the UI-heavy workflow before accepting this reference game.",
+  "status": "AwaitingAcceptance",
+  "readiness": "Ready",
+  "blockingReasons": [],
+  "priority": "P0",
+  "rank": "1000",
+  "labels": [
+    "reference-game",
+    "ui-heavy",
+    "version:0.1.0-preview"
+  ],
+  "assignee": null,
+  "createdBy": "electron2d-ui-heavy-reference",
+  "parentTaskId": null,
+  "dependencies": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "editor-project-contract",
+      "description": "Project Manager opens the project, validation passes, and save/reopen preserves project settings, scenes, resources and task metadata.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "ui-gameplay-subsystems",
+      "description": "The game verifies Control layout, containers, buttons, lists, localization, responsive layouts, touch, text, save progress and scene transitions.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "android-compatibility-renderer",
+      "description": "Android export preset uses the Compatibility renderer profile and package planning excludes Editor metadata from runtime contents.",
+      "state": "Open",
+      "evidenceLinks": []
+    }
+  ],
+  "subtasks": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-ui-heavy-reference-created",
+      "actorId": "electron2d-ui-heavy-reference",
+      "actorKind": "System",
+      "createdAt": "2026-06-23T12:32:00.0000000+00:00",
+      "kind": "Decision",
+      "payload": "Initial acceptance task created with the UI-heavy reference game project files."
+    }
+  ],
+  "linkedTransactions": [],
+  "linkedJobs": [],
+  "linkedDiagnostics": [],
+  "linkedArtifacts": [],
+  "linkedScenesResourcesAndNodes": [
+    "project.e2d.json",
+    "scenes/menu.scene.json",
+    "scenes/game.scene.json",
+    "scenes/result.scene.json",
+    "Scripts/CardPuzzleGame.cs",
+    "resources/ui-heavy-reference.manifest.json"
+  ],
+  "createdAt": "2026-06-23T12:32:00.0000000+00:00",
+  "updatedAt": "2026-06-23T12:32:00.0000000+00:00",
+  "submittedAt": "2026-06-23T12:32:00.0000000+00:00",
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "acceptanceState": "AwaitingHumanAcceptance",
+  "archivedAt": null,
+  "archivedBy": null,
+  "cancellationReason": null
+}

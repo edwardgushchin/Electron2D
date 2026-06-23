@@ -1,0 +1,12 @@
+{
+  "locale": "ru",
+  "entries": {
+    "game.title": "Orbit Cards",
+    "menu.play": "Играть",
+    "menu.options": "Настройки",
+    "menu.quit": "Выход",
+    "hud.moves": "Ходы",
+    "hud.score": "Счёт",
+    "result.win": "Последовательность собрана"
+  }
+}

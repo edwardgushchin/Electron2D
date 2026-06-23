@@ -1,0 +1,54 @@
+{
+  "$schema": "https://electron2d.dev/schemas/project-system/electron2d-lock.schema.json",
+  "format": "Electron2D.ReproducibilityLock",
+  "schemaVersion": 1,
+  "engine": {
+    "version": "0.1.0-preview"
+  },
+  "dotnet": {
+    "sdkVersion": "10.0.101",
+    "rollForward": "latestFeature",
+    "targetFramework": "net10.0"
+  },
+  "nuget": {
+    "packages": [
+      {
+        "id": "Electron2D",
+        "version": "0.1.0-preview"
+      }
+    ]
+  },
+  "nativeRuntime": {
+    "packages": [
+      {
+        "id": "SDL3-CS",
+        "version": "3.4.10.3"
+      },
+      {
+        "id": "SDL3-CS.Native.Shadercross",
+        "version": "3.0.0"
+      },
+      {
+        "id": "SDL3-CS.Native.TTF",
+        "version": "3.3.0"
+      }
+    ]
+  },
+  "assetImporters": {
+    "texture": "0.1.0-preview",
+    "font": "0.1.0-preview",
+    "audio": "0.1.0-preview",
+    "shader": "0.1.0-preview"
+  },
+  "project": {
+    "rendererProfile": "Compatibility",
+    "physicsBackendVersion": "physics-2d-preview-0.1.0",
+    "serializationSchemaVersion": "1"
+  },
+  "exportTemplates": {
+    "version": "0.1.0-preview"
+  },
+  "signing": {
+    "mode": "referencesOnly"
+  }
+}
