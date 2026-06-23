@@ -32,6 +32,7 @@ using Electron2D.Editor.Run;
 using Electron2D.Editor.Scripting;
 using Electron2D.Editor.SceneTreeDock;
 using Electron2D.Editor.Shell;
+using Electron2D.Editor.SpecializedEditors;
 using Electron2D.Editor.Viewport2D;
 
 namespace Electron2D.Editor;
@@ -130,7 +131,12 @@ internal static class Program
             return RunProjectSettingsSmoke(projectSettingsWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--window-smoke <work-root>] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>] [--project-settings-smoke <work-root>]");
+        if (args is ["--specialized-editors-smoke", var specializedEditorsWorkRoot])
+        {
+            return RunSpecializedEditorsSmoke(specializedEditorsWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--window-smoke <work-root>] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>] [--project-settings-smoke <work-root>] [--specialized-editors-smoke <work-root>]");
         return 2;
     }
 
@@ -551,6 +557,60 @@ internal static class Program
                 result.KeyboardInteractionObserved &&
                 result.TextOverflowCount == 0 &&
                 result.ForbiddenUiMatchCount == 0 &&
+                result.ScreenshotReviewed
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunSpecializedEditorsSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorSpecializedEditorsSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor specialized editors smoke passed");
+            Console.WriteLine($"ProjectPath={result.ProjectPath}");
+            Console.WriteLine($"SpriteFramesPath={result.SpriteFramesPath}");
+            Console.WriteLine($"TileSetPath={result.TileSetPath}");
+            Console.WriteLine($"AnimationPath={result.AnimationPath}");
+            Console.WriteLine($"ScenePath={result.ScenePath}");
+            Console.WriteLine($"SpriteAnimations={result.SpriteAnimations}");
+            Console.WriteLine($"TileMapUsedRect={result.TileMapUsedRect}");
+            Console.WriteLine($"AnimationTracks={result.AnimationTracks}");
+            Console.WriteLine($"SpriteFramesRoundTrip={result.SpriteFramesRoundTrip}");
+            Console.WriteLine($"TileMapRoundTrip={result.TileMapRoundTrip}");
+            Console.WriteLine($"AnimationTimelineRoundTrip={result.AnimationTimelineRoundTrip}");
+            Console.WriteLine($"SceneRoundTrip={result.SceneRoundTrip}");
+            Console.WriteLine($"WindowCreated={result.WindowCreated}");
+            Console.WriteLine($"WindowShown={result.WindowShown}");
+            Console.WriteLine($"FramePresented={result.FramePresented}");
+            Console.WriteLine($"EventPumpObserved={result.EventPumpObserved}");
+            Console.WriteLine($"PointerInteractionObserved={result.PointerInteractionObserved}");
+            Console.WriteLine($"KeyboardInteractionObserved={result.KeyboardInteractionObserved}");
+            Console.WriteLine($"TextOverflowCount={result.TextOverflowCount}");
+            Console.WriteLine($"ClickableControlCount={result.ClickableControlCount}");
+            Console.WriteLine($"ForbiddenUiMatches={result.ForbiddenUiMatches}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.SpriteFramesRoundTrip &&
+                result.TileMapRoundTrip &&
+                result.AnimationTimelineRoundTrip &&
+                result.SceneRoundTrip &&
+                result.WindowCreated &&
+                result.WindowShown &&
+                result.FramePresented &&
+                result.PointerInteractionObserved &&
+                result.KeyboardInteractionObserved &&
+                result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatches == 0 &&
                 result.ScreenshotReviewed
                 ? 0
                 : 1;

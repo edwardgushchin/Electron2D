@@ -210,6 +210,20 @@ Project Settings открывается из editor workflow как видимы
 - Видны `Save Apply` и `Revert` как пользовательские действия текущего panel.
 - PNG screenshot и JSON analysis фиксируют bounds sections/actions, pointer hit-test по строке Input Map, keyboard save command, отсутствие text overflow и отсутствие forbidden UI entries.
 
+## Specialized editors
+
+Specialized editors для `SpriteFrames`, `TileMap` и `AnimationPlayer` открываются внутри `2D` workspace, а не как отдельные утилиты. Пользователь остаётся в общем shell layout: слева видны `Scene` и `FileSystem`, справа `Inspector` и `Agent Workspace`, снизу bottom panel с вкладкой `Animation`.
+
+Проверяемый минимум UI для `T-0086`:
+
+- `2D` выбран в общем workspace switcher.
+- В центральной области одновременно видны panels `SpriteFrames`, `TileMap` и `AnimationPlayer`.
+- `SpriteFrames` показывает animations, frames, fps, loop mode, выбранный texture reference и действия add/remove/reorder.
+- `TileMap` показывает tileset source, palette grid, selected tile, brush/erase/paint, grid координаты и used rect.
+- `AnimationPlayer` показывает animations, tracks, keyframes, playhead, length, loop mode и target path.
+- Все три editor panels записывают runtime resource/scene text documents и после reopen показывают те же данные.
+- PNG screenshot и JSON analysis фиксируют bounds panels/actions, pointer hit-test по palette tile, keyboard save command, отсутствие text overflow и отсутствие `3D`, `AssetLib`, GDScript UI и `.gd` files.
+
 ## Agent Workspace dock
 
 `Agent Workspace` — постоянная dock-панель, доступная одновременно с любым центральным workspace.

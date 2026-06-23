@@ -8,6 +8,7 @@
 `Electron2D.Editor` является отдельным executable project для desktop-редактора. Базовый shell проверяет, что editor build path существует, использует runtime `Electron2D`, может стартовать без внешнего desktop UI framework, строит стартовый UI root через общий shell layout model и создаёт пользовательское desktop-окно.
 
 Project Manager, docks, viewport interactions, Inspector, Project Settings UI, run/stop workflow, встроенный редактор кода, C# language services и Agent Workspace panel реализуются отдельными задачами поверх этого проекта. Общий layout shell, persistence и visual harness описаны отдельно: [Editor shell layout и visual harness](editor-shell-layout.md). Экран настроек проекта описан отдельно: [Project Settings UI редактора](project-settings-ui.md). Центральное рабочее пространство встроенного редактора кода описано отдельно: [Script workspace редактора](script-workspace.md), semantic C# подсказки описаны в [C# language services в Script workspace](../scripting/editor-language-services.md).
+Specialized editors для `SpriteFrames`, `TileMap` и `AnimationPlayer` описаны отдельно: [Specialized editors в `Electron2D.Editor`](specialized-editors.md).
 
 ## Текущее поведение
 
@@ -82,6 +83,14 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --project
 
 Она создаёт валидный проект из canonical template, открывает его через Project Manager, сохраняет `project.e2d.json` и `export_presets.e2export.json`, заново загружает оба файла, показывает Project Settings frame в настоящем окне и сохраняет PNG/JSON visual analysis artifact. Проверка фиксирует `mainScene`, display settings, renderer profile, physics tick rate, Input Map, export presets, pointer/keyboard result, отсутствие text overflow и отсутствие запрещённых 3D/GDScript/AssetLib UI.
 
+Smoke-команда specialized editors:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --specialized-editors-smoke .temp\specialized-editors-smoke
+```
+
+Она создаёт валидный проект из canonical template, сохраняет `SpriteFrames`, `TileSet`, `Animation` и scene file в runtime text formats, перечитывает их через runtime serializers, показывает specialized editors frame в настоящем окне и сохраняет PNG/JSON visual analysis artifact. Проверка фиксирует `SpriteFrames`, `TileMap` и `AnimationPlayer` panels, pointer interaction по palette tile, keyboard save command, отсутствие text overflow и отсутствие запрещённых 3D/GDScript/AssetLib UI.
+
 Smoke-команда Script workspace:
 
 ```powershell
@@ -115,6 +124,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorAgentWorkspacePanelTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectTasksBoardTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectSettingsUiTests"
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorSpecializedEditorsTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptWorkspaceTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptLanguageServicesTests"
 ```
