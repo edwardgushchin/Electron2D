@@ -63,7 +63,7 @@ Validation result содержит:
 - `E2D-EXPORT-DOTNET-0001` - .NET SDK недоступен;
 - `E2D-EXPORT-ANDROID-0001` - Android SDK недоступен;
 - `E2D-EXPORT-ANDROID-0002` - Android NDK недоступен;
-- `E2D-EXPORT-IOS-0001` - Xcode недоступен;
+- `E2D-EXPORT-IOS-0013` - Xcode недоступен;
 - `E2D-EXPORT-WEB-0001` - .NET WebAssembly build tools недоступны;
 - `E2D-EXPORT-SIGNING-0001` - signing identity недоступна;
 - `E2D-EXPORT-SIGNING-0002` - signing credential reference недоступна.

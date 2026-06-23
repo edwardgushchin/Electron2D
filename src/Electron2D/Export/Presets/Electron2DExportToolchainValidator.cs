@@ -82,7 +82,7 @@ internal static class Electron2DExportToolchainValidator
         if (preset.Target == Electron2DExportTarget.IosArm64 && string.IsNullOrWhiteSpace(environment.XcodePath))
         {
             diagnostics.Add(Error(
-                "E2D-EXPORT-IOS-0001",
+                "E2D-EXPORT-IOS-0013",
                 preset.Name,
                 $"Xcode is required before export preset '{preset.Name}' can run."));
         }

@@ -57,6 +57,7 @@ Stable diagnostics:
 - `E2D-EXPORT-IOS-0010` - путь ресурса выходит за пределы project root;
 - `E2D-EXPORT-IOS-0011` - iOS simulator или device недоступен;
 - `E2D-EXPORT-IOS-0012` - smoke criterion не прошёл.
+- `E2D-EXPORT-IOS-0013` - Xcode недоступен для iOS toolchain validation.
 
 Сообщения diagnostics не должны раскрывать private keys, certificate bodies, provisioning profile contents, passwords, tokens или secret values.
 

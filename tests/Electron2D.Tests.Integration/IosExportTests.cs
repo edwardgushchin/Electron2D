@@ -133,6 +133,42 @@ public sealed class IosExportTests
     }
 
     [Fact]
+    public void IosToolchainValidationUsesDedicatedXcodeDiagnosticCode()
+    {
+        var preset = CreateIosPreset(
+            Electron2D.Electron2DExportConfiguration.Release,
+            Path.Combine("exports", "ios", "release"),
+            signingRequired: true);
+        preset.Signing = new Electron2D.Electron2DExportSigningSettings
+        {
+            Required = true,
+            Identity = "Apple Development: Example Studio (TEAMID1234)",
+            CredentialReference = "env:E2D_IOS_SIGNING"
+        };
+        var environment = new Electron2D.Electron2DExportToolchainEnvironment
+        {
+            DotnetSdkAvailable = true,
+            XcodePath = "",
+            SigningIdentityAvailable = false,
+            SigningCredentialReferenceAvailable = false
+        };
+
+        var result = Electron2D.Electron2DExportToolchainValidator.Validate(preset, environment);
+
+        Assert.False(result.Succeeded);
+        Assert.Equal(
+            new[]
+            {
+                "E2D-EXPORT-IOS-0013",
+                "E2D-EXPORT-SIGNING-0001",
+                "E2D-EXPORT-SIGNING-0002"
+            },
+            result.Diagnostics.Select(diagnostic => diagnostic.Code));
+        Assert.DoesNotContain(result.Diagnostics, diagnostic => diagnostic.Code == "E2D-EXPORT-IOS-0001");
+        Assert.All(result.Diagnostics, diagnostic => Assert.DoesNotContain("E2D_IOS_SIGNING", diagnostic.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void IosXcodeProjectBuilderCreatesStagingProjectWithoutEditorMetadata()
     {
         var projectRoot = CreateIosProjectRoot("electron2d-ios-package-");
