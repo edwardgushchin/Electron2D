@@ -24,21 +24,19 @@
 */
 namespace Electron2D;
 
-internal sealed class Electron2DExportToolchainEnvironment
+internal sealed class Electron2DAndroidExportPlanResult
 {
-    public bool DotnetSdkAvailable { get; set; }
+    public Electron2DAndroidExportPlanResult(
+        Electron2DAndroidExportPlan? plan,
+        IEnumerable<Electron2DExportDiagnostic> diagnostics)
+    {
+        Plan = plan;
+        Diagnostics = diagnostics.ToArray();
+    }
 
-    public string AndroidSdkPath { get; set; } = string.Empty;
+    public bool Succeeded => Plan is not null && Diagnostics.All(diagnostic => diagnostic.Severity != Electron2DExportDiagnosticSeverity.Error);
 
-    public string AndroidNdkPath { get; set; } = string.Empty;
+    public Electron2DAndroidExportPlan? Plan { get; }
 
-    public string JavaSdkPath { get; set; } = string.Empty;
-
-    public string XcodePath { get; set; } = string.Empty;
-
-    public bool WebAssemblyBuildToolsAvailable { get; set; }
-
-    public bool SigningIdentityAvailable { get; set; }
-
-    public bool SigningCredentialReferenceAvailable { get; set; }
+    public Electron2DExportDiagnostic[] Diagnostics { get; }
 }

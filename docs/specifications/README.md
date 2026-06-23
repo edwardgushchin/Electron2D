@@ -137,6 +137,7 @@
 - [Windows x64 export](export/windows-x64-export.md) - self-contained `win-x64` package plan, локальный publish/run verifier и fail-closed validation.
 - [Linux x64 glibc export](export/linux-x64-export.md) - self-contained `linux-x64` package plan, glibc-only scope, WSL/Linux verifier и fail-closed validation.
 - [macOS arm64 export](export/macos-arm64-export.md) - self-contained `osx-arm64` `.app` bundle plan, x64 policy, user-provided signing plan и macOS verifier.
+- [Android arm64 export](export/android-arm64-export.md) - `android-arm64` APK/AAB package plan, signing references, mobile runtime policies и device smoke criteria.
 - [WebAssembly browser export](export/webassembly-browser-export.md) - `browser-wasm` package layout, browser runtime policies, static hosting workflow, toolchain diagnostics и smoke criteria.
 
 ## Примеры и reference games

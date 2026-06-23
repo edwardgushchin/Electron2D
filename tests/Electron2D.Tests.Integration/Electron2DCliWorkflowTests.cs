@@ -421,6 +421,141 @@ public sealed class Electron2DCliWorkflowTests
     }
 
     [Fact]
+    public void ExportPlanAndroidReturnsAndroidArm64PlanWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("android-plan-cli");
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "plan-android",
+            "--project",
+            projectRoot,
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var plan = data.GetProperty("plan");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export plan-android", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.Equal("export.android.plan", data.GetProperty("mode").GetString());
+        Assert.Equal("AndroidArm64", data.GetProperty("target").GetString());
+        Assert.Equal("android-arm64", data.GetProperty("runtimeIdentifier").GetString());
+        Assert.Equal("apk", plan.GetProperty("packageFormat").GetString());
+        Assert.Equal("arm64-v8a", plan.GetProperty("abi").GetString());
+        Assert.EndsWith("exports/android/debug/android", plan.GetProperty("stagingDirectory").GetString()?.Replace('\\', '/'), StringComparison.Ordinal);
+        Assert.Contains("pauseResume", plan.GetProperty("smokeCriteria").EnumerateArray().Select(item => item.GetString()));
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+    }
+
+    [Fact]
+    public void ExportBuildAndroidCreatesStagingProjectWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("android-build-cli");
+        Directory.CreateDirectory(Path.Combine(projectRoot, "assets"));
+        File.WriteAllText(Path.Combine(projectRoot, "assets", "sprite.txt"), "sprite");
+        Directory.CreateDirectory(Path.Combine(projectRoot, ".electron2d", "tasks"));
+        File.WriteAllText(Path.Combine(projectRoot, ".electron2d", "tasks", "welcome.e2task"), "local task metadata");
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "build-android",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/android/debug",
+            "--skip-publish",
+            "true",
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var package = data.GetProperty("package");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export build-android", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+        Assert.Equal("export.android.build", data.GetProperty("mode").GetString());
+        Assert.Equal("staged", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.True(data.GetProperty("result").GetProperty("publishSkipped").GetBoolean());
+        Assert.Contains("Electron2D.Android.csproj", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("MainActivity.cs", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("AndroidManifest.xml", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("Assets/electron2d/assets/sprite.txt", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "android", "debug", "android", "Electron2D.Android.csproj")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "android", "debug", "android", "MainActivity.cs")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "android", "debug", "android", "AndroidManifest.xml")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "exports", "android", "debug", "android", "Assets", "electron2d", ".electron2d")));
+    }
+
+    [Fact]
+    public void ExportRunAndroidWithoutDeviceWritesBlockedSmokeArtifactWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("android-run-cli");
+        var build = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "build-android",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/android/debug",
+            "--skip-publish",
+            "true",
+            "--format",
+            "json");
+        Assert.Equal(0, build.ExitCode);
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "run-android",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/android/debug",
+            "--smoke-output",
+            ".electron2d/export-smoke/android-smoke.json",
+            "--format",
+            "json");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var smoke = data.GetProperty("smoke");
+        var diagnostic = root.GetProperty("diagnostics")[0];
+
+        Assert.False(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export run-android", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+        Assert.Equal("export.android.run", data.GetProperty("mode").GetString());
+        Assert.Equal("smoke-blocked", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal("E2D-CLI-0002", diagnostic.GetProperty("code").GetString());
+        Assert.Contains("E2D-EXPORT-ANDROID-0014", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+        Assert.True(File.Exists(Path.Combine(projectRoot, ".electron2d", "export-smoke", "android-smoke.json")));
+        Assert.Contains("pauseResume", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("render", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("input", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("audio", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("resources", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("filesystem", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+    }
+
+    [Fact]
     public void UnknownCommandGroupReturnsStableJsonDiagnostic()
     {
         var result = RunCli(

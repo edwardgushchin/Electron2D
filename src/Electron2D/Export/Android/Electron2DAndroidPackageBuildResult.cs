@@ -24,21 +24,19 @@
 */
 namespace Electron2D;
 
-internal sealed class Electron2DExportToolchainEnvironment
+internal sealed class Electron2DAndroidPackageBuildResult
 {
-    public bool DotnetSdkAvailable { get; set; }
+    public Electron2DAndroidPackageBuildResult(
+        IEnumerable<string> files,
+        IEnumerable<Electron2DExportDiagnostic> diagnostics)
+    {
+        Files = files.OrderBy(path => path, StringComparer.Ordinal).ToArray();
+        Diagnostics = diagnostics.ToArray();
+    }
 
-    public string AndroidSdkPath { get; set; } = string.Empty;
+    public bool Succeeded => Diagnostics.All(diagnostic => diagnostic.Severity != Electron2DExportDiagnosticSeverity.Error);
 
-    public string AndroidNdkPath { get; set; } = string.Empty;
+    public string[] Files { get; }
 
-    public string JavaSdkPath { get; set; } = string.Empty;
-
-    public string XcodePath { get; set; } = string.Empty;
-
-    public bool WebAssemblyBuildToolsAvailable { get; set; }
-
-    public bool SigningIdentityAvailable { get; set; }
-
-    public bool SigningCredentialReferenceAvailable { get; set; }
+    public Electron2DExportDiagnostic[] Diagnostics { get; }
 }

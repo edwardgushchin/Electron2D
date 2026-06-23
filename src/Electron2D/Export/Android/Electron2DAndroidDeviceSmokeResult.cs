@@ -24,21 +24,32 @@
 */
 namespace Electron2D;
 
-internal sealed class Electron2DExportToolchainEnvironment
+internal sealed class Electron2DAndroidDeviceSmokeResult
 {
-    public bool DotnetSdkAvailable { get; set; }
+    public Electron2DAndroidDeviceSmokeResult(
+        string artifactPath,
+        string deviceSerial,
+        string status,
+        IReadOnlyDictionary<string, bool> criteria,
+        IEnumerable<Electron2DExportDiagnostic> diagnostics)
+    {
+        ArtifactPath = artifactPath;
+        DeviceSerial = deviceSerial;
+        Status = status;
+        Criteria = criteria.ToDictionary(item => item.Key, item => item.Value, StringComparer.Ordinal);
+        Diagnostics = diagnostics.ToArray();
+    }
 
-    public string AndroidSdkPath { get; set; } = string.Empty;
+    public bool Succeeded => Diagnostics.All(diagnostic => diagnostic.Severity != Electron2DExportDiagnosticSeverity.Error) &&
+        Criteria.Values.All(passed => passed);
 
-    public string AndroidNdkPath { get; set; } = string.Empty;
+    public string ArtifactPath { get; }
 
-    public string JavaSdkPath { get; set; } = string.Empty;
+    public string DeviceSerial { get; }
 
-    public string XcodePath { get; set; } = string.Empty;
+    public string Status { get; }
 
-    public bool WebAssemblyBuildToolsAvailable { get; set; }
+    public IReadOnlyDictionary<string, bool> Criteria { get; }
 
-    public bool SigningIdentityAvailable { get; set; }
-
-    public bool SigningCredentialReferenceAvailable { get; set; }
+    public Electron2DExportDiagnostic[] Diagnostics { get; }
 }

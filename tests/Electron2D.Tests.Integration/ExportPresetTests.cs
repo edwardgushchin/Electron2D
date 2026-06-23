@@ -206,6 +206,7 @@ public sealed class ExportPresetTests
                 "E2D-EXPORT-DOTNET-0001",
                 "E2D-EXPORT-ANDROID-0001",
                 "E2D-EXPORT-ANDROID-0002",
+                "E2D-EXPORT-ANDROID-0016",
                 "E2D-EXPORT-SIGNING-0001",
                 "E2D-EXPORT-SIGNING-0002"
             },

@@ -111,6 +111,7 @@ internal static partial class Electron2DCommandLine
             "run" when HeadlessRuntimeAutomation.HasRuntimeOptions(options) => RunHeadlessRuntime(options, output, error, context),
             "test" when HasSceneTestSuite(options, NormalizeProjectRoot(options.ProjectRoot)) => RunSceneTests(options, output, error, context),
             "export" when IsWebExportCommand(options) => RunWebExport(options, output, error, context),
+            "export" when IsAndroidExportCommand(options) => RunAndroidExport(options, output, error, context),
             "import" or "build" or "run" or "test" or "export" => RunJob(group, options, output, error, context),
             _ => WriteResult(
                 CliResult.Blocked(
@@ -475,6 +476,14 @@ internal static partial class Electron2DCommandLine
             string.Equals(options.Values[0], "run-web", StringComparison.OrdinalIgnoreCase));
     }
 
+    private static bool IsAndroidExportCommand(CliOptions options)
+    {
+        return options.Values.Count > 0 &&
+            (string.Equals(options.Values[0], "plan-android", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(options.Values[0], "build-android", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(options.Values[0], "run-android", StringComparison.OrdinalIgnoreCase));
+    }
+
     private static int RunWebExport(
         CliOptions options,
         TextWriter output,
@@ -492,6 +501,28 @@ internal static partial class Electron2DCommandLine
                     options,
                     "Unknown export command.",
                     CreateCliDiagnostic("E2D-CLI-0001", "Use `e2d export plan-web`, `e2d export build-web` or `e2d export run-web`.")),
+                output,
+                error)
+        };
+    }
+
+    private static int RunAndroidExport(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        return options.Values[0].ToLowerInvariant() switch
+        {
+            "plan-android" => RunAndroidExportPlan(options, output, error),
+            "build-android" => RunAndroidExportBuild(options, output, error),
+            "run-android" => RunAndroidExportSmoke(options, output, error, context),
+            _ => WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "Use `e2d export plan-android`, `e2d export build-android` or `e2d export run-android`.")),
                 output,
                 error)
         };
@@ -683,6 +714,181 @@ internal static partial class Electron2DCommandLine
                 operation: null,
                 job: null,
                 data: BuildWebExportRunData(planContext.Plan, smokeResult)),
+            output,
+            error);
+    }
+
+    private static int RunAndroidExportPlan(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export plan-android` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateAndroidExportPlanContext("export plan-android", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "export plan-android",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "Android arm64 export plan created.",
+                changedFiles: [],
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: BuildAndroidExportPlanData(planContext.Plan)),
+            output,
+            error);
+    }
+
+    private static int RunAndroidExportBuild(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export build-android` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateAndroidExportPlanContext("export build-android", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        var packageResult = Electron2D.Electron2DAndroidPackageBuilder.Build(
+            planContext.Plan,
+            planContext.ProjectRoot,
+            planContext.Settings);
+        if (!packageResult.Succeeded)
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "export build-android",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "Android package staging failed.",
+                    MapExportDiagnostics(packageResult.Diagnostics),
+                    BuildAndroidExportFailureData("export.android.build", "package_failed", planContext.Plan)),
+                output,
+                error);
+        }
+
+        var skipPublish = ReadBooleanOption(options, "--skip-publish", defaultValue: false, "export build-android");
+        if (!skipPublish)
+        {
+            var environment = DetectAndroidExportToolchainEnvironment();
+            environment.SigningIdentityAvailable = !planContext.Preset.Signing.Required ||
+                !string.IsNullOrWhiteSpace(planContext.Preset.Signing.Identity);
+            environment.SigningCredentialReferenceAvailable = !planContext.Preset.Signing.Required ||
+                !string.IsNullOrWhiteSpace(planContext.Preset.Signing.CredentialReference);
+            var validation = Electron2D.Electron2DExportToolchainValidator.Validate(planContext.Preset, environment);
+            if (!validation.Succeeded)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export build-android",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "Android export build failed before publish.",
+                        MapExportDiagnostics(validation.Diagnostics),
+                        BuildAndroidExportFailureData("export.android.build", "toolchain_failed", planContext.Plan)),
+                    output,
+                    error);
+            }
+
+            var buildDiagnostics = RunDotnetAndroidBuild(planContext.Plan, environment);
+            if (buildDiagnostics.Count > 0)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export build-android",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "Android export build failed.",
+                        buildDiagnostics,
+                        BuildAndroidExportFailureData("export.android.build", "build_failed", planContext.Plan)),
+                    output,
+                    error);
+            }
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "export build-android",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "Android package staging created.",
+                changedFiles: ToProjectRelativeAndroidFiles(planContext.ProjectRoot, planContext.Plan.StagingDirectory, packageResult.Files),
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: BuildAndroidExportBuildData(planContext.Plan, packageResult, skipPublish)),
+            output,
+            error);
+    }
+
+    private static int RunAndroidExportSmoke(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export run-android` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateAndroidExportPlanContext("export run-android", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        var smokeOutput = ResolveProjectChildPath(
+            planContext.ProjectRoot,
+            options.GetOption("--smoke-output") ?? Path.Combine(".electron2d", "export-smoke", "android-smoke.json"));
+        var smokeResult = Electron2D.Electron2DAndroidDeviceSmokeRunner.Run(
+            planContext.Plan,
+            smokeOutput,
+            Electron2D.Electron2DAndroidDeviceSmokeObservation.Blocked("No connected Android device or emulator is available for Android export smoke."),
+            context.NowUtc);
+
+        return WriteResult(
+            CliResult.Failure(
+                "export run-android",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "Android device smoke is blocked.",
+                MapExportDiagnostics(smokeResult.Diagnostics),
+                BuildAndroidExportRunData(planContext.Plan, smokeResult)),
             output,
             error);
     }
@@ -1069,6 +1275,83 @@ internal static partial class Electron2DCommandLine
         return true;
     }
 
+    private static bool TryCreateAndroidExportPlanContext(
+        string command,
+        CliOptions options,
+        out AndroidExportPlanContext planContext,
+        out CliResult? failure)
+    {
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        var settingsPath = Path.Combine(projectRoot, "project.e2d.json");
+        var settingsResult = Electron2D.Electron2DSettingsStore.LoadProject(settingsPath);
+        if (!settingsResult.Succeeded || settingsResult.Settings is null)
+        {
+            planContext = AndroidExportPlanContext.Empty;
+            failure = CliResult.Failure(
+                command,
+                options,
+                projectRoot,
+                CliRoute.None,
+                "Android arm64 export planning failed.",
+                settingsResult.Diagnostics.Select(diagnostic => CreateCliDiagnostic(
+                    "E2D-CLI-0002",
+                    $"{diagnostic.Code}: {diagnostic.Message}")).ToArray(),
+                BuildAndroidExportFailureData(
+                    ModeForAndroidCommand(command),
+                    "settings_load_failed",
+                    plan: null));
+            return false;
+        }
+
+        var configuration = ReadExportConfiguration(options.GetOption("--configuration") ?? "Debug", options, command);
+        var signingRequired = ReadBooleanOption(
+            options,
+            "--signing-required",
+            defaultValue: configuration == Electron2D.Electron2DExportConfiguration.Release,
+            command);
+        var outputDirectory = ResolveProjectChildPath(
+            projectRoot,
+            options.GetOption("--output") ?? Path.Combine("exports", "android", configuration.ToString().ToLowerInvariant()));
+        var projectFilePath = ResolveProjectFilePath(projectRoot, options.GetOption("--project-file"));
+        var preset = new Electron2D.Electron2DExportPreset
+        {
+            Name = options.GetOption("--preset-name") ??
+                (configuration == Electron2D.Electron2DExportConfiguration.Release ? "android-release" : "android-debug"),
+            Target = Electron2D.Electron2DExportTarget.AndroidArm64,
+            Configuration = configuration,
+            RuntimeIdentifier = "android-arm64",
+            SelfContained = true,
+            RendererProfile = ReadRendererProfile(options.GetOption("--renderer-profile") ?? settingsResult.Settings.RendererProfile.ToString(), options, command),
+            OutputDirectory = outputDirectory,
+            IncludeDebugSymbols = ReadBooleanOption(options, "--debug-symbols", defaultValue: configuration == Electron2D.Electron2DExportConfiguration.Debug, command),
+            Signing = new Electron2D.Electron2DExportSigningSettings
+            {
+                Required = signingRequired,
+                Identity = options.GetOption("--signing-identity") ?? string.Empty,
+                CredentialReference = options.GetOption("--signing-credential-reference") ?? string.Empty
+            }
+        };
+
+        var planResult = Electron2D.Electron2DAndroidExportPlanner.CreatePlan(preset, projectFilePath, settingsResult.Settings);
+        if (!planResult.Succeeded || planResult.Plan is null)
+        {
+            planContext = AndroidExportPlanContext.Empty;
+            failure = CliResult.Failure(
+                command,
+                options,
+                projectRoot,
+                CliRoute.None,
+                "Android arm64 export planning failed.",
+                MapExportDiagnostics(planResult.Diagnostics),
+                BuildAndroidExportFailureData(ModeForAndroidCommand(command), "plan_failed", plan: null));
+            return false;
+        }
+
+        planContext = new AndroidExportPlanContext(projectRoot, settingsResult.Settings, preset, planResult.Plan);
+        failure = null;
+        return true;
+    }
+
     private static string ResolveProjectChildPath(string projectRoot, string path)
     {
         var fullPath = Path.IsPathRooted(path)
@@ -1222,6 +1505,200 @@ internal static partial class Electron2DCommandLine
         }
     }
 
+    private static Electron2D.Electron2DExportToolchainEnvironment DetectAndroidExportToolchainEnvironment()
+    {
+        var androidSdkPath = FindAndroidSdkPath();
+        return new Electron2D.Electron2DExportToolchainEnvironment
+        {
+            DotnetSdkAvailable = ReadDotnetSdkVersion() is not null,
+            AndroidSdkPath = androidSdkPath,
+            AndroidNdkPath = FindAndroidNdkPath(androidSdkPath),
+            JavaSdkPath = FindJavaSdkPath()
+        };
+    }
+
+    private static string FindAndroidSdkPath()
+    {
+        var candidates = new[]
+        {
+            Environment.GetEnvironmentVariable("ANDROID_HOME"),
+            Environment.GetEnvironmentVariable("ANDROID_SDK_ROOT"),
+            @"G:\Android\Sdk",
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Android",
+                "Sdk")
+        };
+
+        return candidates
+            .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+            .Select(candidate => Path.GetFullPath(candidate!))
+            .FirstOrDefault(Directory.Exists) ?? string.Empty;
+    }
+
+    private static string FindAndroidNdkPath(string androidSdkPath)
+    {
+        var env = Environment.GetEnvironmentVariable("ANDROID_NDK_HOME");
+        if (!string.IsNullOrWhiteSpace(env) && Directory.Exists(env))
+        {
+            return Path.GetFullPath(env);
+        }
+
+        var ndkRoot = string.IsNullOrWhiteSpace(androidSdkPath) ? string.Empty : Path.Combine(androidSdkPath, "ndk");
+        if (!Directory.Exists(ndkRoot))
+        {
+            return string.Empty;
+        }
+
+        return Directory.EnumerateDirectories(ndkRoot)
+            .OrderByDescending(path => path, StringComparer.Ordinal)
+            .FirstOrDefault() ?? string.Empty;
+    }
+
+    private static string FindJavaSdkPath()
+    {
+        var candidates = new[]
+        {
+            Environment.GetEnvironmentVariable("JAVA_HOME"),
+            @"G:\Dev\jdk17"
+        };
+
+        return candidates
+            .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+            .Select(candidate => Path.GetFullPath(candidate!))
+            .FirstOrDefault(path => Directory.Exists(path) &&
+                File.Exists(Path.Combine(path, "bin", "java.exe")) &&
+                IsJavaSdk17OrNewer(path)) ?? string.Empty;
+    }
+
+    private static bool IsJavaSdk17OrNewer(string javaSdkPath)
+    {
+        var releasePath = Path.Combine(javaSdkPath, "release");
+        if (!File.Exists(releasePath))
+        {
+            return false;
+        }
+
+        try
+        {
+            var versionLine = File.ReadLines(releasePath)
+                .FirstOrDefault(line => line.StartsWith("JAVA_VERSION=", StringComparison.Ordinal));
+            if (string.IsNullOrWhiteSpace(versionLine))
+            {
+                return false;
+            }
+
+            var version = versionLine.Split('=', count: 2)[1].Trim().Trim('"');
+            var majorText = version.StartsWith("1.", StringComparison.Ordinal)
+                ? version.Split('.', StringSplitOptions.RemoveEmptyEntries).Skip(1).FirstOrDefault()
+                : version.Split('.', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            return int.TryParse(majorText, out var major) && major >= 17;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
+    private static IReadOnlyList<StructuredDiagnostic> RunDotnetAndroidBuild(
+        Electron2D.Electron2DAndroidExportPlan plan,
+        Electron2D.Electron2DExportToolchainEnvironment environment)
+    {
+        try
+        {
+            using var process = new Process();
+            process.StartInfo = new ProcessStartInfo("dotnet")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            foreach (var argument in plan.BuildArguments)
+            {
+                process.StartInfo.ArgumentList.Add(argument);
+            }
+
+            if (!string.IsNullOrWhiteSpace(environment.AndroidSdkPath))
+            {
+                process.StartInfo.Environment["ANDROID_HOME"] = environment.AndroidSdkPath;
+                process.StartInfo.Environment["ANDROID_SDK_ROOT"] = environment.AndroidSdkPath;
+                process.StartInfo.ArgumentList.Add("-p:AndroidSdkDirectory=" + environment.AndroidSdkPath);
+            }
+
+            if (!string.IsNullOrWhiteSpace(environment.AndroidNdkPath))
+            {
+                process.StartInfo.ArgumentList.Add("-p:AndroidNdkDirectory=" + environment.AndroidNdkPath);
+            }
+
+            if (!string.IsNullOrWhiteSpace(environment.JavaSdkPath))
+            {
+                process.StartInfo.Environment["JAVA_HOME"] = environment.JavaSdkPath;
+                var javaBin = Path.Combine(environment.JavaSdkPath, "bin");
+                var existingPath = process.StartInfo.Environment.TryGetValue("Path", out var pathValue) ||
+                    process.StartInfo.Environment.TryGetValue("PATH", out pathValue)
+                    ? pathValue
+                    : Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+                var javaFirstPath = string.IsNullOrWhiteSpace(existingPath)
+                    ? javaBin
+                    : javaBin + Path.PathSeparator + existingPath;
+                process.StartInfo.Environment["Path"] = javaFirstPath;
+                process.StartInfo.Environment["PATH"] = javaFirstPath;
+                process.StartInfo.ArgumentList.Add("-p:JavaSdkDirectory=" + environment.JavaSdkPath);
+            }
+
+            if (!process.Start())
+            {
+                return [CreateCliDiagnostic("E2D-CLI-0002", "E2D-EXPORT-ANDROID-0010: dotnet Android build could not start.")];
+            }
+
+            var stdout = process.StandardOutput.ReadToEnd();
+            var stderr = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            if (process.ExitCode == 0)
+            {
+                return [];
+            }
+
+            var message = ExtractDotnetFailureMessage(stdout, stderr, process.ExitCode, "dotnet Android build failed.");
+            return [CreateCliDiagnostic("E2D-CLI-0002", $"E2D-EXPORT-ANDROID-0010: {message}")];
+        }
+        catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            return [CreateCliDiagnostic("E2D-CLI-0002", $"E2D-EXPORT-ANDROID-0010: dotnet Android build could not run: {exception.Message}")];
+        }
+    }
+
+    private static string ExtractDotnetFailureMessage(string stdout, string stderr, int exitCode, string fallback)
+    {
+        var lines = stdout
+            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+            .Concat(stderr.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+            .Select(line => line.Trim())
+            .Where(line => !string.IsNullOrWhiteSpace(line))
+            .ToArray();
+        var errorLine = lines.FirstOrDefault(line =>
+            line.Contains(": error ", StringComparison.OrdinalIgnoreCase) ||
+            line.Contains(" error ", StringComparison.OrdinalIgnoreCase) ||
+            line.StartsWith("error ", StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(errorLine))
+        {
+            return $"exit code {exitCode}: {errorLine}";
+        }
+
+        var usefulLine = lines.LastOrDefault(line =>
+            !line.Contains("Прошло времени", StringComparison.OrdinalIgnoreCase) &&
+            !line.Contains("Elapsed", StringComparison.OrdinalIgnoreCase));
+        return string.IsNullOrWhiteSpace(usefulLine)
+            ? $"exit code {exitCode}: {fallback}"
+            : $"exit code {exitCode}: {usefulLine}";
+    }
+
     private static JsonObject BuildWebExportFailureData(string mode, string status)
     {
         return new JsonObject
@@ -1324,6 +1801,124 @@ internal static partial class Electron2DCommandLine
         };
     }
 
+    private static JsonObject BuildAndroidExportFailureData(
+        string mode,
+        string status,
+        Electron2D.Electron2DAndroidExportPlan? plan)
+    {
+        return new JsonObject
+        {
+            ["mode"] = mode,
+            ["target"] = "AndroidArm64",
+            ["runtimeIdentifier"] = "android-arm64",
+            ["result"] = new JsonObject
+            {
+                ["status"] = status
+            },
+            ["plan"] = plan is null ? null : BuildAndroidExportPlanData(plan)["plan"]?.DeepClone()
+        };
+    }
+
+    private static JsonObject BuildAndroidExportPlanData(Electron2D.Electron2DAndroidExportPlan plan)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.android.plan",
+            ["target"] = "AndroidArm64",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = "planned"
+            },
+            ["plan"] = new JsonObject
+            {
+                ["projectFilePath"] = plan.ProjectFilePath,
+                ["configuration"] = plan.Configuration.ToString(),
+                ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+                ["abi"] = plan.Abi,
+                ["packageFormat"] = plan.PackageFormat,
+                ["dotnetCommand"] = plan.DotnetCommand,
+                ["selfContained"] = plan.SelfContained,
+                ["outputDirectory"] = plan.OutputDirectory,
+                ["stagingDirectory"] = plan.StagingDirectory,
+                ["artifactsDirectory"] = plan.ArtifactsDirectory,
+                ["smokeDirectory"] = plan.SmokeDirectory,
+                ["androidProjectFilePath"] = plan.AndroidProjectFilePath,
+                ["mainActivityPath"] = plan.MainActivityPath,
+                ["manifestPath"] = plan.ManifestPath,
+                ["exportMetadataPath"] = plan.ExportMetadataPath,
+                ["projectAssetsDirectory"] = plan.ProjectAssetsDirectory,
+                ["buildArguments"] = WriteStringArray(plan.BuildArguments),
+                ["rendererProfile"] = plan.RendererProfile.ToString(),
+                ["graphicsBackend"] = plan.GraphicsBackend,
+                ["mobileGraphicsProfile"] = plan.MobileGraphicsProfile,
+                ["fallbackPolicy"] = plan.FallbackPolicy,
+                ["requiredFiles"] = WriteStringArray(plan.RequiredFiles),
+                ["mobilePolicies"] = WriteStringArray(plan.MobilePolicies),
+                ["smokeCriteria"] = WriteStringArray(plan.SmokeCriteria),
+                ["includeDebugSymbols"] = plan.IncludeDebugSymbols,
+                ["signingRequired"] = plan.SigningRequired,
+                ["signingIdentity"] = plan.SigningIdentity,
+                ["signingCredentialReference"] = plan.SigningCredentialReference,
+                ["orientation"] = plan.Orientation
+            }
+        };
+    }
+
+    private static JsonObject BuildAndroidExportBuildData(
+        Electron2D.Electron2DAndroidExportPlan plan,
+        Electron2D.Electron2DAndroidPackageBuildResult packageResult,
+        bool publishSkipped)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.android.build",
+            ["target"] = "AndroidArm64",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = publishSkipped ? "staged" : "built",
+                ["publishSkipped"] = publishSkipped
+            },
+            ["plan"] = BuildAndroidExportPlanData(plan)["plan"]?.DeepClone(),
+            ["package"] = new JsonObject
+            {
+                ["stagingDirectory"] = plan.StagingDirectory,
+                ["artifactsDirectory"] = plan.ArtifactsDirectory,
+                ["files"] = WriteStringArray(packageResult.Files),
+                ["smokeCommand"] = "e2d export run-android --project <project-root> --output <output-directory> --format json"
+            }
+        };
+    }
+
+    private static JsonObject BuildAndroidExportRunData(
+        Electron2D.Electron2DAndroidExportPlan plan,
+        Electron2D.Electron2DAndroidDeviceSmokeResult smokeResult)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.android.run",
+            ["target"] = "AndroidArm64",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = smokeResult.Status switch
+                {
+                    "passed" => "smoke-passed",
+                    "blocked" => "smoke-blocked",
+                    _ => "smoke-failed"
+                }
+            },
+            ["smoke"] = new JsonObject
+            {
+                ["artifactPath"] = smokeResult.ArtifactPath,
+                ["deviceSerial"] = smokeResult.DeviceSerial,
+                ["status"] = smokeResult.Status,
+                ["criteria"] = WriteSmokeCriteria(smokeResult.Criteria)
+            }
+        };
+    }
+
     private static JsonObject WriteSmokeCriteria(IReadOnlyDictionary<string, bool> criteria)
     {
         var result = new JsonObject();
@@ -1354,6 +1949,14 @@ internal static partial class Electron2DCommandLine
             .ToArray();
     }
 
+    private static string[] ToProjectRelativeAndroidFiles(string projectRoot, string stagingDirectory, IEnumerable<string> packageFiles)
+    {
+        return packageFiles
+            .Select(file => Path.GetRelativePath(projectRoot, Path.Combine(stagingDirectory, file)).Replace('\\', '/'))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+    }
+
     private static string ModeForWebCommand(string command)
     {
         return command switch
@@ -1361,6 +1964,16 @@ internal static partial class Electron2DCommandLine
             "export build-web" => "export.web.build",
             "export run-web" => "export.web.run",
             _ => "export.web.plan"
+        };
+    }
+
+    private static string ModeForAndroidCommand(string command)
+    {
+        return command switch
+        {
+            "export build-android" => "export.android.build",
+            "export run-android" => "export.android.run",
+            _ => "export.android.plan"
         };
     }
 
@@ -1865,6 +2478,35 @@ internal static partial class Electron2DCommandLine
         public Electron2D.Electron2DExportPreset Preset { get; }
 
         public Electron2D.Electron2DWebAssemblyExportPlan Plan { get; }
+    }
+
+    private sealed class AndroidExportPlanContext
+    {
+        public static readonly AndroidExportPlanContext Empty = new(
+            string.Empty,
+            new Electron2D.Electron2DProjectSettings(),
+            new Electron2D.Electron2DExportPreset(),
+            new Electron2D.Electron2DAndroidExportPlan());
+
+        public AndroidExportPlanContext(
+            string projectRoot,
+            Electron2D.Electron2DProjectSettings settings,
+            Electron2D.Electron2DExportPreset preset,
+            Electron2D.Electron2DAndroidExportPlan plan)
+        {
+            ProjectRoot = projectRoot;
+            Settings = settings;
+            Preset = preset;
+            Plan = plan;
+        }
+
+        public string ProjectRoot { get; }
+
+        public Electron2D.Electron2DProjectSettings Settings { get; }
+
+        public Electron2D.Electron2DExportPreset Preset { get; }
+
+        public Electron2D.Electron2DAndroidExportPlan Plan { get; }
     }
 }
 

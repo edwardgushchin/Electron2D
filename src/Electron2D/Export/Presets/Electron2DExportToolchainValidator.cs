@@ -69,6 +69,14 @@ internal static class Electron2DExportToolchainValidator
                     preset.Name,
                     $"Android NDK is required before export preset '{preset.Name}' can run."));
             }
+
+            if (string.IsNullOrWhiteSpace(environment.JavaSdkPath))
+            {
+                diagnostics.Add(Error(
+                    "E2D-EXPORT-ANDROID-0016",
+                    preset.Name,
+                    $"JDK 17 or newer is required before Android export preset '{preset.Name}' can run."));
+            }
         }
 
         if (preset.Target == Electron2DExportTarget.IosArm64 && string.IsNullOrWhiteSpace(environment.XcodePath))
