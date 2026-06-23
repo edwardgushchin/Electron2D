@@ -372,7 +372,7 @@ Workspace switching не должен сбрасывать:
 
 ## T-0157 shell layout harness
 
-Исторически `T-0157` закрывала default shell через документированный automated harness до появления постоянного desktop event loop. Harness остаётся проверяемым способом построить тот же layout model, который создаёт стартовый `EditorApplication`, сохранить визуальный PNG-артефакт и машинно-читаемый JSON-анализ.
+Исторически `T-0157` закрывала default shell через документированный automated harness до появления постоянного desktop event loop. Harness остаётся проверяемым способом построить тот же layout model, который создаёт стартовый `Application`, сохранить визуальный PNG-артефакт и машинно-читаемый JSON-анализ.
 
 Для релизной приёмки `0.1.0 Preview` этот harness должен быть переаттестован через `--window-smoke <work-root>` или отдельный real-window сценарий: screenshot должен подтверждать, что пользователь видит тот же layout в окне `Electron2D.Editor`.
 

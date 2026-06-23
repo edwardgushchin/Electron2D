@@ -150,6 +150,10 @@ public sealed class EditorProjectShellTests
             Assert.Equal("True", lines["KeyboardInteractionObserved"]);
             Assert.Equal("True", lines["RuntimeControlTree"]);
             Assert.Equal("True", lines["VisualHarnessRemoved"]);
+            Assert.Equal("True", lines["RuntimeUiRendering"]);
+            Assert.Equal("True", lines["RuntimeUiInputDispatch"]);
+            Assert.Equal("runtime-control-tree", lines["RenderSource"]);
+            Assert.Equal("RuntimeHost", lines["InputDispatchSource"]);
             Assert.Equal("True", lines["ScreenshotReviewed"]);
             Assert.Equal("Tasks", lines["SelectedWorkspace"]);
             Assert.Equal("0", lines["TextOverflowCount"]);
@@ -180,11 +184,14 @@ public sealed class EditorProjectShellTests
             Assert.True(data.GetProperty("eventLoop").GetProperty("observed").GetBoolean());
             Assert.True(data.GetProperty("rendering").GetProperty("framePresented").GetBoolean());
             Assert.Equal("runtime-control-tree", data.GetProperty("rendering").GetProperty("source").GetString());
+            Assert.True(data.GetProperty("rendering").GetProperty("runtimeUiRendering").GetBoolean());
             Assert.True(data.GetProperty("rendering").GetProperty("visualHarnessRemoved").GetBoolean());
             Assert.True(data.GetProperty("rendering").GetProperty("drawCommands").GetInt32() >= 16);
             Assert.True(data.GetProperty("rendering").GetProperty("redDominantPixelRatio").GetDouble() < 0.20d);
             Assert.True(data.GetProperty("input").GetProperty("pointerInteractionObserved").GetBoolean());
             Assert.True(data.GetProperty("input").GetProperty("keyboardInteractionObserved").GetBoolean());
+            Assert.True(data.GetProperty("input").GetProperty("runtimeUiDispatch").GetBoolean());
+            Assert.Equal("RuntimeHost", data.GetProperty("input").GetProperty("dispatchSource").GetString());
             Assert.Equal("Tasks", data.GetProperty("layout").GetProperty("selectedWorkspace").GetString());
             Assert.Equal(0, data.GetProperty("layout").GetProperty("textOverflowCount").GetInt32());
             Assert.Equal(0, data.GetProperty("layout").GetProperty("forbiddenUiMatches").GetArrayLength());
@@ -264,6 +271,10 @@ public sealed class EditorProjectShellTests
             Assert.Equal("True", lines["WindowShown"]);
             Assert.Equal("True", lines["FramePresented"]);
             Assert.Equal("True", lines["ScreenshotReviewed"]);
+            Assert.Equal("True", lines["RuntimeUiRendering"]);
+            Assert.Equal("True", lines["RuntimeUiInputDispatch"]);
+            Assert.Equal("runtime-control-tree", lines["RenderSource"]);
+            Assert.Equal("RuntimeHost", lines["InputDispatchSource"]);
             Assert.Equal("0", lines["TextOverflowCount"]);
             Assert.Equal("0", lines["ForbiddenUiMatches"]);
             Assert.True(File.Exists(lines["ScreenshotPath"]), $"Missing window screenshot artifact: {lines["ScreenshotPath"]}");
@@ -280,18 +291,49 @@ public sealed class EditorProjectShellTests
     public void EditorWindowRuntimePathDoesNotUseShellVisualHarness()
     {
         var root = FindRepositoryRoot();
-        var windowSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "EditorWindowSmoke.cs"));
-        var hostSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "EditorWindowHost.cs"));
+        var windowSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "WindowSmoke.cs"));
+        var hostSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "WindowHost.cs"));
+        var runtimeHostSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D", "Runtime", "Application", "RuntimeHost.cs"));
         var programSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Program.cs"));
         var openProjectForWindowSource = ExtractMethodBody(programSource, "OpenProjectForWindow");
 
-        Assert.DoesNotContain("EditorShellVisualHarness", windowSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("ShellVisualHarness", windowSource, StringComparison.Ordinal);
         Assert.DoesNotContain("PresentCanvasForSmoke", windowSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("EditorWindowSmoke.RunInteractive", programSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("WindowSmoke.RunInteractive", programSource, StringComparison.Ordinal);
         Assert.DoesNotContain("FindRepositoryRoot", openProjectForWindowSource, StringComparison.Ordinal);
-        Assert.Contains("SDL.PixelFormat.ABGR8888", hostSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("SDL.PixelFormat.RGBA8888", hostSource, StringComparison.Ordinal);
+        Assert.Contains("SDL.PixelFormat.ABGR8888", runtimeHostSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("SDL.PixelFormat.RGBA8888", runtimeHostSource, StringComparison.Ordinal);
         Assert.DoesNotContain("int.MaxValue", hostSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void EditorWindowRuntimePathUsesSharedRuntimeUiTreeAsRenderingAndInputSource()
+    {
+        var root = FindRepositoryRoot();
+        var rendererSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "RuntimeFrameRenderer.cs"));
+        var hostSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "WindowHost.cs"));
+        var smokeSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Shell", "WindowSmoke.cs"));
+        var applicationSource = File.ReadAllText(Path.Combine(root, "src", "Electron2D.Editor", "Application.cs"));
+        var engineAssemblyInfo = File.ReadAllText(Path.Combine(root, "src", "Electron2D", "Properties", "AssemblyInfo.cs"));
+        var pointerSmokeBody = ExtractMethodBody(smokeSource, "private static Func<Electron2D.RuntimeHostScriptedInputContext, IReadOnlyList<Electron2D.InputEvent>> CreatePointerSelectionProvider");
+
+        Assert.Contains("new Electron2D.Button", applicationSource, StringComparison.Ordinal);
+        Assert.Contains("Connect(\"pressed\"", applicationSource, StringComparison.Ordinal);
+        Assert.Contains("InternalsVisibleTo(\"Electron2D.Editor\")", engineAssemblyInfo, StringComparison.Ordinal);
+
+        Assert.Contains("Electron2D.RuntimeHost", hostSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("DrawArea(", rendererSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("DrawCenterWorkspace", rendererSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(".FillRectangle(", rendererSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(".DrawRectangle(", rendererSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(".DrawText(", rendererSource, StringComparison.Ordinal);
+
+        Assert.DoesNotContain("ShellRegion", hostSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("CreateVisualRegions()", hostSource, StringComparison.Ordinal);
+
+        Assert.DoesNotContain(".DispatchInput(", pointerSmokeBody, StringComparison.Ordinal);
+        Assert.DoesNotContain("CreateVisualRegions()", pointerSmokeBody, StringComparison.Ordinal);
+        Assert.DoesNotContain(".SwitchWorkspace(", pointerSmokeBody, StringComparison.Ordinal);
     }
 
     private static string ExtractMethodBody(string source, string methodName)

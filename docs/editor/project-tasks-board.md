@@ -19,7 +19,7 @@
 
 `Tasks` — центральное рабочее пространство `Electron2D.Editor` для задач пользовательского проекта. Оно показывает встроенный `ProjectTaskManager` как обычную доску задач, а не как Markdown-файл, dock-панель или часть Agent Workspace.
 
-Текущая реализация model-first: `EditorProjectTasksBoardSnapshot` описывает видимую доску, выбранную карточку, правый `Task Details`, фильтры, действия и visual harness. Постоянный desktop event loop, live drag-and-drop pointer events и полная привязка к открытому окну добавляются следующими задачами поверх этого snapshot-контракта.
+Текущая реализация model-first: `ProjectTasksBoardSnapshot` описывает видимую доску, выбранную карточку, правый `Task Details`, фильтры, действия и visual harness. Постоянный desktop event loop, live drag-and-drop pointer events и полная привязка к открытому окну добавляются следующими задачами поверх этого snapshot-контракта.
 
 ## Snapshot model
 

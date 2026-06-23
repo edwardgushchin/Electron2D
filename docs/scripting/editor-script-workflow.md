@@ -428,7 +428,7 @@ Electron2D.ManagedDebugging
 - Editor подключает debugger core как внутренний сервис `Script` workspace и не выбирает debugger adapter заново;
 - `ManagedDebugClient` строит DAP boundary `Electron2D.Editor -> Electron2D.ManagedDebugging -> DAP stdio -> netcoredbg -> Electron2D game process`, читает выбранный adapter id/release/arguments из manifest и сохраняет machine-readable transcript команд `initialize`, `launch`, `attach`, `setBreakpoints`, `configurationDone`, `stopped:breakpoint`, `threads`, `stackTrace`, `scopes`, `variables`, `pause`, `continue`, `next`, `stepIn`, `stepOut`, `disconnect`;
 - запуск проекта под debugger использует immutable `WorkspaceSnapshot`, Debug build с Portable PDB и mapping snapshot source file к canonical `CodeDocument`;
-- attach ограничен game process, запущенным Editor; `EditorRunSession` публикует `ProcessId`, чтобы debugger не требовал произвольный attach к чужому процессу;
+- attach ограничен game process, запущенным Editor; `RunSession` публикует `ProcessId`, чтобы debugger не требовал произвольный attach к чужому процессу;
 - restart реализован как Editor-managed `disconnect` текущей сессии и новый `launch` на свежем `WorkspaceSnapshot`, потому что выбранный adapter не объявляет native DAP restart request;
 - breakpoint store пишет локальные metadata в `.electron2d/user/breakpoints.e2debug`, сохраняет `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`, переживает перезапуск Editor и не попадает в `WorkspaceSnapshot`/export;
 - breakpoint следует за document rename через `DocumentId`, rebases `SourceAnchor` после text edits и получает `Verified = false` при неоднозначном переносе;

@@ -159,13 +159,13 @@ internal static class Program
     {
         try
         {
-            EditorShellStartupProject? startupProject = null;
+            ShellStartupProject? startupProject = null;
             if (!string.IsNullOrWhiteSpace(projectFilePath))
             {
                 startupProject = ToStartupProject(OpenProjectForWindow(projectFilePath));
             }
 
-            return EditorWindowHost.RunInteractive(startupProject);
+            return WindowHost.RunInteractive(startupProject);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         {
@@ -174,11 +174,11 @@ internal static class Program
         }
     }
 
-    private static EditorProjectOpenResult OpenProjectForWindow(string projectFilePath, string? userSettingsPath = null)
+    private static ProjectOpenResult OpenProjectForWindow(string projectFilePath, string? userSettingsPath = null)
     {
         var settingsPath = userSettingsPath ?? GetDefaultUserSettingsPath();
         var templateRoot = Path.Combine(AppContext.BaseDirectory, "open-existing-project-template-not-used");
-        var manager = new EditorProjectManager(templateRoot);
+        var manager = new ProjectManager(templateRoot);
         var openResult = manager.OpenProject(projectFilePath, settingsPath);
         if (!openResult.Succeeded)
         {
@@ -197,14 +197,14 @@ internal static class Program
         return Path.Combine(userDataRoot, "user.e2settings.json");
     }
 
-    private static EditorShellStartupProject ToStartupProject(EditorProjectOpenResult openResult)
+    private static ShellStartupProject ToStartupProject(ProjectOpenResult openResult)
     {
         if (!openResult.Succeeded)
         {
             throw new InvalidOperationException(string.Join(Environment.NewLine, openResult.Diagnostics));
         }
 
-        return new EditorShellStartupProject(
+        return new ShellStartupProject(
             openResult.ProjectName,
             openResult.ProjectPath,
             openResult.ProjectSettingsPath,
@@ -213,7 +213,7 @@ internal static class Program
 
     private static int RunOnce(bool isSmoke)
     {
-        var application = new EditorApplication();
+        var application = new Application();
         var result = application.Start();
 
         if (isSmoke)
@@ -241,7 +241,7 @@ internal static class Program
         {
             var templateRoot = Path.Combine(FindRepositoryRoot(), "data", "templates", "electron2d-empty");
             var userSettingsPath = Path.Combine(Path.GetFullPath(userDataRoot), "user.e2settings.json");
-            var manager = new EditorProjectManager(templateRoot);
+            var manager = new ProjectManager(templateRoot);
             var result = manager.RunSmoke(workRoot, userSettingsPath);
             var succeeded = result.SdkCheck.Available;
 
@@ -271,7 +271,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorSceneTreeDockSmoke.Run(workRoot);
+            var result = SceneTreeDockSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor scene tree dock smoke passed");
             Console.WriteLine($"ScenePath={result.ScenePath}");
@@ -296,7 +296,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorViewport2DSmoke.Run(workRoot);
+            var result = Viewport2DSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor 2D viewport smoke passed");
             Console.WriteLine($"Pan={Format(result.Pan)}");
@@ -326,7 +326,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorInspectorSmoke.Run(workRoot);
+            var result = InspectorSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor inspector smoke passed");
             Console.WriteLine($"ScenePath={result.ScenePath}");
@@ -357,7 +357,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorFileSystemDockSmoke.Run(workRoot);
+            var result = FileSystemDockSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor file system dock smoke passed");
             Console.WriteLine($"ScenePath={result.ScenePath}");
@@ -399,7 +399,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorScriptWorkflowSmoke.Run(workRoot);
+            var result = ScriptWorkflowSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor script workflow smoke passed");
             Console.WriteLine($"ProjectPath={result.ProjectPath}");
@@ -444,7 +444,7 @@ internal static class Program
         {
             var templateRoot = Path.Combine(FindRepositoryRoot(), "data", "templates", "electron2d-empty");
             var userSettingsPath = Path.Combine(Path.GetFullPath(userDataRoot), "user.e2settings.json");
-            var manager = new EditorProjectManager(templateRoot);
+            var manager = new ProjectManager(templateRoot);
             var result = manager.OpenProject(projectFilePath, userSettingsPath);
             if (!result.Succeeded)
             {
@@ -474,7 +474,7 @@ internal static class Program
         {
             var userSettingsPath = Path.Combine(Path.GetFullPath(userDataRoot), "user.e2settings.json");
             var openResult = OpenProjectForWindow(projectFilePath, userSettingsPath);
-            var result = EditorWindowSmoke.RunProjectStartupSmoke(workRoot, ToStartupProject(openResult));
+            var result = WindowSmoke.RunProjectStartupSmoke(workRoot, ToStartupProject(openResult));
 
             Console.WriteLine("Electron2D.Editor open project window smoke passed");
             Console.WriteLine($"ProjectName={openResult.ProjectName}");
@@ -495,6 +495,10 @@ internal static class Program
             Console.WriteLine($"KeyboardInteractionObserved={result.KeyboardInteractionObserved}");
             Console.WriteLine($"RuntimeControlTree={result.RuntimeControlTree}");
             Console.WriteLine($"VisualHarnessRemoved={result.VisualHarnessRemoved}");
+            Console.WriteLine($"RuntimeUiRendering={result.RuntimeUiRendering}");
+            Console.WriteLine($"RuntimeUiInputDispatch={result.RuntimeUiInputDispatch}");
+            Console.WriteLine($"RenderSource={result.RenderSource}");
+            Console.WriteLine($"InputDispatchSource={result.InputDispatchSource}");
             Console.WriteLine($"DrawCommands={result.DrawCommands}");
             Console.WriteLine($"RedDominantPixelRatio={result.RedDominantPixelRatio.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
             Console.WriteLine($"SelectedWorkspace={result.SelectedWorkspace}");
@@ -516,6 +520,10 @@ internal static class Program
                 result.EventPumpObserved &&
                 result.RuntimeControlTree &&
                 result.VisualHarnessRemoved &&
+                result.RuntimeUiRendering &&
+                result.RuntimeUiInputDispatch &&
+                string.Equals(result.RenderSource, RuntimeFrameRenderer.RenderSource, StringComparison.Ordinal) &&
+                string.Equals(result.InputDispatchSource, RuntimeFrameRenderer.InputDispatchSource, StringComparison.Ordinal) &&
                 result.DrawCommands >= 16 &&
                 result.RedDominantPixelRatio < 0.20d &&
                 result.KeyboardInteractionObserved &&
@@ -537,7 +545,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorWindowSmoke.RunSmoke(workRoot);
+            var result = WindowSmoke.RunSmoke(workRoot);
 
             Console.WriteLine("Electron2D.Editor window smoke passed");
             Console.WriteLine($"WindowTitle={result.WindowTitle}");
@@ -549,6 +557,10 @@ internal static class Program
             Console.WriteLine($"KeyboardInteractionObserved={result.KeyboardInteractionObserved}");
             Console.WriteLine($"RuntimeControlTree={result.RuntimeControlTree}");
             Console.WriteLine($"VisualHarnessRemoved={result.VisualHarnessRemoved}");
+            Console.WriteLine($"RuntimeUiRendering={result.RuntimeUiRendering}");
+            Console.WriteLine($"RuntimeUiInputDispatch={result.RuntimeUiInputDispatch}");
+            Console.WriteLine($"RenderSource={result.RenderSource}");
+            Console.WriteLine($"InputDispatchSource={result.InputDispatchSource}");
             Console.WriteLine($"DrawCommands={result.DrawCommands}");
             Console.WriteLine($"RedDominantPixelRatio={result.RedDominantPixelRatio.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
             Console.WriteLine($"SelectedWorkspace={result.SelectedWorkspace}");
@@ -569,6 +581,10 @@ internal static class Program
                 result.EventPumpObserved &&
                 result.RuntimeControlTree &&
                 result.VisualHarnessRemoved &&
+                result.RuntimeUiRendering &&
+                result.RuntimeUiInputDispatch &&
+                string.Equals(result.RenderSource, RuntimeFrameRenderer.RenderSource, StringComparison.Ordinal) &&
+                string.Equals(result.InputDispatchSource, RuntimeFrameRenderer.InputDispatchSource, StringComparison.Ordinal) &&
                 result.DrawCommands >= 16 &&
                 result.RedDominantPixelRatio < 0.20d &&
                 result.PointerInteractionObserved &&
@@ -590,7 +606,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorScriptWorkspaceSmoke.Run(workRoot);
+            var result = ScriptWorkspaceSmoke.Run(workRoot);
             var snapshot = result.Snapshot;
             var document = snapshot.ActiveDocument;
             var surface = snapshot.EditorSurface;
@@ -673,7 +689,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorProjectSettingsSmoke.Run(workRoot);
+            var result = ProjectSettingsSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor project settings smoke passed");
             Console.WriteLine($"ProjectPath={result.ProjectPath}");
@@ -727,7 +743,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorSpecializedEditorsSmoke.Run(workRoot);
+            var result = SpecializedEditorsSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor specialized editors smoke passed");
             Console.WriteLine($"ProjectPath={result.ProjectPath}");
@@ -782,7 +798,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorScriptLanguageServicesSmoke.Run(workRoot);
+            var result = ScriptLanguageServicesSmoke.Run(workRoot);
             var language = result.LanguageServices;
             var diagnostic = language.LiveDiagnostic;
 
@@ -849,7 +865,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorManagedDebuggerSmoke.Run(workRoot);
+            var result = ManagedDebuggerSmoke.Run(workRoot);
             var state = result.State;
             var breakpoint = state.Breakpoint;
             var argument = state.Arguments.Single(variable => variable.Name == "delta");
@@ -946,7 +962,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorScriptDebugToolingSmoke.Run(workRoot);
+            var result = ScriptDebugToolingSmoke.Run(workRoot);
             var diagnostic = result.Diagnostics.Diagnostic;
             var completion = result.Completions.CompletionItems.Single(item => item.IsSelected);
             var local = result.Locals.Variables.Single(variable => variable.Name == "speed");
@@ -1002,7 +1018,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorRunWorkflowSmoke.Run(workRoot);
+            var result = RunWorkflowSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor run workflow smoke passed");
             Console.WriteLine($"ProjectPath={result.ProjectPath}");
@@ -1064,7 +1080,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorShellSmoke.Run(workRoot);
+            var result = ShellSmoke.Run(workRoot);
 
             Console.WriteLine("Electron2D.Editor shell layout smoke passed");
             Console.WriteLine($"MenuItems={Join(result.MenuItems)}");
@@ -1078,6 +1094,7 @@ internal static class Program
             Console.WriteLine($"WorkspaceStateRoundTripStable={result.WorkspaceStateRoundTripStable}");
             Console.WriteLine($"ForbiddenUiMatches={result.ForbiddenUiMatches}");
             Console.WriteLine($"ForbiddenShortcutMatches={result.ForbiddenShortcutMatches}");
+            Console.WriteLine("VisualHarnessPresent=False");
             Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
             Console.WriteLine($"TwoDSelection={result.TwoDSelection}");
             Console.WriteLine($"TwoDScroll={result.TwoDScroll}");
@@ -1086,7 +1103,6 @@ internal static class Program
             Console.WriteLine($"GameDocuments={Join(result.GameDocuments)}");
             Console.WriteLine($"TasksDocuments={Join(result.TasksDocuments)}");
             Console.WriteLine($"StatePath={result.StatePath}");
-            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
             Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
 
             return result.BottomPanelCollapseRoundTrip &&
@@ -1109,7 +1125,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorAgentWorkspacePanelSmoke.Run(workRoot);
+            var result = AgentWorkspacePanelSmoke.Run(workRoot);
             var snapshot = result.Snapshot;
             var job = snapshot.ActiveJob;
             var input = job.InputIdentity;
@@ -1171,7 +1187,7 @@ internal static class Program
     {
         try
         {
-            var result = EditorProjectTasksBoardSmoke.Run(workRoot);
+            var result = ProjectTasksBoardSmoke.Run(workRoot);
             var snapshot = result.Snapshot;
             var selected = snapshot.SelectedTask;
             var details = snapshot.Details;
@@ -1267,12 +1283,12 @@ internal static class Program
         return string.Join('|', values);
     }
 
-    private static string FormatChangedObject(EditorAgentWorkspaceChangedObject changedObject)
+    private static string FormatChangedObject(AgentWorkspaceChangedObject changedObject)
     {
-        return $"{EditorAgentWorkspaceVisualHarness.KindPrefix(changedObject.Kind)}:{changedObject.NavigationTarget}";
+        return $"{AgentWorkspaceVisualHarness.KindPrefix(changedObject.Kind)}:{changedObject.NavigationTarget}";
     }
 
-    private static string FormatTaskDragDrop(EditorProjectTasksDragDropIntent intent)
+    private static string FormatTaskDragDrop(ProjectTasksDragDropIntent intent)
     {
         return $"{intent.TaskId}:{intent.SourceStatus}->{intent.TargetStatus}@{intent.TargetRank}";
     }

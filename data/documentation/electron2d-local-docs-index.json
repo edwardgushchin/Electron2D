@@ -21,7 +21,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/architecture/agent-native-workflow.md",
-                                                    "sha256":  "e01640f745ad52e87f3eea49cbd0c55d0c95d139a5d607427e05f6998eab1495"
+                                                    "sha256":  "1e50d04ba7523d306f2cdc6fc2cfeb00180280faacbca9c231c6d2166978d4ed"
                                                 },
                                                 {
                                                     "path":  "docs/architecture/engine-platform-stack.md",
@@ -113,15 +113,15 @@
                                                 },
                                                 {
                                                     "path":  "docs/editor/agent-workspace-panel.md",
-                                                    "sha256":  "97fe29019def54446e885b9be29a3928eb5b160931495354c7d199c8fa3c2efd"
+                                                    "sha256":  "246fcdca9e3336b2840f992b6b86517adf2ac3a5285ae3b82f4638d157909332"
                                                 },
                                                 {
                                                     "path":  "docs/editor/editor-project-shell.md",
-                                                    "sha256":  "73b96b4c9266cd58b3d67f05877ddb8385193f5c723b794c47d11e1ef0a68550"
+                                                    "sha256":  "e90e93a07f03d6e1cb8d436967da48f4076e448ee8a9a4fdd2398d617efd597a"
                                                 },
                                                 {
                                                     "path":  "docs/editor/editor-shell-layout.md",
-                                                    "sha256":  "d1395847722c01d96cc71fc49e05f64017e9bbb5f552c5a7f801b33f5ff3ea07"
+                                                    "sha256":  "18a9ebacaf40a43112db0601a4f4136683b28ea49829fbafd08534d64cb8506a"
                                                 },
                                                 {
                                                     "path":  "docs/editor/file-system-dock.md",
@@ -129,7 +129,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/editor/godot4-editor-reference.md",
-                                                    "sha256":  "f02e4755bdf41aeb906cfa0aef47c979d5d51c800c102d967983f057dae2accd"
+                                                    "sha256":  "64508c97a3de4457b88515b2a15ea986530683be0ec5d282ea5ac292b44abc2e"
                                                 },
                                                 {
                                                     "path":  "docs/editor/inspector.md",
@@ -145,11 +145,11 @@
                                                 },
                                                 {
                                                     "path":  "docs/editor/project-tasks-board.md",
-                                                    "sha256":  "22307fd9327399451740a860642d49a4d20acba6a4ad33b81b61e6ae38683090"
+                                                    "sha256":  "fc6fffc1d312432d7b46a9efe1fd04216759ae7ba4e8cb34102642fef9936c41"
                                                 },
                                                 {
                                                     "path":  "docs/editor/run-output-workflow.md",
-                                                    "sha256":  "1533546aa4827e7c39bdd19b7a49912ed21f2eb374fda1c6d30a2db50b42ff1f"
+                                                    "sha256":  "64693f15236a311d363991c2d74fb5bbe25ee97e44268f744eb0971704b9ebdb"
                                                 },
                                                 {
                                                     "path":  "docs/editor/scene-tree-dock.md",
@@ -157,7 +157,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/editor/script-workspace.md",
-                                                    "sha256":  "ff942378161a2e13ebbe23a77f12ea532d24791443d539610267c4fb1fb71925"
+                                                    "sha256":  "23d51948906d260d7c67ca3d94b0a417bbdbc5944703d240f4b312eebb291969"
                                                 },
                                                 {
                                                     "path":  "docs/editor/specialized-editors.md",
@@ -533,7 +533,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/scripting/editor-script-workflow.md",
-                                                    "sha256":  "4e40424bcdc4f83120e1172094adb39b32d5ce90ede678162491c899e95c40b6"
+                                                    "sha256":  "5d92b6c5b6ff217da1b420111ed100df0dcecac6a299722ab009737c0f39b6c1"
                                                 },
                                                 {
                                                     "path":  "docs/scripting/managed-debug-adapter-selection.md",
@@ -541,7 +541,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/scripting/managed-debugger.md",
-                                                    "sha256":  "972badeb03f6eee6e030bd97d65502ca8394b197e1ed590d35bca3e5cf825adb"
+                                                    "sha256":  "3f6088a466d2ddd8697d39c51342afc6432bb6eefd6c36b4d460d37e8f96d606"
                                                 },
                                                 {
                                                     "path":  "docs/scripting/script-debug-tooling-parity.md",
@@ -28016,12 +28016,12 @@
                         "id":  "doc:editor.editor-project-shell",
                         "kind":  "documentation",
                         "title":  "Electron2D.Editor project shell",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "d",
                                          "docs",
                                          "editor",

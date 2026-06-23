@@ -19,7 +19,7 @@
 
 `Script` — центральное рабочее пространство `Electron2D.Editor` для встроенного редактирования C# scripts проекта. Оно показывает файлы script-ов, вкладки открытых документов, область кода, поиск/замену, навигацию по строкам, диагностику, правую панель сведений о текущем `CodeDocument` и UI-состояния C# language services.
 
-Текущая реализация model-first: сначала создаётся проверяемая модель состояния UI, а не постоянное окно с циклом ввода. `EditorScriptWorkspaceSnapshot` описывает состояние базового editor UI, а отдельный smoke path `EditorScriptLanguageServicesSmoke` проверяет completion, hover, signature help и diagnostics overlay. Постоянный desktop event loop, то есть цикл обработки окна, pointer/keyboard input и repaint, добавляется следующими задачами поверх этих snapshot-контрактов.
+Текущая реализация model-first: сначала создаётся проверяемая модель состояния UI, а не постоянное окно с циклом ввода. `ScriptWorkspaceSnapshot` описывает состояние базового editor UI, а отдельный smoke path `ScriptLanguageServicesSmoke` проверяет completion, hover, signature help и diagnostics overlay. Постоянный desktop event loop, то есть цикл обработки окна, pointer/keyboard input и repaint, добавляется следующими задачами поверх этих snapshot-контрактов.
 
 ## Предварительный UI-контракт
 

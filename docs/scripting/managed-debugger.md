@@ -68,7 +68,7 @@ State содержит:
 - выбранный adapter id, release tag, arguments и DAP boundary;
 - DAP transcript команд и событий для launch/attach/breakpoints/step/continue/pause/disconnect;
 - `SnapshotId`;
-- attached game process id из `EditorRunSession.ProcessId`;
+- attached game process id из `RunSession.ProcessId`;
 - текущую исполняемую строку;
 - threads;
 - call stack;

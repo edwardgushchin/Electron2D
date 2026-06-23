@@ -1,6 +1,6 @@
 # Electron2D.Editor project shell
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -12,16 +12,39 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `T-0078`, расширена real-window gate `T-0165`.
-Дата: 2026-06-23.
+Статус: целевая спецификация для `T-0078`, расширена real-window gate `T-0165` и runtime UI dogfooding gate `T-0171`.
+Дата: 2026-06-24.
 
 ## Цель
 
-`Electron2D.Editor` должен появиться как отдельный desktop executable в `src/Electron2D.Editor/`. Базовый shell редактора должен собираться вместе с решением, ссылаться на runtime `Electron2D`, стартовать в проверяемом smoke-режиме и строить первый UI root на публичном runtime UI API.
+`Electron2D.Editor` должен появиться как отдельный desktop executable в `src/Electron2D.Editor/`. Базовый shell редактора должен собираться вместе с решением, ссылаться на runtime `Electron2D`, стартовать в проверяемом smoke-режиме и строить первый UI root на общем runtime UI stack Electron2D.
 
 Начиная с `T-0165`, visible UI acceptance нельзя закрывать bootstrap model, PNG из synthetic harness или headless smoke-командой. Обычный запуск редактора не должен показывать synthetic visual harness/debug layer, то есть заранее нарисованную пиксельную картинку вместо настоящего интерфейса. Редактор должен иметь проверяемый desktop window host: обычный запуск создаёт пользовательское окно, строит shell из runtime `Control`/`Button` узлов, отправляет pointer/keyboard input в этот `SceneTree` и остаётся в event loop до закрытия окна.
 
 Project Manager, scene tree dock, 2D viewport, Inspector, FileSystem dock, run/stop workflow, встроенный редактор кода и Agent Workspace panel остаются отдельными задачами. Эта задача не должна подменять их placeholder UI или публичными editor-only API.
+
+## Runtime UI dogfooding gate
+
+Интерфейс `Electron2D.Editor` должен быть построен и запущен через общий runtime UI stack Electron2D. Здесь dogfooding означает не запрет на внутренний код редактора, а использование тех же фундаментальных `SceneTree`, `Viewport`, `Control`, `Container`, theme, input, focus и rendering paths, с которыми столкнётся обычное приложение. Editor может быть дружественной сборкой и пользоваться ограниченным internal host API для frame lifecycle, platform events, input dispatch, render submission и presentation.
+
+Для shell это означает:
+
+- `SceneTree` и root `Viewport` являются владельцами UI.
+- Видимые элементы создаются настоящими runtime `Control`-типами: `Panel`, `Label`, `Button`, `Container` и последующими стандартными или editor-owned control subclasses.
+- Кликабельные действия shell выполняются через button signal path: input доставляется в `SceneTree`, runtime вызывает `_GuiInput` соответствующего `Button`, затем `Button` испускает сигнал.
+- Рендер кадра берёт команды из `CanvasItem`/`Control` draw callbacks общего runtime stack. Внутренние части renderer могут оставаться `internal`, но редактор не должен рисовать видимые widgets вторым shell renderer.
+- Пиксельный буфер окна допустим только как конечный presentation buffer; он не является моделью интерфейса Editor.
+- `ShellRegion` может остаться snapshot, тестовой или persistence-моделью. Нарушением он становится только если видимый shell рисуется напрямую из этих регионов или input обрабатывается самостоятельным hit-test по ним вместо доставки событий в `Control`.
+
+Запрещённые обходы runtime UI dogfooding:
+
+- рисовать рабочий shell напрямую прямоугольниками и текстом из `ShellRegion`;
+- считать `Control` tree доказательством UI, если видимый кадр создан отдельным ручным renderer;
+- обрабатывать pointer selection через поиск координат в `ShellRegion` вместо доставки input в `SceneTree` и дальнейшего runtime GUI routing;
+- реализовывать отдельные от `Control` hover, focus, pressed, disabled, clipping или input routing models для shell widgets;
+- добавлять editor-only UI API в runtime только для обхода отсутствующей общей runtime UI возможности.
+
+Если общий runtime UI stack не позволяет построить нужный shell без такого обхода, это считается незакрытым расхождением и T-0171 не может быть принята. Отсутствие default theme/font, render clipping, text wrapping/ellipsis, hover/focus/pressed/disabled visuals, scrolling, popup/modal focus, keyboard navigation, DPI scaling, reusable split containers или allocation-free layout остаётся отдельными UI API gaps, потому что эти возможности нужны и редактору, и обычным приложениям.
 
 ## Контракт проекта
 
@@ -46,12 +69,12 @@ Smoke-режим должен:
 
 - создать `SceneTree`;
 - настроить root `Viewport.Size` для desktop editor shell;
-- создать UI root на базе `Control`/`Panel`/`Label` или других public UI controls runtime;
-- подготовить bootstrap state только через публичный runtime API, без обращения к test-only frame stepping;
+- создать UI root на базе `Control`/`Panel`/`Label` или других runtime UI controls;
+- подготовить bootstrap state через общий runtime API, без обращения к test-only frame stepping;
 - вернуть exit code `0`;
 - вывести короткий machine-readable текст, по которому test host может подтвердить, что editor shell использует Electron2D runtime.
 
-`--smoke` остаётся быстрым bootstrap-путём для проверки зависимостей и public UI root. Он не является доказательством visible UI.
+`--smoke` остаётся быстрым bootstrap-путём для проверки зависимостей и runtime UI root. Он не является доказательством visible UI.
 
 ## Real-window smoke
 
@@ -65,17 +88,17 @@ Real-window smoke должен:
 
 - создать desktop window с заголовком `Electron2D.Editor`;
 - использовать тот же shell layout model, что и обычный Editor startup;
-- построить shell UI через runtime `Control`, `Panel`, `Label` и `Button`, а не через synthetic visual harness/debug layer;
-- показать окно, войти в управляемый event loop и отрисовать минимум один frame shell UI через runtime rendering path;
-- выполнить проверяемый pointer input по видимой кнопке и keyboard command dispatch для shortcut из Editor baseline;
-- сохранить screenshot frame, который соответствует видимому содержимому созданного окна;
-- сохранить JSON analysis с размером окна, размером screenshot, selected workspace, rendered frame count, draw command count, pointer/keyboard result, text overflow count, clickable control count, forbidden UI matches и долей красных доминирующих пикселей;
+- построить shell UI через runtime `Control`, `Panel`, `Label`, `Button` и `Container`, а не через synthetic visual harness/debug layer или ручной renderer по координатным областям;
+- показать окно, войти в управляемый event loop и отрисовать минимум один frame shell UI через общий runtime host;
+- выполнить проверяемый pointer input по видимой кнопке через runtime input path и keyboard command dispatch для shortcut из Editor baseline;
+- сохранить screenshot frame, который соответствует кадру, отправленному в созданное окно;
+- сохранить JSON analysis с размером окна, размером screenshot, selected workspace, rendered frame count, draw command count, runtime UI source, input dispatch source, pointer/keyboard result, text overflow count, clickable control count, forbidden UI matches и долей красных доминирующих пикселей;
 - вывести machine-readable строки `WindowCreated=True`, `WindowShown=True`, `FramePresented=True`, `EventPumpObserved=True`, `PointerInteractionObserved=True`, `KeyboardInteractionObserved=True`, `RuntimeControlTree=True`, `VisualHarnessRemoved=True`, `ScreenshotReviewed=True`, `ScreenshotPath=...` и `AnalysisPath=...`;
 - завершиться без зависания и уничтожить созданное окно.
 
 Если host не может создать desktop window в текущей среде, smoke должен завершиться ошибкой с диагностикой, а visible UI-задачи остаются неприемлемыми до проверки на машине с окном. Headless bootstrap, compile-only check или synthetic harness без real-window smoke не закрывают этот критерий.
 
-Обычный запуск без smoke-флагов должен создавать `Electron2D.Editor` desktop window, запускаться в maximized resizable window mode, занимать всю доступную клиентскую область кадром редактора без чёрных незаполненных зон и оставаться в event loop до закрытия пользователем или системного запроса на завершение. Этот path обязан использовать runtime-control-tree shell и runtime event loop: synthetic `EditorShellVisualHarness`, заранее нарисованный canvas, red/fallback debug frame и одноразовый static screenshot запрещены для обычного окна.
+Обычный запуск без smoke-флагов должен создавать `Electron2D.Editor` desktop window, запускаться в maximized resizable window mode, занимать всю доступную клиентскую область кадром редактора без чёрных незаполненных зон и оставаться в event loop до закрытия пользователем или системного запроса на завершение. Этот path обязан использовать runtime-control-tree shell и runtime event loop: synthetic `ShellVisualHarness`, заранее нарисованный canvas, red/fallback debug frame и одноразовый static screenshot запрещены для обычного окна.
 
 Если обычный запуск получает единственный аргумент `<ProjectName>.e2d`, startup сначала открывает проект через Project Manager, затем строит runtime-control-tree shell из project-bound layout. Открытие существующего проекта не должно требовать repository root или template directory рядом с executable: эти данные нужны для создания новых проектов, но не для чтения уже существующего `.e2d`.
 
@@ -84,7 +107,7 @@ Real-window smoke должен:
 - Есть integration tests, которые подтверждают наличие editor project в solution, отсутствие внешнего UI framework package references и успешный `dotnet run --project src/Electron2D.Editor/Electron2D.Editor.csproj -- --smoke`.
 - Есть integration test для `--window-smoke <work-root>`, который проверяет создание окна, event loop, rendered frame, runtime control tree, pointer/keyboard result, screenshot, JSON analysis artifact и отсутствие red debug frame.
 - Есть integration test, который подтверждает, что `Electron2D.Editor.csproj` использует `WinExe`, чтобы Windows double-click не создавал отдельное console window.
-- `EditorShellVisualHarness` не используется в runtime/window path редактора; shell layout smoke может проверять только модель layout и JSON analysis без fake screenshot.
+- `ShellVisualHarness` не используется в runtime/window path редактора; shell layout smoke может проверять только модель layout и JSON analysis без fake screenshot.
 - Release metadata verifier подтверждает, что `Electron2D.Editor` подключает брендовую `.ico`-иконку.
 - `dotnet build src/Electron2D.sln -c Release` проходит.
 - `powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1` проходит.
@@ -92,8 +115,8 @@ Real-window smoke должен:
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: документация реализации для `T-0078`, обновлено для `T-0165`.
-Дата: 2026-06-23.
+Статус: документация реализации для `T-0078`, обновлено для `T-0171`.
+Дата: 2026-06-24.
 
 ## Назначение
 
@@ -120,7 +143,7 @@ Smoke-режим создаёт `SceneTree`, настраивает root `Viewpo
 dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-smoke .temp\editor-window-smoke
 ```
 
-Команда создаёт desktop window `Electron2D.Editor`, показывает окно, прокачивает event loop, отрисовывает shell frame, проверяет pointer hit-test по workspace switcher и keyboard command dispatch для baseline shortcut map, затем завершает smoke без зависания. Дополнительно команда запускает существующие visible UI harnesses и последовательно показывает их frames в настоящем окне, чтобы переаттестовать ранее закрытые model-first слои через real-window presenter.
+Команда создаёт desktop window `Electron2D.Editor`, показывает окно, прокачивает event loop, отрисовывает shell frame из runtime `Control` draw commands, проверяет pointer input по workspace switcher через runtime input dispatch и keyboard command dispatch для baseline shortcut map, затем завершает smoke без зависания.
 
 Основной результат сохраняется в:
 
@@ -129,7 +152,7 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-
 
 PNG является screenshot frame, отправленным в созданное окно, а JSON analysis фиксирует `WindowCreated`, `WindowShown`, `FramePresented`, `EventPumpObserved`, selected workspace, размер окна, размер screenshot, pointer/keyboard result, text overflow count, clickable controls и forbidden UI matches.
 
-Начиная с правки `T-0168`, real-window smoke фиксирует `rendering.source=runtime-control-tree`, `visualHarnessRemoved=True`, `drawCommands` и `redDominantPixelRatio`. Он больше не создаёт `reattestedVisibleLayers`, потому что обычное окно должно проверяться через текущий runtime-control-tree, то есть через реальные runtime `Control` nodes, а не через повторный показ заранее сохранённых harness screenshots.
+Начиная с правки `T-0171`, real-window smoke фиксирует `rendering.source=runtime-control-tree`, `runtimeUiRendering=True`, `input.dispatchSource=RuntimeHost`, `runtimeUiDispatch=True`, `visualHarnessRemoved=True`, `drawCommands` и `redDominantPixelRatio`. Он больше не создаёт `reattestedVisibleLayers`, потому что обычное окно должно проверяться через текущий runtime UI tree, то есть через реальные runtime `Control` nodes и их draw commands, а не через повторный показ заранее сохранённых harness screenshots.
 
 `Electron2D.Editor` подключает `data/assets/branding/icon/electron2d.ico` как `ApplicationIcon`, поэтому собираемый desktop executable получает брендовую иконку из поставляемого asset pack.
 
@@ -192,6 +215,7 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-
 ## Ограничения
 
 - `--window-smoke` создаёт управляемый короткий event loop для автоматической проверки, а обычный запуск остаётся в event loop до закрытия окна.
+- Публичные `Label` и `Button` требуют явный `Font` в theme. Готового публичного default-font factory пока нет, поэтому shell редактора задаёт локальный простой `ShellFont`, наследующий публичный `Font` contract с базовыми метриками. Это не блокирует текущий shell, но остаётся пробелом публичного API для приложений, которым нужен готовый шрифт без собственного ресурса.
 - Нет полноценного Project Manager selection screen для ручного выбора проектов; текущий Project Manager и Project Settings UI доступны как проверяемые Editor smoke workflows.
 - Общий shell layout уже содержит зоны docks. Scene editing, Inspector UI, 2D viewport tools, run workflow, Script workspace, model-first Agent Workspace content, model-first `Tasks` workspace и Project Settings UI реализованы отдельными задачами.
 - Editor project не должен добавлять WPF, WinForms, Avalonia или другой внешний UI framework.

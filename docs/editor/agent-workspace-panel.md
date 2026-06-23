@@ -19,7 +19,7 @@
 
 `Agent Workspace` — правая dock-панель `Electron2D.Editor`, которая показывает состояние локального AI-агента и его работу с открытым проектом. Панель не является встроенным чатом и не привязана к одному поставщику моделей: она отображает уже нормализованные данные редактора, project system и tooling-слоёв.
 
-Текущая реализация model-first: `EditorAgentWorkspacePanelSnapshot` собирает состояние для UI и visual harness. Постоянный desktop event loop и live binding к реальному MCP-соединению подключаются следующими задачами поверх этого snapshot-контракта.
+Текущая реализация model-first: `AgentWorkspacePanelSnapshot` собирает состояние для UI и visual harness. Постоянный desktop event loop и live binding к реальному MCP-соединению подключаются следующими задачами поверх этого snapshot-контракта.
 
 ## Snapshot model
 

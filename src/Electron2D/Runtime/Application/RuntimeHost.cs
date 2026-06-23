@@ -69,7 +69,7 @@ internal static class RuntimeHost
     /// </since>
     ///
     /// <seealso cref="Run(SceneTree, RuntimeHostOptions?)"/>
-    internal static RuntimeHostResult Run(Node mainScene, RuntimeHostOptions? options = null)
+    public static RuntimeHostResult Run(Node mainScene, RuntimeHostOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(mainScene);
 
@@ -120,7 +120,7 @@ internal static class RuntimeHost
     /// </since>
     ///
     /// <seealso cref="Run(Node, RuntimeHostOptions?)"/>
-    internal static RuntimeHostResult Run(SceneTree sceneTree, RuntimeHostOptions? options = null)
+    public static RuntimeHostResult Run(SceneTree sceneTree, RuntimeHostOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(sceneTree);
         var runOptions = options ?? new RuntimeHostOptions();
@@ -163,6 +163,12 @@ internal static class RuntimeHost
 
                 sceneTree.PhysicsFrame(runOptions.FixedDelta);
                 sceneTree.ProcessFrame(runOptions.FixedDelta);
+                inputEventsDispatched += DispatchScriptedInput(
+                    sceneTree,
+                    runOptions,
+                    frameCount,
+                    runOptions.WindowSize.X,
+                    runOptions.WindowSize.Y);
 
                 var plan = new CanvasSubmissionContext().BuildPlan(sceneTree.Root);
                 finalDrawCommands = plan.Commands.Count;
@@ -301,6 +307,35 @@ internal static class RuntimeHost
         }
 
         return dispatched;
+    }
+
+    private static int DispatchScriptedInput(
+        SceneTree tree,
+        RuntimeHostOptions options,
+        int frameIndex,
+        int windowWidth,
+        int windowHeight)
+    {
+        if (options.ScriptedInputProvider is null)
+        {
+            return 0;
+        }
+
+        var events = options.ScriptedInputProvider(new RuntimeHostScriptedInputContext(
+            tree,
+            frameIndex,
+            new Vector2I(windowWidth, windowHeight)));
+        if (events is null || events.Count == 0)
+        {
+            return 0;
+        }
+
+        foreach (var inputEvent in events)
+        {
+            tree.DispatchInput(inputEvent);
+        }
+
+        return events.Count;
     }
 
     private static bool PresentFrame(IntPtr window, RuntimePixelCanvas canvas)

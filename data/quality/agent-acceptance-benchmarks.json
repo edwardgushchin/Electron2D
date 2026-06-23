@@ -50,8 +50,8 @@
           ],
           "sourceFiles": [
             "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs",
-            "src/Electron2D.Editor/Shell/EditorWindowSmoke.cs",
-            "src/Electron2D.Editor/Shell/EditorShellVisualHarness.cs"
+            "src/Electron2D.Editor/Shell/WindowSmoke.cs",
+            "src/Electron2D.Editor/Shell/ShellVisualHarness.cs"
           ],
           "covers": [
             "editor-window-screenshot-analysis",
@@ -126,8 +126,8 @@
             "tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs",
             "tests/Electron2D.Tests.Integration/EditorProjectTasksBoardTests.cs",
             "tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs",
-            "src/Electron2D.Editor/AgentWorkspace/EditorAgentWorkspaceVisualHarness.cs",
-            "src/Electron2D.Editor/ProjectTasks/EditorProjectTasksBoardVisualHarness.cs"
+            "src/Electron2D.Editor/AgentWorkspace/AgentWorkspaceVisualHarness.cs",
+            "src/Electron2D.Editor/ProjectTasks/ProjectTasksBoardVisualHarness.cs"
           ],
           "covers": [
             "project-task-manager-links",
@@ -200,7 +200,7 @@
           "sourceFiles": [
             "tests/Electron2D.Tests.Integration/ScriptDebugToolingParityTests.cs",
             "src/Electron2D.Tooling/ToolingScriptDebugServices.cs",
-            "src/Electron2D.Editor/Scripting/EditorScriptDebugToolingVisualHarness.cs"
+            "src/Electron2D.Editor/Scripting/ScriptDebugToolingVisualHarness.cs"
           ],
           "covers": [
             "created-script-visible",
@@ -243,7 +243,7 @@
           ],
           "sourceFiles": [
             "tests/Electron2D.Tests.Integration/EditorRunWorkflowTests.cs",
-            "src/Electron2D.Editor/Run/EditorRunWorkflowSmoke.cs"
+            "src/Electron2D.Editor/Run/RunWorkflowSmoke.cs"
           ],
           "covers": [
             "structured-diagnostics-ai-fix",

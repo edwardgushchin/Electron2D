@@ -1,0 +1,74 @@
+/*
+    Electron2D
+    MIT License
+    Copyright (c) 2025-2026 Eduard Gushchin <eduardgushchin@yandex.ru>
+    SPDX-License-Identifier: MIT
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+namespace Electron2D.Editor.Inspector;
+
+internal sealed class InspectorUndoRedoStack
+{
+    private readonly Stack<InspectorUndoRedoAction> undoActions = new();
+    private readonly Stack<InspectorUndoRedoAction> redoActions = new();
+
+    public bool CanUndo => undoActions.Count > 0;
+
+    public bool CanRedo => redoActions.Count > 0;
+
+    public void Push(string name, Electron2D.SceneFileDocument before, Electron2D.SceneFileDocument after)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(before);
+        ArgumentNullException.ThrowIfNull(after);
+
+        undoActions.Push(new InspectorUndoRedoAction(name, before, after));
+        redoActions.Clear();
+    }
+
+    public Electron2D.SceneFileDocument Undo()
+    {
+        if (!CanUndo)
+        {
+            throw new InvalidOperationException("There is no Inspector operation to undo.");
+        }
+
+        var action = undoActions.Pop();
+        redoActions.Push(action);
+        return action.Before;
+    }
+
+    public Electron2D.SceneFileDocument Redo()
+    {
+        if (!CanRedo)
+        {
+            throw new InvalidOperationException("There is no Inspector operation to redo.");
+        }
+
+        var action = redoActions.Pop();
+        undoActions.Push(action);
+        return action.After;
+    }
+
+    private readonly record struct InspectorUndoRedoAction(
+        string Name,
+        Electron2D.SceneFileDocument Before,
+        Electron2D.SceneFileDocument After);
+}

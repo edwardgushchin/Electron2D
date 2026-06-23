@@ -19,7 +19,7 @@
 
 `Electron2D.Editor` имеет общий shell layout для стартового окна редактора: верхнее меню, переключатель центральных рабочих пространств, вкладки документов, левые и правые docks, нижнюю панель и зарезервированную область `Agent Workspace`.
 
-Текущая реализация использует один внутренний `EditorShellLayout` для стартового UI root редактора, сохраняемого состояния layout, automated visual harness и real-window smoke. Обычный запуск создаёт окно `Electron2D.Editor` как GUI application без отдельной консоли Windows и строит shell через runtime-control-tree, то есть через реальные runtime `Control` nodes, а не через заранее нарисованный PNG/harness.
+Текущая реализация использует один внутренний `ShellLayout` для стартового UI root редактора, сохраняемого состояния layout, automated visual harness и real-window smoke. Обычный запуск создаёт окно `Electron2D.Editor` как GUI application без отдельной консоли Windows и строит shell через runtime-control-tree, то есть через реальные runtime `Control` nodes, а не через заранее нарисованный PNG/harness.
 
 ## Default layout
 
@@ -74,7 +74,7 @@ Smoke-сценарий переключает workspaces `Script`, `Game`, `Task
 
 ## Shortcut map
 
-Machine-readable shortcut map находится в `EditorShellLayout.Shortcuts`.
+Machine-readable shortcut map находится в `ShellLayout.Shortcuts`.
 
 Поддержаны базовые действия:
 

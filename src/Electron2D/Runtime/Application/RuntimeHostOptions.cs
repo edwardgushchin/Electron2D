@@ -243,4 +243,180 @@ internal sealed class RuntimeHostOptions
     /// This property is available since Electron2D 0.1.0 Preview.
     /// </since>
     public Color ClearColor { get; set; } = new(0.04f, 0.05f, 0.06f, 1f);
+
+    /// <summary>
+    /// Gets or sets an optional provider for deterministic scripted input.
+    /// </summary>
+    ///
+    /// <value>
+    /// A callback that returns input events for the current frame, or
+    /// <c>null</c> to disable scripted input.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// The runtime host invokes this callback from the main runtime thread
+    /// after the current frame has run layout and processing callbacks. Returned
+    /// events are dispatched through the same scene-tree input path as platform
+    /// events, then become visible to the next rendered frame.
+    /// </para>
+    /// <para>
+    /// This property is intended for smoke tests, editor automation and
+    /// deterministic acceptance checks. Interactive applications should normally
+    /// leave it unset and rely on platform input.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// The callback is invoked synchronously by the runtime host. Configure the
+    /// property before the run starts and avoid mutating it from another thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    ///
+    /// <seealso cref="RuntimeHost"/>
+    /// <seealso cref="RuntimeHostScriptedInputContext"/>
+    public Func<RuntimeHostScriptedInputContext, IReadOnlyList<InputEvent>>? ScriptedInputProvider { get; set; }
+}
+
+/// <summary>
+/// Describes the frame currently requesting deterministic scripted input.
+/// </summary>
+///
+/// <remarks>
+/// <para>
+/// The context is supplied by <see cref="RuntimeHost"/> to
+/// <see cref="RuntimeHostOptions.ScriptedInputProvider"/>. It exposes only
+/// public runtime objects so a tool or editor can calculate input coordinates
+/// from public controls without calling internal scene-tree methods.
+/// </para>
+/// </remarks>
+///
+/// <threadsafety>
+/// Instances are immutable. The referenced <see cref="SceneTree"/> should be
+/// inspected only on the runtime host thread that supplied the context.
+/// </threadsafety>
+///
+/// <since>
+/// This type is available since Electron2D 0.1.0 Preview.
+/// </since>
+///
+/// <seealso cref="RuntimeHostOptions.ScriptedInputProvider"/>
+/// <seealso cref="SceneTree"/>
+internal sealed class RuntimeHostScriptedInputContext
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RuntimeHostScriptedInputContext"/> type.
+    /// </summary>
+    ///
+    /// <param name="sceneTree">
+    /// The scene tree currently running in the host.
+    /// </param>
+    /// <param name="frameIndex">
+    /// The zero-based frame index that is requesting scripted input.
+    /// </param>
+    /// <param name="windowSize">
+    /// The logical window size used for the current frame.
+    /// </param>
+    ///
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="sceneTree"/> is <c>null</c>.
+    /// </exception>
+    ///
+    /// <remarks>
+    /// The constructor stores the supplied values without taking ownership of
+    /// the scene tree.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This constructor is not synchronized. It is called by the runtime host
+    /// on the main runtime thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public RuntimeHostScriptedInputContext(SceneTree sceneTree, int frameIndex, Vector2I windowSize)
+    {
+        ArgumentNullException.ThrowIfNull(sceneTree);
+        if (frameIndex < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(frameIndex), frameIndex, "Frame index cannot be negative.");
+        }
+
+        SceneTree = sceneTree;
+        FrameIndex = frameIndex;
+        WindowSize = windowSize;
+    }
+
+    /// <summary>
+    /// Gets the scene tree currently running in the host.
+    /// </summary>
+    ///
+    /// <value>
+    /// The active scene tree.
+    /// </value>
+    ///
+    /// <remarks>
+    /// The object is public so scripted input can inspect public controls and
+    /// calculate pointer coordinates without direct access to internal input
+    /// dispatch methods.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// Inspect this value only from the runtime host thread.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public SceneTree SceneTree { get; }
+
+    /// <summary>
+    /// Gets the zero-based frame index that is requesting input.
+    /// </summary>
+    ///
+    /// <value>
+    /// The current frame index.
+    /// </value>
+    ///
+    /// <remarks>
+    /// This value can be used to emit a press on one frame and a release on a
+    /// later frame.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is immutable.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public int FrameIndex { get; }
+
+    /// <summary>
+    /// Gets the logical window size for the current frame.
+    /// </summary>
+    ///
+    /// <value>
+    /// The logical window size in pixels.
+    /// </value>
+    ///
+    /// <remarks>
+    /// The size is the host's current logical target. High-DPI displays can
+    /// still report a different physical pixel size in
+    /// <see cref="RuntimeHostResult.PixelWidth"/> and
+    /// <see cref="RuntimeHostResult.PixelHeight"/>.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is immutable.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public Vector2I WindowSize { get; }
 }
