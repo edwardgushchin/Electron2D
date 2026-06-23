@@ -169,6 +169,22 @@ AI-изменение должно одновременно отображать
 - отображение dirty state;
 - восстановление открытых вкладок после перезапуска Editor.
 
+Проверяемый минимум `T-0158` для базового `Script` workspace:
+
+- `Script` выбран через общий workspace switcher `2D`, `Script`, `Game`, `Tasks` и занимает центральную область редактора;
+- prerequisite manifest перед запуском workspace фиксирует, что `TextEdit`, `CodeEdit`, `SyntaxHighlighter`, `CodeHighlighter`, `PopupMenu`, `TabContainer`, `Tree`, `ItemList`, `SplitContainer`, `ScrollBar`, `LineEdit`, `Label`, `Button`, IME, clipboard, selection, caret navigation, Unicode, monospace font rendering, large documents, scrolling, gutter drawing и mouse hit testing по строке/колонке закрыты публичным UI gate;
+- `CodeDocument` хранит `DocumentId`, path, text, revision, persisted revision, dirty state, diagnostics и semantic version;
+- создание, открытие, редактирование, rename и delete `.cs` files проходят через `Script` workspace model и возвращают structured result;
+- document tabs показывают открытые `.cs` buffers, dirty marker, active tab и восстанавливаются после restart через persistence state;
+- editor surface показывает line numbers, C# syntax highlighting, auto indentation mode, tabs/spaces settings, bracket/quote matching, code folding markers, current line highlight, caret position и selection range;
+- search/replace in file, project search, go to line, clipboard, Undo/Redo, save file и `Save All` представлены как действия workspace model;
+- ручной ввод использует `TextBufferEditSession`, публикует lightweight `CodeDocumentChanged` event, повышает `CodeDocument.Revision` и не создаёт `OperationJournal` entry на каждый символ;
+- AI/refactoring/multi-file operation создаёт один `UndoGroupId` и compound edits в затронутых buffers;
+- `script_save` или другой agent save проверяет базовую revision агента и возвращает structured conflict, если после неё появились ручные unsaved changes;
+- внешнее изменение `.cs` проходит через synchronizer result: непересекающиеся правки merge, конфликтующие правки не затирают dirty editor buffer и дают conflict marker;
+- build/run/test используют `WorkspaceSnapshot` с unsaved C# buffers, включая `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions` и `InputBuildConfigurationHash`;
+- UI smoke harness создаёт PNG screenshot и JSON analysis. Acceptance требует открыть screenshot, проверить вкладки, gutter, text editor surface, search/replace controls, caret/selection states, отсутствие text overflow, отсутствие GDScript/3D/AssetLib UI и соответствие `docs/specifications/editor/godot4-editor-reference.md`.
+
 ## Language services
 
 Это project-aware language services, а не словарное дополнение текста.

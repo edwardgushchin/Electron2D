@@ -7,7 +7,7 @@
 
 `Electron2D.Editor` является отдельным executable project для desktop-редактора. Базовый shell проверяет, что editor build path существует, использует runtime `Electron2D`, может стартовать без внешнего desktop UI framework и строит стартовый UI root через общий shell layout model.
 
-Это ещё не полноценный редактор с постоянным desktop event loop. Project Manager, docks, viewport interactions, Inspector, run/stop workflow, встроенный редактор кода и Agent Workspace panel реализуются отдельными задачами поверх этого проекта. Общий layout shell, persistence и visual harness описаны отдельно: [Editor shell layout и visual harness](editor-shell-layout.md).
+Это ещё не полноценный редактор с постоянным desktop event loop. Project Manager, docks, viewport interactions, Inspector, run/stop workflow, встроенный редактор кода и Agent Workspace panel реализуются отдельными задачами поверх этого проекта. Общий layout shell, persistence и visual harness описаны отдельно: [Editor shell layout и visual harness](editor-shell-layout.md). Центральное рабочее пространство встроенного редактора кода описано отдельно: [Script workspace редактора](script-workspace.md).
 
 ## Текущее поведение
 
@@ -45,6 +45,14 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --tasks-b
 
 Она сохраняет board state, PNG screenshot и JSON analysis artifact для проверки центрального `Tasks` workspace, колонок `ProjectTaskManager`, правого `Task Details`, filters, drag-and-drop intent, trusted human actions и отсутствия запрещённых 3D/GDScript/AssetLib UI.
 
+Smoke-команда Script workspace:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-workspace-smoke .temp\script-workspace
+```
+
+Она сохраняет script workspace state, PNG screenshot и JSON analysis artifact для проверки центрального `Script` workspace, вкладок, line gutter, editor surface, search/replace, caret/selection, правого `Code Document`, conflict marker, snapshot identity и отсутствия запрещённых 3D/GDScript/AssetLib UI.
+
 ## Ограничения
 
 - В этой задаче нет постоянного desktop window event loop.
@@ -61,6 +69,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorShellLayoutTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorAgentWorkspacePanelTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorProjectTasksBoardTests"
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptWorkspaceTests"
 ```
 
 Полные проверки:

@@ -103,6 +103,16 @@ Default docks:
 
 Внешняя IDE может существовать как дополнительный workflow после `0.1.0`, но не является способом закрыть обязательные требования `Script` workspace.
 
+Проверяемый минимум UI для `T-0158`:
+
+- `Script` выбран в общем workspace switcher и занимает центральную область.
+- Видны document tabs открытых `.cs` файлов, active tab и dirty marker.
+- Центральная editor surface показывает gutter с line numbers, C# highlighting, current line, caret и selection.
+- Search/replace in file, project search, go to line, save, `Save All`, Undo/Redo и clipboard actions видны как controls или machine-readable commands harness.
+- В правом `Inspector` или вспомогательной панели видны сведения `CodeDocument`: `DocumentId`, path, revision, persisted revision, dirty state, diagnostics и semantic version.
+- External-change conflict marker и `WorkspaceSnapshot` input identity видны в model/analysis, если harness использует synthetic conflict.
+- PNG screenshot и JSON analysis фиксируют bounds tabs/gutter/editor/search/actions, caret/selection state, text overflow result и отсутствие GDScript/3D/AssetLib UI.
+
 ### `Game`
 
 Видимый тестовый запуск проекта:

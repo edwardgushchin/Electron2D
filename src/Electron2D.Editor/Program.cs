@@ -79,6 +79,11 @@ internal static class Program
             return RunScriptWorkflowSmoke(scriptWorkflowWorkRoot);
         }
 
+        if (args is ["--script-workspace-smoke", var scriptWorkspaceWorkRoot])
+        {
+            return RunScriptWorkspaceSmoke(scriptWorkspaceWorkRoot);
+        }
+
         if (args is ["--run-workflow-smoke", var runWorkflowWorkRoot])
         {
             return RunRunWorkflowSmoke(runWorkflowWorkRoot);
@@ -99,7 +104,7 @@ internal static class Program
             return RunProjectTasksBoardSmoke(tasksBoardWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
         return 2;
     }
 
@@ -320,6 +325,89 @@ internal static class Program
                 result.FixedBuildSucceeded &&
                 result.RerunAfterRebuild &&
                 result.SceneRoundTripStable
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunScriptWorkspaceSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorScriptWorkspaceSmoke.Run(workRoot);
+            var snapshot = result.Snapshot;
+            var document = snapshot.ActiveDocument;
+            var surface = snapshot.EditorSurface;
+            var search = snapshot.Search;
+            var commands = snapshot.Commands;
+            var textBuffer = snapshot.TextBuffer;
+            var identity = snapshot.SnapshotIdentity;
+
+            Console.WriteLine("Electron2D.Editor script workspace smoke passed");
+            Console.WriteLine($"WorkspaceSwitcher={Join(snapshot.WorkspaceSwitcher)}");
+            Console.WriteLine($"SelectedWorkspace={snapshot.SelectedWorkspace}");
+            Console.WriteLine($"PrerequisiteManifestClosed={snapshot.PrerequisiteManifestClosed}");
+            Console.WriteLine($"PrerequisiteManifest={Join(snapshot.PrerequisiteManifest)}");
+            Console.WriteLine($"CreatedFile={snapshot.FileOperations.CreatedFile}");
+            Console.WriteLine($"RenamedFile={snapshot.FileOperations.RenamedFile}");
+            Console.WriteLine($"DeletedFile={snapshot.FileOperations.DeletedFile}");
+            Console.WriteLine($"OpenTabs={Join(snapshot.DisplayTabs)}");
+            Console.WriteLine($"ActiveTab={snapshot.Tabs.Single(tab => tab.IsActive).Path}");
+            Console.WriteLine($"LineNumberCount={surface.LineNumberCount}");
+            Console.WriteLine($"SyntaxTokens={Join(surface.SyntaxTokens)}");
+            Console.WriteLine($"AutoIndentation={surface.AutoIndentation}");
+            Console.WriteLine($"TabsSpaces={surface.TabsSpaces}");
+            Console.WriteLine($"BracketMatching={surface.BracketMatching}");
+            Console.WriteLine($"QuoteMatching={surface.QuoteMatching}");
+            Console.WriteLine($"CodeFolding={surface.CodeFolding}");
+            Console.WriteLine($"CurrentLine={surface.CurrentLine}");
+            Console.WriteLine($"Caret={surface.CaretLine},{surface.CaretColumn}");
+            Console.WriteLine($"Selection={surface.Selection}");
+            Console.WriteLine($"SearchQuery={search.SearchQuery}");
+            Console.WriteLine($"ReplacePreview={search.ReplacePreview}");
+            Console.WriteLine($"ProjectSearchResults={search.ProjectSearchResults}");
+            Console.WriteLine($"GoToLine={search.GoToLine}");
+            Console.WriteLine($"ClipboardRoundTrip={commands.ClipboardRoundTrip}");
+            Console.WriteLine($"UndoRedoRoundTrip={commands.UndoRedoRoundTrip}");
+            Console.WriteLine($"SaveFile={commands.SaveFile}");
+            Console.WriteLine($"SaveAll={commands.SaveAll}");
+            Console.WriteLine($"DocumentId={document.DocumentId}");
+            Console.WriteLine($"DocumentPath={document.Path}");
+            Console.WriteLine($"DocumentRevision={document.Revision.Value}");
+            Console.WriteLine($"PersistedRevision={document.PersistedRevision.Value}");
+            Console.WriteLine($"DirtyState={document.IsDirty}");
+            Console.WriteLine($"DiagnosticCount={document.Diagnostics.Count}");
+            Console.WriteLine($"SemanticVersion={document.SemanticVersion}");
+            Console.WriteLine($"CodeDocumentChangedEvents={textBuffer.CodeDocumentChangedEvents}");
+            Console.WriteLine($"OperationJournalEntriesForTyping={textBuffer.OperationJournalEntriesForTyping}");
+            Console.WriteLine($"TextBufferUndoAvailable={textBuffer.TextBufferUndoAvailable}");
+            Console.WriteLine($"WorkspaceUndoGroupId={textBuffer.WorkspaceUndoGroupId}");
+            Console.WriteLine($"AgentSaveConflictDiagnostic={textBuffer.AgentSaveConflictDiagnostic}");
+            Console.WriteLine($"ExternalMergeResult={snapshot.ExternalChange.MergeResult}");
+            Console.WriteLine($"ExternalConflictMarker={snapshot.ExternalChange.ConflictMarker}");
+            Console.WriteLine($"InputSnapshotId={identity.InputSnapshotId}");
+            Console.WriteLine($"InputWorkspaceRevision={identity.InputWorkspaceRevision.Value}");
+            Console.WriteLine($"InputContentRevision={identity.InputContentRevision.Value}");
+            Console.WriteLine($"InputBuildConfigurationHash={identity.InputBuildConfigurationHash}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"StatePath={result.StatePath}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
+                result.ClickableControlCount >= 16 &&
+                snapshot.PrerequisiteManifestClosed &&
+                document.IsDirty &&
+                textBuffer.OperationJournalEntriesForTyping == 0 &&
+                textBuffer.TextBufferUndoAvailable &&
+                snapshot.ExternalChange.ConflictMarker &&
+                result.ScreenshotReviewed
                 ? 0
                 : 1;
         }

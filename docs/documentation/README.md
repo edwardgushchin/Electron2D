@@ -105,6 +105,7 @@
 - [Agent process bootstrap из Editor](editor/agent-process-bootstrap.md) - текущий internal contract для agent profiles, временной MCP configuration, safe process plan, handshake state и подключения к active Editor route.
 - [Agent Workspace panel редактора](editor/agent-workspace-panel.md) - текущая внутренняя UI-модель Agent Workspace dock, current task, changeset, diagnostics, artifacts, runtime snapshot, jobs, actions и PNG/JSON visual acceptance harness.
 - [Project Tasks board редактора](editor/project-tasks-board.md) - текущая внутренняя UI-модель центрального `Tasks` workspace, task details в Inspector, filters, actions, drag-and-drop intent, human acceptance guard и PNG/JSON visual acceptance harness.
+- [Script workspace редактора](editor/script-workspace.md) - текущая внутренняя UI-модель центрального `Script` workspace, вкладки C# documents, line gutter, caret/selection, search/replace, diagnostics, conflict marker и PNG/JSON visual acceptance harness.
 - [Scene Tree dock редактора](editor/scene-tree-dock.md) - текущая внутренняя логика редактирования дерева сцены, undo/redo и синхронизация с runtime `Tree`.
 - [2D Viewport редактора](editor/viewport-2d.md) - текущая внутренняя модель pan/zoom, выбора, transform-инструментов, snapping, bounds, collision overlays и camera preview.
 - [Inspector редактора](editor/inspector.md) - текущая внутренняя модель редактирования saved properties, reset defaults, nested resources, serialization и undo/redo.
