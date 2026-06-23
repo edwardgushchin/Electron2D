@@ -1,0 +1,76 @@
+{
+  "format": "Electron2D.LeakVerificationReport",
+  "version": 1,
+  "release": "0.1.0-preview",
+  "recordedAt": "2026-06-23T13:05:00Z",
+  "budgets": {
+    "minimumIterations": 64,
+    "maxManagedGrowthBytes": 1048576,
+    "maxNativeHandleDelta": 0,
+    "maxActiveResourceCount": 0,
+    "allowMonotonicGrowth": false
+  },
+  "scenarios": [
+    {
+      "scenarioId": "gpu-texture-render-target-cycles",
+      "subsystem": "rendering texture and render-target registry",
+      "iterations": 64,
+      "managedGrowthBytes": 0,
+      "nativeHandleDelta": 0,
+      "activeResourceCount": 0,
+      "monotonicGrowthDetected": false,
+      "evidence": [
+        "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
+        "tests/Electron2D.Tests.Integration/TextureResourceRegistryTests.cs",
+        "tests/Electron2D.Tests.Integration/RenderTargetRecoveryTests.cs",
+        "docs/documentation/rendering/texture-resource-baseline.md",
+        "docs/documentation/rendering/offscreen-render-target-recovery-baseline.md"
+      ]
+    },
+    {
+      "scenarioId": "audio-voice-cycles",
+      "subsystem": "audio voice lifecycle",
+      "iterations": 64,
+      "managedGrowthBytes": 0,
+      "nativeHandleDelta": 0,
+      "activeResourceCount": 0,
+      "monotonicGrowthDetected": false,
+      "evidence": [
+        "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
+        "tests/Electron2D.Tests.Integration/AudioServerVoiceTests.cs",
+        "docs/documentation/audio/audio-server-voice-handles.md",
+        "docs/documentation/audio/audio-stream-player-nodes.md"
+      ]
+    },
+    {
+      "scenarioId": "physics-rid-cycles",
+      "subsystem": "physics RID lifecycle",
+      "iterations": 64,
+      "managedGrowthBytes": 0,
+      "nativeHandleDelta": 0,
+      "activeResourceCount": 0,
+      "monotonicGrowthDetected": false,
+      "evidence": [
+        "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
+        "tests/Electron2D.Tests.Integration/PhysicsServer2DTests.cs",
+        "docs/documentation/physics/physics-server-2d.md"
+      ]
+    },
+    {
+      "scenarioId": "scene-load-unload-cycles",
+      "subsystem": "scene load and unload lifecycle",
+      "iterations": 64,
+      "managedGrowthBytes": 0,
+      "nativeHandleDelta": 0,
+      "activeResourceCount": 0,
+      "monotonicGrowthDetected": false,
+      "evidence": [
+        "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs",
+        "tests/Electron2D.Tests.Integration/PackedSceneTests.cs",
+        "tests/Electron2D.Tests.Integration/NodeSceneTreeLifecycleTests.cs",
+        "docs/documentation/object-model/packed-scene.md",
+        "docs/documentation/object-model/node-scene-tree-lifecycle.md"
+      ]
+    }
+  ]
+}

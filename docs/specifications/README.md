@@ -24,6 +24,7 @@
 ## Качество
 
 - [Performance verification для 0.1.0 Preview](quality/performance-verification.md) - локальный verifier для empty scene, sprite scene, reference games, steady allocations и batching evidence.
+- [Leak verification для 0.1.0 Preview](quality/leak-verification.md) - локальный verifier для GPU texture/render-target, audio voice, physics RID и scene load/unload cycles.
 
 ## Документация
 
