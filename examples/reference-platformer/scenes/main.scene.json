@@ -1,0 +1,27 @@
+{
+  "type": "Scene",
+  "formatVersion": 1,
+  "root": {
+    "type": "Node2D",
+    "name": "ReferencePlatformer",
+    "script": "Scripts/PlatformerGame.cs",
+    "children": [
+      {
+        "type": "TileMapLayer",
+        "name": "PlatformTileMap"
+      },
+      {
+        "type": "CharacterBody2D",
+        "name": "Player"
+      },
+      {
+        "type": "Camera2D",
+        "name": "PlayerCamera"
+      },
+      {
+        "type": "Control",
+        "name": "PauseMenu"
+      }
+    ]
+  }
+}

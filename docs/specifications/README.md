@@ -146,6 +146,7 @@
 ## Примеры и reference games
 
 - [Ассеты reference games](examples/reference-game-assets.md) - локальный licensed asset pack, manifest, роли, hash-verification и запрет сетевых download steps во время build.
+- [Reference platformer](examples/reference-platformer.md) - валидный проект `Electron2D.Editor`, gameplay contract, export presets и verifier для законченного platformer example.
 
 ## Физика 2D
 

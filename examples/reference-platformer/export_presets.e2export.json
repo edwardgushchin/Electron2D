@@ -1,0 +1,96 @@
+{
+  "format": "Electron2D.ExportPresets",
+  "formatVersion": 1,
+  "presets": [
+    {
+      "name": "android-arm64-debug",
+      "target": "AndroidArm64",
+      "configuration": "Debug",
+      "runtimeIdentifier": "android-arm64",
+      "selfContained": true,
+      "rendererProfile": "Automatic",
+      "outputDirectory": "exports/android",
+      "includeDebugSymbols": true,
+      "signing": {
+        "required": false,
+        "identity": "",
+        "credentialReference": ""
+      }
+    },
+    {
+      "name": "browser-wasm-release",
+      "target": "WebAssemblyBrowser",
+      "configuration": "Release",
+      "runtimeIdentifier": "browser-wasm",
+      "selfContained": true,
+      "rendererProfile": "Automatic",
+      "outputDirectory": "exports/web",
+      "includeDebugSymbols": false,
+      "signing": {
+        "required": false,
+        "identity": "",
+        "credentialReference": ""
+      }
+    },
+    {
+      "name": "ios-arm64-release",
+      "target": "IosArm64",
+      "configuration": "Release",
+      "runtimeIdentifier": "ios-arm64",
+      "selfContained": true,
+      "rendererProfile": "Automatic",
+      "outputDirectory": "exports/ios",
+      "includeDebugSymbols": false,
+      "signing": {
+        "required": true,
+        "identity": "ios-developer",
+        "credentialReference": "env:E2D_IOS_SIGNING_IDENTITY"
+      }
+    },
+    {
+      "name": "linux-x64-release",
+      "target": "LinuxX64",
+      "configuration": "Release",
+      "runtimeIdentifier": "linux-x64",
+      "selfContained": true,
+      "rendererProfile": "Automatic",
+      "outputDirectory": "exports/linux",
+      "includeDebugSymbols": false,
+      "signing": {
+        "required": false,
+        "identity": "",
+        "credentialReference": ""
+      }
+    },
+    {
+      "name": "macos-arm64-release",
+      "target": "MacOSArm64",
+      "configuration": "Release",
+      "runtimeIdentifier": "osx-arm64",
+      "selfContained": true,
+      "rendererProfile": "Automatic",
+      "outputDirectory": "exports/macos",
+      "includeDebugSymbols": false,
+      "signing": {
+        "required": true,
+        "identity": "developer-id",
+        "credentialReference": "env:E2D_MACOS_SIGNING_IDENTITY"
+      }
+    },
+    {
+      "name": "windows-x64-debug",
+      "target": "WindowsX64",
+      "configuration": "Debug",
+      "runtimeIdentifier": "win-x64",
+      "selfContained": true,
+      "rendererProfile": "Automatic",
+      "outputDirectory": "exports/windows",
+      "includeDebugSymbols": true,
+      "signing": {
+        "required": false,
+        "identity": "",
+        "credentialReference": ""
+      }
+    }
+  ]
+}

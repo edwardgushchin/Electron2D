@@ -1,0 +1,111 @@
+{
+  "format": "Electron2D.ProjectSettings",
+  "formatVersion": 1,
+  "name": "Electron2D.ReferencePlatformer",
+  "version": "0.1.0",
+  "engineVersion": "0.1.0-preview",
+  "mainScene": "scenes/main.scene.json",
+  "rendererProfile": "Automatic",
+  "physicsTicksPerSecond": 60,
+  "input": {
+    "actions": [
+      {
+        "name": "jump",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "A"
+          },
+          {
+            "type": "key",
+            "keycode": "Space",
+            "physical_keycode": "Space"
+          }
+        ]
+      },
+      {
+        "name": "move_left",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "DpadLeft"
+          },
+          {
+            "type": "joy_motion",
+            "axis": "LeftX",
+            "axis_value": -1
+          },
+          {
+            "type": "key",
+            "keycode": "A",
+            "physical_keycode": "A"
+          },
+          {
+            "type": "key",
+            "keycode": "Left",
+            "physical_keycode": "Left"
+          }
+        ]
+      },
+      {
+        "name": "move_right",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "DpadRight"
+          },
+          {
+            "type": "joy_motion",
+            "axis": "LeftX",
+            "axis_value": 1
+          },
+          {
+            "type": "key",
+            "keycode": "D",
+            "physical_keycode": "D"
+          },
+          {
+            "type": "key",
+            "keycode": "Right",
+            "physical_keycode": "Right"
+          }
+        ]
+      },
+      {
+        "name": "pause",
+        "deadzone": 0.2,
+        "events": [
+          {
+            "type": "joy_button",
+            "button": "Start"
+          },
+          {
+            "type": "key",
+            "keycode": "Escape",
+            "physical_keycode": "Escape"
+          }
+        ]
+      }
+    ]
+  },
+  "display": {
+    "windowWidth": 1280,
+    "windowHeight": 720,
+    "fullscreen": false,
+    "dpiScale": 1,
+    "stretchMode": "Viewport",
+    "stretchAspect": "Keep",
+    "stretchScaleMode": "Fractional",
+    "stretchScale": 1,
+    "orientation": "Landscape",
+    "safeArea": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  }
+}

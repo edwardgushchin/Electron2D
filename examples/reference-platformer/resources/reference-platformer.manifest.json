@@ -1,0 +1,64 @@
+{
+  "format": "Electron2D.ReferencePlatformer.Resources",
+  "formatVersion": 1,
+  "source": "data/assets/reference-games",
+  "networkRequiredDuringBuild": false,
+  "resources": [
+    {
+      "path": "assets/platformer/graphics/tilemap.png",
+      "roles": [ "tileset", "tilemap" ]
+    },
+    {
+      "path": "assets/platformer/graphics/tilemap-characters.png",
+      "roles": [ "character-atlas", "animation" ]
+    },
+    {
+      "path": "assets/platformer/graphics/tilemap-backgrounds.png",
+      "roles": [ "background" ]
+    },
+    {
+      "path": "assets/platformer/graphics/terrain-solid.png",
+      "roles": [ "solid-terrain" ]
+    },
+    {
+      "path": "assets/platformer/graphics/player-idle.png",
+      "roles": [ "player-idle" ]
+    },
+    {
+      "path": "assets/platformer/audio/jump-cloth1.ogg",
+      "roles": [ "jump-audio" ]
+    },
+    {
+      "path": "assets/platformer/audio/footstep00.ogg",
+      "roles": [ "walk-audio" ]
+    },
+    {
+      "path": "assets/platformer/audio/checkpoint-door-open.ogg",
+      "roles": [ "checkpoint-audio" ]
+    },
+    {
+      "path": "assets/platformer/levels/tilemap-example-a.tmx",
+      "roles": [ "source-level" ]
+    },
+    {
+      "path": "assets/platformer/levels/tileset-tiles.tsx",
+      "roles": [ "source-tileset" ]
+    },
+    {
+      "path": "assets/platformer/levels/tileset-characters.tsx",
+      "roles": [ "source-characters" ]
+    },
+    {
+      "path": "assets/shared/fonts/kenney-future.ttf",
+      "roles": [ "ui-font" ]
+    },
+    {
+      "path": "assets/shared/ui/button-rectangle-depth-flat.png",
+      "roles": [ "pause-menu-ui" ]
+    },
+    {
+      "path": "assets/shared/ui/star.png",
+      "roles": [ "collectible-ui" ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "format": "Electron2D.TaskBoard",
+  "version": 1,
+  "boardId": "reference-platformer-board",
+  "columns": [
+    {
+      "status": "Backlog",
+      "taskIds": []
+    },
+    {
+      "status": "Ready",
+      "taskIds": []
+    },
+    {
+      "status": "InProgress",
+      "taskIds": []
+    },
+    {
+      "status": "Blocked",
+      "taskIds": []
+    },
+    {
+      "status": "Review",
+      "taskIds": []
+    },
+    {
+      "status": "AwaitingAcceptance",
+      "taskIds": [
+        "reference-platformer-acceptance"
+      ]
+    },
+    {
+      "status": "Done",
+      "taskIds": []
+    },
+    {
+      "status": "Cancelled",
+      "taskIds": []
+    }
+  ]
+}
