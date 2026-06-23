@@ -21,6 +21,10 @@
 - [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - project manifest, scene manifest, AI-ready project surface и проверка build/run.
 - [Performance budgets и soak-критерии 0.1.0 Preview](release-management/performance-budgets.md) - целевые устройства, 60 FPS, memory budgets и mobile cycles.
 
+## Качество
+
+- [Performance verification для 0.1.0 Preview](quality/performance-verification.md) - локальный verifier для empty scene, sprite scene, reference games, steady allocations и batching evidence.
+
 ## Документация
 
 - [Пользовательская документация 0.1.0 Preview](documentation/user-documentation.md) - обязательные разделы user guide, проверяемые команды и screenshot policy.

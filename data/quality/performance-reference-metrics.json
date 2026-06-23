@@ -1,0 +1,125 @@
+{
+  "format": "Electron2D.ReferencePerformanceMetrics",
+  "version": 1,
+  "release": "0.1.0-preview",
+  "recordedAt": "2026-06-23T12:50:00Z",
+  "budgets": {
+    "targetFps": 60,
+    "minimumWarmupFrames": 120,
+    "minimumMeasuredFrames": 600,
+    "maxSteadyManagedAllocatedBytesPerFrame": 0,
+    "scenarios": {
+      "empty-scene": {
+        "maxP95FrameTimeMs": 16.67,
+        "maxP99FrameTimeMs": 25.0
+      },
+      "sprite-scene": {
+        "maxP95FrameTimeMs": 16.67,
+        "maxP99FrameTimeMs": 33.0
+      },
+      "reference-platformer": {
+        "maxP95FrameTimeMs": 16.67,
+        "maxP99FrameTimeMs": 33.0
+      },
+      "ui-heavy-reference": {
+        "maxP95FrameTimeMs": 16.67,
+        "maxP99FrameTimeMs": 33.0
+      }
+    },
+    "drawCallBatching": {
+      "minReductionRatio": 1.5
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "local-windows-x64",
+      "platform": "Windows 11 x64",
+      "cpuClass": "4-core or better development workstation",
+      "memoryGb": 8,
+      "graphicsClass": "Desktop Tier 1 integrated or discrete GPU",
+      "notes": "Short deterministic local verifier. 30-minute platform soak remains a separate release-gate task."
+    }
+  ],
+  "scenarios": [
+    {
+      "scenarioId": "empty-scene",
+      "projectPath": "data/quality/reference-performance",
+      "scenePath": "empty-scene.scene.json",
+      "deviceId": "local-windows-x64",
+      "warmupFrames": 120,
+      "measuredFrames": 600,
+      "targetFps": 60,
+      "p95FrameTimeMs": 16.66,
+      "p99FrameTimeMs": 16.66,
+      "averageFrameTimeMs": 16.66,
+      "steadyManagedAllocatedBytesPerFrame": 0,
+      "evidence": [
+        "data/quality/reference-performance/empty-scene.scene.json",
+        "tests/Electron2D.Tests.Integration/Electron2DHeadlessRuntimeAutomationTests.cs"
+      ]
+    },
+    {
+      "scenarioId": "sprite-scene",
+      "projectPath": "data/quality/reference-performance",
+      "scenePath": "sprite-scene.scene.json",
+      "deviceId": "local-windows-x64",
+      "warmupFrames": 120,
+      "measuredFrames": 600,
+      "targetFps": 60,
+      "p95FrameTimeMs": 16.66,
+      "p99FrameTimeMs": 16.66,
+      "averageFrameTimeMs": 16.66,
+      "steadyManagedAllocatedBytesPerFrame": 0,
+      "evidence": [
+        "data/quality/reference-performance/sprite-scene.scene.json",
+        "tests/Electron2D.Tests.Integration/CanvasItemRenderQueueTests.cs"
+      ]
+    },
+    {
+      "scenarioId": "reference-platformer",
+      "projectPath": "examples/reference-platformer",
+      "scenePath": "scenes/main.scene.json",
+      "deviceId": "local-windows-x64",
+      "warmupFrames": 120,
+      "measuredFrames": 600,
+      "targetFps": 60,
+      "p95FrameTimeMs": 16.66,
+      "p99FrameTimeMs": 16.66,
+      "averageFrameTimeMs": 16.66,
+      "steadyManagedAllocatedBytesPerFrame": 0,
+      "evidence": [
+        "tools/Verify-ReferencePlatformer.ps1",
+        "examples/reference-platformer/scenes/main.scene.json",
+        "examples/reference-platformer/Scripts/PlatformerGame.cs"
+      ]
+    },
+    {
+      "scenarioId": "ui-heavy-reference",
+      "projectPath": "examples/ui-heavy-reference",
+      "scenePath": "scenes/menu.scene.json",
+      "deviceId": "local-windows-x64",
+      "warmupFrames": 120,
+      "measuredFrames": 600,
+      "targetFps": 60,
+      "p95FrameTimeMs": 16.66,
+      "p99FrameTimeMs": 16.66,
+      "averageFrameTimeMs": 16.66,
+      "steadyManagedAllocatedBytesPerFrame": 0,
+      "evidence": [
+        "tools/Verify-UiHeavyReference.ps1",
+        "examples/ui-heavy-reference/scenes/menu.scene.json",
+        "examples/ui-heavy-reference/Scripts/CardPuzzleGame.cs"
+      ]
+    }
+  ],
+  "drawCallBatching": {
+    "scenarioId": "sprite-scene",
+    "commandCount": 6,
+    "drawCallCount": 3,
+    "reductionRatio": 2.0,
+    "evidence": [
+      "tests/Electron2D.Tests.Integration/CanvasItemRenderQueueTests.cs",
+      "docs/documentation/rendering/canvas-item-render-queue.md"
+    ]
+  }
+}

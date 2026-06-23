@@ -21,6 +21,10 @@
 - [Формат проекта и шаблон electron2d-empty](release-management/project-template.md) - текущий AI-ready шаблон проекта и проверка его сборки/запуска.
 - [Performance budgets и soak-критерии 0.1.0 Preview](release-management/performance-budgets.md) - текущая матрица устройств и release-gate бюджеты.
 
+## Качество
+
+- [Performance verification для 0.1.0 Preview](quality/performance-verification.md) - текущий verifier empty scene, sprite scene, reference games, steady allocations и batching evidence.
+
 ## Репозиторий
 
 - [Политика MIT License и source headers](repository/license-policy.md) - текущая проверка корневой лицензии и license header в исходных файлах.

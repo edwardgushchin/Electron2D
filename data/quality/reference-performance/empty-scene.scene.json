@@ -1,0 +1,17 @@
+{
+  "format": "Electron2D.SceneFile",
+  "version": 1,
+  "external": [],
+  "internal": [],
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Electron2D.Node2D",
+      "name": "EmptyRoot",
+      "parent": null,
+      "owner": null,
+      "groups": [],
+      "properties": {}
+    }
+  ]
+}

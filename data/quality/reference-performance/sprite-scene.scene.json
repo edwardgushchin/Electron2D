@@ -1,0 +1,69 @@
+{
+  "format": "Electron2D.SceneFile",
+  "version": 1,
+  "external": [
+    {
+      "uid": "uid://reference-performance/sprite-atlas",
+      "path": "assets/sprite-atlas.png",
+      "type": "Texture2D"
+    }
+  ],
+  "internal": [],
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Electron2D.Node2D",
+      "name": "SpriteScene",
+      "parent": null,
+      "owner": null,
+      "groups": [],
+      "properties": {}
+    },
+    {
+      "id": 2,
+      "type": "Electron2D.Sprite2D",
+      "name": "Player",
+      "parent": 1,
+      "owner": 1,
+      "groups": [
+        "performance_sprites"
+      ],
+      "properties": {
+        "texture": {
+          "type": "ResourceReference",
+          "value": "uid://reference-performance/sprite-atlas"
+        },
+        "position": {
+          "type": "Vector2",
+          "value": {
+            "x": 160,
+            "y": 120
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "type": "Electron2D.Sprite2D",
+      "name": "Pickup",
+      "parent": 1,
+      "owner": 1,
+      "groups": [
+        "performance_sprites"
+      ],
+      "properties": {
+        "texture": {
+          "type": "ResourceReference",
+          "value": "uid://reference-performance/sprite-atlas"
+        },
+        "position": {
+          "type": "Vector2",
+          "value": {
+            "x": 224,
+            "y": 120
+          }
+        }
+      }
+    }
+  ]
+}
