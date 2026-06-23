@@ -51,6 +51,8 @@ public sealed class Electron2DCliWorkflowTests
                 ? "--format text|json"
                 : string.Equals(group, "tasks", StringComparison.Ordinal)
                     ? "--format text|markdown"
+                : string.Equals(group, "context", StringComparison.Ordinal)
+                    ? "--format text|json"
                 : "--format text|json|jsonl|sarif";
 
             Assert.Equal(0, help.ExitCode);
@@ -160,6 +162,106 @@ public sealed class Electron2DCliWorkflowTests
         Assert.False(File.Exists(Path.Combine(projectRoot, "TASKS.md")));
         Assert.False(Directory.Exists(Path.Combine(projectRoot, "completed-tasks")));
         Assert.False(Directory.Exists(Path.Combine(projectRoot, "dev-diary")));
+    }
+
+    [Fact]
+    public void ContextBuildCreatesCompactSnapshotWithoutSecretsOrBinaryPayloads()
+    {
+        var projectRoot = CreateContextProjectRoot("context-build");
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "context",
+            "build",
+            "--project",
+            projectRoot,
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+
+        using var envelopeJson = JsonDocument.Parse(result.Output);
+        var envelope = envelopeJson.RootElement;
+        Assert.Equal("context build", envelope.GetProperty("command").GetString());
+        Assert.True(envelope.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("none", envelope.GetProperty("route").GetString());
+
+        var contextRoot = Path.Combine(projectRoot, ".electron2d", "context");
+        var expectedFiles = new[]
+        {
+            "context-manifest.json",
+            "project-summary.json",
+            "api-surface.json",
+            "godot-differences.json",
+            "scene-index.json",
+            "resource-graph.json",
+            "diagnostics.json",
+            "conventions.md"
+        };
+        foreach (var file in expectedFiles)
+        {
+            Assert.True(File.Exists(Path.Combine(contextRoot, file)), file);
+            Assert.Contains(
+                ".electron2d/context/" + file,
+                envelope.GetProperty("changedFiles").EnumerateArray().Select(item => item.GetString()));
+        }
+
+        var data = envelope.GetProperty("data");
+        Assert.Equal("context.build", data.GetProperty("mode").GetString());
+        Assert.Equal(".electron2d/context", data.GetProperty("outputPath").GetString());
+        Assert.Contains("snapshot", data.GetProperty("snapshotWarning").GetString(), StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(expectedFiles.Length, data.GetProperty("files").GetArrayLength());
+        Assert.InRange(data.GetProperty("totalBytes").GetInt64(), 1, 64 * 1024);
+
+        using var summaryJson = JsonDocument.Parse(File.ReadAllText(Path.Combine(contextRoot, "project-summary.json")));
+        var summary = summaryJson.RootElement;
+        Assert.Equal("ContextGame", summary.GetProperty("project").GetProperty("name").GetString());
+        Assert.Equal("0.1.0-preview", summary.GetProperty("engineVersion").GetString());
+        Assert.False(string.IsNullOrWhiteSpace(summary.GetProperty("dotnetVersion").GetString()));
+        Assert.Equal("Standard", summary.GetProperty("rendererProfile").GetString());
+        Assert.Equal("scenes/main.scene.json", summary.GetProperty("mainScene").GetString());
+        Assert.Contains(
+            "jump",
+            summary.GetProperty("inputMap").GetProperty("actions").EnumerateArray().Select(item => item.GetProperty("name").GetString()));
+        Assert.Contains(
+            "Game.PlayerController",
+            summary.GetProperty("customClasses").EnumerateArray().Select(item => item.GetProperty("type").GetString()));
+        Assert.Contains(
+            "e2d validate --project <project> --format json",
+            summary.GetProperty("checkCommands").EnumerateArray().Select(item => item.GetString()));
+
+        using var sceneIndexJson = JsonDocument.Parse(File.ReadAllText(Path.Combine(contextRoot, "scene-index.json")));
+        var scene = sceneIndexJson.RootElement.GetProperty("scenes")[0];
+        Assert.Equal("scenes/main.scene.json", scene.GetProperty("path").GetString());
+        Assert.Contains(
+            "Player",
+            scene.GetProperty("nodes").EnumerateArray().Select(item => item.GetProperty("name").GetString()));
+        Assert.Contains(
+            "res://assets/player.e2res",
+            scene.GetProperty("externalReferences").EnumerateArray().Select(item => item.GetProperty("path").GetString()));
+
+        using var resourceGraphJson = JsonDocument.Parse(File.ReadAllText(Path.Combine(contextRoot, "resource-graph.json")));
+        Assert.Contains(
+            "assets/player.e2res",
+            resourceGraphJson.RootElement.GetProperty("resources").EnumerateArray().Select(item => item.GetProperty("path").GetString()));
+        Assert.Contains(
+            "res://assets/player.e2res",
+            resourceGraphJson.RootElement.GetProperty("sceneReferences").EnumerateArray().Select(item => item.GetProperty("target").GetString()));
+
+        using var apiSurfaceJson = JsonDocument.Parse(File.ReadAllText(Path.Combine(contextRoot, "api-surface.json")));
+        Assert.True(apiSurfaceJson.RootElement.GetProperty("typeCount").GetInt32() > 0);
+
+        var combinedContext = string.Join(
+            "\n",
+            expectedFiles.Select(file => File.ReadAllText(Path.Combine(contextRoot, file))));
+        Assert.DoesNotContain("super-secret-token", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain(".git", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain("TASKS.md", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain("dev-diary", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain("completed-tasks", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain("import-cache", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain("huge.log", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain("player.png", combinedContext, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -876,6 +978,83 @@ public sealed class Electron2DCliWorkflowTests
               </PropertyGroup>
             </Project>
             """);
+        return root;
+    }
+
+    private static string CreateContextProjectRoot(string name)
+    {
+        var root = CreateExportProjectRoot(name);
+        var resourceDirectory = Path.Combine(root, "assets");
+        var scriptDirectory = Path.Combine(root, "Scripts");
+        Directory.CreateDirectory(resourceDirectory);
+        Directory.CreateDirectory(scriptDirectory);
+
+        var resourcePath = "res://assets/player.e2res";
+        var resourceUid = Electron2D.ResourceUid.CreateIdForPath(resourcePath);
+        var resourceDocument = new Electron2D.ResourceFileDocument(
+            resourceUid,
+            "Electron2D.Texture2D",
+            resourcePath);
+        File.WriteAllText(
+            Path.Combine(resourceDirectory, "player.e2res"),
+            Electron2D.ResourceFileTextSerializer.Serialize(resourceDocument));
+        File.WriteAllBytes(Path.Combine(resourceDirectory, "player.png"), [0x89, 0x50, 0x4E, 0x47]);
+
+        var sceneDocument = new Electron2D.SceneFileDocument(
+            [
+                new Electron2D.ResourceFileExternalReference(
+                    1,
+                    resourceUid,
+                    resourcePath,
+                    "Electron2D.Texture2D")
+            ],
+            [],
+            [
+                new Electron2D.SceneFileNode(1, "Electron2D.Node2D", "Root", null, null, ["gameplay"]),
+                new Electron2D.SceneFileNode(2, "Game.PlayerController", "Player", 1, 1, ["player"]),
+                new Electron2D.SceneFileNode(3, "Electron2D.Sprite2D", "Sprite", 2, 1)
+            ]);
+        File.WriteAllText(
+            Path.Combine(root, "scenes", "main.scene.json"),
+            Electron2D.SceneFileTextSerializer.Serialize(sceneDocument));
+
+        File.WriteAllText(
+            Path.Combine(scriptDirectory, "PlayerController.cs"),
+            """
+            namespace Game;
+
+            public sealed class PlayerController : Electron2D.Node2D
+            {
+            }
+            """);
+
+        Electron2D.InputMap.ClearForTests();
+        try
+        {
+            Electron2D.InputMap.AddAction("jump", 0.25f);
+            Electron2D.InputMap.ActionAddEvent("jump", new Electron2D.InputEventKey { Keycode = Electron2D.Key.Space });
+            var settings = Electron2D.Electron2DProjectSettings.Capture(
+                "ContextGame",
+                "0.1.0",
+                "0.1.0-preview",
+                "scenes/main.scene.json");
+            settings.RendererProfile = Electron2D.Electron2DRendererProfileSetting.Standard;
+            Electron2D.Electron2DSettingsStore.SaveProject(Path.Combine(root, "project.e2d.json"), settings);
+        }
+        finally
+        {
+            Electron2D.InputMap.ClearForTests();
+        }
+
+        Directory.CreateDirectory(Path.Combine(root, ".git"));
+        File.WriteAllText(Path.Combine(root, ".git", "config"), "token=super-secret-token");
+        Directory.CreateDirectory(Path.Combine(root, ".electron2d", "import-cache"));
+        File.WriteAllBytes(Path.Combine(root, ".electron2d", "import-cache", "cached-texture.bin"), [1, 2, 3, 4]);
+        Directory.CreateDirectory(Path.Combine(root, "dev-diary"));
+        Directory.CreateDirectory(Path.Combine(root, "completed-tasks"));
+        File.WriteAllText(Path.Combine(root, "TASKS.md"), "password=super-secret-token");
+        File.WriteAllText(Path.Combine(root, "huge.log"), new string('x', 70 * 1024) + "super-secret-token");
+
         return root;
     }
 

@@ -106,6 +106,7 @@ internal static partial class Electron2DCommandLine
             "api" => RunApi(options, output, error),
             "mcp" => RunMcp(options, output, error, context),
             "tasks" => RunTasks(options, output, error),
+            "context" => RunContext(options, output, error, context),
             "doctor" => RunDoctor(options, output, error),
             "workspace" => RunWorkspace(options, output, error, context),
             "validate" => RunValidate(options, output, error),
@@ -1181,6 +1182,8 @@ internal static partial class Electron2DCommandLine
         output.WriteLine();
         var formatHelp = string.Equals(group, "tasks", StringComparison.Ordinal)
             ? "--format text|markdown"
+            : string.Equals(group, "context", StringComparison.Ordinal)
+                ? "--format text|json"
             : "--format text|json|jsonl|sarif";
         output.WriteLine($"Common options: --project <path> {formatHelp} --quiet --verbose");
         if (MutatingOrJobGroups.Contains(group, StringComparer.Ordinal))
@@ -1203,6 +1206,7 @@ internal static partial class Electron2DCommandLine
             "docs" => "  search|type|member|example",
             "api" => "  compare-godot <type>  Compare one API type against the approved Electron2D 0.1.0 2D profile.",
             "tasks" => "  export                Write a Markdown report from `.electron2d/tasks/*.e2task`.",
+            "context" => "  build                 Write a compact static context pack to `.electron2d/context/`.",
             _ => "  Reserved for a later Preview task."
         };
         output.WriteLine(commands);

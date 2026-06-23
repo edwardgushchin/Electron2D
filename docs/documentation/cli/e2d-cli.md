@@ -136,6 +136,31 @@ e2d tasks export --project <path> --status done --format markdown
 
 Markdown output содержит явное предупреждение, что это report only. Он не заменяет `.electron2d/tasks/*.e2task` и `.electron2d/tasks/board.e2tasks`, не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте.
 
+### `context build`
+
+`context build` создаёт компактный static context pack в `.electron2d/context/`:
+
+```powershell
+e2d context build --project <path> --format json
+```
+
+Команда возвращает общий CLI envelope с `command = "context build"`, `route = "none"` и `data.mode = "context.build"`. `route = "none"` означает, что команда не подключалась к active Editor, не открывала headless `ProjectWorkspace`, не создавала undo group и не меняла исходные игровые документы.
+
+Output layout:
+
+- `context-manifest.json`;
+- `project-summary.json`;
+- `api-surface.json`;
+- `godot-differences.json`;
+- `scene-index.json`;
+- `resource-graph.json`;
+- `diagnostics.json`;
+- `conventions.md`.
+
+Context pack является snapshot: он может устареть после любого изменения project settings, scene, resource, script или task documents. Для active Editor workflow живые MCP resources остаются более актуальным источником состояния.
+
+Поддержаны `--format text|json`; `jsonl`, `sarif` и `markdown` для этой команды не поддерживаются. Фактический состав и security policy описаны в [Статический context pack проекта](../project-system/static-context-pack.md).
+
 ### `workspace transaction`
 
 Generic mutation path:

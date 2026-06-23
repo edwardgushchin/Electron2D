@@ -67,6 +67,7 @@
 - [Human-AI concurrent editing, conflicts и grouped Undo](project-system/concurrent-editing-and-undo.md) - internal policy совместного редактирования, conflict detection, operation provenance, binary asset guards и реального grouped Undo/Redo.
 - [ProjectTaskManager, TaskActivity и task storage](project-system/project-task-manager.md) - встроенная модель задач пользовательского проекта, activity, human acceptance guard, dependency graph, stable task documents и transaction integration.
 - [Markdown report export для Project Tasks](project-system/project-tasks-markdown-report-export.md) - отчётная CLI-команда `e2d tasks export`, фильтры задач и запрет использовать Markdown как canonical task storage.
+- [Статический context pack проекта](project-system/static-context-pack.md) - CLI-команда `e2d context build`, компактный snapshot для автономного агента, layout файлов и security/size policy.
 - [External Change Synchronizer](project-system/external-change-synchronizer.md) - внутренний слой синхронизации файлов, изменённых вне Editor, через debounce, фильтры, `ExternalImport`, task guards и live import state.
 
 ## Diagnostics

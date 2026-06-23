@@ -42,6 +42,7 @@ Root help должен показывать группы:
 
 `project create`, детальные scene/resource команды, `api compare-godot`, `mcp serve`, `context build` и `doctor` расширяются отдельными задачами, но уже должны использовать общий parser, common flags и result envelope.
 `tasks export` является read-only report route для встроенного `ProjectTaskManager`.
+`context build` является read-only route без открытия `ProjectWorkspace`: команда создаёт `.electron2d/context/` как компактный snapshot проекта и возвращает `route = "none"`.
 
 ## Common flags
 
@@ -65,6 +66,8 @@ Root help должен показывать группы:
 `sarif` является форматом diagnostics/validation output. Documentation commands `docs search/type/member/example` остаются отдельной веткой и принимают только `--format text|json`.
 
 `tasks export` принимает `--format markdown`; если format не указан, команда пишет тот же Markdown в stdout. `jsonl` и `sarif` для этого отчёта не поддерживаются.
+
+`context build` принимает `--format text|json`; если format не указан, команда пишет короткую text-сводку. `jsonl`, `sarif` и `markdown` для context pack не поддерживаются.
 
 ## Result envelope
 
