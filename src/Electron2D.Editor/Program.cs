@@ -28,6 +28,7 @@ using Electron2D.Editor.ProjectManagement;
 using Electron2D.Editor.Run;
 using Electron2D.Editor.Scripting;
 using Electron2D.Editor.SceneTreeDock;
+using Electron2D.Editor.Shell;
 using Electron2D.Editor.Viewport2D;
 
 namespace Electron2D.Editor;
@@ -81,7 +82,12 @@ internal static class Program
             return RunRunWorkflowSmoke(runWorkflowWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>]");
+        if (args is ["--shell-layout-smoke", var shellLayoutWorkRoot])
+        {
+            return RunShellLayoutSmoke(shellLayoutWorkRoot);
+        }
+
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>]");
         return 2;
     }
 
@@ -374,6 +380,51 @@ internal static class Program
         }
     }
 
+    private static int RunShellLayoutSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorShellSmoke.Run(workRoot);
+
+            Console.WriteLine("Electron2D.Editor shell layout smoke passed");
+            Console.WriteLine($"MenuItems={Join(result.MenuItems)}");
+            Console.WriteLine($"WorkspaceSwitcher={Join(result.WorkspaceSwitcher)}");
+            Console.WriteLine($"LeftDocks={Join(result.LeftDocks)}");
+            Console.WriteLine($"RightDocks={Join(result.RightDocks)}");
+            Console.WriteLine($"BottomPanelTabs={Join(result.BottomPanelTabs)}");
+            Console.WriteLine($"SelectedWorkspace={result.SelectedWorkspace}");
+            Console.WriteLine($"BottomPanelCollapseRoundTrip={result.BottomPanelCollapseRoundTrip}");
+            Console.WriteLine($"PersistenceRoundTripStable={result.PersistenceRoundTripStable}");
+            Console.WriteLine($"WorkspaceStateRoundTripStable={result.WorkspaceStateRoundTripStable}");
+            Console.WriteLine($"ForbiddenUiMatches={result.ForbiddenUiMatches}");
+            Console.WriteLine($"ForbiddenShortcutMatches={result.ForbiddenShortcutMatches}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"TwoDSelection={result.TwoDSelection}");
+            Console.WriteLine($"TwoDScroll={result.TwoDScroll}");
+            Console.WriteLine($"TwoDZoom={result.TwoDZoom}");
+            Console.WriteLine($"ScriptDocuments={Join(result.ScriptDocuments)}");
+            Console.WriteLine($"GameDocuments={Join(result.GameDocuments)}");
+            Console.WriteLine($"TasksDocuments={Join(result.TasksDocuments)}");
+            Console.WriteLine($"StatePath={result.StatePath}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.BottomPanelCollapseRoundTrip &&
+                result.PersistenceRoundTripStable &&
+                result.WorkspaceStateRoundTripStable &&
+                result.ForbiddenUiMatches == 0 &&
+                result.ForbiddenShortcutMatches == 0 &&
+                result.ScreenshotReviewed
+                ? 0
+                : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
     private static string Format(Electron2D.Vector2 value)
     {
         return string.Create(
@@ -396,6 +447,11 @@ internal static class Program
     private static string Format(double value)
     {
         return value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static string Join(IEnumerable<string> values)
+    {
+        return string.Join('|', values);
     }
 
     private static string FindRepositoryRoot()

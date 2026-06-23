@@ -22,6 +22,8 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using Electron2D.Editor.Shell;
+
 namespace Electron2D.Editor;
 
 internal sealed class EditorApplication
@@ -49,6 +51,7 @@ internal sealed class EditorApplication
 
     private static Electron2D.Panel CreateShell()
     {
+        var layout = EditorShellLayout.CreateDefault();
         var shell = new Electron2D.Panel
         {
             Name = "EditorRoot",
@@ -61,16 +64,22 @@ internal sealed class EditorApplication
             OffsetRight = 0f,
             OffsetBottom = 0f
         };
-        var title = new Electron2D.Label
+        foreach (var region in layout.CreateVisualRegions())
         {
-            Name = "EditorTitle",
-            Text = "Electron2D Editor",
-            Position = new Electron2D.Vector2(16f, 16f),
-            Size = new Electron2D.Vector2(360f, 32f)
-        };
-
-        shell.AddChild(title);
+            shell.AddChild(new Electron2D.Label
+            {
+                Name = "EditorShell" + SanitizeName(region.Area) + SanitizeName(region.Label),
+                Text = region.Label,
+                Position = new Electron2D.Vector2(region.X, region.Y),
+                Size = new Electron2D.Vector2(region.Width, region.Height)
+            });
+        }
 
         return shell;
+    }
+
+    private static string SanitizeName(string value)
+    {
+        return string.Concat(value.Where(char.IsLetterOrDigit));
     }
 }

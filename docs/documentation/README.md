@@ -100,6 +100,7 @@
 ## Редактор
 
 - [Electron2D.Editor project shell](editor/editor-project-shell.md) - текущий executable shell редактора, smoke-запуск на runtime Electron2D и отсутствие внешнего desktop UI framework.
+- [Editor shell layout и visual harness](editor/editor-shell-layout.md) - текущий default layout редактора, central workspaces, docks, layout persistence, shortcut map и PNG/JSON visual acceptance harness.
 - [Project Manager редактора](editor/project-manager.md) - текущая внутренняя логика создания/открытия проекта, recent projects, renderer profile и SDK smoke-проверка.
 - [Agent process bootstrap из Editor](editor/agent-process-bootstrap.md) - текущий internal contract для agent profiles, временной MCP configuration, safe process plan, handshake state и подключения к active Editor route.
 - [Scene Tree dock редактора](editor/scene-tree-dock.md) - текущая внутренняя логика редактирования дерева сцены, undo/redo и синхронизация с runtime `Tree`.

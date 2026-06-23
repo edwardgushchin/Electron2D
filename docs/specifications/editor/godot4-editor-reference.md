@@ -282,3 +282,25 @@ Workspace switching не должен сбрасывать:
 - `Tasks` занимает центральную область;
 - `Agent Workspace` сохраняет dock placement после restart;
 - переключение workspaces не сбрасывает selection/open tabs/layout.
+
+## T-0157 shell layout harness
+
+До появления постоянного desktop event loop задача `T-0157` закрывает default shell через документированный automated harness. Harness является проверяемым способом построить тот же layout model, который создаёт стартовый `EditorApplication`, сохранить визуальный PNG-артефакт и машинно-читаемый JSON-анализ.
+
+Harness должен:
+
+- строить `EditorShellLayoutSnapshot` с фиксированным viewport `1280x720`;
+- включать верхнее меню `Scene`, `Project`, `Debug`, `Editor`, `Help`;
+- включать workspace switcher только `2D`, `Script`, `Game`, `Tasks`;
+- размещать `Scene` и `FileSystem` в left dock area;
+- размещать `Inspector`, `Node` и `Agent Workspace` в right dock area;
+- размещать bottom panel с `Output`, `Debugger`, `Diagnostics`, `Search`, `Animation`, `Audio`, `Tests`;
+- поддерживать collapse/expand bottom panel;
+- сохранять и восстанавливать layout docks, размеры, открытые document tabs и выбранный workspace через JSON state file;
+- сохранять per-workspace state при переключении: selection, scroll, zoom и open documents;
+- отдавать machine-readable shortcut map без 3D/GDScript actions;
+- проверять, что видимые labels, shortcut actions и create-node/workspace entries не содержат `3D`, `AssetLib`, `GDScript`, `.gd` или disabled 3D controls;
+- сохранять PNG screenshot и JSON analysis artifact в указанную harness directory;
+- записывать в analysis координаты workspace switcher, left docks, right docks, Agent Workspace и bottom panel, результат проверки переполнения текста, кликабельности основных controls и список forbidden UI matches.
+
+PNG-артефакт должен быть пригоден для ручного просмотра агентом перед закрытием задачи. JSON-анализ не заменяет просмотр screenshot: исполнитель обязан открыть сохранённый PNG, убедиться, что layout читаем и соответствует этой спецификации, и зафиксировать результат в дневнике разработки.
