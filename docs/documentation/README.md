@@ -64,6 +64,7 @@
 ## Тестирование
 
 - [Scene tests и visual regression tests](testing/scene-visual-testing.md) - текущий `Electron2D.Testing` layer, `e2d test --format json`, scene assertions, visual artifacts, progress events, diagnostics и JSON schemas.
+- [Agent acceptance benchmarks](testing/agent-acceptance-benchmarks.md) - текущий release gate manifest и runner для Editor co-development и headless AI benchmark suites.
 
 ## MCP
 

@@ -14,6 +14,10 @@
   - `tests/Electron2D.Tests.GoldenData/`
 - Единая команда запуска: `tools/Run-Tests.ps1`.
 - `src/Electron2D.sln` обновлён: тестовые проекты добавлены, старые examples исключены до отдельной миграции.
+- Agent acceptance benchmark release gate:
+  - `data/quality/agent-acceptance-benchmarks.json`;
+  - `tools/Run-AgentAcceptanceBenchmarks.ps1`;
+  - документация `docs/documentation/testing/agent-acceptance-benchmarks.md`.
 
 ## Как запускать
 
@@ -30,6 +34,14 @@ powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
 ```
 
 В текущем состоянии baseline-категория не содержит намеренно падающих тестов: новая Electron2D объектная модель уже включает `Node` и `SceneTree` baseline.
+
+Agent-native release gate можно проверить без запуска тяжёлых smoke-команд:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/Run-AgentAcceptanceBenchmarks.ps1 -DryRun -OutputDirectory .temp/agent-acceptance-benchmarks
+```
+
+Полный запуск benchmark выполняет evidence steps из manifest последовательно и создаёт `benchmark-result.json`.
 
 ## Текущее состояние runtime
 

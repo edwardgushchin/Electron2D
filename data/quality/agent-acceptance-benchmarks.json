@@ -1,0 +1,363 @@
+{
+  "format": "Electron2D.AgentAcceptanceBenchmarkManifest",
+  "version": 1,
+  "release": "0.1.0-preview",
+  "suites": [
+    {
+      "id": "editor-co-development",
+      "title": "Editor co-development acceptance benchmark",
+      "mode": "activeEditor",
+      "releaseRequired": true,
+      "targetSuccessRatio": 1.0,
+      "documentation": [
+        "docs/specifications/testing/agent-acceptance-benchmarks.md",
+        "docs/documentation/testing/agent-acceptance-benchmarks.md",
+        "docs/specifications/editor/godot4-editor-reference.md"
+      ],
+      "scenarios": [
+        { "id": "active-editor-route", "title": "CLI and MCP route mutating commands into the active Editor workspace." },
+        { "id": "created-script-visible", "title": "Created C# script files are visible in Editor workspaces without manual refresh." },
+        { "id": "scene-inspector-viewport-update", "title": "Scene changes update Scene Tree, Inspector and viewport evidence." },
+        { "id": "concurrent-editing-conflict-panel", "title": "Concurrent edits merge safely or surface a conflict instead of losing data." },
+        { "id": "visible-runtime-control", "title": "Visible runtime can run, pause, step, receive input and expose screenshot/tree/diagnostics." },
+        { "id": "snapshot-artifact-stale-policy", "title": "Run/build/test artifacts carry snapshot identity and stale only on game inputs." },
+        { "id": "task-metadata-not-stale", "title": "Task metadata edits do not stale game artifacts." },
+        { "id": "project-task-manager-links", "title": "Active task links transactions, jobs, diagnostics and artifacts." },
+        { "id": "agent-awaiting-acceptance-only", "title": "Agent can submit for acceptance but cannot mark the task Done." },
+        { "id": "trusted-human-acceptance", "title": "Human acceptance uses trusted interactive Editor context only." },
+        { "id": "project-tasks-board-manual-flow", "title": "Project Tasks board supports manual create/select/accept/request-changes flow." },
+        { "id": "script-workspace-tooling", "title": "Script workspace exposes Tooling/MCP text edits, diagnostics and completion." },
+        { "id": "editor-window-screenshot-analysis", "title": "Real Editor window screenshot and analysis prove visible UI layout quality." },
+        { "id": "managed-debugger-tooling", "title": "Managed debugger commands expose breakpoints, stacks, frame variables and watches." },
+        { "id": "structured-diagnostics-ai-fix", "title": "Structured diagnostics are available as benchmark evidence for AI fixes." },
+        { "id": "grouped-ai-undo", "title": "AI transaction can be undone as one group." },
+        { "id": "agent-crash-read-and-staged-transaction", "title": "Agent disconnect/crash and failed staged changes release leases and preserve workspace integrity." },
+        { "id": "editor-without-mcp", "title": "Editor manual workflow works without an active MCP session." }
+      ],
+      "evidence": [
+        {
+          "id": "editor-real-window-smoke",
+          "kind": "editorRealWindowSmoke",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "run",
+            "--project",
+            "src/Electron2D.Editor/Electron2D.Editor.csproj",
+            "--",
+            "--window-smoke",
+            ".temp/agent-acceptance-editor-window-smoke"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs",
+            "src/Electron2D.Editor/Shell/EditorWindowSmoke.cs",
+            "src/Electron2D.Editor/Shell/EditorShellVisualHarness.cs"
+          ],
+          "covers": [
+            "editor-window-screenshot-analysis",
+            "editor-without-mcp"
+          ],
+          "visualEvidence": {
+            "reference": "docs/specifications/editor/godot4-editor-reference.md",
+            "requiresActualWindow": true,
+            "requiresPointerInteraction": true,
+            "requiresKeyboardInteraction": true,
+            "requiresFramePresented": true,
+            "requiresScreenshotReviewed": true,
+            "maxTextOverflowCount": 0,
+            "maxForbiddenUiMatches": 0
+          }
+        },
+        {
+          "id": "editor-session-routing",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~EditorSessionDiscoveryTests|FullyQualifiedName~Electron2DMcpServerTests.WorkspaceResourcesReadActiveEditorDirtyStateAndMutationsRouteToActiveWorkspace|FullyQualifiedName~Electron2DMcpServerTests.CliMcpServeOutputsManifestWithoutCloudProvider"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/EditorSessionDiscoveryTests.cs",
+            "tests/Electron2D.Tests.Integration/Electron2DMcpServerTests.cs",
+            "src/Electron2D.Tooling/EditorSessionGateway.cs"
+          ],
+          "covers": [
+            "active-editor-route",
+            "editor-without-mcp"
+          ]
+        },
+        {
+          "id": "editor-scene-filesystem-inspector-viewport",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~EditorFileSystemDockTests|FullyQualifiedName~EditorSceneTreeDockTests|FullyQualifiedName~EditorInspectorTests|FullyQualifiedName~EditorViewport2DTests"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/EditorFileSystemDockTests.cs",
+            "tests/Electron2D.Tests.Integration/EditorSceneTreeDockTests.cs",
+            "tests/Electron2D.Tests.Integration/EditorInspectorTests.cs",
+            "tests/Electron2D.Tests.Integration/EditorViewport2DTests.cs"
+          ],
+          "covers": [
+            "created-script-visible",
+            "scene-inspector-viewport-update"
+          ]
+        },
+        {
+          "id": "editor-agent-and-task-ui",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~EditorAgentWorkspacePanelTests|FullyQualifiedName~EditorProjectTasksBoardTests|FullyQualifiedName~EditorShellLayoutTests"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs",
+            "tests/Electron2D.Tests.Integration/EditorProjectTasksBoardTests.cs",
+            "tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs",
+            "src/Electron2D.Editor/AgentWorkspace/EditorAgentWorkspaceVisualHarness.cs",
+            "src/Electron2D.Editor/ProjectTasks/EditorProjectTasksBoardVisualHarness.cs"
+          ],
+          "covers": [
+            "project-task-manager-links",
+            "agent-awaiting-acceptance-only",
+            "trusted-human-acceptance",
+            "project-tasks-board-manual-flow",
+            "visible-runtime-control",
+            "snapshot-artifact-stale-policy"
+          ]
+        },
+        {
+          "id": "tooling-runtime-task-services",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~ToolingServiceBoundaryTests"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/ToolingServiceBoundaryTests.cs",
+            "src/Electron2D.Tooling/ToolingServices.cs"
+          ],
+          "covers": [
+            "visible-runtime-control",
+            "project-task-manager-links",
+            "agent-awaiting-acceptance-only",
+            "trusted-human-acceptance",
+            "snapshot-artifact-stale-policy"
+          ]
+        },
+        {
+          "id": "workspace-stale-conflict-undo",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~WorkspaceJobTests.ArtifactsAndStaleMarkersFollowSnapshotInputs|FullyQualifiedName~WorkspaceTransactionTests.ExternalImportMergesNonOverlappingChangesAndReportsConflicts|FullyQualifiedName~WorkspaceTransactionTests.AgentTransactionUndoRedoRestoresAllDocumentsAndKeepsProvenance|FullyQualifiedName~WorkspaceTransactionTests.HeadlessCommitDryRunDoesNotMutateAndValidationFailureRollsBack|FullyQualifiedName~ProjectTaskManagerTests.ActivityStoreFillsAuditFieldsFromTrustedOperationContext"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/WorkspaceJobTests.cs",
+            "tests/Electron2D.Tests.Integration/WorkspaceTransactionTests.cs",
+            "tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs"
+          ],
+          "covers": [
+            "concurrent-editing-conflict-panel",
+            "snapshot-artifact-stale-policy",
+            "task-metadata-not-stale",
+            "grouped-ai-undo",
+            "agent-crash-read-and-staged-transaction",
+            "trusted-human-acceptance"
+          ]
+        },
+        {
+          "id": "script-debug-tooling-parity",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~ScriptDebugToolingParityTests"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/ScriptDebugToolingParityTests.cs",
+            "src/Electron2D.Tooling/ToolingScriptDebugServices.cs",
+            "src/Electron2D.Editor/Scripting/EditorScriptDebugToolingVisualHarness.cs"
+          ],
+          "covers": [
+            "created-script-visible",
+            "script-workspace-tooling",
+            "managed-debugger-tooling",
+            "structured-diagnostics-ai-fix",
+            "project-task-manager-links"
+          ]
+        },
+        {
+          "id": "agent-bootstrap-lease-and-disconnect",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~EditorAgentBootstrapTests.InvalidOrExpiredAgentTokenUpdatesWorkspaceStateWithoutEchoingSecret|FullyQualifiedName~EditorAgentBootstrapTests.HandshakeConnectsToActiveEditorAndReadsWorkspaceStateBeforeTokenExpiry"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/EditorAgentBootstrapTests.cs",
+            "src/Electron2D.Tooling/EditorAgentProcessBootstrap.cs"
+          ],
+          "covers": [
+            "agent-crash-read-and-staged-transaction",
+            "active-editor-route"
+          ]
+        },
+        {
+          "id": "editor-run-diagnostics",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~EditorRunWorkflowTests"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/EditorRunWorkflowTests.cs",
+            "src/Electron2D.Editor/Run/EditorRunWorkflowSmoke.cs"
+          ],
+          "covers": [
+            "structured-diagnostics-ai-fix",
+            "visible-runtime-control"
+          ]
+        }
+      ],
+      "successConditions": {
+        "requiredEvidenceMustPass": true,
+        "targetPrimaryAgent": "codex",
+        "requiresRealWindowScreenshot": true,
+        "requiresScreenshotAnalysis": true,
+        "maxTextOverflowCount": 0,
+        "maxForbiddenUiMatches": 0
+      }
+    },
+    {
+      "id": "headless-ai",
+      "title": "Headless AI acceptance benchmark",
+      "mode": "headless",
+      "releaseRequired": true,
+      "targetSuccessRatio": 0.8,
+      "documentation": [
+        "docs/specifications/testing/agent-acceptance-benchmarks.md",
+        "docs/documentation/testing/agent-acceptance-benchmarks.md",
+        "docs/documentation/project-system/static-context-pack.md",
+        "docs/documentation/runtime/headless-runtime-automation.md"
+      ],
+      "scenarios": [
+        { "id": "headless-installed-engine", "title": "Agent works from installed Electron2D, docs, CLI and MCP without engine source as input." },
+        { "id": "headless-five-tasks", "title": "Benchmark contains five reference tasks." },
+        { "id": "headless-no-generated-cache-edits", "title": "Generated cache and local session folders are forbidden." },
+        { "id": "headless-no-unsupported-api", "title": "Unsupported API usage fails the benchmark." },
+        { "id": "headless-two-agent-or-manual-harness", "title": "Two-agent run or documented manual harness exists until automation." }
+      ],
+      "headlessTasks": [
+        { "id": "create-project", "title": "Create a new Electron2D project." },
+        { "id": "change-scene", "title": "Modify a scene through CLI/MCP and keep project text valid." },
+        { "id": "implement-mechanic", "title": "Implement a small C# gameplay mechanic in the user project." },
+        { "id": "fix-diagnostic", "title": "Fix a structured diagnostic without hidden instructions." },
+        { "id": "verify-and-build", "title": "Run checks and build/export the project." }
+      ],
+      "evidence": [
+        {
+          "id": "headless-runtime-automation",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests|FullyQualifiedName~Electron2DCliWorkflowTests.ContextBuildCreatesCompactSnapshotWithoutSecretsOrBinaryPayloads"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/Electron2DHeadlessRuntimeAutomationTests.cs",
+            "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs",
+            "src/Electron2D.Cli/HeadlessRuntimeAutomation.cs",
+            "src/Electron2D.Cli/ContextPackCli.cs"
+          ],
+          "covers": [
+            "headless-installed-engine",
+            "headless-five-tasks",
+            "headless-no-generated-cache-edits"
+          ]
+        },
+        {
+          "id": "headless-task-template-and-api-guard",
+          "kind": "dotnetTest",
+          "required": true,
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+            "--filter",
+            "FullyQualifiedName~ProjectTaskManagerTests.StorageRoundTripsTaskAndBoardDocumentsAsEditorMetadata|FullyQualifiedName~WorkspaceTransactionTests.TransactionsRejectGeneratedCacheAndEscapingPaths|FullyQualifiedName~ApiManifestTests"
+          ],
+          "sourceFiles": [
+            "tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs",
+            "tests/Electron2D.Tests.Integration/WorkspaceTransactionTests.cs",
+            "tests/Electron2D.Tests.Integration/ApiManifestTests.cs"
+          ],
+          "covers": [
+            "headless-no-generated-cache-edits",
+            "headless-no-unsupported-api"
+          ]
+        },
+        {
+          "id": "headless-documented-manual-harness",
+          "kind": "documentedManualHarness",
+          "required": true,
+          "sourceFiles": [
+            "docs/documentation/testing/agent-acceptance-benchmarks.md"
+          ],
+          "covers": [
+            "headless-five-tasks",
+            "headless-two-agent-or-manual-harness",
+            "headless-no-unsupported-api"
+          ]
+        }
+      ],
+      "successConditions": {
+        "minimumAgentProfiles": 2,
+        "documentedManualHarness": "docs/documentation/testing/agent-acceptance-benchmarks.md#headless-manual-harness",
+        "forbidGeneratedCacheEdits": true,
+        "forbidUnsupportedApi": true,
+        "forbiddenGeneratedCachePaths": [
+          ".electron2d/import-cache/",
+          ".electron2d/workspaces/",
+          ".electron2d/context/",
+          ".electron2d/session/",
+          ".electron2d/user/"
+        ]
+      }
+    }
+  ]
+}

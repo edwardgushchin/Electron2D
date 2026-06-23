@@ -45,6 +45,7 @@
 ## Тестирование
 
 - [Scene tests и visual regression tests](testing/scene-visual-testing.md) - project scene test suite manifest, deterministic frame advance, node/property assertions, visual comparison artifacts, JSON schemas и CLI `e2d test --format json`.
+- [Agent acceptance benchmarks для Electron2D 0.1](testing/agent-acceptance-benchmarks.md) - release gate для Editor co-development и headless AI benchmark suites, manifest, runner, visual evidence и target success ratios.
 
 ## MCP
 
