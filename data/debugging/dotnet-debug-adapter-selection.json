@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T-0163",
+  "updated": "2026-06-23",
+  "selectedAdapter": {
+    "id": "netcoredbg",
+    "displayName": "NetCoreDbg",
+    "sourceRepository": "https://github.com/Samsung/netcoredbg",
+    "releaseTag": "3.1.3-1062",
+    "releaseUrl": "https://github.com/Samsung/netcoredbg/releases/tag/3.1.3-1062",
+    "releasePublishedAt": "2025-12-12T11:33:53Z",
+    "observedVersionOutput": "NET Core debugger 3.1.3-1 (8b8b222, Release)",
+    "licenseSpdx": "MIT",
+    "licenseUrl": "https://github.com/Samsung/netcoredbg/blob/master/LICENSE",
+    "redistributionPolicy": "Allowed with MIT license notice bundled next to packaged adapter artifacts.",
+    "dap": {
+      "transport": "stdio",
+      "arguments": [
+        "--interpreter=vscode"
+      ],
+      "boundary": "Electron2D.Editor -> Electron2D.ManagedDebugging -> DAP stdio -> netcoredbg -> Electron2D game process"
+    },
+    "updatePolicy": "Pin a release tag, refresh platform assets and source-build outputs through the T-0163 validation checklist before updating the bundled adapter."
+  },
+  "t0160Handoff": {
+    "ready": true,
+    "managedDebuggingProject": "src/Electron2D.ManagedDebugging/",
+    "adapterHostContract": "Start netcoredbg as a child process with --interpreter=vscode, speak Debug Adapter Protocol over stdio, and map Editor breakpoints/source anchors to DAP requests.",
+    "doNotReselectAdapterInT0160": true
+  },
+  "candidateReview": [
+    {
+      "id": "netcoredbg",
+      "status": "selected",
+      "licenseSpdx": "MIT",
+      "reason": "Mature open-source .NET debugger with VS Code Debug Adapter Protocol mode, launch and attach support, Windows/Linux binary release assets, source-build path for macOS arm64, and compatible redistribution terms."
+    },
+    {
+      "id": "microsoft-vsdbg",
+      "status": "rejected",
+      "licenseSpdx": "proprietary",
+      "reason": "Not selected for Electron2D distribution because the Microsoft debugger adapter licensing and distribution model is tied to Microsoft IDE workflows and is not a permissive redistributable dependency for this engine."
+    },
+    {
+      "id": "sharpdbg",
+      "status": "rejected-for-0.1.0",
+      "licenseSpdx": "MIT",
+      "reason": "Promising pure .NET DAP adapter, but no GitHub release/package assets were available during validation; using it would make T-0160 depend on a young source-only debugger before its packaging story is stable."
+    }
+  ],
+  "platformTargets": [
+    {
+      "platform": "windows-x64",
+      "runtimeIdentifier": "win-x64",
+      "sourceKind": "upstream-release-binary",
+      "validationStatus": "executed-local-dap-smoke",
+      "assetName": "netcoredbg-win64.zip",
+      "downloadUrl": "https://github.com/Samsung/netcoredbg/releases/download/3.1.3-1062/netcoredbg-win64.zip",
+      "sizeBytes": 3475639,
+      "sha256": "C67AE052E0BCB9CE37000F261E2D397A0D5B6615CAFE30C868239A78598DFB37",
+      "validationEvidence": {
+        "helpAndVersion": true,
+        "portablePdb": true,
+        "launchSmoke": true,
+        "attachSmoke": true,
+        "evaluateSmoke": true,
+        "evidenceFiles": [
+          ".temp/debug-adapter/dap-smoke/windows-dap-smoke.json",
+          ".temp/debug-adapter/dap-smoke/windows-dap-attach-smoke.json"
+        ]
+      }
+    },
+    {
+      "platform": "linux-x64",
+      "runtimeIdentifier": "linux-x64",
+      "sourceKind": "upstream-release-binary",
+      "validationStatus": "release-asset-available",
+      "assetName": "netcoredbg-linux-amd64.tar.gz",
+      "downloadUrl": "https://github.com/Samsung/netcoredbg/releases/download/3.1.3-1062/netcoredbg-linux-amd64.tar.gz",
+      "sizeBytes": 3496193,
+      "sha256": "3814341C028C81FF7EEA03AC316AD92E9AD7D705D2A00E3E3DF269CDC241C763",
+      "requiredReleaseGate": "Run the same DAP launch and attach smoke on a Linux x64 host before shipping Linux editor/debugger packages."
+    },
+    {
+      "platform": "macos-arm64",
+      "runtimeIdentifier": "osx-arm64",
+      "sourceKind": "electron2d-source-build",
+      "validationStatus": "source-build-required",
+      "assetName": "electron2d-netcoredbg-osx-arm64.tar.gz",
+      "downloadUrl": null,
+      "sizeBytes": null,
+      "sha256": null,
+      "sourceBuild": {
+        "sourceRepository": "https://github.com/Samsung/netcoredbg",
+        "sourceTag": "3.1.3-1062",
+        "requiredHost": "macOS arm64 with .NET SDK, CMake, Homebrew and clang toolchain",
+        "reason": "The upstream 3.1.3-1062 release publishes osx-amd64 but not osx-arm64. NetCoreDbg source is MIT licensed and documents a macOS arm64 build path, so Electron2D must produce and smoke-test its own osx-arm64 artifact in the release packaging pipeline."
+      },
+      "requiredReleaseGate": "Build osx-arm64 from the pinned source tag, bundle MIT license notice, then run DAP launch and attach smoke on macOS arm64 before shipping macOS editor/debugger packages."
+    }
+  ],
+  "capabilityMatrix": {
+    "initialize": true,
+    "launch": true,
+    "attach": true,
+    "setBreakpoints": true,
+    "configurationDone": true,
+    "continue": true,
+    "next": true,
+    "stepIn": true,
+    "stepOut": true,
+    "threads": true,
+    "stackTrace": true,
+    "scopes": true,
+    "variables": true,
+    "exceptionFilters": true,
+    "exceptionInfo": true,
+    "expressionEvaluation": true,
+    "conditionalBreakpoints": true,
+    "functionBreakpoints": true,
+    "restart": true,
+    "restartStrategy": "editor-managed-disconnect-and-relaunch",
+    "terminate": true,
+    "pause": true,
+    "limitations": [
+      "setBreakpoints may initially report a pending breakpoint; Electron2D must treat the later stopped:breakpoint event and resolved frame as the binding confirmation.",
+      "NetCoreDbg initialize response does not advertise a native DAP restart request; Electron2D 0.1.0 restart must be implemented by the Editor as disconnect plus a new launch over the same adapter package.",
+      "macOS arm64 is a source-build packaging target for Electron2D because the selected upstream release does not publish osx-arm64 binaries.",
+      "Remote Android, iOS and WebAssembly debugging remain outside Electron2D 0.1.0."
+    ]
+  },
+  "primarySources": [
+    "https://github.com/Samsung/netcoredbg",
+    "https://github.com/Samsung/netcoredbg/releases/tag/3.1.3-1062",
+    "https://github.com/Samsung/netcoredbg/blob/master/LICENSE",
+    "https://microsoft.github.io/debug-adapter-protocol/specification",
+    "https://github.com/MattParkerDev/sharpdbg"
+  ]
+}

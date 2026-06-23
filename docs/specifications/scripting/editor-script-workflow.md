@@ -334,6 +334,21 @@ Electron2D game process
 - способ обновления adapter binaries;
 - распространение по совместимой лицензии.
 
+Проверяемый минимум `T-0163` для выбора packaged .NET debug adapter:
+
+- результат spike фиксируется в tracked manifest `data/debugging/dotnet-debug-adapter-selection.json`, чтобы `T-0160` мог использовать выбранный adapter без повторного выбора;
+- manifest выбирает один adapter, содержит source repository, pinned release tag или commit, SPDX license id, redistribution policy, DAP transport, command-line arguments, update policy и links на primary sources;
+- manifest содержит candidate review минимум для `netcoredbg`, Microsoft debugger adapters и молодых open-source alternatives, с machine-readable причиной выбора или отказа;
+- selected adapter должен использовать DAP boundary `Electron2D.Editor -> Electron2D.ManagedDebugging -> DAP stdio -> adapter -> Electron2D game process`;
+- Windows x64 validation выполняет реальный local smoke выбранного adapter: download/extract, `--version`, DAP `initialize`, `launch`, `setBreakpoints`, `configurationDone`, остановка на breakpoint, `threads`, `stackTrace`, `scopes`, `variables`, `next`, `continue`, `disconnect`;
+- Windows x64 attach validation выполняет `attach` к уже запущенному .NET process, `configurationDone`, `threads`, `pause`, `stackTrace`, `continue` и `disconnect`;
+- validation sample собирается в Debug configuration с Portable PDB, чтобы проверка не подменялась launch без debug symbols;
+- Linux x64 и macOS arm64 фиксируются как release packaging targets. Если upstream release не содержит нужный binary artifact, manifest должен явно указать source-build strategy, required host, required release-gate smoke и причину, почему это не меняет выбранный adapter;
+- DAP capability matrix включает launch, attach, breakpoints, stepping, threads, stackTrace, scopes, variables, expression evaluation, exception filters, terminate/restart-related support и ограничения;
+- license validation подтверждает MIT-compatible redistribution для selected adapter и исключает adapters, чья лицензия не разрешает поставку вместе с Electron2D;
+- documentation `docs/documentation/scripting/managed-debug-adapter-selection.md` описывает выбранный adapter, проверенные команды, capability matrix, platform/package plan, limitations и update procedure;
+- integration test проверяет manifest и documentation, чтобы отсутствие platform strategy, license, capability или T-0160 handoff считалось regression.
+
 Runtime debug bridge:
 
 - scene tree;
