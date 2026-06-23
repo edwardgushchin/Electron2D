@@ -70,6 +70,18 @@ The staging builder copies `project.e2d.json`, the main scene and `assets/**`. I
 
 The generated host files include smoke markers for launch, render, touch, safe area, foreground/background lifecycle, audio, resources, filesystem, precompiled rendering artifacts and shutdown. These markers are only staging evidence until they are observed on a real iOS simulator or device.
 
+## Current CLI routes
+
+The current CLI exposes the planner and staging builder without claiming that iOS is release-ready:
+
+```powershell
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-ios --project <project-root> --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-ios --project <project-root> --output exports/ios/debug --skip-publish true --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
+```
+
+`plan-ios` returns the deterministic plan. `build-ios --skip-publish true` writes the transient staging project. `run-ios` writes `Electron2D.IosDeviceSmokeArtifact`; on hosts without simulator/device evidence it exits as a failure with `data.result.status = "smoke-blocked"` and diagnostic `E2D-EXPORT-IOS-0011`.
+
 ## Current smoke artifact
 
 `Electron2DIosDeviceSmokeRunner.Run(...)` writes a JSON artifact with format `Electron2D.IosDeviceSmokeArtifact`.

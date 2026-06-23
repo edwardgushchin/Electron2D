@@ -134,6 +134,16 @@ xcodebuild -project <xcodeproj> -scheme Electron2D.iOS -configuration <Debug|Rel
 
 Planner может сохранить deterministic command arguments, но не выполняет команды. Реальный `xcodebuild`, signing и deploy допустимы только в verifier или CLI-команде, запущенной на macOS после явного выбора simulator/device/signing environment.
 
+CLI должен открыть тот же безопасный путь, что и внутренний planner:
+
+```text
+e2d export plan-ios --project <project-root> --format json
+e2d export build-ios --project <project-root> --output exports/ios/debug --skip-publish true --format json
+e2d export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
+```
+
+`plan-ios` возвращает deterministic JSON plan без записи файлов. `build-ios --skip-publish true` создаёт transient Xcode staging project без запуска `dotnet publish`, `xcodebuild`, signing или deploy. `run-ios` обязан записать structured smoke artifact; если simulator/device evidence не передан и не обнаружен, команда возвращает failure со статусом `smoke-blocked` и diagnostic `E2D-EXPORT-IOS-0011`.
+
 ## Simulator/device smoke
 
 Smoke artifact должен проверять:
@@ -162,6 +172,7 @@ Smoke artifact должен проверять:
 - iOS planner fail closed для wrong target, wrong runtime identifier, framework-dependent deployment, missing project file path, missing project settings и missing signing identity.
 - iOS Xcode project builder создаёт staging project, host files, metadata, project settings, main scene и `assets/**`, но не копирует `.electron2d/tasks/**`.
 - iOS smoke runner создаёт structured artifact; при отсутствии simulator/device возвращает blocked/failure с `E2D-EXPORT-IOS-0011`.
+- CLI routes `e2d export plan-ios`, `e2d export build-ios` и `e2d export run-ios` возвращают stable JSON envelope и не queue generic export job.
 - На macOS host с Xcode выполнен simulator или device smoke для lifecycle, render, input, audio, resources, filesystem, safe area и clean shutdown.
 - Implementation documentation описывает фактический target, layout, diagnostics, limitations и команды проверки.
 - Focused export tests, source license/header checks и documentation verifiers проходят.

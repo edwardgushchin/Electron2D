@@ -215,6 +215,18 @@ e2d export run-web --project <path> --output exports/web --url http://127.0.0.1:
 
 `plan-web` возвращает `data.mode = "export.web.plan"` и deterministic `wwwroot` layout. `build-web` создаёт `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `project.e2d.json`, main scene и `assets/**`; без `--skip-publish true` команда сначала проверяет WebAssembly build tools и запускает внешний `dotnet publish`. `run-web` проверяет package contract и пишет `Electron2D.WebAssemblySmokeArtifact`.
 
+### `export plan-ios`, `export build-ios`, `export run-ios`
+
+iOS export имеет отдельные CLI routes и не queue generic `WorkspaceJob`.
+
+```powershell
+e2d export plan-ios --project <path> --format json
+e2d export build-ios --project <path> --output exports/ios/debug --skip-publish true --format json
+e2d export run-ios --project <path> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
+```
+
+`plan-ios` возвращает `data.mode = "export.ios.plan"` и deterministic Xcode staging plan для `IosArm64`/`ios-arm64`. `build-ios --skip-publish true` создаёт transient Xcode project files, `Info.plist`, `Entitlements.plist`, `ExportMetadata.json`, project settings, main scene и `assets/**` без запуска `dotnet publish`, `xcodebuild`, signing или deploy. `run-ios` пишет `Electron2D.IosDeviceSmokeArtifact`; если simulator/device evidence отсутствует, команда возвращает failure с `data.result.status = "smoke-blocked"` и diagnostic `E2D-EXPORT-IOS-0011`.
+
 ### `run debug`
 
 `e2d run debug` подключает preview runtime debug bridge. Он не запускает настоящий видимый game process; текущий route создаёт deterministic debug session по scene JSON и возвращает machine-readable runtime state.

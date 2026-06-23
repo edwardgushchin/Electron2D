@@ -912,6 +912,129 @@ public sealed class Electron2DCliWorkflowTests
     }
 
     [Fact]
+    public void ExportPlanIosReturnsIosArm64PlanWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("ios-plan-cli");
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "plan-ios",
+            "--project",
+            projectRoot,
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var plan = data.GetProperty("plan");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export plan-ios", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+        Assert.Equal("export.ios.plan", data.GetProperty("mode").GetString());
+        Assert.Equal("IosArm64", data.GetProperty("target").GetString());
+        Assert.Equal("ios-arm64", data.GetProperty("runtimeIdentifier").GetString());
+        Assert.Equal("metal", plan.GetProperty("graphicsBackend").GetString());
+        Assert.EndsWith("exports/ios/debug/ios", plan.GetProperty("stagingDirectory").GetString()?.Replace('\\', '/'), StringComparison.Ordinal);
+        Assert.Contains("safeArea", plan.GetProperty("smokeCriteria").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("precompiledArtifacts", plan.GetProperty("smokeCriteria").EnumerateArray().Select(item => item.GetString()));
+    }
+
+    [Fact]
+    public void ExportBuildIosCreatesStagingProjectWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("ios-build-cli");
+        Directory.CreateDirectory(Path.Combine(projectRoot, "assets"));
+        File.WriteAllText(Path.Combine(projectRoot, "assets", "sprite.txt"), "sprite");
+        Directory.CreateDirectory(Path.Combine(projectRoot, ".electron2d", "tasks"));
+        File.WriteAllText(Path.Combine(projectRoot, ".electron2d", "tasks", "welcome.e2task"), "local task metadata");
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "build-ios",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/ios/debug",
+            "--skip-publish",
+            "true",
+            "--format",
+            "json");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var package = data.GetProperty("package");
+
+        Assert.True(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export build-ios", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+        Assert.Equal("export.ios.build", data.GetProperty("mode").GetString());
+        Assert.Equal("staged", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.True(data.GetProperty("result").GetProperty("publishSkipped").GetBoolean());
+        Assert.Contains("Electron2D.iOS.csproj", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("AppDelegate.cs", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("Info.plist", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("Entitlements.plist", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("ExportMetadata.json", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.Contains("Assets/electron2d/assets/sprite.txt", package.GetProperty("files").EnumerateArray().Select(item => item.GetString()));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "ios", "debug", "ios", "Electron2D.iOS.csproj")));
+        Assert.True(File.Exists(Path.Combine(projectRoot, "exports", "ios", "debug", "ios", "Electron2D.iOS.xcodeproj", "project.pbxproj")));
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "exports", "ios", "debug", "ios", "Assets", "electron2d", ".electron2d")));
+    }
+
+    [Fact]
+    public void ExportRunIosWithoutSimulatorOrDeviceWritesBlockedSmokeArtifactWithoutQueueingJob()
+    {
+        var projectRoot = CreateExportProjectRoot("ios-run-cli");
+
+        var result = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "export",
+            "run-ios",
+            "--project",
+            projectRoot,
+            "--output",
+            "exports/ios/debug",
+            "--smoke-output",
+            ".electron2d/export-smoke/ios-smoke.json",
+            "--format",
+            "json");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Empty(result.Error);
+        using var json = JsonDocument.Parse(result.Output);
+        var root = json.RootElement;
+        var data = root.GetProperty("data");
+        var smoke = data.GetProperty("smoke");
+        var diagnostic = root.GetProperty("diagnostics")[0];
+
+        Assert.False(root.GetProperty("succeeded").GetBoolean());
+        Assert.Equal("export run-ios", root.GetProperty("command").GetString());
+        Assert.Equal("none", root.GetProperty("route").GetString());
+        Assert.True(root.GetProperty("job").ValueKind is JsonValueKind.Null);
+        Assert.Equal("export.ios.run", data.GetProperty("mode").GetString());
+        Assert.Equal("smoke-blocked", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal("E2D-CLI-0002", diagnostic.GetProperty("code").GetString());
+        Assert.Contains("E2D-EXPORT-IOS-0011", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+        Assert.True(File.Exists(Path.Combine(projectRoot, ".electron2d", "export-smoke", "ios-smoke.json")));
+        Assert.Contains("safeArea", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("input", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("audio", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("resources", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("filesystem", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+        Assert.Contains("precompiledArtifacts", smoke.GetProperty("criteria").EnumerateObject().Select(item => item.Name));
+    }
+
+    [Fact]
     public void UnknownCommandGroupReturnsStableJsonDiagnostic()
     {
         var result = RunCli(

@@ -87,6 +87,9 @@ Assert-ContainsAll 'Export guide' $guide @(
     'export-doc:web-status',
     'export build-web',
     'export run-web',
+    'export plan-ios',
+    'export build-ios',
+    'export run-ios',
     'tools\Verify-WindowsExport.ps1',
     'tools\Verify-LinuxExport.ps1',
     'tools\Verify-MacOSExport.ps1'
@@ -139,7 +142,12 @@ Assert-ContainsAll 'iOS export documentation' $ios @(
     'SDK and toolchain',
     'Signing and credentials',
     'Known limitations',
-    'not a ready release path'
+    'not a ready release path',
+    'export plan-ios',
+    'export build-ios',
+    'export run-ios',
+    'Electron2D.IosDeviceSmokeArtifact',
+    'E2D-EXPORT-IOS-0011'
 )
 
 Assert-ContainsAll 'WebAssembly browser export documentation' $web @(
@@ -167,6 +175,9 @@ Assert-ContainsAll 'User guide export section' $userGuide @(
     'webassembly-browser-export.md',
     'export build-web',
     'export run-web',
+    'export plan-ios',
+    'export build-ios',
+    'export run-ios',
     'tools\Verify-ExportDocumentation.ps1'
 )
 

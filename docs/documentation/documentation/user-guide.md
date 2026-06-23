@@ -176,6 +176,14 @@ Android и iOS export сейчас заблокированы окружение
 - [Android arm64 export](../export/android-arm64-export.md);
 - [iOS arm64 export](../export/ios-arm64-export.md).
 
+iOS export имеет CLI planning/staging path:
+
+- `e2d export plan-ios --project <project-root> --format json`;
+- `e2d export build-ios --project <project-root> --output exports/ios/debug --skip-publish true --format json`;
+- `e2d export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json`.
+
+`run-ios` пишет blocked smoke artifact, если simulator/device evidence отсутствует; это не закрывает iOS release gate.
+
 WebAssembly browser export имеет planner, package builder и локальный smoke artifact. `build-web --skip-publish true` создаёт host page, loader, manifest и runtime resources без внешнего publish; обычный `build-web` пытается выполнить `dotnet publish` только при подходящих WebAssembly build tools. `run-web` сохраняет structured smoke artifact и launch URL; remote hosting deploy не выполняется. Подробности: [WebAssembly browser export](../export/webassembly-browser-export.md).
 
 После правки export-документации запускайте:

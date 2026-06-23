@@ -37,7 +37,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/cli/e2d-cli.md",
-                                                    "sha256":  "c1daaaad1ea13181428580ae00ae5bb375339cd40f077b87739f0428c436324d"
+                                                    "sha256":  "2013ac57ab9904e47d9187a12c337d865b37a1d494466b60d000cee0d6b602e4"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/core-types/2d-math-baseline.md",
@@ -97,7 +97,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/documentation/user-guide.md",
-                                                    "sha256":  "9b293815c37b00389ba56e65b1749edb01afba8070e38ca5c88a97b8957088f6"
+                                                    "sha256":  "1f4fa673acbb09f8d2a89658e0ccd28c2dc6694cd2491cafcbeb0b6c4378e04a"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/editor/agent-process-bootstrap.md",
@@ -177,7 +177,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/export-guide.md",
-                                                    "sha256":  "1fa5181b43f847f125b28e182e9a3f483d37bd4660812d95f4416a6b4ce9680c"
+                                                    "sha256":  "ba45941b61ba0dd658bff27769521abf86ca680cd9543238848dda08fff8c63d"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/export-preset-model.md",
@@ -185,7 +185,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/ios-arm64-export.md",
-                                                    "sha256":  "df96154cdf03bee096ab6b95789606ad7f7bfe2751656d2f5a0dfce63cb9973d"
+                                                    "sha256":  "a2d1027b07548beaf7ea54e828e0a40c438ca95690eb72444be477df35f97133"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/export/linux-x64-export.md",

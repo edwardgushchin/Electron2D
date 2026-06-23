@@ -56,7 +56,13 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-andr
 
 `run-android` is intentionally fail-closed until a connected authorized device or emulator is available. Use `--adb-serial` when more than one Android target is connected. For `x86_64` emulators, the command builds a temporary `android-x64` smoke package; this does not replace the `android-arm64` production preset.
 
-`IosArm64` currently has an internal planner, transient Xcode project staging builder and blocked smoke artifact writer. It does not run `xcodebuild`, signing, install, launch or simulator/device smoke from this repository state. Mobile export remains a release gate until each platform task provides device/simulator smoke checks, reference-game evidence and CI/reporting evidence.
+```powershell
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-ios --project <project-root> --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-ios --project <project-root> --output exports/ios/debug --skip-publish true --format json
+dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
+```
+
+`IosArm64` currently has a CLI planner, transient Xcode project staging builder and blocked smoke artifact writer. It does not run `xcodebuild`, signing, install, launch or simulator/device smoke from this repository state. Mobile export remains a release gate until each platform task provides device/simulator smoke checks, reference-game evidence and CI/reporting evidence.
 
 <!-- export-doc:web-status -->
 ## WebAssembly browser status

@@ -115,6 +115,7 @@ internal static partial class Electron2DCommandLine
             "test" when HasSceneTestSuite(options, NormalizeProjectRoot(options.ProjectRoot)) => RunSceneTests(options, output, error, context),
             "export" when IsWebExportCommand(options) => RunWebExport(options, output, error, context),
             "export" when IsAndroidExportCommand(options) => RunAndroidExport(options, output, error, context),
+            "export" when IsIosExportCommand(options) => RunIosExport(options, output, error, context),
             "import" or "build" or "run" or "test" or "export" => RunJob(group, options, output, error, context),
             _ => WriteResult(
                 CliResult.Blocked(
@@ -487,6 +488,14 @@ internal static partial class Electron2DCommandLine
             string.Equals(options.Values[0], "run-android", StringComparison.OrdinalIgnoreCase));
     }
 
+    private static bool IsIosExportCommand(CliOptions options)
+    {
+        return options.Values.Count > 0 &&
+            (string.Equals(options.Values[0], "plan-ios", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(options.Values[0], "build-ios", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(options.Values[0], "run-ios", StringComparison.OrdinalIgnoreCase));
+    }
+
     private static int RunWebExport(
         CliOptions options,
         TextWriter output,
@@ -526,6 +535,28 @@ internal static partial class Electron2DCommandLine
                     options,
                     "Unknown export command.",
                     CreateCliDiagnostic("E2D-CLI-0001", "Use `e2d export plan-android`, `e2d export build-android` or `e2d export run-android`.")),
+                output,
+                error)
+        };
+    }
+
+    private static int RunIosExport(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        return options.Values[0].ToLowerInvariant() switch
+        {
+            "plan-ios" => RunIosExportPlan(options, output, error),
+            "build-ios" => RunIosExportBuild(options, output, error),
+            "run-ios" => RunIosExportSmoke(options, output, error, context),
+            _ => WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "Use `e2d export plan-ios`, `e2d export build-ios` or `e2d export run-ios`.")),
                 output,
                 error)
         };
@@ -752,6 +783,193 @@ internal static partial class Electron2DCommandLine
                 operation: null,
                 job: null,
                 data: BuildAndroidExportPlanData(planContext.Plan)),
+            output,
+            error);
+    }
+
+    private static int RunIosExportPlan(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export plan-ios` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateIosExportPlanContext("export plan-ios", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "export plan-ios",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "iOS arm64 export plan created.",
+                changedFiles: [],
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: BuildIosExportPlanData(planContext.Plan)),
+            output,
+            error);
+    }
+
+    private static int RunIosExportBuild(CliOptions options, TextWriter output, TextWriter error)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export build-ios` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateIosExportPlanContext("export build-ios", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        var packageResult = Electron2D.Electron2DIosXcodeProjectBuilder.Build(
+            planContext.Plan,
+            planContext.ProjectRoot,
+            planContext.Settings);
+        if (!packageResult.Succeeded)
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "export build-ios",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "iOS Xcode project staging failed.",
+                    MapExportDiagnostics(packageResult.Diagnostics),
+                    BuildIosExportFailureData("export.ios.build", "package_failed", planContext.Plan)),
+                output,
+                error);
+        }
+
+        var skipPublish = ReadBooleanOption(options, "--skip-publish", defaultValue: false, "export build-ios");
+        if (!skipPublish)
+        {
+            var validation = Electron2D.Electron2DExportToolchainValidator.Validate(
+                planContext.Preset,
+                DetectIosExportToolchainEnvironment(planContext.Preset));
+            if (!validation.Succeeded)
+            {
+                return WriteResult(
+                    CliResult.Failure(
+                        "export build-ios",
+                        options,
+                        planContext.ProjectRoot,
+                        CliRoute.None,
+                        "iOS export build failed before publish.",
+                        MapExportDiagnostics(validation.Diagnostics),
+                        BuildIosExportFailureData("export.ios.build", "toolchain_failed", planContext.Plan)),
+                    output,
+                    error);
+            }
+
+            return WriteResult(
+                CliResult.Failure(
+                    "export build-ios",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "iOS publish is not available in this preview CLI route.",
+                    [CreateCliDiagnostic("E2D-CLI-0002", "iOS publish requires a macOS/Xcode verifier path; use --skip-publish true for deterministic staging.")],
+                    BuildIosExportFailureData("export.ios.build", "publish_unavailable", planContext.Plan)),
+                output,
+                error);
+        }
+
+        return WriteResult(
+            CliResult.Success(
+                "export build-ios",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "iOS Xcode project staging created.",
+                changedFiles: ToProjectRelativeIosFiles(planContext.ProjectRoot, planContext.Plan.StagingDirectory, packageResult.Files),
+                dirtyDocuments: [],
+                operation: null,
+                job: null,
+                data: BuildIosExportBuildData(planContext.Plan, packageResult, publishSkipped: true)),
+            output,
+            error);
+    }
+
+    private static int RunIosExportSmoke(
+        CliOptions options,
+        TextWriter output,
+        TextWriter error,
+        CliExecutionContext context)
+    {
+        if (options.Values.Count != 1)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("export", options),
+                    options,
+                    "Unknown export command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d export run-ios` does not take a subcommand.")),
+                output,
+                error);
+        }
+
+        if (!TryCreateIosExportPlanContext("export run-ios", options, out var planContext, out var failure))
+        {
+            return WriteResult(failure!, output, error);
+        }
+
+        var packageResult = Electron2D.Electron2DIosXcodeProjectBuilder.Build(
+            planContext.Plan,
+            planContext.ProjectRoot,
+            planContext.Settings);
+        if (!packageResult.Succeeded)
+        {
+            return WriteResult(
+                CliResult.Failure(
+                    "export run-ios",
+                    options,
+                    planContext.ProjectRoot,
+                    CliRoute.None,
+                    "iOS export staging failed before simulator/device smoke.",
+                    MapExportDiagnostics(packageResult.Diagnostics),
+                    BuildIosExportFailureData("export.ios.run", "package_failed", planContext.Plan)),
+                output,
+                error);
+        }
+
+        var smokeOutput = ResolveProjectChildPath(
+            planContext.ProjectRoot,
+            options.GetOption("--smoke-output") ?? Path.Combine(".electron2d", "export-smoke", "ios-smoke.json"));
+        var smokeResult = Electron2D.Electron2DIosDeviceSmokeRunner.Run(
+            planContext.Plan,
+            smokeOutput,
+            Electron2D.Electron2DIosDeviceSmokeObservation.Blocked("No iOS simulator or device evidence is available for iOS export smoke."),
+            context.NowUtc);
+
+        return WriteResult(
+            CliResult.Failure(
+                "export run-ios",
+                options,
+                planContext.ProjectRoot,
+                CliRoute.None,
+                "iOS simulator/device smoke is blocked.",
+                MapExportDiagnostics(smokeResult.Diagnostics),
+                BuildIosExportRunData(planContext.Plan, smokeResult)),
             output,
             error);
     }
@@ -1482,6 +1700,83 @@ internal static partial class Electron2DCommandLine
         return true;
     }
 
+    private static bool TryCreateIosExportPlanContext(
+        string command,
+        CliOptions options,
+        out IosExportPlanContext planContext,
+        out CliResult? failure)
+    {
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        var settingsPath = Path.Combine(projectRoot, "project.e2d.json");
+        var settingsResult = Electron2D.Electron2DSettingsStore.LoadProject(settingsPath);
+        if (!settingsResult.Succeeded || settingsResult.Settings is null)
+        {
+            planContext = IosExportPlanContext.Empty;
+            failure = CliResult.Failure(
+                command,
+                options,
+                projectRoot,
+                CliRoute.None,
+                "iOS arm64 export planning failed.",
+                settingsResult.Diagnostics.Select(diagnostic => CreateCliDiagnostic(
+                    "E2D-CLI-0002",
+                    $"{diagnostic.Code}: {diagnostic.Message}")).ToArray(),
+                BuildIosExportFailureData(
+                    ModeForIosCommand(command),
+                    "settings_load_failed",
+                    plan: null));
+            return false;
+        }
+
+        var configuration = ReadExportConfiguration(options.GetOption("--configuration") ?? "Debug", options, command);
+        var signingRequired = ReadBooleanOption(
+            options,
+            "--signing-required",
+            defaultValue: configuration == Electron2D.Electron2DExportConfiguration.Release,
+            command);
+        var outputDirectory = ResolveProjectChildPath(
+            projectRoot,
+            options.GetOption("--output") ?? Path.Combine("exports", "ios", configuration.ToString().ToLowerInvariant()));
+        var projectFilePath = ResolveProjectFilePath(projectRoot, options.GetOption("--project-file"));
+        var preset = new Electron2D.Electron2DExportPreset
+        {
+            Name = options.GetOption("--preset-name") ??
+                (configuration == Electron2D.Electron2DExportConfiguration.Release ? "ios-release" : "ios-debug"),
+            Target = Electron2D.Electron2DExportTarget.IosArm64,
+            Configuration = configuration,
+            RuntimeIdentifier = "ios-arm64",
+            SelfContained = true,
+            RendererProfile = ReadRendererProfile(options.GetOption("--renderer-profile") ?? settingsResult.Settings.RendererProfile.ToString(), options, command),
+            OutputDirectory = outputDirectory,
+            IncludeDebugSymbols = ReadBooleanOption(options, "--debug-symbols", defaultValue: configuration == Electron2D.Electron2DExportConfiguration.Debug, command),
+            Signing = new Electron2D.Electron2DExportSigningSettings
+            {
+                Required = signingRequired,
+                Identity = options.GetOption("--signing-identity") ?? string.Empty,
+                CredentialReference = options.GetOption("--signing-credential-reference") ?? string.Empty
+            }
+        };
+
+        var planResult = Electron2D.Electron2DIosExportPlanner.CreatePlan(preset, projectFilePath, settingsResult.Settings);
+        if (!planResult.Succeeded || planResult.Plan is null)
+        {
+            planContext = IosExportPlanContext.Empty;
+            failure = CliResult.Failure(
+                command,
+                options,
+                projectRoot,
+                CliRoute.None,
+                "iOS arm64 export planning failed.",
+                MapExportDiagnostics(planResult.Diagnostics),
+                BuildIosExportFailureData(ModeForIosCommand(command), "plan_failed", plan: null));
+            return false;
+        }
+
+        planContext = new IosExportPlanContext(projectRoot, settingsResult.Settings, preset, planResult.Plan);
+        failure = null;
+        return true;
+    }
+
     private static string ResolveProjectChildPath(string projectRoot, string path)
     {
         var fullPath = Path.IsPathRooted(path)
@@ -1645,6 +1940,41 @@ internal static partial class Electron2DCommandLine
             AndroidNdkPath = FindAndroidNdkPath(androidSdkPath),
             JavaSdkPath = FindJavaSdkPath()
         };
+    }
+
+    private static Electron2D.Electron2DExportToolchainEnvironment DetectIosExportToolchainEnvironment(
+        Electron2D.Electron2DExportPreset preset)
+    {
+        return new Electron2D.Electron2DExportToolchainEnvironment
+        {
+            DotnetSdkAvailable = ReadDotnetSdkVersion() is not null,
+            XcodePath = FindXcodePath(),
+            SigningIdentityAvailable = !preset.Signing.Required || !string.IsNullOrWhiteSpace(preset.Signing.Identity),
+            SigningCredentialReferenceAvailable = !preset.Signing.Required || !string.IsNullOrWhiteSpace(preset.Signing.CredentialReference)
+        };
+    }
+
+    private static string FindXcodePath()
+    {
+        if (!OperatingSystem.IsMacOS())
+        {
+            return string.Empty;
+        }
+
+        var developerDir = Environment.GetEnvironmentVariable("DEVELOPER_DIR");
+        if (!string.IsNullOrWhiteSpace(developerDir) && Directory.Exists(developerDir))
+        {
+            return Path.GetFullPath(developerDir);
+        }
+
+        var xcodeRoot = Environment.GetEnvironmentVariable("XCODE_ROOT");
+        if (!string.IsNullOrWhiteSpace(xcodeRoot) && Directory.Exists(xcodeRoot))
+        {
+            return Path.GetFullPath(xcodeRoot);
+        }
+
+        var xcodeVersion = ReadCommandFirstLine("xcodebuild", "-version");
+        return xcodeVersion is null ? string.Empty : "/Applications/Xcode.app";
     }
 
     private static string FindAndroidSdkPath()
@@ -2423,6 +2753,128 @@ internal static partial class Electron2DCommandLine
         };
     }
 
+    private static JsonObject BuildIosExportFailureData(
+        string mode,
+        string status,
+        Electron2D.Electron2DIosExportPlan? plan)
+    {
+        return new JsonObject
+        {
+            ["mode"] = mode,
+            ["target"] = "IosArm64",
+            ["runtimeIdentifier"] = "ios-arm64",
+            ["result"] = new JsonObject
+            {
+                ["status"] = status
+            },
+            ["plan"] = plan is null ? null : BuildIosExportPlanData(plan)["plan"]?.DeepClone()
+        };
+    }
+
+    private static JsonObject BuildIosExportPlanData(Electron2D.Electron2DIosExportPlan plan)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.ios.plan",
+            ["target"] = "IosArm64",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = "planned"
+            },
+            ["plan"] = new JsonObject
+            {
+                ["projectFilePath"] = plan.ProjectFilePath,
+                ["configuration"] = plan.Configuration.ToString(),
+                ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+                ["architecture"] = plan.Architecture,
+                ["targetFramework"] = plan.TargetFramework,
+                ["selfContained"] = plan.SelfContained,
+                ["outputDirectory"] = plan.OutputDirectory,
+                ["stagingDirectory"] = plan.StagingDirectory,
+                ["artifactsDirectory"] = plan.ArtifactsDirectory,
+                ["smokeDirectory"] = plan.SmokeDirectory,
+                ["iosProjectFilePath"] = plan.IosProjectFilePath,
+                ["appDelegatePath"] = plan.AppDelegatePath,
+                ["infoPlistPath"] = plan.InfoPlistPath,
+                ["entitlementsPath"] = plan.EntitlementsPath,
+                ["exportMetadataPath"] = plan.ExportMetadataPath,
+                ["xcodeProjectDirectory"] = plan.XcodeProjectDirectory,
+                ["xcodeProjectFilePath"] = plan.XcodeProjectFilePath,
+                ["appBundlePath"] = plan.AppBundlePath,
+                ["projectAssetsDirectory"] = plan.ProjectAssetsDirectory,
+                ["appName"] = plan.AppName,
+                ["executableName"] = plan.ExecutableName,
+                ["bundleIdentifier"] = plan.BundleIdentifier,
+                ["publishArguments"] = WriteStringArray(plan.PublishArguments),
+                ["xcodeBuildArguments"] = WriteStringArray(plan.XcodeBuildArguments),
+                ["rendererProfile"] = plan.RendererProfile.ToString(),
+                ["graphicsBackend"] = plan.GraphicsBackend,
+                ["requiredFiles"] = WriteStringArray(plan.RequiredFiles),
+                ["mobilePolicies"] = WriteStringArray(plan.MobilePolicies),
+                ["smokeCriteria"] = WriteStringArray(plan.SmokeCriteria),
+                ["includeDebugSymbols"] = plan.IncludeDebugSymbols,
+                ["signingRequired"] = plan.SigningRequired,
+                ["signingIdentity"] = plan.SigningIdentity,
+                ["signingCredentialReference"] = plan.SigningCredentialReference
+            }
+        };
+    }
+
+    private static JsonObject BuildIosExportBuildData(
+        Electron2D.Electron2DIosExportPlan plan,
+        Electron2D.Electron2DIosXcodeProjectBuildResult packageResult,
+        bool publishSkipped)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.ios.build",
+            ["target"] = "IosArm64",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = publishSkipped ? "staged" : "built",
+                ["publishSkipped"] = publishSkipped
+            },
+            ["plan"] = BuildIosExportPlanData(plan)["plan"]?.DeepClone(),
+            ["package"] = new JsonObject
+            {
+                ["stagingDirectory"] = plan.StagingDirectory,
+                ["artifactsDirectory"] = plan.ArtifactsDirectory,
+                ["files"] = WriteStringArray(packageResult.Files),
+                ["smokeCommand"] = "e2d export run-ios --project <project-root> --output <output-directory> --format json"
+            }
+        };
+    }
+
+    private static JsonObject BuildIosExportRunData(
+        Electron2D.Electron2DIosExportPlan plan,
+        Electron2D.Electron2DIosDeviceSmokeResult smokeResult)
+    {
+        return new JsonObject
+        {
+            ["mode"] = "export.ios.run",
+            ["target"] = "IosArm64",
+            ["runtimeIdentifier"] = plan.RuntimeIdentifier,
+            ["result"] = new JsonObject
+            {
+                ["status"] = smokeResult.Status switch
+                {
+                    "passed" => "smoke-passed",
+                    "blocked" => "smoke-blocked",
+                    _ => "smoke-failed"
+                }
+            },
+            ["smoke"] = new JsonObject
+            {
+                ["artifactPath"] = smokeResult.ArtifactPath,
+                ["deviceIdentifier"] = smokeResult.DeviceIdentifier,
+                ["status"] = smokeResult.Status,
+                ["criteria"] = WriteSmokeCriteria(smokeResult.Criteria)
+            }
+        };
+    }
+
     private static JsonObject WriteSmokeCriteria(IReadOnlyDictionary<string, bool> criteria)
     {
         var result = new JsonObject();
@@ -2461,6 +2913,14 @@ internal static partial class Electron2DCommandLine
             .ToArray();
     }
 
+    private static string[] ToProjectRelativeIosFiles(string projectRoot, string stagingDirectory, IEnumerable<string> packageFiles)
+    {
+        return packageFiles
+            .Select(file => Path.GetRelativePath(projectRoot, Path.Combine(stagingDirectory, file)).Replace('\\', '/'))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+    }
+
     private static string ModeForWebCommand(string command)
     {
         return command switch
@@ -2478,6 +2938,16 @@ internal static partial class Electron2DCommandLine
             "export build-android" => "export.android.build",
             "export run-android" => "export.android.run",
             _ => "export.android.plan"
+        };
+    }
+
+    private static string ModeForIosCommand(string command)
+    {
+        return command switch
+        {
+            "export build-ios" => "export.ios.build",
+            "export run-ios" => "export.ios.run",
+            _ => "export.ios.plan"
         };
     }
 
@@ -3011,6 +3481,35 @@ internal static partial class Electron2DCommandLine
         public Electron2D.Electron2DExportPreset Preset { get; }
 
         public Electron2D.Electron2DAndroidExportPlan Plan { get; }
+    }
+
+    private sealed class IosExportPlanContext
+    {
+        public static readonly IosExportPlanContext Empty = new(
+            string.Empty,
+            new Electron2D.Electron2DProjectSettings(),
+            new Electron2D.Electron2DExportPreset(),
+            new Electron2D.Electron2DIosExportPlan());
+
+        public IosExportPlanContext(
+            string projectRoot,
+            Electron2D.Electron2DProjectSettings settings,
+            Electron2D.Electron2DExportPreset preset,
+            Electron2D.Electron2DIosExportPlan plan)
+        {
+            ProjectRoot = projectRoot;
+            Settings = settings;
+            Preset = preset;
+            Plan = plan;
+        }
+
+        public string ProjectRoot { get; }
+
+        public Electron2D.Electron2DProjectSettings Settings { get; }
+
+        public Electron2D.Electron2DExportPreset Preset { get; }
+
+        public Electron2D.Electron2DIosExportPlan Plan { get; }
     }
 }
 
