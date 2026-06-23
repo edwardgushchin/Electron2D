@@ -1,6 +1,6 @@
 # Script workflow в редакторе
 
-Статус: документация реализации для `T-0046`, `T-0158` и `T-0159`.
+Статус: документация реализации для `T-0046`, `T-0158`, `T-0159`, `T-0160` и `T-0161`.
 Дата: 2026-06-23.
 
 ## Назначение
@@ -9,7 +9,7 @@
 
 Workflow не добавляет runtime compilation и не загружает пользовательские assemblies динамически. Script остаётся обычным `.cs` файлом проекта игры и компилируется обычной .NET toolchain.
 
-Центральное рабочее пространство `Script` описано отдельно: [Script workspace редактора](../editor/script-workspace.md). Встроенные C# подсказки, semantic diagnostics и code actions описаны отдельно: [C# language services в Script workspace](editor-language-services.md). Source-level отладка C# описана отдельно: [Managed C# debugger в редакторе](managed-debugger.md).
+Центральное рабочее пространство `Script` описано отдельно: [Script workspace редактора](../editor/script-workspace.md). Встроенные C# подсказки, semantic diagnostics и code actions описаны отдельно: [C# language services в Script workspace](editor-language-services.md). Source-level отладка C# описана отдельно: [Managed C# debugger в редакторе](managed-debugger.md). Tooling/MCP-паритет для агентских script/debug операций описан отдельно: [Script/Debugger Tooling parity](script-debug-tooling-parity.md).
 
 ## Текущее поведение
 
@@ -32,6 +32,8 @@ Attach script меняет serialized node type на полное имя script 
 C# language services вынесены в отдельную сборку `Electron2D.CSharpLanguageServices`. Эта сборка работает внутри процесса Editor, использует Roslyn semantic model и обслуживает live `CodeDocument` с unsaved text. Completion, signature help, hover, live diagnostics, go to definition, references, rename, formatting и basic code action используют `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; `WorkspaceSnapshot` остаётся для build/test/run/debug и пакетного анализа.
 
 Managed C# debugger вынесен в отдельную сборку `Electron2D.ManagedDebugging`. Эта сборка читает выбранный adapter manifest из `data/debugging/dotnet-debug-adapter-selection.json`, хранит local breakpoints в `.electron2d/user/breakpoints.e2debug`, описывает DAP boundary до `netcoredbg`, debug session state, stack/locals/arguments/watches и stale marker после изменения code document.
+
+Script/debug Tooling parity добавляет путь для локального агента: text edits, diagnostics, completion, signature help, hover, navigation, document symbols, references, rename, formatting, code actions, breakpoints, debug session control, stacks, locals, arguments и watches доступны через `ProjectToolingHost.Script`, `ProjectToolingHost.Debug` и соответствующие MCP tools. Editor smoke показывает эти операции в `Script` workspace и правой панели `Agent Workspace`; агент не использует UI automation для ввода текста.
 
 ## Smoke workflow
 
@@ -79,6 +81,14 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --managed
 
 Она сохраняет state JSON, PNG screenshot и JSON analysis artifact для проверки DAP boundary, breakpoint persistence, rename/rebase, Debug build/PDB marker, attach process id, restart strategy, current line, threads, call stack, locals, arguments, watches, exception panel, stale marker и отсутствия запрещённых UI elements.
 
+Дополнительная smoke-команда для Script/Debugger Tooling parity:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-debug-tooling-smoke .temp\script-debug-tooling
+```
+
+Она сохраняет state JSON, PNG screenshot и JSON analysis artifact для проверки агентской text edit операции, live diagnostic `CS0103`, completion popup `Sprite2D`, breakpoint marker, stacks всех threads, locals/arguments выбранного frame, watch definitions/evaluation и правой панели `Agent Workspace` с task/transaction/job/artifact links.
+
 ## Ограничения
 
 - Это ещё не полный desktop IDE event loop, то есть не постоянный цикл обработки окна, pointer/keyboard input и repaint: C# language services покрыты smoke-моделью и visual harness, а постоянная привязка popup/hover/diagnostics к real-time input будет подключаться следующими editor tasks.
@@ -96,6 +106,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptWorkspaceTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorScriptLanguageServicesTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~EditorManagedDebuggerTests"
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~ScriptDebugToolingParityTests" -m:1
 ```
 
 Полные проверки:

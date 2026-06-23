@@ -574,12 +574,17 @@ Acceptance для `T-0160`:
 
 Acceptance для `T-0161`:
 
-- Tooling/MCP script commands применяют text edits, rename/delete file, search, symbols и code actions без keyboard emulation.
-- AI получает diagnostics/completion/definition/references/document symbols/code actions через Tooling/MCP.
-- AI ставит и обновляет breakpoint, запускает debug session, выполняет restart, читает stack/locals/arguments, получает watch definitions, явно вычисляет watches для выбранного frame, управляет watches и продолжает выполнение.
-- `debug_attach` для агента ограничен active Editor game process; произвольный attach требует человеческого подтверждения.
-- Agent Workspace показывает script/debug operations и links к active task.
+- `ProjectToolingHost.SupportedCommandNames` и MCP manifest публикуют полный список `script_*` и `debug_*` команд из раздела выше; published команда не может возвращать generic unsupported diagnostic.
+- Tooling/MCP script commands применяют text edits, create/rename/delete file, search, symbols и code actions без keyboard emulation. Изменяющие команды принимают `expectedRevision`, создают workspace transaction и возвращают structured diagnostics при stale revision, unsafe path или конфликте.
+- Read-only IDE commands возвращают `DocumentRevision`, `SemanticVersion`, `WorkspaceSnapshotUsedForIde=false` и результат live Roslyn Workspace. Для этих запросов не создаётся immutable `WorkspaceSnapshot`.
+- AI получает diagnostics/completion/signature help/hover/definition/references/document symbols/code actions через Tooling/MCP по текущему открытому `CodeDocument`, включая unsaved text.
+- `script_save` получает базовую revision агента и возвращает structured conflict, если после неё появились ручные unsaved changes; при отсутствии конфликта save выполняет persistence transaction.
+- AI ставит и обновляет breakpoint, запускает debug session, выполняет restart, читает stacks всех threads, читает locals/arguments по явному `frameId`, получает watch definitions без вычисления expressions, явно вычисляет watches для выбранного frame, управляет watches и продолжает выполнение.
+- `debug_start` и `debug_restart` создают immutable `WorkspaceSnapshot` и возвращают его identity вместе с debug state; build/run/test остаются на том же snapshot contract.
+- `debug_attach` для агента ограничен active Editor game process, переданным доверенным Editor-слоем; произвольный attach по pid возвращает structured diagnostic либо требует интерактивного подтверждения разработчика.
+- Agent Workspace показывает script/debug operations, links к active task, workspace transactions, jobs и artifacts.
 - Подготовлен script/debug integration harness, который используется benchmark-задачей `T-0128`.
+- Editor smoke harness создаёт `script-debug-tooling.state.json`, PNG screenshot и JSON analysis, где видны agent-applied text edit, diagnostics, breakpoint, selected stack frame, watches, current task links, transactions/jobs/artifacts, clickability, отсутствие text overflow и отсутствие запрещённых 3D/GDScript/AssetLib UI.
 
 Общие проверки:
 

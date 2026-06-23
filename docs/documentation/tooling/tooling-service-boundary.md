@@ -1,8 +1,8 @@
 # Electron2D.Tooling service boundary
 
-Статус: реализованная внутренняя основа.
-Задача: `T-0115`.
-Обновлено: 2026-06-22.
+Статус: реализованная внутренняя основа, расширенная Script/Debugger services.
+Задачи: `T-0115`, `T-0161`.
+Обновлено: 2026-06-23.
 
 ## Назначение
 
@@ -20,11 +20,13 @@
 - `Tests`;
 - `Export`;
 - `Import`;
-- `Runtime`.
+- `Runtime`;
+- `Script`;
+- `Debug`.
 
 `ProjectToolingHost` не создаёт workspace lease сам. Открытие Editor/headless workspace остаётся ответственностью слоя выше.
 
-`ProjectToolingHost.SupportedCommandNames` публикует machine-readable список Tooling command identifiers для `Editor Capability Manifest`. Это не отдельный dispatcher: список нужен verifier-у, чтобы capability не ссылалась на несуществующий Tooling endpoint. Production semantics по-прежнему находятся в `ProjectService`, `TaskService` и job services.
+`ProjectToolingHost.SupportedCommandNames` публикует machine-readable список Tooling command identifiers для `Editor Capability Manifest`. Это не отдельный dispatcher: список нужен verifier-у, чтобы capability не ссылалась на несуществующий Tooling endpoint. Production semantics по-прежнему находятся в `ProjectService`, `TaskService`, job services, `ToolingScriptService` и `ToolingDebugService`.
 
 ## ToolingOperationResult
 
@@ -117,14 +119,38 @@ Tooling не имеет собственной логики merge, atomic write 
 
 Этот service не является managed debugger и не заменяет будущий renderer-backed frame capture.
 
+## Script service
+
+`ProjectToolingHost.Script` добавляет смысловой доступ к C# documents без эмуляции действий в UI:
+
+- mutating commands `script_create`, `script_rename`, `script_delete`, `script_apply_text_edits`, `script_format`, `script_rename_symbol`, `script_apply_code_action` используют `expectedRevision`, `WorkspaceTransactionEngine`, grouped undo и structured diagnostics;
+- read-only commands `script_read`, `script_search_text`, `script_get_diagnostics`, `script_get_completions`, `script_get_signature_help`, `script_get_hover`, `script_get_definition`, `script_get_document_symbols`, `script_find_references`, `script_get_code_actions` читают live document text, `DocumentRevision` и `SemanticVersion`;
+- IDE-команды не создают `WorkspaceSnapshot`; snapshot остаётся входом для build/test/run/debug jobs;
+- `script_save` отклоняет agent save, если после базовой revision агента в документе есть ручные unsaved changes.
+
+`ToolingScriptIdeResult` возвращает DTO, принадлежащие Tooling: completion items, signature help, hover, diagnostic, locations, document symbols и code actions. Внутренние типы language-services не выходят за boundary Tooling/MCP/Editor.
+
+## Debug service
+
+`ProjectToolingHost.Debug` добавляет model-first managed debugger contract:
+
+- breakpoints создаются, обновляются и удаляются по `BreakpointId`;
+- `debug_start` и `debug_restart` создают `WorkspaceSnapshot` и enqueue run job с `WorkspaceJobInputIdentity`;
+- `debug_attach` для agent context разрешён только к active Editor game process, если нет явного интерактивного подтверждения;
+- `debug_get_stack()` возвращает stacks всех threads;
+- `debug_get_locals(frameId)` и `debug_get_arguments(frameId)` требуют явный frame id;
+- `debug_get_watches()` возвращает только определения watches, а `debug_evaluate_watches(frameId)` возвращает значения для указанного frame.
+
+Текущая реализация использует smoke session из `Electron2D.ManagedDebugging` и не является постоянным desktop debugger event loop. Она фиксирует contract для MCP, Editor Script workspace и будущего acceptance benchmark.
+
 ## Текущие ограничения
 
-Текущий `T-0115` закрывает service boundary и базовые wrappers. Он не реализует:
+Текущий `T-0115` закрывает service boundary и базовые wrappers, а `T-0161` добавляет script/debug Tooling parity. Эти задачи не реализуют:
 
 - CLI commands и flags;
 - MCP tools/resources;
 - Editor UI updates сверх событий, уже публикуемых `ProjectWorkspace`;
-- полноценные scene/resource/script convenience commands;
+- полноценные scene/resource convenience commands;
 - реальный import/build/test/export/run toolchain запуск;
 - реальный named pipe/Unix domain socket protocol server.
 - renderer-backed screenshot для attached runtime session.
@@ -144,3 +170,9 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 ```
 
 Проверка покрывает transaction wrappers, result shape, revision mismatch, unsafe path, TaskService acceptance guard, task links через transaction semantics, job-backed long operations и Editor-attached runtime control.
+
+Script/debug focused проверка:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~ScriptDebugToolingParityTests" -m:1
+```

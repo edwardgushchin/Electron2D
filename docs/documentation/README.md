@@ -99,6 +99,7 @@
 - [C# language services в Script workspace](scripting/editor-language-services.md) - текущая отдельная Roslyn-backed сборка для completion, signature help, hover, live diagnostics, navigation, rename, formatting, code actions и visual acceptance harness.
 - [Выбор managed .NET debug adapter](scripting/managed-debug-adapter-selection.md) - текущий `netcoredbg` selection manifest, DAP capability matrix, license/redistribution decision и platform packaging plan для managed debugger.
 - [Managed C# debugger в редакторе](scripting/managed-debugger.md) - текущая внутренняя сборка `Electron2D.ManagedDebugging`, local breakpoints, DAP boundary, debug session state и visual acceptance harness.
+- [Script/Debugger Tooling parity](scripting/script-debug-tooling-parity.md) - текущий Tooling/MCP контракт для script edits, IDE-запросов, debugger commands и visual smoke с Agent Workspace.
 
 ## Редактор
 

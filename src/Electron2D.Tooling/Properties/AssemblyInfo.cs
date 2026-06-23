@@ -25,5 +25,6 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Electron2D.Mcp")]
+[assembly: InternalsVisibleTo("Electron2D.Editor")]
 [assembly: InternalsVisibleTo("Electron2D.Tests.Integration")]
 [assembly: InternalsVisibleTo("e2d")]

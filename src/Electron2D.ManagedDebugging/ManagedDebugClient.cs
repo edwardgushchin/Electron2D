@@ -76,7 +76,8 @@ internal sealed class ManagedDebugClient
             StackFrames:
             [
                 new ManagedDebugStackFrame(101, 1, "Smoke.Scripts.HeroController._Process(float delta)", new SourceAnchor("Scripts/HeroController.cs", 10, 17)),
-                new ManagedDebugStackFrame(102, 1, "Electron2D.Node.ProcessFrame(float delta)", new SourceAnchor("Runtime/Node.cs", 214, 9))
+                new ManagedDebugStackFrame(102, 1, "Electron2D.Node.ProcessFrame(float delta)", new SourceAnchor("Runtime/Node.cs", 214, 9)),
+                new ManagedDebugStackFrame(701, 7, "Electron2D.Audio.AudioWorker.Mix()", new SourceAnchor("Runtime/AudioWorker.cs", 41, 5))
             ],
             Locals:
             [

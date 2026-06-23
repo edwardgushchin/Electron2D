@@ -49,6 +49,8 @@ internal sealed class ProjectToolingHost
         Export = new ToolingJobService(workspace, WorkspaceJobKind.Export);
         Import = new ToolingJobService(workspace, WorkspaceJobKind.Import);
         Runtime = new ToolingRuntimeService(workspace);
+        Script = new ToolingScriptService(workspace, Project);
+        Debug = new ToolingDebugService(workspace);
     }
 
     public ProjectService Project { get; }
@@ -64,6 +66,10 @@ internal sealed class ProjectToolingHost
     public ToolingJobService Import { get; }
 
     public ToolingRuntimeService Runtime { get; }
+
+    public ToolingScriptService Script { get; }
+
+    public ToolingDebugService Debug { get; }
 }
 
 internal sealed class ToolingTextEditRequest
@@ -212,6 +218,63 @@ internal sealed class ToolingOperationResult
     {
         ArgumentNullException.ThrowIfNull(result);
         return FromTransaction(result.TransactionResult, operationKind, result.Task.TaskId);
+    }
+
+    public static ToolingOperationResult FromWorkspaceState(
+        bool succeeded,
+        string operationId,
+        string operationKind,
+        ProjectWorkspace workspace,
+        IReadOnlyList<string> changedFiles,
+        IReadOnlyList<string> changedObjects,
+        IReadOnlyList<string> createdObjects,
+        IReadOnlyList<StructuredDiagnostic> diagnostics,
+        string? undoGroupId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(operationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(operationKind);
+        ArgumentNullException.ThrowIfNull(workspace);
+        ArgumentNullException.ThrowIfNull(changedFiles);
+        ArgumentNullException.ThrowIfNull(changedObjects);
+        ArgumentNullException.ThrowIfNull(createdObjects);
+        ArgumentNullException.ThrowIfNull(diagnostics);
+
+        return new ToolingOperationResult(
+            succeeded,
+            operationId,
+            operationKind,
+            workspace.Revisions.WorkspaceRevision,
+            workspace.Revisions.ContentRevision,
+            workspace.Revisions.DocumentRevisions,
+            new ProjectDocumentRevision(0),
+            workspace.Revisions.DirtyDocuments,
+            workspace.Revisions.PersistenceState,
+            changedFiles,
+            changedObjects,
+            createdObjects,
+            diagnostics,
+            undoGroupId,
+            taskId: null,
+            jobId: null);
+    }
+
+    public static ToolingOperationResult Failure(
+        string operationId,
+        string operationKind,
+        ProjectWorkspace workspace,
+        StructuredDiagnostic diagnostic)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostic);
+        return FromWorkspaceState(
+            succeeded: false,
+            operationId,
+            operationKind,
+            workspace,
+            changedFiles: [],
+            changedObjects: [],
+            createdObjects: [],
+            diagnostics: [diagnostic],
+            undoGroupId: null);
     }
 
     private static ProjectDocumentRevision SelectPersistedRevision(WorkspaceTransactionResult result)

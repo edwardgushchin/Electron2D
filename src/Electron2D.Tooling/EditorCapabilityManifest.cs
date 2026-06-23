@@ -245,7 +245,28 @@ internal static class EditorCapabilityManifestFactory
                     "runtime.control.pause_step_input",
                     "Pause, step and inject input into visible runtime",
                     ["runtime-control"],
-                    "RuntimePauseStepInput")
+                    "RuntimePauseStepInput"),
+                SupportedEditorSessionAction(
+                    "script.workspace.mutate",
+                    "Apply script document mutations",
+                    ["script", "diagnostics"],
+                    "ScriptWorkspaceMutate",
+                    "script_apply_text_edits",
+                    "script_apply_text_edits"),
+                SupportedEditorSessionAction(
+                    "script.workspace.ide",
+                    "Read C# IDE information",
+                    ["script", "diagnostics"],
+                    "ScriptWorkspaceIde",
+                    "script_get_diagnostics",
+                    "script_get_diagnostics"),
+                SupportedEditorSessionAction(
+                    "debugger.managed.control",
+                    "Control managed C# debugger",
+                    ["debugger", "script", "runtime-control"],
+                    "ManagedDebuggerControl",
+                    "debug_start",
+                    "debug_start")
             ]);
     }
 
@@ -363,6 +384,26 @@ internal static class EditorCapabilityManifestFactory
             new EditorCapabilityEndpoint(toolingCommand, EditorCapabilitySupportStatus.Supported, "Tooling exposes diagnostics through the workspace state query contract."),
             new EditorCapabilityEndpoint(mcpTool, EditorCapabilitySupportStatus.Supported, "MCP exposes diagnostics through the workspace state tool."),
             new EditorCapabilityCliBinding(EditorCapabilityCliBindingKind.NotApplicable, Command: null, "Read-only diagnostics are available through MCP/resources and do not require a dedicated CLI command."));
+    }
+
+    private static EditorCapability SupportedEditorSessionAction(
+        string id,
+        string title,
+        IReadOnlyList<string> categories,
+        string editorCommand,
+        string toolingCommand,
+        string mcpTool)
+    {
+        return new EditorCapability(
+            id,
+            title,
+            categories,
+            EditorCapabilityKind.EditorSessionAction,
+            ReleaseRequired: true,
+            new EditorCapabilityEndpoint(editorCommand, EditorCapabilitySupportStatus.Supported, "Editor exposes the operation in the visible Script or debugger workspace."),
+            new EditorCapabilityEndpoint(toolingCommand, EditorCapabilitySupportStatus.Supported, "Tooling exposes the same semantic operation without UI automation."),
+            new EditorCapabilityEndpoint(mcpTool, EditorCapabilitySupportStatus.Supported, "MCP routes the command through Tooling and the active Editor workspace when available."),
+            new EditorCapabilityCliBinding(EditorCapabilityCliBindingKind.NotApplicable, Command: null, "This Editor-session operation is available through Tooling/MCP and does not require a dedicated headless CLI command."));
     }
 }
 
@@ -502,7 +543,9 @@ internal static class EditorCapabilityManifestVerifier
         "export-presets",
         "tests",
         "diagnostics",
-        "runtime-control"
+        "runtime-control",
+        "script",
+        "debugger"
     ];
 
     public static EditorCapabilityManifestVerificationResult Verify(
@@ -686,7 +729,47 @@ internal static class ProjectToolingCommandCatalog
         "task.claim",
         "task.set-status",
         "task.append-activity",
-        "task.submit-for-acceptance"
+        "task.submit-for-acceptance",
+        "script_create",
+        "script_open",
+        "script_read",
+        "script_rename",
+        "script_delete",
+        "script_search_text",
+        "script_apply_text_edits",
+        "script_save",
+        "script_format",
+        "script_get_diagnostics",
+        "script_get_completions",
+        "script_get_signature_help",
+        "script_get_hover",
+        "script_get_definition",
+        "script_get_document_symbols",
+        "script_find_references",
+        "script_rename_symbol",
+        "script_get_code_actions",
+        "script_apply_code_action",
+        "debug_set_breakpoint",
+        "debug_update_breakpoint",
+        "debug_remove_breakpoint",
+        "debug_start",
+        "debug_attach",
+        "debug_restart",
+        "debug_pause",
+        "debug_continue",
+        "debug_step_into",
+        "debug_step_over",
+        "debug_step_out",
+        "debug_get_threads",
+        "debug_get_stack",
+        "debug_get_locals",
+        "debug_get_arguments",
+        "debug_get_watches",
+        "debug_evaluate_watches",
+        "debug_add_watch",
+        "debug_update_watch",
+        "debug_remove_watch",
+        "debug_stop"
     ];
 
     public static IReadOnlyList<string> SupportedCommandNames { get; } =

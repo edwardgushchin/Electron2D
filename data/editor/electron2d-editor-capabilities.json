@@ -46,6 +46,37 @@
       }
     },
     {
+      "capability": "debugger.managed.control",
+      "title": "Control managed C# debugger",
+      "categories": [
+        "debugger",
+        "runtime-control",
+        "script"
+      ],
+      "kind": "editorSessionAction",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ManagedDebuggerControl",
+        "status": "supported",
+        "explanation": "Editor exposes the operation in the visible Script or debugger workspace."
+      },
+      "tooling": {
+        "command": "debug_start",
+        "status": "supported",
+        "explanation": "Tooling exposes the same semantic operation without UI automation."
+      },
+      "mcp": {
+        "toolOrResource": "debug_start",
+        "status": "supported",
+        "explanation": "MCP routes the command through Tooling and the active Editor workspace when available."
+      },
+      "cli": {
+        "kind": "notApplicable",
+        "command": null,
+        "explanation": "This Editor-session operation is available through Tooling/MCP and does not require a dedicated headless CLI command."
+      }
+    },
+    {
       "capability": "diagnostics.read",
       "title": "Read workspace diagnostics",
       "categories": [
@@ -519,6 +550,66 @@
         "kind": "genericTransaction",
         "command": null,
         "explanation": "CLI uses `e2d workspace transaction` instead of a dedicated command for this mutation."
+      }
+    },
+    {
+      "capability": "script.workspace.ide",
+      "title": "Read C# IDE information",
+      "categories": [
+        "diagnostics",
+        "script"
+      ],
+      "kind": "editorSessionAction",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ScriptWorkspaceIde",
+        "status": "supported",
+        "explanation": "Editor exposes the operation in the visible Script or debugger workspace."
+      },
+      "tooling": {
+        "command": "script_get_diagnostics",
+        "status": "supported",
+        "explanation": "Tooling exposes the same semantic operation without UI automation."
+      },
+      "mcp": {
+        "toolOrResource": "script_get_diagnostics",
+        "status": "supported",
+        "explanation": "MCP routes the command through Tooling and the active Editor workspace when available."
+      },
+      "cli": {
+        "kind": "notApplicable",
+        "command": null,
+        "explanation": "This Editor-session operation is available through Tooling/MCP and does not require a dedicated headless CLI command."
+      }
+    },
+    {
+      "capability": "script.workspace.mutate",
+      "title": "Apply script document mutations",
+      "categories": [
+        "diagnostics",
+        "script"
+      ],
+      "kind": "editorSessionAction",
+      "releaseRequired": true,
+      "editor": {
+        "command": "ScriptWorkspaceMutate",
+        "status": "supported",
+        "explanation": "Editor exposes the operation in the visible Script or debugger workspace."
+      },
+      "tooling": {
+        "command": "script_apply_text_edits",
+        "status": "supported",
+        "explanation": "Tooling exposes the same semantic operation without UI automation."
+      },
+      "mcp": {
+        "toolOrResource": "script_apply_text_edits",
+        "status": "supported",
+        "explanation": "MCP routes the command through Tooling and the active Editor workspace when available."
+      },
+      "cli": {
+        "kind": "notApplicable",
+        "command": null,
+        "explanation": "This Editor-session operation is available through Tooling/MCP and does not require a dedicated headless CLI command."
       }
     },
     {

@@ -22,7 +22,30 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-using System.Runtime.CompilerServices;
+using Electron2D.Tooling;
 
-[assembly: InternalsVisibleTo("Electron2D.Editor")]
-[assembly: InternalsVisibleTo("Electron2D.Tooling")]
+namespace Electron2D.Editor.Scripting;
+
+internal sealed record EditorScriptDebugToolingSmokeResult(
+    string SelectedWorkspace,
+    ToolingScriptMutationResult ScriptMutation,
+    ToolingScriptIdeResult Diagnostics,
+    ToolingScriptIdeResult Completions,
+    ToolingDebugCommandResult Breakpoint,
+    ToolingDebugSessionResult DebugSession,
+    ToolingDebugStackResult Stack,
+    ToolingDebugVariablesResult Locals,
+    ToolingDebugVariablesResult Arguments,
+    ToolingDebugWatchesResult WatchDefinitions,
+    ToolingDebugWatchesResult WatchEvaluations,
+    string CurrentTask,
+    IReadOnlyList<string> LinkedTransactions,
+    IReadOnlyList<string> LinkedJobs,
+    IReadOnlyList<string> LinkedArtifacts,
+    string StatePath,
+    string ScreenshotPath,
+    string AnalysisPath,
+    int TextOverflowCount,
+    int ClickableControlCount,
+    int ForbiddenUiMatchCount,
+    bool ScreenshotReviewed);

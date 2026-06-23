@@ -1,6 +1,6 @@
 # Script workspace редактора
 
-Статус: реализовано для `T-0158` и дополнено language services для `T-0159`.
+Статус: реализовано для `T-0158`, дополнено language services для `T-0159`, managed debugger для `T-0160` и Tooling/MCP-паритетом для `T-0161`.
 Обновлено: 2026-06-23.
 
 ## Назначение
@@ -52,6 +52,16 @@ Managed debugger UI поверх `Script` workspace показывает:
 
 Фактическая debugger model описана отдельно: [Managed C# debugger в редакторе](../scripting/managed-debugger.md).
 
+Script/Debugger Tooling parity поверх `Script` workspace показывает:
+
+- агентскую правку C# document, применённую через `script_apply_text_edits`, без эмуляции набора текста через UI;
+- live diagnostic, completion popup и выбранный completion item;
+- breakpoint marker в gutter, состояние debug session, stacks всех threads и variables для явно выбранного frame;
+- watch definitions отдельно от безопасного вычисления значений;
+- правый `Agent Workspace` с current task `T-0161`, transaction link, debug job link и screenshot artifact link.
+
+Фактический Tooling/MCP contract описан отдельно: [Script/Debugger Tooling parity](../scripting/script-debug-tooling-parity.md).
+
 ## Visual harness
 
 Команда:
@@ -78,6 +88,27 @@ PNG является deterministic screenshot artifact для обязатель
 - текст не выходит за границы контейнеров и не перекрывает соседние элементы;
 - `3D`, `AssetLib`, GDScript UI, `.gd` и disabled 3D controls визуально отсутствуют.
 
+Дополнительная команда для agent script/debug операций:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-debug-tooling-smoke .temp\script-debug-tooling
+```
+
+Она создаёт:
+
+- `.temp/script-debug-tooling/script-debug-tooling.state.json`;
+- `.temp/script-debug-tooling/visual/script-debug-tooling.png`;
+- `.temp/script-debug-tooling/visual/script-debug-tooling.analysis.json`.
+
+В текущей проверке агент открыл `script-debug-tooling.png` и подтвердил:
+
+- `Script` выбран в workspace switcher;
+- применённая агентом строка `speed = 280` видна в code editor;
+- diagnostic `CS0103`, completion popup `Sprite2D` и breakpoint marker читаемы;
+- bottom `Debugger` panel показывает threads, stack, locals, arguments и watch value;
+- `Agent Workspace` справа показывает `T-0161`, transaction, job и screenshot artifact;
+- текст не выходит за границы контейнеров и не перекрывает соседние элементы.
+
 ## Проверки
 
 Focused test:
@@ -102,6 +133,12 @@ Managed debugger smoke-команда:
 
 ```powershell
 dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --managed-debugger-smoke .temp\managed-debugger
+```
+
+Script/debug tooling smoke-команда:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-debug-tooling-smoke .temp\script-debug-tooling
 ```
 
 Документационный verifier после изменения справки:

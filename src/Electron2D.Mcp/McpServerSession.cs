@@ -373,7 +373,47 @@ internal sealed class McpServerSession : IDisposable
         "task_submit_for_acceptance",
         "task_accept",
         "task_request_changes",
-        "task_cancel"
+        "task_cancel",
+        "script_create",
+        "script_open",
+        "script_read",
+        "script_rename",
+        "script_delete",
+        "script_search_text",
+        "script_apply_text_edits",
+        "script_save",
+        "script_format",
+        "script_get_diagnostics",
+        "script_get_completions",
+        "script_get_signature_help",
+        "script_get_hover",
+        "script_get_definition",
+        "script_get_document_symbols",
+        "script_find_references",
+        "script_rename_symbol",
+        "script_get_code_actions",
+        "script_apply_code_action",
+        "debug_set_breakpoint",
+        "debug_update_breakpoint",
+        "debug_remove_breakpoint",
+        "debug_start",
+        "debug_attach",
+        "debug_restart",
+        "debug_pause",
+        "debug_continue",
+        "debug_step_into",
+        "debug_step_over",
+        "debug_step_out",
+        "debug_get_threads",
+        "debug_get_stack",
+        "debug_get_locals",
+        "debug_get_arguments",
+        "debug_get_watches",
+        "debug_evaluate_watches",
+        "debug_add_watch",
+        "debug_update_watch",
+        "debug_remove_watch",
+        "debug_stop"
     ];
 
     public static IReadOnlyList<string> DefaultToolNames => ToolNames;
@@ -527,6 +567,49 @@ internal sealed class McpServerSession : IDisposable
                 OperationId(request.ToolName),
                 UndoGroupId(request.ToolName),
                 AgentContext(OperationCapability.TaskWrite)))),
+            "script_create" => ScriptCreate(request),
+            "script_open" => ScriptRead(request),
+            "script_read" => ScriptRead(request),
+            "script_rename" => ScriptRename(request),
+            "script_delete" => ScriptDelete(request),
+            "script_search_text" => ScriptSearchText(request),
+            "script_apply_text_edits" => ScriptApplyTextEdits(request),
+            "script_save" => ScriptSave(request),
+            "script_format" => ScriptFormat(request),
+            "script_get_diagnostics" => ScriptIde(request, Tooling.Script.GetDiagnostics),
+            "script_get_completions" => ScriptIde(request, Tooling.Script.GetCompletions),
+            "script_get_signature_help" => ScriptIde(request, Tooling.Script.GetSignatureHelp),
+            "script_get_hover" => ScriptIde(request, Tooling.Script.GetHover),
+            "script_get_definition" => ScriptIde(request, Tooling.Script.GetDefinition),
+            "script_get_document_symbols" => ScriptIde(request, Tooling.Script.GetDocumentSymbols),
+            "script_find_references" => ScriptIde(request, Tooling.Script.FindReferences),
+            "script_rename_symbol" => ScriptRenameSymbol(request),
+            "script_get_code_actions" => ScriptIde(request, Tooling.Script.GetCodeActions),
+            "script_apply_code_action" => ScriptApplyCodeAction(request),
+            "debug_set_breakpoint" => DebugSetBreakpoint(request),
+            "debug_update_breakpoint" => DebugUpdateBreakpoint(request),
+            "debug_remove_breakpoint" => DebugRemoveBreakpoint(request),
+            "debug_start" => DebugStart(request),
+            "debug_attach" => DebugAttach(request),
+            "debug_restart" => DebugRestart(request),
+            "debug_pause" => DebugCommand(request, Tooling.Debug.Pause),
+            "debug_continue" => DebugCommand(request, Tooling.Debug.Continue),
+            "debug_step_into" => DebugCommand(request, Tooling.Debug.StepInto),
+            "debug_step_over" => DebugCommand(request, Tooling.Debug.StepOver),
+            "debug_step_out" => DebugCommand(request, Tooling.Debug.StepOut),
+            "debug_get_threads" => McpToolResult.ContentOnly(request.ToolName, Route, new JsonObject
+            {
+                ["threads"] = WriteDebugThreads(Tooling.Debug.GetThreads())
+            }),
+            "debug_get_stack" => DebugGetStack(request),
+            "debug_get_locals" => DebugVariables(request, Tooling.Debug.GetLocals),
+            "debug_get_arguments" => DebugVariables(request, Tooling.Debug.GetArguments),
+            "debug_get_watches" => DebugGetWatches(request),
+            "debug_evaluate_watches" => DebugEvaluateWatches(request),
+            "debug_add_watch" => DebugAddWatch(request),
+            "debug_update_watch" => DebugUpdateWatch(request),
+            "debug_remove_watch" => DebugRemoveWatch(request),
+            "debug_stop" => DebugCommand(request, Tooling.Debug.Stop),
             _ => McpToolResult.Unsupported(request.ToolName, Route)
         };
     }
@@ -700,6 +783,494 @@ internal sealed class McpServerSession : IDisposable
             "mcp-session",
             capabilities,
             "mcp");
+    }
+
+    private McpToolResult ScriptCreate(McpToolRequest request)
+    {
+        var result = Tooling.Script.Create(
+            OperationId(request.ToolName),
+            Get(request, "path") ?? "Scripts/GeneratedAgentScript.cs",
+            Get(request, "text") ?? "using Electron2D;\n\npublic sealed class GeneratedAgentScript : Node\n{\n}\n",
+            AgentContext(OperationCapability.TaskWrite),
+            ScriptApplyMode());
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteScriptDocument(result));
+    }
+
+    private McpToolResult ScriptRead(McpToolRequest request)
+    {
+        return McpToolResult.ContentOnly(
+            request.ToolName,
+            Route,
+            WriteScriptDocument(Tooling.Script.Read(Get(request, "path") ?? "Scripts/HeroController.cs")));
+    }
+
+    private McpToolResult ScriptRename(McpToolRequest request)
+    {
+        var result = Tooling.Script.Rename(
+            OperationId(request.ToolName),
+            Require(request, "oldPath"),
+            Require(request, "newPath"),
+            Revision(request),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.FromOperation(request.ToolName, Route, result.Operation, RouteDiagnostics);
+    }
+
+    private McpToolResult ScriptDelete(McpToolRequest request)
+    {
+        var result = Tooling.Script.Delete(
+            OperationId(request.ToolName),
+            Require(request, "path"),
+            Revision(request),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.FromOperation(request.ToolName, Route, result.Operation, RouteDiagnostics);
+    }
+
+    private McpToolResult ScriptSearchText(McpToolRequest request)
+    {
+        var result = Tooling.Script.SearchText(Get(request, "query") ?? string.Empty);
+        var matches = new JsonArray();
+        foreach (var match in result.Matches)
+        {
+            matches.Add(new JsonObject
+            {
+                ["path"] = match.Path,
+                ["line"] = match.Line,
+                ["column"] = match.Column
+            });
+        }
+
+        return McpToolResult.ContentOnly(request.ToolName, Route, new JsonObject
+        {
+            ["matches"] = matches
+        });
+    }
+
+    private McpToolResult ScriptApplyTextEdits(McpToolRequest request)
+    {
+        var result = Tooling.Script.ApplyTextEdits(
+            new ToolingScriptApplyTextEditsRequest(
+                OperationId(request.ToolName),
+                Require(request, "path"),
+                Revision(request),
+                [ToolingScriptTextEdit.ReplaceAll(Require(request, "text"))],
+                UndoGroupId(request.ToolName),
+                ScriptApplyMode()),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.FromOperation(request.ToolName, Route, result.Operation, RouteDiagnostics);
+    }
+
+    private McpToolResult ScriptSave(McpToolRequest request)
+    {
+        var revision = Get(request, "agentBaseRevision") ?? Get(request, "expectedRevision") ?? "0";
+        var baseRevision = long.TryParse(revision, out var parsed)
+            ? new ProjectDocumentRevision(parsed)
+            : new ProjectDocumentRevision(0);
+        var result = Tooling.Script.Save(
+            new ToolingScriptSaveRequest(
+                OperationId(request.ToolName),
+                Require(request, "path"),
+                baseRevision,
+                dryRun: false),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.FromOperation(request.ToolName, Route, result.Operation, RouteDiagnostics);
+    }
+
+    private McpToolResult ScriptFormat(McpToolRequest request)
+    {
+        var result = Tooling.Script.Format(
+            ScriptIdeRequest(request),
+            OperationId(request.ToolName),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.FromOperation(request.ToolName, Route, result.Operation, RouteDiagnostics);
+    }
+
+    private McpToolResult ScriptIde(McpToolRequest request, Func<ToolingScriptIdeRequest, ToolingScriptIdeResult> command)
+    {
+        var result = command(ScriptIdeRequest(request));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteScriptIdeResult(result));
+    }
+
+    private McpToolResult ScriptRenameSymbol(McpToolRequest request)
+    {
+        var result = Tooling.Script.RenameSymbol(
+            ScriptIdeRequest(request),
+            OperationId(request.ToolName),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.FromOperation(request.ToolName, Route, result.Operation, RouteDiagnostics);
+    }
+
+    private McpToolResult ScriptApplyCodeAction(McpToolRequest request)
+    {
+        var result = Tooling.Script.ApplyCodeAction(
+            ScriptIdeRequest(request),
+            OperationId(request.ToolName),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.FromOperation(request.ToolName, Route, result.Operation, RouteDiagnostics);
+    }
+
+    private ToolingScriptIdeRequest ScriptIdeRequest(McpToolRequest request)
+    {
+        return new ToolingScriptIdeRequest(
+            Get(request, "path") ?? "Scripts/HeroController.cs",
+            IntArgument(request, "completionPosition", -1),
+            IntArgument(request, "signatureHelpPosition", -1),
+            IntArgument(request, "hoverPosition", -1),
+            IntArgument(request, "definitionPosition", -1),
+            Get(request, "renameTo") ?? "RenamedSymbol",
+            IntArgument(request, "responseDocumentRevision", -1));
+    }
+
+    private ToolingApplyMode ScriptApplyMode()
+    {
+        return Route == McpRoute.ActiveEditor ? ToolingApplyMode.WorkspaceOnly : ToolingApplyMode.HeadlessCommit;
+    }
+
+    private McpToolResult DebugSetBreakpoint(McpToolRequest request)
+    {
+        var result = Tooling.Debug.SetBreakpoint(
+            new ToolingDebugSetBreakpointRequest(
+                OperationId(request.ToolName),
+                Get(request, "documentId") ?? "doc-hero",
+                Get(request, "path") ?? "Scripts/HeroController.cs",
+                IntArgument(request, "line", 10),
+                IntArgument(request, "column", 17)),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugCommand(result));
+    }
+
+    private McpToolResult DebugUpdateBreakpoint(McpToolRequest request)
+    {
+        var result = Tooling.Debug.UpdateBreakpoint(
+            new ToolingDebugUpdateBreakpointRequest(
+                OperationId(request.ToolName),
+                Get(request, "breakpointId") ?? "breakpoint-hero-update",
+                BoolArgument(request, "enabled", true),
+                IntArgument(request, "line", 10),
+                IntArgument(request, "column", 17)),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugCommand(result));
+    }
+
+    private McpToolResult DebugRemoveBreakpoint(McpToolRequest request)
+    {
+        var result = Tooling.Debug.RemoveBreakpoint(Get(request, "breakpointId") ?? "breakpoint-hero-update");
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugCommand(result));
+    }
+
+    private McpToolResult DebugStart(McpToolRequest request)
+    {
+        var result = Tooling.Debug.Start(
+            new ToolingDebugStartRequest(
+                OperationId(request.ToolName),
+                Get(request, "inputBuildConfigurationHash") ?? "sha256:mcp-debug",
+                Environment.ProcessId),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugSession(result));
+    }
+
+    private McpToolResult DebugAttach(McpToolRequest request)
+    {
+        var result = Tooling.Debug.Attach(
+            new ToolingDebugAttachRequest(
+                OperationId(request.ToolName),
+                IntArgument(request, "processId", Environment.ProcessId),
+                IntArgument(request, "activeEditorGameProcessId", Environment.ProcessId),
+                BoolArgument(request, "interactiveApproved", false),
+                Get(request, "inputBuildConfigurationHash") ?? "sha256:mcp-debug-attach"),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugSession(result));
+    }
+
+    private McpToolResult DebugRestart(McpToolRequest request)
+    {
+        var result = Tooling.Debug.Restart(
+            new ToolingDebugStartRequest(
+                OperationId(request.ToolName),
+                Get(request, "inputBuildConfigurationHash") ?? "sha256:mcp-debug-restart",
+                Environment.ProcessId),
+            AgentContext(OperationCapability.TaskWrite));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugSession(result));
+    }
+
+    private McpToolResult DebugCommand(McpToolRequest request, Func<ToolingDebugCommandResult> command)
+    {
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugCommand(command()));
+    }
+
+    private McpToolResult DebugGetStack(McpToolRequest request)
+    {
+        var result = Tooling.Debug.GetStack();
+        return McpToolResult.ContentOnly(request.ToolName, Route, new JsonObject
+        {
+            ["succeeded"] = result.Succeeded,
+            ["diagnostics"] = WriteDiagnostics(result.Diagnostics),
+            ["threads"] = WriteDebugThreads(result.Threads),
+            ["stacksByThread"] = WriteStacksByThread(result.StacksByThread)
+        });
+    }
+
+    private McpToolResult DebugVariables(McpToolRequest request, Func<ToolingDebugFrameRequest, ToolingDebugVariablesResult> command)
+    {
+        var result = command(new ToolingDebugFrameRequest(IntArgument(request, "frameId", 101)));
+        return McpToolResult.ContentOnly(request.ToolName, Route, new JsonObject
+        {
+            ["succeeded"] = result.Succeeded,
+            ["diagnostics"] = WriteDiagnostics(result.Diagnostics),
+            ["variables"] = WriteDebugVariables(result.Variables)
+        });
+    }
+
+    private McpToolResult DebugGetWatches(McpToolRequest request)
+    {
+        var result = Tooling.Debug.GetWatches();
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugWatches(result));
+    }
+
+    private McpToolResult DebugEvaluateWatches(McpToolRequest request)
+    {
+        var result = Tooling.Debug.EvaluateWatches(new ToolingDebugFrameRequest(IntArgument(request, "frameId", 101)));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugWatches(result));
+    }
+
+    private McpToolResult DebugAddWatch(McpToolRequest request)
+    {
+        var result = Tooling.Debug.AddWatch(new ToolingDebugWatchRequest(OperationId(request.ToolName), Get(request, "expression") ?? "hero.Health"));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugWatches(result));
+    }
+
+    private McpToolResult DebugUpdateWatch(McpToolRequest request)
+    {
+        var result = Tooling.Debug.UpdateWatch(new ToolingDebugWatchUpdateRequest(
+            OperationId(request.ToolName),
+            Require(request, "watchId"),
+            Get(request, "expression") ?? "hero.Health"));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugWatches(result));
+    }
+
+    private McpToolResult DebugRemoveWatch(McpToolRequest request)
+    {
+        var result = Tooling.Debug.RemoveWatch(new ToolingDebugRemoveWatchRequest(OperationId(request.ToolName), Require(request, "watchId")));
+        return McpToolResult.ContentOnly(request.ToolName, Route, WriteDebugCommand(result));
+    }
+
+    private static JsonObject WriteScriptDocument(ToolingScriptDocumentResult result)
+    {
+        return new JsonObject
+        {
+            ["succeeded"] = result.Succeeded,
+            ["path"] = result.Path,
+            ["text"] = result.Text,
+            ["documentId"] = result.DocumentId,
+            ["documentRevision"] = result.DocumentRevision.Value,
+            ["persistedRevision"] = result.PersistedRevision.Value,
+            ["semanticVersion"] = result.SemanticVersion,
+            ["diagnostics"] = WriteDiagnostics(result.Diagnostics)
+        };
+    }
+
+    private static JsonObject WriteScriptIdeResult(ToolingScriptIdeResult result)
+    {
+        var completions = new JsonArray();
+        foreach (var item in result.CompletionItems)
+        {
+            completions.Add(new JsonObject
+            {
+                ["displayText"] = item.DisplayText,
+                ["isSelected"] = item.IsSelected
+            });
+        }
+
+        var symbols = new JsonArray();
+        foreach (var symbol in result.Symbols)
+        {
+            symbols.Add(new JsonObject
+            {
+                ["name"] = symbol.Name,
+                ["kind"] = symbol.Kind,
+                ["line"] = symbol.Line,
+                ["column"] = symbol.Column
+            });
+        }
+
+        var references = new JsonArray();
+        foreach (var reference in result.References)
+        {
+            references.Add(new JsonObject
+            {
+                ["path"] = reference.Path,
+                ["line"] = reference.Line,
+                ["column"] = reference.Column
+            });
+        }
+
+        var codeActions = new JsonArray();
+        foreach (var action in result.CodeActions)
+        {
+            codeActions.Add(new JsonObject
+            {
+                ["title"] = action.Title,
+                ["editCount"] = action.Edits.Count
+            });
+        }
+
+        return new JsonObject
+        {
+            ["succeeded"] = result.Succeeded,
+            ["commandName"] = result.CommandName,
+            ["documentRevision"] = result.DocumentRevision.Value,
+            ["semanticVersion"] = result.SemanticVersion,
+            ["roslynSemanticModel"] = result.RoslynSemanticModel,
+            ["workspaceSnapshotUsedForIde"] = result.WorkspaceSnapshotUsedForIde,
+            ["completionItems"] = completions,
+            ["signatureHelp"] = result.SignatureHelp?.Display,
+            ["hover"] = result.Hover?.SymbolDisplay,
+            ["diagnosticCode"] = result.Diagnostic?.Code,
+            ["definition"] = result.Definition?.ToString(),
+            ["references"] = references,
+            ["symbols"] = symbols,
+            ["codeActions"] = codeActions,
+            ["diagnostics"] = WriteDiagnostics(result.Diagnostics)
+        };
+    }
+
+    private static JsonObject WriteDebugCommand(ToolingDebugCommandResult result)
+    {
+        return new JsonObject
+        {
+            ["succeeded"] = result.Succeeded,
+            ["diagnostics"] = WriteDiagnostics(result.Diagnostics),
+            ["breakpoint"] = result.Breakpoint is null ? null : WriteDebugBreakpoint(result.Breakpoint)
+        };
+    }
+
+    private static JsonObject WriteDebugSession(ToolingDebugSessionResult result)
+    {
+        return new JsonObject
+        {
+            ["succeeded"] = result.Succeeded,
+            ["operationId"] = result.OperationId,
+            ["inputSnapshotId"] = result.InputSnapshotId,
+            ["inputWorkspaceRevision"] = result.InputWorkspaceRevision.Value,
+            ["inputContentRevision"] = result.InputContentRevision.Value,
+            ["inputDocumentRevisions"] = WriteRevisions(result.InputDocumentRevisions),
+            ["inputBuildConfigurationHash"] = result.InputBuildConfigurationHash,
+            ["debugBuildPortablePdb"] = result.DebugBuildPortablePdb,
+            ["threads"] = WriteDebugThreads(result.Threads),
+            ["stackFrames"] = WriteDebugStackFrames(result.StackFrames),
+            ["diagnostics"] = WriteDiagnostics(result.Diagnostics)
+        };
+    }
+
+    private static JsonObject WriteDebugBreakpoint(ToolingDebugBreakpoint breakpoint)
+    {
+        return new JsonObject
+        {
+            ["breakpointId"] = breakpoint.BreakpointId,
+            ["documentId"] = breakpoint.DocumentId,
+            ["path"] = breakpoint.SourceAnchor.Path,
+            ["line"] = breakpoint.SourceAnchor.Line,
+            ["column"] = breakpoint.SourceAnchor.Column,
+            ["enabled"] = breakpoint.Enabled,
+            ["verified"] = breakpoint.Verified,
+            ["adapterMessage"] = breakpoint.AdapterMessage
+        };
+    }
+
+    private static JsonArray WriteDebugThreads(IEnumerable<ToolingDebugThread> threads)
+    {
+        var array = new JsonArray();
+        foreach (var thread in threads.OrderBy(thread => thread.ThreadId))
+        {
+            array.Add(new JsonObject
+            {
+                ["threadId"] = thread.ThreadId,
+                ["name"] = thread.Name,
+                ["isSelected"] = thread.IsSelected
+            });
+        }
+
+        return array;
+    }
+
+    private static JsonArray WriteDebugStackFrames(IEnumerable<ToolingDebugStackFrame> frames)
+    {
+        var array = new JsonArray();
+        foreach (var frame in frames.OrderBy(frame => frame.ThreadId).ThenBy(frame => frame.FrameId))
+        {
+            array.Add(new JsonObject
+            {
+                ["frameId"] = frame.FrameId,
+                ["threadId"] = frame.ThreadId,
+                ["display"] = frame.Display,
+                ["path"] = frame.Source.Path,
+                ["line"] = frame.Source.Line,
+                ["column"] = frame.Source.Column
+            });
+        }
+
+        return array;
+    }
+
+    private static JsonObject WriteStacksByThread(IReadOnlyDictionary<int, IReadOnlyList<ToolingDebugStackFrame>> stacksByThread)
+    {
+        var root = new JsonObject();
+        foreach (var pair in stacksByThread.OrderBy(pair => pair.Key))
+        {
+            root[pair.Key.ToString(System.Globalization.CultureInfo.InvariantCulture)] = WriteDebugStackFrames(pair.Value);
+        }
+
+        return root;
+    }
+
+    private static JsonArray WriteDebugVariables(IEnumerable<ToolingDebugVariable> variables)
+    {
+        var array = new JsonArray();
+        foreach (var variable in variables.OrderBy(variable => variable.Name, StringComparer.Ordinal))
+        {
+            array.Add(new JsonObject
+            {
+                ["name"] = variable.Name,
+                ["value"] = variable.Value,
+                ["kind"] = variable.Kind,
+                ["frameId"] = variable.FrameId
+            });
+        }
+
+        return array;
+    }
+
+    private static JsonObject WriteDebugWatches(ToolingDebugWatchesResult result)
+    {
+        var watches = new JsonArray();
+        foreach (var watch in result.Watches.OrderBy(watch => watch.WatchId, StringComparer.Ordinal))
+        {
+            watches.Add(new JsonObject
+            {
+                ["watchId"] = watch.WatchId,
+                ["expression"] = watch.Expression,
+                ["value"] = watch.Value,
+                ["frameId"] = watch.FrameId
+            });
+        }
+
+        return new JsonObject
+        {
+            ["succeeded"] = result.Succeeded,
+            ["diagnostics"] = WriteDiagnostics(result.Diagnostics),
+            ["watches"] = watches
+        };
+    }
+
+    private static int IntArgument(McpToolRequest request, string key, int fallback)
+    {
+        var value = Get(request, key);
+        return int.TryParse(value, out var parsed) ? parsed : fallback;
+    }
+
+    private static bool BoolArgument(McpToolRequest request, string key, bool fallback)
+    {
+        var value = Get(request, key);
+        return bool.TryParse(value, out var parsed) ? parsed : fallback;
     }
 
     private JsonObject ProjectSummary()

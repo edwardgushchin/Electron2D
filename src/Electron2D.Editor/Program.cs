@@ -94,6 +94,11 @@ internal static class Program
             return RunManagedDebuggerSmoke(managedDebuggerWorkRoot);
         }
 
+        if (args is ["--script-debug-tooling-smoke", var scriptDebugToolingWorkRoot])
+        {
+            return RunScriptDebugToolingSmoke(scriptDebugToolingWorkRoot);
+        }
+
         if (args is ["--run-workflow-smoke", var runWorkflowWorkRoot])
         {
             return RunRunWorkflowSmoke(runWorkflowWorkRoot);
@@ -114,7 +119,7 @@ internal static class Program
             return RunProjectTasksBoardSmoke(tasksBoardWorkRoot);
         }
 
-        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
+        Console.Error.WriteLine("Usage: Electron2D.Editor [--smoke] [--project-manager-smoke <work-root> --user-data-dir <user-data-dir>] [--scene-tree-dock-smoke <work-root>] [--viewport-2d-smoke <work-root>] [--inspector-smoke <work-root>] [--file-system-dock-smoke <work-root>] [--script-workflow-smoke <work-root>] [--script-workspace-smoke <work-root>] [--script-language-services-smoke <work-root>] [--managed-debugger-smoke <work-root>] [--script-debug-tooling-smoke <work-root>] [--run-workflow-smoke <work-root>] [--shell-layout-smoke <work-root>] [--agent-workspace-panel-smoke <work-root>] [--tasks-board-smoke <work-root>]");
         return 2;
     }
 
@@ -581,6 +586,62 @@ internal static class Program
                 result.TextOverflowCount == 0 &&
                 result.ForbiddenUiMatchCount == 0 &&
                 result.ClickableControlCount >= 18 &&
+                result.ScreenshotReviewed
+                    ? 0
+                    : 1;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or FormatException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 1;
+        }
+    }
+
+    private static int RunScriptDebugToolingSmoke(string workRoot)
+    {
+        try
+        {
+            var result = EditorScriptDebugToolingSmoke.Run(workRoot);
+            var diagnostic = result.Diagnostics.Diagnostic;
+            var completion = result.Completions.CompletionItems.Single(item => item.IsSelected);
+            var local = result.Locals.Variables.Single(variable => variable.Name == "speed");
+            var argument = result.Arguments.Variables.Single(variable => variable.Name == "delta");
+            var watchDefinition = result.WatchDefinitions.Watches.Single(watch => watch.Expression == "hero.Health");
+            var watchEvaluation = result.WatchEvaluations.Watches.Single(watch => watch.Expression == "hero.Health");
+
+            Console.WriteLine("Electron2D.Editor script/debug tooling smoke passed");
+            Console.WriteLine($"SelectedWorkspace={result.SelectedWorkspace}");
+            Console.WriteLine($"ScriptOperation={result.ScriptMutation.Operation.OperationKind}");
+            Console.WriteLine($"DiagnosticCode={diagnostic?.Code}");
+            Console.WriteLine($"CompletionSelected={completion.DisplayText}");
+            Console.WriteLine($"BreakpointId={result.Breakpoint.Breakpoint?.BreakpointId}");
+            Console.WriteLine($"ThreadCount={result.DebugSession.Threads.Count}");
+            Console.WriteLine($"StackThreadCount={result.Stack.StacksByThread.Count}");
+            Console.WriteLine($"LocalValue={local.Name}={local.Value}");
+            Console.WriteLine($"ArgumentValue={argument.Name}={argument.Value}");
+            Console.WriteLine($"WatchDefinition={watchDefinition.Expression}");
+            Console.WriteLine($"WatchEvaluation={watchEvaluation.Expression}={watchEvaluation.Value}");
+            Console.WriteLine($"CurrentTask={result.CurrentTask}");
+            Console.WriteLine($"LinkedTransactions={Join(result.LinkedTransactions)}");
+            Console.WriteLine($"LinkedJobs={Join(result.LinkedJobs)}");
+            Console.WriteLine($"LinkedArtifacts={Join(result.LinkedArtifacts)}");
+            Console.WriteLine($"ScreenshotReviewed={result.ScreenshotReviewed}");
+            Console.WriteLine($"StatePath={result.StatePath}");
+            Console.WriteLine($"ScreenshotPath={result.ScreenshotPath}");
+            Console.WriteLine($"AnalysisPath={result.AnalysisPath}");
+
+            return result.ScriptMutation.Succeeded &&
+                string.Equals(diagnostic?.Code, "CS0103", StringComparison.Ordinal) &&
+                string.Equals(completion.DisplayText, "Sprite2D", StringComparison.Ordinal) &&
+                result.Breakpoint.Breakpoint is not null &&
+                result.DebugSession.Threads.Count >= 2 &&
+                result.Stack.StacksByThread.Count >= 2 &&
+                string.Equals(local.Value, "240", StringComparison.Ordinal) &&
+                string.Equals(argument.Value, "0.016", StringComparison.Ordinal) &&
+                string.Equals(watchEvaluation.Value, "100", StringComparison.Ordinal) &&
+                result.TextOverflowCount == 0 &&
+                result.ForbiddenUiMatchCount == 0 &&
+                result.ClickableControlCount >= 24 &&
                 result.ScreenshotReviewed
                     ? 0
                     : 1;

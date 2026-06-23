@@ -1,7 +1,7 @@
 # Локальный MCP adapter для Editor-сессии и Tooling
 
-Статус: реализованный внутренний контракт для `T-0119`.
-Обновлено: 2026-06-22.
+Статус: реализованный внутренний контракт для `T-0119`, расширенный script/debug tools для `T-0161`.
+Обновлено: 2026-06-23.
 Связанные документы: [Локальный MCP-сервер поверх active Editor session и Tooling](../../specifications/mcp/mcp-server.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [`e2d` CLI для headless, CI и active Editor routing](../cli/e2d-cli.md); [ProjectTaskManager](../project-system/project-task-manager.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, JSONL stream и SARIF](../diagnostics/diagnostics-adapters.md); [Runtime debug bridge и scene inspection](../runtime/runtime-debug-bridge.md); [Editor-attached runtime control](../runtime/editor-attached-runtime-control.md).
 
 ## Назначение
@@ -63,10 +63,16 @@ Manifest публикует все обязательные tool names из MCP 
 - `project_build`, `project_run`, `project_test`, `project_export` и `resource_import` создают `WorkspaceJob` через соответствующий Tooling service;
 - `runtime_start`, `runtime_stop`, `runtime_pause`, `runtime_resume`, `runtime_step`, `runtime_inject_input`, `runtime_capture_frame`, `runtime_get_scene_tree`, `runtime_get_diagnostics`, `runtime_highlight_node` и `runtime_report_crash` управляют active Editor-attached runtime session через `ToolingRuntimeService`;
 - `task_list`, `task_get`, `task_append_activity`, `task_submit_for_acceptance`, `task_accept`, `task_request_changes` и `task_cancel` идут через `TaskService`.
+- `script_create`, `script_open`, `script_read`, `script_rename`, `script_delete`, `script_search_text`, `script_apply_text_edits`, `script_save`, `script_format`, `script_get_diagnostics`, `script_get_completions`, `script_get_signature_help`, `script_get_hover`, `script_get_definition`, `script_get_document_symbols`, `script_find_references`, `script_rename_symbol`, `script_get_code_actions`, `script_apply_code_action` идут через `Tooling.Script`;
+- `debug_set_breakpoint`, `debug_update_breakpoint`, `debug_remove_breakpoint`, `debug_start`, `debug_attach`, `debug_restart`, `debug_pause`, `debug_continue`, `debug_step_into`, `debug_step_over`, `debug_step_out`, `debug_get_threads`, `debug_get_stack`, `debug_get_locals`, `debug_get_arguments`, `debug_get_watches`, `debug_evaluate_watches`, `debug_add_watch`, `debug_update_watch`, `debug_remove_watch`, `debug_stop` идут через `Tooling.Debug`.
 
-Узкие scene/resource tools, которые ещё не имеют production semantics, возвращают structured diagnostic `E2D-MCP-0001` и не пишут project files напрямую.
+Узкие scene/resource tools, которые ещё не имеют production semantics, возвращают structured diagnostic `E2D-MCP-0001` и не пишут project files напрямую. Script/debug tools больше не относятся к этой placeholder-группе: если имя опубликовано в manifest, запрос маршрутизируется в `Tooling.Script` или `Tooling.Debug`.
 
 Runtime tools не создают отдельную приватную модель. Они читают и меняют `ProjectWorkspace.Runtime.ActiveSession`, поэтому Agent Workspace и MCP видят один и тот же state.
+
+Script tools возвращают document text, document revision, semantic version, diagnostics, completion/signature/hover/navigation payloads и code actions. Mutating script tools используют `expectedRevision` и workspace transaction. `script_save` отклоняет agent save при конфликте с ручными unsaved changes.
+
+Debug tools возвращают breakpoint state, `WorkspaceSnapshot` identity для `debug_start`/`debug_restart`, stacks всех threads, variables выбранного frame и watches. `debug_get_watches()` не вычисляет expressions; значения появляются только в `debug_evaluate_watches(frameId)`.
 
 ## Task guard
 
@@ -117,3 +123,9 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 ```
 
 Она покрывает manifest resources/tools, `electron2d://editor/capabilities`, `electron2d://runtime/session`, live dirty state active Editor route, `workspace_apply_transaction`, headless job event snapshot identity, runtime control tools, task acceptance guard и CLI manifest без облачного AI-провайдера.
+
+Script/debug parity проверяется отдельно:
+
+```powershell
+dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~ScriptDebugToolingParityTests" -m:1
+```

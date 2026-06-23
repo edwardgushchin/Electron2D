@@ -25,3 +25,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Electron2D.Editor")]
+[assembly: InternalsVisibleTo("Electron2D.Tooling")]

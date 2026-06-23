@@ -32,9 +32,15 @@ Stable API identifiers используются для связи capability с 
 - resources и import settings;
 - Input Map, Project Settings, main scene и export presets;
 - SpriteFrames, AnimationPlayer, TileMap и UI themes;
-- tests, diagnostics и runtime control.
+- tests, diagnostics, runtime control, script workspace и managed debugger control.
 
-Часть строк уже `supported`: shared workspace transaction для text project documents, resource import job, test/export/run job, diagnostics query и fine-grained visible runtime controls. Часть строк помечена `partial`: специализированные SpriteFrames/AnimationPlayer/TileMap/UI theme workflows. Такой статус означает, что строка входит в parity map, но её production workflow закрывается последующими задачами.
+Часть строк уже `supported`: shared workspace transaction для text project documents, resource import job, test/export/run job, diagnostics query, fine-grained visible runtime controls, script document mutations, live C# IDE queries и managed debugger control. Часть строк помечена `partial`: специализированные SpriteFrames/AnimationPlayer/TileMap/UI theme workflows. Такой статус означает, что строка входит в parity map, но её production workflow закрывается последующими задачами.
+
+Новые release-required строки для `T-0161`:
+
+- `script.workspace.mutate` связывает visible Script workspace, Tooling command `script_apply_text_edits` и MCP tool `script_apply_text_edits`;
+- `script.workspace.ide` связывает visible Script workspace, Tooling command `script_get_diagnostics` и MCP tool `script_get_diagnostics`;
+- `debugger.managed.control` связывает visible debugger workspace, Tooling command `debug_start` и MCP tool `debug_start`.
 
 ## Verifier
 

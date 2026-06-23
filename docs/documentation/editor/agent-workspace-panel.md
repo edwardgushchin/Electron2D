@@ -1,6 +1,6 @@
 # Agent Workspace panel редактора
 
-Статус: реализовано для `T-0150`.
+Статус: реализовано для `T-0150` и используется script/debug tooling smoke из `T-0161`.
 Обновлено: 2026-06-23.
 
 ## Назначение
@@ -20,6 +20,8 @@ Snapshot панели содержит:
 - artifacts: screenshots, runtime snapshots и job artifacts с `WorkspaceJobInputIdentity`;
 - active job: kind, state, progress, cancel availability, stale markers и input identity;
 - actions: `Send Review`, `Undo AI`, `Cancel`, `Stop`.
+
+Для script/debug tooling smoke панель дополнительно показывает нормализованные операции агента: `script_apply_text_edits`, current task `T-0161`, ссылку на workspace transaction, ссылку на debug job и ссылку на screenshot artifact. Это проверяет, что агентские изменения в Script workspace видны человеку через обычную правую dock-панель, а не только в машинном ответе Tooling/MCP.
 
 Панель намеренно не создаёт action `Done` и не даёт AI-контексту принять задачу за человека. AI может отправить задачу на human review, но acceptance остаётся ручным действием.
 
@@ -63,6 +65,14 @@ PNG является deterministic screenshot artifact для обязатель
 - кнопки `Send Review`, `Undo AI`, `Cancel`, `Stop` видимы и не ломают layout;
 - action `Done` визуально отсутствует;
 - текст не выходит за границы контейнеров и не перекрывает соседние элементы.
+
+Дополнительная команда script/debug tooling smoke:
+
+```powershell
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --script-debug-tooling-smoke .temp\script-debug-tooling
+```
+
+Она создаёт `script-debug-tooling.png` и проверяет, что `Agent Workspace` справа показывает `T-0161`, `transaction://op-script-agent-edit`, `job://op-debug-start` и `artifact://script-debug-tooling/screenshot.png`.
 
 ## Проверки
 
