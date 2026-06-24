@@ -33,16 +33,6 @@
       "sourceUrl": "https://opengameart.org/content/50-rpg-sound-effects",
       "sourceArchive": "RPGsounds_Kenney.zip",
       "sourceArchiveSha256": "3ae398ad63e293f9c450bda22d5d81c3af69c74df66fc1400f33c012c0bbc231"
-    },
-    {
-      "id": "electron2d",
-      "title": "Electron2D reference game metadata",
-      "author": "Electron2D contributors",
-      "license": "MIT",
-      "licenseUrl": "../../LICENSE",
-      "sourceUrl": "https://github.com/edwardgushchin/Electron2D",
-      "sourceArchive": null,
-      "sourceArchiveSha256": null
     }
   ],
   "requirements": {
@@ -57,15 +47,6 @@
       "level.source",
       "ui.font",
       "ui.sprite"
-    ],
-    "ui-heavy-reference": [
-      "graphics.ui",
-      "audio.interaction",
-      "audio.reward",
-      "ui.font",
-      "ui.sprite",
-      "localization",
-      "game.data"
     ]
   },
   "assets": [
@@ -171,7 +152,7 @@
     {
       "id": "shared.font.kenney-future",
       "path": "data/assets/reference-games/shared/fonts/kenney-future.ttf",
-      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "games": [ "reference-platformer" ],
       "roles": [ "ui.font" ],
       "source": "kenney-ui-pack",
       "bytes": 34160,
@@ -180,7 +161,7 @@
     {
       "id": "shared.ui.button",
       "path": "data/assets/reference-games/shared/ui/button-rectangle-depth-flat.png",
-      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "games": [ "reference-platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 383,
@@ -189,7 +170,7 @@
     {
       "id": "shared.ui.check",
       "path": "data/assets/reference-games/shared/ui/check-square-color-checkmark.png",
-      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "games": [ "reference-platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 555,
@@ -198,7 +179,7 @@
     {
       "id": "shared.ui.slider",
       "path": "data/assets/reference-games/shared/ui/slide-horizontal-color.png",
-      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "games": [ "reference-platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 383,
@@ -207,92 +188,11 @@
     {
       "id": "shared.ui.star",
       "path": "data/assets/reference-games/shared/ui/star.png",
-      "games": [ "reference-platformer", "ui-heavy-reference" ],
+      "games": [ "reference-platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 1507,
       "sha256": "ba91a196117f8c324beac04ae426379d054e9497be901469eea5d333b369265c"
-    },
-    {
-      "id": "ui-heavy.button-gradient",
-      "path": "data/assets/reference-games/ui-heavy/graphics/button-rectangle-depth-gradient.png",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "graphics.ui" ],
-      "source": "kenney-ui-pack",
-      "bytes": 582,
-      "sha256": "3fc1d9bedf07da0f1a49bed143311e6edf3bebd9a937e95a6ab4b812c8448ec0"
-    },
-    {
-      "id": "ui-heavy.square-button",
-      "path": "data/assets/reference-games/ui-heavy/graphics/button-square-depth-flat.png",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "graphics.ui" ],
-      "source": "kenney-ui-pack",
-      "bytes": 355,
-      "sha256": "7f113aa488dee62009fe7b7043b51672c9845d5d0dd0c856d8aa179c91a9c688"
-    },
-    {
-      "id": "ui-heavy.icon-checkmark",
-      "path": "data/assets/reference-games/ui-heavy/graphics/icon-checkmark.png",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "graphics.ui" ],
-      "source": "kenney-ui-pack",
-      "bytes": 377,
-      "sha256": "82a5c1c3dfe9a704e9f5f220c9510b622c77c2207c226b41728978c2335b1f3b"
-    },
-    {
-      "id": "ui-heavy.icon-cross",
-      "path": "data/assets/reference-games/ui-heavy/graphics/icon-cross.png",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "graphics.ui" ],
-      "source": "kenney-ui-pack",
-      "bytes": 350,
-      "sha256": "32eea5ea58f44f15c82691cad35406b32dfad7c3c1152d633dcd74a25e430d48"
-    },
-    {
-      "id": "ui-heavy.card-flip",
-      "path": "data/assets/reference-games/ui-heavy/audio/card-flip-bookflip1.ogg",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "audio.interaction" ],
-      "source": "kenney-rpg-sounds",
-      "bytes": 18248,
-      "sha256": "fa81ac2fedc8c641661b87e349630a36c9800e795e0c800e029214efdbe26a7d"
-    },
-    {
-      "id": "ui-heavy.reward",
-      "path": "data/assets/reference-games/ui-heavy/audio/reward-handle-coins.ogg",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "audio.reward" ],
-      "source": "kenney-rpg-sounds",
-      "bytes": 25394,
-      "sha256": "8a91f969e932df709df80ee124d86a51389eed9b67f22e5e716bc2bbf60d8dab"
-    },
-    {
-      "id": "ui-heavy.card-set",
-      "path": "data/assets/reference-games/ui-heavy/data/card-set.json",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "game.data" ],
-      "source": "electron2d",
-      "bytes": 403,
-      "sha256": "2fad6fb9eb32687c93835ea40f83e870d1695abd864e573f197a5903a0cb14d9"
-    },
-    {
-      "id": "ui-heavy.locale.en",
-      "path": "data/assets/reference-games/ui-heavy/localization/en.json",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "localization" ],
-      "source": "electron2d",
-      "bytes": 245,
-      "sha256": "16a8f5b133f8f8356fe41418f49bc0f9d57bb47b0b0dc406255ccd6104aca9ac"
-    },
-    {
-      "id": "ui-heavy.locale.ru",
-      "path": "data/assets/reference-games/ui-heavy/localization/ru.json",
-      "games": [ "ui-heavy-reference" ],
-      "roles": [ "localization" ],
-      "source": "electron2d",
-      "bytes": 310,
-      "sha256": "4eb6f8ceff6559151d05344310d5d39a0067b4393c098368c5aa4bee6b2f24ad"
     }
   ]
 }

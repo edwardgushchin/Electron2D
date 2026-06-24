@@ -1,7 +1,0 @@
-bin/
-obj/
-.electron2d/import-cache/
-.electron2d/workspaces/
-.electron2d/context/
-.electron2d/session/
-.electron2d/user/

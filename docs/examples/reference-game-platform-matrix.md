@@ -16,22 +16,22 @@
 
 ## Цель
 
-`examples/reference-platformer/` должен быть активным полноценным приёмочным проектом `Electron2D.Editor`, который экспортируется из обычной структуры проекта под все runtime-платформы `0.1.0 Preview`: Windows, Linux, macOS, Android, iOS и WebAssembly browser. Задача не создаёт отдельные platform forks и не подменяет проект standalone fixture-ом.
+`examples/reference-platformer/` должен быть единственным активным полноценным приёмочным проектом `Electron2D.Editor`, который экспортируется из обычной структуры проекта под все runtime-платформы `0.1.0 Preview`: Windows, Linux, macOS, Android, iOS и WebAssembly browser. Задача не создаёт отдельные platform forks и не подменяет проект standalone fixture-ом.
 
 Проверяемый результат `T-0096` - общий verifier `tools\Verify-ReferenceGamePlatformMatrix.ps1` и артефакт `data/quality/reference-game-platform-matrix.json`. Они должны доказать, что активный reference project:
 
-- имеют одинаковый набор export targets: `WindowsX64`, `LinuxX64`, `MacOSArm64`, `AndroidArm64`, `IosArm64`, `WebAssemblyBrowser`;
+- имеет набор export targets: `WindowsX64`, `LinuxX64`, `MacOSArm64`, `AndroidArm64`, `IosArm64`, `WebAssemblyBrowser`;
 - использует named `.e2d` project file, `.csproj`, main scene, embedded export presets, локальные resources, C# scripts и `.electron2d/tasks/**` как обычный формат проекта;
 - проходит проектный verifier `tools\Verify-ReferencePlatformer.ps1`;
-- не содержат platform-specific игровой fork в `Scripts/`, `scenes/`, `resources/` или `assets/`;
-- не зависят от локальных repository workflow-файлов `TASKS.md`, `dev-diary/` или `completed-tasks/`.
+- не содержит platform-specific игровой fork в `scripts/`, `scenes/`, `resources/` или `assets/`;
+- не зависит от локальных repository workflow-файлов `TASKS.md`, `dev-diary/` или `completed-tasks/`.
 
 ## Разрешённые platform-specific отличия
 
 Внутри reference games разрешены только отличия, которые относятся к упаковке или платформенной конфигурации:
 
 - export target, configuration, runtime identifier и output directory в `export_presets.e2export.json`;
-- renderer profile, если он является частью проверяемого контракта игры, например `Compatibility` у UI-heavy reference game;
+- renderer profile, если он является частью проверяемого контракта игры;
 - иконки приложения и branding metadata;
 - signing references без секретов;
 - storefront metadata;

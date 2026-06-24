@@ -238,7 +238,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 
 ## Текущие границы
 
-`T-0094` закрывает наличие законченного platformer project и локального verifier-а. Общая матрица `T-0096` проверяет, что этот проект вместе с UI-heavy reference game использует один набор export targets из обычной структуры проекта. Эти задачи не закрывают:
+`T-0094` закрывает наличие законченного platformer project и локального verifier-а. Общая матрица `T-0096` проверяет, что этот проект использует полный набор export targets из обычной структуры проекта. Эти задачи не закрывают:
 
 - Tier 1 smoke/soak на reference projects (`T-0093`);
 - performance gate на reference games (`T-0102`);

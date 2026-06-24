@@ -83,7 +83,6 @@
 - [Ассеты reference games 0.1.0 Preview](examples/reference-game-assets.md)
 - [Reference game platform matrix 0.1.0 Preview](examples/reference-game-platform-matrix.md)
 - [Reference platformer 0.1.0 Preview](examples/reference-platformer.md)
-- [UI-heavy reference game 0.1.0 Preview](examples/ui-heavy-reference.md)
 
 ## Export pipeline и платформы
 
@@ -236,6 +235,7 @@
 - [Editor Capability Manifest](tooling/editor-capability-manifest.md)
 - [Editor session discovery и Editor-hosted Agent Gateway](tooling/editor-session-discovery.md)
 - [Electron2D.Tooling service boundary](tooling/tooling-service-boundary.md)
+- [VS Code запуск примеров](tooling/vscode-example-launch.md)
 
 ## UI
 

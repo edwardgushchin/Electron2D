@@ -9,7 +9,6 @@
 | `kenney-pixel-platformer` | Platformer PNG tilesheets, sprites, TMX/TSX level sources | Kenney | CC0-1.0 | <https://opengameart.org/content/pixel-platformer-0> |
 | `kenney-ui-pack` | UI PNG sprites and `kenney-future.ttf` | Kenney | CC0-1.0 | <https://opengameart.org/content/ui-pack> |
 | `kenney-rpg-sounds` | OGG sound effects | Kenney | CC0-1.0 | <https://opengameart.org/content/50-rpg-sound-effects> |
-| `electron2d` | Reference game localization and card-set metadata | Electron2D contributors | MIT | <https://github.com/edwardgushchin/Electron2D> |
 
 ## Archive Hashes
 

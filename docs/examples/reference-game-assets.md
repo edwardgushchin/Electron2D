@@ -12,13 +12,13 @@
 
 ## Контракт и ожидаемое поведение
 
-`T-0136` закрывает блокер по отсутствующим реальным ассетам для приёмочных игр `0.1.0 Preview`.
+`T-0136` закрывает блокер по отсутствующим реальным ассетам для приёмочного Platformer-проекта `0.1.0 Preview`.
 
-Эта спецификация не закрывает сами reference games. `T-0094` и `T-0095` должны создать полноценные валидные проекты `Electron2D.Editor`: с `project.e2d.json`, `.csproj`, main scene, project settings, Input Map, export presets, импортируемыми resources, scripts и `.electron2d/tasks/**` metadata. Успешная проверка ассетов означает только готовность исходных файлов ресурсов; она не заменяет Editor project validation, открытие проекта в Editor, save/reopen cycle, run/debug/export workflow и platform packaging checks.
+Эта спецификация не закрывает сам reference game. `T-0094` должен создать полноценный валидный проект `Electron2D.Editor`: с `.e2d`, `.csproj`, main scene, project settings, Input Map, export presets, импортируемыми resources, scripts и `.electron2d/tasks/**` metadata. Успешная проверка ассетов означает только готовность исходных файлов ресурсов; она не заменяет Editor project validation, открытие проекта в Editor, save/reopen cycle, run/debug/export workflow и platform packaging checks.
 
 ## Цель
 
-Reference platformer и UI-heavy reference game должны получать локально поставляемые файлы ассетов с понятной лицензией, проверяемым manifest и без сетевого скачивания во время build, test или release archive packaging.
+Reference platformer должен получать локально поставляемые файлы ассетов с понятной лицензией, проверяемым manifest и без сетевого скачивания во время build, test или release archive packaging. Отдельные ассеты второго reference project больше не входят в активный preview/release contract.
 
 Набор ассетов не должен состоять из placeholder-изображений, синтетических звуков, test-only resources или временных файлов из исходных архивов.
 
@@ -32,7 +32,6 @@ Reference platformer и UI-heavy reference game должны получать л
 - `LICENSES.md` - человекочитаемые license metadata по каждому внешнему source.
 - `README.md` - правила использования и локальная команда проверки.
 - ассеты для `reference-platformer`: tileset/characters/background sprites, отдельные sprites, source level files, OGG-звуки движения/шага/взаимодействия, общий TTF font и UI sprites.
-- ассеты для `ui-heavy-reference`: UI sprites, OGG-звуки взаимодействия/награды, общий TTF font, localization JSON и game data JSON.
 
 ## Источники и лицензии
 
@@ -57,15 +56,15 @@ Verifier `tools\Verify-ReferenceGameAssets.ps1` должен:
 - проверять, что все shipped files находятся внутри `data/assets/reference-games/`;
 - проверять size и SHA-256 каждого asset file;
 - проверять базовые сигнатуры PNG, OGG и TTF;
-- проверять JSON/XML parse для localization, game data и source tilemap files;
+- проверять JSON/XML parse для source tilemap files;
 - запрещать `.url`, `.sfk`, cache/temp/helper files;
-- проверять, что каждое обязательное role присутствует для `reference-platformer` и `ui-heavy-reference`;
+- проверять, что каждое обязательное role присутствует для `reference-platformer`;
 - падать, если в asset directory есть файл, не описанный в manifest, кроме `manifest.json`, `README.md` и `LICENSES.md`.
 
 ## Acceptance
 
-- `T-0094` и `T-0095` можно разблокировать только после green verifier и фактического появления required roles для обеих игр.
-- `T-0093` и `T-0102` остаются blocked, пока сами reference games не реализованы поверх этих ассетов.
+- `T-0094` можно разблокировать только после green verifier и фактического появления required roles для `reference-platformer`.
+- `T-0093` и `T-0102` остаются blocked, пока reference game не реализован поверх этих ассетов.
 - Любое изменение asset file требует обновить `bytes`, `sha256`, роли и license metadata в manifest.
 
 ## Фактическое состояние, ограничения и проверки
@@ -81,7 +80,6 @@ Verifier `tools\Verify-ReferenceGameAssets.ps1` должен:
 - `data/assets/reference-games/README.md` - локальные правила использования набора.
 - `data/assets/reference-games/platformer/` - графика, source tilemap files и OGG-звуки для reference platformer.
 - `data/assets/reference-games/shared/` - общий TTF font и UI sprites.
-- `data/assets/reference-games/ui-heavy/` - UI-графика, OGG-звуки, localization JSON и card-set JSON.
 
 ## Источники
 
@@ -90,8 +88,6 @@ Verifier `tools\Verify-ReferenceGameAssets.ps1` должен:
 - `kenney-pixel-platformer` - platformer tilesheets, sprites и source tilemap files.
 - `kenney-ui-pack` - UI sprites и `kenney-future.ttf`.
 - `kenney-rpg-sounds` - OGG sound effects.
-
-Project-owned localization и card-set metadata помечены source id `electron2d` и наследуют MIT License проекта.
 
 ## Проверка
 
@@ -109,14 +105,14 @@ Verifier проверяет:
 - license metadata для всех sources;
 - наличие и hash каждого файла;
 - базовые сигнатуры PNG/OGG/TTF;
-- parse JSON/XML для локализации, card-set и tilemap source files;
+- parse JSON/XML для tilemap source files;
 - отсутствие `.url`, `.sfk`, cache/temp/helper files;
-- required roles для `reference-platformer` и `ui-heavy-reference`.
+- required roles для `reference-platformer`.
 
 ## Текущий статус
 
-`T-0136` закрыл asset blocker для `T-0094` и `T-0095`: оба reference examples получили локальные визуальные, звуковые, font/UI и data/localization resources.
+`T-0136` закрыл asset blocker для `T-0094`: Platformer получил локальные визуальные, звуковые и font/UI resources.
 
 `T-0094` реализовал `examples/reference-platformer/` как валидный проект `Electron2D.Editor` поверх этих ассетов.
 
-`T-0095` реализовал `examples/ui-heavy-reference/` как валидный проект `Electron2D.Editor` поверх `ui-heavy/` и `shared/` ассетов. `T-0093` и `T-0102` остаются отдельными задачами: smoke/soak checks и performance gate должны проверяться поверх настоящих reference projects, а не временных fixtures.
+`T-0211` удаляет второй reference project и его отдельный asset subset из активного preview/release contract. `T-0093` и `T-0102` остаются отдельными задачами: smoke/soak checks и performance gate должны проверяться поверх настоящего reference project, а не временных fixtures.

@@ -158,7 +158,7 @@ foreach ($source in @($manifest.sources)) {
     }
 }
 
-foreach ($requiredSource in @('kenney-pixel-platformer', 'kenney-ui-pack', 'kenney-rpg-sounds', 'electron2d')) {
+foreach ($requiredSource in @('kenney-pixel-platformer', 'kenney-ui-pack', 'kenney-rpg-sounds')) {
     if (-not $sourceIds.Contains($requiredSource)) {
         throw "Reference game asset manifest is missing required source: $requiredSource"
     }

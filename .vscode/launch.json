@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Electron2D: Platformer",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Electron2D: build CLI",
+      "program": "${workspaceFolder}/src/Electron2D.Cli/bin/Debug/net10.0/e2d.dll",
+      "windows": {
+        "program": "${workspaceFolder}/src/Electron2D.Cli/bin/Debug/net10.0/e2d.exe"
+      },
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/examples/reference-platformer"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "stopAtEntry": false
+    }
+  ]
+}

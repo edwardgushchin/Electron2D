@@ -9,7 +9,7 @@
                           "documentation":  [
                                                 {
                                                     "path":  "docs/README.md",
-                                                    "sha256":  "7a1da5d2e30b92e4263bb5c9b845de49ecdb7e8ccb2ec6e8e6c4bc1eb7ef1335"
+                                                    "sha256":  "202822ffea184d4267ef7444dc60e5c2c1e4f60fa8e1c6e7ea601ecae07f7da9"
                                                 },
                                                 {
                                                     "path":  "docs/animation/animation-player-tracks.md",
@@ -185,19 +185,15 @@
                                                 },
                                                 {
                                                     "path":  "docs/examples/reference-game-assets.md",
-                                                    "sha256":  "10b67731f85d50204acf1a296625c4ff536a5a06fb5ee00111bff05321144417"
+                                                    "sha256":  "decbd24944f063440b87ea67319e5f1a87671936fcaff6fd5cc39ce999299737"
                                                 },
                                                 {
                                                     "path":  "docs/examples/reference-game-platform-matrix.md",
-                                                    "sha256":  "a5e858becb472b902876d9714883a2b45ef07ec8ae1425c7ed24a7804c9becdf"
+                                                    "sha256":  "180bdc1e7826c9e803977b13dacfcf979dcd18fcd1c6a80edfc28d3a613be5b7"
                                                 },
                                                 {
                                                     "path":  "docs/examples/reference-platformer.md",
-                                                    "sha256":  "abd8b0a85fd045f7a1f40827c4790ac893064717c26e944627f68d148cc3eb87"
-                                                },
-                                                {
-                                                    "path":  "docs/examples/ui-heavy-reference.md",
-                                                    "sha256":  "7d5ae1d63eb9ee3cbe55cefde70ff4c41a264e0aab64959dc97c047251a1230c"
+                                                    "sha256":  "e1f9c89cd25f22a2c7015b10107fffd50bdd4d3b3d00c52ed1454218865a3810"
                                                 },
                                                 {
                                                     "path":  "docs/export/android-arm64-export.md",
@@ -417,7 +413,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/releases/0.1.0-preview.md",
-                                                    "sha256":  "bdaae12c5a8a083d37dd9aa0f816c082a4a498cb561dcd36404fffc62fe81a26"
+                                                    "sha256":  "88fdbfd4049fed6ca1a91ba95c239be0ff982574dd0080a4f16c0265984404a6"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -533,7 +529,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/runtime/project-runtime-runner.md",
-                                                    "sha256":  "5b901952307a1b38014d6ffafff13673827a55e663487cb0785996ed5c46c637"
+                                                    "sha256":  "b774eb0c6738a583d85c1e327f8a5a407aea1e61337414e8c2b7594847a10984"
                                                 },
                                                 {
                                                     "path":  "docs/runtime/runtime-debug-bridge.md",
@@ -602,6 +598,10 @@
                                                 {
                                                     "path":  "docs/tooling/tooling-service-boundary.md",
                                                     "sha256":  "95396b7d78cc21bc216a504d4bfbaf165d9ca18a7356d2e84566b1c5cc677797"
+                                                },
+                                                {
+                                                    "path":  "docs/tooling/vscode-example-launch.md",
+                                                    "sha256":  "dd70374d35834267a7b6cb6e86b7a53013a49d874421d46037f4268c4bbcd8c1"
                                                 },
                                                 {
                                                     "path":  "docs/ui/basic-controls.md",
@@ -730,7 +730,6 @@
                                                         "docs/examples/reference-game-assets.md",
                                                         "docs/examples/reference-game-platform-matrix.md",
                                                         "docs/examples/reference-platformer.md",
-                                                        "docs/examples/ui-heavy-reference.md",
                                                         "docs/export/android-arm64-export.md",
                                                         "docs/export/export-guide.md",
                                                         "docs/export/export-preset-model.md",
@@ -832,6 +831,7 @@
                                                         "docs/tooling/editor-capability-manifest.md",
                                                         "docs/tooling/editor-session-discovery.md",
                                                         "docs/tooling/tooling-service-boundary.md",
+                                                        "docs/tooling/vscode-example-launch.md",
                                                         "docs/ui/basic-controls.md",
                                                         "docs/ui/containers.md",
                                                         "docs/ui/control-layout-core.md",
@@ -75512,35 +75512,6 @@
                                       ]
                     },
                     {
-                        "id":  "doc:examples.ui-heavy-reference",
-                        "kind":  "documentation",
-                        "title":  "UI-heavy reference game 0.1.0 Preview",
-                        "summary":  "Обновлено: 2026-06-23.",
-                        "keywords":  [
-                                         "0",
-                                         "06",
-                                         "1",
-                                         "2026",
-                                         "23",
-                                         "docs",
-                                         "examples",
-                                         "game",
-                                         "heavy",
-                                         "md",
-                                         "preview",
-                                         "reference",
-                                         "ui"
-                                     ],
-                        "sourcePath":  "docs/examples/ui-heavy-reference.md",
-                        "sourceId":  "doc:examples.ui-heavy-reference",
-                        "audiences":  [
-                                          "human",
-                                          "ai",
-                                          "cli",
-                                          "wiki"
-                                      ]
-                    },
-                    {
                         "id":  "doc:export.android-arm64-export",
                         "kind":  "documentation",
                         "title":  "Android arm64 export",
@@ -77061,14 +77032,14 @@
                         "id":  "doc:releases.0.1.0-preview",
                         "kind":  "documentation",
                         "title":  "Electron2D 0.1.0 Preview",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "0",
                                          "06",
                                          "1",
                                          "2",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "d",
                                          "docs",
                                          "electron",
@@ -77846,11 +77817,11 @@
                         "id":  "doc:runtime.project-runtime-runner",
                         "kind":  "documentation",
                         "title":  "Project runtime runner",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "docs",
                                          "md",
                                          "project",
@@ -78324,6 +78295,33 @@
                                      ],
                         "sourcePath":  "docs/tooling/tooling-service-boundary.md",
                         "sourceId":  "doc:tooling.tooling-service-boundary",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:tooling.vscode-example-launch",
+                        "kind":  "documentation",
+                        "title":  "VS Code запуск примеров",
+                        "summary":  "Обновлено: 2026-06-24.",
+                        "keywords":  [
+                                         "06",
+                                         "2026",
+                                         "24",
+                                         "code",
+                                         "docs",
+                                         "example",
+                                         "launch",
+                                         "md",
+                                         "tooling",
+                                         "vs",
+                                         "vscode"
+                                     ],
+                        "sourcePath":  "docs/tooling/vscode-example-launch.md",
+                        "sourceId":  "doc:tooling.vscode-example-launch",
                         "audiences":  [
                                           "human",
                                           "ai",
