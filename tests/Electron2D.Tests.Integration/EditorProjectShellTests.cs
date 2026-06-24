@@ -97,6 +97,7 @@ public sealed class EditorProjectShellTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts()
     {
         var root = FindRepositoryRoot();
@@ -206,6 +207,7 @@ public sealed class EditorProjectShellTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task EditorWindowStartupSmokeLoadsProjectPassedAsE2DFileArgument()
     {
         var root = FindRepositoryRoot();

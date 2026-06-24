@@ -141,17 +141,7 @@ public sealed class AgentAcceptanceBenchmarkTests
         {
             Assert.True(File.Exists(runnerPath), $"Missing agent acceptance benchmark runner: {runnerPath}");
 
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "powershell",
-                WorkingDirectory = root,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
-            };
-            startInfo.ArgumentList.Add("-ExecutionPolicy");
-            startInfo.ArgumentList.Add("Bypass");
-            startInfo.ArgumentList.Add("-File");
-            startInfo.ArgumentList.Add(runnerPath);
+            var startInfo = PowerShellProcess.CreateScriptStartInfo(root, runnerPath);
             startInfo.ArgumentList.Add("-DryRun");
             startInfo.ArgumentList.Add("-OutputDirectory");
             startInfo.ArgumentList.Add(outputRoot);

@@ -32,6 +32,7 @@ namespace Electron2D.Tests.Integration;
 public sealed class EditorProjectSettingsUiTests
 {
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task ProjectSettingsSmokeWritesProjectAndExportSettingsThroughRealWindowUi()
     {
         var root = FindRepositoryRoot();

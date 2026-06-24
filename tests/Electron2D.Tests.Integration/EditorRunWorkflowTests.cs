@@ -30,6 +30,7 @@ namespace Electron2D.Tests.Integration;
 public sealed class EditorRunWorkflowTests
 {
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task RunWorkflowSmokeRunBuildsRunsStopsAndReportsDiagnostics()
     {
         var root = FindRepositoryRoot();

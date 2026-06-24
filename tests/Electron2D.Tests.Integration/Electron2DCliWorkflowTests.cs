@@ -1264,128 +1264,270 @@ public sealed class Electron2DCliWorkflowTests
 
     private static string CreateFakeAdb(string projectRoot)
     {
-        var path = Path.Combine(projectRoot, "fake-adb.cmd");
         var logPath = Path.Combine(projectRoot, "fake-adb-args.txt");
-        File.WriteAllText(
-            path,
-            $$"""
-            @echo off
-            echo %*>>"{{logPath}}"
-            set ARGS=%*
-            if "%1"=="devices" (
-              echo List of devices attached
-              echo emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:1
-              exit /b 0
-            )
-            if "%1"=="-s" (
-              if "%3"=="install" (
-                echo Success
-                exit /b 0
-              )
-              if "%3"=="logcat" (
-                echo I/Electron2D: E2D_SMOKE_LAUNCH_READY
-                echo I/Electron2D: E2D_SMOKE_RENDER_READY
-                echo I/Electron2D: E2D_SMOKE_TOUCH_READY
-                echo I/Electron2D: E2D_SMOKE_PAUSE_READY
-                echo I/Electron2D: E2D_SMOKE_RESUME_READY
-                echo I/Electron2D: E2D_SMOKE_ORIENTATION_READY
-                echo I/Electron2D: E2D_SMOKE_SAFE_AREA_READY
-                echo I/Electron2D: E2D_SMOKE_AUDIO_READY
-                echo I/Electron2D: E2D_SMOKE_RESOURCES_READY
-                echo I/Electron2D: E2D_SMOKE_FILESYSTEM_READY
-                echo I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY
-                echo I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY
-                echo I/Electron2D: E2D_SMOKE_SHUTDOWN_READY
-                exit /b 0
-              )
-              if "%3"=="shell" (
-                if "%4"=="getprop" (
-                  echo x86_64
+        if (OperatingSystem.IsWindows())
+        {
+            var path = Path.Combine(projectRoot, "fake-adb.cmd");
+            File.WriteAllText(
+                path,
+                $$"""
+                @echo off
+                echo %*>>"{{logPath}}"
+                set ARGS=%*
+                if "%1"=="devices" (
+                  echo List of devices attached
+                  echo emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:1
                   exit /b 0
                 )
-                if "%4"=="input" (
-                  exit /b 1
+                if "%1"=="-s" (
+                  if "%3"=="install" (
+                    echo Success
+                    exit /b 0
+                  )
+                  if "%3"=="logcat" (
+                    echo I/Electron2D: E2D_SMOKE_LAUNCH_READY
+                    echo I/Electron2D: E2D_SMOKE_RENDER_READY
+                    echo I/Electron2D: E2D_SMOKE_TOUCH_READY
+                    echo I/Electron2D: E2D_SMOKE_PAUSE_READY
+                    echo I/Electron2D: E2D_SMOKE_RESUME_READY
+                    echo I/Electron2D: E2D_SMOKE_ORIENTATION_READY
+                    echo I/Electron2D: E2D_SMOKE_SAFE_AREA_READY
+                    echo I/Electron2D: E2D_SMOKE_AUDIO_READY
+                    echo I/Electron2D: E2D_SMOKE_RESOURCES_READY
+                    echo I/Electron2D: E2D_SMOKE_FILESYSTEM_READY
+                    echo I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY
+                    echo I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY
+                    echo I/Electron2D: E2D_SMOKE_SHUTDOWN_READY
+                    exit /b 0
+                  )
+                  if "%3"=="shell" (
+                    if "%4"=="getprop" (
+                      echo x86_64
+                      exit /b 0
+                    )
+                    if "%4"=="input" (
+                      exit /b 1
+                    )
+                    exit /b 0
+                  )
                 )
+                echo OK
                 exit /b 0
-              )
-            )
-            echo OK
-            exit /b 0
+                """,
+                System.Text.Encoding.ASCII);
+            return path;
+        }
+
+        var unixPath = Path.Combine(projectRoot, "fake-adb.sh");
+        File.WriteAllText(
+            unixPath,
+            $$"""
+            #!/usr/bin/env sh
+            printf '%s\n' "$*" >> "{{logPath}}"
+            if [ "$1" = "devices" ]; then
+              echo "List of devices attached"
+              echo "emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:1"
+              exit 0
+            fi
+            if [ "$1" = "-s" ]; then
+              if [ "$3" = "install" ]; then
+                echo "Success"
+                exit 0
+              fi
+              if [ "$3" = "logcat" ]; then
+                echo "I/Electron2D: E2D_SMOKE_LAUNCH_READY"
+                echo "I/Electron2D: E2D_SMOKE_RENDER_READY"
+                echo "I/Electron2D: E2D_SMOKE_TOUCH_READY"
+                echo "I/Electron2D: E2D_SMOKE_PAUSE_READY"
+                echo "I/Electron2D: E2D_SMOKE_RESUME_READY"
+                echo "I/Electron2D: E2D_SMOKE_ORIENTATION_READY"
+                echo "I/Electron2D: E2D_SMOKE_SAFE_AREA_READY"
+                echo "I/Electron2D: E2D_SMOKE_AUDIO_READY"
+                echo "I/Electron2D: E2D_SMOKE_RESOURCES_READY"
+                echo "I/Electron2D: E2D_SMOKE_FILESYSTEM_READY"
+                echo "I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY"
+                echo "I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY"
+                echo "I/Electron2D: E2D_SMOKE_SHUTDOWN_READY"
+                exit 0
+              fi
+              if [ "$3" = "shell" ]; then
+                if [ "$4" = "getprop" ]; then
+                  echo "x86_64"
+                  exit 0
+                fi
+                if [ "$4" = "input" ]; then
+                  exit 1
+                fi
+                exit 0
+              fi
+            fi
+            echo "OK"
+            exit 0
             """,
             System.Text.Encoding.ASCII);
-        return path;
+        MakeExecutable(unixPath);
+        return unixPath;
     }
 
     private static string CreateFakeAdbWithPhoneAndEmulator(string projectRoot)
     {
-        var path = Path.Combine(projectRoot, "fake-adb-multiple.cmd");
         var logPath = Path.Combine(projectRoot, "fake-adb-args.txt");
-        File.WriteAllText(
-            path,
-            $$"""
-            @echo off
-            echo %*>>"{{logPath}}"
-            if "%1"=="devices" (
-              echo List of devices attached
-              echo 641d225b0510 device product:eos model:22011119UY device:eos transport_id:1
-              echo emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:2
-              exit /b 0
-            )
-            if "%1"=="-s" (
-              if "%3"=="install" (
-                echo Success
-                exit /b 0
-              )
-              if "%3"=="logcat" (
-                echo I/Electron2D: E2D_SMOKE_LAUNCH_READY
-                echo I/Electron2D: E2D_SMOKE_RENDER_READY
-                echo I/Electron2D: E2D_SMOKE_TOUCH_READY
-                echo I/Electron2D: E2D_SMOKE_PAUSE_READY
-                echo I/Electron2D: E2D_SMOKE_RESUME_READY
-                echo I/Electron2D: E2D_SMOKE_ORIENTATION_READY
-                echo I/Electron2D: E2D_SMOKE_SAFE_AREA_READY
-                echo I/Electron2D: E2D_SMOKE_AUDIO_READY
-                echo I/Electron2D: E2D_SMOKE_RESOURCES_READY
-                echo I/Electron2D: E2D_SMOKE_FILESYSTEM_READY
-                echo I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY
-                echo I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY
-                echo I/Electron2D: E2D_SMOKE_SHUTDOWN_READY
-                exit /b 0
-              )
-              if "%3"=="shell" (
-                if "%4"=="getprop" (
-                  if "%2"=="emulator-5554" (
-                    echo x86_64
-                  ) else (
-                    echo arm64-v8a
-                  )
+        if (OperatingSystem.IsWindows())
+        {
+            var path = Path.Combine(projectRoot, "fake-adb-multiple.cmd");
+            File.WriteAllText(
+                path,
+                $$"""
+                @echo off
+                echo %*>>"{{logPath}}"
+                if "%1"=="devices" (
+                  echo List of devices attached
+                  echo 641d225b0510 device product:eos model:22011119UY device:eos transport_id:1
+                  echo emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:2
                   exit /b 0
                 )
+                if "%1"=="-s" (
+                  if "%3"=="install" (
+                    echo Success
+                    exit /b 0
+                  )
+                  if "%3"=="logcat" (
+                    echo I/Electron2D: E2D_SMOKE_LAUNCH_READY
+                    echo I/Electron2D: E2D_SMOKE_RENDER_READY
+                    echo I/Electron2D: E2D_SMOKE_TOUCH_READY
+                    echo I/Electron2D: E2D_SMOKE_PAUSE_READY
+                    echo I/Electron2D: E2D_SMOKE_RESUME_READY
+                    echo I/Electron2D: E2D_SMOKE_ORIENTATION_READY
+                    echo I/Electron2D: E2D_SMOKE_SAFE_AREA_READY
+                    echo I/Electron2D: E2D_SMOKE_AUDIO_READY
+                    echo I/Electron2D: E2D_SMOKE_RESOURCES_READY
+                    echo I/Electron2D: E2D_SMOKE_FILESYSTEM_READY
+                    echo I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY
+                    echo I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY
+                    echo I/Electron2D: E2D_SMOKE_SHUTDOWN_READY
+                    exit /b 0
+                  )
+                  if "%3"=="shell" (
+                    if "%4"=="getprop" (
+                      if "%2"=="emulator-5554" (
+                        echo x86_64
+                      ) else (
+                        echo arm64-v8a
+                      )
+                      exit /b 0
+                    )
+                    exit /b 0
+                  )
+                )
+                echo OK
                 exit /b 0
-              )
-            )
-            echo OK
-            exit /b 0
+                """,
+                System.Text.Encoding.ASCII);
+            return path;
+        }
+
+        var unixPath = Path.Combine(projectRoot, "fake-adb-multiple.sh");
+        File.WriteAllText(
+            unixPath,
+            $$"""
+            #!/usr/bin/env sh
+            printf '%s\n' "$*" >> "{{logPath}}"
+            if [ "$1" = "devices" ]; then
+              echo "List of devices attached"
+              echo "641d225b0510 device product:eos model:22011119UY device:eos transport_id:1"
+              echo "emulator-5554 device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:2"
+              exit 0
+            fi
+            if [ "$1" = "-s" ]; then
+              if [ "$3" = "install" ]; then
+                echo "Success"
+                exit 0
+              fi
+              if [ "$3" = "logcat" ]; then
+                echo "I/Electron2D: E2D_SMOKE_LAUNCH_READY"
+                echo "I/Electron2D: E2D_SMOKE_RENDER_READY"
+                echo "I/Electron2D: E2D_SMOKE_TOUCH_READY"
+                echo "I/Electron2D: E2D_SMOKE_PAUSE_READY"
+                echo "I/Electron2D: E2D_SMOKE_RESUME_READY"
+                echo "I/Electron2D: E2D_SMOKE_ORIENTATION_READY"
+                echo "I/Electron2D: E2D_SMOKE_SAFE_AREA_READY"
+                echo "I/Electron2D: E2D_SMOKE_AUDIO_READY"
+                echo "I/Electron2D: E2D_SMOKE_RESOURCES_READY"
+                echo "I/Electron2D: E2D_SMOKE_FILESYSTEM_READY"
+                echo "I/Electron2D: E2D_SMOKE_LOGO_BLACK_READY"
+                echo "I/Electron2D: E2D_SMOKE_RENDERER_FALLBACK_READY"
+                echo "I/Electron2D: E2D_SMOKE_SHUTDOWN_READY"
+                exit 0
+              fi
+              if [ "$3" = "shell" ]; then
+                if [ "$4" = "getprop" ]; then
+                  if [ "$2" = "emulator-5554" ]; then
+                    echo "x86_64"
+                  else
+                    echo "arm64-v8a"
+                  fi
+                  exit 0
+                fi
+                exit 0
+              fi
+            fi
+            echo "OK"
+            exit 0
             """,
             System.Text.Encoding.ASCII);
-        return path;
+        MakeExecutable(unixPath);
+        return unixPath;
     }
 
     private static string CreateFakeAdbWithoutDevices(string projectRoot)
     {
-        var path = Path.Combine(projectRoot, "fake-adb-empty.cmd");
+        if (OperatingSystem.IsWindows())
+        {
+            var path = Path.Combine(projectRoot, "fake-adb-empty.cmd");
+            File.WriteAllText(
+                path,
+                """
+                @echo off
+                if "%1"=="devices" (
+                  echo List of devices attached
+                  exit /b 0
+                )
+                exit /b 0
+                """,
+                System.Text.Encoding.ASCII);
+            return path;
+        }
+
+        var unixPath = Path.Combine(projectRoot, "fake-adb-empty.sh");
         File.WriteAllText(
-            path,
+            unixPath,
             """
-            @echo off
-            if "%1"=="devices" (
-              echo List of devices attached
-              exit /b 0
-            )
-            exit /b 0
+            #!/usr/bin/env sh
+            if [ "$1" = "devices" ]; then
+              echo "List of devices attached"
+              exit 0
+            fi
+            exit 0
             """,
             System.Text.Encoding.ASCII);
-        return path;
+        MakeExecutable(unixPath);
+        return unixPath;
+    }
+
+    private static void MakeExecutable(string path)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode(
+                path,
+                UnixFileMode.UserRead |
+                UnixFileMode.UserWrite |
+                UnixFileMode.UserExecute |
+                UnixFileMode.GroupRead |
+                UnixFileMode.GroupExecute |
+                UnixFileMode.OtherRead |
+                UnixFileMode.OtherExecute);
+        }
     }
 
     private static void AssertAgentReadyProject(string projectRoot, string rendererProfile)

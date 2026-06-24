@@ -153,17 +153,7 @@ public sealed class LeakVerificationTests
 
         Assert.True(File.Exists(verifierPath), $"Missing leak verification verifier: {verifierPath}");
 
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = "powershell",
-            WorkingDirectory = root,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
-        };
-        startInfo.ArgumentList.Add("-ExecutionPolicy");
-        startInfo.ArgumentList.Add("Bypass");
-        startInfo.ArgumentList.Add("-File");
-        startInfo.ArgumentList.Add(verifierPath);
+        var startInfo = PowerShellProcess.CreateScriptStartInfo(root, verifierPath);
 
         using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start leak verifier.");
         var outputTask = process.StandardOutput.ReadToEndAsync();

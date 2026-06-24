@@ -32,6 +32,7 @@ public sealed class RuntimeHostTests
     private const string RgbaPng2x2Base64 = "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFUlEQVR4nGP4z8DwHwhB4D8QMDQAAD1VB3peF7pjAAAAAElFTkSuQmCC";
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public void RuntimeHostRunsSceneCallbacksPresentsWindowAndCapturesScreenshot()
     {
         var screenshotPath = Path.Combine(
@@ -86,6 +87,7 @@ public sealed class RuntimeHostTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public void RuntimeHostRendersImageTexturePixelsInScreenshot()
     {
         var directory = Path.Combine(
@@ -128,6 +130,7 @@ public sealed class RuntimeHostTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public void RuntimeHostSetsRootViewportSizeBeforeReady()
     {
         var scene = new ViewportSizeProbeScene();

@@ -291,6 +291,7 @@ public sealed class ReferencePlatformerProjectTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task ReferencePlatformerPlayableScriptRunsGameLoop()
     {
         var root = FindRepositoryRoot();
@@ -357,6 +358,7 @@ public sealed class ReferencePlatformerProjectTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task ReferencePlatformerIdleScriptKeepsPlayerGrounded()
     {
         var root = FindRepositoryRoot();

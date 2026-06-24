@@ -32,6 +32,7 @@ namespace Electron2D.Tests.Integration;
 public sealed class EditorSpecializedEditorsTests
 {
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task SpecializedEditorsSmokeWritesRuntimeResourcesAndShowsRealWindowUi()
     {
         var root = FindRepositoryRoot();

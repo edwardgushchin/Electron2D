@@ -267,6 +267,7 @@ public sealed class ScriptDebugToolingParityTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task EditorScriptDebugToolingSmokeWritesVisibleScriptDebugAndAgentWorkspaceArtifacts()
     {
         var root = FindRepositoryRoot();

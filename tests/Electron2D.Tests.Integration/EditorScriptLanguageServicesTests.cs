@@ -32,6 +32,7 @@ namespace Electron2D.Tests.Integration;
 public sealed class EditorScriptLanguageServicesTests
 {
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task ScriptLanguageServicesSmokeRunWritesRoslynModelAndVisualAcceptanceArtifacts()
     {
         var root = FindRepositoryRoot();
