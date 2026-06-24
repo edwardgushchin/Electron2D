@@ -30,13 +30,21 @@
   <a href="#license">License</a>
 </p>
 
-## About
+<p align="center">
+  ⭐ <a href="https://github.com/edwardgushchin/Electron2D">Star us on GitHub</a> - it motivates us a lot!
+</p>
+
+<a id="about"></a>
+
+## 🧭 About
 
 Electron2D is an agent-native, cross-platform 2D game engine for .NET.
 
 Developers and local coding agents work on the same scenes, scripts, resources, diagnostics and undo history through the editor.
 
-## Features
+<a id="features"></a>
+
+## ✨ Features
 
 - **Agent-native workflow** - Local coding agents can inspect and edit scenes, scripts, resources and project settings through the same project model as the Editor. Their changes, diagnostics and undo history remain visible and reversible.
 - **Trello-style task board** - Coordinate work through shared task columns, cards, assignees, labels, review states and editor-visible project context.
@@ -48,17 +56,22 @@ Developers and local coding agents work on the same scenes, scripts, resources, 
 - **Asset workflow** - Textures, fonts, audio, shaders and resource importing.
 - **Cross-platform runtime** - Build and run games on Windows, Linux, macOS and Android. iOS is planned as a future runtime target.
 
-## Platforms
+<a id="platforms"></a>
 
-| Platform | Status |
-| --- | --- |
-| Windows | Editor and runtime target |
-| Linux | Editor and runtime target |
-| macOS | Editor and runtime target |
-| Android | Runtime target |
-| iOS | Future runtime target |
+## 🖥️ Platforms
 
-## Installation
+| Platform | Editor | Runtime |
+| --- | --- | --- |
+| Windows | ✅ Done | ✅ Done |
+| Linux | ✅ Done | ✅ Done |
+| macOS | ✅ Done | ✅ Done |
+| Android | ❌ Not planned | ✅ Done |
+| iOS | ❌ Not planned | 🕓 Planned |
+| Web | ❌ Not planned | 🕓 Planned |
+
+<a id="installation"></a>
+
+## 📦 Installation
 
 Clone the repository and build the solution:
 
@@ -70,7 +83,9 @@ dotnet build src/Electron2D.sln -c Release
 
 The runtime package version is `0.1.0-preview`.
 
-## Quick Start
+<a id="quick-start"></a>
+
+## 🚀 Quick Start
 
 Run the editor:
 
@@ -78,24 +93,34 @@ Run the editor:
 dotnet run --project src/Electron2D.Editor/Electron2D.Editor.csproj -c Release
 ```
 
-## Documentation
+<a id="documentation"></a>
+
+## 📚 Documentation
 
 Documentation, guides and API reference are available in the [Electron2D GitHub Wiki](https://github.com/edwardgushchin/Electron2D/wiki).
 
-## Examples
+<a id="examples"></a>
+
+## 🎮 Examples
 
 - **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A complete 2D platformer built with Electron2D.
 
-## Feedback and Contributing
+<a id="feedback-and-contributing"></a>
+
+## 💬 Feedback and Contributing
 
 Use [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) for bug reports, feature requests and design feedback. [Pull requests](https://github.com/edwardgushchin/Electron2D/pulls) are welcome once the related behavior is covered by documentation and tests.
 
 Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Do not include secrets, signing keys, private data or credentials in issues, examples, screenshots or build artifacts.
 
-## Contributors
+<a id="contributors"></a>
+
+## 👥 Contributors
 
 Electron2D is maintained by Eduard Gushchin. See the [contributors graph](https://github.com/edwardgushchin/Electron2D/graphs/contributors) for repository contributors.
 
-## License
+<a id="license"></a>
+
+## 📄 License
 
 Electron2D is distributed under the [MIT License](LICENSE).
