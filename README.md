@@ -54,7 +54,7 @@ Developers and local coding agents work on the same scenes, scripts, resources, 
 - **2D rendering** - Sprites, cameras, viewports, text, shaders and immediate drawing.
 - **2D physics** - Bodies, areas, collision shapes, raycasts and fixed-step simulation.
 - **Asset workflow** - Textures, fonts, audio, shaders and resource importing.
-- **Cross-platform runtime** - Build and run games on Windows, Linux, macOS and Android. iOS is planned as a future runtime target.
+- **Cross-platform runtime** - Build and run games on Windows, Linux, macOS and Android. iOS and Web are planned as future runtime targets.
 
 <a id="platforms"></a>
 

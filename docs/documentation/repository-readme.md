@@ -67,7 +67,7 @@ Features должны описывать пользовательские воз
 - `project-local metadata`;
 - `primary runtime targets for the preview line`.
 
-Cross-platform runtime должен формулироваться прямо: `Build and run games on Windows, Linux, macOS and Android. iOS is planned as a future runtime target.`
+Cross-platform runtime должен формулироваться прямо: `Build and run games on Windows, Linux, macOS and Android. iOS and Web are planned as future runtime targets.`
 
 ## Platforms
 
