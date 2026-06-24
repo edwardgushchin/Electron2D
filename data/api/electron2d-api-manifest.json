@@ -19,7 +19,7 @@
   },
   "statusSummary": {
     "supported": 48,
-    "partial": 124,
+    "partial": 126,
     "experimental": 1,
     "planned": 0
   },
@@ -12539,6 +12539,143 @@
       ]
     },
     {
+      "id": "electron2d://api/type/Electron2D.ImageTexture",
+      "fullName": "Electron2D.ImageTexture",
+      "namespace": "Electron2D",
+      "name": "ImageTexture",
+      "kind": "class",
+      "baseType": "Electron2D.Texture2D",
+      "interfaces": [],
+      "xmlDocId": "T:Electron2D.ImageTexture",
+      "summary": "Provides an immutable image-backed 2D texture loaded from a PNG file.",
+      "category": "Rendering",
+      "profile": {
+        "name": "Electron2D 0.1.0 2D",
+        "status": "partial",
+        "parity": "not_verified",
+        "outOfProfile": true,
+        "godotReference": "ImageTexture",
+        "notes": "Image-backed texture resource loaded from PNG files or mounted res:// project resources."
+      },
+      "members": [
+        {
+          "id": "electron2d://api/member/Electron2D.ImageTexture/Method/GetHeight%28%29",
+          "declaringType": "Electron2D.ImageTexture",
+          "name": "GetHeight",
+          "kind": "Method",
+          "signature": "public System.Int32 GetHeight()()",
+          "returnType": "System.Int32",
+          "parameters": [],
+          "xmlDocId": "M:Electron2D.ImageTexture.GetHeight",
+          "summary": "Gets the decoded image height in pixels.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "ImageTexture",
+            "notes": "Image-backed texture resource loaded from PNG files or mounted res:// project resources."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ImageTexture/Method/GetWidth%28%29",
+          "declaringType": "Electron2D.ImageTexture",
+          "name": "GetWidth",
+          "kind": "Method",
+          "signature": "public System.Int32 GetWidth()()",
+          "returnType": "System.Int32",
+          "parameters": [],
+          "xmlDocId": "M:Electron2D.ImageTexture.GetWidth",
+          "summary": "Gets the decoded image width in pixels.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "ImageTexture",
+            "notes": "Image-backed texture resource loaded from PNG files or mounted res:// project resources."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ImageTexture/Method/HasAlpha%28%29",
+          "declaringType": "Electron2D.ImageTexture",
+          "name": "HasAlpha",
+          "kind": "Method",
+          "signature": "public System.Boolean HasAlpha()()",
+          "returnType": "System.Boolean",
+          "parameters": [],
+          "xmlDocId": "M:Electron2D.ImageTexture.HasAlpha",
+          "summary": "Checks whether the decoded image contains transparent pixels or alpha metadata.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "ImageTexture",
+            "notes": "Image-backed texture resource loaded from PNG files or mounted res:// project resources."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ImageTexture/Method/IsPixelOpaque%28System.Int32%2C%20System.Int32%29",
+          "declaringType": "Electron2D.ImageTexture",
+          "name": "IsPixelOpaque",
+          "kind": "Method",
+          "signature": "public System.Boolean IsPixelOpaque(System.Int32, System.Int32)(System.Int32 x, System.Int32 y)",
+          "returnType": "System.Boolean",
+          "parameters": [
+            {
+              "name": "x",
+              "type": "System.Int32",
+              "isNullable": false,
+              "hasDefaultValue": false
+            },
+            {
+              "name": "y",
+              "type": "System.Int32",
+              "isNullable": false,
+              "hasDefaultValue": false
+            }
+          ],
+          "xmlDocId": "M:Electron2D.ImageTexture.IsPixelOpaque(System.Int32,System.Int32)",
+          "summary": "Checks whether a decoded image pixel is fully opaque.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "ImageTexture",
+            "notes": "Image-backed texture resource loaded from PNG files or mounted res:// project resources."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ImageTexture/Method/LoadFromFile%28System.String%29",
+          "declaringType": "Electron2D.ImageTexture",
+          "name": "LoadFromFile",
+          "kind": "Method",
+          "signature": "public static Electron2D.ImageTexture LoadFromFile(System.String)(System.String path)",
+          "returnType": "Electron2D.ImageTexture",
+          "parameters": [
+            {
+              "name": "path",
+              "type": "System.String",
+              "isNullable": true,
+              "hasDefaultValue": false
+            }
+          ],
+          "xmlDocId": "M:Electron2D.ImageTexture.LoadFromFile(System.String)",
+          "summary": "Loads an \u0060Electron2D.ImageTexture\u0060 from a PNG file or project resource path.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "ImageTexture",
+            "notes": "Image-backed texture resource loaded from PNG files or mounted res:// project resources."
+          }
+        }
+      ]
+    },
+    {
       "id": "electron2d://api/type/Electron2D.Input",
       "fullName": "Electron2D.Input",
       "namespace": "Electron2D",
@@ -21319,6 +21456,25 @@
             "godotReference": "Node",
             "notes": "Lifecycle, hierarchy, Owner, groups, reparent/move, QueueFree() and GetViewport() baseline."
           }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.Node/Property/ProcessMode",
+          "declaringType": "Electron2D.Node",
+          "name": "ProcessMode",
+          "kind": "Property",
+          "signature": "public Electron2D.ProcessMode ProcessMode { get; set; }",
+          "returnType": "Electron2D.ProcessMode",
+          "parameters": [],
+          "xmlDocId": "P:Electron2D.Node.ProcessMode",
+          "summary": "Gets or sets how this node participates in process, physics-process and input callbacks while its scene tree is paused.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "Node",
+            "notes": "Lifecycle, hierarchy, Owner, groups, reparent/move, QueueFree() and GetViewport() baseline."
+          }
         }
       ]
     },
@@ -25148,6 +25304,146 @@
             "outOfProfile": false,
             "godotReference": "PopupMenu",
             "notes": "Runtime command menu with text, icon, checkable and separator items, disabled state, popup rectangle, index/id activation signals and hide-after-activation behavior."
+          }
+        }
+      ]
+    },
+    {
+      "id": "electron2d://api/type/Electron2D.ProcessMode",
+      "fullName": "Electron2D.ProcessMode",
+      "namespace": "Electron2D",
+      "name": "ProcessMode",
+      "kind": "enum",
+      "interfaces": [
+        "System.IComparable",
+        "System.IConvertible",
+        "System.IFormattable",
+        "System.ISpanFormattable"
+      ],
+      "xmlDocId": "T:Electron2D.ProcessMode",
+      "summary": "Identifies how a \u0060Electron2D.Node\u0060 participates in scene-tree callbacks while its \u0060Electron2D.SceneTree\u0060 is paused.",
+      "category": "Scene Tree",
+      "profile": {
+        "name": "Electron2D 0.1.0 2D",
+        "status": "partial",
+        "parity": "not_verified",
+        "outOfProfile": true,
+        "godotReference": "Node.ProcessMode",
+        "notes": "Node processing mode values for paused and unpaused scene tree callbacks."
+      },
+      "members": [
+        {
+          "id": "electron2d://api/member/Electron2D.ProcessMode/EnumValue/Always",
+          "declaringType": "Electron2D.ProcessMode",
+          "name": "Always",
+          "kind": "EnumValue",
+          "signature": "public const Electron2D.ProcessMode Always",
+          "returnType": "Electron2D.ProcessMode",
+          "parameters": [],
+          "xmlDocId": "F:Electron2D.ProcessMode.Always",
+          "summary": "Processes regardless of the owning \u0060Electron2D.SceneTree\u0060 pause state.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "Node.ProcessMode",
+            "notes": "Node processing mode values for paused and unpaused scene tree callbacks."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ProcessMode/EnumValue/Disabled",
+          "declaringType": "Electron2D.ProcessMode",
+          "name": "Disabled",
+          "kind": "EnumValue",
+          "signature": "public const Electron2D.ProcessMode Disabled",
+          "returnType": "Electron2D.ProcessMode",
+          "parameters": [],
+          "xmlDocId": "F:Electron2D.ProcessMode.Disabled",
+          "summary": "Does not receive process, physics-process or input callbacks.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "Node.ProcessMode",
+            "notes": "Node processing mode values for paused and unpaused scene tree callbacks."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ProcessMode/EnumValue/Inherit",
+          "declaringType": "Electron2D.ProcessMode",
+          "name": "Inherit",
+          "kind": "EnumValue",
+          "signature": "public const Electron2D.ProcessMode Inherit",
+          "returnType": "Electron2D.ProcessMode",
+          "parameters": [],
+          "xmlDocId": "F:Electron2D.ProcessMode.Inherit",
+          "summary": "Inherits the effective process mode from the nearest ancestor.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "Node.ProcessMode",
+            "notes": "Node processing mode values for paused and unpaused scene tree callbacks."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ProcessMode/EnumValue/Pausable",
+          "declaringType": "Electron2D.ProcessMode",
+          "name": "Pausable",
+          "kind": "EnumValue",
+          "signature": "public const Electron2D.ProcessMode Pausable",
+          "returnType": "Electron2D.ProcessMode",
+          "parameters": [],
+          "xmlDocId": "F:Electron2D.ProcessMode.Pausable",
+          "summary": "Processes only when the owning \u0060Electron2D.SceneTree\u0060 is not paused.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "Node.ProcessMode",
+            "notes": "Node processing mode values for paused and unpaused scene tree callbacks."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ProcessMode/EnumValue/WhenPaused",
+          "declaringType": "Electron2D.ProcessMode",
+          "name": "WhenPaused",
+          "kind": "EnumValue",
+          "signature": "public const Electron2D.ProcessMode WhenPaused",
+          "returnType": "Electron2D.ProcessMode",
+          "parameters": [],
+          "xmlDocId": "F:Electron2D.ProcessMode.WhenPaused",
+          "summary": "Processes only while the owning \u0060Electron2D.SceneTree\u0060 is paused.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "Node.ProcessMode",
+            "notes": "Node processing mode values for paused and unpaused scene tree callbacks."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.ProcessMode/EnumValue/value__",
+          "declaringType": "Electron2D.ProcessMode",
+          "name": "value__",
+          "kind": "EnumValue",
+          "signature": "public System.Int32 value__",
+          "returnType": "System.Int32",
+          "parameters": [],
+          "xmlDocId": "F:Electron2D.ProcessMode.value__",
+          "summary": "",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "Node.ProcessMode",
+            "notes": "Node processing mode values for paused and unpaused scene tree callbacks."
           }
         }
       ]
@@ -29527,6 +29823,25 @@
           "parameters": [],
           "xmlDocId": "P:Electron2D.SceneTree.DebugCollisionsHint",
           "summary": "Gets or sets whether collision shapes should be exposed to debug visualization.",
+          "profile": {
+            "name": "Electron2D 0.1.0 2D",
+            "status": "partial",
+            "parity": "not_verified",
+            "outOfProfile": true,
+            "godotReference": "SceneTree",
+            "notes": "Initial root node, current scene, deterministic tree traversal for tests and future editor/runtime tools, debug collision hint, scene change, group queries/calls, deferred queue flush and queued deletion flush."
+          }
+        },
+        {
+          "id": "electron2d://api/member/Electron2D.SceneTree/Property/Paused",
+          "declaringType": "Electron2D.SceneTree",
+          "name": "Paused",
+          "kind": "Property",
+          "signature": "public System.Boolean Paused { get; set; }",
+          "returnType": "System.Boolean",
+          "parameters": [],
+          "xmlDocId": "P:Electron2D.SceneTree.Paused",
+          "summary": "Gets or sets whether ordinary scene processing is paused.",
           "profile": {
             "name": "Electron2D 0.1.0 2D",
             "status": "partial",

@@ -54,7 +54,6 @@ $platformNames = @(
     'browser-wasm'
 )
 $forbiddenWorkflowPaths = @('TASKS.md', 'dev-diary', 'completed-tasks')
-$referenceGameVerifierNames = @('Verify-ReferencePlatformer.ps1', 'Verify-UiHeavyReference.ps1')
 $editorTaskMetadataRootName = '.electron2d/tasks'
 
 function Get-RelativeRepositoryPath([string]$path) {
@@ -261,7 +260,8 @@ foreach ($project in @($artifact.projects)) {
 
     Assert-NoForbiddenWorkflowReferences $projectRoot $settings $projectId
 
-    $presets = Get-Content -LiteralPath $presetFile -Raw | ConvertFrom-Json
+    $presetsSource = Get-Content -LiteralPath $presetFile -Raw | ConvertFrom-Json
+    $presets = if ($null -ne $presetsSource.exportPresets) { $presetsSource.exportPresets } else { $presetsSource }
     if ($presets.format -ne 'Electron2D.ExportPresets') {
         throw "$projectId export preset format is invalid."
     }

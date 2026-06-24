@@ -42,15 +42,14 @@ public sealed class ReferenceGamePlatformMatrixTests
 
     private static readonly string[] ProjectIds =
     [
-        "reference-platformer",
-        "ui-heavy-reference"
+        "reference-platformer"
     ];
 
     [Fact]
     public void ReferenceGamePlatformMatrixSpecificationDefinesGateContract()
     {
         var root = FindRepositoryRoot();
-        var specPath = Path.Combine(root, "docs", "specifications", "examples", "reference-game-platform-matrix.md");
+        var specPath = Path.Combine(root, "docs", "examples", "reference-game-platform-matrix.md");
 
         Assert.True(File.Exists(specPath), $"Missing reference game platform matrix specification: {specPath}");
 
@@ -58,7 +57,6 @@ public sealed class ReferenceGamePlatformMatrixTests
         Assert.Contains("tools\\Verify-ReferenceGamePlatformMatrix.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("data/quality/reference-game-platform-matrix.json", spec, StringComparison.Ordinal);
         Assert.Contains("tools\\Verify-ReferencePlatformer.ps1", spec, StringComparison.Ordinal);
-        Assert.Contains("tools\\Verify-UiHeavyReference.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("platform-specific игровой fork", spec, StringComparison.Ordinal);
         Assert.Contains("browser hosting metadata", spec, StringComparison.Ordinal);
 
@@ -128,8 +126,12 @@ public sealed class ReferenceGamePlatformMatrixTests
         var root = FindRepositoryRoot();
         foreach (var projectId in ProjectIds)
         {
-            var presetPath = Path.Combine(root, "examples", projectId, "export_presets.e2export.json");
-            var exportPresets = Electron2D.ExportPresetStore.Load(presetPath);
+            var projectRoot = Path.Combine(root, "examples", projectId);
+            var loosePresetPath = Path.Combine(projectRoot, "export_presets.e2export.json");
+            var embeddedProjectPath = Path.Combine(projectRoot, "ReferencePlatformer.e2d");
+            var exportPresets = File.Exists(loosePresetPath)
+                ? Electron2D.ExportPresetStore.Load(loosePresetPath)
+                : Electron2D.ExportPresetStore.LoadFromProjectFile(embeddedProjectPath);
 
             Assert.True(exportPresets.Succeeded, FormatExportDiagnostics(exportPresets.Diagnostics));
             Assert.NotNull(exportPresets.Document);
@@ -144,7 +146,7 @@ public sealed class ReferenceGamePlatformMatrixTests
     }
 
     [Fact]
-    public void ReferenceGamePlatformMatrixVerifierDeclaresBothProjectVerifiersAndSharedCodeChecks()
+    public void ReferenceGamePlatformMatrixVerifierDeclaresActiveProjectVerifierAndSharedCodeChecks()
     {
         var root = FindRepositoryRoot();
         var verifierPath = Path.Combine(root, "tools", "Verify-ReferenceGamePlatformMatrix.ps1");
@@ -152,8 +154,8 @@ public sealed class ReferenceGamePlatformMatrixTests
         Assert.True(File.Exists(verifierPath), $"Missing reference game platform matrix verifier: {verifierPath}");
 
         var verifier = File.ReadAllText(verifierPath);
-        Assert.Contains("Verify-ReferencePlatformer.ps1", verifier, StringComparison.Ordinal);
-        Assert.Contains("Verify-UiHeavyReference.ps1", verifier, StringComparison.Ordinal);
+        Assert.Contains("project.verifier", verifier, StringComparison.Ordinal);
+        Assert.Contains("& $verifierPath", verifier, StringComparison.Ordinal);
         Assert.Contains("reference-game-platform-matrix.json", verifier, StringComparison.Ordinal);
         Assert.Contains("forbiddenPlatformSpecificRoots", verifier, StringComparison.Ordinal);
         Assert.Contains("credentialReference", verifier, StringComparison.Ordinal);

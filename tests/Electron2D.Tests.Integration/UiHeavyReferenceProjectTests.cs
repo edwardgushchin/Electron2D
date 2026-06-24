@@ -29,6 +29,7 @@ using Xunit;
 namespace Electron2D.Tests.Integration;
 
 [Collection(RuntimeWindowCollection.Name)]
+[Trait("Category", "Baseline")]
 public sealed class UiHeavyReferenceProjectTests
 {
     [Fact]

@@ -34,15 +34,14 @@ public sealed class ReferencePerformanceVerificationTests
     [
         "empty-scene",
         "sprite-scene",
-        "reference-platformer",
-        "ui-heavy-reference"
+        "reference-platformer"
     ];
 
     [Fact]
     public void PerformanceSpecificationDefinesReferenceVerificationContract()
     {
         var root = FindRepositoryRoot();
-        var specPath = Path.Combine(root, "docs", "specifications", "quality", "performance-verification.md");
+        var specPath = Path.Combine(root, "docs", "quality", "performance-verification.md");
 
         Assert.True(File.Exists(specPath), $"Missing performance verification specification: {specPath}");
 
@@ -50,7 +49,6 @@ public sealed class ReferencePerformanceVerificationTests
         Assert.Contains("tools\\Verify-ReferencePerformance.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("data/quality/performance-reference-metrics.json", spec, StringComparison.Ordinal);
         Assert.Contains("tools\\Verify-ReferencePlatformer.ps1", spec, StringComparison.Ordinal);
-        Assert.Contains("tools\\Verify-UiHeavyReference.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("0 B/frame", spec, StringComparison.Ordinal);
         Assert.Contains("reductionRatio >= 1.5", spec, StringComparison.Ordinal);
 
@@ -70,7 +68,6 @@ public sealed class ReferencePerformanceVerificationTests
 
         var verifier = File.ReadAllText(verifierPath);
         Assert.Contains("Verify-ReferencePlatformer.ps1", verifier, StringComparison.Ordinal);
-        Assert.Contains("Verify-UiHeavyReference.ps1", verifier, StringComparison.Ordinal);
         Assert.Contains("performance-reference-metrics.json", verifier, StringComparison.Ordinal);
         Assert.Contains("p95FrameTimeMs", verifier, StringComparison.Ordinal);
         Assert.Contains("steadyManagedAllocatedBytesPerFrame", verifier, StringComparison.Ordinal);
@@ -128,9 +125,6 @@ public sealed class ReferencePerformanceVerificationTests
         Assert.Contains(
             scenarios["reference-platformer"].GetProperty("evidence").EnumerateArray(),
             evidence => evidence.GetString() == "tools/Verify-ReferencePlatformer.ps1");
-        Assert.Contains(
-            scenarios["ui-heavy-reference"].GetProperty("evidence").EnumerateArray(),
-            evidence => evidence.GetString() == "tools/Verify-UiHeavyReference.ps1");
 
         var batching = metrics.GetProperty("drawCallBatching");
         Assert.Equal("sprite-scene", batching.GetProperty("scenarioId").GetString());

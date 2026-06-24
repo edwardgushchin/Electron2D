@@ -34,7 +34,7 @@ public sealed class ManagedDebugAdapterSelectionTests
     {
         var root = FindRepositoryRoot();
         var manifestPath = Path.Combine(root, "data", "debugging", "dotnet-debug-adapter-selection.json");
-        var documentationPath = Path.Combine(root, "docs", "documentation", "scripting", "managed-debug-adapter-selection.md");
+        var documentationPath = Path.Combine(root, "docs", "scripting", "managed-debug-adapter-selection.md");
 
         Assert.True(File.Exists(manifestPath), $"Missing debug adapter selection manifest: {manifestPath}");
         Assert.True(File.Exists(documentationPath), $"Missing debug adapter selection documentation: {documentationPath}");

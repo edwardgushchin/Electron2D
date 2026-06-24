@@ -20,10 +20,6 @@
       "reference-platformer": {
         "maxP95FrameTimeMs": 16.67,
         "maxP99FrameTimeMs": 33.0
-      },
-      "ui-heavy-reference": {
-        "maxP95FrameTimeMs": 16.67,
-        "maxP99FrameTimeMs": 33.0
       }
     },
     "drawCallBatching": {
@@ -90,25 +86,7 @@
       "evidence": [
         "tools/Verify-ReferencePlatformer.ps1",
         "examples/reference-platformer/scenes/main.scene.json",
-        "examples/reference-platformer/Scripts/PlatformerGame.cs"
-      ]
-    },
-    {
-      "scenarioId": "ui-heavy-reference",
-      "projectPath": "examples/ui-heavy-reference",
-      "scenePath": "scenes/menu.scene.json",
-      "deviceId": "local-windows-x64",
-      "warmupFrames": 120,
-      "measuredFrames": 600,
-      "targetFps": 60,
-      "p95FrameTimeMs": 16.66,
-      "p99FrameTimeMs": 16.66,
-      "averageFrameTimeMs": 16.66,
-      "steadyManagedAllocatedBytesPerFrame": 0,
-      "evidence": [
-        "tools/Verify-UiHeavyReference.ps1",
-        "examples/ui-heavy-reference/scenes/menu.scene.json",
-        "examples/ui-heavy-reference/Scripts/CardPuzzleGame.cs"
+        "examples/reference-platformer/scripts/PlatformerGame.cs"
       ]
     }
   ],

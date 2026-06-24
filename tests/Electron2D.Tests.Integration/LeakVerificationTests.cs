@@ -45,7 +45,7 @@ public sealed class LeakVerificationTests
     public void LeakSpecificationDefinesVerifierArtifactAndBudgets()
     {
         var root = FindRepositoryRoot();
-        var specPath = Path.Combine(root, "docs", "specifications", "quality", "leak-verification.md");
+        var specPath = Path.Combine(root, "docs", "quality", "leak-verification.md");
 
         Assert.True(File.Exists(specPath), $"Missing leak verification specification: {specPath}");
 

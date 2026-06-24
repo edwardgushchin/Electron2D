@@ -40,15 +40,13 @@ public sealed class Box2DPhysicsValidationInfrastructureTests
             "Electron2D.Tests.PhysicsBox2DSmoke.csproj");
         var programPath = Path.Combine(root, "tests", "Electron2D.Tests.PhysicsBox2DSmoke", "Program.cs");
         var verifierPath = Path.Combine(root, "tools", "Verify-Box2DPhysicsCandidate.ps1");
-        var specPath = Path.Combine(root, "docs", "specifications", "physics", "box2d-net-validation.md");
-        var docPath = Path.Combine(root, "docs", "documentation", "physics", "box2d-net-validation.md");
+        var documentPath = Path.Combine(root, "docs", "physics", "box2d-net-validation.md");
         var workflowPath = Path.Combine(root, ".github", "workflows", "ci.yml");
 
         Assert.True(File.Exists(projectPath), $"Missing Box2D smoke project: {projectPath}");
         Assert.True(File.Exists(programPath), $"Missing Box2D smoke entry point: {programPath}");
         Assert.True(File.Exists(verifierPath), $"Missing Box2D validation verifier: {verifierPath}");
-        Assert.True(File.Exists(specPath), $"Missing Box2D validation specification: {specPath}");
-        Assert.True(File.Exists(docPath), $"Missing Box2D validation documentation: {docPath}");
+        Assert.True(File.Exists(documentPath), $"Missing Box2D validation domain document: {documentPath}");
 
         var project = File.ReadAllText(projectPath);
         Assert.Contains("PackageReference Include=\"Box2D.NET\" Version=\"3.1.654\"", project, StringComparison.Ordinal);
@@ -69,7 +67,7 @@ public sealed class Box2DPhysicsValidationInfrastructureTests
         Assert.Contains("PublishAot=true", verifier, StringComparison.Ordinal);
         Assert.Contains("AllocatedBytesPerTick", verifier, StringComparison.Ordinal);
 
-        var combinedDocumentation = File.ReadAllText(specPath) + "\n" + File.ReadAllText(docPath);
+        var combinedDocumentation = File.ReadAllText(documentPath);
         foreach (var required in new[]
         {
             "Windows x64",

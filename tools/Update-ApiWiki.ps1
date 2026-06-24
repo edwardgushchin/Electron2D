@@ -319,7 +319,7 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
         "API-Scene-Tree.md",
         "Scene Tree",
         "Nodes, node paths, scene packing and scene traversal.",
-        type => Named(type, "Node", "Node2D", "NodePath", "PackedScene", "SceneTree")),
+        type => Named(type, "Node", "Node2D", "NodePath", "PackedScene", "ProcessMode", "SceneTree")),
     new ApiCategory(
         "API-Resources.md",
         "Resources",
@@ -346,7 +346,7 @@ IReadOnlyList<ApiCategory> ApiCategories() =>
         "API-Rendering.md",
         "Rendering",
         "2D drawing nodes, textures, tile maps, viewports, cameras, materials, shaders and rendering server state.",
-        type => Named(type, "AtlasTexture", "Texture2D", "TileData", "TileMapLayer", "TileSet", "TileSetAtlasSource", "TileSetSource", "CanvasItem", "CanvasLayer", "Camera2D", "Viewport", "ViewportTexture", "Sprite2D", "RenderingServer", "Material", "Shader", "ShaderMaterial")),
+        type => Named(type, "AtlasTexture", "ImageTexture", "Texture2D", "TileData", "TileMapLayer", "TileSet", "TileSetAtlasSource", "TileSetSource", "CanvasItem", "CanvasLayer", "Camera2D", "Viewport", "ViewportTexture", "Sprite2D", "RenderingServer", "Material", "Shader", "ShaderMaterial")),
     new ApiCategory(
         "API-Animation-and-Tweening.md",
         "Animation and Tweening",

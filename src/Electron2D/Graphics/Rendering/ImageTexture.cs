@@ -137,25 +137,95 @@ public sealed class ImageTexture : Texture2D
         return new ImageTexture(decoded.Width, decoded.Height, decoded.HasAlpha, decoded.RgbaPixels);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the decoded image width in pixels.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The positive width of the decoded PNG image in pixels.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread because <see cref="ImageTexture"/>
+    /// instances are immutable after loading.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public override int GetWidth()
     {
         return Width;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the decoded image height in pixels.
+    /// </summary>
+    ///
+    /// <returns>
+    /// The positive height of the decoded PNG image in pixels.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread because <see cref="ImageTexture"/>
+    /// instances are immutable after loading.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public override int GetHeight()
     {
         return Height;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Checks whether the decoded image contains transparent pixels or alpha metadata.
+    /// </summary>
+    ///
+    /// <returns>
+    /// <c>true</c> when the source PNG contained an alpha channel, transparency
+    /// chunk or transparent palette entry; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread because <see cref="ImageTexture"/>
+    /// instances are immutable after loading.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public override bool HasAlpha()
     {
         return Alpha;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Checks whether a decoded image pixel is fully opaque.
+    /// </summary>
+    ///
+    /// <param name="x">
+    /// The pixel X coordinate in image space.
+    /// </param>
+    ///
+    /// <param name="y">
+    /// The pixel Y coordinate in image space.
+    /// </param>
+    ///
+    /// <returns>
+    /// <c>true</c> when the coordinate is inside the image and its alpha value is
+    /// fully opaque; otherwise, <c>false</c>.
+    /// </returns>
+    ///
+    /// <threadsafety>
+    /// This method is safe to call from any thread because <see cref="ImageTexture"/>
+    /// instances are immutable after loading.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This method is available since Electron2D 0.1.0 Preview.
+    /// </since>
     public override bool IsPixelOpaque(int x, int y)
     {
         if (x < 0 || y < 0 || x >= Width || y >= Height)

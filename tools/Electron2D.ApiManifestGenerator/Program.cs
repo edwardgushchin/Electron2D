@@ -334,14 +334,14 @@ static string CategoryFor(Type type)
 static IReadOnlyList<ApiCategory> ApiCategories() =>
 [
     new ApiCategory("Core", type => Named(type, "Object", "RefCounted", "Callable", "Error", "ConnectFlags", "Rid", "StringName")),
-    new ApiCategory("Scene Tree", type => Named(type, "Node", "Node2D", "NodePath", "PackedScene", "SceneTree")),
+    new ApiCategory("Scene Tree", type => Named(type, "Node", "Node2D", "NodePath", "PackedScene", "ProcessMode", "SceneTree")),
     new ApiCategory("Resources", type => Named(type, "Resource", "ResourceUid")),
     new ApiCategory("Math and Data", type => Named(type, "Mathf", "Vector2", "Vector2I", "Rect2", "Rect2I", "Transform2D", "Color", "RandomNumberGenerator", "Variant") ||
         ShortDisplayName(type).StartsWith("Collections.", StringComparison.Ordinal)),
     new ApiCategory("Input", type => Named(type, "Input", "InputMap", "InputEvent", "Key", "KeyLocation", "MouseButton", "MouseButtonMask", "JoyAxis", "JoyButton") ||
         ShortDisplayName(type).StartsWith("InputEvent", StringComparison.Ordinal)),
     new ApiCategory("Display and Localization", type => Named(type, "DisplayServer", "Translation", "TranslationServer")),
-    new ApiCategory("Rendering", type => Named(type, "AtlasTexture", "Texture2D", "TileData", "TileMapLayer", "TileSet", "TileSetAtlasSource", "TileSetSource", "CanvasItem", "CanvasLayer", "Camera2D", "Viewport", "ViewportTexture", "Sprite2D", "RenderingServer", "Material", "Shader", "ShaderMaterial")),
+    new ApiCategory("Rendering", type => Named(type, "AtlasTexture", "ImageTexture", "Texture2D", "TileData", "TileMapLayer", "TileSet", "TileSetAtlasSource", "TileSetSource", "CanvasItem", "CanvasLayer", "Camera2D", "Viewport", "ViewportTexture", "Sprite2D", "RenderingServer", "Material", "Shader", "ShaderMaterial")),
     new ApiCategory("Animation and Tweening", type => Named(type, "AnimatedSprite2D", "Animation", "AnimationLibrary", "AnimationPlayer", "SpriteFrames", "Tween", "Tweener", "CallbackTweener", "IntervalTweener", "PropertyTweener")),
     new ApiCategory("Audio", type => Named(type, "AudioServer", "AudioStream", "AudioStreamPlayer", "AudioStreamPlayer2D")),
     new ApiCategory("Physics", type => Named(type, "World2D", "Area2D", "CollisionObject2D", "CollisionShape2D", "Shape2D", "CapsuleShape2D", "CircleShape2D", "ConcavePolygonShape2D", "ConvexPolygonShape2D", "RectangleShape2D", "SegmentShape2D", "PhysicsBody2D", "PhysicsDirectSpaceState2D", "PhysicsMaterial", "PhysicsPointQueryParameters2D", "PhysicsRayQueryParameters2D", "PhysicsServer2D", "PhysicsShapeQueryParameters2D", "RayCast2D", "StaticBody2D", "RigidBody2D", "CharacterBody2D", "KinematicCollision2D")),
