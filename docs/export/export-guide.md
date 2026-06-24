@@ -1,6 +1,6 @@
-# Export user documentation
+# Пользовательская документация экспорта
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -17,7 +17,7 @@
 
 ## Назначение
 
-Пользовательская export-документация Electron2D `0.1.0 Preview` должна дать проверяемый путь для поддерживаемых desktop export targets, описать WebAssembly browser package/smoke baseline и честно обозначить mobile/web execution gaps. Документация не должна выдавать Android/iOS export или remote WebAssembly hosting как готовый release path до закрытия соответствующих platform tasks и реальных smoke checks.
+Пользовательская export-документация Electron2D `0.1.0 Preview` должна дать проверяемый путь для текущих export targets, описать WebAssembly browser package/smoke проверку, честно обозначить mobile/web execution gaps и не смешивать `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`. Документация не должна выдавать Android/iOS export или remote WebAssembly hosting как готовый release path до закрытия соответствующих platform tasks и реальных smoke checks.
 
 ## Обязательные страницы
 
@@ -35,13 +35,14 @@
 
 Общий export guide должен описывать:
 
-- текущую target matrix;
+- текущую runtime/export target matrix;
+- отличие `runtimeTargets` от desktop-only `editorTargets` и отдельного release verification tier;
 - различие между проверенным desktop export и заблокированным mobile export;
-- различие между WebAssembly browser package/smoke baseline, внешним `dotnet publish` и future browser automation workflow;
+- различие между WebAssembly browser package/smoke проверкой, внешним `dotnet publish` и будущей browser automation, то есть автоматической проверкой в браузере;
 - формат `export_presets.e2export.json`;
 - SDK/toolchain requirements;
 - signing и credential references без secret values;
-- known limitations;
+- известные ограничения;
 - команды проверки.
 
 Каждая platform page должна описывать:
@@ -53,11 +54,11 @@
 - ограничения;
 - локальную или CI-проверку.
 
-Mobile status pages должны описывать SDK, signing, credentials и known limitations как требования будущей реализации, но не должны содержать команду, которая выглядит как готовый mobile release export.
+Mobile status pages должны описывать SDK, signing, credentials и известные ограничения как требования будущей реализации, но не должны содержать команду, которая выглядит как готовый mobile release export.
 
 WebAssembly status page должна описывать `browser-wasm`, static package layout, CLI commands `plan-web`, `build-web`, `run-web`, browser policies, smoke criteria, WebAssembly build tools, local smoke artifact и ограничения remote hosting/browser automation.
 
-## Secret safety
+## Безопасность секретов
 
 Документация не должна содержать реальные passwords, tokens, private keys, certificates, keystore payloads, provisioning profiles или signing secrets. Разрешены только placeholder values и opaque references вроде имени переменной окружения или имени секрета CI.
 
@@ -84,37 +85,39 @@ WebAssembly status page должна описывать `browser-wasm`, static p
 ## Фактическое состояние, ограничения и проверки
 
 <!-- export-doc:overview -->
-## Overview
+## Обзор
 
-Electron2D `0.1.0 Preview` has a verified desktop export baseline, a WebAssembly browser package/smoke baseline, and an Android arm64 debug APK baseline with emulator smoke evidence. This page is the user-facing entry point for export documentation: it explains which targets are currently verified, which toolchains are required, how signing references are represented, and which commands prove the current repository state.
+Electron2D `0.1.0 Preview` имеет локально проверенные механизмы экспорта для desktop, проверки структуры WebAssembly browser package и Android arm64 debug APK с запуском на эмуляторе. Эта страница является пользовательской входной точкой в export-документацию: она объясняет, какие targets сейчас имеют проверяемые механизмы, какие toolchains нужны, как представлены signing references и какие команды подтверждают текущее состояние репозитория. Это не означает, что финальная релизная проверка уже пройдена: полный проход остаётся за `T-0093` и `T-0104`.
 
-The export layer is intentionally fail-closed. A missing SDK, unsupported runtime identifier, missing signing identity, or missing project setting must produce diagnostics instead of a partial package.
+Export layer намеренно работает по правилу fail closed: отсутствующий SDK, неподдерживаемый runtime identifier, отсутствующая signing identity или отсутствующая project setting должны дать диагностику, а не частичный package.
 
 <!-- export-doc:target-matrix -->
-## Target matrix
+## Матрица runtime/export targets
 
-| Target | Runtime identifier | Status | Verification |
+`runtimeTargets` - это платформы, для которых существуют export presets и где экспортированная игра должна работать. `editorTargets` для `0.1.0 Preview` ограничены Windows, Linux и macOS. `releaseVerificationTargets` задаются отдельно в [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md): для текущего релиза они включают все runtime targets, но blocked-environment artifact не считается успешным release gate.
+
+| Target | Runtime identifier | Статус | Проверка |
 | --- | --- | --- | --- |
-| `WindowsX64` | `win-x64` | Verified desktop baseline | `tools\Verify-WindowsExport.ps1` on Windows |
-| `LinuxX64` | `linux-x64` | Verified desktop baseline | `tools\Verify-LinuxExport.ps1` on Linux or WSL |
-| `MacOSArm64` | `osx-arm64` | Verified desktop baseline | `tools\Verify-MacOSExport.ps1` on macOS arm64 |
-| `AndroidArm64` | `android-arm64` | Debug APK baseline with emulator smoke; release AAB signing plan | [Android arm64 export](android-arm64-export.md) |
-| `IosArm64` | `ios-arm64` | Planner/staging baseline; blocked simulator/device smoke | [iOS arm64 export](ios-arm64-export.md) |
-| `WebAssemblyBrowser` | `browser-wasm` | Package and smoke baseline | [WebAssembly browser export](webassembly-browser-export.md) |
+| `WindowsX64` | `win-x64` | Локально проверен механизм desktop export | `tools\Verify-WindowsExport.ps1` на Windows |
+| `LinuxX64` | `linux-x64` | Локально проверен механизм desktop export | `tools\Verify-LinuxExport.ps1` на Linux или WSL |
+| `MacOSArm64` | `osx-arm64` | Локально проверен механизм desktop export | `tools\Verify-MacOSExport.ps1` на macOS arm64 |
+| `AndroidArm64` | `android-arm64` | Проверены debug APK и запуск на эмуляторе; финальная релизная проверка не закрыта | [Android arm64 export](android-arm64-export.md) |
+| `IosArm64` | `ios-arm64` | Planner и staging есть; проверка на симуляторе или устройстве заблокирована окружением | [iOS arm64 export](ios-arm64-export.md) |
+| `WebAssemblyBrowser` | `browser-wasm` | Проверены структура пакета и локальный smoke artifact; финальная браузерная проверка не закрыта | [WebAssembly browser export](webassembly-browser-export.md) |
 
-Desktop export means the repository can create, publish, and run the empty project package on the matching host. The WebAssembly browser baseline can plan the static package layout, create host/loader/manifest files, copy project resources, and write a structured smoke artifact. Android can now plan/stage debug APK and release AAB workflows, build a debug APK when the local Android toolchain is available, install/run it through `adb`, and produce a structured smoke artifact. iOS can now plan and stage a transient Xcode project and write a blocked smoke artifact, but remains blocked as a release path until a macOS/Xcode simulator or device smoke run passes.
+Desktop export означает, что репозиторий может создать, опубликовать и запустить package пустого проекта на подходящем host. WebAssembly browser export умеет планировать static package layout, создавать host/loader/manifest files, копировать project resources и писать structured smoke artifact. Android сейчас умеет планировать и staging-ить debug APK и release AAB workflows, собирать debug APK при доступном локальном Android toolchain, устанавливать и запускать его через `adb`, а также создавать structured smoke artifact. iOS умеет планировать и staging-ить transient Xcode project и писать blocked smoke artifact, но остаётся заблокированным release path до успешной проверки на macOS/Xcode с симулятором или устройством.
 
 <!-- export-doc:preset-file -->
-## Preset file
+## Файл export presets
 
-Export presets live in `export_presets.e2export.json`. The current model is documented in [Export preset model](export-preset-model.md).
+Export presets хранятся в `export_presets.e2export.json`. Текущая модель описана в [Export preset model](export-preset-model.md).
 
-Each preset names a target, configuration, runtime identifier, output directory, renderer profile, debug symbol policy, and signing references. The file must not contain secret values. Use references such as a CI secret name, environment variable name, certificate alias, or signing identity label instead of passwords, private keys, keystore contents, certificates, provisioning profile contents, or tokens.
+Каждый preset задаёт target, configuration, runtime identifier, output directory, renderer profile, debug symbol policy и signing references. Файл не должен содержать secret values. Вместо passwords, private keys, keystore contents, certificates, provisioning profile contents или tokens используйте ссылки: имя CI secret, имя переменной окружения, certificate alias или signing identity label.
 
 <!-- export-doc:desktop-verification -->
-## Desktop verification
+## Проверка desktop export
 
-Run the verifier that matches the host operating system:
+Запустите verifier, который соответствует host operating system:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\Verify-WindowsExport.ps1
@@ -122,14 +125,14 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-LinuxExport.ps1
 powershell -ExecutionPolicy Bypass -File tools\Verify-MacOSExport.ps1
 ```
 
-Each verifier builds the local package, creates a temporary project from `data/templates/electron2d-empty`, restores that project from the local package source, publishes a self-contained build, runs the exported executable, and checks the reference scene output.
+Каждый verifier собирает локальный package, создаёт временный проект из `data/templates/electron2d-empty`, восстанавливает его из локального package source, публикует self-contained build, запускает экспортированный executable и проверяет вывод reference scene.
 
-The macOS verifier must run on macOS arm64. The Linux verifier runs on Linux directly or through WSL on Windows. The Windows verifier must run on Windows.
+macOS verifier должен запускаться на macOS arm64. Linux verifier запускается на Linux напрямую или через WSL на Windows. Windows verifier должен запускаться на Windows.
 
 <!-- export-doc:mobile-status -->
-## Mobile status
+## Состояние mobile export
 
-`AndroidArm64` has planner, staging, debug APK build and device/emulator smoke commands:
+`AndroidArm64` имеет planner, staging, debug APK build и device/emulator smoke commands:
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-android --project <project-root> --format json
@@ -137,7 +140,7 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-an
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-android --project <project-root> --output exports/android/debug --smoke-output .electron2d/export-smoke/android-smoke.json --adb-path <path-to-adb> --adb-serial <serial> --format json
 ```
 
-`run-android` is intentionally fail-closed until a connected authorized device or emulator is available. Use `--adb-serial` when more than one Android target is connected. For `x86_64` emulators, the command builds a temporary `android-x64` smoke package; this does not replace the `android-arm64` production preset.
+`run-android` намеренно fail closed до появления подключённого авторизованного device или emulator. Используйте `--adb-serial`, когда подключено больше одного Android target. Для `x86_64` emulators команда собирает временный `android-x64` smoke package; это не заменяет production preset `android-arm64`.
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-ios --project <project-root> --format json
@@ -145,12 +148,12 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-io
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
 ```
 
-`IosArm64` currently has a CLI planner, transient Xcode project staging builder and blocked smoke artifact writer. It does not run `xcodebuild`, signing, install, launch or simulator/device smoke from this repository state. Mobile export remains a release gate until each platform task provides device/simulator smoke checks, reference-game evidence and CI/reporting evidence.
+`IosArm64` сейчас имеет CLI planner, transient Xcode project staging builder и writer для blocked smoke artifact. Из текущего состояния репозитория он не запускает `xcodebuild`, signing, install, launch или simulator/device smoke. Mobile export остаётся release gate, пока каждая platform task не даст device/simulator smoke checks, reference-game evidence и CI/reporting evidence.
 
 <!-- export-doc:web-status -->
-## WebAssembly browser status
+## Состояние WebAssembly browser
 
-`WebAssemblyBrowser` with runtime identifier `browser-wasm` has planner, package and smoke commands:
+`WebAssemblyBrowser` с runtime identifier `browser-wasm` имеет planner, package и smoke commands:
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-web --project <project-root> --format json
@@ -158,33 +161,33 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-we
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json
 ```
 
-`plan-web` returns a JSON plan for `wwwroot`, `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `_framework`, `assets`, `project.e2d.json`, the main scene path, browser policies and smoke criteria. `build-web --skip-publish true` creates the static files without invoking external publish; normal `build-web` first validates matching WebAssembly build tools and then runs `dotnet publish`. `run-web` checks the generated package and writes a structured smoke artifact with launch instructions. These commands do not queue workspace jobs, deploy to hosting, or publish remote artifacts.
+`plan-web` возвращает JSON plan для `wwwroot`, `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `_framework`, `assets`, `project.e2d.json`, main scene path, browser policies и smoke criteria. `build-web --skip-publish true` создаёт static files без внешнего publish; обычный `build-web` сначала проверяет подходящие WebAssembly build tools, а затем запускает `dotnet publish`. `run-web` проверяет созданный package и пишет structured smoke artifact с launch instructions. Эти команды не ставят workspace jobs в очередь, не выполняют deploy на hosting и не публикуют remote artifacts.
 
 <!-- export-doc:signing-credentials -->
-## Signing and credentials
+## Signing и credentials
 
-Signing data is split into two categories:
+Signing data делится на две категории:
 
-- public or non-secret labels: signing identity name, certificate alias, profile name, bundle identifier, package id;
+- публичные или non-secret labels: signing identity name, certificate alias, profile name, bundle identifier, package id;
 - secret-bearing material: passwords, tokens, private keys, keystore contents, certificate contents, provisioning profile contents.
 
-Repository files may contain only the first category. Secret-bearing material must stay outside the repository and be referenced through `credentialReference` or the future editor/CI secret configuration.
+Файлы репозитория могут содержать только первую категорию. Secret-bearing material должен оставаться вне репозитория и ссылаться через `credentialReference` или будущую editor/CI secret configuration.
 
-Verifier scripts do not read real secrets and do not publish artifacts.
+Verifier scripts не читают реальные secrets и не публикуют artifacts.
 
 <!-- export-doc:known-limitations -->
-## Known limitations
+## Известные ограничения
 
-- Desktop export is verified against the empty project template, not finished reference games.
-- Windows x64, Linux x64 glibc, and macOS arm64 are the only verified desktop targets.
-- Linux musl, Linux ARM, Windows ARM, macOS x64, Android release signing with real credentials, and iOS simulator/device smoke are outside the current verified native export baseline.
-- Automated browser launch, remote hosting deploy, PWA installation and service worker caching are outside the current WebAssembly baseline.
-- Android lifecycle, orientation, safe area, touch, package staging, debug APK build and emulator deployment/runtime smoke have a repository baseline, but release signing publish and long reference-game soak are not complete release paths.
-- GitHub Release publication is intentionally outside these verifier commands and requires a separate user command.
+- Desktop export проверяется на empty project template, а не на законченных reference games.
+- Windows x64, Linux x64 glibc и macOS arm64 - единственные проверенные desktop targets.
+- Linux musl, Linux ARM, Windows ARM, macOS x64, Android release signing с реальными credentials и iOS simulator/device smoke находятся вне текущего проверенного native export path.
+- Automated browser launch, remote hosting deploy, PWA installation и service worker caching находятся вне текущей WebAssembly проверки.
+- Android lifecycle, orientation, safe area, touch, package staging, debug APK build и emulator deployment/runtime smoke имеют локальную проверку в репозитории, но release signing publish и долгий reference-game soak ещё не являются завершёнными release paths.
+- GitHub Release publication намеренно не входит в эти verifier commands и требует отдельной команды пользователя.
 
-## Documentation check
+## Проверка документации
 
-After editing export documentation, run:
+После изменения export-документации запустите:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\Verify-ExportDocumentation.ps1

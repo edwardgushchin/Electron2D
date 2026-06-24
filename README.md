@@ -103,7 +103,7 @@ Documentation, guides and API reference are available in the [Electron2D GitHub 
 
 ## 🎮 Examples
 
-- **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A complete 2D platformer built with Electron2D.
+- **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A 2D platformer example built with Electron2D.
 
 <a id="feedback-and-contributing"></a>
 

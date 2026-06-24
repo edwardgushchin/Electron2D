@@ -59,6 +59,14 @@ function Assert-ContainsAll([string]$name, [string]$content, [string[]]$fragment
     }
 }
 
+function New-Text([int[]]$codePoints) {
+    $characters = foreach ($codePoint in $codePoints) {
+        [char]$codePoint
+    }
+
+    return -join $characters
+}
+
 $guide = Read-Doc 'docs/export/export-guide.md'
 $windows = Read-Doc 'docs/export/windows-x64-export.md'
 $linux = Read-Doc 'docs/export/linux-x64-export.md'
@@ -68,6 +76,12 @@ $ios = Read-Doc 'docs/export/ios-arm64-export.md'
 $web = Read-Doc 'docs/export/webassembly-browser-export.md'
 $userGuide = Read-Doc 'docs/documentation/user-guide.md'
 $documentationIndex = Read-Doc 'docs/README.md'
+
+$iosStatusHeading = New-Text @(0x0421, 0x0442, 0x0430, 0x0442, 0x0443, 0x0441)
+$iosSdkHeading = New-Text @(0x0053, 0x0044, 0x004B, 0x0020, 0x0438, 0x0020, 0x0074, 0x006F, 0x006F, 0x006C, 0x0063, 0x0068, 0x0061, 0x0069, 0x006E)
+$iosSigningHeading = New-Text @(0x0053, 0x0069, 0x0067, 0x006E, 0x0069, 0x006E, 0x0067, 0x0020, 0x0438, 0x0020, 0x0063, 0x0072, 0x0065, 0x0064, 0x0065, 0x006E, 0x0074, 0x0069, 0x0061, 0x006C, 0x0073)
+$iosLimitationsHeading = New-Text @(0x0418, 0x0437, 0x0432, 0x0435, 0x0441, 0x0442, 0x043D, 0x044B, 0x0435, 0x0020, 0x043E, 0x0433, 0x0440, 0x0430, 0x043D, 0x0438, 0x0447, 0x0435, 0x043D, 0x0438, 0x044F)
+$iosNotReadyReleasePath = New-Text @(0x043D, 0x0435, 0x0020, 0x0433, 0x043E, 0x0442, 0x043E, 0x0432, 0x044B, 0x0439, 0x0020, 0x0072, 0x0065, 0x006C, 0x0065, 0x0061, 0x0073, 0x0065, 0x0020, 0x0070, 0x0061, 0x0074, 0x0068)
 
 Assert-ContainsAll 'Export guide' $guide @(
     '<!-- export-doc:overview -->',
@@ -138,11 +152,11 @@ Assert-ContainsAll 'Android export documentation' $android @(
 Assert-ContainsAll 'iOS export documentation' $ios @(
     'IosArm64',
     'ios-arm64',
-    'Status',
-    'SDK and toolchain',
-    'Signing and credentials',
-    'Known limitations',
-    'not a ready release path',
+    $iosStatusHeading,
+    $iosSdkHeading,
+    $iosSigningHeading,
+    $iosLimitationsHeading,
+    $iosNotReadyReleasePath,
     'export plan-ios',
     'export build-ios',
     'export run-ios',
@@ -153,19 +167,18 @@ Assert-ContainsAll 'iOS export documentation' $ios @(
 Assert-ContainsAll 'WebAssembly browser export documentation' $web @(
     'WebAssemblyBrowser',
     'browser-wasm',
-    'Host requirements',
-    'SDK and toolchain',
-    'Signing and credentials',
-    'Package layout',
-    'Browser runtime policy',
-    'CLI plan',
-    'CLI build',
-    'CLI run',
-    'Known limitations',
+    'WebAssemblyBuildToolsAvailable',
+    'Electron2DWebAssemblyExportPlanner.CreatePlan',
+    'Electron2DWebAssemblyPackageBuilder.Build',
+    'Electron2D.WebAssemblySmokeArtifact',
+    'window.Electron2DWebRuntimeSmoke.run()',
+    'CLI route `plan-web`',
+    'CLI route `build-web`',
+    'CLI route `run-web`',
+    'E2D-EXPORT-WEB-0013',
     'e2d export plan-web',
     'e2d export build-web',
-    'e2d export run-web',
-    'Electron2D.WebAssemblySmokeArtifact'
+    'e2d export run-web'
 )
 
 Assert-ContainsAll 'User guide export section' $userGuide @(

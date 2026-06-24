@@ -1,6 +1,6 @@
 # iOS arm64 export
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,11 +13,13 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация для `T-0092`.
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 ## Назначение
 
 Electron2D `0.1.0 Preview` должен экспортировать один проект в iOS runtime package без переписывания игровой логики. iOS является платформой запуска и экспорта, но не платформой редактирования проекта.
+
+iOS входит в `runtimeTargets` и в `releaseVerificationTargets` текущего preview-релиза. Blocked-environment artifact допустим, когда macOS/Xcode, simulator/device или iOS workload недоступны, но такой artifact не закрывает release gate: финальная проверка требует реального simulator или device smoke/soak либо отдельного изменения `docs/releases/0.1.0-preview.md`.
 
 `T-0092` считается закрытой только после macOS/Xcode проверки с iOS simulator или подключённым iOS device. Частичные шаги, которые можно проверить на Windows, не являются готовым release path, но должны быть полезны для финального gate:
 
@@ -185,33 +187,33 @@ Smoke artifact должен проверять:
 - iOS Xcode project builder создаёт staging project, host files, metadata, project settings, main scene и `assets/**`, но не копирует `.electron2d/tasks/**`.
 - iOS smoke runner создаёт structured artifact; при отсутствии simulator/device возвращает blocked/failure с `E2D-EXPORT-IOS-0011`.
 - CLI routes `e2d export plan-ios`, `e2d export build-ios` и `e2d export run-ios` возвращают stable JSON envelope и не queue generic export job.
-- На macOS host с Xcode выполнен simulator или device smoke для lifecycle, render, input, audio, resources, filesystem, safe area и clean shutdown.
+- На macOS с Xcode выполнена smoke-проверка на iOS-симуляторе или подключённом устройстве: жизненный цикл приложения, рендеринг, ввод, звук, загрузка ресурсов, файловая система, безопасная область экрана (`safe area`) и корректное завершение.
 - Implementation documentation описывает фактический target, layout, diagnostics, limitations и команды проверки.
 - Focused export tests, source license/header checks и documentation verifiers проходят.
 
 ## Фактическое состояние, ограничения и проверки
 
-## Status
+## Статус
 
-`IosArm64` with runtime identifier `ios-arm64` is still a blocked mobile release target for Electron2D `0.1.0 Preview`. It is not a ready release path in the current repository state because the required macOS/Xcode simulator or device smoke has not been run.
+`IosArm64` с runtime identifier `ios-arm64` остаётся заблокированным mobile release target для Electron2D `0.1.0 Preview`. В текущем состоянии репозитория это не готовый release path, потому что обязательный macOS/Xcode smoke на simulator или device ещё не выполнен.
 
-The current repository can validate iOS preset inputs fail-closed, create a deterministic Xcode project staging plan, write a transient iOS staging project, and write a structured smoke artifact that reports `blocked` when no simulator or device is available. It does not run `xcodebuild`, does not sign an app, does not deploy to a simulator or device, and does not pass a real iOS smoke check yet.
+Текущий репозиторий умеет fail closed проверять iOS preset inputs, создавать deterministic Xcode project staging plan, записывать transient iOS staging project и сохранять structured smoke artifact со статусом `blocked`, когда simulator или device недоступны. Он пока не запускает `xcodebuild`, не подписывает app, не устанавливает app на simulator или device и не проходит реальный iOS smoke.
 
-## SDK and toolchain
+## SDK и toolchain
 
-iOS export completion still requires:
+Для завершения iOS export всё ещё нужны:
 
-- macOS host with a supported Xcode installation;
-- .NET SDK `10.0.x` with the iOS workload installed;
-- `xcodebuild` and simulator tooling available on `PATH`;
-- configured Apple signing identity and provisioning profile references;
-- simulator or device smoke coverage for lifecycle, input, audio, resources, filesystem, orientation, and safe-area behavior.
+- macOS host с поддерживаемой установкой Xcode;
+- .NET SDK `10.0.x` с установленным iOS workload;
+- `xcodebuild` и simulator tooling, доступные через `PATH`;
+- настроенные ссылки на Apple signing identity и provisioning profile;
+- smoke-покрытие на simulator или device для lifecycle, input, audio, resources, filesystem, orientation и safe-area behavior.
 
-The current validator returns diagnostics when Xcode is unavailable. The planner and staging builder are deterministic and do not silently mark iOS export as complete.
+Текущий validator возвращает diagnostics, когда Xcode недоступен. Planner и staging builder остаются deterministic и не помечают iOS export как завершённый молча.
 
-## Current planner
+## Текущий planner
 
-`Electron2DIosExportPlanner.CreatePlan(...)` builds an internal plan for:
+`Electron2DIosExportPlanner.CreatePlan(...)` строит внутренний plan для:
 
 - target `IosArm64`;
 - runtime identifier `ios-arm64`;
@@ -229,13 +231,13 @@ The current validator returns diagnostics when Xcode is unavailable. The planner
 - app bundle path under `artifacts/<configuration>/`;
 - signing identity and credential reference as non-secret strings;
 - mobile policies for touch, foreground/background lifecycle, safe area, orientation, audio, resource loading, filesystem sandbox and precompiled rendering artifacts;
-- smoke criteria for build, install, launch, render, input, lifecycle, orientation, safe area, audio, resources, filesystem, precompiled artifacts and shutdown.
+- smoke criteria для build, install, launch, render, input, lifecycle, orientation, safe area, audio, resources, filesystem, precompiled artifacts и shutdown.
 
-The planner fail-closes for wrong target, wrong runtime identifier, framework-dependent deployment, missing project path, missing project settings and missing signing identity when signing is required.
+Planner завершает проверку fail closed для wrong target, wrong runtime identifier, framework-dependent deployment, missing project path, missing project settings и missing signing identity, когда signing обязателен.
 
-## Current staging builder
+## Текущий staging builder
 
-`Electron2DIosXcodeProjectBuilder.Build(...)` writes a transient staging layout under the preset output directory:
+`Electron2DIosXcodeProjectBuilder.Build(...)` записывает transient staging layout внутри preset output directory:
 
 ```text
 <outputDirectory>/
@@ -257,13 +259,13 @@ The planner fail-closes for wrong target, wrong runtime identifier, framework-de
   smoke/
 ```
 
-The staging builder copies `project.e2d.json`, the main scene and `assets/**`. It does not copy `.electron2d/tasks/**`, `TASKS.md`, `dev-diary/` or `completed-tasks/`.
+Staging builder копирует `project.e2d.json`, main scene и `assets/**`. Он не копирует `.electron2d/tasks/**`, `TASKS.md`, `dev-diary/` или `completed-tasks/`.
 
-The generated host files include smoke markers for launch, render, touch, safe area, foreground/background lifecycle, audio, resources, filesystem, precompiled rendering artifacts and shutdown. These markers are only staging evidence until they are observed on a real iOS simulator or device.
+Сгенерированные host files содержат smoke markers для launch, render, touch, safe area, foreground/background lifecycle, audio, resources, filesystem, precompiled rendering artifacts и shutdown. Эти markers являются только staging evidence, пока они не будут подтверждены на реальном iOS simulator или device.
 
-## Current CLI routes
+## Текущие CLI routes
 
-The current CLI exposes the planner and staging builder without claiming that iOS is release-ready:
+Текущий CLI открывает planner и staging builder, но не утверждает, что iOS release-ready:
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-ios --project <project-root> --format json
@@ -271,40 +273,40 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-io
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
 ```
 
-`plan-ios` returns the deterministic plan. `build-ios --skip-publish true` writes the transient staging project. `run-ios` writes `Electron2D.IosDeviceSmokeArtifact`; on hosts without simulator/device evidence it exits as a failure with `data.result.status = "smoke-blocked"` and diagnostic `E2D-EXPORT-IOS-0011`.
+`plan-ios` возвращает deterministic plan. `build-ios --skip-publish true` записывает transient staging project. `run-ios` записывает `Electron2D.IosDeviceSmokeArtifact`; на hosts без simulator/device evidence команда завершается failure с `data.result.status = "smoke-blocked"` и diagnostic `E2D-EXPORT-IOS-0011`.
 
-## Current smoke artifact
+## Текущий smoke artifact
 
-`Electron2DIosDeviceSmokeRunner.Run(...)` writes a JSON artifact with format `Electron2D.IosDeviceSmokeArtifact`.
+`Electron2DIosDeviceSmokeRunner.Run(...)` записывает JSON artifact с format `Electron2D.IosDeviceSmokeArtifact`.
 
-When simulator/device evidence is missing, the artifact status is `blocked`, diagnostic `E2D-EXPORT-IOS-0011` is emitted and all required criteria remain failed. This is useful for release gate transparency, but it does not close `T-0092`.
+Когда simulator/device evidence отсутствует, artifact status равен `blocked`, diagnostic `E2D-EXPORT-IOS-0011` записывается, а все required criteria остаются failed. Это полезно для прозрачности release gate, но не закрывает `T-0092`.
 
-## Signing and credentials
+## Signing и credentials
 
-Release iOS export will require signing. Repository files may store only non-secret references:
+Release iOS export потребует signing. Файлы репозитория могут хранить только non-secret references:
 
 - signing identity label;
 - provisioning profile name;
 - bundle identifier;
 - CI secret name;
-- environment variable name used by future tooling.
+- имя переменной окружения, которую будет использовать будущий tooling.
 
-Repository files must not contain private keys, certificates, provisioning profile contents, passwords, access tokens, or copied secret payloads.
+Файлы репозитория не должны содержать private keys, certificates, provisioning profile contents, passwords, access tokens или скопированные secret payloads.
 
-## Known limitations
+## Известные ограничения
 
-- `.ipa` packaging is not implemented.
-- Signing execution is not implemented.
-- Simulator/device install and launch are not implemented.
-- Pause/resume, orientation, safe area, touch, virtual keyboard, audio, resources, and filesystem smoke checks are not implemented.
-- The CI workflow reports mobile export as a status gap instead of running iOS packaging.
+- `.ipa` packaging не реализован.
+- Выполнение signing не реализовано.
+- Install и launch на simulator/device не реализованы.
+- Smoke checks для pause/resume, orientation, safe area, touch, virtual keyboard, audio, resources и filesystem не реализованы.
+- CI workflow показывает mobile export как status gap вместо запуска iOS packaging.
 
-## Verification
+## Проверка
 
-Focused local tests for the current planner/staging/smoke artifact:
+Focused local tests для текущего planner/staging/smoke artifact:
 
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~IosExportTests"
 ```
 
-There is still no iOS release-package verifier that runs on a simulator or device. Final `T-0092` acceptance requires a macOS host with Xcode and a real simulator/device smoke run.
+Verifier для iOS release package, который запускается на simulator или device, всё ещё отсутствует. Финальная приёмка `T-0092` требует macOS host с Xcode и реальный simulator/device smoke run.

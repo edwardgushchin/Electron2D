@@ -28,7 +28,9 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $artifactPath = Join-Path $repoRoot 'data/quality/reference-game-platform-matrix.json'
 $workRoot = Join-Path $repoRoot '.temp/reference-game-platform-matrix'
 $summaryPath = Join-Path $workRoot 'summary.json'
-$expectedTargets = @('AndroidArm64', 'IosArm64', 'LinuxX64', 'MacOSArm64', 'WebAssemblyBrowser', 'WindowsX64')
+$expectedRuntimeTargets = @('AndroidArm64', 'IosArm64', 'LinuxX64', 'MacOSArm64', 'WebAssemblyBrowser', 'WindowsX64')
+$expectedEditorTargets = @('Linux', 'Windows', 'macOS')
+$expectedReleaseVerificationDecisionId = 'all-runtime-targets-for-0.1.0-preview'
 $allowedDifferences = @(
     'export preset target/configuration/runtime identifier/output directory',
     'renderer profile',
@@ -103,6 +105,38 @@ function Assert-StringSet([string[]]$actual, [string[]]$expected, [string]$conte
     $expectedSorted = @(Get-SortedStrings $expected)
     if (($actualSorted -join ',') -ne ($expectedSorted -join ',')) {
         throw "$context mismatch. Expected $($expectedSorted -join ','), got $($actualSorted -join ',')."
+    }
+}
+
+function Assert-NoProperty([object]$value, [string]$propertyName, [string]$context) {
+    if ($value.PSObject.Properties.Name -contains $propertyName) {
+        throw "$context must not declare legacy property '$propertyName'."
+    }
+}
+
+function Assert-ReleaseVerificationTargets([object[]]$releaseVerificationTargets, [string[]]$expectedTargets) {
+    $targets = @($releaseVerificationTargets)
+    if ($targets.Count -ne $expectedTargets.Count) {
+        throw "releaseVerificationTargets must contain one entry per runtime target. Expected $($expectedTargets.Count), got $($targets.Count)."
+    }
+
+    $targetNames = @($targets | ForEach-Object { [string]$_.target })
+    Assert-StringSet $targetNames $expectedTargets 'Reference game platform matrix releaseVerificationTargets'
+
+    foreach ($target in $targets) {
+        $targetName = [string]$target.target
+        if ($target.realSmokeSoakRequired -ne $true) {
+            throw "$targetName releaseVerificationTarget must require real smoke/soak for 0.1.0 Preview."
+        }
+
+        if ($target.blockedEnvironmentArtifactAllowed -ne $true) {
+            throw "$targetName releaseVerificationTarget must allow blocked-environment artifact diagnostics."
+        }
+
+        $releaseGateBlocker = [string]$target.releaseGateBlocker
+        if ([System.String]::IsNullOrWhiteSpace($releaseGateBlocker)) {
+            throw "$targetName releaseVerificationTarget must describe the release gate blocker."
+        }
     }
 }
 
@@ -221,11 +255,20 @@ function Assert-EditorMetadataNotRuntimeResource([string]$projectRoot, [string[]
 
 Assert-File $artifactPath "Reference game platform matrix artifact was not found: $artifactPath"
 $artifact = Get-Content -LiteralPath $artifactPath -Raw | ConvertFrom-Json
-if ($artifact.format -ne 'Electron2D.ReferenceGamePlatformMatrix' -or $artifact.version -ne 1 -or $artifact.release -ne '0.1.0-preview') {
+if ($artifact.format -ne 'Electron2D.ReferenceGamePlatformMatrix' -or $artifact.version -ne 2 -or $artifact.release -ne '0.1.0-preview') {
     throw 'Reference game platform matrix artifact has invalid identity.'
 }
 
-Assert-StringSet @($artifact.targetSet) $expectedTargets 'Reference game platform matrix targetSet'
+Assert-NoProperty $artifact 'targetSet' 'Reference game platform matrix artifact'
+Assert-StringSet @($artifact.runtimeTargets) $expectedRuntimeTargets 'Reference game platform matrix runtimeTargets'
+Assert-StringSet @($artifact.editorTargets) $expectedEditorTargets 'Reference game platform matrix editorTargets'
+Assert-ReleaseVerificationTargets @($artifact.releaseVerificationTargets) $expectedRuntimeTargets
+if ($null -eq $artifact.releaseVerificationDecision -or
+    [string]$artifact.releaseVerificationDecision.id -ne $expectedReleaseVerificationDecisionId -or
+    [string]$artifact.releaseVerificationDecision.source -ne 'docs/releases/0.1.0-preview.md') {
+    throw 'Reference game platform matrix releaseVerificationDecision is missing or invalid.'
+}
+
 Assert-StringSet @($artifact.allowedDifferences) $allowedDifferences 'Reference game platform matrix allowedDifferences'
 
 Remove-Item -LiteralPath $workRoot -Recurse -Force -ErrorAction SilentlyContinue
@@ -267,8 +310,9 @@ foreach ($project in @($artifact.projects)) {
     }
 
     $targets = @($presets.presets | ForEach-Object { [string]$_.target })
-    Assert-StringSet $targets $expectedTargets "$projectId export target set"
-    Assert-StringSet @($project.expectedTargets) $expectedTargets "$projectId artifact expectedTargets"
+    Assert-StringSet $targets $expectedRuntimeTargets "$projectId export runtimeTargets"
+    Assert-NoProperty $project 'expectedTargets' "$projectId artifact"
+    Assert-StringSet @($project.expectedRuntimeTargets) $expectedRuntimeTargets "$projectId artifact expectedRuntimeTargets"
 
     foreach ($preset in @($presets.presets)) {
         Assert-SafeSigningReference $preset $projectId
@@ -312,9 +356,12 @@ $summary = [ordered]@{
     release = '0.1.0-preview'
     verifiedAtUtc = [System.DateTimeOffset]::UtcNow.ToString('O')
     projects = $projectSummaries
-    targetSet = @(Get-SortedStrings $expectedTargets)
+    runtimeTargets = @(Get-SortedStrings $expectedRuntimeTargets)
+    editorTargets = @(Get-SortedStrings $expectedEditorTargets)
+    releaseVerificationTargets = @($artifact.releaseVerificationTargets | Sort-Object target)
+    releaseVerificationDecision = $artifact.releaseVerificationDecision
     allowedDifferences = @(Get-SortedStrings $allowedDifferences)
 }
 $summary | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath $summaryPath -Encoding UTF8
 
-Write-Host "Reference game platform matrix verification passed. Projects: $($projectSummaries.Count), targets: $($expectedTargets.Count)."
+Write-Host "Reference game platform matrix verification passed. Projects: $($projectSummaries.Count), runtime targets: $($expectedRuntimeTargets.Count), editor targets: $($expectedEditorTargets.Count)."

@@ -1,8 +1,8 @@
 {
   "format": "Electron2D.ReferenceGamePlatformMatrix",
-  "version": 1,
+  "version": 2,
   "release": "0.1.0-preview",
-  "targetSet": [
+  "runtimeTargets": [
     "AndroidArm64",
     "IosArm64",
     "LinuxX64",
@@ -10,6 +10,54 @@
     "WebAssemblyBrowser",
     "WindowsX64"
   ],
+  "editorTargets": [
+    "Linux",
+    "Windows",
+    "macOS"
+  ],
+  "releaseVerificationTargets": [
+    {
+      "target": "AndroidArm64",
+      "realSmokeSoakRequired": true,
+      "blockedEnvironmentArtifactAllowed": true,
+      "releaseGateBlocker": "Android release gate is blocked until device or emulator smoke, lifecycle, touch/input, audio, resource loading, save data, shutdown, soak and package-content evidence pass."
+    },
+    {
+      "target": "IosArm64",
+      "realSmokeSoakRequired": true,
+      "blockedEnvironmentArtifactAllowed": true,
+      "releaseGateBlocker": "iOS release gate is blocked until macOS/Xcode simulator or device smoke/soak, signing references without secrets, lifecycle/touch/safe-area evidence and package-content evidence pass."
+    },
+    {
+      "target": "LinuxX64",
+      "realSmokeSoakRequired": true,
+      "blockedEnvironmentArtifactAllowed": true,
+      "releaseGateBlocker": "Linux release gate is blocked until reference project launch, rendering, input, audio, resources, scene switching, save data, pause/resume, shutdown, 30-minute soak and package-content evidence pass."
+    },
+    {
+      "target": "MacOSArm64",
+      "realSmokeSoakRequired": true,
+      "blockedEnvironmentArtifactAllowed": true,
+      "releaseGateBlocker": "macOS release gate is blocked until reference project launch, rendering, input, audio, resources, scene switching, save data, pause/resume, shutdown, 30-minute soak and package-content evidence pass on macOS arm64."
+    },
+    {
+      "target": "WebAssemblyBrowser",
+      "realSmokeSoakRequired": true,
+      "blockedEnvironmentArtifactAllowed": true,
+      "releaseGateBlocker": "WebAssembly browser release gate is blocked until browser package smoke, rendering readiness, pointer/touch/keyboard input, audio unlock policy, resource loading, sandbox save-data policy, browser launch evidence and soak-equivalent criteria pass."
+    },
+    {
+      "target": "WindowsX64",
+      "realSmokeSoakRequired": true,
+      "blockedEnvironmentArtifactAllowed": true,
+      "releaseGateBlocker": "Windows release gate is blocked until reference project launch, rendering, input, audio, resources, scene switching, save data, pause/resume, shutdown, 30-minute soak and package-content evidence pass."
+    }
+  ],
+  "releaseVerificationDecision": {
+    "id": "all-runtime-targets-for-0.1.0-preview",
+    "source": "docs/releases/0.1.0-preview.md",
+    "summary": "0.1.0 Preview keeps all six runtime targets in releaseVerificationTargets; blocked-environment artifacts document missing prerequisites but do not pass the release gate."
+  },
   "allowedDifferences": [
     "export preset target/configuration/runtime identifier/output directory",
     "renderer profile",
@@ -41,7 +89,7 @@
         ".electron2d/tasks"
       ],
       "verifier": "tools/Verify-ReferencePlatformer.ps1",
-      "expectedTargets": [
+      "expectedRuntimeTargets": [
         "AndroidArm64",
         "IosArm64",
         "LinuxX64",

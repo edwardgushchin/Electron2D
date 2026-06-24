@@ -90,7 +90,7 @@ Platforms оформляется как таблица с колонками `Pl
 | iOS | `❌ Not planned` | `🕓 Planned` |
 | Web | `❌ Not planned` | `🕓 Planned` |
 
-iOS и Web показываются только как future runtime targets и не входят в mandatory `0.1.0 Preview` gate. README не должен превращать Web в отдельный Roadmap-раздел.
+iOS и Web показываются в публичном README как запланированные платформы запуска. README не отображает уровень релизной проверки; текущий состав `releaseVerificationTargets` задаётся в `docs/releases/0.1.0-preview.md`. README не должен превращать Web в отдельный Roadmap-раздел.
 
 ## Installation
 
@@ -133,7 +133,7 @@ Examples содержит только `Platformer`.
 Блок выглядит так:
 
 ```markdown
-- **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A complete 2D platformer built with Electron2D.
+- **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A 2D platformer example built with Electron2D.
 ```
 
 Старое имя `reference-platformer` не должно появляться ни в видимом тексте, ни в URL README. До фактического переименования каталога `T-0110` остаётся `open`.

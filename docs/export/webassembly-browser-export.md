@@ -1,6 +1,6 @@
 # WebAssembly browser export
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,15 +13,17 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация для `T-0164`.
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 ## Назначение
 
-Electron2D должен иметь отдельный web export target, который собирает игру в WebAssembly и запускает её в браузере без переписывания игрового кода. Этот target дополняет native desktop/mobile export и не заменяет Windows, Linux, macOS, Android или iOS.
+Electron2D должен иметь отдельный web export target, который собирает игру в WebAssembly и запускает её в браузере без переписывания игрового кода. Этот target дополняет нативный экспорт для настольных и мобильных платформ и не заменяет Windows, Linux, macOS, Android или iOS.
+
+WebAssembly browser входит в `runtimeTargets` и в `releaseVerificationTargets` текущего preview-релиза, но остаётся отдельным release verification tier от самой runtime matrix. Локальный package-contract smoke artifact полезен для диагностики; финальный release gate требует browser launch evidence, runtime probes или отдельного изменения `docs/releases/0.1.0-preview.md`.
 
 WebAssembly browser export в этой спецификации означает статический browser package: набор файлов, который можно открыть через локальный или внешний статический HTTP server. Публикация на внешний hosting, CDN, store или облачный сервис не входит в `0.1.0 Preview`.
 
-## Export target
+## Целевой export target
 
 Preset для web export использует:
 
@@ -36,7 +38,7 @@ Preset для web export использует:
 
 `WebAssemblyBrowser` не требует signing credentials. Если preset требует signing, planner должен fail closed: web package не подписывается Android/iOS/macOS credentials.
 
-## Toolchain
+## Инструменты сборки
 
 Минимальный toolchain:
 
@@ -46,7 +48,7 @@ Preset для web export использует:
 - локальный static HTTP server для smoke run;
 - browser automation harness или документированная ручная browser smoke-команда.
 
-Validator не должен запускать build, browser, deploy или remote hosting. Он получает обнаруженные факты окружения и возвращает deterministic diagnostics.
+Проверка окружения не должна запускать сборку, браузер, deploy или внешний хостинг. Она получает обнаруженные факты окружения и возвращает deterministic diagnostics.
 
 Stable diagnostics:
 
@@ -66,7 +68,7 @@ Stable diagnostics:
 
 Сообщения diagnostics должны объяснять, какой preset заблокирован и почему. Они не должны раскрывать credential references или локальные секреты.
 
-## Package layout
+## Структура browser package
 
 Planner должен возвращать deterministic browser package layout:
 
@@ -92,7 +94,7 @@ Planner должен возвращать deterministic browser package layout:
 
 `assets/` - статические игровые ресурсы после import/export processing. Служебные файлы редактора, включая `.electron2d/tasks/**`, local-only task tracker, дневник и completed archives, не входят в browser package.
 
-## Runtime policies
+## Правила browser runtime
 
 Browser runtime должен явно учитывать ограничения браузера:
 
@@ -104,7 +106,7 @@ Browser runtime должен явно учитывать ограничения 
 - browser lifecycle отражает visibility/focus changes и page unload как pause/resume/shutdown signals там, где это возможно;
 - dynamic loading of user code at runtime is not allowed.
 
-## Build and run workflow
+## Сборка и запуск
 
 `e2d export plan-web` должен формировать build workflow без выполнения внешних процессов:
 
@@ -112,9 +114,9 @@ Browser runtime должен явно учитывать ограничения 
 dotnet publish <project.csproj> --configuration <Debug|Release> --runtime browser-wasm --self-contained true --output <outputDirectory>/wwwroot/_framework
 ```
 
-`e2d export build-web` должен создать host page, loader, webmanifest и перенести project/runtime resources в `wwwroot`. По умолчанию команда пытается выполнить `dotnet publish` перед записью package files. Для deterministic checks разрешён явный режим `--skip-publish true`: он не объявляет внешний publish успешным, но создаёт проверяемый static package layout, который нужен тестам planner/layout/diagnostics.
+`e2d export build-web` должен создать host page, loader, webmanifest и перенести project/runtime resources в `wwwroot`. По умолчанию команда пытается выполнить `dotnet publish` перед записью package files. Для deterministic checks разрешён явный режим `--skip-publish true`: он не объявляет внешний publish успешным, но создаёт проверяемую статическую структуру пакета, которая нужна тестам planner/layout/diagnostics.
 
-`e2d export run-web` должен проверить созданный `wwwroot`, сформировать launch URL и сохранить structured smoke artifact. Минимальный smoke artifact проверяет package contract локально: наличие host page, loader, manifest, project settings, main scene, canvas/readiness marker, input event handlers, audio policy и save-data policy. Полноценная browser automation может использовать тот же loader API `window.Electron2DWebRuntimeSmoke.run()`.
+`e2d export run-web` должен проверить созданный `wwwroot`, сформировать launch URL и сохранить structured smoke artifact. Минимальный smoke artifact локально проверяет контракт пакета: наличие host page, loader, manifest, project settings, main scene, canvas/readiness marker, input event handlers, audio policy и save-data policy. Полноценная автоматизация браузера может использовать тот же loader API `window.Electron2DWebRuntimeSmoke.run()`.
 
 Browser run workflow:
 
@@ -124,7 +126,7 @@ Browser run workflow:
 4. проверить startup, main scene load, rendering readiness, input event path, audio policy state, resource loading и save-data policy;
 5. сохранить structured smoke artifact с URL, browser name/version, pass/fail, diagnostics и проверенными steps.
 
-Если WebAssembly toolchain отсутствует, команда publish должна fail closed с diagnostics и не объявлять внешний publish успешным. Если browser automation отсутствует, `run-web` обязан как минимум сохранить локальный smoke artifact по package contract и launch instructions; автоматизированный browser launch остаётся расширением поверх этого artifact.
+Если WebAssembly toolchain отсутствует, команда publish должна завершиться закрытой ошибкой (`fail closed`) с diagnostics и не объявлять внешний publish успешным. Если автоматизация браузера отсутствует, `run-web` обязан как минимум сохранить локальный smoke artifact по package contract и instructions для запуска; автоматизированный browser launch остаётся расширением поверх этого artifact.
 
 ## Критерии приёмки
 
@@ -133,43 +135,43 @@ Browser run workflow:
 - Web planner создаёт deterministic package layout, publish arguments, browser policies и smoke criteria.
 - Web planner fail closed для неправильного target, runtime identifier, deployment mode, signing и отсутствующих project settings.
 - Web package builder создаёт `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, named project settings file `<ProjectName>.e2d`, main scene и `assets/**`, но не копирует `.electron2d/tasks/**`. Legacy `project.e2d.json` копируется только для старых проектов, где это фактическое имя project settings file.
-- CLI `export build-web --skip-publish true` создаёт проверяемый static package layout без workspace job, а обычный `export build-web` fail closed, если WebAssembly build tools не соответствуют текущему SDK.
+- CLI `export build-web --skip-publish true` создаёт проверяемую статическую структуру пакета без workspace job, а обычный `export build-web` завершается закрытой ошибкой (`fail closed`), если WebAssembly build tools не соответствуют текущему SDK.
 - CLI `export run-web` создаёт structured smoke artifact с criteria для startup, scene load, rendering readiness, input event path, audio policy state, resource loading и save-data policy.
 - Implementation documentation описывает фактический target, layout, diagnostics, limitations и команды проверки.
 - Focused export tests, source license/header checks и documentation verifiers проходят.
 
 ## Фактическое состояние, ограничения и проверки
 
-Текущая реализация добавляет внутренний WebAssembly browser export planner, package builder, локальный smoke runner и CLI-команды `e2d export plan-web`, `e2d export build-web`, `e2d export run-web`. Planner строит проверяемый план, package builder создаёт static `wwwroot`, а smoke runner сохраняет structured artifact по browser package contract. Remote hosting, CDN, store publication и PWA/service-worker caching не выполняются.
+Текущая реализация добавляет внутренний планировщик экспорта для WebAssembly browser, сборщик браузерного пакета, локальный запуск smoke-проверки и CLI-команды `e2d export plan-web`, `e2d export build-web`, `e2d export run-web`. Планировщик строит проверяемый план, сборщик пакета создаёт статический каталог `wwwroot`, а smoke-runner сохраняет structured artifact по контракту браузерного пакета. Внешний хостинг, CDN, публикация в store и PWA/service-worker caching не выполняются.
 
-## Target
+## Целевой export target
 
 - Export target: `WebAssemblyBrowser`.
 - Runtime identifier: `browser-wasm`.
-- Package shape: static browser package under `wwwroot`.
-- Verification status: planner, package layout, CLI JSON contract and smoke artifact are covered by integration tests.
+- Форма пакета: статический браузерный пакет в `wwwroot`.
+- Статус проверки: планировщик, структура пакета, CLI JSON contract и smoke artifact покрыты интеграционными тестами.
 
-## Host requirements
+## Требования к окружению
 
-WebAssembly browser export planning and deterministic package checks can run on any desktop host with .NET SDK `10.0.x`. Actual `dotnet publish` requires .NET WebAssembly build tools that match the active SDK. For example, an SDK `10.0.x` host is not considered publish-ready only because `wasm-tools-net9` is installed. Browser play requires serving `wwwroot` through a static HTTP server and opening `index.html` in a browser.
+Планирование экспорта для WebAssembly browser и детерминированные проверки пакета могут выполняться на любом настольном окружении с .NET SDK `10.0.x`. Реальный `dotnet publish` требует .NET WebAssembly build tools, которые соответствуют активному SDK. Например, окружение с SDK `10.0.x` не считается готовым к публикации только потому, что установлен `wasm-tools-net9`. Для ручного запуска в браузере нужно раздать `wwwroot` через локальный статический HTTP-сервер и открыть `index.html` в браузере.
 
-## SDK and toolchain
+## SDK и инструменты сборки
 
-`plan-web` returns this publish command:
+`plan-web` возвращает такую команду публикации:
 
 ```text
 dotnet publish <project.csproj> --configuration <Debug|Release> --runtime browser-wasm --self-contained true --output <outputDirectory>/wwwroot/_framework
 ```
 
-The toolchain validator has a separate `WebAssemblyBuildToolsAvailable` flag. When a `WebAssemblyBrowser` preset is validated without matching WebAssembly build tools, validation fails closed with `E2D-EXPORT-WEB-0001`. `build-web` uses that check before running the external publish step unless `--skip-publish true` is passed for deterministic package-layout verification.
+Проверка инструментов сборки имеет отдельный флаг `WebAssemblyBuildToolsAvailable`. Когда `WebAssemblyBrowser` preset проверяется без подходящих WebAssembly build tools, validation завершается закрытой ошибкой (`fail closed`) с `E2D-EXPORT-WEB-0001`. `build-web` использует эту проверку перед внешним шагом публикации, если не передан `--skip-publish true` для детерминированной проверки структуры пакета.
 
-## Signing and credentials
+## Подписание и учётные ссылки
 
-WebAssembly browser export does not use signing credentials. A web preset with `signing.required: true` fails closed in the planner with `E2D-EXPORT-WEB-0005`. Repository files must still avoid passwords, tokens, private keys, certificates and copied secret payloads.
+Экспорт для WebAssembly browser не использует данные для подписания. Web preset с `signing.required: true` завершается закрытой ошибкой (`fail closed`) в планировщике с `E2D-EXPORT-WEB-0005`. Файлы репозитория всё равно не должны содержать passwords, tokens, private keys, certificates и скопированные secret payloads.
 
-## Package layout
+## Структура браузерного пакета
 
-`Electron2DWebAssemblyExportPlanner.CreatePlan(...)` returns this deterministic layout, and `Electron2DWebAssemblyPackageBuilder.Build(...)` writes the static files:
+`Electron2DWebAssemblyExportPlanner.CreatePlan(...)` возвращает эту детерминированную структуру, а `Electron2DWebAssemblyPackageBuilder.Build(...)` записывает статические файлы:
 
 ```text
 <outputDirectory>/
@@ -183,19 +185,19 @@ WebAssembly browser export does not use signing credentials. A web preset with `
     <main scene path>
 ```
 
-The package builder writes `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, copies the actual project settings file such as `ReferencePlatformer.e2d`, copies the main scene path, and copies `assets/**`. The manifest stores that project file path in `projectFile`, and the loader uses it instead of assuming `project.e2d.json`. Legacy projects that still use `project.e2d.json` keep that filename. The package intentionally does not include `.electron2d/tasks/**`, local workflow files or signing secrets.
+Сборщик пакета записывает `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, копирует фактический файл настроек проекта, например `ReferencePlatformer.e2d`, копирует путь к главной сцене и `assets/**`. Manifest хранит путь к project file в `projectFile`, а loader использует его вместо предположения о `project.e2d.json`. Старые проекты, которые всё ещё используют `project.e2d.json`, сохраняют это имя файла. Пакет намеренно не включает `.electron2d/tasks/**`, локальные workflow-файлы или signing secrets.
 
-## Browser runtime policy
+## Правила браузерной среды выполнения
 
-The plan records these browser-specific policies:
+План фиксирует такие browser-specific policies:
 
-- `staticHosting` - package can be served by a static HTTP server;
-- `browserSandboxStorage` - save data must respect browser storage limits;
-- `audioRequiresUserGesture` - audio starts locked until a user gesture;
-- `packageLocalResourcesOnly` - resources are loaded from package contents;
-- `noRuntimeUserCodeLoading` - user code is not dynamically loaded at runtime.
+- `staticHosting` - пакет можно раздавать через статический HTTP-сервер;
+- `browserSandboxStorage` - сохранение данных должно учитывать ограничения browser storage;
+- `audioRequiresUserGesture` - звук остаётся заблокированным до пользовательского жеста;
+- `packageLocalResourcesOnly` - ресурсы загружаются из содержимого пакета;
+- `noRuntimeUserCodeLoading` - пользовательский код не загружается динамически во время выполнения.
 
-Smoke criteria are:
+Критерии smoke-проверки:
 
 - `startup`;
 - `sceneLoad`;
@@ -205,15 +207,15 @@ Smoke criteria are:
 - `resourceLoading`;
 - `saveDataPolicy`.
 
-## CLI plan
+## CLI route `plan-web`
 
-From a project root that contains one `.e2d` project settings file and one `.csproj`:
+Из корня проекта, который содержит один `.e2d` файл настроек проекта и один `.csproj`:
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-web --project <project-root> --format json
 ```
 
-The JSON envelope uses:
+JSON-оболочка использует:
 
 - `command`: `export plan-web`;
 - `route`: `none`;
@@ -222,43 +224,43 @@ The JSON envelope uses:
 - `data.runtimeIdentifier`: `browser-wasm`;
 - `data.plan`: deterministic paths, publish arguments, browser policies and smoke criteria.
 
-This command does not queue a workspace job and does not launch external build or browser processes.
+Эта команда не ставит workspace job в очередь и не запускает внешнюю сборку или процессы браузера.
 
-## CLI build
+## CLI route `build-web`
 
-Create the static package layout and run publish when the matching WebAssembly toolchain is available:
+Создать статическую структуру пакета и запустить публикацию, когда доступны подходящие WebAssembly build tools:
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --format json
 ```
 
-For deterministic CI checks that must not invoke external publish, pass:
+Для детерминированных CI-проверок, которые не должны вызывать внешний publish, передайте:
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --skip-publish true --format json
 ```
 
-The JSON envelope uses `command = "export build-web"`, `route = "none"`, `data.mode = "export.web.build"` and `data.package.files`. It does not queue a workspace job. When publish is not skipped and the WebAssembly toolchain does not match the active SDK, the command fails closed before writing a misleading publish success.
+JSON-оболочка использует `command = "export build-web"`, `route = "none"`, `data.mode = "export.web.build"` и `data.package.files`. Команда не ставит workspace job в очередь. Если publish не пропущен и WebAssembly build tools не соответствуют активному SDK, команда завершается закрытой ошибкой (`fail closed`) до записи ложной успешной публикации.
 
-## CLI run
+## CLI route `run-web`
 
-After `build-web` created `wwwroot`, create a local smoke artifact and launch instructions:
+После того как `build-web` создал `wwwroot`, создайте локальный smoke artifact и инструкции запуска:
 
 ```powershell
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json
 ```
 
-The artifact format is `Electron2D.WebAssemblySmokeArtifact`. It records launch URL, web root, runtime policies, diagnostics and criteria results for `startup`, `sceneLoad`, `renderingReadiness`, `inputEventPath`, `audioPolicyState`, `resourceLoading` and `saveDataPolicy`. To play manually in a browser, serve the generated folder, for example:
+Формат артефакта: `Electron2D.WebAssemblySmokeArtifact`. Артефакт записывает launch URL, web root, runtime policies, diagnostics и criteria results для `startup`, `sceneLoad`, `renderingReadiness`, `inputEventPath`, `audioPolicyState`, `resourceLoading` и `saveDataPolicy`. Для ручного запуска в браузере раздайте сгенерированную папку, например:
 
 ```powershell
 python -m http.server 8080 --directory <project-root>\exports\web\wwwroot
 ```
 
-Then open `http://127.0.0.1:8080/index.html`.
+Затем откройте `http://127.0.0.1:8080/index.html`.
 
-## Validation
+## Диагностика
 
-Stable diagnostic codes for the web planner:
+Стабильные diagnostic codes для web planner:
 
 - `E2D-EXPORT-WEB-0001` - WebAssembly build tools недоступны;
 - `E2D-EXPORT-WEB-0002` - target не `WebAssemblyBrowser`;
@@ -272,16 +274,16 @@ Stable diagnostic codes for the web planner:
 - `E2D-EXPORT-WEB-0010` - browser package не удалось записать;
 - `E2D-EXPORT-WEB-0011` - обязательный файл package отсутствует или не читается;
 - `E2D-EXPORT-WEB-0012` - путь ресурса выходит за пределы project root;
-- `E2D-EXPORT-WEB-0013` - smoke criterion failed.
+- `E2D-EXPORT-WEB-0013` - smoke criterion не прошёл.
 
-## Known limitations
+## Известные ограничения
 
-- The current repository creates a static package and local smoke artifact; it does not deploy that package to remote hosting.
-- Automated browser launch can use `window.Electron2DWebRuntimeSmoke.run()`, but the built-in CLI smoke is a local package-contract check and launch-instruction artifact.
-- Browser debugging, remote hosting deploy, CDN upload, PWA installation and service worker caching are outside the current implementation.
-- WebAssembly browser support does not replace native desktop/mobile targets.
+- Текущий репозиторий создаёт статический пакет и локальный smoke artifact; он не разворачивает этот пакет на внешний хостинг.
+- Автоматический запуск браузера может использовать `window.Electron2DWebRuntimeSmoke.run()`, но встроенный CLI smoke является локальной проверкой package contract и артефактом с launch instructions.
+- Отладка в браузере, публикация на внешний хостинг, CDN upload, PWA installation и service worker caching находятся вне текущей реализации.
+- Поддержка WebAssembly browser не заменяет нативные настольные и мобильные target-платформы.
 
-## Local verification
+## Локальная проверка
 
 ```powershell
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~WebAssemblyExportTests"

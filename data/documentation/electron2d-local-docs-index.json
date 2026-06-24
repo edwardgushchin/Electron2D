@@ -109,7 +109,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/repository-readme.md",
-                                                    "sha256":  "04a4ba4d8635125d3cde577334f743ddb3c65264c482af1e3a8bbcd2acfba19a"
+                                                    "sha256":  "1a748e526f7ec8d1514c3ff6c320db4451d8e980e060cbed586ca16225c74234"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/troubleshooting-release-checklist.md",
@@ -189,7 +189,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/examples/reference-game-platform-matrix.md",
-                                                    "sha256":  "180bdc1e7826c9e803977b13dacfcf979dcd18fcd1c6a80edfc28d3a613be5b7"
+                                                    "sha256":  "ff8a1a6682d851b8abf7516c5db1a11f65e5b8d2b5bce9b359b276b1d548eb58"
                                                 },
                                                 {
                                                     "path":  "docs/examples/reference-platformer.md",
@@ -201,7 +201,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/export/export-guide.md",
-                                                    "sha256":  "3af4a6be26835aec04c1e0f79b8207369e2e3dddf1637da50999c49386f236b4"
+                                                    "sha256":  "74d90783757655cf5330f3df79c5e03074ff2f16a0a52aaf0c2a749b578e12d1"
                                                 },
                                                 {
                                                     "path":  "docs/export/export-preset-model.md",
@@ -209,7 +209,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/export/ios-arm64-export.md",
-                                                    "sha256":  "d894768fe2aa7e64597089bac19707149ffacf1d6cea47f081df9a1ce54966af"
+                                                    "sha256":  "6eb3ada387e55fd5e3fae120c88bb14157c78be8592dcedca7cfe7393c2010e1"
                                                 },
                                                 {
                                                     "path":  "docs/export/linux-x64-export.md",
@@ -221,7 +221,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/export/webassembly-browser-export.md",
-                                                    "sha256":  "f7f32631bbffd45f568989e3149e891c489a4dc148cb12d9f3de66e47ddd367b"
+                                                    "sha256":  "d57b4f22ecdfbf4ff07322aabf81203ac352c1f736f9a01e62d317c650598dad"
                                                 },
                                                 {
                                                     "path":  "docs/export/windows-x64-export.md",
@@ -413,7 +413,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/releases/0.1.0-preview.md",
-                                                    "sha256":  "88fdbfd4049fed6ca1a91ba95c239be0ff982574dd0080a4f16c0265984404a6"
+                                                    "sha256":  "cc3c1279285dd2ca94586584ecfd7b504b65442d026e563ca923df5428de5d95"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -573,7 +573,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/settings-localization/translation-runtime.md",
-                                                    "sha256":  "93a62ca5cc65d9332d199ce54ea88282d7cd9c9099d66ffd5e42d3ff3ba2cd8c"
+                                                    "sha256":  "dad96c67c8b4ba903bdf0e1d982de869bf0c9ac939e338a258a079c30b453956"
                                                 },
                                                 {
                                                     "path":  "docs/settings-localization/unicode-ime-rtl-text.md",
@@ -75540,18 +75540,16 @@
                     {
                         "id":  "doc:export.export-guide",
                         "kind":  "documentation",
-                        "title":  "Export user documentation",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "title":  "Пользовательская документация экспорта",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "docs",
-                                         "documentation",
                                          "export",
                                          "guide",
-                                         "md",
-                                         "user"
+                                         "md"
                                      ],
                         "sourcePath":  "docs/export/export-guide.md",
                         "sourceId":  "doc:export.export-guide",
@@ -75593,11 +75591,11 @@
                         "id":  "doc:export.ios-arm64-export",
                         "kind":  "documentation",
                         "title":  "iOS arm64 export",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "64",
                                          "arm",
                                          "arm64",
@@ -75676,11 +75674,11 @@
                         "id":  "doc:export.webassembly-browser-export",
                         "kind":  "documentation",
                         "title":  "WebAssembly browser export",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "assembly",
                                          "browser",
                                          "docs",
@@ -78111,20 +78109,17 @@
                     {
                         "id":  "doc:settings-localization.translation-runtime",
                         "kind":  "documentation",
-                        "title":  "Translation resource, locale switching и `Tr`",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "title":  "Ресурс переводов, переключение языка и `Tr`",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "docs",
-                                         "locale",
                                          "localization",
                                          "md",
-                                         "resource",
                                          "runtime",
                                          "settings",
-                                         "switching",
                                          "tr",
                                          "translation"
                                      ],
