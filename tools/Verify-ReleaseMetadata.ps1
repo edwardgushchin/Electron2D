@@ -100,8 +100,8 @@ foreach ($path in @($readmePath, $packageIconPath, $editorIconPath)) {
 
 $readme = Get-Content -LiteralPath $readmePath -Raw
 
-if ($readme.IndexOf('0.1.0 Preview', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
-    throw 'README.md does not mention 0.1.0 Preview.'
+if ($readme.IndexOf('0.1.0-preview', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    throw 'README.md does not mention 0.1.0-preview.'
 }
 
 foreach ($brandAssetPath in @(

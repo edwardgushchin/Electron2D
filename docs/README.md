@@ -53,6 +53,7 @@
 - [Canonical goal alignment audit](documentation/canonical-goal-alignment.md)
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md)
 - [Local documentation pipeline](documentation/local-documentation-pipeline.md)
+- [Repository README и публичная входная страница](documentation/repository-readme.md)
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md)
 - [Документация renderer profiles](documentation/renderer-profiles.md)
 - [Troubleshooting guide и release checklist](documentation/troubleshooting-release-checklist.md)
@@ -157,6 +158,7 @@
 - [CI-матрица `0.1.0 Preview`](release-management/ci-matrix.md)
 - [Performance budgets и soak-критерии `0.1.0 Preview`](release-management/performance-budgets.md)
 - [Формат проекта и шаблон `electron2d-empty`](release-management/project-template.md)
+- [Release packaging и GitHub Release rehearsal](release-management/release-packaging.md)
 - [Версионирование и release metadata `0.1.0 Preview`](release-management/release-metadata.md)
 - [Тестовая инфраструктура `0.1.0 Preview`](release-management/test-infrastructure.md)
 

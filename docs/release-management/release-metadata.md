@@ -57,7 +57,7 @@ Maintainer может держать такие файлы локально ка
 powershell -ExecutionPolicy Bypass -File tools/Verify-ReleaseMetadata.ps1
 ```
 
-Verifier сверяет package metadata в `src/Electron2D/Electron2D.csproj`, иконку `Electron2D.Editor`, наличие брендовых файлов, ссылки README на брендовые SVG, отсутствие tracked release draft файлов и упоминание текущей preview-версии в README.
+Verifier сверяет package metadata в `src/Electron2D/Electron2D.csproj`, иконку `Electron2D.Editor`, наличие брендовых файлов, ссылки README на брендовые SVG, отсутствие tracked release draft файлов и упоминание package version `0.1.0-preview` в README.
 
 ## Фактическое состояние, ограничения и проверки
 
