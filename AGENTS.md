@@ -70,6 +70,8 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Acceptance criteria for code changes must explicitly require the domain document, automated tests, and final document update described in the Feature Gate.
 - Do not close or archive a task just because implementation is finished. Close/archive only after the user explicitly accepts it.
 - Completed tasks belong in local `completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. These archives are intentionally ignored by Git and must not be staged or pushed. Do not create one-file-per-task archives such as `completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
+- `TASKS.md` must end with a `## ROADMAP` section after all active task sections. The roadmap is a local recommended execution order for existing `T-*` tasks; it must not create new task IDs, replace dependency lines, or be treated as an acceptance state. Update it whenever task dependencies, priorities, blockers, or user-directed sequencing changes.
+- Keep the roadmap concise and zero-context: group tasks into ordered phases, mention important blockers, and keep every listed task ID traceable to an active task section above it.
 
 ## Release Sequencing
 - `Electron2D.Editor` follows a runtime-dogfooding gate, not a strict public-host-only gate. The editor may use internal runtime host, frame lifecycle, platform event, input dispatch, render submission, presentation, import, metadata, dock persistence, inspector, build, and export APIs when that code is editor or engine infrastructure.

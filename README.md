@@ -39,22 +39,24 @@ Developers and local coding agents work on the same scenes, scripts, resources, 
 ## Features
 
 - **Agent-native workflow** - Local coding agents can inspect and edit scenes, scripts, resources and project settings through the same project model as the Editor. Their changes, diagnostics and undo history remain visible and reversible.
+- **Trello-style task board** - Coordinate work through shared task columns, cards, assignees, labels, review states and editor-visible project context.
 - **Built-in editor** - Scene tree, inspector, 2D viewport, script workspace, debugger and run/output tools for everyday game development.
 - **C# scripting** - Game logic is written as regular C# classes and runs inside the same .NET project as the rest of the game.
 - **Node-based scenes** - Scenes are built from reusable nodes, resources, signals and serializable project files.
 - **2D rendering** - Sprites, cameras, viewports, text, shaders and immediate drawing.
 - **2D physics** - Bodies, areas, collision shapes, raycasts and fixed-step simulation.
 - **Asset workflow** - Textures, fonts, audio, shaders and resource importing.
-- **Cross-platform runtime** - Build and run games on Windows, Linux, macOS and Android.
+- **Cross-platform runtime** - Build and run games on Windows, Linux, macOS and Android. iOS is planned as a future runtime target.
 
 ## Platforms
 
 | Platform | Status |
 | --- | --- |
 | Windows | Editor and runtime target |
-| Linux | Runtime target |
-| macOS | Runtime target |
+| Linux | Editor and runtime target |
+| macOS | Editor and runtime target |
 | Android | Runtime target |
+| iOS | Future runtime target |
 
 ## Installation
 
@@ -82,7 +84,7 @@ Documentation, guides and API reference are available in the [Electron2D GitHub 
 
 ## Examples
 
-- **Platformer** - A complete 2D platformer built with Electron2D.
+- **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A complete 2D platformer built with Electron2D.
 
 ## Feedback and Contributing
 
