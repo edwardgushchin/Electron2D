@@ -56,16 +56,18 @@ internal static class ProjectFileLocator
             return false;
         }
 
-        var namedProjectFile = Path.Combine(fullRoot, Path.GetFileName(fullRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)) + ProjectExtension);
-        if (File.Exists(namedProjectFile))
+        var projectFiles = Directory.EnumerateFiles(fullRoot, "*" + ProjectExtension, SearchOption.TopDirectoryOnly)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+        var namedProjectFileName = Path.GetFileName(fullRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)) + ProjectExtension;
+        var namedProjectFile = projectFiles.FirstOrDefault(path =>
+            string.Equals(Path.GetFileName(path), namedProjectFileName, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrEmpty(namedProjectFile))
         {
             projectFilePath = namedProjectFile;
             return true;
         }
 
-        var projectFiles = Directory.EnumerateFiles(fullRoot, "*" + ProjectExtension, SearchOption.TopDirectoryOnly)
-            .OrderBy(path => path, StringComparer.Ordinal)
-            .ToArray();
         if (projectFiles.Length > 0)
         {
             projectFilePath = projectFiles[0];

@@ -68,12 +68,12 @@
   ],
   "projects": [
     {
-      "id": "reference-platformer",
-      "name": "ReferencePlatformer",
-      "projectPath": "examples/reference-platformer",
-      "projectFile": "ReferencePlatformer.csproj",
-      "settingsFile": "ReferencePlatformer.e2d",
-      "exportPresetFile": "ReferencePlatformer.e2d",
+      "id": "platformer",
+      "name": "Platformer",
+      "projectPath": "examples/platformer",
+      "projectFile": "Platformer.csproj",
+      "settingsFile": "Platformer.e2d",
+      "exportPresetFile": "Platformer.e2d",
       "mainScene": "scenes/main.scene.json",
       "scriptRoots": [
         "scripts"
@@ -88,7 +88,7 @@
       "editorMetadataRoots": [
         ".electron2d/tasks"
       ],
-      "verifier": "tools/Verify-ReferencePlatformer.ps1",
+      "verifier": "tools/Verify-Platformer.ps1",
       "expectedRuntimeTargets": [
         "AndroidArm64",
         "IosArm64",
@@ -124,8 +124,8 @@
         "assets/windows"
       ],
       "evidence": [
-        "tools/Verify-ReferencePlatformer.ps1",
-        "examples/reference-platformer/ReferencePlatformer.e2d"
+        "tools/Verify-Platformer.ps1",
+        "examples/platformer/Platformer.e2d"
       ]
     }
   ]

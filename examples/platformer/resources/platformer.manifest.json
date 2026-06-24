@@ -1,5 +1,5 @@
 {
-  "format": "ReferencePlatformer.Resources",
+  "format": "Platformer.Resources",
   "formatVersion": 1,
   "source": "data/assets/reference-games",
   "networkRequiredDuringBuild": false,

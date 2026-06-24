@@ -1,7 +1,7 @@
 {
   "format": "Electron2D.ProjectSettings",
   "formatVersion": 1,
-  "name": "ReferencePlatformer",
+  "name": "Platformer",
   "version": "0.1.0",
   "engineVersion": "0.1.0-preview",
   "mainScene": "scenes/main.scene.json",

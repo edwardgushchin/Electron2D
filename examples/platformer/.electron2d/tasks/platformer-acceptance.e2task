@@ -1,8 +1,8 @@
 {
   "format": "Electron2D.TaskFile",
   "version": 1,
-  "taskId": "reference-platformer-acceptance",
-  "title": "Verify the 0.1.0 Preview reference platformer",
+  "taskId": "platformer-acceptance",
+  "title": "Verify the 0.1.0 Preview Platformer",
   "description": "Open the project in Electron2D.Editor, inspect the scene/resources/tasks, run the platformer and verify the gameplay loop before accepting this reference game.",
   "status": "AwaitingAcceptance",
   "readiness": "Ready",
@@ -15,7 +15,7 @@
     "version:0.1.0-preview"
   ],
   "assignee": null,
-  "createdBy": "electron2d-reference-platformer",
+  "createdBy": "electron2d-platformer",
   "parentTaskId": null,
   "dependencies": [],
   "acceptanceCriteria": [
@@ -41,12 +41,12 @@
   "subtasks": [],
   "activity": [
     {
-      "activityEntryId": "activity-reference-platformer-created",
-      "actorId": "electron2d-reference-platformer",
+      "activityEntryId": "activity-platformer-created",
+      "actorId": "electron2d-platformer",
       "actorKind": "System",
       "createdAt": "2026-06-23T12:12:00.0000000+00:00",
       "kind": "Decision",
-      "payload": "Initial acceptance task created with the reference platformer project files."
+      "payload": "Initial acceptance task created with the Platformer project files."
     }
   ],
   "linkedTransactions": [],
@@ -54,10 +54,10 @@
   "linkedDiagnostics": [],
   "linkedArtifacts": [],
   "linkedScenesResourcesAndNodes": [
-    "project.e2d.json",
+    "Platformer.e2d",
     "scenes/main.scene.json",
-    "Scripts/PlatformerGame.cs",
-    "resources/reference-platformer.manifest.json"
+    "scripts/PlatformerGame.cs",
+    "resources/platformer.manifest.json"
   ],
   "createdAt": "2026-06-23T12:12:00.0000000+00:00",
   "updatedAt": "2026-06-23T12:12:00.0000000+00:00",

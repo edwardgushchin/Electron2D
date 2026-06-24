@@ -145,7 +145,7 @@ Project Manager не создаёт `TASKS.md`, `completed-tasks/` или `dev-d
 
 ## Открытие проекта
 
-Открыть можно папку проекта или конкретный named `.e2d` file, например `ReferencePlatformer.e2d`. Project Manager читает JSON через тот же внутренний формат настроек, который использует runtime для project settings. Legacy `project.e2d.json` поддерживается только как fallback для старых проектов, если рядом нет named `.e2d`. Если файл повреждён, содержит неизвестный формат или ссылается на отсутствующую main scene, открытие завершается диагностикой и не меняет список последних проектов.
+Открыть можно папку проекта или конкретный named `.e2d` file, например `Platformer.e2d`. Project Manager читает JSON через тот же внутренний формат настроек, который использует runtime для project settings. Legacy `project.e2d.json` поддерживается только как fallback для старых проектов, если рядом нет named `.e2d`. Если файл повреждён, содержит неизвестный формат или ссылается на отсутствующую main scene, открытие завершается диагностикой и не меняет список последних проектов.
 
 После успешного открытия путь проекта сохраняется первым в recent projects, а `lastProjectPath` получает тот же путь.
 
@@ -171,14 +171,14 @@ Script записывает только HKCU-ключи: `.e2d`, `Electron2D.Pr
 Bounded-проверка без ручного закрытия окна:
 
 ```powershell
-dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --open-project-window-smoke examples\reference-platformer\ReferencePlatformer.e2d .temp\editor-open-project-window --user-data-dir .temp\editor-open-project-window-user
+dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --open-project-window-smoke examples\platformer\Platformer.e2d .temp\editor-open-project-window --user-data-dir .temp\editor-open-project-window-user
 ```
 
 Ожидаемый результат содержит:
 
 ```text
 Electron2D.Editor open project window smoke passed
-ProjectName=ReferencePlatformer
+ProjectName=Platformer
 ProjectLoaded=True
 SelectedWorkspace=2D
 DocumentTabs=main.scene.json

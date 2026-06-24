@@ -124,7 +124,7 @@ public sealed class EditorProjectManagerTests
     {
         var root = FindRepositoryRoot();
         var projectPath = Path.Combine(root, "src", "Electron2D.Editor", "Electron2D.Editor.csproj");
-        var referenceProjectFile = Path.Combine(root, "examples", "reference-platformer", "ReferencePlatformer.e2d");
+        var referenceProjectFile = Path.Combine(root, "examples", "platformer", "Platformer.e2d");
         var userDataRoot = CreateTemporaryDirectory("electron2d-editor-open-project-");
 
         try
@@ -160,10 +160,10 @@ public sealed class EditorProjectManagerTests
             var lines = ParseMachineReadableOutput(output);
 
             Assert.Contains("Electron2D.Editor open project smoke passed", output);
-            Assert.Equal("ReferencePlatformer", lines["ProjectName"]);
+            Assert.Equal("Platformer", lines["ProjectName"]);
             Assert.Equal(referenceProjectFile, lines["ProjectSettingsPath"]);
-            Assert.Equal(Path.Combine(root, "examples", "reference-platformer"), lines["ProjectPath"]);
-            Assert.Equal(Path.Combine(root, "examples", "reference-platformer", "scenes", "main.scene.json"), lines["MainScenePath"]);
+            Assert.Equal(Path.Combine(root, "examples", "platformer"), lines["ProjectPath"]);
+            Assert.Equal(Path.Combine(root, "examples", "platformer", "scenes", "main.scene.json"), lines["MainScenePath"]);
             Assert.Equal("True", lines["MainSceneLoaded"]);
             Assert.Equal("1", lines["RecentProjects"]);
         }

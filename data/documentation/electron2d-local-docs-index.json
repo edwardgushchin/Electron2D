@@ -9,7 +9,7 @@
                           "documentation":  [
                                                 {
                                                     "path":  "docs/README.md",
-                                                    "sha256":  "202822ffea184d4267ef7444dc60e5c2c1e4f60fa8e1c6e7ea601ecae07f7da9"
+                                                    "sha256":  "6ec2c0cbb59970cb5f264f0c7cbb74cf86b977b33053ce76f4880b06e478ea1b"
                                                 },
                                                 {
                                                     "path":  "docs/animation/animation-player-tracks.md",
@@ -109,7 +109,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/repository-readme.md",
-                                                    "sha256":  "1a748e526f7ec8d1514c3ff6c320db4451d8e980e060cbed586ca16225c74234"
+                                                    "sha256":  "cd37aab6234d9332f52dc795247b247d4ac1ddeae6737d4dd5e383fed273ba43"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/troubleshooting-release-checklist.md",
@@ -149,7 +149,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/editor/project-manager.md",
-                                                    "sha256":  "517125f8508c4db840a8c36f4b6adfc1148da3d0fa1df2ec6ef0627749975fd9"
+                                                    "sha256":  "6c09b29fd02a6273ec20323f7d488027f76d3c928bf43821fe7d320e854e6759"
                                                 },
                                                 {
                                                     "path":  "docs/editor/project-settings-ui.md",
@@ -184,16 +184,16 @@
                                                     "sha256":  "6ab7dc3c70c55cf80824c4528d1c71323b5335bc9b3b7d0d284c0c6367b4d05a"
                                                 },
                                                 {
+                                                    "path":  "docs/examples/platformer.md",
+                                                    "sha256":  "9f3b069da0631a3502e96b739d33ae7f3395e1c6e84e4e701db4e19fcc15f467"
+                                                },
+                                                {
                                                     "path":  "docs/examples/reference-game-assets.md",
-                                                    "sha256":  "decbd24944f063440b87ea67319e5f1a87671936fcaff6fd5cc39ce999299737"
+                                                    "sha256":  "b8d0e78b4df3ad154751d7d2a3f78cdd86793a95001bb493a3399f1938bbecc8"
                                                 },
                                                 {
                                                     "path":  "docs/examples/reference-game-platform-matrix.md",
-                                                    "sha256":  "ff8a1a6682d851b8abf7516c5db1a11f65e5b8d2b5bce9b359b276b1d548eb58"
-                                                },
-                                                {
-                                                    "path":  "docs/examples/reference-platformer.md",
-                                                    "sha256":  "e1f9c89cd25f22a2c7015b10107fffd50bdd4d3b3d00c52ed1454218865a3810"
+                                                    "sha256":  "58aba82ff169d1ca104213a0034d2572257530153314d9984e3984b268590866"
                                                 },
                                                 {
                                                     "path":  "docs/export/android-arm64-export.md",
@@ -221,7 +221,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/export/webassembly-browser-export.md",
-                                                    "sha256":  "d57b4f22ecdfbf4ff07322aabf81203ac352c1f736f9a01e62d317c650598dad"
+                                                    "sha256":  "929e5bbd04f6fca32dfe83c66dbb1950c476d45a438f28307cf66af872c73348"
                                                 },
                                                 {
                                                     "path":  "docs/export/windows-x64-export.md",
@@ -381,7 +381,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/quality/performance-verification.md",
-                                                    "sha256":  "87c8c02259a3075123b12f630770db670cbba756d5fcf5089f2d22fec15f3144"
+                                                    "sha256":  "641f609b4df60ec9c07831be48865d34ba2e0af865d85b8f96340e494bfe8cc6"
                                                 },
                                                 {
                                                     "path":  "docs/release-management/api-compatibility.md",
@@ -413,7 +413,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/releases/0.1.0-preview.md",
-                                                    "sha256":  "cc3c1279285dd2ca94586584ecfd7b504b65442d026e563ca923df5428de5d95"
+                                                    "sha256":  "54fb4629b25dd6e81d6b3bdf0c27ca2ffb42fc922614f48e20c807ecd9ea6d03"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -469,7 +469,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/rendering/tilemap-layer-runtime-api.md",
-                                                    "sha256":  "227622e51c3e22b3fff9855dc3b32cd09827f4e052fe016cb9153313a5092d9b"
+                                                    "sha256":  "2a6f66129b7585e6e009d551b678d5d698f35cf964f533fc23230d216352fe78"
                                                 },
                                                 {
                                                     "path":  "docs/repository/license-policy.md",
@@ -505,7 +505,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/resources/runtime-resource-loader.md",
-                                                    "sha256":  "391a953ffecb0b56bc555dd3c9511e31cdee0b504c90a03c57d853e64ba35e05"
+                                                    "sha256":  "79b10071e0fa91cf54c496fbb4c632e1873c487b763ac140633364eb5d75492e"
                                                 },
                                                 {
                                                     "path":  "docs/resources/scene-resource-serialization.md",
@@ -529,7 +529,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/runtime/project-runtime-runner.md",
-                                                    "sha256":  "b774eb0c6738a583d85c1e327f8a5a407aea1e61337414e8c2b7594847a10984"
+                                                    "sha256":  "101e68a3e41a246ef2d5cc58ac246df798126f95a2e1d97df508d245ac95d9ad"
                                                 },
                                                 {
                                                     "path":  "docs/runtime/runtime-debug-bridge.md",
@@ -601,7 +601,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/tooling/vscode-example-launch.md",
-                                                    "sha256":  "dd70374d35834267a7b6cb6e86b7a53013a49d874421d46037f4268c4bbcd8c1"
+                                                    "sha256":  "f3ac7dea7363386b47b13fd070424ec1c01c91303b2196d76ca2bec7b7b2a2d1"
                                                 },
                                                 {
                                                     "path":  "docs/ui/basic-controls.md",
@@ -727,9 +727,9 @@
                                                         "docs/editor/script-workspace.md",
                                                         "docs/editor/specialized-editors.md",
                                                         "docs/editor/viewport-2d.md",
+                                                        "docs/examples/platformer.md",
                                                         "docs/examples/reference-game-assets.md",
                                                         "docs/examples/reference-game-platform-matrix.md",
-                                                        "docs/examples/reference-platformer.md",
                                                         "docs/export/android-arm64-export.md",
                                                         "docs/export/export-guide.md",
                                                         "docs/export/export-preset-model.md",
@@ -75427,6 +75427,32 @@
                                       ]
                     },
                     {
+                        "id":  "doc:examples.platformer",
+                        "kind":  "documentation",
+                        "title":  "Platformer 0.1.0 Preview",
+                        "summary":  "Обновлено: 2026-06-23.",
+                        "keywords":  [
+                                         "0",
+                                         "06",
+                                         "1",
+                                         "2026",
+                                         "23",
+                                         "docs",
+                                         "examples",
+                                         "md",
+                                         "platformer",
+                                         "preview"
+                                     ],
+                        "sourcePath":  "docs/examples/platformer.md",
+                        "sourceId":  "doc:examples.platformer",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
                         "id":  "doc:examples.reference-game-assets",
                         "kind":  "documentation",
                         "title":  "Ассеты reference games 0.1.0 Preview",
@@ -75477,33 +75503,6 @@
                                      ],
                         "sourcePath":  "docs/examples/reference-game-platform-matrix.md",
                         "sourceId":  "doc:examples.reference-game-platform-matrix",
-                        "audiences":  [
-                                          "human",
-                                          "ai",
-                                          "cli",
-                                          "wiki"
-                                      ]
-                    },
-                    {
-                        "id":  "doc:examples.reference-platformer",
-                        "kind":  "documentation",
-                        "title":  "Reference platformer 0.1.0 Preview",
-                        "summary":  "Обновлено: 2026-06-23.",
-                        "keywords":  [
-                                         "0",
-                                         "06",
-                                         "1",
-                                         "2026",
-                                         "23",
-                                         "docs",
-                                         "examples",
-                                         "md",
-                                         "platformer",
-                                         "preview",
-                                         "reference"
-                                     ],
-                        "sourcePath":  "docs/examples/reference-platformer.md",
-                        "sourceId":  "doc:examples.reference-platformer",
                         "audiences":  [
                                           "human",
                                           "ai",

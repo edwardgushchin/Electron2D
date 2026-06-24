@@ -3,7 +3,7 @@
   "formatVersion": 1,
   "root": {
     "type": "Node2D",
-    "name": "ReferencePlatformer",
+    "name": "Platformer",
     "script": "scripts/PlatformerGame.cs",
     "scriptProperties": {
       "Ground": "World/PlatformTileMap",

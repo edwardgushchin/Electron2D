@@ -15,7 +15,7 @@
 Статус: целевая спецификация.
 Задача: `T-0102`.
 Обновлено: 2026-06-24.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Performance budgets и soak-критерии 0.1.0 Preview](../release-management/performance-budgets.md); [Reference platformer](../examples/reference-platformer.md).
+Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Performance budgets и soak-критерии 0.1.0 Preview](../release-management/performance-budgets.md); [Platformer](../examples/platformer.md).
 
 ## Цель
 
@@ -33,7 +33,7 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-ReferencePerformance.ps1
 
 Verifier обязан:
 
-1. проверить, что `reference-platformer` остаётся валидным проектом `Electron2D.Editor`, запустив `tools\Verify-ReferencePlatformer.ps1`;
+1. проверить, что `platformer` остаётся валидным проектом `Electron2D.Editor`, запустив `tools\Verify-Platformer.ps1`;
 2. проверить или обновить локальный scratch-output только внутри `.temp/reference-performance/`;
 3. прочитать tracked artifact `data/quality/performance-reference-metrics.json`;
 4. проверить, что artifact содержит все обязательные сценарии, устройства, бюджеты и фактические метрики;
@@ -47,7 +47,7 @@ Artifact `data/quality/performance-reference-metrics.json` должен соде
 | --- | --- |
 | `empty-scene` | Минимальная сцена без игровых объектов; проверяет baseline frame loop и отсутствие steady allocations после warm-up. |
 | `sprite-scene` | Типовая сцена со спрайтами; проверяет frame budget, отсутствие steady allocations после warm-up и batching. |
-| `reference-platformer` | Законченный platformer-проект из `examples/reference-platformer`; проверяется только после project validation. |
+| `platformer` | Законченный platformer-проект из `examples/platformer`; проверяется только после project validation. |
 
 Для каждого сценария обязательны поля:
 
@@ -74,7 +74,7 @@ Verifier обязан применять такие бюджеты:
 | --- | ---: | ---: | ---: |
 | `empty-scene` | `<= 16.67 ms` | `<= 25 ms` | `0 B/frame` |
 | `sprite-scene` | `<= 16.67 ms` | `<= 33 ms` | `0 B/frame` |
-| `reference-platformer` | `<= 16.67 ms` | `<= 33 ms` | `0 B/frame` |
+| `platformer` | `<= 16.67 ms` | `<= 33 ms` | `0 B/frame` |
 
 Проверка использует короткий deterministic frame run: фиксированный шаг `1/60`, прогрев не меньше `120` кадров и измерение не меньше `600` кадров. Длительные 30-минутные проверки, background/foreground cycles и platform soak остаются отдельной задачей release gate.
 
@@ -111,7 +111,7 @@ Artifact должен содержать список `devices`. Для лока
 
 - Спецификация, implementation documentation и tracked artifact описывают один и тот же набор сценариев, бюджетов и команд.
 - Focused automated test падает до появления verifier/artifact и проходит после реализации.
-- `tools\Verify-ReferencePerformance.ps1` запускает validator активного `reference-platformer` до проверки performance metrics.
+- `tools\Verify-ReferencePerformance.ps1` запускает validator активного `platformer` до проверки performance metrics.
 - `tools\Verify-ReferencePerformance.ps1` проверяет `data/quality/performance-reference-metrics.json` и падает при превышении p95/p99, наличии steady allocations или отсутствии batching reduction.
 - Документация в `docs/quality/` описывает, как запускать verifier, где читать metrics artifact и какие проверки не входят в `T-0102`.
 
@@ -132,7 +132,7 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-ReferencePerformance.ps1
 
 Команда выполняет три группы проверок:
 
-1. запускает `tools\Verify-ReferencePlatformer.ps1`, чтобы подтвердить, что performance metrics для активного reference project собираются только после проверки валидного проекта `Electron2D.Editor`;
+1. запускает `tools\Verify-Platformer.ps1`, чтобы подтвердить, что performance metrics для активного reference project собираются только после проверки валидного проекта `Electron2D.Editor`;
 2. читает tracked artifact `data/quality/performance-reference-metrics.json`;
 3. проверяет бюджеты 60 FPS, отсутствие steady managed allocations после прогрева, наличие documented device и batching evidence.
 
@@ -144,7 +144,7 @@ Tracked artifact содержит три активных сценария:
 
 - `empty-scene` - минимальная сцена из `data/quality/reference-performance/empty-scene.scene.json`;
 - `sprite-scene` - типовая sprite-сцена из `data/quality/reference-performance/sprite-scene.scene.json`;
-- `reference-platformer` - проект `examples/reference-platformer`.
+- `platformer` - проект `examples/platformer`.
 
 Для каждого сценария artifact фиксирует:
 

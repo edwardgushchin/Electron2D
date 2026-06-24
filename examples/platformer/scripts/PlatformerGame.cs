@@ -25,7 +25,7 @@
 using System.Text.Json;
 using Electron2D;
 
-namespace ReferencePlatformer.scripts;
+namespace Platformer.scripts;
 
 public partial class PlatformerGame : Node2D
 {
@@ -314,7 +314,7 @@ public partial class PlatformerGame : Node2D
 
         var payload = new
         {
-            format = "ReferencePlatformer.Progress",
+            format = "Platformer.Progress",
             checkpointId,
             coins
         };
@@ -385,7 +385,7 @@ public partial class PlatformerGame : Node2D
         using var saved = JsonDocument.Parse(File.ReadAllText(fullPath));
         var root = saved.RootElement;
         return root.TryGetProperty("format", out var formatElement) &&
-            string.Equals(formatElement.GetString(), "ReferencePlatformer.Progress", StringComparison.Ordinal) &&
+            string.Equals(formatElement.GetString(), "Platformer.Progress", StringComparison.Ordinal) &&
             root.TryGetProperty("checkpointId", out var checkpointElement) &&
             string.Equals(checkpointElement.GetString(), expectedCheckpointId, StringComparison.Ordinal) &&
             root.TryGetProperty("coins", out var coinsElement) &&

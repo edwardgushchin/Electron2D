@@ -30,42 +30,42 @@ using Xunit;
 namespace Electron2D.Tests.Integration;
 
 [Collection(RuntimeWindowCollection.Name)]
-public sealed class ReferencePlatformerProjectTests
+public sealed class PlatformerProjectTests
 {
     [Fact]
-    public void ReferencePlatformerProjectHasEditorProjectContract()
+    public void PlatformerProjectHasEditorProjectContract()
     {
         var root = FindRepositoryRoot();
-        var projectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var projectRoot = Path.Combine(root, "examples", "platformer");
 
         foreach (var relativePath in RequiredFiles)
         {
             Assert.True(
                 File.Exists(Path.Combine(projectRoot, relativePath)),
-                $"Reference platformer is missing required file: {relativePath}");
+                $"Platformer is missing required file: {relativePath}");
         }
 
-        Assert.False(File.Exists(Path.Combine(projectRoot, "project.e2d.json")), "Reference platformer must not keep the legacy project.e2d.json manifest.");
-        Assert.False(File.Exists(Path.Combine(projectRoot, "Electron2D.ReferencePlatformer.csproj")), "Reference platformer project file must not include the engine namespace prefix.");
-        Assert.False(File.Exists(Path.Combine(projectRoot, "electron2d.lock.json")), "Reference platformer lock data must be embedded in ReferencePlatformer.e2d.");
-        Assert.False(File.Exists(Path.Combine(projectRoot, "export_presets.e2export.json")), "Reference platformer export presets must be embedded in ReferencePlatformer.e2d.");
-        Assert.False(Directory.Exists(Path.Combine(projectRoot, "bin")), "Reference platformer root must not keep build output bin/.");
-        Assert.False(Directory.Exists(Path.Combine(projectRoot, "obj")), "Reference platformer root must not keep build output obj/.");
-        Assert.False(ExactDirectoryExists(projectRoot, "Scripts"), "Reference platformer source folder must use lower-case scripts/.");
+        Assert.False(File.Exists(Path.Combine(projectRoot, "project.e2d.json")), "Platformer must not keep the legacy project.e2d.json manifest.");
+        Assert.False(File.Exists(Path.Combine(projectRoot, "Electron2D.Platformer.csproj")), "Platformer project file must not include the engine namespace prefix.");
+        Assert.False(File.Exists(Path.Combine(projectRoot, "electron2d.lock.json")), "Platformer lock data must be embedded in Platformer.e2d.");
+        Assert.False(File.Exists(Path.Combine(projectRoot, "export_presets.e2export.json")), "Platformer export presets must be embedded in Platformer.e2d.");
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "bin")), "Platformer root must not keep build output bin/.");
+        Assert.False(Directory.Exists(Path.Combine(projectRoot, "obj")), "Platformer root must not keep build output obj/.");
+        Assert.False(ExactDirectoryExists(projectRoot, "Scripts"), "Platformer source folder must use lower-case scripts/.");
 
-        var projectManifestPath = Path.Combine(projectRoot, "ReferencePlatformer.e2d");
+        var projectManifestPath = Path.Combine(projectRoot, "Platformer.e2d");
         var settings = Electron2D.Electron2DSettingsStore.LoadProject(projectManifestPath);
         Assert.True(settings.Succeeded, FormatSettingsDiagnostics(settings.Diagnostics));
         Assert.NotNull(settings.Settings);
-        Assert.Equal("ReferencePlatformer", settings.Settings.Name);
+        Assert.Equal("Platformer", settings.Settings.Name);
         Assert.Equal("scenes/main.scene.json", settings.Settings.MainScene);
         Assert.Equal(
             new[] { "jump", "move_left", "move_right", "pause" },
             settings.Settings.InputActions.Select(action => action.Name).OrderBy(name => name, StringComparer.Ordinal).ToArray());
 
         using var projectManifest = JsonDocument.Parse(File.ReadAllText(projectManifestPath));
-        Assert.True(projectManifest.RootElement.TryGetProperty("exportPresets", out _), "ReferencePlatformer.e2d must embed export presets.");
-        Assert.True(projectManifest.RootElement.TryGetProperty("reproducibilityLock", out _), "ReferencePlatformer.e2d must embed reproducibility lock data.");
+        Assert.True(projectManifest.RootElement.TryGetProperty("exportPresets", out _), "Platformer.e2d must embed export presets.");
+        Assert.True(projectManifest.RootElement.TryGetProperty("reproducibilityLock", out _), "Platformer.e2d must embed reproducibility lock data.");
 
         var exportPresets = Electron2D.ExportPresetStore.LoadFromProjectFile(projectManifestPath);
         Assert.True(exportPresets.Succeeded, FormatExportDiagnostics(exportPresets.Diagnostics));
@@ -156,10 +156,10 @@ public sealed class ReferencePlatformerProjectTests
     }
 
     [Fact]
-    public void ReferencePlatformerKeepsScreenUiInCanvasLayers()
+    public void PlatformerKeepsScreenUiInCanvasLayers()
     {
         var root = FindRepositoryRoot();
-        var projectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var projectRoot = Path.Combine(root, "examples", "platformer");
 
         using var scene = JsonDocument.Parse(File.ReadAllText(Path.Combine(projectRoot, "scenes", "main.scene.json")));
         var sceneRoot = scene.RootElement.GetProperty("root");
@@ -184,12 +184,12 @@ public sealed class ReferencePlatformerProjectTests
     }
 
     [Fact]
-    public void ReferencePlatformerScriptCoversRequiredGameplaySubsystems()
+    public void PlatformerScriptCoversRequiredGameplaySubsystems()
     {
         var root = FindRepositoryRoot();
-        var scriptPath = Path.Combine(root, "examples", "reference-platformer", "scripts", "PlatformerGame.cs");
+        var scriptPath = Path.Combine(root, "examples", "platformer", "scripts", "PlatformerGame.cs");
 
-        Assert.True(File.Exists(scriptPath), $"Reference platformer script is missing: {scriptPath}");
+        Assert.True(File.Exists(scriptPath), $"Platformer script is missing: {scriptPath}");
 
         var script = File.ReadAllText(scriptPath);
         foreach (var requiredText in new[]
@@ -237,16 +237,16 @@ public sealed class ReferencePlatformerProjectTests
     }
 
     [Fact]
-    public void ReferencePlatformerVerifierExists()
+    public void PlatformerVerifierExists()
     {
         var root = FindRepositoryRoot();
-        var verifierPath = Path.Combine(root, "tools", "Verify-ReferencePlatformer.ps1");
+        var verifierPath = Path.Combine(root, "tools", "Verify-Platformer.ps1");
 
-        Assert.True(File.Exists(verifierPath), $"Reference platformer verifier is missing: {verifierPath}");
+        Assert.True(File.Exists(verifierPath), $"Platformer verifier is missing: {verifierPath}");
 
         var verifier = File.ReadAllText(verifierPath);
-        Assert.Contains("ReferencePlatformer.csproj", verifier, StringComparison.Ordinal);
-        Assert.DoesNotContain("Electron2D.ReferencePlatformer.csproj", verifier, StringComparison.Ordinal);
+        Assert.Contains("Platformer.csproj", verifier, StringComparison.Ordinal);
+        Assert.DoesNotContain("Electron2D.Platformer.csproj", verifier, StringComparison.Ordinal);
         Assert.Contains("dotnet build", verifier, StringComparison.Ordinal);
         Assert.Contains("-- run --project", verifier, StringComparison.Ordinal);
         Assert.Contains("e2d validate", verifier, StringComparison.Ordinal);
@@ -254,14 +254,14 @@ public sealed class ReferencePlatformerProjectTests
     }
 
     [Fact]
-    public void ReferencePlatformerPlayableUsesOnlyElectron2DApi()
+    public void PlatformerPlayableUsesOnlyElectron2DApi()
     {
         var root = FindRepositoryRoot();
-        var projectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var projectRoot = Path.Combine(root, "examples", "platformer");
         var programPath = Path.Combine(projectRoot, "Program.cs");
         var source = File.ReadAllText(Path.Combine(projectRoot, "scripts", "PlatformerGame.cs"));
 
-        Assert.False(File.Exists(programPath), "Reference platformer must be launched by e2d run, not by a user Program.cs bootstrap.");
+        Assert.False(File.Exists(programPath), "Platformer must be launched by e2d run, not by a user Program.cs bootstrap.");
         Assert.DoesNotContain("Electron2DRuntimeHost", source, StringComparison.Ordinal);
         Assert.DoesNotContain("ProjectRuntimeRunner", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Electron2DApplication", source, StringComparison.Ordinal);
@@ -271,7 +271,7 @@ public sealed class ReferencePlatformerProjectTests
         Assert.DoesNotContain("SDL.", source, StringComparison.Ordinal);
         Assert.DoesNotContain("SDL3", source, StringComparison.Ordinal);
         Assert.DoesNotContain("CreateWindow", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("FRAME reference-platformer", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FRAME platformer", source, StringComparison.Ordinal);
         Assert.DoesNotContain("DrawRect(", source, StringComparison.Ordinal);
         Assert.DoesNotContain("DrawString(", source, StringComparison.Ordinal);
         Assert.DoesNotContain("new Label", source, StringComparison.Ordinal);
@@ -292,15 +292,15 @@ public sealed class ReferencePlatformerProjectTests
 
     [Fact]
     [Trait("Category", "Baseline")]
-    public async Task ReferencePlatformerPlayableScriptRunsGameLoop()
+    public async Task PlatformerPlayableScriptRunsGameLoop()
     {
         var root = FindRepositoryRoot();
-        var projectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var projectRoot = Path.Combine(root, "examples", "platformer");
         var screenshotPath = Path.Combine(
             Path.GetTempPath(),
-            "Electron2D-ReferencePlatformerPlayableTests",
+            "Electron2D-PlatformerPlayableTests",
             Guid.NewGuid().ToString("N"),
-            "reference-platformer-playable.png");
+            "platformer-playable.png");
 
         var startInfo = new ProcessStartInfo
         {
@@ -321,7 +321,7 @@ public sealed class ReferencePlatformerProjectTests
         startInfo.ArgumentList.Add("--screenshot");
         startInfo.ArgumentList.Add(screenshotPath);
 
-        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start reference platformer playable script.");
+        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start Platformer playable script.");
         var outputTask = process.StandardOutput.ReadToEndAsync();
         var errorTask = process.StandardError.ReadToEndAsync();
 
@@ -331,7 +331,7 @@ public sealed class ReferencePlatformerProjectTests
 
         Assert.True(
             process.ExitCode == 0,
-            $"Reference platformer playable script failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
+            $"Platformer playable script failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
 
         var lines = ParseMachineReadableOutput(output);
         Assert.Equal("playable", lines["Mode"]);
@@ -359,15 +359,15 @@ public sealed class ReferencePlatformerProjectTests
 
     [Fact]
     [Trait("Category", "Baseline")]
-    public async Task ReferencePlatformerIdleScriptKeepsPlayerGrounded()
+    public async Task PlatformerIdleScriptKeepsPlayerGrounded()
     {
         var root = FindRepositoryRoot();
-        var projectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var projectRoot = Path.Combine(root, "examples", "platformer");
         var screenshotPath = Path.Combine(
             Path.GetTempPath(),
-            "Electron2D-ReferencePlatformerPlayableTests",
+            "Electron2D-PlatformerPlayableTests",
             Guid.NewGuid().ToString("N"),
-            "reference-platformer-idle.png");
+            "platformer-idle.png");
 
         var output = await RunPlayableScriptAsync(root, projectRoot, "idle,idle,idle,save,quit", screenshotPath);
         var lines = ParseMachineReadableOutput(output);
@@ -378,7 +378,7 @@ public sealed class ReferencePlatformerProjectTests
     }
 
     [Fact]
-    public async Task ReferencePlatformerWindowsExportBuildCreatesPlayerBinaryAndResourcePack()
+    public async Task PlatformerWindowsExportBuildCreatesPlayerBinaryAndResourcePack()
     {
         if (!OperatingSystem.IsWindows())
         {
@@ -386,12 +386,12 @@ public sealed class ReferencePlatformerProjectTests
         }
 
         var root = FindRepositoryRoot();
-        var projectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var projectRoot = Path.Combine(root, "examples", "platformer");
         var exportRoot = Path.Combine(
             Path.GetTempPath(),
-            "Electron2D-ReferencePlatformerWindowsExportTests",
+            "Electron2D-PlatformerWindowsExportTests",
             Guid.NewGuid().ToString("N"));
-        var screenshotPath = Path.Combine(exportRoot, "reference-platformer-exported.png");
+        var screenshotPath = Path.Combine(exportRoot, "platformer-exported.png");
 
         var build = await RunProcessAsync(
             root,
@@ -418,7 +418,7 @@ public sealed class ReferencePlatformerProjectTests
             build.ExitCode == 0,
             $"Windows export build failed with exit code {build.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{build.Output}{Environment.NewLine}stderr:{Environment.NewLine}{build.Error}");
 
-        var executablePath = Path.Combine(exportRoot, "ReferencePlatformer.exe");
+        var executablePath = Path.Combine(exportRoot, "Platformer.exe");
         var manifestPath = Path.Combine(exportRoot, "electron2d.pack.json");
         var projectPackPath = Path.Combine(exportRoot, "packs", "project.e2dpkg");
         var scenePackPath = Path.Combine(exportRoot, "packs", "scenes", "main.e2dpkg");
@@ -431,7 +431,7 @@ public sealed class ReferencePlatformerProjectTests
         Assert.True(File.Exists(assetPackPath), $"Missing exported asset package: {assetPackPath}");
         Assert.True(File.Exists(resourcePackPath), $"Missing exported resource package: {resourcePackPath}");
 
-        Assert.False(File.Exists(Path.Combine(exportRoot, "ReferencePlatformer.e2d")), "Export output must not contain loose ReferencePlatformer.e2d.");
+        Assert.False(File.Exists(Path.Combine(exportRoot, "Platformer.e2d")), "Export output must not contain loose Platformer.e2d.");
         Assert.False(File.Exists(Path.Combine(exportRoot, "project.e2d.json")), "Export output must not contain loose project.e2d.json.");
         Assert.False(File.Exists(Path.Combine(exportRoot, "export_presets.e2export.json")), "Export output must not contain loose export presets.");
         Assert.False(Directory.Exists(Path.Combine(exportRoot, "assets")), "Export output must not contain loose assets directory.");
@@ -449,7 +449,7 @@ public sealed class ReferencePlatformerProjectTests
                 .Select(entry => entry.FullName.Replace('\\', '/'))
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray();
-            Assert.Contains("ReferencePlatformer.e2d", entries);
+            Assert.Contains("Platformer.e2d", entries);
             Assert.DoesNotContain("project.e2d.json", entries);
             Assert.DoesNotContain(entries, entry => entry.StartsWith(".electron2d/tasks/", StringComparison.Ordinal));
         }
@@ -480,7 +480,7 @@ public sealed class ReferencePlatformerProjectTests
                 .Select(entry => entry.FullName.Replace('\\', '/'))
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray();
-            Assert.Contains("resources/reference-platformer.manifest.json", entries);
+            Assert.Contains("resources/platformer.manifest.json", entries);
         }
 
         var manifest = JsonDocument.Parse(File.ReadAllText(manifestPath));
@@ -511,7 +511,7 @@ public sealed class ReferencePlatformerProjectTests
         var lines = ParseMachineReadableOutput(run.Output);
         Assert.Equal("playable", lines["Mode"]);
         Assert.Equal("True", lines["Playable"]);
-        Assert.Equal("ReferencePlatformer", lines["Project"]);
+        Assert.Equal("Platformer", lines["Project"]);
         Assert.Equal("True", lines["WindowCreated"]);
         Assert.Equal("True", lines["FramePresented"]);
         Assert.Equal(screenshotPath, lines["ScreenshotPath"]);
@@ -521,14 +521,14 @@ public sealed class ReferencePlatformerProjectTests
 
     private static readonly string[] RequiredFiles =
     [
-        "ReferencePlatformer.csproj",
+        "Platformer.csproj",
         "scripts/PlatformerGame.cs",
-        "ReferencePlatformer.e2d",
+        "Platformer.e2d",
         "global.json",
         "scenes/main.scene.json",
-        "resources/reference-platformer.manifest.json",
+        "resources/platformer.manifest.json",
         ".electron2d/tasks/board.e2tasks",
-        ".electron2d/tasks/reference-platformer-acceptance.e2task"
+        ".electron2d/tasks/platformer-acceptance.e2task"
     ];
 
     private static JsonDocument ReadJson(string path)
@@ -604,7 +604,7 @@ public sealed class ReferencePlatformerProjectTests
         startInfo.ArgumentList.Add("--screenshot");
         startInfo.ArgumentList.Add(screenshotPath);
 
-        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start reference platformer playable script.");
+        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start Platformer playable script.");
         var outputTask = process.StandardOutput.ReadToEndAsync();
         var errorTask = process.StandardError.ReadToEndAsync();
 
@@ -614,7 +614,7 @@ public sealed class ReferencePlatformerProjectTests
 
         Assert.True(
             process.ExitCode == 0,
-            $"Reference platformer playable script failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
+            $"Platformer playable script failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
 
         return output;
     }

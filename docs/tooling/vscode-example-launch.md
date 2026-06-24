@@ -20,13 +20,13 @@
 4. нажать зелёную кнопку запуска;
 5. дождаться открытия окна Platformer.
 
-Запуск не должен использовать `examples/reference-platformer/ReferencePlatformer.csproj` напрямую, потому что этот project file является библиотекой. Окно, цикл кадров, ввод и screenshot-support создаёт CLI runner Electron2D:
+Запуск не должен использовать `examples/platformer/Platformer.csproj` напрямую, потому что этот project file является библиотекой. Окно, цикл кадров, ввод и screenshot-support создаёт CLI runner Electron2D:
 
 ```text
-src/Electron2D.Cli/Electron2D.Cli.csproj -- run --project examples/reference-platformer
+src/Electron2D.Cli/Electron2D.Cli.csproj -- run --project examples/platformer
 ```
 
-В `launch.json` это выражено иначе: VS Code сначала выполняет task `Electron2D: build CLI`, затем запускает уже собранный CLI с аргументами `run --project examples/reference-platformer`. На Windows debug target использует apphost `src/Electron2D.Cli/bin/Debug/net10.0/e2d.exe`, чтобы отладчик стартовал обычный исполняемый файл. Базовый `program` остаётся `src/Electron2D.Cli/bin/Debug/net10.0/e2d.dll` для сред, где .NET debug adapter запускает CLI через assembly file.
+В `launch.json` это выражено иначе: VS Code сначала выполняет task `Electron2D: build CLI`, затем запускает уже собранный CLI с аргументами `run --project examples/platformer`. На Windows debug target использует apphost `src/Electron2D.Cli/bin/Debug/net10.0/e2d.exe`, чтобы отладчик стартовал обычный исполняемый файл. Базовый `program` остаётся `src/Electron2D.Cli/bin/Debug/net10.0/e2d.dll` для сред, где .NET debug adapter запускает CLI через assembly file.
 
 ## Текущая конфигурация
 
@@ -37,7 +37,7 @@ src/Electron2D.Cli/Electron2D.Cli.csproj -- run --project examples/reference-pla
 - `program = ${workspaceFolder}/src/Electron2D.Cli/bin/Debug/net10.0/e2d.dll`;
 - `windows.program = ${workspaceFolder}/src/Electron2D.Cli/bin/Debug/net10.0/e2d.exe`;
 - `preLaunchTask = Electron2D: build CLI`;
-- `args = run --project ${workspaceFolder}/examples/reference-platformer`.
+- `args = run --project ${workspaceFolder}/examples/platformer`.
 
 `launch.json` не использует `inputs`, потому что после удаления второго reference project активным example остаётся только Platformer. `pickString` в VS Code блокирует старт до ручного выбора, поэтому для одного проекта он не подходит. Когда появятся новые примеры, лучше добавить отдельные debug profiles с понятными именами, например `Electron2D: Platformer` и `Electron2D: Another Example`, чтобы зелёная кнопка всегда запускала выбранный профиль без дополнительного всплывающего выбора.
 
@@ -48,7 +48,7 @@ src/Electron2D.Cli/Electron2D.Cli.csproj -- run --project examples/reference-pla
 
 ## Ограничения
 
-После удаления второго reference project в `T-0211` активным example остаётся только `examples/reference-platformer`. Поэтому профиль запускает его напрямую без окна выбора.
+После удаления второго reference project в `T-0211` активным example остаётся только `examples/platformer`. Поэтому профиль запускает его напрямую без окна выбора.
 
 `coreclr` launch profile требует установленное C# расширение VS Code, которое поддерживает .NET debugging. Это именно debug target: брейкпоинты в загруженном managed code могут срабатывать, когда отладчик видит соответствующие символы. Без C# debug adapter можно использовать `Terminal: Run Task...` и task `Electron2D: run Platformer`, но этот task является запасным ручным запуском, а не заменой debug target.
 

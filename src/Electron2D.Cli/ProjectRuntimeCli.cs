@@ -1029,15 +1029,15 @@ internal static partial class Electron2DCommandLine
 
     private static string GetSaveEnvironmentVariable(string projectName)
     {
-        return projectName.Contains("ReferencePlatformer", StringComparison.OrdinalIgnoreCase)
-            ? "ELECTRON2D_REFERENCE_PLATFORMER_SAVE"
+        return projectName.Contains("Platformer", StringComparison.OrdinalIgnoreCase)
+            ? "ELECTRON2D_PLATFORMER_SAVE"
             : "ELECTRON2D_RUNTIME_SAVE";
     }
 
     private static string GetSaveFileName(string projectName)
     {
-        return projectName.Contains("ReferencePlatformer", StringComparison.OrdinalIgnoreCase)
-            ? "reference-platformer-progress.json"
+        return projectName.Contains("Platformer", StringComparison.OrdinalIgnoreCase)
+            ? "platformer-progress.json"
             : "runtime-progress.json";
     }
 

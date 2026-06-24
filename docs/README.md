@@ -82,7 +82,7 @@
 
 - [Ассеты reference games 0.1.0 Preview](examples/reference-game-assets.md)
 - [Reference game platform matrix 0.1.0 Preview](examples/reference-game-platform-matrix.md)
-- [Reference platformer 0.1.0 Preview](examples/reference-platformer.md)
+- [Platformer 0.1.0 Preview](examples/platformer.md)
 
 ## Export pipeline и платформы
 

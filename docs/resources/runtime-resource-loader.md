@@ -36,4 +36,4 @@ Runtime resource filesystem должен дать игровому коду ед
 - Automated tests подтверждают, что внутренний runtime reader читает text из `.e2dpkg` напрямую и не создаёт loose extracted files рядом с package output.
 - Reference games используют `ImageTexture.LoadFromFile("res://...")` для runtime textures вместо hand-written placeholder textures.
 - Reference games не вызывают public или internal mount API из пользовательского кода.
-- Windows export player монтирует pack manifest и запускает reference platformer без распаковки пакетов во временную runtime-папку.
+- Windows export player монтирует pack manifest и запускает Platformer без распаковки пакетов во временную runtime-папку.

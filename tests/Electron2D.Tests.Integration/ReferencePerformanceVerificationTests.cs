@@ -34,7 +34,7 @@ public sealed class ReferencePerformanceVerificationTests
     [
         "empty-scene",
         "sprite-scene",
-        "reference-platformer"
+        "platformer"
     ];
 
     [Fact]
@@ -48,7 +48,7 @@ public sealed class ReferencePerformanceVerificationTests
         var spec = File.ReadAllText(specPath);
         Assert.Contains("tools\\Verify-ReferencePerformance.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("data/quality/performance-reference-metrics.json", spec, StringComparison.Ordinal);
-        Assert.Contains("tools\\Verify-ReferencePlatformer.ps1", spec, StringComparison.Ordinal);
+        Assert.Contains("tools\\Verify-Platformer.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("0 B/frame", spec, StringComparison.Ordinal);
         Assert.Contains("reductionRatio >= 1.5", spec, StringComparison.Ordinal);
 
@@ -67,7 +67,7 @@ public sealed class ReferencePerformanceVerificationTests
         Assert.True(File.Exists(verifierPath), $"Missing reference performance verifier: {verifierPath}");
 
         var verifier = File.ReadAllText(verifierPath);
-        Assert.Contains("Verify-ReferencePlatformer.ps1", verifier, StringComparison.Ordinal);
+        Assert.Contains("Verify-Platformer.ps1", verifier, StringComparison.Ordinal);
         Assert.Contains("performance-reference-metrics.json", verifier, StringComparison.Ordinal);
         Assert.Contains("p95FrameTimeMs", verifier, StringComparison.Ordinal);
         Assert.Contains("steadyManagedAllocatedBytesPerFrame", verifier, StringComparison.Ordinal);
@@ -123,8 +123,8 @@ public sealed class ReferencePerformanceVerificationTests
         }
 
         Assert.Contains(
-            scenarios["reference-platformer"].GetProperty("evidence").EnumerateArray(),
-            evidence => evidence.GetString() == "tools/Verify-ReferencePlatformer.ps1");
+            scenarios["platformer"].GetProperty("evidence").EnumerateArray(),
+            evidence => evidence.GetString() == "tools/Verify-Platformer.ps1");
 
         var batching = metrics.GetProperty("drawCallBatching");
         Assert.Equal("sprite-scene", batching.GetProperty("scenarioId").GetString());

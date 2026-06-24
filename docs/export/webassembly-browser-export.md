@@ -185,7 +185,7 @@ dotnet publish <project.csproj> --configuration <Debug|Release> --runtime browse
     <main scene path>
 ```
 
-Сборщик пакета записывает `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, копирует фактический файл настроек проекта, например `ReferencePlatformer.e2d`, копирует путь к главной сцене и `assets/**`. Manifest хранит путь к project file в `projectFile`, а loader использует его вместо предположения о `project.e2d.json`. Старые проекты, которые всё ещё используют `project.e2d.json`, сохраняют это имя файла. Пакет намеренно не включает `.electron2d/tasks/**`, локальные workflow-файлы или signing secrets.
+Сборщик пакета записывает `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, копирует фактический файл настроек проекта, например `Platformer.e2d`, копирует путь к главной сцене и `assets/**`. Manifest хранит путь к project file в `projectFile`, а loader использует его вместо предположения о `project.e2d.json`. Старые проекты, которые всё ещё используют `project.e2d.json`, сохраняют это имя файла. Пакет намеренно не включает `.electron2d/tasks/**`, локальные workflow-файлы или signing secrets.
 
 ## Правила браузерной среды выполнения
 

@@ -25,41 +25,41 @@
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$projectRoot = Join-Path $repoRoot 'examples/reference-platformer'
-$projectPath = Join-Path $projectRoot 'ReferencePlatformer.csproj'
+$projectRoot = Join-Path $repoRoot 'examples/platformer'
+$projectPath = Join-Path $projectRoot 'Platformer.csproj'
 $cliProjectPath = Join-Path $repoRoot 'src/Electron2D.Cli/Electron2D.Cli.csproj'
-$workRoot = Join-Path $repoRoot '.temp/reference-platformer'
+$workRoot = Join-Path $repoRoot '.temp/platformer'
 $progressPath = Join-Path $workRoot 'progress.json'
 $webOutput = Join-Path $workRoot 'web'
 
 function Assert-File([string]$relativePath) {
     $path = Join-Path $projectRoot $relativePath
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
-        throw "Reference platformer required file was not found: $relativePath"
+        throw "Platformer required file was not found: $relativePath"
     }
 }
 
 function Assert-LocalProjectPath([string]$relativePath) {
     if ([System.String]::IsNullOrWhiteSpace($relativePath)) {
-        throw 'Reference platformer resource path must not be empty.'
+        throw 'Platformer resource path must not be empty.'
     }
 
     if ($relativePath -match '^[a-zA-Z][a-zA-Z0-9+.-]*://') {
-        throw "Reference platformer resource path must be local, not a URL: $relativePath"
+        throw "Platformer resource path must be local, not a URL: $relativePath"
     }
 
     if ($relativePath -match '\\') {
-        throw "Reference platformer resource path must use forward slashes: $relativePath"
+        throw "Platformer resource path must use forward slashes: $relativePath"
     }
 
     $fullPath = [System.IO.Path]::GetFullPath((Join-Path $projectRoot $relativePath.Replace('/', [System.IO.Path]::DirectorySeparatorChar)))
     $rootPath = [System.IO.Path]::GetFullPath($projectRoot)
     if (-not $fullPath.StartsWith($rootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
-        throw "Reference platformer resource path escapes project root: $relativePath"
+        throw "Platformer resource path escapes project root: $relativePath"
     }
 
     if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
-        throw "Reference platformer resource file was not found: $relativePath"
+        throw "Platformer resource file was not found: $relativePath"
     }
 
     return $fullPath
@@ -119,59 +119,59 @@ function Assert-Ttf([string]$path) {
 }
 
 foreach ($relativePath in @(
-    'ReferencePlatformer.csproj',
+    'Platformer.csproj',
     'scripts/PlatformerGame.cs',
-    'ReferencePlatformer.e2d',
+    'Platformer.e2d',
     'global.json',
     'scenes/main.scene.json',
-    'resources/reference-platformer.manifest.json',
+    'resources/platformer.manifest.json',
     '.electron2d/tasks/board.e2tasks',
-    '.electron2d/tasks/reference-platformer-acceptance.e2task'
+    '.electron2d/tasks/platformer-acceptance.e2task'
 )) {
     Assert-File $relativePath
 }
 
 foreach ($forbiddenPath in @('TASKS.md', 'dev-diary', 'completed-tasks')) {
     if (Test-Path -LiteralPath (Join-Path $projectRoot $forbiddenPath)) {
-        throw "Reference platformer must not contain repository workflow path: $forbiddenPath"
+        throw "Platformer must not contain repository workflow path: $forbiddenPath"
     }
 }
 
-$settings = Get-Content -LiteralPath (Join-Path $projectRoot 'ReferencePlatformer.e2d') -Raw | ConvertFrom-Json
-if ($settings.format -ne 'Electron2D.ProjectSettings' -or $settings.name -ne 'ReferencePlatformer') {
-    throw 'Reference platformer project settings are invalid.'
+$settings = Get-Content -LiteralPath (Join-Path $projectRoot 'Platformer.e2d') -Raw | ConvertFrom-Json
+if ($settings.format -ne 'Electron2D.ProjectSettings' -or $settings.name -ne 'Platformer') {
+    throw 'Platformer project settings are invalid.'
 }
 
 $actionNames = @($settings.input.actions | ForEach-Object { [string]$_.name } | Sort-Object)
 $expectedActions = @('jump', 'move_left', 'move_right', 'pause')
 if (($actionNames -join ',') -ne ($expectedActions -join ',')) {
-    throw "Reference platformer Input Map mismatch. Expected $($expectedActions -join ','), got $($actionNames -join ',')."
+    throw "Platformer Input Map mismatch. Expected $($expectedActions -join ','), got $($actionNames -join ',')."
 }
 
 $presets = $settings.exportPresets
 if ($presets.format -ne 'Electron2D.ExportPresets') {
-    throw 'Reference platformer export presets format is invalid.'
+    throw 'Platformer export presets format is invalid.'
 }
 
 $targets = @($presets.presets | ForEach-Object { [string]$_.target } | Sort-Object)
 $expectedTargets = @('AndroidArm64', 'IosArm64', 'LinuxX64', 'MacOSArm64', 'WebAssemblyBrowser', 'WindowsX64')
 if (($targets -join ',') -ne ($expectedTargets -join ',')) {
-    throw "Reference platformer export target mismatch. Expected $($expectedTargets -join ','), got $($targets -join ',')."
+    throw "Platformer export target mismatch. Expected $($expectedTargets -join ','), got $($targets -join ',')."
 }
 
 $board = Get-Content -LiteralPath (Join-Path $projectRoot '.electron2d/tasks/board.e2tasks') -Raw | ConvertFrom-Json
-$task = Get-Content -LiteralPath (Join-Path $projectRoot '.electron2d/tasks/reference-platformer-acceptance.e2task') -Raw | ConvertFrom-Json
+$task = Get-Content -LiteralPath (Join-Path $projectRoot '.electron2d/tasks/platformer-acceptance.e2task') -Raw | ConvertFrom-Json
 if ($board.format -ne 'Electron2D.TaskBoard' -or $task.format -ne 'Electron2D.TaskFile') {
-    throw 'Reference platformer task metadata is invalid.'
+    throw 'Platformer task metadata is invalid.'
 }
 
 if ($task.status -ne 'AwaitingAcceptance' -or $task.acceptanceState -ne 'AwaitingHumanAcceptance') {
-    throw 'Reference platformer acceptance task must wait for human acceptance.'
+    throw 'Platformer acceptance task must wait for human acceptance.'
 }
 
-$resourceManifest = Get-Content -LiteralPath (Join-Path $projectRoot 'resources/reference-platformer.manifest.json') -Raw | ConvertFrom-Json
-if ($resourceManifest.format -ne 'ReferencePlatformer.Resources' -or $resourceManifest.networkRequiredDuringBuild -ne $false) {
-    throw 'Reference platformer resource manifest is invalid.'
+$resourceManifest = Get-Content -LiteralPath (Join-Path $projectRoot 'resources/platformer.manifest.json') -Raw | ConvertFrom-Json
+if ($resourceManifest.format -ne 'Platformer.Resources' -or $resourceManifest.networkRequiredDuringBuild -ne $false) {
+    throw 'Platformer resource manifest is invalid.'
 }
 
 $roles = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
@@ -188,7 +188,7 @@ foreach ($resource in @($resourceManifest.resources)) {
         '.tmx' { [void]([xml](Get-Content -LiteralPath $fullPath -Raw)) }
         '.tsx' { [void]([xml](Get-Content -LiteralPath $fullPath -Raw)) }
         '.json' { [void](Get-Content -LiteralPath $fullPath -Raw | ConvertFrom-Json) }
-        default { throw "Unsupported reference platformer resource extension: $($resource.path)" }
+        default { throw "Unsupported Platformer resource extension: $($resource.path)" }
     }
 }
 
@@ -205,19 +205,19 @@ foreach ($requiredRole in @(
     'pause-menu-ui'
 )) {
     if (-not $roles.Contains($requiredRole)) {
-        throw "Reference platformer resource manifest is missing role: $requiredRole"
+        throw "Platformer resource manifest is missing role: $requiredRole"
     }
 }
 
 $programPath = Join-Path $projectRoot 'Program.cs'
 if (Test-Path -LiteralPath $programPath) {
-    throw 'Reference platformer must not provide Program.cs; editor/dev run and export own the launch flow.'
+    throw 'Platformer must not provide Program.cs; editor/dev run and export own the launch flow.'
 }
 
 $source = Get-Content -LiteralPath (Join-Path $projectRoot 'scripts/PlatformerGame.cs') -Raw
 foreach ($forbiddenText in @(
     'Console.ReadKey',
-    'FRAME reference-platformer',
+    'FRAME platformer',
     'SDL.',
     'SDL3',
     'CreateWindow',
@@ -225,13 +225,13 @@ foreach ($forbiddenText in @(
     'ProjectRuntimeRunner'
 )) {
     if ($source.IndexOf($forbiddenText, [System.StringComparison]::Ordinal) -ge 0) {
-        throw "Reference platformer project script must use only public Electron2D game API. Forbidden text: $forbiddenText"
+        throw "Platformer project script must use only public Electron2D game API. Forbidden text: $forbiddenText"
     }
 }
 
 foreach ($forbiddenApi in @('Electron2DApplication', 'Electron2DRunOptions', 'Electron2DRunResult')) {
     if ($source.IndexOf($forbiddenApi, [System.StringComparison]::Ordinal) -ge 0) {
-        throw "Reference platformer must not use out-of-profile public bootstrap API '$forbiddenApi'."
+        throw "Platformer must not use out-of-profile public bootstrap API '$forbiddenApi'."
     }
 }
 
@@ -243,8 +243,8 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-$previousSavePath = [System.Environment]::GetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE')
-[System.Environment]::SetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE', $progressPath)
+$previousSavePath = [System.Environment]::GetEnvironmentVariable('ELECTRON2D_PLATFORMER_SAVE')
+[System.Environment]::SetEnvironmentVariable('ELECTRON2D_PLATFORMER_SAVE', $progressPath)
 try {
     $runOutput = dotnet run --project $cliProjectPath -- run --project $projectRoot --play-script "right,right,save,quit"
     if ($LASTEXITCODE -ne 0) {
@@ -253,7 +253,7 @@ try {
     }
 }
 finally {
-    [System.Environment]::SetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE', $previousSavePath)
+    [System.Environment]::SetEnvironmentVariable('ELECTRON2D_PLATFORMER_SAVE', $previousSavePath)
 }
 
 $joinedRunOutput = $runOutput -join [Environment]::NewLine
@@ -269,18 +269,18 @@ foreach ($requiredText in @(
 )) {
     if ($joinedRunOutput.IndexOf($requiredText, [System.StringComparison]::Ordinal) -lt 0) {
         Write-Host $runOutput
-        throw "Reference platformer run output does not contain expected text: $requiredText"
+        throw "Platformer run output does not contain expected text: $requiredText"
     }
 }
 
 if (-not (Test-Path -LiteralPath $progressPath -PathType Leaf)) {
-    throw 'Reference platformer did not write progress save artifact.'
+    throw 'Platformer did not write progress save artifact.'
 }
 
 $playableSavePath = Join-Path $workRoot 'playable-progress.json'
-$playableScreenshotPath = Join-Path $workRoot 'reference-platformer-playable.png'
-$previousSavePath = [System.Environment]::GetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE')
-[System.Environment]::SetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE', $playableSavePath)
+$playableScreenshotPath = Join-Path $workRoot 'platformer-playable.png'
+$previousSavePath = [System.Environment]::GetEnvironmentVariable('ELECTRON2D_PLATFORMER_SAVE')
+[System.Environment]::SetEnvironmentVariable('ELECTRON2D_PLATFORMER_SAVE', $playableSavePath)
 try {
     $playableOutput = dotnet run --project $cliProjectPath -- run --project $projectRoot --play-script "right,jump,right,pause,save,quit" --screenshot $playableScreenshotPath
     if ($LASTEXITCODE -ne 0) {
@@ -289,7 +289,7 @@ try {
     }
 }
 finally {
-    [System.Environment]::SetEnvironmentVariable('ELECTRON2D_REFERENCE_PLATFORMER_SAVE', $previousSavePath)
+    [System.Environment]::SetEnvironmentVariable('ELECTRON2D_PLATFORMER_SAVE', $previousSavePath)
 }
 
 $joinedPlayableOutput = $playableOutput -join [Environment]::NewLine
@@ -310,27 +310,27 @@ foreach ($requiredText in @(
 )) {
     if ($joinedPlayableOutput.IndexOf($requiredText, [System.StringComparison]::Ordinal) -lt 0) {
         Write-Host $playableOutput
-        throw "Reference platformer playable output does not contain expected text: $requiredText"
+        throw "Platformer playable output does not contain expected text: $requiredText"
     }
 }
 
 if ($joinedPlayableOutput.IndexOf('FRAME ', [System.StringComparison]::Ordinal) -ge 0) {
     Write-Host $playableOutput
-    throw 'Reference platformer playable output must not contain ASCII frame output.'
+    throw 'Platformer playable output must not contain ASCII frame output.'
 }
 
 $drawCommandsMatch = [System.Text.RegularExpressions.Regex]::Match($joinedPlayableOutput, 'DrawCommands=(\d+)')
 if (-not $drawCommandsMatch.Success -or [int]$drawCommandsMatch.Groups[1].Value -le 0) {
     Write-Host $playableOutput
-    throw 'Reference platformer playable output must report DrawCommands greater than zero.'
+    throw 'Platformer playable output must report DrawCommands greater than zero.'
 }
 
 if (-not (Test-Path -LiteralPath $playableSavePath -PathType Leaf)) {
-    throw 'Reference platformer playable mode did not write progress save artifact.'
+    throw 'Platformer playable mode did not write progress save artifact.'
 }
 
 if (-not (Test-Path -LiteralPath $playableScreenshotPath -PathType Leaf)) {
-    throw 'Reference platformer playable mode did not write PNG screenshot artifact.'
+    throw 'Platformer playable mode did not write PNG screenshot artifact.'
 }
 
 Assert-PngMinDimensions $playableScreenshotPath 640 360
@@ -344,7 +344,7 @@ if ($LASTEXITCODE -ne 0) {
 $validateJson = $validateOutput -join [Environment]::NewLine | ConvertFrom-Json
 if ($validateJson.succeeded -ne $true -or $validateJson.command -ne 'validate') {
     Write-Host $validateOutput
-    throw 'Reference platformer e2d validate route did not succeed.'
+    throw 'Platformer e2d validate route did not succeed.'
 }
 
 $webBuildOutput = dotnet run --project $cliProjectPath -- export build-web --project $projectRoot --output $webOutput --skip-publish true --format json
@@ -355,13 +355,13 @@ if ($LASTEXITCODE -ne 0) {
 
 $webRoot = Join-Path $webOutput 'wwwroot'
 if (-not (Test-Path -LiteralPath $webRoot -PathType Container)) {
-    throw 'Reference platformer WebAssembly package did not create wwwroot.'
+    throw 'Platformer WebAssembly package did not create wwwroot.'
 }
 
 $forbiddenPackagedFiles = Get-ChildItem -LiteralPath $webRoot -Recurse -File |
     Where-Object { $_.FullName.Replace('\', '/').IndexOf('/.electron2d/tasks/', [System.StringComparison]::OrdinalIgnoreCase) -ge 0 }
 if ($forbiddenPackagedFiles) {
-    throw 'Reference platformer WebAssembly package contains Editor task metadata.'
+    throw 'Platformer WebAssembly package contains Editor task metadata.'
 }
 
-Write-Host "Reference platformer verification passed. Assets: $($resourceManifest.resources.Count), export targets: $($targets.Count)."
+Write-Host "Platformer verification passed. Assets: $($resourceManifest.resources.Count), export targets: $($targets.Count)."

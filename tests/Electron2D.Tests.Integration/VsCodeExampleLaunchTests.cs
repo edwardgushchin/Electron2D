@@ -40,11 +40,11 @@ public sealed class VsCodeExampleLaunchTests
         var document = File.ReadAllText(documentPath);
         Assert.Contains("Run and Debug", document, StringComparison.Ordinal);
         Assert.Contains("Electron2D: Platformer", document, StringComparison.Ordinal);
-        Assert.Contains("examples/reference-platformer", document, StringComparison.Ordinal);
+        Assert.Contains("examples/platformer", document, StringComparison.Ordinal);
         Assert.Contains("src/Electron2D.Cli/Electron2D.Cli.csproj", document, StringComparison.Ordinal);
         Assert.Contains("debug target", document, StringComparison.Ordinal);
         Assert.Contains("e2d.exe", document, StringComparison.Ordinal);
-        Assert.Contains("ReferencePlatformer.csproj", document, StringComparison.Ordinal);
+        Assert.Contains("Platformer.csproj", document, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -77,10 +77,10 @@ public sealed class VsCodeExampleLaunchTests
             [
                 "run",
                 "--project",
-                "${workspaceFolder}/examples/reference-platformer"
+                "${workspaceFolder}/examples/platformer"
             ],
             args);
-        Assert.DoesNotContain(args, argument => argument.Contains("ReferencePlatformer.csproj", StringComparison.Ordinal));
+        Assert.DoesNotContain(args, argument => argument.Contains("Platformer.csproj", StringComparison.Ordinal));
         Assert.DoesNotContain(args, argument => argument.Contains("ui-heavy", StringComparison.OrdinalIgnoreCase));
         Assert.False(rootElement.TryGetProperty("inputs", out _));
     }
@@ -119,10 +119,10 @@ public sealed class VsCodeExampleLaunchTests
                 "--",
                 "run",
                 "--project",
-                "${workspaceFolder}/examples/reference-platformer"
+                "${workspaceFolder}/examples/platformer"
             ],
             runArgs);
-        Assert.DoesNotContain(runArgs, argument => argument.Contains("ReferencePlatformer.csproj", StringComparison.Ordinal));
+        Assert.DoesNotContain(runArgs, argument => argument.Contains("Platformer.csproj", StringComparison.Ordinal));
         Assert.DoesNotContain(runArgs, argument => argument.Contains("ui-heavy", StringComparison.OrdinalIgnoreCase));
         Assert.False(rootElement.TryGetProperty("inputs", out _));
     }

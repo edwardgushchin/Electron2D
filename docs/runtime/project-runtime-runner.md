@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация для исправления playable reference games `0.1.0 Preview`.
 Обновлено: 2026-06-24.
-Связанные документы: [Reference platformer](../examples/reference-platformer.md), [Headless runtime automation](headless-runtime-automation.md), [Runtime debug bridge и scene inspection](runtime-debug-bridge.md).
+Связанные документы: [Platformer](../examples/platformer.md), [Headless runtime automation](headless-runtime-automation.md), [Runtime debug bridge и scene inspection](runtime-debug-bridge.md).
 
 ## Назначение
 
@@ -84,9 +84,9 @@ Loop должен:
 - Project runtime runner реализован в `src/Electron2D/`, а project launch command реализован в `src/Electron2D.Cli/`; ни один из них не является helper внутри `examples/`.
 - Focused test создаёт `Node2D`, рисует через `_Draw`, запускает internal project runtime runner, получает visible/window markers и PNG screenshot.
 - Focused test подтверждает, что root `Viewport.Size` равен logical window size уже в `_Ready()` и `_Process()`.
-- Reference platformer запускается командой `e2d run --project ...` в режиме разработки или через export player, не содержит `Program.cs`, не вызывает `RuntimeHost`, `ProjectRuntimeRunner` или другой engine-owned bootstrap из user code.
+- Platformer запускается командой `e2d run --project ...` в режиме разработки или через export player, не содержит `Program.cs`, не вызывает `RuntimeHost`, `ProjectRuntimeRunner` или другой engine-owned bootstrap из user code.
 - Reference games не содержат `Console.ReadKey`, ASCII frame output, прямые вызовы `SDL`/window backend или custom event loop.
-- `e2d run --project examples/reference-platformer --play-script ... --screenshot <path>` возвращает `WindowCreated=True`, `WindowShown=True`, `FramePresented=True`, `DrawCommands > 0`, `ScreenshotPath=<path>` и создаёт PNG нормального размера.
+- `e2d run --project examples/platformer --play-script ... --screenshot <path>` возвращает `WindowCreated=True`, `WindowShown=True`, `FramePresented=True`, `DrawCommands > 0`, `ScreenshotPath=<path>` и создаёт PNG нормального размера.
 - Implementation documentation в `docs/runtime/` описывает фактический scope и ограничения project runtime runner.
 - API compatibility, API manifest, GitHub Wiki generation, source license/header checks и focused reference verifiers проходят, не добавляя out-of-profile public bootstrap API.
 

@@ -23,7 +23,7 @@
         "--",
         "run",
         "--project",
-        "${workspaceFolder}/examples/reference-platformer"
+        "${workspaceFolder}/examples/platformer"
       ],
       "options": {
         "cwd": "${workspaceFolder}"

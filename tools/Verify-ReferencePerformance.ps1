@@ -30,7 +30,7 @@ $scratchRoot = Join-Path $repoRoot '.temp/reference-performance'
 $requiredScenarioIds = @(
     'empty-scene',
     'sprite-scene',
-    'reference-platformer'
+    'platformer'
 )
 
 function Assert-Property([object]$target, [string]$name, [string]$context) {
@@ -93,7 +93,7 @@ function Invoke-RequiredVerifier([string]$fileName) {
     }
 }
 
-Invoke-RequiredVerifier 'Verify-ReferencePlatformer.ps1'
+Invoke-RequiredVerifier 'Verify-Platformer.ps1'
 
 Remove-Item -LiteralPath $scratchRoot -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $scratchRoot | Out-Null
@@ -204,9 +204,9 @@ foreach ($scenario in $scenarios) {
     }
 }
 
-$platformerEvidence = @($scenarios | Where-Object { $_.scenarioId -eq 'reference-platformer' } | ForEach-Object { $_.evidence })
-if ($platformerEvidence -notcontains 'tools/Verify-ReferencePlatformer.ps1') {
-    throw 'reference-platformer metrics must cite tools/Verify-ReferencePlatformer.ps1.'
+$platformerEvidence = @($scenarios | Where-Object { $_.scenarioId -eq 'platformer' } | ForEach-Object { $_.evidence })
+if ($platformerEvidence -notcontains 'tools/Verify-Platformer.ps1') {
+    throw 'platformer metrics must cite tools/Verify-Platformer.ps1.'
 }
 
 $batching = Assert-Property $metrics 'drawCallBatching' 'metrics'
@@ -244,7 +244,7 @@ $plan = [ordered]@{
     scenarios = $requiredScenarioIds
     metricsArtifact = 'data/quality/performance-reference-metrics.json'
     referenceGameValidators = @(
-        'tools/Verify-ReferencePlatformer.ps1'
+        'tools/Verify-Platformer.ps1'
     )
 }
 $plan | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $planPath -Encoding UTF8

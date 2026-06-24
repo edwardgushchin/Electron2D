@@ -1,7 +1,7 @@
 {
   "format": "Electron2D.TaskBoard",
   "version": 1,
-  "boardId": "reference-platformer-board",
+  "boardId": "platformer-board",
   "columns": [
     {
       "status": "Backlog",
@@ -26,7 +26,7 @@
     {
       "status": "AwaitingAcceptance",
       "taskIds": [
-        "reference-platformer-acceptance"
+        "platformer-acceptance"
       ]
     },
     {

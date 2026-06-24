@@ -13,7 +13,7 @@
       "args": [
         "run",
         "--project",
-        "${workspaceFolder}/examples/reference-platformer"
+        "${workspaceFolder}/examples/platformer"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",

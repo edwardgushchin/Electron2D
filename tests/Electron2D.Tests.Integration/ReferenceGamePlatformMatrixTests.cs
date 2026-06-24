@@ -48,7 +48,7 @@ public sealed class ReferenceGamePlatformMatrixTests
 
     private static readonly string[] ProjectIds =
     [
-        "reference-platformer"
+        "platformer"
     ];
 
     [Fact]
@@ -62,7 +62,7 @@ public sealed class ReferenceGamePlatformMatrixTests
         var spec = File.ReadAllText(specPath);
         Assert.Contains("tools\\Verify-ReferenceGamePlatformMatrix.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("data/quality/reference-game-platform-matrix.json", spec, StringComparison.Ordinal);
-        Assert.Contains("tools\\Verify-ReferencePlatformer.ps1", spec, StringComparison.Ordinal);
+        Assert.Contains("tools\\Verify-Platformer.ps1", spec, StringComparison.Ordinal);
         Assert.Contains("platform-specific игровой fork", spec, StringComparison.Ordinal);
         Assert.Contains("browser hosting metadata", spec, StringComparison.Ordinal);
         Assert.Contains("runtimeTargets", spec, StringComparison.Ordinal);
@@ -153,7 +153,7 @@ public sealed class ReferenceGamePlatformMatrixTests
         {
             var projectRoot = Path.Combine(root, "examples", projectId);
             var loosePresetPath = Path.Combine(projectRoot, "export_presets.e2export.json");
-            var embeddedProjectPath = Path.Combine(projectRoot, "ReferencePlatformer.e2d");
+            var embeddedProjectPath = Path.Combine(projectRoot, "Platformer.e2d");
             var exportPresets = File.Exists(loosePresetPath)
                 ? Electron2D.ExportPresetStore.Load(loosePresetPath)
                 : Electron2D.ExportPresetStore.LoadFromProjectFile(embeddedProjectPath);
@@ -223,7 +223,11 @@ public sealed class ReferenceGamePlatformMatrixTests
         var readmeContract = File.ReadAllText(readmeContractPath);
         Assert.Contains("Cross-platform runtime должен формулироваться прямо: `Build and run games on Windows, Linux, macOS and Android. iOS and Web are planned as future runtime targets.`", readmeContract, StringComparison.Ordinal);
         Assert.Contains("README не отображает уровень релизной проверки; текущий состав `releaseVerificationTargets` задаётся в `docs/releases/0.1.0-preview.md`.", readmeContract, StringComparison.Ordinal);
+        Assert.Contains("README закрепляет текущее публичное имя `Platformer` и ссылку на `examples/platformer`.", readmeContract, StringComparison.Ordinal);
         Assert.DoesNotContain("iOS и Web показываются только как future runtime targets и не входят в mandatory `0.1.0 Preview` gate.", readmeContract, StringComparison.Ordinal);
+        Assert.DoesNotContain("- `platformer`;", readmeContract, StringComparison.Ordinal);
+        Assert.DoesNotContain("- `Platformer`;", readmeContract, StringComparison.Ordinal);
+        Assert.DoesNotContain("`Platformer` в `Platformer`", readmeContract, StringComparison.Ordinal);
 
         var readme = File.ReadAllText(readmePath);
         Assert.Contains("Build and run games on Windows, Linux, macOS and Android. iOS and Web are planned as future runtime targets.", readme, StringComparison.Ordinal);

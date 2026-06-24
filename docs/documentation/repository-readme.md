@@ -136,7 +136,7 @@ Examples содержит только `Platformer`.
 - **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A 2D platformer example built with Electron2D.
 ```
 
-Старое имя `reference-platformer` не должно появляться ни в видимом тексте, ни в URL README. До фактического переименования каталога `T-0110` остаётся `open`.
+README закрепляет текущее публичное имя `Platformer` и ссылку на `examples/platformer`. Он не должен возвращать прежнее внутреннее имя примера в видимом тексте или URL.
 
 ## Feedback и Contributors
 
@@ -164,11 +164,9 @@ README не должен содержать:
 - `pwsh`;
 - `Status` как отдельный раздел;
 - `Roadmap` как отдельный раздел;
-- `UI-heavy`;
-- `reference-platformer`;
-- `ReferencePlatformer`.
+- `UI-heavy`.
 
-До переименования проекта `ReferencePlatformer` в `Platformer` README может описывать пример как `Platformer`, но не должен раскрывать старое внутреннее имя в видимом тексте или URL.
+После `T-0212` README должен использовать только публичное имя `Platformer` и ссылку `examples/platformer`; старое внутреннее имя примера не должно возвращаться в видимый текст или URL.
 
 ## Проверка
 
@@ -185,7 +183,7 @@ dotnet run --project eng/Electron2D.Build -- verify readme
 - проверять star callout и emoji-акценты на публичных разделах;
 - проверять отсутствие запрещённых формулировок в `README.md`, а не raw grep по всему репозиторию;
 - проверять единственную документационную ссылку на GitHub Wiki;
-- проверять отсутствие UI-heavy и старого имени Platformer в видимом тексте и URL;
+- проверять отсутствие UI-heavy и старого внутреннего имени примера в видимом тексте и URL;
 - проверять отсутствие PowerShell-команд;
 - визуально проверять rendered GitHub preview или локальный HTML/Markdown preview artifact.
 
@@ -193,4 +191,4 @@ dotnet run --project eng/Electron2D.Build -- verify readme
 
 Статус: контракт исправлен после rejection предыдущего README; автоматическая C#-проверка ещё не реализована.
 
-`README.md` переписан как публичная продуктовая страница и больше не содержит внутренние task IDs, PowerShell-команды, UI-heavy или старое имя Platformer. Ссылка `Platformer` ведёт на будущий GitHub-каталог `examples/platformer`. `T-0110` остаётся `open`, потому что acceptance требует `T-0212`, C# verifier и visual preview check.
+`README.md` переписан как публичная продуктовая страница и больше не содержит внутренние task IDs, PowerShell-команды, UI-heavy или старое внутреннее имя примера. Ссылка `Platformer` ведёт на текущий GitHub-каталог `examples/platformer`. `T-0110` остаётся `open`, потому что acceptance требует C# verifier и visual preview check.

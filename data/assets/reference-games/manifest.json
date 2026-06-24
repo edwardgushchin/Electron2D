@@ -36,7 +36,7 @@
     }
   ],
   "requirements": {
-    "reference-platformer": [
+    "platformer": [
       "graphics.tileset",
       "graphics.characters",
       "graphics.backgrounds",
@@ -53,7 +53,7 @@
     {
       "id": "platformer.tilemap",
       "path": "data/assets/reference-games/platformer/graphics/tilemap.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "graphics.tileset" ],
       "source": "kenney-pixel-platformer",
       "bytes": 6180,
@@ -62,7 +62,7 @@
     {
       "id": "platformer.characters",
       "path": "data/assets/reference-games/platformer/graphics/tilemap-characters.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "graphics.characters" ],
       "source": "kenney-pixel-platformer",
       "bytes": 1996,
@@ -71,7 +71,7 @@
     {
       "id": "platformer.backgrounds",
       "path": "data/assets/reference-games/platformer/graphics/tilemap-backgrounds.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "graphics.backgrounds" ],
       "source": "kenney-pixel-platformer",
       "bytes": 669,
@@ -80,7 +80,7 @@
     {
       "id": "platformer.player-idle",
       "path": "data/assets/reference-games/platformer/graphics/player-idle.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "graphics.sprite" ],
       "source": "kenney-pixel-platformer",
       "bytes": 254,
@@ -89,7 +89,7 @@
     {
       "id": "platformer.terrain-solid",
       "path": "data/assets/reference-games/platformer/graphics/terrain-solid.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "graphics.sprite" ],
       "source": "kenney-pixel-platformer",
       "bytes": 190,
@@ -98,7 +98,7 @@
     {
       "id": "platformer.tilemap-example-a",
       "path": "data/assets/reference-games/platformer/levels/tilemap-example-a.tmx",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "level.source" ],
       "source": "kenney-pixel-platformer",
       "bytes": 4576,
@@ -107,7 +107,7 @@
     {
       "id": "platformer.tileset-characters",
       "path": "data/assets/reference-games/platformer/levels/tileset-characters.tsx",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "level.source" ],
       "source": "kenney-pixel-platformer",
       "bytes": 298,
@@ -116,7 +116,7 @@
     {
       "id": "platformer.tileset-tiles",
       "path": "data/assets/reference-games/platformer/levels/tileset-tiles.tsx",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "level.source" ],
       "source": "kenney-pixel-platformer",
       "bytes": 254,
@@ -125,7 +125,7 @@
     {
       "id": "platformer.footstep",
       "path": "data/assets/reference-games/platformer/audio/footstep00.ogg",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "audio.footstep" ],
       "source": "kenney-rpg-sounds",
       "bytes": 9475,
@@ -134,7 +134,7 @@
     {
       "id": "platformer.jump",
       "path": "data/assets/reference-games/platformer/audio/jump-cloth1.ogg",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "audio.movement" ],
       "source": "kenney-rpg-sounds",
       "bytes": 16508,
@@ -143,7 +143,7 @@
     {
       "id": "platformer.checkpoint",
       "path": "data/assets/reference-games/platformer/audio/checkpoint-door-open.ogg",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "audio.interaction" ],
       "source": "kenney-rpg-sounds",
       "bytes": 22848,
@@ -152,7 +152,7 @@
     {
       "id": "shared.font.kenney-future",
       "path": "data/assets/reference-games/shared/fonts/kenney-future.ttf",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "ui.font" ],
       "source": "kenney-ui-pack",
       "bytes": 34160,
@@ -161,7 +161,7 @@
     {
       "id": "shared.ui.button",
       "path": "data/assets/reference-games/shared/ui/button-rectangle-depth-flat.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 383,
@@ -170,7 +170,7 @@
     {
       "id": "shared.ui.check",
       "path": "data/assets/reference-games/shared/ui/check-square-color-checkmark.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 555,
@@ -179,7 +179,7 @@
     {
       "id": "shared.ui.slider",
       "path": "data/assets/reference-games/shared/ui/slide-horizontal-color.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 383,
@@ -188,7 +188,7 @@
     {
       "id": "shared.ui.star",
       "path": "data/assets/reference-games/shared/ui/star.png",
-      "games": [ "reference-platformer" ],
+      "games": [ "platformer" ],
       "roles": [ "ui.sprite" ],
       "source": "kenney-ui-pack",
       "bytes": 1507,

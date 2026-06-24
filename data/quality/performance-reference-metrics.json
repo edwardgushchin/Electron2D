@@ -17,7 +17,7 @@
         "maxP95FrameTimeMs": 16.67,
         "maxP99FrameTimeMs": 33.0
       },
-      "reference-platformer": {
+      "platformer": {
         "maxP95FrameTimeMs": 16.67,
         "maxP99FrameTimeMs": 33.0
       }
@@ -72,8 +72,8 @@
       ]
     },
     {
-      "scenarioId": "reference-platformer",
-      "projectPath": "examples/reference-platformer",
+      "scenarioId": "platformer",
+      "projectPath": "examples/platformer",
       "scenePath": "scenes/main.scene.json",
       "deviceId": "local-windows-x64",
       "warmupFrames": 120,
@@ -84,9 +84,9 @@
       "averageFrameTimeMs": 16.66,
       "steadyManagedAllocatedBytesPerFrame": 0,
       "evidence": [
-        "tools/Verify-ReferencePlatformer.ps1",
-        "examples/reference-platformer/scenes/main.scene.json",
-        "examples/reference-platformer/scripts/PlatformerGame.cs"
+        "tools/Verify-Platformer.ps1",
+        "examples/platformer/scenes/main.scene.json",
+        "examples/platformer/scripts/PlatformerGame.cs"
       ]
     }
   ],

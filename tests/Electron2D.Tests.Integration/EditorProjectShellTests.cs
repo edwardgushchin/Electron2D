@@ -212,8 +212,8 @@ public sealed class EditorProjectShellTests
     {
         var root = FindRepositoryRoot();
         var editorProjectPath = Path.Combine(root, "src", "Electron2D.Editor", "Electron2D.Editor.csproj");
-        var referenceProjectFile = Path.Combine(root, "examples", "reference-platformer", "ReferencePlatformer.e2d");
-        var referenceProjectRoot = Path.Combine(root, "examples", "reference-platformer");
+        var referenceProjectFile = Path.Combine(root, "examples", "platformer", "Platformer.e2d");
+        var referenceProjectRoot = Path.Combine(root, "examples", "platformer");
         var referenceMainScene = Path.Combine(referenceProjectRoot, "scenes", "main.scene.json");
         var workRoot = CreateTemporaryDirectory("electron2d-editor-open-project-window-");
         var userDataRoot = CreateTemporaryDirectory("electron2d-editor-open-project-window-user-");
@@ -259,7 +259,7 @@ public sealed class EditorProjectShellTests
             var lines = ParseMachineReadableOutput(output);
 
             Assert.Contains("Electron2D.Editor open project window smoke passed", output);
-            Assert.Equal("ReferencePlatformer", lines["ProjectName"]);
+            Assert.Equal("Platformer", lines["ProjectName"]);
             Assert.Equal(referenceProjectRoot, lines["ProjectPath"]);
             Assert.Equal(referenceProjectFile, lines["ProjectSettingsPath"]);
             Assert.Equal(referenceMainScene, lines["MainScenePath"]);
