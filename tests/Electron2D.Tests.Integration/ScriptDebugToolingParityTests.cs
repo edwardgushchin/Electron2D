@@ -349,6 +349,7 @@ public sealed class ScriptDebugToolingParityTests
             Assert.True(data.GetProperty("debug").GetProperty("watchEvaluationVisible").GetBoolean());
             Assert.True(data.GetProperty("agentWorkspace").GetProperty("taskVisible").GetBoolean());
             Assert.True(data.GetProperty("agentWorkspace").GetProperty("linksVisible").GetBoolean());
+            Assert.True(data.GetProperty("agentWorkspace").GetProperty("bounds").GetProperty("y").GetInt32() >= 500);
             Assert.True(data.GetProperty("screenshotReviewed").GetBoolean());
         }
         finally

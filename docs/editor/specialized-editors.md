@@ -1,6 +1,6 @@
 # Specialized editors: SpriteFrames, TileMap и AnimationPlayer
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -54,7 +54,7 @@ Smoke-сценарий `--specialized-editors-smoke <work-root>` должен:
 - Scene file использует runtime node type names `Electron2D.AnimatedSprite2D`, `Electron2D.TileMapLayer` и `Electron2D.AnimationPlayer`.
 - Screenshot настоящего окна фиксирует три specialized editor panels, shell layout, docks и bottom panel.
 - Analysis artifact фиксирует `WindowCreated=True`, `WindowShown=True`, `FramePresented=True`, pointer interaction по palette tile, keyboard save command, `TextOverflowCount=0`, отсутствие `3D`, `AssetLib`, GDScript и `.gd` UI.
-- UI соответствует layout-референсу: `2D` workspace остаётся выбранным, specialized editors находятся в центральной области, `Inspector`, `FileSystem`, `Scene` и bottom `Animation` tab видимы как части общего редактора.
+- UI соответствует layout-референсу: `2D` workspace остаётся выбранным, specialized editors находятся в центральной области, `Inspector`, `FileSystem`, `Scene`, bottom `Animation` tab и bottom `Agent` tab видимы как части общего редактора.
 
 ## Не входит в scope
 
@@ -104,8 +104,8 @@ Specialized editors отображаются внутри общего shell lay
 
 - выбран `2D` workspace;
 - слева видны `Scene` и `FileSystem`;
-- справа видны `Inspector`, `Node` и `Agent Workspace`;
-- снизу видна bottom panel с вкладкой `Animation`;
+- справа видны `Inspector` и `Node`;
+- снизу видна bottom panel с вкладками `Animation` и `Agent`;
 - в центральной области одновременно показаны panels `SpriteFrames`, `TileMap` и `AnimationPlayer`.
 
 `SpriteFrames` panel показывает animations, frame list, fps, loop mode, selected texture и действия `Add`, `Remove`, `Reorder`.

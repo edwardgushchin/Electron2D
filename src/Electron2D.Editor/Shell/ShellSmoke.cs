@@ -42,10 +42,11 @@ internal static class ShellSmoke
         layout.SwitchWorkspace("Game");
         layout.SwitchWorkspace("Tasks");
 
+        var initialBottomPanelCollapsed = layout.BottomPanelCollapsed;
         layout.ToggleBottomPanel();
-        var collapsed = layout.BottomPanelCollapsed;
+        var toggledBottomPanel = layout.BottomPanelCollapsed != initialBottomPanelCollapsed;
         layout.ToggleBottomPanel();
-        var bottomPanelCollapseRoundTrip = collapsed && !layout.BottomPanelCollapsed;
+        var bottomPanelCollapseRoundTrip = toggledBottomPanel && layout.BottomPanelCollapsed == initialBottomPanelCollapsed;
 
         var statePath = Path.Combine(fullWorkRoot, "editor-shell-layout.state.json");
         ShellLayoutPersistence.Save(statePath, layout.CaptureState());

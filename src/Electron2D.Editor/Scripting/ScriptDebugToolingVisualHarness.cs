@@ -152,21 +152,24 @@ internal static class ScriptDebugToolingVisualHarness
         regions.Add(new("Completion", state.CompletionSelected, centerX + 380, centerY + 210, 172, 84, Clickable: true, TextScale: 1));
         regions.Add(new("Diagnostic", state.DiagnosticCode, centerX + 518, centerY + 306, 190, 44, Clickable: true, TextScale: 1));
         regions.Add(new("Breakpoint", "BP", centerX + 28, centerY + 42 + ((10 - 1) * 18), 36, 20, Clickable: true, TextScale: 1));
-        regions.Add(new("RightDock", "Inspector", rightX, topHeight, rightDockWidth, 52, Clickable: true, TextScale: 2));
-        regions.Add(new("AgentWorkspace", "Agent Workspace", rightX, topHeight + 52, rightDockWidth, centerHeight - 52, Clickable: true, TextScale: 2));
-        regions.Add(new("BottomPanel", "Debugger", 0, ShellLayout.DefaultViewportHeight - bottomPanelHeight, ShellLayout.DefaultViewportWidth, bottomPanelHeight, Clickable: true, TextScale: 2));
+        regions.Add(new("RightDock", "Inspector", rightX, topHeight, rightDockWidth, 126, Clickable: true, TextScale: 2));
+        regions.Add(new("RightDock", "Node", rightX, topHeight + 126, rightDockWidth, centerHeight - 126, Clickable: true, TextScale: 2));
+        regions.Add(new("BottomPanel", "Debugger | Agent", 0, ShellLayout.DefaultViewportHeight - bottomPanelHeight, ShellLayout.DefaultViewportWidth, bottomPanelHeight, Clickable: true, TextScale: 2));
+        regions.Add(new("BottomPanelTab", "Debugger", 14, ShellLayout.DefaultViewportHeight - bottomPanelHeight + 8, 96, 24, Clickable: true, TextScale: 1));
+        regions.Add(new("BottomPanelTab", "Agent", 118, ShellLayout.DefaultViewportHeight - bottomPanelHeight + 8, 76, 24, Clickable: true, TextScale: 1));
+        regions.Add(new("AgentWorkspace", "Agent Workspace", 824, ShellLayout.DefaultViewportHeight - bottomPanelHeight + 38, 440, bottomPanelHeight - 48, Clickable: true, TextScale: 1));
         regions.Add(new("Threads", "Threads", 16, ShellLayout.DefaultViewportHeight - 126, 156, 88, Clickable: true, TextScale: 1));
         regions.Add(new("CallStack", "Call Stack", 184, ShellLayout.DefaultViewportHeight - 126, 310, 88, Clickable: true, TextScale: 1));
         regions.Add(new("Variables", "Locals Args", 506, ShellLayout.DefaultViewportHeight - 126, 272, 88, Clickable: true, TextScale: 1));
         regions.Add(new("Watches", "Watches", 790, ShellLayout.DefaultViewportHeight - 126, 226, 88, Clickable: true, TextScale: 1));
         regions.Add(new("Artifacts", "Artifacts", 1028, ShellLayout.DefaultViewportHeight - 126, 236, 88, Clickable: true, TextScale: 1));
 
-        var agentX = rightX + 12;
-        var agentY = topHeight + 104;
+        var agentX = 836;
+        var agentY = ShellLayout.DefaultViewportHeight - bottomPanelHeight + 62;
         foreach (var section in new[] { state.CurrentTask, "script_apply_text_edits", state.LinkedTransactions[0], state.LinkedJobs[0], state.LinkedArtifacts[0] })
         {
-            regions.Add(new("AgentItem", section, agentX, agentY, rightDockWidth - 24, 24, Clickable: true, TextScale: 1));
-            agentY += 30;
+            regions.Add(new("AgentItem", section, agentX, agentY, 416, 18, Clickable: true, TextScale: 1));
+            agentY += 20;
         }
 
         return regions;
@@ -184,6 +187,7 @@ internal static class ScriptDebugToolingVisualHarness
         FillArea(canvas, regions, "Tab", new Rgba(41, 47, 56), new Rgba(238, 242, 246));
         FillArea(canvas, regions, "RightDock", new Rgba(38, 42, 55), new Rgba(221, 226, 232));
         FillArea(canvas, regions, "BottomPanel", new Rgba(30, 35, 42), new Rgba(205, 213, 222));
+        FillArea(canvas, regions, "BottomPanelTab", new Rgba(52, 58, 67), new Rgba(231, 235, 242));
         FillArea(canvas, regions, "Threads", new Rgba(38, 45, 53), new Rgba(224, 231, 238));
         FillArea(canvas, regions, "CallStack", new Rgba(38, 45, 53), new Rgba(224, 231, 238));
         FillArea(canvas, regions, "Variables", new Rgba(38, 45, 53), new Rgba(224, 231, 238));
@@ -193,8 +197,8 @@ internal static class ScriptDebugToolingVisualHarness
         var agent = regions.Single(region => region.Area == "AgentWorkspace");
         canvas.FillRectangle(agent.X, agent.Y, agent.Width, agent.Height, new Rgba(33, 39, 51));
         canvas.DrawRectangle(agent.X, agent.Y, agent.Width, agent.Height, new Rgba(102, 116, 132));
-        canvas.DrawText("AGENT WORKSPACE", agent.X + 12, agent.Y + 14, new Rgba(244, 248, 252), scale: 2);
-        canvas.DrawText("SCRIPT DEBUG TOOLING", agent.X + 12, agent.Y + 44, new Rgba(176, 206, 230), scale: 1);
+        canvas.DrawText("AGENT WORKSPACE", agent.X + 8, agent.Y + 8, new Rgba(244, 248, 252), scale: 1);
+        canvas.DrawText("PROCESS CONTEXT", agent.X + 8, agent.Y + 24, new Rgba(176, 206, 230), scale: 1);
         foreach (var item in regions.Where(region => region.Area == "AgentItem"))
         {
             canvas.FillRectangle(item.X, item.Y, item.Width, item.Height, new Rgba(45, 52, 66));

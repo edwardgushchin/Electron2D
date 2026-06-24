@@ -99,7 +99,7 @@ public sealed class EditorAgentWorkspacePanelTests
             Assert.Equal("undo-agent-001", lines["UndoGroupId"]);
             Assert.Equal("True", lines["AwaitingAcceptanceActionAvailable"]);
             Assert.Equal("False", lines["DoneActionAvailable"]);
-            Assert.Equal("RightBelowInspectorNode", lines["DockPlacement"]);
+            Assert.Equal("BottomPanel/Agent", lines["DockPlacement"]);
             Assert.Equal("True", lines["DockPersisted"]);
             Assert.Equal("2D|Script|Game|Tasks", lines["VisibleWorkspaces"]);
             Assert.Equal("True", lines["ScreenshotReviewed"]);
@@ -119,7 +119,7 @@ public sealed class EditorAgentWorkspacePanelTests
 
             Assert.Equal("Electron2D.AgentWorkspaceVisualAnalysis", data.GetProperty("format").GetString());
             Assert.Equal("automated-agent-workspace-panel-harness", data.GetProperty("harness").GetString());
-            Assert.Equal("RightBelowInspectorNode", data.GetProperty("dock").GetProperty("placement").GetString());
+            Assert.Equal("BottomPanel/Agent", data.GetProperty("dock").GetProperty("placement").GetString());
             Assert.True(data.GetProperty("dock").GetProperty("persisted").GetBoolean());
             Assert.Equal(1280, data.GetProperty("viewport").GetProperty("width").GetInt32());
             Assert.Equal(720, data.GetProperty("viewport").GetProperty("height").GetInt32());
@@ -131,7 +131,7 @@ public sealed class EditorAgentWorkspacePanelTests
             Assert.True(data.GetProperty("awaitingAcceptanceActionAvailable").GetBoolean());
             Assert.True(data.GetProperty("groupedUndoAvailable").GetBoolean());
             Assert.Equal(
-                new[] { "Session", "Current Task", "Changeset", "Diagnostics", "Artifacts", "Runtime", "Jobs", "Actions" },
+                new[] { "Overview", "Changes", "Jobs", "Diagnostics", "Artifacts", "Terminal" },
                 data.GetProperty("sections").EnumerateArray().Select(item => item.GetString()).ToArray());
             Assert.Equal(
                 new[] { "2D", "Script", "Game", "Tasks" },

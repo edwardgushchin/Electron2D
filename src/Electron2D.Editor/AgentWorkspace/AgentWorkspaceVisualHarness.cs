@@ -73,16 +73,15 @@ internal static class AgentWorkspaceVisualHarness
     private static IReadOnlyList<AgentWorkspaceVisualRegion> CreateRegions(AgentWorkspacePanelSnapshot snapshot)
     {
         const int topHeight = 110;
-        const int bottomPanelHeight = 128;
+        const int bottomPanelHeight = 168;
         const int bottomTop = ViewportHeight - bottomPanelHeight;
         const int leftDockWidth = 250;
         const int rightDockWidth = 340;
         const int rightX = ViewportWidth - rightDockWidth;
         const int centerWidth = ViewportWidth - leftDockWidth - rightDockWidth;
         const int rightInspectorHeight = 126;
-        const int rightNodeHeight = 52;
-        const int agentTop = topHeight + rightInspectorHeight + rightNodeHeight;
-        const int agentHeight = bottomTop - agentTop;
+        var agentTop = bottomTop;
+        var agentHeight = bottomPanelHeight;
 
         var regions = new List<AgentWorkspaceVisualRegion>
         {
@@ -97,28 +96,31 @@ internal static class AgentWorkspaceVisualHarness
             new("LeftDock", "FileSystem", 0, topHeight + 294, leftDockWidth, bottomTop - topHeight - 294, Clickable: true, TextScale: 2),
             new("Center", "Game workspace", leftDockWidth, topHeight, centerWidth, bottomTop - topHeight, Clickable: true, TextScale: 2),
             new("RightDock", "Inspector", rightX, topHeight, rightDockWidth, rightInspectorHeight, Clickable: true, TextScale: 2),
-            new("RightDock", "Node", rightX, topHeight + rightInspectorHeight, rightDockWidth, rightNodeHeight, Clickable: true, TextScale: 2),
-            new("AgentWorkspace", "Agent Workspace", rightX, agentTop, rightDockWidth, agentHeight, Clickable: true, TextScale: 2),
-            new("BottomPanel", "Diagnostics", 0, bottomTop, ViewportWidth, bottomPanelHeight, Clickable: true, TextScale: 2)
+            new("RightDock", "Node", rightX, topHeight + rightInspectorHeight, rightDockWidth, bottomTop - topHeight - rightInspectorHeight, Clickable: true, TextScale: 2),
+            new("BottomPanel", "Output | Debugger | Agent | Diagnostics", 0, bottomTop, ViewportWidth, bottomPanelHeight, Clickable: true, TextScale: 2),
+            new("BottomPanelTab", "Output", 12, bottomTop + 8, 82, 24, Clickable: true, TextScale: 1),
+            new("BottomPanelTab", "Debugger", 102, bottomTop + 8, 96, 24, Clickable: true, TextScale: 1),
+            new("BottomPanelTab", "Agent", 206, bottomTop + 8, 76, 24, Clickable: true, TextScale: 1),
+            new("AgentWorkspace", "Agent Workspace", 0, agentTop + 36, ViewportWidth, agentHeight - 36, Clickable: true, TextScale: 2)
         };
 
-        var sectionY = agentTop + 42;
+        var sectionX = 14;
         foreach (var section in snapshot.Sections)
         {
             regions.Add(new AgentWorkspaceVisualRegion(
                 "AgentSection",
                 section,
-                rightX + 12,
-                sectionY,
-                rightDockWidth - 24,
-                22,
-                Clickable: section is "Changeset" or "Diagnostics" or "Artifacts" or "Runtime" or "Jobs",
+                sectionX,
+                agentTop + 46,
+                Math.Max(96, (section.Length * 8) + 28),
+                24,
+                Clickable: true,
                 TextScale: 1));
-            sectionY += 25;
+            sectionX += Math.Max(96, (section.Length * 8) + 28) + 8;
         }
 
-        var buttonY = agentTop + agentHeight - 34;
-        var buttonX = rightX + 12;
+        var buttonY = agentTop + 8;
+        var buttonX = ViewportWidth - 372;
         foreach (var action in snapshot.Actions)
         {
             regions.Add(new AgentWorkspaceVisualRegion(
@@ -153,8 +155,8 @@ internal static class AgentWorkspaceVisualHarness
         var agent = regions.Single(region => region.Area == "AgentWorkspace");
         canvas.FillRectangle(agent.X, agent.Y, agent.Width, agent.Height, new Rgba(33, 39, 51));
         canvas.DrawRectangle(agent.X, agent.Y, agent.Width, agent.Height, new Rgba(102, 116, 132));
-        canvas.DrawText("AGENT WORKSPACE", agent.X + 12, agent.Y + 12, new Rgba(244, 248, 252), scale: 2);
-        DrawFit(canvas, snapshot.Session.ConnectionState.ToString().ToUpperInvariant(), agent.X + 214, agent.Y + 15, 106, new Rgba(160, 234, 190), scale: 1);
+        canvas.DrawText("AGENT WORKSPACE", agent.X + 14, agent.Y + 44, new Rgba(244, 248, 252), scale: 2);
+        DrawFit(canvas, snapshot.Session.ConnectionState.ToString().ToUpperInvariant(), agent.X + 260, agent.Y + 47, 106, new Rgba(160, 234, 190), scale: 1);
 
         var sectionRegions = regions.Where(region => region.Area == "AgentSection").ToArray();
         foreach (var section in sectionRegions)
@@ -164,14 +166,12 @@ internal static class AgentWorkspaceVisualHarness
             DrawFit(canvas, section.Label.ToUpperInvariant(), section.X + 6, section.Y + 6, 116, new Rgba(226, 232, 240), scale: 1);
         }
 
-        DrawSectionValue(canvas, sectionRegions[0], $"{snapshot.Session.ProfileId} {snapshot.Session.HandshakeState}");
-        DrawSectionValue(canvas, sectionRegions[1], $"{snapshot.Task.TaskId} {snapshot.Task.Status}");
-        DrawSectionValue(canvas, sectionRegions[2], $"{snapshot.ChangedObjects.Count} objects");
+        DrawSectionValue(canvas, sectionRegions[0], $"{snapshot.Session.ProfileId} {snapshot.Task.TaskId}");
+        DrawSectionValue(canvas, sectionRegions[1], $"{snapshot.ChangedObjects.Count} objects");
+        DrawSectionValue(canvas, sectionRegions[2], $"{snapshot.ActiveJob.Kind} {snapshot.ActiveJob.ProgressPercent}%");
         DrawSectionValue(canvas, sectionRegions[3], snapshot.Diagnostics[0].Code);
         DrawSectionValue(canvas, sectionRegions[4], $"{snapshot.Artifacts.Count} items");
-        DrawSectionValue(canvas, sectionRegions[5], "snapshot stale");
-        DrawSectionValue(canvas, sectionRegions[6], $"{snapshot.ActiveJob.Kind} {snapshot.ActiveJob.ProgressPercent}%");
-        DrawSectionValue(canvas, sectionRegions[7], "human review");
+        DrawSectionValue(canvas, sectionRegions[5], "terminal ready");
 
         foreach (var action in regions.Where(region => region.Area == "AgentAction"))
         {

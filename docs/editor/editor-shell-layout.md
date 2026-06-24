@@ -1,6 +1,6 @@
 # Editor shell layout и visual harness
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -12,14 +12,14 @@
 
 ## Контракт, состояние и проверки
 
-Статус: реализовано для `T-0157`, переаттестация через окно добавлена в `T-0165`.
-Обновлено: 2026-06-23.
+Статус: реализовано для `T-0157`, переаттестация через окно добавлена в `T-0165`, placement `Agent Workspace` перенесён в bottom panel.
+Обновлено: 2026-06-24.
 
 ## Назначение
 
-`Electron2D.Editor` имеет общий shell layout для стартового окна редактора: верхнее меню, переключатель центральных рабочих пространств, вкладки документов, левые и правые docks, нижнюю панель и зарезервированную область `Agent Workspace`.
+`Electron2D.Editor` имеет общий shell layout для стартового окна редактора: верхнее меню, переключатель центральных рабочих пространств, вкладки документов, левые docks, правый контекстный dock `Inspector | Node` и нижнюю панель с процессными инструментами, включая вкладку `Agent`.
 
-Текущая реализация использует один внутренний `ShellLayout` для стартового UI root редактора, сохраняемого состояния layout, automated visual harness и real-window smoke. Обычный запуск создаёт окно `Electron2D.Editor` как GUI application без отдельной консоли Windows и строит shell через runtime-control-tree, то есть через реальные runtime `Control` nodes, а не через заранее нарисованный PNG/harness.
+Текущая реализация использует один внутренний `ShellLayout` для стартового UI root редактора, сохраняемого состояния layout, быстрой проверки state/analysis и real-window smoke. Обычный запуск создаёт окно `Electron2D.Editor` как GUI application без отдельной консоли Windows и строит shell через runtime-control-tree, то есть через реальные runtime `Control` nodes, а не через заранее нарисованный PNG/harness.
 
 ## Default layout
 
@@ -49,14 +49,21 @@ FileSystem
 ```text
 Inspector
 Node
-Agent Workspace
 ```
 
 Bottom panel:
 
 ```text
-Output | Debugger | Diagnostics | Search | Animation | Audio | Tests
+Output | Debugger | Agent | Diagnostics | Search | Animation | Audio | Tests
 ```
+
+`Inspector` и `Node` справа описывают выбранный объект. `Agent Workspace` описывает процесс и находится в bottom panel как вкладка `Agent`; заголовок открытой панели остаётся `Agent Workspace`.
+
+Если ширины окна не хватает для всех вкладок bottom panel, лишние вкладки уходят в overflow-menu. Вкладки не должны сжиматься до нечитаемого состояния и не должны менять высоту нижней полосы.
+
+Глобальная вкладка `Diagnostics` в bottom panel показывает общепроектные diagnostics: ошибки сборки, проверки проекта, runtime и tooling. Внутренняя вкладка `Diagnostics` внутри `Agent Workspace` показывает только diagnostics агентского процесса: handshake, jobs, artifacts, tool calls и связанные agent routes.
+
+Автоматическое раскрытие вкладки `Agent` при ошибке handshake, падении job или запросе review не забирает keyboard focus у текущего workspace. Фокус остаётся на текущем control; панель только становится видимой и обновляет badge/active tab.
 
 В shell отсутствуют workspace `3D`, `AssetLib`, GDScript UI, `.gd` templates, `Node3D` entries и disabled 3D controls.
 
@@ -67,8 +74,11 @@ Shell сохраняет JSON state с такими данными:
 - выбранный central workspace;
 - collapsed/expanded состояние bottom panel;
 - размеры left/right docks и bottom panel;
+- активную вкладку bottom panel и активную внутреннюю вкладку `Agent Workspace`;
 - открытые document tabs;
 - per-workspace selection, scroll, zoom и open documents.
+
+Старое persisted placement `RightBelowInspectorNode` для `Agent Workspace` мигрируется в `BottomPanel/Agent`.
 
 Smoke-сценарий переключает workspaces `Script`, `Game`, `Tasks`, сворачивает и разворачивает bottom panel, сохраняет state, заново читает его и проверяет stable round-trip.
 
@@ -92,7 +102,7 @@ Machine-readable shortcut map находится в `ShellLayout.Shortcuts`.
 
 Smoke-проверка подтверждает, что shortcut map не содержит 3D или GDScript actions.
 
-## Visual harness
+## Shell layout smoke
 
 Команда:
 
@@ -103,12 +113,11 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --shell-l
 Создаёт:
 
 - `.temp/editor-shell-visual/editor-shell-layout.state.json`;
-- `.temp/editor-shell-visual/visual/editor-shell-default.png`;
-- `.temp/editor-shell-visual/visual/editor-shell-default.analysis.json`.
+- `.temp/editor-shell-visual/editor-shell-layout.analysis.json`.
 
-PNG является deterministic screenshot artifact для ручного просмотра агентом до закрытия UI-задачи. JSON analysis содержит координаты workspace switcher, left docks, right docks, bottom panel, число кликабельных controls, результат проверки text overflow и список запрещённых UI matches.
+Эта команда больше не создаёт synthetic PNG и не считается visual harness. Она проверяет только модель layout, сохранённое состояние, round-trip persistence и JSON analysis: workspace switcher, left docks, right docks, bottom panel, число кликабельных controls, результат проверки text overflow и список запрещённых UI matches. Исторический `ShellVisualHarness` может оставаться внутренним подготовительным инструментом, но `--shell-layout-smoke` не обещает PNG-артефакт.
 
-Начиная с `T-0165`, этот harness является подготовительной проверкой layout model, а не финальной приёмкой visible UI. Он не используется в обычном интерактивном запуске редактора. Финальная проверка видимого shell должна использовать real-window smoke:
+Начиная с `T-0165`, эта проверка является подготовительной проверкой layout model, а не финальной приёмкой visible UI. Она не используется в обычном интерактивном запуске редактора. Финальная проверка видимого shell должна использовать real-window smoke:
 
 ```powershell
 dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-smoke .temp\editor-window-smoke
@@ -118,13 +127,13 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-
 
 JSON analysis дополнительно фиксирует `rendering.source=runtime-control-tree`, `visualHarnessRemoved=True`, `drawCommands` и `redDominantPixelRatio`. Обычный real-window smoke больше не загружает старые screenshots отдельных harness-слоёв и не создаёт `reattestedVisibleLayers`, потому что этот путь должен проверять текущее окно редактора, а не заранее подготовленные изображения.
 
-В текущей проверке агент открыл `editor-shell-default.png` и подтвердил:
+В текущей проверке `--shell-layout-smoke` JSON analysis подтверждает:
 
 - workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`;
 - `Scene` и `FileSystem` расположены слева;
-- `Inspector`, `Node` и `Agent Workspace` расположены справа;
-- bottom panel видна, читаема и имеет кнопку `Collapse`;
-- текст не выходит за границы контейнеров и не перекрывает соседние элементы;
+- `Inspector` и `Node` расположены справа;
+- bottom panel описана в expected bounds, содержит вкладку `Agent` и имеет кнопку `Collapse`;
+- анализ не находит text overflow и перекрытие соседних элементов;
 - `3D`, `AssetLib`, GDScript UI и disabled 3D controls визуально отсутствуют.
 
 Для real-window smoke агент открыл `.temp/editor-window-smoke/visual/editor-window-smoke.png` и подтвердил:
@@ -132,8 +141,8 @@ JSON analysis дополнительно фиксирует `rendering.source=ru
 - окно 1280x720 показывает верхнее меню `Scene`, `Project`, `Debug`, `Editor`, `Help`;
 - workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`, выбран `Tasks`;
 - `Scene` и `FileSystem` расположены слева;
-- `Inspector`, `Node` и `Agent Workspace` расположены справа;
-- bottom panel видна внизу и содержит tabs `Output`, `Debugger`, `Diagnostics`, `Search`, `Animation`, `Audio`, `Tests`;
+- `Inspector` и `Node` расположены справа;
+- bottom panel видна внизу и содержит tabs `Output`, `Debugger`, `Agent`, `Diagnostics`, `Search`, `Animation`, `Audio`, `Tests`;
 - текст читаем и не выходит за контейнеры;
 - `3D`, `AssetLib`, GDScript UI и disabled 3D controls визуально отсутствуют.
 

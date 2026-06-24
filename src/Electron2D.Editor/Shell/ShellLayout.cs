@@ -58,9 +58,9 @@ internal sealed class ShellLayout
 
     public IReadOnlyList<string> LeftDocks { get; } = ["Scene", "FileSystem"];
 
-    public IReadOnlyList<string> RightDocks { get; } = ["Inspector", "Node", "Agent Workspace"];
+    public IReadOnlyList<string> RightDocks { get; } = ["Inspector", "Node"];
 
-    public IReadOnlyList<string> BottomPanelTabs { get; } = ["Output", "Debugger", "Diagnostics", "Search", "Animation", "Audio", "Tests"];
+    public IReadOnlyList<string> BottomPanelTabs { get; } = ["Output", "Debugger", "Agent", "Diagnostics", "Search", "Animation", "Audio", "Tests"];
 
     public IReadOnlyList<ShellShortcut> Shortcuts { get; } =
     [
@@ -116,7 +116,7 @@ internal sealed class ShellLayout
 
         return new ShellLayout(
             "2D",
-            bottomPanelCollapsed: false,
+            bottomPanelCollapsed: true,
             leftDockWidth: 250,
             rightDockWidth: 300,
             bottomPanelHeight: 128,
@@ -145,7 +145,7 @@ internal sealed class ShellLayout
 
         return new ShellLayout(
             "2D",
-            bottomPanelCollapsed: false,
+            bottomPanelCollapsed: true,
             leftDockWidth: 250,
             rightDockWidth: 300,
             bottomPanelHeight: 128,
@@ -260,9 +260,9 @@ internal sealed class ShellLayout
         regions.Add(new ShellRegion("LeftDock", "Scene", 0, topHeight, LeftDockWidth, sceneHeight, Clickable: true));
         regions.Add(new ShellRegion("LeftDock", "FileSystem", 0, topHeight + sceneHeight, LeftDockWidth, centerHeight - sceneHeight, Clickable: true));
         regions.Add(new ShellRegion("CenterWorkspace", "Active workspace: " + SelectedWorkspace, centerX, topHeight, centerWidth, centerHeight, Clickable: true));
-        regions.Add(new ShellRegion("RightDock", "Inspector", rightX, topHeight, RightDockWidth, 170, Clickable: true));
-        regions.Add(new ShellRegion("RightDock", "Node", rightX, topHeight + 170, RightDockWidth, 72, Clickable: true));
-        regions.Add(new ShellRegion("RightDock", "Agent Workspace", rightX, topHeight + 242, RightDockWidth, centerHeight - 242, Clickable: true));
+        var inspectorHeight = Math.Max(180, centerHeight - 72);
+        regions.Add(new ShellRegion("RightDock", "Inspector", rightX, topHeight, RightDockWidth, inspectorHeight, Clickable: true));
+        regions.Add(new ShellRegion("RightDock", "Node", rightX, topHeight + inspectorHeight, RightDockWidth, centerHeight - inspectorHeight, Clickable: true));
         regions.Add(new ShellRegion("BottomPanel", "Bottom Panel", 0, bottomTop, DefaultViewportWidth, BottomPanelHeight, Clickable: true));
 
         var bottomTabX = 12;

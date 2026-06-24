@@ -1,6 +1,6 @@
 # Референс интерфейса редактора Godot 4
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-24.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -45,13 +45,13 @@ Baseline для `0.1.0`:
 ├──────────────────┬──────────────────────────────────┬──────────────────────┤
 │ Scene            │                                  │ Inspector / Node     │
 │                  │                                  │                      │
-│                  │       Active workspace           ├──────────────────────┤
-│                  │                                  │ Agent Workspace      │
+│                  │       Active workspace           │                      │
+│                  │                                  │                      │
 │  Scene Tree      │  2D / Script / Game / Task Board │                      │
 ├──────────────────┤                                  │                      │
 │ FileSystem       │                                  │                      │
 ├──────────────────┴──────────────────────────────────┴──────────────────────┤
-│ Output | Debugger | Diagnostics | Search | Animation | Audio | Tests       │
+│ Output | Debugger | Agent | Diagnostics | Search | Animation | Audio       │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -64,7 +64,7 @@ Default docks:
 | Scene dock | `Scene` dock слева |
 | FileSystem dock | `FileSystem` dock слева под `Scene` |
 | Inspector/Node dock | `Inspector`/`Node` dock справа |
-| Bottom panel | `Output`, `Debugger`, `Diagnostics`, `Search`, `Animation`, `Audio`, `Tests` |
+| Bottom panel | `Output`, `Debugger`, `Agent`, `Diagnostics`, `Search`, `Animation`, `Audio`, `Tests` |
 | Run controls | `Run Current Scene`, `Run Project`, `Stop`, `Pause`, `Restart` там, где уместно |
 
 ## Центральные workspaces
@@ -224,7 +224,7 @@ Project Settings открывается из editor workflow как видимы
 
 ## Specialized editors
 
-Specialized editors для `SpriteFrames`, `TileMap` и `AnimationPlayer` открываются внутри `2D` workspace, а не как отдельные утилиты. Пользователь остаётся в общем shell layout: слева видны `Scene` и `FileSystem`, справа `Inspector` и `Agent Workspace`, снизу bottom panel с вкладкой `Animation`.
+Specialized editors для `SpriteFrames`, `TileMap` и `AnimationPlayer` открываются внутри `2D` workspace, а не как отдельные утилиты. Пользователь остаётся в общем shell layout: слева видны `Scene` и `FileSystem`, справа `Inspector`/`Node`, снизу bottom panel с вкладками `Animation` и `Agent`.
 
 Проверяемый минимум UI для `T-0086`:
 
@@ -236,25 +236,39 @@ Specialized editors для `SpriteFrames`, `TileMap` и `AnimationPlayer` отк
 - Все три editor panels записывают runtime resource/scene text documents и после reopen показывают те же данные.
 - PNG screenshot и JSON analysis фиксируют bounds panels/actions, pointer hit-test по palette tile, keyboard save command, отсутствие text overflow и отсутствие `3D`, `AssetLib`, GDScript UI и `.gd` files.
 
-## Agent Workspace dock
+## Agent Workspace bottom tab
 
-`Agent Workspace` — постоянная dock-панель, доступная одновременно с любым центральным workspace.
+`Agent Workspace` — вкладка `Agent` в нижней панели, доступная одновременно с любым центральным workspace.
+
+Принцип: `Inspector` и `Node` справа показывают контекст выбранного объекта, а `Agent Workspace` снизу показывает контекст процесса: сессию, задачу, changeset, jobs, diagnostics, artifacts и terminal.
 
 Default placement:
 
 ```text
-Right dock area, below Inspector/Node or in the same dock group.
+Bottom panel tab: Agent
 ```
 
 Панель должна быть:
 
-- dockable;
-- resizable;
+- resizable через splitter bottom panel;
 - hideable;
-- movable;
-- maximizable;
+- maximizable двойным кликом по вкладке `Agent`;
 - сохраняющей layout между запусками;
 - доступной в `2D`, `Script`, `Game` и `Tasks`.
+
+Внутренние вкладки:
+
+```text
+Overview | Changes | Jobs | Diagnostics | Artifacts | Terminal
+```
+
+Toolbar справа в открытой панели содержит connection state, `Send Review`, `Undo AI`, `Cancel`, `Stop`.
+
+Панель по умолчанию свёрнута. Она автоматически раскрывается только при ошибке handshake, падении job или запросе review; обычный прогресс обновляет badge вкладки `Agent`, но не перехватывает focus. Автоматическое раскрытие не забирает keyboard focus у текущего workspace.
+
+Внутренняя вкладка `Diagnostics` показывает diagnostics агентского процесса: handshake, jobs, tool calls, artifacts и route resolution. Глобальная вкладка `Diagnostics` нижней панели показывает общепроектные diagnostics и не смешивается с агентскими сообщениями.
+
+Если нижней панели не хватает ширины, вкладки переходят в overflow-menu. Они не должны сжиматься до нечитаемых подписей.
 
 Содержимое:
 
@@ -359,37 +373,37 @@ Workspace switching не должен сбрасывать:
 - default layout на Windows, Linux и macOS;
 - верхний workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`;
 - слева видны `Scene` и `FileSystem`;
-- справа видны `Inspector`/`Node` и `Agent Workspace`;
-- снизу видна сворачиваемая bottom panel;
+- справа видны только `Inspector`/`Node`;
+- снизу видна сворачиваемая bottom panel с вкладкой `Agent`;
 - новые кнопки, поля, вкладки, панели и списки находятся в ожидаемой области layout;
 - pointer/keyboard interaction работает для изменённых элементов там, где это применимо;
 - текст не выходит за границы контейнеров и не перекрывает соседние элементы;
 - hover, active, focus, selected и disabled states не меняют layout непредсказуемо;
 - `3D` и `AssetLib` отсутствуют во всех видимых menus, shortcuts и create-node flows;
 - `Tasks` занимает центральную область;
-- `Agent Workspace` сохраняет dock placement после restart;
+- `Agent Workspace` сохраняет высоту bottom panel, раскрытое состояние и активную внутреннюю вкладку после restart;
 - переключение workspaces не сбрасывает selection/open tabs/layout.
 
 ## T-0157 shell layout harness
 
-Исторически `T-0157` закрывала default shell через документированный automated harness до появления постоянного desktop event loop. Harness остаётся проверяемым способом построить тот же layout model, который создаёт стартовый `Application`, сохранить визуальный PNG-артефакт и машинно-читаемый JSON-анализ.
+Исторически `T-0157` закрывала default shell через документированный automated harness до появления постоянного desktop event loop. После `T-0173` команда `--shell-layout-smoke` остаётся проверяемым способом построить тот же layout model, который создаёт стартовый `Application`, но пишет только layout state и машинно-читаемый JSON-анализ без synthetic PNG.
 
-Для релизной приёмки `0.1.0 Preview` этот harness должен быть переаттестован через `--window-smoke <work-root>` или отдельный real-window сценарий: screenshot должен подтверждать, что пользователь видит тот же layout в окне `Electron2D.Editor`.
+Для релизной приёмки `0.1.0 Preview` этот layout smoke должен быть переаттестован через `--window-smoke <work-root>` или отдельный real-window сценарий: screenshot должен подтверждать, что пользователь видит тот же layout в окне `Electron2D.Editor`.
 
-Harness должен:
+`--shell-layout-smoke` должен:
 
 - строить `EditorShellLayoutSnapshot` с фиксированным viewport `1280x720`;
 - включать верхнее меню `Scene`, `Project`, `Debug`, `Editor`, `Help`;
 - включать workspace switcher только `2D`, `Script`, `Game`, `Tasks`;
 - размещать `Scene` и `FileSystem` в left dock area;
-- размещать `Inspector`, `Node` и `Agent Workspace` в right dock area;
-- размещать bottom panel с `Output`, `Debugger`, `Diagnostics`, `Search`, `Animation`, `Audio`, `Tests`;
+- размещать `Inspector` и `Node` в right dock area;
+- размещать bottom panel с `Output`, `Debugger`, `Agent`, `Diagnostics`, `Search`, `Animation`, `Audio`, `Tests`;
 - поддерживать collapse/expand bottom panel;
 - сохранять и восстанавливать layout docks, размеры, открытые document tabs и выбранный workspace через JSON state file;
 - сохранять per-workspace state при переключении: selection, scroll, zoom и open documents;
 - отдавать machine-readable shortcut map без 3D/GDScript actions;
 - проверять, что видимые labels, shortcut actions и create-node/workspace entries не содержат `3D`, `AssetLib`, `GDScript`, `.gd` или disabled 3D controls;
-- сохранять PNG screenshot и JSON analysis artifact в указанную harness directory;
-- записывать в analysis координаты workspace switcher, left docks, right docks, Agent Workspace и bottom panel, результат проверки переполнения текста, кликабельности основных controls и список forbidden UI matches.
+- сохранять layout state и JSON analysis artifact в указанную smoke directory;
+- записывать в analysis координаты workspace switcher, left docks, right docks, вкладки `Agent` в bottom panel, результат проверки переполнения текста, кликабельности основных controls и список forbidden UI matches.
 
-PNG-артефакт должен быть пригоден для ручного просмотра агентом перед закрытием задачи. JSON-анализ не заменяет просмотр screenshot: исполнитель обязан открыть сохранённый PNG, убедиться, что layout читаем и соответствует этой спецификации, и зафиксировать результат в дневнике разработки.
+JSON-анализ `--shell-layout-smoke` не заменяет просмотр real-window screenshot. Для закрытия видимой UI-задачи исполнитель обязан открыть PNG из `--window-smoke` или соответствующей real-window visual smoke-команды, убедиться, что layout читаем и соответствует этой спецификации, и зафиксировать результат в дневнике разработки.

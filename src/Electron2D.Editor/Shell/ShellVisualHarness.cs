@@ -142,8 +142,8 @@ internal static class ShellVisualHarness
             ["notes"] = ToJsonArray([
                 "Workspace switcher contains only 2D, Script, Game and Tasks.",
                 "Scene and FileSystem are in the left dock area.",
-                "Inspector, Node and Agent Workspace are in the right dock area.",
-                "Bottom panel is present and has a collapse toggle.",
+                "Inspector and Node are in the right dock area.",
+                "Bottom panel is present, contains Agent and has a collapse toggle.",
                 "Forbidden 3D, AssetLib and GDScript labels are absent."
             ])
         };

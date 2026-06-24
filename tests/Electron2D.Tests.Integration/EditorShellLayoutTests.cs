@@ -72,8 +72,8 @@ public sealed class EditorShellLayoutTests
             Assert.Equal("Scene|Project|Debug|Editor|Help", lines["MenuItems"]);
             Assert.Equal("2D|Script|Game|Tasks", lines["WorkspaceSwitcher"]);
             Assert.Equal("Scene|FileSystem", lines["LeftDocks"]);
-            Assert.Equal("Inspector|Node|Agent Workspace", lines["RightDocks"]);
-            Assert.Equal("Output|Debugger|Diagnostics|Search|Animation|Audio|Tests", lines["BottomPanelTabs"]);
+            Assert.Equal("Inspector|Node", lines["RightDocks"]);
+            Assert.Equal("Output|Debugger|Agent|Diagnostics|Search|Animation|Audio|Tests", lines["BottomPanelTabs"]);
             Assert.Equal("Tasks", lines["SelectedWorkspace"]);
             Assert.Equal("True", lines["BottomPanelCollapseRoundTrip"]);
             Assert.Equal("True", lines["PersistenceRoundTripStable"]);
@@ -113,10 +113,10 @@ public sealed class EditorShellLayoutTests
                 new[] { "Scene", "FileSystem" },
                 data.GetProperty("leftDocks").EnumerateArray().Select(item => item.GetProperty("label").GetString()).ToArray());
             Assert.Equal(
-                new[] { "Inspector", "Node", "Agent Workspace" },
+                new[] { "Inspector", "Node" },
                 data.GetProperty("rightDocks").EnumerateArray().Select(item => item.GetProperty("label").GetString()).ToArray());
             Assert.Equal(
-                new[] { "Output", "Debugger", "Diagnostics", "Search", "Animation", "Audio", "Tests" },
+                new[] { "Output", "Debugger", "Agent", "Diagnostics", "Search", "Animation", "Audio", "Tests" },
                 data.GetProperty("bottomPanel").GetProperty("tabs").EnumerateArray().Select(item => item.GetString()).ToArray());
         }
         finally

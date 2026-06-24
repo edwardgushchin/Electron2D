@@ -56,14 +56,12 @@ internal sealed class AgentWorkspacePanel
 {
     private static readonly string[] Sections =
     [
-        "Session",
-        "Current Task",
-        "Changeset",
+        "Overview",
+        "Changes",
+        "Jobs",
         "Diagnostics",
         "Artifacts",
-        "Runtime",
-        "Jobs",
-        "Actions"
+        "Terminal"
     ];
 
     public AgentWorkspacePanel(AgentWorkspacePanelSnapshot snapshot)
@@ -207,7 +205,7 @@ internal sealed class AgentWorkspacePanel
                     Clickable: true)
             ],
             new AgentWorkspaceDockState(
-                placement: "RightBelowInspectorNode",
+                placement: "BottomPanel/Agent",
                 persisted: true,
                 visibleWorkspaces: ["2D", "Script", "Game", "Tasks"],
                 dockable: true,
@@ -433,7 +431,7 @@ internal sealed class AgentWorkspaceDockState
         ArgumentException.ThrowIfNullOrWhiteSpace(placement);
         ArgumentNullException.ThrowIfNull(visibleWorkspaces);
 
-        Placement = placement;
+        Placement = NormalizePlacement(placement);
         Persisted = persisted;
         VisibleWorkspaces = visibleWorkspaces.ToArray();
         Dockable = dockable;
@@ -458,4 +456,11 @@ internal sealed class AgentWorkspaceDockState
     public bool Movable { get; }
 
     public bool Maximizable { get; }
+
+    private static string NormalizePlacement(string placement)
+    {
+        return placement.Equals("RightBelowInspectorNode", StringComparison.Ordinal)
+            ? "BottomPanel/Agent"
+            : placement;
+    }
 }
