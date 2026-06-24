@@ -134,6 +134,7 @@ public sealed class ReferencePerformanceVerificationTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task ReferencePerformanceVerifierPasses()
     {
         var root = FindRepositoryRoot();

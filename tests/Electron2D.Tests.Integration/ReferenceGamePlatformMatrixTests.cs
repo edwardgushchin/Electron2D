@@ -168,6 +168,7 @@ public sealed class ReferenceGamePlatformMatrixTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public async Task ReferenceGamePlatformMatrixVerifierPasses()
     {
         var root = FindRepositoryRoot();

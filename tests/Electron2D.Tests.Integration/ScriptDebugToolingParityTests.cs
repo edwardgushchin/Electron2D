@@ -120,6 +120,7 @@ public sealed class ScriptDebugToolingParityTests
     }
 
     [Fact]
+    [Trait("Category", "Baseline")]
     public void ScriptServiceUsesWorkspaceTransactionsLiveRoslynAndSaveConflictGuard()
     {
         var source = ScriptText(out var positions);

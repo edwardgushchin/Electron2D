@@ -83,6 +83,57 @@ function Normalize-Whitespace([string]$Value) {
     return (($Value -replace '\s+', ' ').Trim())
 }
 
+function Get-ObjectSortValue([object]$Value, [string]$PropertyName) {
+    if ([string]::IsNullOrEmpty($PropertyName)) {
+        return [string]$Value
+    }
+
+    if ($Value -is [System.Collections.IDictionary]) {
+        return [string]$Value[$PropertyName]
+    }
+
+    return [string]$Value.$PropertyName
+}
+
+function Sort-OrdinalUniqueStrings([object[]]$Values) {
+    $set = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+    foreach ($value in @($Values)) {
+        if ($null -ne $value) {
+            [void]$set.Add([string]$value)
+        }
+    }
+
+    $items = [string[]]$set
+    [array]::Sort($items, [System.StringComparer]::Ordinal)
+    return $items
+}
+
+function Sort-OrdinalObjects([object[]]$Values, [string[]]$PropertyNames) {
+    $items = [System.Collections.Generic.List[object]]::new()
+    foreach ($value in @($Values)) {
+        if ($null -ne $value) {
+            $items.Add($value)
+        }
+    }
+
+    $comparison = [System.Comparison[object]] {
+        param($left, $right)
+
+        foreach ($propertyName in $PropertyNames) {
+            $result = [System.StringComparer]::Ordinal.Compare(
+                (Get-ObjectSortValue -Value $left -PropertyName $propertyName),
+                (Get-ObjectSortValue -Value $right -PropertyName $propertyName))
+            if ($result -ne 0) {
+                return $result
+            }
+        }
+
+        return 0
+    }
+    $items.Sort($comparison)
+    return $items.ToArray()
+}
+
 function Split-SearchWords([string]$Value) {
     $words = New-Object System.Collections.Generic.List[string]
     foreach ($part in [regex]::Matches($Value, '[A-Z]?[a-z]+|[A-Z]+(?![a-z])|\d+')) {
@@ -98,7 +149,7 @@ function Split-SearchWords([string]$Value) {
         }
     }
 
-    return @($words | Sort-Object -Unique)
+    return Sort-OrdinalUniqueStrings $words
 }
 
 function Get-MarkdownSummary([string]$Text) {
@@ -158,7 +209,8 @@ function New-DocumentationEntry {
         Split-SearchWords $title
         Split-SearchWords $summary
         Split-SearchWords $relative
-    ) | Sort-Object -Unique
+    )
+    $keywords = Sort-OrdinalUniqueStrings $keywords
 
     [ordered]@{
         id = $id
@@ -183,7 +235,8 @@ function New-TypeEntry {
         Split-SearchWords $Type.name
         Split-SearchWords $Type.category
         Split-SearchWords $Type.summary
-    ) | Sort-Object -Unique
+    )
+    $keywords = Sort-OrdinalUniqueStrings $keywords
 
     [ordered]@{
         id = "api-type:$($Type.fullName)"
@@ -225,7 +278,8 @@ function New-MemberEntry {
         Split-SearchWords $Member.signature
         Split-SearchWords $Member.summary
         Split-SearchWords $Type.category
-    ) | Sort-Object -Unique
+    )
+    $keywords = Sort-OrdinalUniqueStrings $keywords
 
     [ordered]@{
         id = $id
@@ -250,7 +304,8 @@ function New-ExampleEntry {
         Split-SearchWords $Example.title
         Split-SearchWords $Example.summary
         @($Example.keywords | ForEach-Object { Split-SearchWords $_ })
-    ) | Sort-Object -Unique
+    )
+    $keywords = Sort-OrdinalUniqueStrings $keywords
 
     [ordered]@{
         id = $Example.id
@@ -291,18 +346,16 @@ $apiManifest = Get-Content -LiteralPath $apiManifestPath -Raw | ConvertFrom-Json
 $examples = Get-Content -LiteralPath $examplesPath -Raw | ConvertFrom-Json
 
 $documentationFiles = New-Object System.Collections.Generic.List[string]
-Get-ChildItem -LiteralPath (Join-Path $repoRoot 'docs') -Recurse -File -Filter '*.md' |
-    Sort-Object FullName |
-    ForEach-Object {
-        $documentationFiles.Add($_.FullName)
-    }
+foreach ($file in (Sort-OrdinalObjects (Get-ChildItem -LiteralPath (Join-Path $repoRoot 'docs') -Recurse -File -Filter '*.md') @('FullName'))) {
+    $documentationFiles.Add($file.FullName)
+}
 
 $entries = New-Object System.Collections.Generic.List[object]
-foreach ($type in @($apiManifest.types | Sort-Object fullName)) {
+foreach ($type in (Sort-OrdinalObjects $apiManifest.types @('fullName'))) {
     $entries.Add((New-TypeEntry -Type $type))
 
     $duplicateKeys = @{}
-    foreach ($member in @($type.members | Sort-Object name, id)) {
+    foreach ($member in (Sort-OrdinalObjects $type.members @('name', 'id'))) {
         $key = "$($member.declaringType).$($member.name)"
         $duplicateIndex = if ($duplicateKeys.ContainsKey($key)) {
             $duplicateKeys[$key] + 1
@@ -315,7 +368,7 @@ foreach ($type in @($apiManifest.types | Sort-Object fullName)) {
     }
 }
 
-foreach ($documentationFile in @($documentationFiles | Sort-Object -Unique)) {
+foreach ($documentationFile in (Sort-OrdinalUniqueStrings $documentationFiles)) {
     if (-not (Test-Path -LiteralPath $documentationFile)) {
         throw "Documentation source file was not found: $documentationFile"
     }
@@ -323,11 +376,11 @@ foreach ($documentationFile in @($documentationFiles | Sort-Object -Unique)) {
     $entries.Add((New-DocumentationEntry -Path $documentationFile))
 }
 
-foreach ($example in @($examples.examples | Sort-Object id)) {
+foreach ($example in (Sort-OrdinalObjects $examples.examples @('id'))) {
     $entries.Add((New-ExampleEntry -Example $example))
 }
 
-$documentationHashRecords = @($documentationFiles | Sort-Object -Unique | ForEach-Object { Get-FileHashRecord -Path $_ })
+$documentationHashRecords = @(Sort-OrdinalUniqueStrings $documentationFiles | ForEach-Object { Get-FileHashRecord -Path $_ })
 
 $index = [ordered]@{
     schemaVersion = 1
@@ -378,7 +431,12 @@ $index = [ordered]@{
             compatibilityPage = '.github/wiki/API-Compatibility.md'
         }
     }
-    entries = @($entries | Sort-Object id)
+    entries = @(Sort-OrdinalObjects $entries @('id'))
+}
+
+function ConvertTo-ComparableJson([string]$jsonText) {
+    $document = $jsonText | ConvertFrom-Json
+    return ($document | ConvertTo-Json -Depth 100 -Compress)
 }
 
 $json = ($index | ConvertTo-Json -Depth 100).Replace("`r`n", "`n").Replace("`r", "`n").TrimEnd() + "`n"
@@ -391,8 +449,8 @@ if ($Check) {
         throw "Local documentation index was not found: $targetIndexPath"
     }
 
-    $expectedText = [System.IO.File]::ReadAllText($targetForGeneration).Replace("`r`n", "`n").Replace("`r", "`n")
-    $actualText = [System.IO.File]::ReadAllText($targetIndexPath).Replace("`r`n", "`n").Replace("`r", "`n")
+    $expectedText = ConvertTo-ComparableJson ([System.IO.File]::ReadAllText($targetForGeneration))
+    $actualText = ConvertTo-ComparableJson ([System.IO.File]::ReadAllText($targetIndexPath))
     if (-not [System.String]::Equals($expectedText, $actualText, [System.StringComparison]::Ordinal)) {
         throw "Local documentation index is out of date: $targetIndexPath"
     }
