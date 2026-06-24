@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Electron2D Wiki
+    url: https://github.com/edwardgushchin/Electron2D/wiki
+    about: Read documentation, guides and API reference.
+  - name: GitHub Discussions
+    url: https://github.com/edwardgushchin/Electron2D/discussions
+    about: Ask broader questions and discuss ideas before they are ready as issues.

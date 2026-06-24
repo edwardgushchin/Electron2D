@@ -145,6 +145,8 @@ Feedback должен содержать реальные ссылки на GitH
 - `https://github.com/edwardgushchin/Electron2D/issues`;
 - `https://github.com/edwardgushchin/Electron2D/pulls`.
 
+Feedback также должен ссылаться на `CONTRIBUTING.md`, чтобы внешний contributor видел правила до открытия pull request.
+
 Contributors должен ссылаться на contributors graph.
 
 ## Запрещённые формулировки и ссылки

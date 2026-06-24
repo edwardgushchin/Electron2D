@@ -109,7 +109,7 @@ Documentation, guides and API reference are available in the [Electron2D GitHub 
 
 ## 💬 Feedback and Contributing
 
-Use [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) for bug reports, feature requests and design feedback. [Pull requests](https://github.com/edwardgushchin/Electron2D/pulls) are welcome once the related behavior is covered by documentation and tests.
+Use [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) for bug reports, feature requests and design feedback. [Pull requests](https://github.com/edwardgushchin/Electron2D/pulls) are welcome once the related behavior is covered by documentation and tests. See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change.
 
 Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). Do not include secrets, signing keys, private data or credentials in issues, examples, screenshots or build artifacts.
 

@@ -1,0 +1,55 @@
+name: Feature request
+description: Propose a new capability or behavior change.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for product behavior, editor workflow, runtime, tooling or documentation proposals.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the expected behavior from a user's point of view.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional. Mention simpler or different approaches if useful.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Agent-native workflow
+        - Editor
+        - Runtime
+        - Rendering
+        - Physics
+        - Assets
+        - Scripting
+        - Documentation
+        - Build or release tooling
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and discussions.
+          required: true
+        - label: I removed secrets, private keys, tokens, private data and credentials.
+          required: true

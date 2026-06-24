@@ -51,6 +51,7 @@
 
 - [Machine-readable API manifest](documentation/api-manifest.md)
 - [Canonical goal alignment audit](documentation/canonical-goal-alignment.md)
+- [GitHub community profile репозитория](documentation/github-community-profile.md)
 - [GitHub Wiki API reference](documentation/github-wiki-api-reference.md)
 - [Local documentation pipeline](documentation/local-documentation-pipeline.md)
 - [Repository README и публичная входная страница](documentation/repository-readme.md)

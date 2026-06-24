@@ -1,0 +1,77 @@
+name: Bug report
+description: Report a reproducible problem in Electron2D.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Please keep the report focused and do not include secrets, private keys, tokens or private data.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The Electron2D version, branch or commit where the problem happens.
+      placeholder: 0.1.0-preview, main, or a commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - Android
+        - iOS
+        - Web
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the bug clearly.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest set of steps that reproduces the problem.
+      placeholder: |
+        1. Open ...
+        2. Run ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Attach only safe logs or screenshots with secrets removed.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: I removed secrets, private keys, tokens, private data and credentials.
+          required: true
