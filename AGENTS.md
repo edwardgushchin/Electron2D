@@ -52,7 +52,17 @@ These instructions are global defaults for Codex agents across projects. They ap
 - If user changes overlap with the requested area, read them carefully and work with them. Ask only when the overlap makes the task impossible or ambiguous.
 - Do not run destructive commands such as hard resets, forced checkouts, recursive deletes, database wipes, or volume cleanup without explicit approval for that exact action.
 - Stage, commit, push, tag, or open pull requests only when the user explicitly requests it. Stage only files related to the requested task.
-- Commit messages must be written in English. Conventional technical prefixes are allowed, but the human-readable description after the prefix must also be English.
+- Commit messages must be written in English and follow the Commit Style rules below when a commit is explicitly requested.
+
+## Commit Style
+- Use Conventional Commits for every new commit: `<type>(optional-scope): <summary>`.
+- Use the standard lowercase types when they fit: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `build`, `ci`, `chore`, and `revert`.
+- Keep the summary imperative, specific, and English. Avoid vague summaries such as `update stuff`, `misc changes`, `work in progress`, or `fix bugs`.
+- Make commits atomic: one commit must represent one coherent logical change that can be reviewed, reverted, or cherry-picked independently.
+- Keep tracked code, tests, committed documentation, and required generated artifacts for one logical change in the same commit. Update local-only task and diary files as required, but never stage or commit them.
+- Split formatting changes, dependency updates, generated artifacts, documentation changes, and fixes into separate commits only when they are independent logical changes. Keep required tests, documentation, and generated outputs with the change they belong to.
+- Do not create checkpoint, WIP, or aggregate "everything changed" commits unless the user explicitly requests that exact commit shape.
+- When a change is breaking, mark it according to Conventional Commits with `!` after the type or scope and explain the breaking change in the commit body.
 
 ## Feature Gate
 - Feature or runtime work means adding or changing product behavior, UI/API flows, domain rules, integrations, data flow, configuration behavior, startup behavior, production code paths, or user-facing behavior.
