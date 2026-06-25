@@ -104,7 +104,7 @@ public sealed class SdlGpuLifecycleTests
         };
         var backend = new Electron2D.SdlGpuRenderingBackend(api, debugMode: true);
 
-        var exception = Assert.Throws<InvalidOperationException>(() => backend.Initialize(new Electron2D.SdlGpuWindowInfo(640, 480, 1f, fullscreen: false)));
+        var exception = Assert.Throws<Electron2D.GpuPresenterUnavailableException>(() => backend.Initialize(new Electron2D.SdlGpuWindowInfo(640, 480, 1f, fullscreen: false)));
 
         Assert.Equal(Electron2D.SdlGpuLifecycleState.Failed, backend.State);
         Assert.Contains("No SDL_GPU driver", exception.Message, StringComparison.Ordinal);
@@ -122,12 +122,50 @@ public sealed class SdlGpuLifecycleTests
         var backend = new Electron2D.SdlGpuRenderingBackend(api, debugMode: false);
         backend.Initialize(new Electron2D.SdlGpuWindowInfo(640, 480, 1f, fullscreen: false));
 
-        var exception = Assert.Throws<InvalidOperationException>(() => backend.BeginFrame());
+        var exception = Assert.Throws<Electron2D.GpuPresenterUnavailableException>(() => backend.BeginFrame());
 
         Assert.Equal(Electron2D.SdlGpuLifecycleState.Failed, backend.State);
         Assert.Contains("command buffer", exception.Message, StringComparison.OrdinalIgnoreCase);
         var error = Assert.Single(backend.Events, item => item.Kind == Electron2D.SdlGpuLifecycleEventKind.DeviceError);
         Assert.Equal("Could not acquire command buffer.", error.Error);
+    }
+
+    [Fact]
+    public void SdlGpuBackendKeepsLifecycleEventsBoundedAcrossSteadyFrames()
+    {
+        var backend = new Electron2D.SdlGpuRenderingBackend(new FakeSdlGpuApi(), debugMode: false);
+        backend.Initialize(new Electron2D.SdlGpuWindowInfo(640, 480, 1f, fullscreen: false));
+
+        for (var index = 0; index < 700; index++)
+        {
+            var frame = backend.BeginFrame();
+            backend.EndFrame(frame);
+        }
+
+        Assert.InRange(backend.Events.Count, 1, 128);
+        Assert.Contains(backend.Events, item => item.Kind == Electron2D.SdlGpuLifecycleEventKind.WindowClaimed);
+        Assert.Contains(backend.Events, item => item.Kind == Electron2D.SdlGpuLifecycleEventKind.FrameSubmitted);
+    }
+
+    [Fact]
+    public void SdlGpuBackendKeepsLifecycleEventsBoundedAcrossResizeAndFullscreenTransitions()
+    {
+        var backend = new Electron2D.SdlGpuRenderingBackend(new FakeSdlGpuApi(), debugMode: false);
+        backend.Initialize(new Electron2D.SdlGpuWindowInfo(640, 480, 1f, fullscreen: false));
+
+        for (var index = 0; index < 600; index++)
+        {
+            backend.Resize(640 + index, 480 + index, 1f + (index % 3));
+            backend.SetFullscreen((index & 1) == 0);
+        }
+
+        Assert.InRange(backend.Events.Count, 1, Electron2D.SdlGpuRenderingBackend.MaxLifecycleEventCount);
+        Assert.True(backend.DroppedEventCount > 0);
+        Assert.Contains(backend.Events, item => item.Kind == Electron2D.SdlGpuLifecycleEventKind.Resized);
+        Assert.Contains(backend.Events, item => item.Kind == Electron2D.SdlGpuLifecycleEventKind.FullscreenChanged);
+        Assert.Equal(1239, backend.Window.Width);
+        Assert.Equal(1079, backend.Window.Height);
+        Assert.False(backend.Window.Fullscreen);
     }
 
     [Fact]
@@ -209,6 +247,28 @@ public sealed class SdlGpuLifecycleTests
             SubmitCommandBufferCalls++;
             error = SubmitCommandBufferError;
             return error is null;
+        }
+
+        public Electron2D.SdlGpuFenceHandle SubmitCommandBufferAndAcquireFence(
+            Electron2D.SdlGpuCommandBufferHandle commandBuffer,
+            out string? error)
+        {
+            SubmitCommandBufferCalls++;
+            error = SubmitCommandBufferError;
+            return error is null ? new Electron2D.SdlGpuFenceHandle(3) : default;
+        }
+
+        public bool WaitForFence(
+            Electron2D.SdlGpuDeviceHandle device,
+            Electron2D.SdlGpuFenceHandle fence,
+            out string? error)
+        {
+            error = null;
+            return true;
+        }
+
+        public void ReleaseFence(Electron2D.SdlGpuDeviceHandle device, Electron2D.SdlGpuFenceHandle fence)
+        {
         }
 
         public void DestroyDevice(Electron2D.SdlGpuDeviceHandle device)

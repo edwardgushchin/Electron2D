@@ -22,6 +22,8 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using System.Runtime.CompilerServices;
+
 namespace Electron2D;
 
 /// <summary>
@@ -245,4 +247,6 @@ public abstract class Texture2D : Resource
             y < GetHeight() &&
             !HasAlpha();
     }
+
+    internal virtual long RenderContentVersion => RuntimeHelpers.GetHashCode(this);
 }

@@ -24,27 +24,13 @@
 */
 namespace Electron2D;
 
-internal interface ISdlGpuApi
+internal sealed class UnsupportedTextureResourceException : InvalidOperationException
 {
-    SdlGpuDeviceHandle CreateDevice(SdlGpuDeviceCreateInfo createInfo, out string? error);
+    public UnsupportedTextureResourceException(Texture2D? texture)
+        : base("Runtime presenter cannot resolve texture resource type '" + (texture?.GetType().FullName ?? "<null>") + "'.")
+    {
+        Texture = texture;
+    }
 
-    bool ClaimWindow(SdlGpuDeviceHandle device, SdlGpuWindowInfo window, out string? error);
-
-    SdlGpuDeviceInfo GetDeviceInfo(SdlGpuDeviceHandle device);
-
-    bool ValidateTextureSmoke(SdlGpuDeviceHandle device, out string? error);
-
-    bool ValidatePipelineSmoke(SdlGpuDeviceHandle device, out string? error);
-
-    SdlGpuCommandBufferHandle AcquireCommandBuffer(SdlGpuDeviceHandle device, out string? error);
-
-    bool SubmitCommandBuffer(SdlGpuCommandBufferHandle commandBuffer, out string? error);
-
-    SdlGpuFenceHandle SubmitCommandBufferAndAcquireFence(SdlGpuCommandBufferHandle commandBuffer, out string? error);
-
-    bool WaitForFence(SdlGpuDeviceHandle device, SdlGpuFenceHandle fence, out string? error);
-
-    void ReleaseFence(SdlGpuDeviceHandle device, SdlGpuFenceHandle fence);
-
-    void DestroyDevice(SdlGpuDeviceHandle device);
+    public Texture2D? Texture { get; }
 }

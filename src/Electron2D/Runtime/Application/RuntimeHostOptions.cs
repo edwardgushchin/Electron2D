@@ -183,9 +183,10 @@ internal sealed class RuntimeHostOptions
     /// </value>
     ///
     /// <remarks>
-    /// When set, the runtime host writes a PNG after the last presented frame.
-    /// Relative paths are resolved by the current process in the normal .NET
-    /// file-system manner.
+    /// When set, the runtime host writes a PNG from the bounded run's final
+    /// presented frame. Interactive runs with <see cref="FrameLimit"/> equal to
+    /// <c>0</c> capture the first presented frame once. Relative paths are
+    /// resolved by the current process in the normal .NET file-system manner.
     /// </remarks>
     ///
     /// <threadsafety>

@@ -24,27 +24,14 @@
 */
 namespace Electron2D;
 
-internal interface ISdlGpuApi
+internal readonly struct SdlGpuFenceHandle
 {
-    SdlGpuDeviceHandle CreateDevice(SdlGpuDeviceCreateInfo createInfo, out string? error);
+    public SdlGpuFenceHandle(nint value)
+    {
+        Value = value;
+    }
 
-    bool ClaimWindow(SdlGpuDeviceHandle device, SdlGpuWindowInfo window, out string? error);
+    public nint Value { get; }
 
-    SdlGpuDeviceInfo GetDeviceInfo(SdlGpuDeviceHandle device);
-
-    bool ValidateTextureSmoke(SdlGpuDeviceHandle device, out string? error);
-
-    bool ValidatePipelineSmoke(SdlGpuDeviceHandle device, out string? error);
-
-    SdlGpuCommandBufferHandle AcquireCommandBuffer(SdlGpuDeviceHandle device, out string? error);
-
-    bool SubmitCommandBuffer(SdlGpuCommandBufferHandle commandBuffer, out string? error);
-
-    SdlGpuFenceHandle SubmitCommandBufferAndAcquireFence(SdlGpuCommandBufferHandle commandBuffer, out string? error);
-
-    bool WaitForFence(SdlGpuDeviceHandle device, SdlGpuFenceHandle fence, out string? error);
-
-    void ReleaseFence(SdlGpuDeviceHandle device, SdlGpuFenceHandle fence);
-
-    void DestroyDevice(SdlGpuDeviceHandle device);
+    public bool IsValid => Value != 0;
 }

@@ -68,6 +68,7 @@ internal sealed class RuntimeHostResult
     /// <param name="screenshotPath">The screenshot path requested by the caller, if any.</param>
     /// <param name="screenshotSaved">Whether a screenshot file was written.</param>
     /// <param name="diagnosticMessage">A host-level diagnostic message, or an empty string on success.</param>
+    /// <param name="renderDiagnostics">The final runtime renderer diagnostics.</param>
     ///
     /// <remarks>
     /// The constructor stores values exactly as observed by
@@ -99,7 +100,8 @@ internal sealed class RuntimeHostResult
         string videoDriver,
         string? screenshotPath,
         bool screenshotSaved,
-        string diagnosticMessage)
+        string diagnosticMessage,
+        RuntimeFrameDiagnostics renderDiagnostics)
     {
         Succeeded = succeeded;
         WindowCreated = windowCreated;
@@ -117,6 +119,23 @@ internal sealed class RuntimeHostResult
         ScreenshotPath = screenshotPath;
         ScreenshotSaved = screenshotSaved;
         DiagnosticMessage = diagnosticMessage;
+        RenderSource = renderDiagnostics.RenderSource;
+        PresentationBackend = renderDiagnostics.PresentationBackend;
+        UsedFallbackPresenter = renderDiagnostics.UsedFallbackPresenter;
+        FallbackReason = renderDiagnostics.FallbackReason;
+        RenderBatches = renderDiagnostics.RenderBatches;
+        ActualDrawCalls = renderDiagnostics.ActualDrawCalls;
+        TextureSwitches = renderDiagnostics.TextureSwitches;
+        PipelineSwitches = renderDiagnostics.PipelineSwitches;
+        TextureUploads = renderDiagnostics.TextureUploads;
+        TextureCacheHits = renderDiagnostics.TextureCacheHits;
+        PresentationResourcesCreated = renderDiagnostics.PresentationResourcesCreated;
+        PresentationResourcesRecreated = renderDiagnostics.PresentationResourcesRecreated;
+        ObservedPresentationResizes = renderDiagnostics.ObservedPresentationResizes;
+        PresentationBackendReconfigurations = renderDiagnostics.PresentationBackendReconfigurations;
+        MaxPresenterManagedBytesPerFrame = renderDiagnostics.MaxPresenterManagedBytesPerFrame;
+        PresenterMeasuredFrames = renderDiagnostics.PresenterMeasuredFrames;
+        CapturePresenterManagedBytesAllocated = renderDiagnostics.CapturePresenterManagedBytesAllocated;
     }
 
     /// <summary>
@@ -255,7 +274,11 @@ internal sealed class RuntimeHostResult
     /// Gets whether a screenshot file was written.
     /// </summary>
     /// <value><c>true</c> when <see cref="ScreenshotPath"/> was written; otherwise, <c>false</c>.</value>
-    /// <remarks>Screenshot writing uses the final frame presented by the host.</remarks>
+    /// <remarks>
+    /// Screenshot writing uses the final presented frame for bounded runs and
+    /// the first presented frame for interactive runs where <see cref="RuntimeHostOptions.FrameLimit"/>
+    /// is <c>0</c>.
+    /// </remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
     /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
     public bool ScreenshotSaved { get; }
@@ -268,4 +291,160 @@ internal sealed class RuntimeHostResult
     /// <threadsafety>This property is immutable.</threadsafety>
     /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
     public string DiagnosticMessage { get; }
+
+    /// <summary>
+    /// Gets the internal renderer path that presented the final frame.
+    /// </summary>
+    /// <value>The renderer source label.</value>
+    /// <remarks>This value is diagnostic and is not part of the public game API.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public string RenderSource { get; }
+
+    /// <summary>
+    /// Gets the internal presentation backend used by the final frame presenter.
+    /// </summary>
+    /// <value>The presenter backend label.</value>
+    /// <remarks>This value is diagnostic and is not part of the public game API.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public string PresentationBackend { get; }
+
+    /// <summary>
+    /// Gets whether the runtime switched from the primary presenter to a fallback presenter.
+    /// </summary>
+    /// <value><c>true</c> when a fallback presenter was used; otherwise, <c>false</c>.</value>
+    /// <remarks>The fallback presenter is selected only after the primary backend cannot be created or cannot present.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public bool UsedFallbackPresenter { get; }
+
+    /// <summary>
+    /// Gets the reason that caused fallback presenter selection.
+    /// </summary>
+    /// <value>The fallback reason, or an empty string when the primary presenter was used.</value>
+    /// <remarks>The message is intended for diagnostics and must not contain secret values.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public string FallbackReason { get; }
+
+    /// <summary>
+    /// Gets the batch count reported for the final frame.
+    /// </summary>
+    /// <value>The final frame batch count.</value>
+    /// <remarks>The value comes from the shared canvas render plan.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int RenderBatches { get; }
+
+    /// <summary>
+    /// Gets the actual low-level draw-call count reported for the final frame.
+    /// </summary>
+    /// <value>The final frame presenter draw-call count.</value>
+    /// <remarks>This can differ from <see cref="RenderBatches"/> when a presenter cannot submit one batch with one native draw call.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int ActualDrawCalls { get; }
+
+    /// <summary>
+    /// Gets the texture switch count for the final frame.
+    /// </summary>
+    /// <value>The number of texture changes in draw order.</value>
+    /// <remarks>Ordering barriers may make this value larger than upload count.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int TextureSwitches { get; }
+
+    /// <summary>
+    /// Gets the graphics pipeline switch count for the final frame.
+    /// </summary>
+    /// <value>The number of solid/textured pipeline changes in draw order.</value>
+    /// <remarks>This value is separate from <see cref="TextureSwitches"/> because textured batches can change sampler state without changing pipeline.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int PipelineSwitches { get; }
+
+    /// <summary>
+    /// Gets the number of texture resources uploaded during the run.
+    /// </summary>
+    /// <value>The cumulative texture upload count.</value>
+    /// <remarks>Repeated use of the same texture should increase <see cref="TextureCacheHits"/> instead.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int TextureUploads { get; }
+
+    /// <summary>
+    /// Gets the number of texture cache hits during the run.
+    /// </summary>
+    /// <value>The cumulative texture cache hit count.</value>
+    /// <remarks>This value proves unchanged textures were reused by the presenter.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int TextureCacheHits { get; }
+
+    /// <summary>
+    /// Gets the number of presentation resources created during the run.
+    /// </summary>
+    /// <value>The cumulative presentation resource creation count.</value>
+    /// <remarks>A steady-size window should create the presenter resources once.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int PresentationResourcesCreated { get; }
+
+    /// <summary>
+    /// Gets the number of Electron2D-owned screenshot resource recreations caused by size changes.
+    /// </summary>
+    /// <value>The cumulative screenshot texture or readback resource recreation count.</value>
+    /// <remarks>This value is separate from observed window-size changes and backend reconfiguration.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int PresentationResourcesRecreated { get; }
+
+    /// <summary>
+    /// Gets the number of observed window-size changes in the final run.
+    /// </summary>
+    /// <value>The observed presentation resize count.</value>
+    /// <remarks>This count is separate from owned presentation resource recreation.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int ObservedPresentationResizes { get; }
+
+    /// <summary>
+    /// Gets the number of actual backend or swapchain presentation reconfigurations in the final run.
+    /// </summary>
+    /// <value>The backend or swapchain reconfiguration count.</value>
+    /// <remarks>Observed window-size changes do not increase this value unless the presenter performs a real backend reconfiguration.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int PresentationBackendReconfigurations { get; }
+
+    /// <summary>
+    /// Gets the maximum managed bytes allocated across measured presenter frames.
+    /// </summary>
+    /// <value>The maximum measured presenter-boundary allocation after warm-up.</value>
+    /// <remarks>This value intentionally starts at the presenter boundary after the render plan has already been built.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public long MaxPresenterManagedBytesPerFrame { get; }
+
+    /// <summary>
+    /// Gets the number of presenter frames included in allocation measurement.
+    /// </summary>
+    /// <value>The measured presenter frame count after warm-up.</value>
+    /// <remarks>Warm-up frames are excluded so one-time presenter setup does not masquerade as steady-state allocation.</remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int PresenterMeasuredFrames { get; }
+
+    /// <summary>
+    /// Gets managed bytes allocated by the active presenter during capture frames.
+    /// </summary>
+    /// <value>The managed allocation count measured around the active presenter call for requested captures.</value>
+    /// <remarks>
+    /// This value is separate from <see cref="MaxPresenterManagedBytesPerFrame"/> because captures intentionally allocate a
+    /// readback buffer. PNG encoding and file writes happen after this presenter-boundary measurement.
+    /// </remarks>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public long CapturePresenterManagedBytesAllocated { get; }
 }

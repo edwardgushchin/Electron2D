@@ -27,8 +27,15 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
-var exitCode = Electron2DCommandLine.Run(args, Console.Out, Console.Error);
-return exitCode;
+try
+{
+    var exitCode = Electron2DCommandLine.Run(args, Console.Out, Console.Error);
+    return exitCode;
+}
+finally
+{
+    Electron2D.RuntimeApplicationServices.ShutdownOnRenderThread();
+}
 
 internal static partial class Electron2DCommandLine
 {

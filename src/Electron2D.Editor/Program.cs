@@ -41,6 +41,18 @@ internal static class Program
 {
     public static int Main(string[] args)
     {
+        try
+        {
+            return Run(args);
+        }
+        finally
+        {
+            Electron2D.RuntimeApplicationServices.ShutdownOnRenderThread();
+        }
+    }
+
+    private static int Run(string[] args)
+    {
         if (args.Length == 0)
         {
             return RunEditorWindow();

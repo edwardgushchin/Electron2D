@@ -24,7 +24,6 @@
 */
 using System.Buffers.Binary;
 using System.IO.Compression;
-using System.Runtime.InteropServices;
 using System.Text;
 using SDL3;
 
@@ -154,7 +153,27 @@ internal static class RuntimeHost
             var inputEventsDispatched = 0;
             var frameCount = 0;
             var finalDrawCommands = 0;
-            RuntimePixelCanvas? lastCanvas = null;
+            RuntimeFrameSnapshot? lastSnapshot = null;
+            var renderDiagnostics = new RuntimeFrameDiagnostics(
+                RuntimeFramePresenter.RenderSource,
+                RuntimeFramePresenter.GpuPresentationBackend,
+                UsedFallbackPresenter: false,
+                FallbackReason: string.Empty,
+                RenderBatches: 0,
+                ActualDrawCalls: 0,
+                TextureSwitches: 0,
+                PipelineSwitches: 0,
+                TextureUploads: 0,
+                TextureCacheHits: 0,
+                PresentationResourcesCreated: 0,
+                PresentationResourcesRecreated: 0,
+                ObservedPresentationResizes: 0,
+                PresentationBackendReconfigurations: 0,
+                MaxPresenterManagedBytesPerFrame: 0,
+                PresenterMeasuredFrames: 0,
+                CapturePresenterManagedBytesAllocated: 0);
+            using var presenter = new RuntimeFramePresenter(window, runOptions.WindowSize);
+            var submissionContext = new CanvasSubmissionContext();
 
             while (!closeRequested && frameCount < targetFrames)
             {
@@ -170,14 +189,17 @@ internal static class RuntimeHost
                     runOptions.WindowSize.X,
                     runOptions.WindowSize.Y);
 
-                var plan = new CanvasSubmissionContext().BuildPlan(sceneTree.Root);
+                var plan = submissionContext.BuildPlan(sceneTree.Root);
                 finalDrawCommands = plan.Commands.Count;
-                lastCanvas = RuntimePreviewFrameRasterizer.Render(
-                    plan,
-                    runOptions.WindowSize.X,
-                    runOptions.WindowSize.Y,
-                    runOptions.ClearColor);
-                framePresented = PresentFrame(window, lastCanvas) || framePresented;
+                var captureFrame = ShouldCaptureFrame(runOptions.ScreenshotPath, runOptions.FrameLimit, frameCount, targetFrames);
+                var presentedFrame = presenter.Present(plan, runOptions.WindowSize, runOptions.ClearColor, captureFrame);
+                renderDiagnostics = presentedFrame.Diagnostics;
+                if (presentedFrame.Screenshot is not null)
+                {
+                    lastSnapshot = presentedFrame.Screenshot;
+                }
+
+                framePresented = true;
                 frameCount++;
 
                 if (runOptions.FrameLimit == 0)
@@ -186,7 +208,9 @@ internal static class RuntimeHost
                 }
             }
 
-            var screenshotSaved = SaveScreenshotIfRequested(runOptions.ScreenshotPath, lastCanvas);
+            var screenshotSaved = SaveScreenshotIfRequested(
+                runOptions.ScreenshotPath,
+                lastSnapshot);
             var windowWidth = runOptions.WindowSize.X;
             var windowHeight = runOptions.WindowSize.Y;
             _ = SDL.GetWindowSize(window, out windowWidth, out windowHeight);
@@ -211,7 +235,8 @@ internal static class RuntimeHost
                 SDL.GetCurrentVideoDriver() ?? "unknown",
                 string.IsNullOrWhiteSpace(runOptions.ScreenshotPath) ? null : runOptions.ScreenshotPath,
                 screenshotSaved,
-                framePresented ? string.Empty : "Runtime host did not present a frame.");
+                framePresented ? string.Empty : "Runtime host did not present a frame.",
+                renderDiagnostics);
         }
         finally
         {
@@ -277,7 +302,25 @@ internal static class RuntimeHost
             SDL.GetCurrentVideoDriver() ?? "unknown",
             string.IsNullOrWhiteSpace(options.ScreenshotPath) ? null : options.ScreenshotPath,
             screenshotSaved: false,
-            message);
+            message,
+            new RuntimeFrameDiagnostics(
+                RuntimeFramePresenter.RenderSource,
+                RuntimeFramePresenter.GpuPresentationBackend,
+                UsedFallbackPresenter: false,
+                FallbackReason: string.Empty,
+                RenderBatches: 0,
+                ActualDrawCalls: 0,
+                TextureSwitches: 0,
+                PipelineSwitches: 0,
+                TextureUploads: 0,
+                TextureCacheHits: 0,
+                PresentationResourcesCreated: 0,
+                PresentationResourcesRecreated: 0,
+                ObservedPresentationResizes: 0,
+                PresentationBackendReconfigurations: 0,
+                MaxPresenterManagedBytesPerFrame: 0,
+                PresenterMeasuredFrames: 0,
+                CapturePresenterManagedBytesAllocated: 0));
     }
 
     private static int DispatchPendingInput(SceneTree tree, bool quitOnEscape, ref bool closeRequested)
@@ -338,55 +381,21 @@ internal static class RuntimeHost
         return events.Count;
     }
 
-    private static bool PresentFrame(IntPtr window, RuntimePixelCanvas canvas)
+    private static bool ShouldCaptureFrame(string? screenshotPath, int frameLimit, int frameIndex, int targetFrames)
     {
-        var windowSurface = SDL.GetWindowSurface(window);
-        if (windowSurface == IntPtr.Zero)
+        if (string.IsNullOrWhiteSpace(screenshotPath))
         {
-            throw new InvalidOperationException("Runtime window surface was not available: " + SDL.GetError());
+            return false;
         }
 
-        var handle = GCHandle.Alloc(canvas.Pixels, GCHandleType.Pinned);
-        var frameSurface = IntPtr.Zero;
-        try
-        {
-            frameSurface = SDL.CreateSurfaceFrom(
-                canvas.Width,
-                canvas.Height,
-                SDL.PixelFormat.ABGR8888,
-                handle.AddrOfPinnedObject(),
-                canvas.Width * 4);
-            if (frameSurface == IntPtr.Zero)
-            {
-                throw new InvalidOperationException("Runtime frame surface creation failed: " + SDL.GetError());
-            }
-
-            if (!SDL.BlitSurface(frameSurface, IntPtr.Zero, windowSurface, IntPtr.Zero))
-            {
-                throw new InvalidOperationException("Runtime frame blit failed: " + SDL.GetError());
-            }
-
-            if (!SDL.UpdateWindowSurface(window))
-            {
-                throw new InvalidOperationException("Runtime window frame presentation failed: " + SDL.GetError());
-            }
-
-            return true;
-        }
-        finally
-        {
-            if (frameSurface != IntPtr.Zero)
-            {
-                SDL.DestroySurface(frameSurface);
-            }
-
-            handle.Free();
-        }
+        return frameLimit == 0 ? frameIndex == 0 : frameIndex == targetFrames - 1;
     }
 
-    private static bool SaveScreenshotIfRequested(string? screenshotPath, RuntimePixelCanvas? canvas)
+    private static bool SaveScreenshotIfRequested(
+        string? screenshotPath,
+        RuntimeFrameSnapshot? snapshot)
     {
-        if (string.IsNullOrWhiteSpace(screenshotPath) || canvas is null)
+        if (string.IsNullOrWhiteSpace(screenshotPath) || snapshot is null)
         {
             return false;
         }
@@ -398,7 +407,7 @@ internal static class RuntimeHost
             Directory.CreateDirectory(directory);
         }
 
-        File.WriteAllBytes(fullPath, RuntimePngEncoder.Encode(canvas.Width, canvas.Height, canvas.Pixels));
+        File.WriteAllBytes(fullPath, RuntimePngEncoder.Encode(snapshot.Width, snapshot.Height, snapshot.RgbaPixels));
         return true;
     }
 }
@@ -471,7 +480,7 @@ internal static class RuntimePreviewFrameRasterizer
 
     private static void DrawTexture(RuntimePixelCanvas canvas, CanvasItemRenderCommand command, RuntimeRgba modulate)
     {
-        if (command.Texture is null || !TryResolveImageTexture(command.Texture, command.SourceRect, out var image, out var sourceRect))
+        if (command.Texture is null || !RuntimeTextureResolver.TryResolveImageTexture(command.Texture, command.SourceRect, out var image, out var sourceRect))
         {
             DrawTextureFallback(canvas, command, modulate);
             return;
@@ -501,36 +510,6 @@ internal static class RuntimePreviewFrameRasterizer
                 }
             }
         }
-    }
-
-    private static bool TryResolveImageTexture(Texture2D texture, Rect2 requestedSource, out ImageTexture image, out Rect2 sourceRect)
-    {
-        switch (texture)
-        {
-            case ImageTexture imageTexture:
-                image = imageTexture;
-                sourceRect = NormalizeSourceRect(requestedSource, imageTexture.GetWidth(), imageTexture.GetHeight());
-                return true;
-            case AtlasTexture { Atlas: ImageTexture atlasImage } atlas:
-                image = atlasImage;
-                var atlasRegion = atlas.GetSourceRegion();
-                var requested = NormalizeSourceRect(requestedSource, atlas.GetWidth(), atlas.GetHeight());
-                sourceRect = new Rect2(
-                    atlasRegion.Position + requested.Position,
-                    requested.Size);
-                return true;
-            default:
-                image = null!;
-                sourceRect = default;
-                return false;
-        }
-    }
-
-    private static Rect2 NormalizeSourceRect(Rect2 sourceRect, int textureWidth, int textureHeight)
-    {
-        var width = sourceRect.Size.X > 0f ? sourceRect.Size.X : textureWidth;
-        var height = sourceRect.Size.Y > 0f ? sourceRect.Size.Y : textureHeight;
-        return new Rect2(sourceRect.Position, new Vector2(width, height));
     }
 
     private static void DrawLine(RuntimePixelCanvas canvas, CanvasItemRenderCommand command, RuntimeRgba color)
@@ -738,9 +717,9 @@ internal sealed class RuntimePixelCanvas
         }
 
         var cursor = x;
-        foreach (var character in text.ToUpperInvariant())
+        foreach (var character in text)
         {
-            RuntimePixelFont.DrawCharacter(this, character, cursor, y, color, scale);
+            RuntimePixelFont.DrawCharacter(this, char.ToUpperInvariant(character), cursor, y, color, scale);
             cursor += 6 * scale;
         }
     }
@@ -788,6 +767,60 @@ internal sealed class RuntimePixelCanvas
 
 internal static class RuntimePixelFont
 {
+    public const int GlyphWidth = 5;
+    public const int GlyphHeight = 7;
+
+    private static readonly string[] UnknownGlyph = ["11111", "10001", "00010", "00100", "00000", "00100", "00100"];
+
+    private static readonly System.Collections.Generic.IReadOnlyDictionary<char, string[]> Glyphs =
+        new System.Collections.Generic.Dictionary<char, string[]>
+        {
+            ['A'] = ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
+            ['B'] = ["11110", "10001", "10001", "11110", "10001", "10001", "11110"],
+            ['C'] = ["01111", "10000", "10000", "10000", "10000", "10000", "01111"],
+            ['D'] = ["11110", "10001", "10001", "10001", "10001", "10001", "11110"],
+            ['E'] = ["11111", "10000", "10000", "11110", "10000", "10000", "11111"],
+            ['F'] = ["11111", "10000", "10000", "11110", "10000", "10000", "10000"],
+            ['G'] = ["01111", "10000", "10000", "10011", "10001", "10001", "01111"],
+            ['H'] = ["10001", "10001", "10001", "11111", "10001", "10001", "10001"],
+            ['I'] = ["11111", "00100", "00100", "00100", "00100", "00100", "11111"],
+            ['J'] = ["00111", "00010", "00010", "00010", "10010", "10010", "01100"],
+            ['K'] = ["10001", "10010", "10100", "11000", "10100", "10010", "10001"],
+            ['L'] = ["10000", "10000", "10000", "10000", "10000", "10000", "11111"],
+            ['M'] = ["10001", "11011", "10101", "10101", "10001", "10001", "10001"],
+            ['N'] = ["10001", "11001", "10101", "10011", "10001", "10001", "10001"],
+            ['O'] = ["01110", "10001", "10001", "10001", "10001", "10001", "01110"],
+            ['P'] = ["11110", "10001", "10001", "11110", "10000", "10000", "10000"],
+            ['Q'] = ["01110", "10001", "10001", "10001", "10101", "10010", "01101"],
+            ['R'] = ["11110", "10001", "10001", "11110", "10100", "10010", "10001"],
+            ['S'] = ["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
+            ['T'] = ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
+            ['U'] = ["10001", "10001", "10001", "10001", "10001", "10001", "01110"],
+            ['V'] = ["10001", "10001", "10001", "10001", "10001", "01010", "00100"],
+            ['W'] = ["10001", "10001", "10001", "10101", "10101", "10101", "01010"],
+            ['X'] = ["10001", "10001", "01010", "00100", "01010", "10001", "10001"],
+            ['Y'] = ["10001", "10001", "01010", "00100", "00100", "00100", "00100"],
+            ['Z'] = ["11111", "00001", "00010", "00100", "01000", "10000", "11111"],
+            ['0'] = ["01110", "10001", "10011", "10101", "11001", "10001", "01110"],
+            ['1'] = ["00100", "01100", "00100", "00100", "00100", "00100", "01110"],
+            ['2'] = ["01110", "10001", "00001", "00010", "00100", "01000", "11111"],
+            ['3'] = ["11110", "00001", "00001", "01110", "00001", "00001", "11110"],
+            ['4'] = ["00010", "00110", "01010", "10010", "11111", "00010", "00010"],
+            ['5'] = ["11111", "10000", "10000", "11110", "00001", "00001", "11110"],
+            ['6'] = ["01110", "10000", "10000", "11110", "10001", "10001", "01110"],
+            ['7'] = ["11111", "00001", "00010", "00100", "01000", "01000", "01000"],
+            ['8'] = ["01110", "10001", "10001", "01110", "10001", "10001", "01110"],
+            ['9'] = ["01110", "10001", "10001", "01111", "00001", "00001", "01110"],
+            [':'] = ["00000", "00100", "00100", "00000", "00100", "00100", "00000"],
+            ['.'] = ["00000", "00000", "00000", "00000", "00000", "01100", "01100"],
+            [','] = ["00000", "00000", "00000", "00000", "00100", "00100", "01000"],
+            ['-'] = ["00000", "00000", "00000", "11111", "00000", "00000", "00000"],
+            ['/'] = ["00001", "00010", "00010", "00100", "01000", "01000", "10000"],
+            ['+'] = ["00000", "00100", "00100", "11111", "00100", "00100", "00000"],
+            ['|'] = ["00100", "00100", "00100", "00100", "00100", "00100", "00100"],
+            [' '] = ["00000", "00000", "00000", "00000", "00000", "00000", "00000"]
+        };
+
     public static void DrawCharacter(RuntimePixelCanvas canvas, char character, int x, int y, RuntimeRgba color, int scale)
     {
         var glyph = GetGlyph(character);
@@ -803,56 +836,9 @@ internal static class RuntimePixelFont
         }
     }
 
-    private static string[] GetGlyph(char character)
+    public static string[] GetGlyph(char character)
     {
-        return character switch
-        {
-            'A' => ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
-            'B' => ["11110", "10001", "10001", "11110", "10001", "10001", "11110"],
-            'C' => ["01111", "10000", "10000", "10000", "10000", "10000", "01111"],
-            'D' => ["11110", "10001", "10001", "10001", "10001", "10001", "11110"],
-            'E' => ["11111", "10000", "10000", "11110", "10000", "10000", "11111"],
-            'F' => ["11111", "10000", "10000", "11110", "10000", "10000", "10000"],
-            'G' => ["01111", "10000", "10000", "10011", "10001", "10001", "01111"],
-            'H' => ["10001", "10001", "10001", "11111", "10001", "10001", "10001"],
-            'I' => ["11111", "00100", "00100", "00100", "00100", "00100", "11111"],
-            'J' => ["00111", "00010", "00010", "00010", "10010", "10010", "01100"],
-            'K' => ["10001", "10010", "10100", "11000", "10100", "10010", "10001"],
-            'L' => ["10000", "10000", "10000", "10000", "10000", "10000", "11111"],
-            'M' => ["10001", "11011", "10101", "10101", "10001", "10001", "10001"],
-            'N' => ["10001", "11001", "10101", "10011", "10001", "10001", "10001"],
-            'O' => ["01110", "10001", "10001", "10001", "10001", "10001", "01110"],
-            'P' => ["11110", "10001", "10001", "11110", "10000", "10000", "10000"],
-            'Q' => ["01110", "10001", "10001", "10001", "10101", "10010", "01101"],
-            'R' => ["11110", "10001", "10001", "11110", "10100", "10010", "10001"],
-            'S' => ["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
-            'T' => ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
-            'U' => ["10001", "10001", "10001", "10001", "10001", "10001", "01110"],
-            'V' => ["10001", "10001", "10001", "10001", "10001", "01010", "00100"],
-            'W' => ["10001", "10001", "10001", "10101", "10101", "10101", "01010"],
-            'X' => ["10001", "10001", "01010", "00100", "01010", "10001", "10001"],
-            'Y' => ["10001", "10001", "01010", "00100", "00100", "00100", "00100"],
-            'Z' => ["11111", "00001", "00010", "00100", "01000", "10000", "11111"],
-            '0' => ["01110", "10001", "10011", "10101", "11001", "10001", "01110"],
-            '1' => ["00100", "01100", "00100", "00100", "00100", "00100", "01110"],
-            '2' => ["01110", "10001", "00001", "00010", "00100", "01000", "11111"],
-            '3' => ["11110", "00001", "00001", "01110", "00001", "00001", "11110"],
-            '4' => ["00010", "00110", "01010", "10010", "11111", "00010", "00010"],
-            '5' => ["11111", "10000", "10000", "11110", "00001", "00001", "11110"],
-            '6' => ["01110", "10000", "10000", "11110", "10001", "10001", "01110"],
-            '7' => ["11111", "00001", "00010", "00100", "01000", "01000", "01000"],
-            '8' => ["01110", "10001", "10001", "01110", "10001", "10001", "01110"],
-            '9' => ["01110", "10001", "10001", "01111", "00001", "00001", "01110"],
-            ':' => ["00000", "00100", "00100", "00000", "00100", "00100", "00000"],
-            '.' => ["00000", "00000", "00000", "00000", "00000", "01100", "01100"],
-            ',' => ["00000", "00000", "00000", "00000", "00100", "00100", "01000"],
-            '-' => ["00000", "00000", "00000", "11111", "00000", "00000", "00000"],
-            '/' => ["00001", "00010", "00010", "00100", "01000", "01000", "10000"],
-            '+' => ["00000", "00100", "00100", "11111", "00100", "00100", "00000"],
-            '|' => ["00100", "00100", "00100", "00100", "00100", "00100", "00100"],
-            ' ' => ["00000", "00000", "00000", "00000", "00000", "00000", "00000"],
-            _ => ["11111", "10001", "00010", "00100", "00000", "00100", "00100"]
-        };
+        return Glyphs.TryGetValue(character, out var glyph) ? glyph : UnknownGlyph;
     }
 }
 

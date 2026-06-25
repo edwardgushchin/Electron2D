@@ -26,6 +26,8 @@ namespace Electron2D;
 
 internal sealed class SdlGpuRenderingBackend : RenderingBackend
 {
+    internal const int MaxLifecycleEventCount = 128;
+
     private static readonly RenderingServer.RenderingFeature[] Features =
     {
         RenderingServer.RenderingFeature.Sprites,
@@ -50,6 +52,9 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
     private readonly List<SdlGpuLifecycleEvent> _events = new();
     private SdlGpuDeviceHandle _device;
     private ulong _nextFrameSequence;
+    private int droppedEventCount;
+    private bool frameBeganLogged;
+    private bool frameSubmittedLogged;
 
     public SdlGpuRenderingBackend(ISdlGpuApi api, bool debugMode)
         : this(api, SdlGpuDeviceCreateInfo.Standard(debugMode))
@@ -73,6 +78,8 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
 
     public IReadOnlyList<SdlGpuLifecycleEvent> Events => _events;
 
+    public int DroppedEventCount => droppedEventCount;
+
     public SdlGpuDeviceCreateInfo CreateInfo => _createInfo;
 
     public SdlGpuDeviceInfo DeviceInfo { get; private set; }
@@ -88,7 +95,10 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
 
         Window = window;
         _events.Clear();
+        droppedEventCount = 0;
         _nextFrameSequence = 0;
+        frameBeganLogged = false;
+        frameSubmittedLogged = false;
         DeviceInfo = SdlGpuDeviceInfo.Unknown;
 
         _device = _api.CreateDevice(_createInfo, out var createError);
@@ -150,6 +160,44 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
         Log(SdlGpuLifecycleEventKind.FrameSubmitted, "SDL_GPU frame submitted.");
     }
 
+    public SdlGpuFenceHandle EndFrameAndAcquireFence(SdlGpuFrame frame)
+    {
+        if (State != SdlGpuLifecycleState.FrameOpen)
+        {
+            ThrowInvalidState("submit an SDL_GPU frame");
+        }
+
+        if (!frame.IsValid || frame.Sequence != _nextFrameSequence)
+        {
+            ThrowInvalidState("submit this SDL_GPU frame");
+        }
+
+        var fence = _api.SubmitCommandBufferAndAcquireFence(frame.CommandBuffer, out var submitError);
+        if (!fence.IsValid || submitError is not null)
+        {
+            Fail(submitError ?? "SDL_GPU command buffer fence submit returned an invalid handle.");
+        }
+
+        State = SdlGpuLifecycleState.WindowClaimed;
+        Log(SdlGpuLifecycleEventKind.FrameSubmitted, "SDL_GPU frame submitted with fence.");
+        return fence;
+    }
+
+    public void WaitForFence(SdlGpuFenceHandle fence)
+    {
+        EnsureWindowClaimed("wait for an SDL_GPU fence");
+
+        if (!_api.WaitForFence(_device, fence, out var waitError))
+        {
+            Fail(waitError ?? "SDL_GPU fence wait failed.");
+        }
+    }
+
+    public void ReleaseFence(SdlGpuFenceHandle fence)
+    {
+        _api.ReleaseFence(_device, fence);
+    }
+
     public void Resize(int width, int height, float dpiScale)
     {
         EnsureWindowClaimed("resize SDL_GPU window");
@@ -191,7 +239,7 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
     {
         State = SdlGpuLifecycleState.Failed;
         Log(SdlGpuLifecycleEventKind.DeviceError, "SDL_GPU lifecycle error.", error);
-        throw new InvalidOperationException(error);
+        throw new GpuPresenterUnavailableException(error);
     }
 
     private void ThrowInvalidState(string operation)
@@ -202,6 +250,32 @@ internal sealed class SdlGpuRenderingBackend : RenderingBackend
 
     private void Log(SdlGpuLifecycleEventKind kind, string message, string? error = null)
     {
+        if (kind == SdlGpuLifecycleEventKind.FrameBegan)
+        {
+            if (frameBeganLogged)
+            {
+                return;
+            }
+
+            frameBeganLogged = true;
+        }
+
+        if (kind == SdlGpuLifecycleEventKind.FrameSubmitted)
+        {
+            if (frameSubmittedLogged)
+            {
+                return;
+            }
+
+            frameSubmittedLogged = true;
+        }
+
+        if (_events.Count == MaxLifecycleEventCount)
+        {
+            _events.RemoveAt(0);
+            droppedEventCount++;
+        }
+
         _events.Add(new SdlGpuLifecycleEvent(kind, message, Window, error));
     }
 }

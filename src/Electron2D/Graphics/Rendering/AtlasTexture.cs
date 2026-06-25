@@ -352,6 +352,27 @@ public sealed class AtlasTexture : Texture2D
         return new Rect2(Region.Position, new Vector2(GetWidth(), GetHeight()));
     }
 
+    internal override long RenderContentVersion
+    {
+        get
+        {
+            var hash = new HashCode();
+            hash.Add(Atlas?.RenderContentVersion ?? 0);
+            hash.Add(FilterClip);
+            AddRect(ref hash, Margin);
+            AddRect(ref hash, Region);
+            return hash.ToHashCode();
+        }
+    }
+
+    private static void AddRect(ref HashCode hash, Rect2 rect)
+    {
+        hash.Add(rect.Position.X);
+        hash.Add(rect.Position.Y);
+        hash.Add(rect.Size.X);
+        hash.Add(rect.Size.Y);
+    }
+
     private static int ToPixelSize(float value, int fallback)
     {
         return value > 0f ? Math.Max(0, (int)MathF.Floor(value)) : fallback;

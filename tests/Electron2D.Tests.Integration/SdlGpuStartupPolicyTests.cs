@@ -214,6 +214,27 @@ public sealed class SdlGpuStartupPolicyTests
             return error is null;
         }
 
+        public Electron2D.SdlGpuFenceHandle SubmitCommandBufferAndAcquireFence(
+            Electron2D.SdlGpuCommandBufferHandle commandBuffer,
+            out string? error)
+        {
+            error = SubmitCommandBufferError;
+            return error is null ? new Electron2D.SdlGpuFenceHandle(3) : default;
+        }
+
+        public bool WaitForFence(
+            Electron2D.SdlGpuDeviceHandle device,
+            Electron2D.SdlGpuFenceHandle fence,
+            out string? error)
+        {
+            error = null;
+            return true;
+        }
+
+        public void ReleaseFence(Electron2D.SdlGpuDeviceHandle device, Electron2D.SdlGpuFenceHandle fence)
+        {
+        }
+
         public void DestroyDevice(Electron2D.SdlGpuDeviceHandle device)
         {
         }

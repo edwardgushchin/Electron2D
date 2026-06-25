@@ -1,6 +1,6 @@
 # Texture2D resource baseline
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-25.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -27,12 +27,20 @@
 
 ## Источники поведения
 
-- [Godot `Texture2D`](https://docs.godotengine.org/en/stable/classes/class_texture2d.html): public resource exposes width, height, size, alpha, mipmaps, pixel opacity and draw methods.
-- [Godot `AtlasTexture`](https://docs.godotengine.org/en/stable/classes/class_atlastexture.html): region wrapper over another `Texture2D` with `atlas`, `filter_clip`, `margin` and `region`.
+- [Godot `Texture2D`](https://docs.godotengine.org/en/stable/classes/class_texture2d.html): публичный ресурс описывает размер, формат, копию изображения, прозрачность, mipmap-уровни, проверку прозрачности пикселя, placeholder и методы отрисовки.
+- [Godot `AtlasTexture`](https://docs.godotengine.org/en/stable/classes/class_atlastexture.html): представление области другого `Texture2D` с `atlas`, `filter_clip`, `margin` и `region`.
 - [Godot `CanvasItem`](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html): `TextureFilter` и `TextureRepeat` принадлежат CanvasItem sampling state.
 - [SDL GPU](https://wiki.libsdl.org/SDL3/CategoryGPU): textures are created/uploaded/released on the GPU timeline, while samplers describe how textures are read.
 
-## Public API
+## Уточнение совместимости Godot 4.7
+
+`T-0025` реализовала только минимальный слой `Texture2D`: размер, прозрачность, mipmap-данные и проверку прозрачности пикселя. Это не полное соответствие выбранному API-подмножеству Godot 4.7.
+
+`T-0226` должен добавить недостающий базовый контракт `Texture2D`: `GetFormat()`, `GetImage()`, `CreatePlaceholder()`, `Draw(...)`, `DrawRect(...)`, `DrawRectRegion(...)`, внутренний переопределяемый контракт отрисовки, публичный `Image`, `Image.Format` и `PlaceholderTexture2D`.
+
+`T-0227` должен после `T-0226` привести `AtlasTexture` к тому же контракту: рекурсивный `Atlas` любого `Texture2D`, запрет прямой ссылки на себя, правила `Region`, `Margin`, `FilterClip`, `GetImage()` и обрезку области при отрисовке.
+
+## Публичный API `T-0025`
 
 `Texture2D`:
 
@@ -46,6 +54,39 @@ public abstract class Texture2D : Resource
     public virtual bool HasMipmaps();
     public virtual int GetMipmapCount();
     public virtual bool IsPixelOpaque(int x, int y);
+}
+```
+
+## Целевой публичный API `T-0226`
+
+```csharp
+public abstract class Texture2D : Resource
+{
+    public abstract int GetWidth();
+    public abstract int GetHeight();
+    public Vector2 GetSize();
+    public abstract bool HasAlpha();
+    public virtual bool HasMipmaps();
+    public virtual int GetMipmapCount();
+    public virtual bool IsPixelOpaque(int x, int y);
+    public virtual Image.Format GetFormat();
+    public virtual Image? GetImage();
+    public Resource CreatePlaceholder();
+    public void Draw(Rid toCanvasItem, Vector2 position, Color modulate, bool transpose = false);
+    public void DrawRect(Rid toCanvasItem, Rect2 rect, bool tile, Color modulate, bool transpose = false);
+    public void DrawRectRegion(Rid toCanvasItem, Rect2 rect, Rect2 sourceRect, Color modulate, bool transpose = false, bool clipUv = true);
+}
+
+public sealed class PlaceholderTexture2D : Texture2D
+{
+}
+
+public sealed class Image : Resource
+{
+    public enum Format
+    {
+        Rgba8
+    }
 }
 ```
 
@@ -87,13 +128,17 @@ public sealed class ImageTexture : Texture2D
 
 `AtlasTexture.GetWidth()` и `GetHeight()` возвращают:
 
-- `0`, если `Atlas == null`;
-- размер `Region.Size`, если соответствующая ось region больше `0`;
-- размер `Atlas`, если соответствующая ось region равна `0`.
+- размер соответствующей оси `Atlas`, если округлённая вниз ось `Region.Size` равна `0` и `Atlas` задан;
+- поведение отсутствующего `Atlas` при нулевой оси фиксируется по исходному коду Godot в `T-0227`;
+- округлённый вниз размер `Region.Size` плюс `Margin.Size`, если ось region больше `0`.
 
-Размер округляется вниз до `int`, потому что Godot documentation указывает integer image size.
+Размер округляется вниз до `int`, потому что контракт Godot работает с целочисленным размером изображения.
 
-`AtlasTexture.HasAlpha()`, `HasMipmaps()`, `GetMipmapCount()` и `IsPixelOpaque()` делегируют данные atlas texture. `IsPixelOpaque(x, y)` переводит координаты в `Region.Position + (x, y)` и возвращает `false` за пределами видимого atlas region.
+`AtlasTexture.HasAlpha()`, `HasMipmaps()` и `GetMipmapCount()` делегируют данные atlas texture. `IsPixelOpaque(x, y)` переводит координаты с учётом `Region.Position - Margin.Position` и возвращает `false`, если результат попадает за пределы atlas texture.
+
+`AtlasTexture.GetImage()` возвращает копию вырезанного региона исходной texture. `AtlasTexture.Draw(...)`, `DrawRect(...)` и `DrawRectRegion(...)` используют контракт отрисовки базового `Texture2D`: обрезка исходной области должна пропорционально корректировать destination rectangle, включая destination rectangle с разворотом.
+
+`FilterClip` должен влиять на выборку пикселей и предотвращать чтение соседних пикселей за пределами atlas region. `Atlas` может быть любым `Texture2D`, включая другой `AtlasTexture`; прямая ссылка на самого себя запрещена.
 
 ## Internal texture lifetime
 
@@ -157,9 +202,9 @@ Project runtime host preview rasterizer должен рисовать `ImageText
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: реализовано.
-Задача: `T-0025`, обновлено в `T-0030` и `T-0037`.
-Обновлено: 2026-06-23.
+Статус: минимальный слой `T-0025` реализован; полная совместимость с выбранным API-подмножеством Godot 4.7 открыта задачами `T-0226` и `T-0227`.
+Задача: `T-0025`, обновлено в `T-0030`, `T-0037`, `T-0226` и `T-0227`.
+Обновлено: 2026-06-25.
 
 ## Public API
 
@@ -187,7 +232,7 @@ Project runtime host preview rasterizer должен рисовать `ImageText
 - `Margin`;
 - `FilterClip`.
 
-Если у `Region.Size.X` или `Region.Size.Y` значение `0`, для соответствующей оси используется размер atlas texture. Размер региона округляется вниз до `int`, как integer image size.
+Текущее состояние до `T-0227`: если у `Region.Size.X` или `Region.Size.Y` значение `0`, для соответствующей оси используется размер atlas texture; размер региона округляется вниз до `int`, как целочисленный размер изображения. `Margin` и `FilterClip` сохраняются как свойства, но ещё не выполняют полный контракт отрисовки и выборки пикселей Godot 4.7. Внутренний механизм показа кадра из `T-0219` уже разрешает вложенные `AtlasTexture` для поддержанного подмножества `Texture2D -> ImageTexture`, но полный публичный контракт atlas resource, включая `Margin`, `FilterClip`, `GetImage()` и методы отрисовки, остаётся задачей `T-0227`.
 
 `ImageTexture.LoadFromFile(path)` загружает PNG из filesystem path или `res://` resource path и возвращает immutable texture с реальными RGBA pixels. Поддерживаются non-interlaced PNG:
 
@@ -202,7 +247,7 @@ Unsupported PNG mode, malformed image или отсутствующий файл
 
 `Texture2D.IsPixelOpaque()` возвращает `true` только для пикселей внутри texture bounds. Базовая реализация считает texture без alpha полностью непрозрачной внутри bounds, а alpha texture требует concrete override.
 
-`AtlasTexture.IsPixelOpaque()` переводит координаты в `Region.Position + (x, y)` и делегирует проверку atlas texture. Запросы за пределами region или atlas возвращают `false`.
+Текущее состояние до `T-0227`: `AtlasTexture.IsPixelOpaque()` переводит координаты в `Region.Position + (x, y)` и делегирует проверку atlas texture. Это не учитывает `Margin.Position`; исправление закреплено в `T-0227`.
 
 ## Internal Lifetime Registry
 
@@ -228,7 +273,7 @@ Filter/repeat сейчас представлены internal `TextureSamplingOpt
 ## Ограничения
 
 - PNG/JPEG import metadata реализован в `T-0037` как internal import cache importer. JPEG пока не является runtime texture source.
-- Real rendering-backend transfer-buffer upload ещё не реализован; T-0025 фиксирует registry contract и backend adapter boundary.
+- Полный registry contract остаётся границей `T-0025`, а интерактивный runtime presenter из `T-0219` уже использует транзакционную загрузку через staged state: texture resource попадает в committed cache и в счётчик `TextureUploads` только после успешной отправки кадра.
 - `DrawTexture()` реализован в immediate drawing baseline `T-0028`; `DrawTextureRect()` и `DrawTextureRectRegion()` остаются будущими drawing задачами.
 
 ## Проверки
@@ -241,4 +286,4 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 dotnet test tests\Electron2D.Tests.RuntimeSmoke\Electron2D.Tests.RuntimeSmoke.csproj --no-restore
 ```
 
-Они проверяют public metadata/atlas/viewport/image texture behavior, PNG RGBA и indexed palette loading, internal upload/reload/release registry, atlas upload descriptor, failed upload cleanup, unknown handle rejection, render target descriptor, restore path и no-leak smoke cycles.
+Они проверяют public metadata/atlas/viewport/image texture behavior, PNG RGBA и indexed palette loading, internal upload/reload/release registry, atlas upload descriptor, failed upload cleanup, unknown handle rejection, render target descriptor, restore path и no-leak smoke cycles. В runtime presenter path `T-0219` дополнительно проверяется staged GPU upload: texture resource не попадает в committed cache, `TextureUploads` не увеличивается и native texture/transfer buffer освобождаются ровно один раз, если кадр падает до успешной отправки command buffer.

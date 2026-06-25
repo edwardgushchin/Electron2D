@@ -166,6 +166,48 @@ internal sealed class SdlGpuApi : ISdlGpuApi
         return result;
     }
 
+    public SdlGpuFenceHandle SubmitCommandBufferAndAcquireFence(
+        SdlGpuCommandBufferHandle commandBuffer,
+        out string? error)
+    {
+        if (!commandBuffer.IsValid)
+        {
+            error = "SDL_GPU command buffer handle is invalid.";
+            return default;
+        }
+
+        var fence = SDL.SubmitGPUCommandBufferAndAcquireFence(commandBuffer.Value);
+        error = fence == IntPtr.Zero ? ReadError("SDL_SubmitGPUCommandBufferAndAcquireFence failed.") : null;
+        return new SdlGpuFenceHandle(fence);
+    }
+
+    public bool WaitForFence(SdlGpuDeviceHandle device, SdlGpuFenceHandle fence, out string? error)
+    {
+        if (!device.IsValid)
+        {
+            error = "SDL_GPU device handle is invalid.";
+            return false;
+        }
+
+        if (!fence.IsValid)
+        {
+            error = "SDL_GPU fence handle is invalid.";
+            return false;
+        }
+
+        var result = SDL.WaitForGPUFences(device.Value, waitAll: true, [fence.Value], numFences: 1);
+        error = result ? null : ReadError("SDL_WaitForGPUFences failed.");
+        return result;
+    }
+
+    public void ReleaseFence(SdlGpuDeviceHandle device, SdlGpuFenceHandle fence)
+    {
+        if (device.IsValid && fence.IsValid)
+        {
+            SDL.ReleaseGPUFence(device.Value, fence.Value);
+        }
+    }
+
     public void DestroyDevice(SdlGpuDeviceHandle device)
     {
         if (device.IsValid)
