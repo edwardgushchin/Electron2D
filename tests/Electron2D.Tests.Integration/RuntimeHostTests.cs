@@ -993,6 +993,565 @@ public sealed class RuntimeHostTests
     }
 
     [Fact]
+    public void RuntimeHostInteractiveSchedulerIncludesPlatformInputInDeadlineBudgetWithoutDrift()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+        var scene = new SchedulerDeltaScene(clock, processCost: TimeSpan.FromMilliseconds(1));
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = false,
+                TargetFrameRate = 60
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                clock,
+                submitCost: TimeSpan.FromMilliseconds(2),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 3,
+                DispatchInput = () =>
+                {
+                    clock.Advance(TimeSpan.FromMilliseconds(4));
+                    return 0;
+                }
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(3, sleeper.Sleeps.Count);
+        Assert.All(
+            sleeper.Sleeps,
+            sleep => Assert.Equal(TimeSpan.FromSeconds(1d / 60d).TotalSeconds - 0.007d, sleep.TotalSeconds, precision: 12));
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerDoesNotSleepWhenInputAndFrameWorkOverrunBudget()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+        var scene = new SchedulerDeltaScene(clock, processCost: TimeSpan.FromMilliseconds(4));
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = false,
+                TargetFrameRate = 60
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                clock,
+                submitCost: TimeSpan.FromMilliseconds(4),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 1,
+                DispatchInput = () =>
+                {
+                    clock.Advance(TimeSpan.FromMilliseconds(10));
+                    return 0;
+                }
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Empty(sleeper.Sleeps);
+        Assert.Equal(0, GetResultProperty<int>(result, "SchedulerSoftwareWaits"));
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerUsesSceneTreeFixedStepForThirtyHertzFixedDelta()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var scene = new SchedulerDeltaScene();
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 30d,
+                Clock = clock,
+                Sleeper = new RecordingRuntimeHostSleeper(),
+                PresentationSyncEnabled = true
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(CreateSchedulerDiagnostics()))
+            {
+                StopAfterPresentedFrames = 2,
+                AfterFramePresented = frameIndex =>
+                {
+                    if (frameIndex == 1)
+                    {
+                        clock.Advance(TimeSpan.FromSeconds(1d / 30d));
+                    }
+                }
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(2, scene.PhysicsDeltas.Count);
+        Assert.All(scene.PhysicsDeltas, delta => Assert.Equal(1d / 60d, delta, precision: 12));
+        Assert.Equal(scene.PhysicsDeltas.Count, GetResultProperty<int>(result, "SchedulerPhysicsSteps"));
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerUsesSceneTreeFixedStepForOneHundredTwentyHertzFixedDelta()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var scene = new SchedulerDeltaScene();
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 120d,
+                Clock = clock,
+                Sleeper = new RecordingRuntimeHostSleeper(),
+                PresentationSyncEnabled = true
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(CreateSchedulerDiagnostics()))
+            {
+                StopAfterPresentedFrames = 2,
+                AfterFramePresented = frameIndex =>
+                {
+                    if (frameIndex == 1)
+                    {
+                        clock.Advance(TimeSpan.FromSeconds(1d / 60d));
+                    }
+                }
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Single(scene.PhysicsDeltas);
+        Assert.Equal(1d / 60d, scene.PhysicsDeltas[0], precision: 12);
+        Assert.Equal(scene.PhysicsDeltas.Count, GetResultProperty<int>(result, "SchedulerPhysicsSteps"));
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerSendsMeasuredDeltaToProcessFrame()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var scene = new SchedulerDeltaScene();
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = new RecordingRuntimeHostSleeper(),
+                PresentationSyncEnabled = true
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 3,
+                AfterFramePresented = frameIndex =>
+                {
+                    if (frameIndex == 1)
+                    {
+                        clock.Advance(TimeSpan.FromSeconds(0.020d));
+                    }
+                    else if (frameIndex == 2)
+                    {
+                        clock.Advance(TimeSpan.FromSeconds(0.040d));
+                    }
+                }
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(3, result.FrameCount);
+        Assert.Equal(3, scene.ProcessDeltas.Count);
+        Assert.Equal(0d, scene.ProcessDeltas[0], precision: 12);
+        Assert.Equal(0.020d, scene.ProcessDeltas[1], precision: 12);
+        Assert.Equal(0.040d, scene.ProcessDeltas[2], precision: 12);
+        Assert.NotEqual(1d / 60d, scene.ProcessDeltas[1], precision: 12);
+        Assert.NotEqual(1d / 60d, scene.ProcessDeltas[2], precision: 12);
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerLimitsPhysicsCatchUpAndReportsDroppedTime()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var scene = new SchedulerDeltaScene();
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = new RecordingRuntimeHostSleeper(),
+                PresentationSyncEnabled = true
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 2,
+                AfterFramePresented = frameIndex =>
+                {
+                    if (frameIndex == 1)
+                    {
+                        clock.Advance(TimeSpan.FromSeconds(1d));
+                    }
+                }
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(2, result.FrameCount);
+        Assert.Equal(2, scene.ProcessDeltas.Count);
+        Assert.Equal(0.25d, scene.ProcessDeltas[1], precision: 12);
+        Assert.Equal(5, scene.PhysicsDeltas.Count);
+        Assert.All(scene.PhysicsDeltas, delta => Assert.Equal(1d / 60d, delta, precision: 12));
+        Assert.Equal(5, GetResultProperty<int>(result, "SchedulerPhysicsSteps"));
+        Assert.Equal(0.75d, GetResultProperty<double>(result, "SchedulerClampedTimeSeconds"), precision: 12);
+        Assert.Equal(0.25d - (5d / 60d), GetResultProperty<double>(result, "SchedulerDroppedTimeSeconds"), precision: 12);
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerLimitsCatchUpByRealPhysicsTicksForNonDefaultFixedDelta()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var scene = new SchedulerDeltaScene();
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 30d,
+                Clock = clock,
+                Sleeper = new RecordingRuntimeHostSleeper(),
+                PresentationSyncEnabled = true
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(CreateSchedulerDiagnostics()))
+            {
+                StopAfterPresentedFrames = 2,
+                AfterFramePresented = frameIndex =>
+                {
+                    if (frameIndex == 1)
+                    {
+                        clock.Advance(TimeSpan.FromSeconds(1d));
+                    }
+                }
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(5, scene.PhysicsDeltas.Count);
+        Assert.All(scene.PhysicsDeltas, delta => Assert.Equal(1d / 60d, delta, precision: 12));
+        Assert.Equal(scene.PhysicsDeltas.Count, GetResultProperty<int>(result, "SchedulerPhysicsSteps"));
+        Assert.Equal(0.75d, GetResultProperty<double>(result, "SchedulerClampedTimeSeconds"), precision: 12);
+        Assert.Equal(0.25d - (5d / 60d), GetResultProperty<double>(result, "SchedulerDroppedTimeSeconds"), precision: 12);
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerUsesObservedPresenterSyncForSoftwareLimiter()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+
+        var result = Electron2D.RuntimeHost.Run(
+            new Electron2D.SceneTree(),
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = true,
+                TargetFrameRate = 60
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 1
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Single(sleeper.Sleeps);
+        Assert.Equal(TimeSpan.FromSeconds(1d / 60d).TotalSeconds, sleeper.Sleeps[0].TotalSeconds, precision: 12);
+        Assert.Equal(1, GetResultProperty<int>(result, "SchedulerSoftwareWaits"));
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerDoesNotAddSoftwareWaitWhenPresenterSyncIsObserved()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+
+        var result = Electron2D.RuntimeHost.Run(
+            new Electron2D.SceneTree(),
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = true,
+                TargetFrameRate = 60
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                presentationSyncObserved: true))
+            {
+                StopAfterPresentedFrames = 1
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Empty(sleeper.Sleeps);
+        Assert.Equal(0, GetResultProperty<int>(result, "SchedulerSoftwareWaits"));
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerKeepsSixtyHertzTargetWhenPresenterDoesNotSynchronize()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+
+        var result = Electron2D.RuntimeHost.Run(
+            new Electron2D.SceneTree(),
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = true,
+                TargetFrameRate = 60
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                clock,
+                presentCost: TimeSpan.FromSeconds(1d / 144d),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 2
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(2, sleeper.Sleeps.Count);
+        var expectedSleep = TimeSpan.FromSeconds(1d / 60d) - TimeSpan.FromSeconds(1d / 144d);
+        Assert.All(
+            sleeper.Sleeps,
+            sleep => Assert.Equal(expectedSleep.TotalSeconds, sleep.TotalSeconds, precision: 12));
+        Assert.Equal(2, GetResultProperty<int>(result, "SchedulerSoftwareWaits"));
+        Assert.Equal((TimeSpan.FromSeconds(1d / 60d) * 2).TotalSeconds, clock.Now.TotalSeconds, precision: 12);
+    }
+
+    [Fact]
+    public void RuntimeHostTimingDiagnosticsSeparateFrameStagesAndObservedWaits()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new OversleepingRuntimeHostSleeper(clock, TimeSpan.FromMilliseconds(1));
+        var scene = new SchedulerDeltaScene(
+            clock,
+            processCost: TimeSpan.FromMilliseconds(3),
+            physicsCost: TimeSpan.FromMilliseconds(2));
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = false,
+                TargetFrameRate = 60
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                clock,
+                submitCost: TimeSpan.FromMilliseconds(5),
+                presentCost: TimeSpan.FromMilliseconds(0.5),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 2,
+                DispatchInput = () =>
+                {
+                    clock.Advance(TimeSpan.FromMilliseconds(1));
+                    return 0;
+                },
+                BeforeRenderPlan = () => clock.Advance(TimeSpan.FromMilliseconds(4))
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(0.002d, GetResultProperty<double>(result, "InputTimeSeconds"), precision: 12);
+        Assert.Equal(0.002d, GetResultProperty<double>(result, "PhysicsTimeSeconds"), precision: 12);
+        Assert.Equal(0.006d, GetResultProperty<double>(result, "ProcessTimeSeconds"), precision: 12);
+        Assert.Equal(0.008d, GetResultProperty<double>(result, "RenderPlanTimeSeconds"), precision: 12);
+        Assert.Equal(0.010d, GetResultProperty<double>(result, "SubmitTimeSeconds"), precision: 12);
+        Assert.Equal(0.001d, GetResultProperty<double>(result, "PresentTimeSeconds"), precision: 12);
+        var targetInterval = TimeSpan.FromSeconds(1d / 60d).TotalSeconds;
+        Assert.Equal((targetInterval - 0.0135d) + (targetInterval - 0.0155d), GetResultProperty<double>(result, "SchedulerRequestedWaitTimeSeconds"), precision: 12);
+        Assert.Equal((targetInterval - 0.0135d) + (targetInterval - 0.0155d) + 0.002d, GetResultProperty<double>(result, "SchedulerObservedWaitTimeSeconds"), precision: 12);
+        Assert.Equal(0d, GetResultProperty<double>(result, "SchedulerPauseWaitTimeSeconds"), precision: 12);
+    }
+
+    [Theory]
+    [InlineData(60)]
+    [InlineData(120)]
+    [InlineData(144)]
+    [InlineData(165)]
+    public void RuntimeHostInteractiveSchedulerWaitsUntilSelectedFrameDeadline(int targetFrameRate)
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+        var result = Electron2D.RuntimeHost.Run(
+            new Electron2D.SceneTree(),
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = false,
+                TargetFrameRate = targetFrameRate
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 2
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(targetFrameRate, GetResultProperty<int>(result, "SchedulerTargetFrameRate"));
+        Assert.Equal(2, sleeper.Sleeps.Count);
+        Assert.Equal(TimeSpan.FromSeconds(1d / targetFrameRate).TotalSeconds, sleeper.Sleeps[0].TotalSeconds, precision: 12);
+        Assert.Equal(1d / targetFrameRate, GetResultProperty<double>(result, "SchedulerTargetFrameIntervalSeconds"), precision: 12);
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerUsesNearestSupportedTargetFrameRate()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+
+        var result = Electron2D.RuntimeHost.Run(
+            new Electron2D.SceneTree(),
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = false,
+                TargetFrameRate = 150
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(
+                CreateSchedulerDiagnostics(),
+                presentationSyncObserved: false))
+            {
+                StopAfterPresentedFrames = 1
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(144, GetResultProperty<int>(result, "SchedulerTargetFrameRate"));
+        Assert.Single(sleeper.Sleeps);
+        Assert.Equal(TimeSpan.FromSeconds(1d / 144d).TotalSeconds, sleeper.Sleeps[0].TotalSeconds, precision: 12);
+    }
+
+    [Fact]
+    public void RuntimeHostInteractiveSchedulerSleepsDuringWindowPauseWithoutAccumulatingDelta()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+        var scene = new SchedulerDeltaScene();
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+        var pauseChecks = 0;
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 0,
+                FixedDelta = 1d / 60d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = true
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(CreateSchedulerDiagnostics()))
+            {
+                StopAfterPresentedFrames = 1,
+                IsWindowPaused = () => ++pauseChecks <= 2
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(1, result.FrameCount);
+        Assert.Equal(3, pauseChecks);
+        Assert.Equal(2, sleeper.Sleeps.Count);
+        Assert.Equal(0d, scene.ProcessDeltas.Single(), precision: 12);
+        Assert.Empty(scene.PhysicsDeltas);
+        Assert.Equal(2, GetResultProperty<int>(result, "SchedulerPausedWaits"));
+        Assert.Equal(0d, GetResultProperty<double>(result, "PresentTimeSeconds"), precision: 12);
+        Assert.Equal(0.100d, GetResultProperty<double>(result, "SchedulerPauseWaitTimeSeconds"), precision: 12);
+    }
+
+    [Fact]
+    public void RuntimeHostBoundedRunStaysDeterministicUnlessSchedulerIsEnabled()
+    {
+        var clock = new ManualRuntimeHostClock();
+        var sleeper = new RecordingRuntimeHostSleeper(clock);
+        var scene = new SchedulerDeltaScene();
+        var tree = new Electron2D.SceneTree();
+        tree.Root.AddChild(scene);
+
+        var result = Electron2D.RuntimeHost.Run(
+            tree,
+            new Electron2D.RuntimeHostOptions
+            {
+                FrameLimit = 3,
+                FixedDelta = 1d / 30d,
+                Clock = clock,
+                Sleeper = sleeper,
+                PresentationSyncEnabled = false,
+                TargetFrameRate = 165
+            },
+            new Electron2D.RuntimeHostLoopDriver(new FakeRuntimeFramePresenter(CreateSchedulerDiagnostics()))
+            {
+                AfterFramePresented = _ => clock.Advance(TimeSpan.FromSeconds(1d))
+            });
+
+        Assert.True(result.Succeeded, result.DiagnosticMessage);
+        Assert.Equal(3, result.FrameCount);
+        Assert.Equal(new[] { 1d / 30d, 1d / 30d, 1d / 30d }, scene.ProcessDeltas);
+        Assert.Empty(sleeper.Sleeps);
+        Assert.Equal(0, GetResultProperty<int>(result, "SchedulerSoftwareWaits"));
+    }
+
+    [Fact]
     public void RuntimeFramePresenterUsesSdlRendererFallbackWhenGpuPresenterCreationFails()
     {
         var fallback = new FakeRuntimeFramePresenter(new Electron2D.RuntimeFrameDiagnostics(
@@ -1033,6 +1592,64 @@ public sealed class RuntimeHostTests
         Assert.Equal("SDL_Renderer", diagnostics.PresentationBackend);
         Assert.True(diagnostics.UsedFallbackPresenter);
         Assert.Contains("GPU unavailable for test.", diagnostics.FallbackReason, StringComparison.Ordinal);
+        Assert.Equal(1, fallback.PresentCalls);
+        Assert.Null(presentedFrame.Screenshot);
+    }
+
+    [Theory]
+    [InlineData(true, SDL.GPUPresentMode.VSync)]
+    [InlineData(false, SDL.GPUPresentMode.Immediate)]
+    public void RuntimeGpuFramePresenterConfiguresSwapchainPresentModeFromPresentationSettings(
+        bool syncRequested,
+        SDL.GPUPresentMode expectedPresentMode)
+    {
+        var terminalApi = new PresenterFaultSdlGpuApi();
+        var backend = CreateInitializedGpuBackend(terminalApi);
+        var gpuApi = new PresenterFaultGpuApi(RuntimeGpuPresenterFailurePoint.None);
+
+        using var presenter = new Electron2D.RuntimeGpuFramePresenter(
+            new IntPtr(52),
+            new Electron2D.Vector2I(16, 16),
+            backend,
+            gpuApi,
+            presentationResourcesReady: true,
+            new Electron2D.RuntimePresentationSettings(syncRequested, TargetFrameRate: 60));
+
+        Assert.Equal(expectedPresentMode, gpuApi.LastPresentMode);
+        Assert.Equal(syncRequested, presenter.PresentationSyncObserved);
+    }
+
+    [Fact]
+    public void RuntimeFramePresenterPassesPresentationSettingsToFallbackAndReportsObservedSync()
+    {
+        Electron2D.RuntimePresentationSettings? capturedSettings = null;
+        var fallback = new FakeRuntimeFramePresenter(
+            CreateSchedulerDiagnostics(),
+            presentationSyncObserved: false);
+
+        using var presenter = new Electron2D.RuntimeFramePresenter(
+            new IntPtr(1),
+            new Electron2D.Vector2I(16, 16),
+            new Electron2D.RuntimePresentationSettings(SyncRequested: false, TargetFrameRate: 60),
+            (_, _, _) => throw new Electron2D.GpuPresenterUnavailableException("GPU unavailable for test."),
+            (_, _, settings) =>
+            {
+                capturedSettings = settings;
+                return fallback;
+            });
+
+        var presentedFrame = presenter.Present(
+            new Electron2D.CanvasItemRenderPlan(
+                Array.Empty<Electron2D.CanvasItemRenderCommand>(),
+                Array.Empty<Electron2D.CanvasItemRenderBatch>()),
+            new Electron2D.Vector2I(16, 16),
+            Electron2D.Color.Black,
+            captureFrame: false);
+
+        Assert.NotNull(capturedSettings);
+        Assert.False(capturedSettings.Value.SyncRequested);
+        Assert.Equal(60, capturedSettings.Value.TargetFrameRate);
+        Assert.False(presenter.PresentationSyncObserved);
         Assert.Equal(1, fallback.PresentCalls);
         Assert.Null(presentedFrame.Screenshot);
     }
@@ -1270,6 +1887,28 @@ public sealed class RuntimeHostTests
         var value = property.GetValue(result);
         Assert.IsType<T>(value);
         return (T)value;
+    }
+
+    private static Electron2D.RuntimeFrameDiagnostics CreateSchedulerDiagnostics()
+    {
+        return new Electron2D.RuntimeFrameDiagnostics(
+            "RenderingServer",
+            "SDL_GPU",
+            UsedFallbackPresenter: false,
+            FallbackReason: string.Empty,
+            RenderBatches: 0,
+            ActualDrawCalls: 0,
+            TextureSwitches: 0,
+            PipelineSwitches: 0,
+            TextureUploads: 0,
+            TextureCacheHits: 0,
+            PresentationResourcesCreated: 1,
+            PresentationResourcesRecreated: 0,
+            ObservedPresentationResizes: 0,
+            PresentationBackendReconfigurations: 0,
+            MaxPresenterManagedBytesPerFrame: 0,
+            PresenterMeasuredFrames: 0,
+            CapturePresenterManagedBytesAllocated: 0);
     }
 
     private static Electron2D.CanvasItemRenderCommand CreateDiagnosticCommand(
@@ -1748,10 +2387,120 @@ public sealed class RuntimeHostTests
 
     private sealed class HostSmokeFont : Electron2D.Font;
 
-    private sealed class FakeRuntimeFramePresenter(Electron2D.RuntimeFrameDiagnostics diagnostics)
-        : Electron2D.IRuntimeFramePresenter
+    private sealed class ManualRuntimeHostClock : Electron2D.IRuntimeHostClock
     {
+        public TimeSpan Now { get; private set; }
+
+        public void Advance(TimeSpan duration)
+        {
+            if (duration < TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException(nameof(duration), duration, "Manual clock cannot move backwards.");
+            }
+
+            Now += duration;
+        }
+    }
+
+    private sealed class RecordingRuntimeHostSleeper : Electron2D.IRuntimeHostSleeper
+    {
+        private readonly ManualRuntimeHostClock? clock;
+
+        public RecordingRuntimeHostSleeper(ManualRuntimeHostClock? clock = null)
+        {
+            this.clock = clock;
+        }
+
+        public List<TimeSpan> Sleeps { get; } = new();
+
+        public void Sleep(TimeSpan duration)
+        {
+            Sleeps.Add(duration);
+            clock?.Advance(duration);
+        }
+    }
+
+    private sealed class OversleepingRuntimeHostSleeper : Electron2D.IRuntimeHostSleeper
+    {
+        private readonly ManualRuntimeHostClock clock;
+        private readonly TimeSpan oversleep;
+
+        public OversleepingRuntimeHostSleeper(ManualRuntimeHostClock clock, TimeSpan oversleep)
+        {
+            this.clock = clock;
+            this.oversleep = oversleep;
+        }
+
+        public List<TimeSpan> RequestedSleeps { get; } = new();
+
+        public void Sleep(TimeSpan duration)
+        {
+            RequestedSleeps.Add(duration);
+            clock.Advance(duration + oversleep);
+        }
+    }
+
+    private sealed class SchedulerDeltaScene : Electron2D.Node
+    {
+        private readonly ManualRuntimeHostClock? clock;
+        private readonly TimeSpan processCost;
+        private readonly TimeSpan physicsCost;
+
+        public SchedulerDeltaScene(
+            ManualRuntimeHostClock? clock = null,
+            TimeSpan processCost = default,
+            TimeSpan physicsCost = default)
+        {
+            this.clock = clock;
+            this.processCost = processCost;
+            this.physicsCost = physicsCost;
+        }
+
+        public List<double> ProcessDeltas { get; } = new();
+
+        public List<double> PhysicsDeltas { get; } = new();
+
+        public override void _Process(double delta)
+        {
+            clock?.Advance(processCost);
+            ProcessDeltas.Add(delta);
+        }
+
+        public override void _PhysicsProcess(double delta)
+        {
+            clock?.Advance(physicsCost);
+            PhysicsDeltas.Add(delta);
+        }
+    }
+
+    private sealed class FakeRuntimeFramePresenter : Electron2D.IRuntimeFramePresenter
+    {
+        private readonly Electron2D.RuntimeFrameDiagnostics diagnostics;
+        private readonly ManualRuntimeHostClock? clock;
+        private readonly TimeSpan submitCost;
+        private readonly TimeSpan presentCost;
+
+        public FakeRuntimeFramePresenter(
+            Electron2D.RuntimeFrameDiagnostics diagnostics,
+            ManualRuntimeHostClock? clock = null,
+            TimeSpan submitCost = default,
+            TimeSpan presentCost = default,
+            bool presentationSyncObserved = true)
+        {
+            this.diagnostics = diagnostics;
+            this.clock = clock;
+            this.submitCost = submitCost;
+            this.presentCost = presentCost;
+            PresentationSyncObserved = presentationSyncObserved;
+        }
+
         public int PresentCalls { get; private set; }
+
+        public bool PresentationSyncObserved { get; }
+
+        public double LastSubmitTimeSeconds { get; private set; }
+
+        public double LastPresentTimeSeconds { get; private set; }
 
         public Electron2D.RuntimePresentedFrame Present(
             Electron2D.CanvasItemRenderPlan renderPlan,
@@ -1764,6 +2513,10 @@ public sealed class RuntimeHostTests
             _ = clearColor;
             _ = captureFrame;
             PresentCalls++;
+            LastSubmitTimeSeconds = submitCost.TotalSeconds;
+            LastPresentTimeSeconds = presentCost.TotalSeconds;
+            clock?.Advance(submitCost);
+            clock?.Advance(presentCost);
             return new Electron2D.RuntimePresentedFrame(diagnostics, null);
         }
 
@@ -1858,6 +2611,8 @@ public sealed class RuntimeHostTests
 
         public IntPtr LastCreatedTransferBuffer { get; private set; }
 
+        public SDL.GPUPresentMode LastPresentMode { get; private set; }
+
         public bool SetSwapchainParameters(
             IntPtr device,
             IntPtr window,
@@ -1867,7 +2622,7 @@ public sealed class RuntimeHostTests
             _ = device;
             _ = window;
             _ = composition;
-            _ = presentMode;
+            LastPresentMode = presentMode;
             return true;
         }
 

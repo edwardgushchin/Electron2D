@@ -24,6 +24,24 @@
 */
 namespace Electron2D;
 
+internal readonly record struct RuntimeHostTimingDiagnostics(
+    double InputTimeSeconds,
+    double PhysicsTimeSeconds,
+    double ProcessTimeSeconds,
+    double RenderPlanTimeSeconds,
+    double SubmitTimeSeconds,
+    double PresentTimeSeconds,
+    double SchedulerClampedTimeSeconds,
+    double SchedulerDroppedTimeSeconds,
+    double SchedulerRequestedWaitTimeSeconds,
+    double SchedulerObservedWaitTimeSeconds,
+    double SchedulerPauseWaitTimeSeconds,
+    int SchedulerTargetFrameRate,
+    double SchedulerTargetFrameIntervalSeconds,
+    int SchedulerPhysicsSteps,
+    int SchedulerSoftwareWaits,
+    int SchedulerPausedWaits);
+
 /// <summary>
 /// Describes the result of a visible Electron2D runtime loop.
 /// </summary>
@@ -69,6 +87,7 @@ internal sealed class RuntimeHostResult
     /// <param name="screenshotSaved">Whether a screenshot file was written.</param>
     /// <param name="diagnosticMessage">A host-level diagnostic message, or an empty string on success.</param>
     /// <param name="renderDiagnostics">The final runtime renderer diagnostics.</param>
+    /// <param name="timingDiagnostics">The final host frame scheduler diagnostics.</param>
     ///
     /// <remarks>
     /// The constructor stores values exactly as observed by
@@ -101,7 +120,8 @@ internal sealed class RuntimeHostResult
         string? screenshotPath,
         bool screenshotSaved,
         string diagnosticMessage,
-        RuntimeFrameDiagnostics renderDiagnostics)
+        RuntimeFrameDiagnostics renderDiagnostics,
+        RuntimeHostTimingDiagnostics timingDiagnostics)
     {
         Succeeded = succeeded;
         WindowCreated = windowCreated;
@@ -136,6 +156,22 @@ internal sealed class RuntimeHostResult
         MaxPresenterManagedBytesPerFrame = renderDiagnostics.MaxPresenterManagedBytesPerFrame;
         PresenterMeasuredFrames = renderDiagnostics.PresenterMeasuredFrames;
         CapturePresenterManagedBytesAllocated = renderDiagnostics.CapturePresenterManagedBytesAllocated;
+        InputTimeSeconds = timingDiagnostics.InputTimeSeconds;
+        PhysicsTimeSeconds = timingDiagnostics.PhysicsTimeSeconds;
+        ProcessTimeSeconds = timingDiagnostics.ProcessTimeSeconds;
+        RenderPlanTimeSeconds = timingDiagnostics.RenderPlanTimeSeconds;
+        SubmitTimeSeconds = timingDiagnostics.SubmitTimeSeconds;
+        PresentTimeSeconds = timingDiagnostics.PresentTimeSeconds;
+        SchedulerClampedTimeSeconds = timingDiagnostics.SchedulerClampedTimeSeconds;
+        SchedulerDroppedTimeSeconds = timingDiagnostics.SchedulerDroppedTimeSeconds;
+        SchedulerRequestedWaitTimeSeconds = timingDiagnostics.SchedulerRequestedWaitTimeSeconds;
+        SchedulerObservedWaitTimeSeconds = timingDiagnostics.SchedulerObservedWaitTimeSeconds;
+        SchedulerPauseWaitTimeSeconds = timingDiagnostics.SchedulerPauseWaitTimeSeconds;
+        SchedulerTargetFrameRate = timingDiagnostics.SchedulerTargetFrameRate;
+        SchedulerTargetFrameIntervalSeconds = timingDiagnostics.SchedulerTargetFrameIntervalSeconds;
+        SchedulerPhysicsSteps = timingDiagnostics.SchedulerPhysicsSteps;
+        SchedulerSoftwareWaits = timingDiagnostics.SchedulerSoftwareWaits;
+        SchedulerPausedWaits = timingDiagnostics.SchedulerPausedWaits;
     }
 
     /// <summary>
@@ -447,4 +483,132 @@ internal sealed class RuntimeHostResult
     /// <threadsafety>This property is immutable.</threadsafety>
     /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
     public long CapturePresenterManagedBytesAllocated { get; }
+
+    /// <summary>
+    /// Gets the accumulated host time spent dispatching input.
+    /// </summary>
+    /// <value>The input dispatch time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double InputTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated host time spent advancing fixed physics.
+    /// </summary>
+    /// <value>The physics callback time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double PhysicsTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated host time spent in process and draw callbacks.
+    /// </summary>
+    /// <value>The process callback time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double ProcessTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated host time spent building the render plan.
+    /// </summary>
+    /// <value>The render-plan build time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double RenderPlanTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated host time spent submitting frames to the presenter.
+    /// </summary>
+    /// <value>The presenter submission time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double SubmitTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated host time spent in the present phase.
+    /// </summary>
+    /// <value>The presenter presentation time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double PresentTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the interactive scheduler time removed by the maximum delta clamp.
+    /// </summary>
+    /// <value>The clamped time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double SchedulerClampedTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the interactive scheduler time dropped after bounded physics catch-up.
+    /// </summary>
+    /// <value>The dropped time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double SchedulerDroppedTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated software wait requested by the frame scheduler.
+    /// </summary>
+    /// <value>The requested deadline wait time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double SchedulerRequestedWaitTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated time actually spent in software deadline waits.
+    /// </summary>
+    /// <value>The observed deadline wait time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double SchedulerObservedWaitTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the accumulated time spent waiting while the runtime window was paused.
+    /// </summary>
+    /// <value>The observed pause wait time in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double SchedulerPauseWaitTimeSeconds { get; }
+
+    /// <summary>
+    /// Gets the scheduler-selected target frame rate.
+    /// </summary>
+    /// <value>The target frame rate in hertz.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int SchedulerTargetFrameRate { get; }
+
+    /// <summary>
+    /// Gets the scheduler-selected target frame interval.
+    /// </summary>
+    /// <value>The target frame interval in seconds.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public double SchedulerTargetFrameIntervalSeconds { get; }
+
+    /// <summary>
+    /// Gets the number of fixed physics steps executed by the host scheduler.
+    /// </summary>
+    /// <value>The accumulated physics scheduler step count.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int SchedulerPhysicsSteps { get; }
+
+    /// <summary>
+    /// Gets the number of software waits issued for frame deadlines.
+    /// </summary>
+    /// <value>The software wait count.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int SchedulerSoftwareWaits { get; }
+
+    /// <summary>
+    /// Gets the number of pause waits issued while the window was inactive.
+    /// </summary>
+    /// <value>The pause wait count.</value>
+    /// <threadsafety>This property is immutable.</threadsafety>
+    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    public int SchedulerPausedWaits { get; }
 }

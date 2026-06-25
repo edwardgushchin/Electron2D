@@ -149,7 +149,8 @@ internal sealed class RuntimeHostOptions
     public int FrameLimit { get; set; }
 
     /// <summary>
-    /// Gets or sets the fixed frame delta used by the preview runtime loop.
+    /// Gets or sets the deterministic delta used by non-scheduled bounded
+    /// runtime loops.
     /// </summary>
     ///
     /// <value>
@@ -157,9 +158,17 @@ internal sealed class RuntimeHostOptions
     /// </value>
     ///
     /// <remarks>
-    /// The same value is used for process and physics callbacks in the minimal
-    /// 0.1.0 Preview host. More advanced variable-frame scheduling can be added
-    /// without changing the current options contract.
+    /// <para>
+    /// Bounded runs that do not opt into scheduler pacing pass this value to
+    /// <see cref="SceneTree.ProcessFrame(double)"/> and to the scene-tree
+    /// physics accumulator. The individual physics callbacks still use the
+    /// scene tree's fixed physics step.
+    /// </para>
+    /// <para>
+    /// Interactive scheduled runs use this value only as a validated option.
+    /// Their process callbacks receive the scheduler's measured frame delta,
+    /// while physics catch-up advances with fixed physics steps.
+    /// </para>
     /// </remarks>
     ///
     /// <threadsafety>
@@ -172,6 +181,72 @@ internal sealed class RuntimeHostOptions
     ///
     /// <seealso cref="SceneTree"/>
     public double FixedDelta { get; set; } = 1d / 60d;
+
+    /// <summary>
+    /// Gets or sets the requested interactive scheduler frame rate.
+    /// </summary>
+    ///
+    /// <value>
+    /// A positive frame rate in hertz. Unsupported values are mapped to the
+    /// nearest scheduler-supported rate for the run.
+    /// </value>
+    ///
+    /// <remarks>
+    /// The 0.1.0 Preview scheduler supports 60, 120, 144 and 165 hertz
+    /// targets. The normalized value is used by the interactive scheduler and
+    /// is also passed to the presenter settings. Bounded runs with
+    /// <see cref="FrameLimit"/> greater than <c>0</c> remain deterministic by
+    /// default and do not use this value for pacing unless an internal caller
+    /// explicitly enables scheduler pacing.
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Configure it before the run starts.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public int TargetFrameRate { get; set; } = 60;
+
+    /// <summary>
+    /// Gets or sets whether the runtime host requests synchronized frame
+    /// presentation from the active presenter.
+    /// </summary>
+    ///
+    /// <value>
+    /// <c>true</c> to request synchronized presentation; otherwise,
+    /// <c>false</c> to request immediate presentation.
+    /// </value>
+    ///
+    /// <remarks>
+    /// <para>
+    /// This option is the requested presentation mode. The active presenter
+    /// reports whether synchronization was actually observed through
+    /// <see cref="IRuntimeFramePresenter.PresentationSyncObserved"/>.
+    /// </para>
+    /// <para>
+    /// When the presenter reports synchronized presentation, the interactive
+    /// scheduler relies on the presenter for pacing and does not add a second
+    /// software wait after presenting a frame. When synchronization is not
+    /// observed, the scheduler may issue its own deadline wait.
+    /// </para>
+    /// </remarks>
+    ///
+    /// <threadsafety>
+    /// This property is not synchronized. Configure it before the run starts.
+    /// </threadsafety>
+    ///
+    /// <since>
+    /// This property is available since Electron2D 0.1.0 Preview.
+    /// </since>
+    public bool PresentationSyncEnabled { get; set; } = true;
+
+    internal IRuntimeHostClock Clock { get; set; } = RuntimeHostSystemClock.Shared;
+
+    internal IRuntimeHostSleeper Sleeper { get; set; } = RuntimeHostThreadSleeper.Shared;
+
+    internal bool UseSchedulerForBoundedRuns { get; set; }
 
     /// <summary>
     /// Gets or sets an optional PNG path for the final presented frame.

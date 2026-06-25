@@ -313,7 +313,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/physics/fixed-physics-step-and-rigid-body-motion.md",
-                                                    "sha256":  "b278bf6ebbac5be77d94149fea6ac27dd70ac9b0aa3090318bb9aab19e9e9bde"
+                                                    "sha256":  "2b8d0f9d8a43f0fe57619fd210823aa9f693148f0d5e7ad135fdc3b7a86e4b56"
                                                 },
                                                 {
                                                     "path":  "docs/physics/physics-nodes-lifecycle.md",
@@ -413,7 +413,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/releases/0.1.0-preview.md",
-                                                    "sha256":  "54fb4629b25dd6e81d6b3bdf0c27ca2ffb42fc922614f48e20c807ecd9ea6d03"
+                                                    "sha256":  "93d45eefe5cff15d1e8b1d061a2631c760da2bc1c636554330cbe27437bf3fcd"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -425,7 +425,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/rendering/canvas-item-render-queue.md",
-                                                    "sha256":  "82473110e11273c7f0238b628f07d5710557759e989b6802b84e31d522aaaef4"
+                                                    "sha256":  "3c155b98f8bea36f95651900aa3b076b26f44a343933bfc15d264bf83cae0f72"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/canvas-node-submission-baseline.md",
@@ -445,7 +445,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/rendering/rendering-server.md",
-                                                    "sha256":  "3143a47a20f35a6aeb409b754cb7c29f06ef74ad03e76a08ca2c23d90f25c717"
+                                                    "sha256":  "0ecd457b936e63cc026501e4403794fffe3515f51bd2c7734977cc5a503480fe"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/sdl-gpu-lifecycle.md",
@@ -465,7 +465,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/rendering/texture-resource-baseline.md",
-                                                    "sha256":  "17c33ce91bbcce173f9de50eca8be59635e1ea4524e3ebd9bcb813fe6ce92580"
+                                                    "sha256":  "56c9204d65015cabe7500b998942d07db7f50131f23a3a2ef22aa36ed5db9f81"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/tilemap-layer-runtime-api.md",
@@ -529,7 +529,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/runtime/project-runtime-runner.md",
-                                                    "sha256":  "101e68a3e41a246ef2d5cc58ac246df798126f95a2e1d97df508d245ac95d9ad"
+                                                    "sha256":  "cc05f21f42a36de2e04789ef2ff8fae01453d36fcbbf7e52af7a4bf38d7387fa"
                                                 },
                                                 {
                                                     "path":  "docs/runtime/runtime-debug-bridge.md",
@@ -626,6 +626,50 @@
                                                 {
                                                     "path":  "docs/ui/theme-tooltips.md",
                                                     "sha256":  "9ec3dbb2511d8199ce4b3383d1f11d5c8bb32914e17a02797f236fca0dcb6830"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
+                                                    "sha256":  "64f5edf9155455623cf21f7e0bf7a18807b08023eda6c06a5da2ac93e341c5d9"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
+                                                    "sha256":  "0778f10723838fb3d6780bb8864bc3ea279d21ae6f3c69a8e835ec24af5fc0f0"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
+                                                    "sha256":  "c5d8055ef88aeb6c9e869d3f785b699b5db1453dc3f10468372b8e06c48fb3d3"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md",
+                                                    "sha256":  "22b21a6e16527bc6fe96d2cd33b28c6118da4d172707f56ab1af3b58469dd1f8"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md",
+                                                    "sha256":  "fd97a4fd8e4e89759a6e640c33bf809a8fbe3c4359cca4b89ae3a9531103b453"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md",
+                                                    "sha256":  "f4f356f5e1cc6330ef1e666ac421c5882bf321f9a0fe0039052edfaf0e5a1a49"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md",
+                                                    "sha256":  "caca19a048a89e10b27b46d93db01069c6fc9673f19a80d86f849368a73be183"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0220-audit-r01.md",
+                                                    "sha256":  "e53cb5953083e7127fc837d0462fb6ca32d6bf2b5258789376798f0d989c8c3b"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0220-audit-r02.md",
+                                                    "sha256":  "3a113419c46cec3008af392f28fb8182ef048676b1e15be10a984ba66c9b130c"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0220-audit-r03.md",
+                                                    "sha256":  "84a907359cfa504197dfde8d7427359e0c25a73ede7a9577b15c483ceadd14b9"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/runtime/t-0220-audit-r04.md",
+                                                    "sha256":  "e391567ddbdfc1c98e6ebe135b1c86b50afb3361019fc2c653db1073bae0e27a"
                                                 }
                                             ],
                           "examples":  {
@@ -837,7 +881,18 @@
                                                         "docs/ui/control-layout-core.md",
                                                         "docs/ui/public-api-gate.md",
                                                         "docs/ui/structured-controls.md",
-                                                        "docs/ui/theme-tooltips.md"
+                                                        "docs/ui/theme-tooltips.md",
+                                                        "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
+                                                        "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
+                                                        "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
+                                                        "docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md",
+                                                        "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md",
+                                                        "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md",
+                                                        "docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md",
+                                                        "docs/verdicts/runtime/t-0220-audit-r01.md",
+                                                        "docs/verdicts/runtime/t-0220-audit-r02.md",
+                                                        "docs/verdicts/runtime/t-0220-audit-r03.md",
+                                                        "docs/verdicts/runtime/t-0220-audit-r04.md"
                                                     ],
                                           "contract":  "Current implementation documentation and Agent-native cross-platform 2D game engine architecture notes."
                                       },
@@ -76312,11 +76367,11 @@
                         "id":  "doc:physics.fixed-physics-step-and-rigid-body-motion",
                         "kind":  "documentation",
                         "title":  "Fixed physics timestep, basic CCD и one-way platform baseline",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-25.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "25",
                                          "and",
                                          "baseline",
                                          "basic",
@@ -77029,14 +77084,14 @@
                         "id":  "doc:releases.0.1.0-preview",
                         "kind":  "documentation",
                         "title":  "Electron2D 0.1.0 Preview",
-                        "summary":  "Обновлено: 2026-06-24.",
+                        "summary":  "Обновлено: 2026-06-25.",
                         "keywords":  [
                                          "0",
                                          "06",
                                          "1",
                                          "2",
                                          "2026",
-                                         "24",
+                                         "25",
                                          "d",
                                          "docs",
                                          "electron",
@@ -77117,11 +77172,11 @@
                         "id":  "doc:rendering.canvas-item-render-queue",
                         "kind":  "documentation",
                         "title":  "CanvasItem render queue baseline",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "baseline",
                                          "canvas",
                                          "canvasitem",
@@ -77253,11 +77308,11 @@
                         "id":  "doc:rendering.rendering-server",
                         "kind":  "documentation",
                         "title":  "`RenderingServer` и renderer profiles",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-24.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "24",
                                          "docs",
                                          "md",
                                          "profiles",
@@ -77388,12 +77443,12 @@
                         "id":  "doc:rendering.texture-resource-baseline",
                         "kind":  "documentation",
                         "title":  "Texture2D resource baseline",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-25.",
                         "keywords":  [
                                          "06",
                                          "2",
                                          "2026",
-                                         "23",
+                                         "25",
                                          "baseline",
                                          "d",
                                          "docs",
@@ -77814,11 +77869,11 @@
                         "id":  "doc:runtime.project-runtime-runner",
                         "kind":  "documentation",
                         "title":  "Project runtime runner",
-                        "summary":  "Обновлено: 2026-06-24.",
+                        "summary":  "Обновлено: 2026-06-25.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "24",
+                                         "25",
                                          "docs",
                                          "md",
                                          "project",
@@ -78463,6 +78518,317 @@
                                      ],
                         "sourcePath":  "docs/ui/theme-tooltips.md",
                         "sourceId":  "doc:ui.theme-tooltips",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0219-runtime-presenter-audit",
+                        "kind":  "documentation",
+                        "title":  "Вердикт T-0219: runtime presenter и повторная приёмка",
+                        "summary":  "- Задача: `T-0219`.",
+                        "keywords":  [
+                                         "0219",
+                                         "audit",
+                                         "docs",
+                                         "md",
+                                         "presenter",
+                                         "runtime",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0219-runtime-presenter-audit",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0219: жизненный цикл и ошибки runtime presenter",
+                        "summary":  "- Задача: `T-0219`.",
+                        "keywords":  [
+                                         "0219",
+                                         "06",
+                                         "2026",
+                                         "25",
+                                         "audit",
+                                         "docs",
+                                         "error",
+                                         "lifecycle",
+                                         "md",
+                                         "presenter",
+                                         "runtime",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0219-runtime-presenter-reaudit-2026-06-25",
+                        "kind":  "documentation",
+                        "title":  "Повторный аудит T-0219: runtime presenter allocations",
+                        "summary":  "- Задача: `T-0219`.",
+                        "keywords":  [
+                                         "0219",
+                                         "06",
+                                         "2026",
+                                         "25",
+                                         "allocations",
+                                         "docs",
+                                         "md",
+                                         "presenter",
+                                         "reaudit",
+                                         "runtime",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0219-runtime-presenter-reaudit-2026-06-25",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0219-runtime-presenter-review-2026-06-25",
+                        "kind":  "documentation",
+                        "title":  "Повторная проверка T-0219: runtime presenter",
+                        "summary":  "- Задача: `T-0219`.",
+                        "keywords":  [
+                                         "0219",
+                                         "06",
+                                         "2026",
+                                         "25",
+                                         "docs",
+                                         "md",
+                                         "presenter",
+                                         "review",
+                                         "runtime",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0219-runtime-presenter-review-2026-06-25",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25",
+                        "kind":  "documentation",
+                        "title":  "Вердикт T-0219: ShaderCross shutdown и изоляция тестов",
+                        "summary":  "- Задача: `T-0219`.",
+                        "keywords":  [
+                                         "0219",
+                                         "06",
+                                         "2026",
+                                         "25",
+                                         "audit",
+                                         "cross",
+                                         "docs",
+                                         "isolation",
+                                         "md",
+                                         "presenter",
+                                         "runtime",
+                                         "shader",
+                                         "shadercross",
+                                         "shutdown",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25",
+                        "kind":  "documentation",
+                        "title":  "Вердикт T-0219: изоляция `ShaderCross` test scope",
+                        "summary":  "- Задача: `T-0219`.",
+                        "keywords":  [
+                                         "0219",
+                                         "06",
+                                         "2026",
+                                         "25",
+                                         "audit",
+                                         "cross",
+                                         "docs",
+                                         "md",
+                                         "presenter",
+                                         "runtime",
+                                         "scope",
+                                         "shader",
+                                         "shadercross",
+                                         "t",
+                                         "test",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0219: terminal lifecycle и fault injection runtime presenter",
+                        "summary":  "- Задача: `T-0219`.",
+                        "keywords":  [
+                                         "0219",
+                                         "06",
+                                         "2026",
+                                         "25",
+                                         "audit",
+                                         "docs",
+                                         "fault",
+                                         "injection",
+                                         "lifecycle",
+                                         "md",
+                                         "presenter",
+                                         "runtime",
+                                         "t",
+                                         "terminal",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0220-audit-r01",
+                        "kind":  "documentation",
+                        "title":  "Внешний аудит T-0220 r01",
+                        "summary":  "- Задача: T-0220",
+                        "keywords":  [
+                                         "01",
+                                         "0220",
+                                         "audit",
+                                         "docs",
+                                         "md",
+                                         "r",
+                                         "r01",
+                                         "runtime",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0220-audit-r01.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0220-audit-r01",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0220-audit-r02",
+                        "kind":  "documentation",
+                        "title":  "Verdict: T-0220 audit r02",
+                        "summary":  "- Задача: T-0220",
+                        "keywords":  [
+                                         "02",
+                                         "0220",
+                                         "audit",
+                                         "docs",
+                                         "md",
+                                         "r",
+                                         "r02",
+                                         "runtime",
+                                         "t",
+                                         "verdict",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0220-audit-r02.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0220-audit-r02",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0220-audit-r03",
+                        "kind":  "documentation",
+                        "title":  "External Audit Verdict: T-0220 r03",
+                        "summary":  "- Задача: T-0220",
+                        "keywords":  [
+                                         "0220",
+                                         "03",
+                                         "audit",
+                                         "docs",
+                                         "external",
+                                         "md",
+                                         "r",
+                                         "r03",
+                                         "runtime",
+                                         "t",
+                                         "verdict",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0220-audit-r03.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0220-audit-r03",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.runtime.t-0220-audit-r04",
+                        "kind":  "documentation",
+                        "title":  "Verdict: T-0220 audit r04",
+                        "summary":  "- Задача: `T-0220`",
+                        "keywords":  [
+                                         "0220",
+                                         "04",
+                                         "audit",
+                                         "docs",
+                                         "md",
+                                         "r",
+                                         "r04",
+                                         "runtime",
+                                         "t",
+                                         "verdict",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/runtime/t-0220-audit-r04.md",
+                        "sourceId":  "doc:verdicts.runtime.t-0220-audit-r04",
                         "audiences":  [
                                           "human",
                                           "ai",

@@ -44,7 +44,7 @@ namespace Electron2D;
 ///
 public class SceneTree : Object
 {
-    private const double FixedPhysicsStep = 1d / 60d;
+    internal const double FixedPhysicsStep = 1d / 60d;
     private const double PhysicsStepEpsilon = 0.000000000001d;
 
     private readonly List<SceneTreeDiagnostic> _diagnostics = new();
@@ -513,6 +513,15 @@ public class SceneTree : Object
                     _physicsAccumulator = 0d;
                 }
             }
+        });
+        Input.FlushFrameTransitions();
+    }
+
+    internal void PhysicsFixedStep()
+    {
+        RunTraversal(() =>
+        {
+            Root.PhysicsProcessRecursive(FixedPhysicsStep);
         });
         Input.FlushFrameTransitions();
     }

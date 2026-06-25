@@ -23,6 +23,7 @@
     SOFTWARE.
 */
 using System.Buffers.Binary;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 using SDL3;
@@ -31,6 +32,11 @@ namespace Electron2D;
 
 internal static class RuntimeHost
 {
+    private const double MaxDeltaTimeSeconds = 0.25d;
+    private const int MaxPhysicsStepsPerFrame = 5;
+    private static readonly TimeSpan WindowPauseSleep = TimeSpan.FromMilliseconds(50);
+    private static readonly int[] SupportedTargetFrameRates = [60, 120, 144, 165];
+
     /// <summary>
     /// Runs a main scene node in a visible Electron2D runtime window.
     /// </summary>
@@ -79,6 +85,48 @@ internal static class RuntimeHost
         SetRootViewportSize(tree, runOptions.WindowSize);
         tree.Root.AddChild(mainScene);
         return Run(tree, runOptions);
+    }
+
+    internal static RuntimeHostResult Run(
+        SceneTree sceneTree,
+        RuntimeHostOptions? options,
+        RuntimeHostLoopDriver loopDriver)
+    {
+        ArgumentNullException.ThrowIfNull(sceneTree);
+        ArgumentNullException.ThrowIfNull(loopDriver);
+
+        var runOptions = options ?? new RuntimeHostOptions();
+        ValidateOptions(runOptions);
+        SetRootViewportSize(sceneTree, runOptions.WindowSize);
+
+        var dependencies = new RuntimeHostLoopDependencies(
+            loopDriver.Presenter,
+            windowCreated: true,
+            loopDriver.WindowShown,
+            loopDriver.VideoDriver,
+            () => new RuntimeHostInputDispatchResult(loopDriver.DispatchInput?.Invoke() ?? 0, CloseRequested: false),
+            () => loopDriver.IsWindowPaused?.Invoke() ?? false,
+            () =>
+            {
+                var windowSize = loopDriver.WindowSize.X > 0 && loopDriver.WindowSize.Y > 0
+                    ? loopDriver.WindowSize
+                    : runOptions.WindowSize;
+                var pixelSize = loopDriver.PixelSize.X > 0 && loopDriver.PixelSize.Y > 0
+                    ? loopDriver.PixelSize
+                    : windowSize;
+                return new RuntimeHostWindowMetrics(
+                    windowSize.X,
+                    windowSize.Y,
+                    pixelSize.X,
+                    pixelSize.Y);
+            })
+        {
+            StopAfterPresentedFrames = loopDriver.StopAfterPresentedFrames,
+            AfterFramePresented = loopDriver.AfterFramePresented,
+            BeforeRenderPlan = loopDriver.BeforeRenderPlan
+        };
+
+        return RunLoop(sceneTree, runOptions, dependencies);
     }
 
     /// <summary>
@@ -146,97 +194,36 @@ internal static class RuntimeHost
             }
 
             var shown = SDL.ShowWindow(window);
-            var targetFrames = runOptions.FrameLimit == 0 ? int.MaxValue : runOptions.FrameLimit;
             var closeRequested = false;
-            var eventPumpObserved = false;
-            var framePresented = false;
-            var inputEventsDispatched = 0;
-            var frameCount = 0;
-            var finalDrawCommands = 0;
-            RuntimeFrameSnapshot? lastSnapshot = null;
-            var renderDiagnostics = new RuntimeFrameDiagnostics(
-                RuntimeFramePresenter.RenderSource,
-                RuntimeFramePresenter.GpuPresentationBackend,
-                UsedFallbackPresenter: false,
-                FallbackReason: string.Empty,
-                RenderBatches: 0,
-                ActualDrawCalls: 0,
-                TextureSwitches: 0,
-                PipelineSwitches: 0,
-                TextureUploads: 0,
-                TextureCacheHits: 0,
-                PresentationResourcesCreated: 0,
-                PresentationResourcesRecreated: 0,
-                ObservedPresentationResizes: 0,
-                PresentationBackendReconfigurations: 0,
-                MaxPresenterManagedBytesPerFrame: 0,
-                PresenterMeasuredFrames: 0,
-                CapturePresenterManagedBytesAllocated: 0);
-            using var presenter = new RuntimeFramePresenter(window, runOptions.WindowSize);
-            var submissionContext = new CanvasSubmissionContext();
-
-            while (!closeRequested && frameCount < targetFrames)
-            {
-                eventPumpObserved = true;
-                inputEventsDispatched += DispatchPendingInput(sceneTree, runOptions.QuitOnEscape, ref closeRequested);
-
-                sceneTree.PhysicsFrame(runOptions.FixedDelta);
-                sceneTree.ProcessFrame(runOptions.FixedDelta);
-                inputEventsDispatched += DispatchScriptedInput(
-                    sceneTree,
-                    runOptions,
-                    frameCount,
-                    runOptions.WindowSize.X,
-                    runOptions.WindowSize.Y);
-
-                var plan = submissionContext.BuildPlan(sceneTree.Root);
-                finalDrawCommands = plan.Commands.Count;
-                var captureFrame = ShouldCaptureFrame(runOptions.ScreenshotPath, runOptions.FrameLimit, frameCount, targetFrames);
-                var presentedFrame = presenter.Present(plan, runOptions.WindowSize, runOptions.ClearColor, captureFrame);
-                renderDiagnostics = presentedFrame.Diagnostics;
-                if (presentedFrame.Screenshot is not null)
-                {
-                    lastSnapshot = presentedFrame.Screenshot;
-                }
-
-                framePresented = true;
-                frameCount++;
-
-                if (runOptions.FrameLimit == 0)
-                {
-                    Thread.Sleep(16);
-                }
-            }
-
-            var screenshotSaved = SaveScreenshotIfRequested(
-                runOptions.ScreenshotPath,
-                lastSnapshot);
-            var windowWidth = runOptions.WindowSize.X;
-            var windowHeight = runOptions.WindowSize.Y;
-            _ = SDL.GetWindowSize(window, out windowWidth, out windowHeight);
-
-            var pixelWidth = runOptions.WindowSize.X;
-            var pixelHeight = runOptions.WindowSize.Y;
-            _ = SDL.GetWindowSizeInPixels(window, out pixelWidth, out pixelHeight);
-
-            return new RuntimeHostResult(
-                succeeded: framePresented,
+            var presentationSettings = new RuntimePresentationSettings(
+                runOptions.PresentationSyncEnabled,
+                NormalizeTargetFrameRate(runOptions.TargetFrameRate));
+            using var presenter = new RuntimeFramePresenter(window, runOptions.WindowSize, presentationSettings);
+            var dependencies = new RuntimeHostLoopDependencies(
+                presenter,
                 windowCreated: true,
-                windowShown: shown,
-                framePresented,
-                eventPumpObserved,
-                inputEventsDispatched,
-                frameCount,
-                finalDrawCommands,
-                windowWidth,
-                windowHeight,
-                pixelWidth,
-                pixelHeight,
+                shown,
                 SDL.GetCurrentVideoDriver() ?? "unknown",
-                string.IsNullOrWhiteSpace(runOptions.ScreenshotPath) ? null : runOptions.ScreenshotPath,
-                screenshotSaved,
-                framePresented ? string.Empty : "Runtime host did not present a frame.",
-                renderDiagnostics);
+                () =>
+                {
+                    var dispatched = DispatchPendingInput(sceneTree, runOptions.QuitOnEscape, ref closeRequested);
+                    return new RuntimeHostInputDispatchResult(dispatched, closeRequested);
+                },
+                () => IsWindowPaused(window),
+                () =>
+                {
+                    var windowWidth = runOptions.WindowSize.X;
+                    var windowHeight = runOptions.WindowSize.Y;
+                    _ = SDL.GetWindowSize(window, out windowWidth, out windowHeight);
+
+                    var pixelWidth = runOptions.WindowSize.X;
+                    var pixelHeight = runOptions.WindowSize.Y;
+                    _ = SDL.GetWindowSizeInPixels(window, out pixelWidth, out pixelHeight);
+
+                    return new RuntimeHostWindowMetrics(windowWidth, windowHeight, pixelWidth, pixelHeight);
+                });
+
+            return RunLoop(sceneTree, runOptions, dependencies);
         }
         finally
         {
@@ -247,6 +234,155 @@ internal static class RuntimeHost
 
             SDL.Quit();
         }
+    }
+
+    private static RuntimeHostResult RunLoop(
+        SceneTree sceneTree,
+        RuntimeHostOptions runOptions,
+        RuntimeHostLoopDependencies dependencies)
+    {
+        var selectedTargetFrameRate = NormalizeTargetFrameRate(runOptions.TargetFrameRate);
+        var useScheduler = runOptions.FrameLimit == 0 || runOptions.UseSchedulerForBoundedRuns;
+        var scheduler = useScheduler
+            ? new RuntimeHostFrameScheduler(SceneTree.FixedPhysicsStep, selectedTargetFrameRate, runOptions.Clock.Now)
+            : null;
+        var timing = new RuntimeHostTimingAccumulator(selectedTargetFrameRate);
+        var targetFrames = runOptions.FrameLimit == 0 ? int.MaxValue : runOptions.FrameLimit;
+        var closeRequested = false;
+        var eventPumpObserved = false;
+        var framePresented = false;
+        var inputEventsDispatched = 0;
+        var frameCount = 0;
+        var finalDrawCommands = 0;
+        RuntimeFrameSnapshot? lastSnapshot = null;
+        var renderDiagnostics = CreateEmptyRenderDiagnostics();
+        var submissionContext = new CanvasSubmissionContext();
+
+        while (!closeRequested &&
+            frameCount < targetFrames &&
+            frameCount < dependencies.StopAfterPresentedFrames)
+        {
+            var frameStart = runOptions.Clock.Now;
+            eventPumpObserved = true;
+            var inputStart = runOptions.Clock.Now;
+            var inputResult = dependencies.DispatchInput();
+            timing.InputTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, inputStart);
+            inputEventsDispatched += inputResult.DispatchedEvents;
+            closeRequested |= inputResult.CloseRequested;
+
+            if (useScheduler && dependencies.IsWindowPaused())
+            {
+                scheduler!.ResetPrevious(runOptions.Clock.Now);
+                var pauseStart = runOptions.Clock.Now;
+                runOptions.Sleeper.Sleep(WindowPauseSleep);
+                timing.SchedulerPauseWaitTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, pauseStart);
+                timing.SchedulerPausedWaits++;
+                scheduler.ResetPrevious(runOptions.Clock.Now);
+                continue;
+            }
+
+            var processDelta = runOptions.FixedDelta;
+            if (useScheduler)
+            {
+                var sample = scheduler!.BeginFrame(frameStart);
+                processDelta = sample.DeltaTimeSeconds;
+                timing.SchedulerClampedTimeSeconds += sample.ClampedTimeSeconds;
+
+                var physicsStart = runOptions.Clock.Now;
+                var physics = scheduler.AdvancePhysics(sceneTree);
+                timing.PhysicsTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, physicsStart);
+                timing.SchedulerPhysicsSteps += physics.Steps;
+                timing.SchedulerDroppedTimeSeconds += physics.DroppedTimeSeconds;
+            }
+            else
+            {
+                var physicsStart = runOptions.Clock.Now;
+                sceneTree.PhysicsFrame(runOptions.FixedDelta);
+                timing.PhysicsTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, physicsStart);
+            }
+
+            var processStart = runOptions.Clock.Now;
+            sceneTree.ProcessFrame(processDelta);
+            timing.ProcessTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, processStart);
+            var scriptedInputStart = runOptions.Clock.Now;
+            inputEventsDispatched += DispatchScriptedInput(
+                sceneTree,
+                runOptions,
+                frameCount,
+                runOptions.WindowSize.X,
+                runOptions.WindowSize.Y);
+            timing.InputTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, scriptedInputStart);
+
+            var renderPlanStart = runOptions.Clock.Now;
+            dependencies.BeforeRenderPlan?.Invoke();
+            var plan = submissionContext.BuildPlan(sceneTree.Root);
+            timing.RenderPlanTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, renderPlanStart);
+            finalDrawCommands = plan.Commands.Count;
+
+            var captureFrame = ShouldCaptureFrame(runOptions.ScreenshotPath, runOptions.FrameLimit, frameCount, targetFrames);
+            var submitStart = runOptions.Clock.Now;
+            var presentedFrame = dependencies.Presenter.Present(plan, runOptions.WindowSize, runOptions.ClearColor, captureFrame);
+            var presenterElapsedSeconds = ElapsedSeconds(runOptions.Clock.Now, submitStart);
+            var presenterSubmitSeconds = dependencies.Presenter.LastSubmitTimeSeconds;
+            var presenterPresentSeconds = dependencies.Presenter.LastPresentTimeSeconds;
+            if (presenterSubmitSeconds > 0d || presenterPresentSeconds > 0d)
+            {
+                timing.SubmitTimeSeconds += presenterSubmitSeconds;
+                timing.PresentTimeSeconds += presenterPresentSeconds;
+            }
+            else
+            {
+                timing.SubmitTimeSeconds += presenterElapsedSeconds;
+            }
+
+            renderDiagnostics = presentedFrame.Diagnostics;
+            if (presentedFrame.Screenshot is not null)
+            {
+                lastSnapshot = presentedFrame.Screenshot;
+            }
+
+            framePresented = true;
+            frameCount++;
+            dependencies.AfterFramePresented?.Invoke(frameCount);
+
+            if (useScheduler && !dependencies.Presenter.PresentationSyncObserved)
+            {
+                var wait = scheduler!.GetDeadlineWait(frameStart, runOptions.Clock.Now);
+                if (wait > TimeSpan.Zero)
+                {
+                    timing.SchedulerRequestedWaitTimeSeconds += wait.TotalSeconds;
+                    var waitStart = runOptions.Clock.Now;
+                    runOptions.Sleeper.Sleep(wait);
+                    timing.SchedulerObservedWaitTimeSeconds += ElapsedSeconds(runOptions.Clock.Now, waitStart);
+                    timing.SchedulerSoftwareWaits++;
+                }
+            }
+        }
+
+        var screenshotSaved = SaveScreenshotIfRequested(
+            runOptions.ScreenshotPath,
+            lastSnapshot);
+        var metrics = dependencies.GetWindowMetrics();
+
+        return new RuntimeHostResult(
+            succeeded: framePresented,
+            windowCreated: dependencies.WindowCreated,
+            windowShown: dependencies.WindowShown,
+            framePresented: framePresented,
+            eventPumpObserved: eventPumpObserved,
+            inputEventsDispatched: inputEventsDispatched,
+            frameCount: frameCount,
+            drawCommands: finalDrawCommands,
+            windowWidth: metrics.WindowWidth,
+            windowHeight: metrics.WindowHeight,
+            pixelWidth: metrics.PixelWidth,
+            pixelHeight: metrics.PixelHeight,
+            videoDriver: dependencies.VideoDriver,
+            screenshotPath: string.IsNullOrWhiteSpace(runOptions.ScreenshotPath) ? null : runOptions.ScreenshotPath,
+            screenshotSaved: screenshotSaved,
+            diagnosticMessage: framePresented ? string.Empty : "Runtime host did not present a frame.",
+            renderDiagnostics: renderDiagnostics,
+            timingDiagnostics: timing.ToDiagnostics());
     }
 
     private static void ValidateOptions(RuntimeHostOptions options)
@@ -266,6 +402,14 @@ internal static class RuntimeHost
         {
             throw new ArgumentException("Runtime fixed delta must be a positive finite value.", nameof(options));
         }
+
+        if (options.TargetFrameRate <= 0)
+        {
+            throw new ArgumentException("Runtime target frame rate must be positive.", nameof(options));
+        }
+
+        ArgumentNullException.ThrowIfNull(options.Clock);
+        ArgumentNullException.ThrowIfNull(options.Sleeper);
 
         if (!float.IsFinite(options.ClearColor.R) ||
             !float.IsFinite(options.ClearColor.G) ||
@@ -303,24 +447,62 @@ internal static class RuntimeHost
             string.IsNullOrWhiteSpace(options.ScreenshotPath) ? null : options.ScreenshotPath,
             screenshotSaved: false,
             message,
-            new RuntimeFrameDiagnostics(
-                RuntimeFramePresenter.RenderSource,
-                RuntimeFramePresenter.GpuPresentationBackend,
-                UsedFallbackPresenter: false,
-                FallbackReason: string.Empty,
-                RenderBatches: 0,
-                ActualDrawCalls: 0,
-                TextureSwitches: 0,
-                PipelineSwitches: 0,
-                TextureUploads: 0,
-                TextureCacheHits: 0,
-                PresentationResourcesCreated: 0,
-                PresentationResourcesRecreated: 0,
-                ObservedPresentationResizes: 0,
-                PresentationBackendReconfigurations: 0,
-                MaxPresenterManagedBytesPerFrame: 0,
-                PresenterMeasuredFrames: 0,
-                CapturePresenterManagedBytesAllocated: 0));
+            CreateEmptyRenderDiagnostics(),
+            new RuntimeHostTimingAccumulator(NormalizeTargetFrameRate(options.TargetFrameRate)).ToDiagnostics());
+    }
+
+    private static RuntimeFrameDiagnostics CreateEmptyRenderDiagnostics()
+    {
+        return new RuntimeFrameDiagnostics(
+            RuntimeFramePresenter.RenderSource,
+            RuntimeFramePresenter.GpuPresentationBackend,
+            UsedFallbackPresenter: false,
+            FallbackReason: string.Empty,
+            RenderBatches: 0,
+            ActualDrawCalls: 0,
+            TextureSwitches: 0,
+            PipelineSwitches: 0,
+            TextureUploads: 0,
+            TextureCacheHits: 0,
+            PresentationResourcesCreated: 0,
+            PresentationResourcesRecreated: 0,
+            ObservedPresentationResizes: 0,
+            PresentationBackendReconfigurations: 0,
+            MaxPresenterManagedBytesPerFrame: 0,
+            PresenterMeasuredFrames: 0,
+            CapturePresenterManagedBytesAllocated: 0);
+    }
+
+    private static bool IsWindowPaused(IntPtr window)
+    {
+        var flags = SDL.GetWindowFlags(window);
+        var hiddenOrMinimized = (flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0;
+        var hasFocus = (flags & (SDL.WindowFlags.InputFocus | SDL.WindowFlags.MouseFocus)) != 0;
+        return hiddenOrMinimized || !hasFocus;
+    }
+
+    private static int NormalizeTargetFrameRate(int targetFrameRate)
+    {
+        var nearest = SupportedTargetFrameRates[0];
+        var nearestDistance = Math.Abs(targetFrameRate - nearest);
+        for (var index = 1; index < SupportedTargetFrameRates.Length; index++)
+        {
+            var candidate = SupportedTargetFrameRates[index];
+            var distance = Math.Abs(targetFrameRate - candidate);
+            if (distance < nearestDistance)
+            {
+                nearest = candidate;
+                nearestDistance = distance;
+            }
+        }
+
+        return nearest;
+    }
+
+    private static double ElapsedSeconds(TimeSpan now, TimeSpan start)
+    {
+        var elapsed = now - start;
+        return elapsed <= TimeSpan.Zero ? 0d : elapsed.TotalSeconds;
     }
 
     private static int DispatchPendingInput(SceneTree tree, bool quitOnEscape, ref bool closeRequested)
@@ -410,6 +592,251 @@ internal static class RuntimeHost
         File.WriteAllBytes(fullPath, RuntimePngEncoder.Encode(snapshot.Width, snapshot.Height, snapshot.RgbaPixels));
         return true;
     }
+
+    private sealed class RuntimeHostLoopDependencies
+    {
+        public RuntimeHostLoopDependencies(
+            IRuntimeFramePresenter presenter,
+            bool windowCreated,
+            bool windowShown,
+            string videoDriver,
+            Func<RuntimeHostInputDispatchResult> dispatchInput,
+            Func<bool> isWindowPaused,
+            Func<RuntimeHostWindowMetrics> getWindowMetrics)
+        {
+            ArgumentNullException.ThrowIfNull(presenter);
+            ArgumentNullException.ThrowIfNull(videoDriver);
+            ArgumentNullException.ThrowIfNull(dispatchInput);
+            ArgumentNullException.ThrowIfNull(isWindowPaused);
+            ArgumentNullException.ThrowIfNull(getWindowMetrics);
+
+            Presenter = presenter;
+            WindowCreated = windowCreated;
+            WindowShown = windowShown;
+            VideoDriver = videoDriver;
+            DispatchInput = dispatchInput;
+            IsWindowPaused = isWindowPaused;
+            GetWindowMetrics = getWindowMetrics;
+        }
+
+        public IRuntimeFramePresenter Presenter { get; }
+
+        public bool WindowCreated { get; }
+
+        public bool WindowShown { get; }
+
+        public string VideoDriver { get; }
+
+        public Func<RuntimeHostInputDispatchResult> DispatchInput { get; }
+
+        public Func<bool> IsWindowPaused { get; }
+
+        public Func<RuntimeHostWindowMetrics> GetWindowMetrics { get; }
+
+        public int StopAfterPresentedFrames { get; init; } = int.MaxValue;
+
+        public Action<int>? AfterFramePresented { get; init; }
+
+        public Action? BeforeRenderPlan { get; init; }
+    }
+
+    private sealed class RuntimeHostFrameScheduler
+    {
+        private const double PhysicsStepEpsilon = 0.0000001d;
+        private readonly double fixedDelta;
+        private readonly TimeSpan frameInterval;
+        private TimeSpan previous;
+        private double physicsAccumulator;
+
+        public RuntimeHostFrameScheduler(double fixedDelta, int targetFrameRate, TimeSpan initialTimestamp)
+        {
+            this.fixedDelta = fixedDelta;
+            frameInterval = TimeSpan.FromSeconds(1d / targetFrameRate);
+            previous = initialTimestamp;
+        }
+
+        public RuntimeSchedulerFrameSample BeginFrame(TimeSpan now)
+        {
+            var measuredTime = now - previous;
+            if (measuredTime < TimeSpan.Zero)
+            {
+                measuredTime = TimeSpan.Zero;
+            }
+
+            previous = now;
+            var measuredSeconds = measuredTime.TotalSeconds;
+            var deltaSeconds = Math.Min(measuredSeconds, MaxDeltaTimeSeconds);
+            physicsAccumulator += deltaSeconds;
+            return new RuntimeSchedulerFrameSample(
+                measuredSeconds,
+                deltaSeconds,
+                Math.Max(0d, measuredSeconds - deltaSeconds));
+        }
+
+        public RuntimeSchedulerPhysicsResult AdvancePhysics(SceneTree sceneTree)
+        {
+            var steps = 0;
+            while (physicsAccumulator + PhysicsStepEpsilon >= fixedDelta && steps < MaxPhysicsStepsPerFrame)
+            {
+                sceneTree.PhysicsFixedStep();
+                physicsAccumulator -= fixedDelta;
+                steps++;
+            }
+
+            var droppedTime = 0d;
+            if (physicsAccumulator + PhysicsStepEpsilon >= fixedDelta)
+            {
+                droppedTime = physicsAccumulator;
+                physicsAccumulator = 0d;
+            }
+            else if (physicsAccumulator < PhysicsStepEpsilon)
+            {
+                physicsAccumulator = 0d;
+            }
+
+            return new RuntimeSchedulerPhysicsResult(steps, droppedTime);
+        }
+
+        public TimeSpan GetDeadlineWait(TimeSpan frameStart, TimeSpan now)
+        {
+            var deadline = frameStart + frameInterval;
+            return now >= deadline ? TimeSpan.Zero : deadline - now;
+        }
+
+        public void ResetPrevious(TimeSpan now)
+        {
+            previous = now;
+        }
+    }
+
+    private sealed class RuntimeHostTimingAccumulator
+    {
+        private readonly int targetFrameRate;
+
+        public RuntimeHostTimingAccumulator(int targetFrameRate)
+        {
+            this.targetFrameRate = targetFrameRate;
+        }
+
+        public double InputTimeSeconds { get; set; }
+
+        public double PhysicsTimeSeconds { get; set; }
+
+        public double ProcessTimeSeconds { get; set; }
+
+        public double RenderPlanTimeSeconds { get; set; }
+
+        public double SubmitTimeSeconds { get; set; }
+
+        public double PresentTimeSeconds { get; set; }
+
+        public double SchedulerClampedTimeSeconds { get; set; }
+
+        public double SchedulerDroppedTimeSeconds { get; set; }
+
+        public double SchedulerRequestedWaitTimeSeconds { get; set; }
+
+        public double SchedulerObservedWaitTimeSeconds { get; set; }
+
+        public double SchedulerPauseWaitTimeSeconds { get; set; }
+
+        public int SchedulerPhysicsSteps { get; set; }
+
+        public int SchedulerSoftwareWaits { get; set; }
+
+        public int SchedulerPausedWaits { get; set; }
+
+        public RuntimeHostTimingDiagnostics ToDiagnostics()
+        {
+            return new RuntimeHostTimingDiagnostics(
+                InputTimeSeconds,
+                PhysicsTimeSeconds,
+                ProcessTimeSeconds,
+                RenderPlanTimeSeconds,
+                SubmitTimeSeconds,
+                PresentTimeSeconds,
+                SchedulerClampedTimeSeconds,
+                SchedulerDroppedTimeSeconds,
+                SchedulerRequestedWaitTimeSeconds,
+                SchedulerObservedWaitTimeSeconds,
+                SchedulerPauseWaitTimeSeconds,
+                targetFrameRate,
+                1d / targetFrameRate,
+                SchedulerPhysicsSteps,
+                SchedulerSoftwareWaits,
+                SchedulerPausedWaits);
+        }
+    }
+
+    private readonly record struct RuntimeHostInputDispatchResult(int DispatchedEvents, bool CloseRequested);
+
+    private readonly record struct RuntimeHostWindowMetrics(int WindowWidth, int WindowHeight, int PixelWidth, int PixelHeight);
+
+    private readonly record struct RuntimeSchedulerFrameSample(
+        double MeasuredTimeSeconds,
+        double DeltaTimeSeconds,
+        double ClampedTimeSeconds);
+
+    private readonly record struct RuntimeSchedulerPhysicsResult(int Steps, double DroppedTimeSeconds);
+}
+
+internal interface IRuntimeHostClock
+{
+    TimeSpan Now { get; }
+}
+
+internal sealed class RuntimeHostSystemClock : IRuntimeHostClock
+{
+    public static RuntimeHostSystemClock Shared { get; } = new();
+
+    public TimeSpan Now => Stopwatch.GetElapsedTime(0, Stopwatch.GetTimestamp());
+}
+
+internal interface IRuntimeHostSleeper
+{
+    void Sleep(TimeSpan duration);
+}
+
+internal sealed class RuntimeHostThreadSleeper : IRuntimeHostSleeper
+{
+    public static RuntimeHostThreadSleeper Shared { get; } = new();
+
+    public void Sleep(TimeSpan duration)
+    {
+        if (duration > TimeSpan.Zero)
+        {
+            Thread.Sleep(duration);
+        }
+    }
+}
+
+internal sealed class RuntimeHostLoopDriver
+{
+    public RuntimeHostLoopDriver(IRuntimeFramePresenter presenter)
+    {
+        ArgumentNullException.ThrowIfNull(presenter);
+        Presenter = presenter;
+    }
+
+    public IRuntimeFramePresenter Presenter { get; }
+
+    public int StopAfterPresentedFrames { get; set; } = int.MaxValue;
+
+    public Action<int>? AfterFramePresented { get; set; }
+
+    public Func<int>? DispatchInput { get; set; }
+
+    public Action? BeforeRenderPlan { get; set; }
+
+    public Func<bool>? IsWindowPaused { get; set; }
+
+    public bool WindowShown { get; set; } = true;
+
+    public string VideoDriver { get; set; } = "injected";
+
+    public Vector2I WindowSize { get; set; }
+
+    public Vector2I PixelSize { get; set; }
 }
 
 internal static class RuntimePreviewFrameRasterizer

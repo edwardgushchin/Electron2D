@@ -22,6 +22,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SDL3;
 
@@ -41,6 +42,14 @@ internal sealed class RuntimeSdlRendererFramePresenter : IRuntimeFramePresenter
     private bool disposed;
 
     public RuntimeSdlRendererFramePresenter(IntPtr window, Vector2I presentationSize)
+        : this(window, presentationSize, RuntimePresentationSettings.Default)
+    {
+    }
+
+    public RuntimeSdlRendererFramePresenter(
+        IntPtr window,
+        Vector2I presentationSize,
+        RuntimePresentationSettings presentationSettings)
     {
         if (window == IntPtr.Zero)
         {
@@ -54,8 +63,15 @@ internal sealed class RuntimeSdlRendererFramePresenter : IRuntimeFramePresenter
             throw new InvalidOperationException("Runtime SDL renderer fallback creation failed: " + SDL.GetError());
         }
 
+        PresentationSyncObserved = ConfigurePresentationSync(presentationSettings.SyncRequested);
         this.presentationSize = presentationSize;
     }
+
+    public bool PresentationSyncObserved { get; }
+
+    public double LastSubmitTimeSeconds { get; private set; }
+
+    public double LastPresentTimeSeconds { get; private set; }
 
     public RuntimePresentedFrame Present(
         CanvasItemRenderPlan renderPlan,
@@ -66,6 +82,7 @@ internal sealed class RuntimeSdlRendererFramePresenter : IRuntimeFramePresenter
         ArgumentNullException.ThrowIfNull(renderPlan);
         ThrowIfDisposed();
 
+        var frameStartTimestamp = Stopwatch.GetTimestamp();
         UpdateObservedPresentationSize(windowSize);
 
         SetDrawBlendMode();
@@ -83,10 +100,14 @@ internal sealed class RuntimeSdlRendererFramePresenter : IRuntimeFramePresenter
         }
 
         var screenshot = captureFrame ? CaptureCurrentRenderTarget() : null;
+        var presentStartTimestamp = Stopwatch.GetTimestamp();
         if (!SDL.RenderPresent(renderer))
         {
             throw new InvalidOperationException("Runtime SDL renderer fallback presentation failed: " + SDL.GetError());
         }
+
+        LastSubmitTimeSeconds = Stopwatch.GetElapsedTime(frameStartTimestamp, presentStartTimestamp).TotalSeconds;
+        LastPresentTimeSeconds = Stopwatch.GetElapsedTime(presentStartTimestamp, Stopwatch.GetTimestamp()).TotalSeconds;
 
         return new RuntimePresentedFrame(
             new RuntimeFrameDiagnostics(
@@ -155,6 +176,19 @@ internal sealed class RuntimeSdlRendererFramePresenter : IRuntimeFramePresenter
 
             SDL.DestroySurface(surface);
         }
+    }
+
+    private bool ConfigurePresentationSync(bool syncRequested)
+    {
+        var requestedValue = syncRequested ? 1 : 0;
+        if (!SDL.SetRenderVSync(renderer, requestedValue))
+        {
+            return false;
+        }
+
+        return SDL.GetRenderVSync(renderer, out var observedValue)
+            ? observedValue != 0
+            : syncRequested;
     }
 
     private static RuntimeFrameSnapshot CopySurfaceToSnapshot(IntPtr surfaceHandle)

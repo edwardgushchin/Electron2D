@@ -22,6 +22,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SDL3;
 
@@ -29,11 +30,22 @@ namespace Electron2D;
 
 internal interface IRuntimeFramePresenter : IDisposable
 {
+    bool PresentationSyncObserved => false;
+
+    double LastSubmitTimeSeconds => 0d;
+
+    double LastPresentTimeSeconds => 0d;
+
     RuntimePresentedFrame Present(
         CanvasItemRenderPlan renderPlan,
         Vector2I windowSize,
         Color clearColor,
         bool captureFrame);
+}
+
+internal readonly record struct RuntimePresentationSettings(bool SyncRequested, int TargetFrameRate)
+{
+    public static RuntimePresentationSettings Default { get; } = new(SyncRequested: true, TargetFrameRate: 60);
 }
 
 internal interface IRuntimeGpuPresenterApi
@@ -311,21 +323,31 @@ internal sealed class RuntimeFramePresenter : IRuntimeFramePresenter
     internal const string SdlRendererPresentationBackend = "SDL_Renderer";
     private const int AllocationWarmupFrames = 120;
 
-    private readonly Func<IntPtr, Vector2I, IRuntimeFramePresenter> gpuFactory;
-    private readonly Func<IntPtr, Vector2I, IRuntimeFramePresenter> fallbackFactory;
+    private readonly Func<IntPtr, Vector2I, RuntimePresentationSettings, IRuntimeFramePresenter> gpuFactory;
+    private readonly Func<IntPtr, Vector2I, RuntimePresentationSettings, IRuntimeFramePresenter> fallbackFactory;
     private readonly IntPtr window;
     private readonly Vector2I presentationSize;
+    private readonly RuntimePresentationSettings presentationSettings;
     private IRuntimeFramePresenter activePresenter;
     private bool usedFallbackPresenter;
     private string fallbackReason = string.Empty;
     private bool disposed;
 
     public RuntimeFramePresenter(IntPtr window, Vector2I presentationSize)
+        : this(window, presentationSize, RuntimePresentationSettings.Default)
+    {
+    }
+
+    public RuntimeFramePresenter(
+        IntPtr window,
+        Vector2I presentationSize,
+        RuntimePresentationSettings presentationSettings)
         : this(
             window,
             presentationSize,
-            static (nativeWindow, size) => new RuntimeGpuFramePresenter(nativeWindow, size),
-            static (nativeWindow, size) => new RuntimeSdlRendererFramePresenter(nativeWindow, size))
+            presentationSettings,
+            static (nativeWindow, size, settings) => new RuntimeGpuFramePresenter(nativeWindow, size, settings),
+            static (nativeWindow, size, settings) => new RuntimeSdlRendererFramePresenter(nativeWindow, size, settings))
     {
     }
 
@@ -334,6 +356,21 @@ internal sealed class RuntimeFramePresenter : IRuntimeFramePresenter
         Vector2I presentationSize,
         Func<IntPtr, Vector2I, IRuntimeFramePresenter> gpuFactory,
         Func<IntPtr, Vector2I, IRuntimeFramePresenter> fallbackFactory)
+        : this(
+            window,
+            presentationSize,
+            RuntimePresentationSettings.Default,
+            (nativeWindow, size, _) => gpuFactory(nativeWindow, size),
+            (nativeWindow, size, _) => fallbackFactory(nativeWindow, size))
+    {
+    }
+
+    internal RuntimeFramePresenter(
+        IntPtr window,
+        Vector2I presentationSize,
+        RuntimePresentationSettings presentationSettings,
+        Func<IntPtr, Vector2I, RuntimePresentationSettings, IRuntimeFramePresenter> gpuFactory,
+        Func<IntPtr, Vector2I, RuntimePresentationSettings, IRuntimeFramePresenter> fallbackFactory)
     {
         if (window == IntPtr.Zero)
         {
@@ -345,10 +382,17 @@ internal sealed class RuntimeFramePresenter : IRuntimeFramePresenter
 
         this.window = window;
         this.presentationSize = presentationSize;
+        this.presentationSettings = presentationSettings;
         this.gpuFactory = gpuFactory;
         this.fallbackFactory = fallbackFactory;
         activePresenter = CreatePrimaryOrFallback();
     }
+
+    public bool PresentationSyncObserved => activePresenter.PresentationSyncObserved;
+
+    public double LastSubmitTimeSeconds => activePresenter.LastSubmitTimeSeconds;
+
+    public double LastPresentTimeSeconds => activePresenter.LastPresentTimeSeconds;
 
     public RuntimePresentedFrame Present(
         CanvasItemRenderPlan renderPlan,
@@ -390,13 +434,13 @@ internal sealed class RuntimeFramePresenter : IRuntimeFramePresenter
     {
         try
         {
-            return gpuFactory(window, presentationSize);
+            return gpuFactory(window, presentationSize, presentationSettings);
         }
         catch (GpuPresenterUnavailableException exception)
         {
             usedFallbackPresenter = true;
             fallbackReason = exception.Message;
-            return fallbackFactory(window, presentationSize);
+            return fallbackFactory(window, presentationSize, presentationSettings);
         }
     }
 
@@ -405,7 +449,7 @@ internal sealed class RuntimeFramePresenter : IRuntimeFramePresenter
         activePresenter.Dispose();
         usedFallbackPresenter = true;
         fallbackReason = exception.Message;
-        activePresenter = fallbackFactory(window, presentationSize);
+        activePresenter = fallbackFactory(window, presentationSize, presentationSettings);
     }
 
     private int presentedFrames;
@@ -569,11 +613,23 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
     private bool disposed;
 
     public RuntimeGpuFramePresenter(IntPtr window, Vector2I presentationSize)
-        : this(window, presentationSize, RuntimeSdlGpuPresenterApi.Instance)
+        : this(window, presentationSize, RuntimePresentationSettings.Default)
     {
     }
 
-    private RuntimeGpuFramePresenter(IntPtr window, Vector2I presentationSize, IRuntimeGpuPresenterApi gpuApi)
+    public RuntimeGpuFramePresenter(
+        IntPtr window,
+        Vector2I presentationSize,
+        RuntimePresentationSettings presentationSettings)
+        : this(window, presentationSize, presentationSettings, RuntimeSdlGpuPresenterApi.Instance)
+    {
+    }
+
+    private RuntimeGpuFramePresenter(
+        IntPtr window,
+        Vector2I presentationSize,
+        RuntimePresentationSettings presentationSettings,
+        IRuntimeGpuPresenterApi gpuApi)
     {
         if (window == IntPtr.Zero)
         {
@@ -597,15 +653,19 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
                 nativeWindowHandle: window));
             windowClaimed = true;
 
+            var presentMode = presentationSettings.SyncRequested
+                ? SDL.GPUPresentMode.VSync
+                : SDL.GPUPresentMode.Immediate;
             if (!gpuApi.SetSwapchainParameters(
                 backend.Device.Value,
                 window,
                 SDL.GPUSwapchainComposition.SDR,
-                SDL.GPUPresentMode.VSync))
+                presentMode))
             {
                 throw new GpuPresenterUnavailableException("Runtime GPU swapchain setup failed: " + gpuApi.GetError());
             }
 
+            PresentationSyncObserved = presentMode == SDL.GPUPresentMode.VSync;
             shaderCrossLease = RuntimeShaderCrossService.Acquire();
         }
         catch (GpuPresenterUnavailableException)
@@ -626,6 +686,23 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
         SdlGpuRenderingBackend backend,
         IRuntimeGpuPresenterApi gpuApi,
         bool presentationResourcesReady)
+        : this(
+            window,
+            presentationSize,
+            backend,
+            gpuApi,
+            presentationResourcesReady,
+            RuntimePresentationSettings.Default)
+    {
+    }
+
+    internal RuntimeGpuFramePresenter(
+        IntPtr window,
+        Vector2I presentationSize,
+        SdlGpuRenderingBackend backend,
+        IRuntimeGpuPresenterApi gpuApi,
+        bool presentationResourcesReady,
+        RuntimePresentationSettings presentationSettings)
     {
         if (window == IntPtr.Zero)
         {
@@ -639,6 +716,19 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
         this.gpuApi = gpuApi;
         this.presentationSize = presentationSize;
         this.backend = backend;
+        var presentMode = presentationSettings.SyncRequested
+            ? SDL.GPUPresentMode.VSync
+            : SDL.GPUPresentMode.Immediate;
+        if (!gpuApi.SetSwapchainParameters(
+            backend.Device.Value,
+            window,
+            SDL.GPUSwapchainComposition.SDR,
+            presentMode))
+        {
+            throw new GpuPresenterUnavailableException("Runtime GPU swapchain setup failed: " + gpuApi.GetError());
+        }
+
+        PresentationSyncObserved = presentMode == SDL.GPUPresentMode.VSync;
         if (presentationResourcesReady)
         {
             solidPipeline = new IntPtr(101);
@@ -653,6 +743,12 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
         }
     }
 
+    public bool PresentationSyncObserved { get; private set; }
+
+    public double LastSubmitTimeSeconds { get; private set; }
+
+    public double LastPresentTimeSeconds { get; private set; }
+
     public RuntimePresentedFrame Present(
         CanvasItemRenderPlan renderPlan,
         Vector2I windowSize,
@@ -663,6 +759,8 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
         ThrowIfDisposed();
         UpdateObservedPresentationSize(windowSize);
 
+        var frameStartTimestamp = Stopwatch.GetTimestamp();
+        var presentTicks = 0L;
         var frame = backend.BeginFrame();
         var frameSubmitted = false;
         var terminalPathStarted = false;
@@ -670,6 +768,7 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
         RuntimeFrameSnapshot? screenshot = null;
         try
         {
+            var acquireStartTimestamp = Stopwatch.GetTimestamp();
             if (!gpuApi.WaitAndAcquireSwapchainTexture(
                 frame.CommandBuffer.Value,
                 window,
@@ -680,12 +779,14 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
                 throw new GpuPresenterUnavailableException("Runtime GPU swapchain acquisition failed: " + gpuApi.GetError());
             }
 
+            presentTicks += Stopwatch.GetTimestamp() - acquireStartTimestamp;
             swapchainTextureAcquired = true;
             if (swapchainTexture == IntPtr.Zero)
             {
                 terminalPathStarted = true;
                 backend.EndFrame(frame);
                 frameSubmitted = true;
+                SetFrameTiming(frameStartTimestamp, presentTicks);
                 return new RuntimePresentedFrame(CreateDiagnostics(renderPlan, capturePresenterManagedBytesAllocated: 0, actualDrawCalls: 0), null);
             }
 
@@ -717,7 +818,9 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
                 fence = backend.EndFrameAndAcquireFence(frame);
                 frameSubmitted = true;
                 CommitStagedTextureUploads();
+                var screenshotWaitStartTimestamp = Stopwatch.GetTimestamp();
                 screenshot = ReadScreenshotAfterFence(fence, targetSize);
+                presentTicks += Stopwatch.GetTimestamp() - screenshotWaitStartTimestamp;
             }
             else
             {
@@ -755,12 +858,21 @@ internal sealed class RuntimeGpuFramePresenter : IRuntimeFramePresenter
             ReleaseSubmittedTransferBuffers();
         }
 
+        SetFrameTiming(frameStartTimestamp, presentTicks);
         return new RuntimePresentedFrame(
             CreateDiagnostics(
                 renderPlan,
                 screenshot?.RgbaPixels.Length ?? 0,
                 drawBatches.Count * (captureFrame ? 2 : 1)),
             screenshot);
+    }
+
+    private void SetFrameTiming(long frameStartTimestamp, long presentTicks)
+    {
+        var totalSeconds = Stopwatch.GetElapsedTime(frameStartTimestamp, Stopwatch.GetTimestamp()).TotalSeconds;
+        var presentSeconds = Stopwatch.GetElapsedTime(0, presentTicks).TotalSeconds;
+        LastPresentTimeSeconds = Math.Max(0d, presentSeconds);
+        LastSubmitTimeSeconds = Math.Max(0d, totalSeconds - LastPresentTimeSeconds);
     }
 
     public void Dispose()
