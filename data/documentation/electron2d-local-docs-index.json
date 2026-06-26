@@ -389,7 +389,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/release-management/ci-matrix.md",
-                                                    "sha256":  "887b07c70e32f7f320db71de3b1aaa2fed0edcf56f0ba23bf4db5867b7b4dfd4"
+                                                    "sha256":  "1882d6720d01adf46f07efbd9945683601f4b71945c5a5e08740e2fed7ade7a3"
                                                 },
                                                 {
                                                     "path":  "docs/release-management/performance-budgets.md",
@@ -405,7 +405,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/release-management/release-packaging.md",
-                                                    "sha256":  "1ef388cbc94e523b1181b726bdd4cff5fe2b1366185f1120a2f8615fcf504625"
+                                                    "sha256":  "f45dc6d1475f01400982b976f8687b633a14e63439d6d540404f8b9b05cd3385"
                                                 },
                                                 {
                                                     "path":  "docs/release-management/test-infrastructure.md",
@@ -413,7 +413,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/releases/0.1.0-preview.md",
-                                                    "sha256":  "93d45eefe5cff15d1e8b1d061a2631c760da2bc1c636554330cbe27437bf3fcd"
+                                                    "sha256":  "91f36097651372e2c07938d6184d4491457abe08a419f5930aa77decd1ea30b6"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -626,6 +626,22 @@
                                                 {
                                                     "path":  "docs/ui/theme-tooltips.md",
                                                     "sha256":  "9ec3dbb2511d8199ce4b3383d1f11d5c8bb32914e17a02797f236fca0dcb6830"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0207-audit-r01.md",
+                                                    "sha256":  "5a3c64c56f24533878b39c1bc4d642575debcbc49e29bf1b4abad09cd3b9e1d8"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0207-audit-r02.md",
+                                                    "sha256":  "c30ff3c54a223638de8557b98524d88632a40b99e18cc0ef6fb0486c1823c124"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0207-audit-r03.md",
+                                                    "sha256":  "e409ff8b74d9cc329c7d29144d0b9b4979f38835422fab771a96866a11f76105"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0207-audit-r04.md",
+                                                    "sha256":  "d9935a56de99897c7a2991ae42414645ee577694d008bfffb4b354e830fbed84"
                                                 },
                                                 {
                                                     "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
@@ -882,6 +898,10 @@
                                                         "docs/ui/public-api-gate.md",
                                                         "docs/ui/structured-controls.md",
                                                         "docs/ui/theme-tooltips.md",
+                                                        "docs/verdicts/release-management/t-0207-audit-r01.md",
+                                                        "docs/verdicts/release-management/t-0207-audit-r02.md",
+                                                        "docs/verdicts/release-management/t-0207-audit-r03.md",
+                                                        "docs/verdicts/release-management/t-0207-audit-r04.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
@@ -76911,13 +76931,13 @@
                         "id":  "doc:release-management.ci-matrix",
                         "kind":  "documentation",
                         "title":  "CI-матрица `0.1.0 Preview`",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-26.",
                         "keywords":  [
                                          "0",
                                          "06",
                                          "1",
                                          "2026",
-                                         "23",
+                                         "26",
                                          "ci",
                                          "docs",
                                          "management",
@@ -77025,11 +77045,11 @@
                         "id":  "doc:release-management.release-packaging",
                         "kind":  "documentation",
                         "title":  "Cross-platform release packaging и draft GitHub Release workflow",
-                        "summary":  "Обновлено: 2026-06-24.",
+                        "summary":  "Обновлено: 2026-06-26.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "24",
+                                         "26",
                                          "cross",
                                          "docs",
                                          "draft",
@@ -77084,14 +77104,14 @@
                         "id":  "doc:releases.0.1.0-preview",
                         "kind":  "documentation",
                         "title":  "Electron2D 0.1.0 Preview",
-                        "summary":  "Обновлено: 2026-06-25.",
+                        "summary":  "Обновлено: 2026-06-26.",
                         "keywords":  [
                                          "0",
                                          "06",
                                          "1",
                                          "2",
                                          "2026",
-                                         "25",
+                                         "26",
                                          "d",
                                          "docs",
                                          "electron",
@@ -78518,6 +78538,126 @@
                                      ],
                         "sourcePath":  "docs/ui/theme-tooltips.md",
                         "sourceId":  "doc:ui.theme-tooltips",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0207-audit-r01",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0207 r01: внутренний C# repository tool",
+                        "summary":  "- Задача: `T-0207`",
+                        "keywords":  [
+                                         "01",
+                                         "0207",
+                                         "audit",
+                                         "c",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r01",
+                                         "release",
+                                         "repository",
+                                         "t",
+                                         "tool",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0207-audit-r01.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0207-audit-r01",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0207-audit-r02",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0207 r02: внутренний C# repository tool",
+                        "summary":  "- Задача: `T-0207`",
+                        "keywords":  [
+                                         "02",
+                                         "0207",
+                                         "audit",
+                                         "c",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r02",
+                                         "release",
+                                         "repository",
+                                         "t",
+                                         "tool",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0207-audit-r02.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0207-audit-r02",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0207-audit-r03",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0207 r03: внутренний C# repository tool",
+                        "summary":  "- Задача: `T-0207`",
+                        "keywords":  [
+                                         "0207",
+                                         "03",
+                                         "audit",
+                                         "c",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r03",
+                                         "release",
+                                         "repository",
+                                         "t",
+                                         "tool",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0207-audit-r03.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0207-audit-r03",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0207-audit-r04",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0207 r04: внутренний C# repository tool",
+                        "summary":  "- Задача: `T-0207`",
+                        "keywords":  [
+                                         "0207",
+                                         "04",
+                                         "audit",
+                                         "c",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r04",
+                                         "release",
+                                         "repository",
+                                         "t",
+                                         "tool",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0207-audit-r04.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0207-audit-r04",
                         "audiences":  [
                                           "human",
                                           "ai",
