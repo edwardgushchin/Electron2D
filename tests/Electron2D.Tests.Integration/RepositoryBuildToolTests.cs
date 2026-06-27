@@ -482,15 +482,229 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("docs/release-management/audit-fixture.md", manifest, StringComparison.Ordinal);
         Assert.Contains($"evidence/{taskId}-r01/checks/git-status/stdout.txt", manifest, StringComparison.Ordinal);
 
-        var request = ReadZipEntryText(zipPath, "AUDIT-REQUEST.md");
-        Assert.Contains($"{taskId} audit r01", request, StringComparison.Ordinal);
-        Assert.Contains($"{taskId}-audit-r01.zip", request, StringComparison.Ordinal);
+        Assert.Equal(
+            File.ReadAllBytes(fixture.FilePath("docs/release-management/AUDIT-REQUEST.md")),
+            ReadZipEntryBytes(zipPath, "AUDIT-REQUEST.md"));
 
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-minimal");
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
 
         Assert.Equal(0, verify.ExitCode);
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+    }
+
+    [Fact]
+    public async Task AuditPackageCopiesStaticRequestVerbatimIntoRootAuditRequest()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-verbatim");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the package has repository-owned changes.
+        """);
+        fixture.WriteTextFile("docs/release-management/AUDIT-REQUEST.md", """
+        # Custom static request
+
+        This request must be copied byte-for-byte from the tracked source file.
+
+        - VERDICT: ACCEPT
+        - VERDICT: NEEDS_FIXES
+        - TASK_ASSESSMENT
+        - BLOCKERS
+        - EVIDENCE_REVIEW
+        - RISKS_AND_NOTES
+        - CLOSURE_DECISION
+        - metadata.previousVerdictChain
+        - metadata.blockerClosureList
+        - previous verdict files
+        - verbatim preservation
+        - previous blockers closure
+        - restore scanning
+        - evidence scanning
+        - secret scanning
+        - scope scanning
+        - single final report
+        - no intermediate VERDICT
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+        var expectedBytes = File.ReadAllBytes(fixture.FilePath("docs/release-management/AUDIT-REQUEST.md"));
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        Assert.Equal(expectedBytes, ReadZipEntryBytes(fixture.ZipPath(taskId), "AUDIT-REQUEST.md"));
+    }
+
+    [Fact]
+    public async Task AuditPackageFailsWhenStaticRequestIsMissing()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-missing");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the package has repository-owned changes.
+        """);
+        fixture.DeleteFile("docs/release-management/AUDIT-REQUEST.md");
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-REQUEST-MISSING");
+    }
+
+    [Theory]
+    [InlineData("VERDICT: ACCEPT")]
+    [InlineData("VERDICT: NEEDS_FIXES")]
+    [InlineData("TASK_ASSESSMENT")]
+    [InlineData("BLOCKERS")]
+    [InlineData("EVIDENCE_REVIEW")]
+    [InlineData("RISKS_AND_NOTES")]
+    [InlineData("CLOSURE_DECISION")]
+    public async Task AuditPackageFailsWhenStaticRequestLacksRequiredMarkers(string removedMarker)
+    {
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-static-request-marker-{removedMarker.ToLowerInvariant().Replace(':', '-').Replace('_', '-').Replace(' ', '-')}");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the package has repository-owned changes.
+        """);
+        fixture.WriteTextFile(
+            "docs/release-management/AUDIT-REQUEST.md",
+            DefaultAuditRequestText.Replace(removedMarker, "REMOVED_MARKER", StringComparison.Ordinal));
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-REQUEST-INVALID");
+    }
+
+    [Fact]
+    public async Task AuditPackageFailsWhenStaticRequestLacksPreviousVerdictAndBlockerClosureMarkers()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-previous-verdict-contract");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the package has repository-owned changes.
+        """);
+        fixture.WriteTextFile(
+            "docs/release-management/AUDIT-REQUEST.md",
+            DefaultAuditRequestText
+                .Replace("metadata.previousVerdictChain", "removed.previousVerdictChain", StringComparison.Ordinal)
+                .Replace("metadata.blockerClosureList", "removed.blockerClosureList", StringComparison.Ordinal)
+                .Replace("previous verdict files", "previous audit documents", StringComparison.Ordinal)
+                .Replace("verbatim preservation", "exact retention", StringComparison.Ordinal)
+                .Replace("previous blockers closure", "old blockers review", StringComparison.Ordinal));
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-REQUEST-INVALID");
+    }
+
+    [Fact]
+    public async Task AuditPackageFailsWhenStaticRequestLacksFinalReportVerdictMarkers()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-final-report-contract");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the package has repository-owned changes.
+        """);
+        fixture.WriteTextFile(
+            "docs/release-management/AUDIT-REQUEST.md",
+            DefaultAuditRequestText
+                .Replace("single final report", "single closing document", StringComparison.Ordinal)
+                .Replace("no intermediate VERDICT", "no provisional decision line", StringComparison.Ordinal));
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-REQUEST-INVALID");
+    }
+
+    [Theory]
+    [InlineData("empty", "E2D-BUILD-AUDIT-REQUEST-INVALID")]
+    [InlineData("one-line", "E2D-BUILD-AUDIT-REQUEST-INVALID")]
+    [InlineData("machine-path", "E2D-BUILD-AUDIT-ABSOLUTE-PATH")]
+    [InlineData("secret-like", "E2D-BUILD-AUDIT-SECRET-DETECTED")]
+    public async Task AuditPackageFailsWhenStaticRequestHasForbiddenContent(string caseName, string diagnosticCode)
+    {
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-static-request-{caseName}");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the package has repository-owned changes.
+        """);
+        fixture.WriteTextFile("docs/release-management/AUDIT-REQUEST.md", BuildInvalidStaticAuditRequest(caseName));
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, diagnosticCode);
+    }
+
+    [Fact]
+    public async Task AuditPackageManifestListsStaticRequestSource()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-source");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the package has repository-owned changes.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var manifest = ReadZipEntryText(fixture.ZipPath(taskId), "AUDIT-MANIFEST.md");
+        Assert.Contains("- requestSource: `docs/release-management/AUDIT-REQUEST.md`", manifest, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyRejectsRootAuditRequestThatDiffersFromRestoredSource()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-static-request-verify-mismatch", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        ReplaceZipEntryText(
+            zipPath,
+            "AUDIT-REQUEST.md",
+            request => request + "\narchive-only request drift\n",
+            updateChecksums: true);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-static-request-mismatch");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-REQUEST-MISMATCH");
+    }
+
+    [Fact]
+    public void AuditPackageDocumentationDefinesStrictVerdictExtractionRule()
+    {
+        var text = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "docs", "release-management", "audit-package.md"),
+            Encoding.UTF8);
+
+        Assert.Contains("Извлечение verdict-а - жёсткое правило", text, StringComparison.Ordinal);
+        Assert.Contains("[data-message-author-role=\"assistant\"]", text, StringComparison.Ordinal);
+        Assert.Contains("main.textContent", text, StringComparison.Ordinal);
+        Assert.Contains("conversation-turn", text, StringComparison.Ordinal);
+        Assert.Contains("matches.at(-1)", text, StringComparison.Ordinal);
+        Assert.Contains("verdictCount", text, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1498,9 +1712,9 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Equal(0, package.ExitCode);
         var zipPath = fixture.ZipPath(taskId);
-        var request = ReadZipEntryText(zipPath, "AUDIT-REQUEST.md");
-        Assert.Contains("t-0207-audit-r04.md", request, StringComparison.Ordinal);
-        Assert.Contains("T-0207", request, StringComparison.Ordinal);
+        var metadata = ReadZipEntryText(zipPath, "metadata/audit-package.input.json");
+        Assert.Contains("t-0207-audit-r04.md", metadata, StringComparison.Ordinal);
+        Assert.Contains("T-0207", metadata, StringComparison.Ordinal);
 
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-historical-task-ids");
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
@@ -2504,6 +2718,17 @@ public sealed class RepositoryBuildToolTests
         return reader.ReadToEnd();
     }
 
+    private static byte[] ReadZipEntryBytes(string zipPath, string entryName)
+    {
+        using var archive = ZipFile.OpenRead(zipPath);
+        var entry = archive.GetEntry(entryName)
+            ?? throw new InvalidOperationException($"ZIP entry was not found: {entryName}");
+        using var stream = entry.Open();
+        using var memory = new MemoryStream();
+        stream.CopyTo(memory);
+        return memory.ToArray();
+    }
+
     private static string Sha256ZipEntry(string zipPath, string entryName)
     {
         using var archive = ZipFile.OpenRead(zipPath);
@@ -2675,6 +2900,30 @@ public sealed class RepositoryBuildToolTests
     private const string SecretValueCasePasswordAssignment = "negative-case-02";
     private const string SecretValueCaseApiKeyAssignment = "negative-case-03";
     private const string SecretValueCasePrivateKeyMarker = "negative-case-04";
+    private const string DefaultAuditRequestText = """
+    # Static audit request
+
+    This request fixture is intentionally stable and task-independent.
+
+    VERDICT: ACCEPT
+    VERDICT: NEEDS_FIXES
+    TASK_ASSESSMENT
+    BLOCKERS
+    EVIDENCE_REVIEW
+    RISKS_AND_NOTES
+    CLOSURE_DECISION
+    metadata.previousVerdictChain
+    metadata.blockerClosureList
+    previous verdict files
+    verbatim preservation
+    previous blockers closure
+    restore scanning
+    evidence scanning
+    secret scanning
+    scope scanning
+    single final report
+    no intermediate VERDICT
+    """;
     private const string DarkReadmeAssetRelativePath = "data/assets/branding/readme/electron2d_readme_dark.svg";
     private const string LightReadmeAssetRelativePath = "data/assets/branding/readme/electron2d_readme_light.svg";
     private const string ApiManifestRelativePath = "data/api/electron2d-api-manifest.json";
@@ -2694,6 +2943,18 @@ public sealed class RepositoryBuildToolTests
     private const string DoneStatus = "\u2705 Done";
     private const string PlannedStatus = "\U0001F553 Planned";
     private const string NotPlannedStatus = "\u274C Not planned";
+
+    private static string BuildInvalidStaticAuditRequest(string caseName)
+    {
+        return caseName switch
+        {
+            "empty" => string.Empty,
+            "one-line" => DefaultAuditRequestText.Replace("\r", string.Empty).Replace("\n", " ", StringComparison.Ordinal),
+            "machine-path" => string.Concat(DefaultAuditRequestText, "\n", "C", ":/Users/example/source.md", "\n"),
+            "secret-like" => string.Concat(DefaultAuditRequestText, "\n", "api", "_key", "=", "fixture-value", "\n"),
+            _ => throw new ArgumentOutOfRangeException(nameof(caseName), caseName, "Unknown static audit request fixture case.")
+        };
+    }
 
     private sealed record ReadmeFixtureCase(string Name, Action<string> Mutate, string ExpectedCode);
 
@@ -2783,6 +3044,7 @@ public sealed class RepositoryBuildToolTests
             await RunGitAsync(repositoryRoot, "add", ".");
             await RunGitAsync(repositoryRoot, "commit", "-m", "initial fixture baseline");
             var baseline = await RunGitCaptureAsync(repositoryRoot, "rev-parse", "HEAD");
+            WriteFile(repositoryRoot, "docs/release-management/AUDIT-REQUEST.md", DefaultAuditRequestText);
 
             return new AuditFixture(root, repositoryRoot, baseline.Trim());
         }
@@ -2797,9 +3059,23 @@ public sealed class RepositoryBuildToolTests
             return Path.Combine(RepositoryRoot, ".temp", "audit", $"{taskId}-audit-r01.zip");
         }
 
+        public string FilePath(string relativePath)
+        {
+            return Path.Combine(RepositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        }
+
         public void WriteTextFile(string relativePath, string content)
         {
             WriteFile(RepositoryRoot, relativePath, content);
+        }
+
+        public void DeleteFile(string relativePath)
+        {
+            var path = FilePath(relativePath);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
         }
 
         public string WriteConfig(
@@ -2819,7 +3095,10 @@ public sealed class RepositoryBuildToolTests
                 branch = "codex/audit-package-fixture",
                 domain = "release-management",
                 repoFileGlobs = repoFileGlobs ?? ["docs/release-management/*.md"],
-                repoFileAllowlist = repoFileAllowlist ?? Array.Empty<string>(),
+                repoFileAllowlist = (repoFileAllowlist ?? Array.Empty<string>())
+                    .Prepend("docs/release-management/AUDIT-REQUEST.md")
+                    .Distinct(StringComparer.Ordinal)
+                    .ToArray(),
                 archiveOnlyEvidenceGlobs = archiveOnlyEvidenceGlobs ?? ["audit-evidence/**"],
                 checks = checks ??
                 [

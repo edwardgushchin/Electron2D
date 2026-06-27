@@ -62,6 +62,29 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     private static readonly Regex WindowsDrivePathPattern = new(
         @"(?i)\b[A-Z]:(?:\\|/)",
         RegexOptions.CultureInvariant);
+    private const string StaticAuditRequestSourcePath = "docs/release-management/AUDIT-REQUEST.md";
+    private const string StaticAuditRequestArchivePath = "AUDIT-REQUEST.md";
+    private static readonly string[] StaticAuditRequestRequiredMarkers =
+    [
+        "VERDICT: ACCEPT",
+        "VERDICT: NEEDS_FIXES",
+        "TASK_ASSESSMENT",
+        "BLOCKERS",
+        "EVIDENCE_REVIEW",
+        "RISKS_AND_NOTES",
+        "CLOSURE_DECISION",
+        "metadata.previousVerdictChain",
+        "metadata.blockerClosureList",
+        "previous verdict files",
+        "verbatim preservation",
+        "previous blockers closure",
+        "restore scanning",
+        "evidence scanning",
+        "secret scanning",
+        "scope scanning",
+        "single final report",
+        "no intermediate VERDICT"
+    ];
     private static readonly string[] RedactedSecretPlaceholderValues =
     [
         "<redacted>",
@@ -141,11 +164,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         using var staging = TemporaryWorkspace.Create("Electron2D-AuditPackage");
+        var auditRequest = await ReadStaticAuditRequestAsync(repoRoot, cancellationToken).ConfigureAwait(false);
         var repoFiles = await SelectRepositoryFilesAsync(repoRoot, config, cancellationToken).ConfigureAwait(false);
         var importedEvidence = SelectArchiveOnlyEvidenceFiles(repoRoot, config);
         var checkEvidence = await RunConfiguredChecksAsync(repoRoot, staging.Root, config, cancellationToken).ConfigureAwait(false);
         var evidenceFiles = importedEvidence.Concat(checkEvidence).OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
-        var firstSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, cancellationToken).ConfigureAwait(false);
+        var firstSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, auditRequest.AbsolutePath, cancellationToken).ConfigureAwait(false);
 
         var previousVerdictPaths = SelectPreviousVerdictPaths(config);
         var patch = await CreatePatchAsync(repoRoot, staging.Root, options.Baseline, repoFiles, previousVerdictPaths, cancellationToken).ConfigureAwait(false);
@@ -158,12 +182,11 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         var restoreManifest = await CreateRestoreManifestAsync(repoRoot, config, repoFiles, cancellationToken).ConfigureAwait(false);
         var normalizedConfigJson = JsonSerializer.Serialize(config, JsonWriteOptions) + "\n";
-        var requestText = CreateAuditRequest(config, $"{options.TaskId}-audit-{options.Iteration}.zip", patch.NameStatus);
         var archiveFiles = new Dictionary<string, byte[]>(StringComparer.Ordinal)
         {
             [$"{options.TaskId}.patch"] = Encoding.UTF8.GetBytes(patch.PatchText),
             ["repo-file-hashes.json"] = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(restoreManifest, JsonWriteOptions) + "\n"),
-            ["AUDIT-REQUEST.md"] = Encoding.UTF8.GetBytes(requestText),
+            [StaticAuditRequestArchivePath] = auditRequest.Bytes,
             ["metadata/audit-package.input.json"] = Encoding.UTF8.GetBytes(normalizedConfigJson)
         };
 
@@ -181,7 +204,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         archiveFiles["SHA256SUMS.txt"] = CreateChecksumFile(archiveFiles);
 
         ValidateArchiveFiles(archiveFiles, repoRoot, previousVerdictPaths);
-        var secondSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, cancellationToken).ConfigureAwait(false);
+        var secondSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, auditRequest.AbsolutePath, cancellationToken).ConfigureAwait(false);
         if (!SnapshotsEqual(firstSnapshot, secondSnapshot))
         {
             throw new AuditPackageFailure(
@@ -231,6 +254,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         ValidateIteration(config.Iteration, "audit package verify");
         ValidateBaseline(config.Baseline, "audit package verify");
         ValidateArchiveFiles(entries, options.RepositoryPath, SelectPreviousVerdictPaths(config));
+        ValidateStaticAuditRequestBytes(entries[StaticAuditRequestArchivePath], options.RepositoryPath, "audit package verify");
         VerifyChecksums(entries);
         await VerifySha256SumToolAsync(extractRoot.Root, cancellationToken).ConfigureAwait(false);
         if (!string.Equals(config.Baseline, options.Baseline, StringComparison.Ordinal))
@@ -283,6 +307,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         VerifyRestoreManifestMetadata(config, restoreManifest);
         await VerifyRestoredFileSetAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyRestoredHashesAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
+        await VerifyStaticAuditRequestMatchesRestoredSourceAsync(options.RepositoryPath, entries[StaticAuditRequestArchivePath], cancellationToken).ConfigureAwait(false);
         await VerifyOneLineStubsAsync(options.RepositoryPath, config, restoreManifest, cancellationToken).ConfigureAwait(false);
 
         if (writeSuccessDiagnostic)
@@ -797,6 +822,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         string repoRoot,
         IEnumerable<SelectedRepositoryFile> repoFiles,
         IEnumerable<EvidenceSourceFile> evidenceFiles,
+        string auditRequestPath,
         CancellationToken cancellationToken)
     {
         var snapshot = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -806,6 +832,10 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 ? await Sha256FileAsync(file.AbsolutePath, cancellationToken).ConfigureAwait(false)
                 : "<deleted>";
         }
+
+        snapshot[$"request:{StaticAuditRequestSourcePath}"] = File.Exists(auditRequestPath)
+            ? await Sha256FileAsync(auditRequestPath, cancellationToken).ConfigureAwait(false)
+            : "<missing>";
 
         foreach (var evidence in evidenceFiles.OrderBy(file => file.ArchivePath, StringComparer.Ordinal))
         {
@@ -1115,48 +1145,55 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return new RestoreManifest(config.TaskId, config.Iteration, config.Baseline, existing, deleted);
     }
 
-    private static string CreateAuditRequest(AuditPackageConfiguration config, string zipName, string nameStatus)
+    private static async Task<StaticAuditRequest> ReadStaticAuditRequestAsync(string repoRoot, CancellationToken cancellationToken)
     {
-        var builder = new StringBuilder();
-        builder.AppendLine($"# {config.TaskId} audit {config.Iteration}");
-        builder.AppendLine();
-        builder.AppendLine($"- Archive: `{zipName}`");
-        builder.AppendLine($"- Baseline: `{config.Baseline}`");
-        builder.AppendLine($"- Branch: `{config.Branch}`");
-        builder.AppendLine($"- Domain: `{config.Domain}`");
-        builder.AppendLine();
-        builder.AppendLine("## Previous Verdict Chain");
-        AppendList(builder, config.PreviousVerdictChain);
-        builder.AppendLine();
-        builder.AppendLine("## Blocker Closure List");
-        AppendList(builder, config.BlockerClosureList);
-        builder.AppendLine();
-        builder.AppendLine("## Restore Model");
-        builder.AppendLine("- Verify `SHA256SUMS.txt`.");
-        builder.AppendLine("- Apply repository patch with `git apply --check` and `git apply` from baseline.");
-        builder.AppendLine("- Compare restored files with `repo-file-hashes.json`.");
-        builder.AppendLine("- Treat `evidence/` as archive-only evidence.");
-        builder.AppendLine();
-        builder.AppendLine("## Diff Name-Status");
-        builder.AppendLine("```text");
-        builder.Append(nameStatus);
-        if (!nameStatus.EndsWith('\n'))
+        var absolutePath = Path.Combine(repoRoot, StaticAuditRequestSourcePath.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(absolutePath))
         {
-            builder.AppendLine();
+            throw new AuditPackageFailure(
+                "audit package",
+                "E2D-BUILD-AUDIT-REQUEST-MISSING",
+                $"Static audit request was not found: {StaticAuditRequestSourcePath}");
         }
 
-        builder.AppendLine("```");
-        builder.AppendLine();
-        builder.AppendLine("## Checks");
-        AppendList(builder, config.Checks.Select(check => $"{check.Name}: expected exit code {check.ExpectedExitCode}"));
-        builder.AppendLine();
-        builder.AppendLine("## Required Response");
-        builder.AppendLine("Use one of these exact verdict headers:");
-        builder.AppendLine("- `VERDICT: ACCEPT`");
-        builder.AppendLine("- `VERDICT: NEEDS_FIXES`");
-        builder.AppendLine();
-        builder.AppendLine("For every blocker include criterion, evidence, fix, and reproduction command.");
-        return builder.ToString();
+        var bytes = await File.ReadAllBytesAsync(absolutePath, cancellationToken).ConfigureAwait(false);
+        ValidateStaticAuditRequestBytes(bytes, repoRoot, "audit package");
+        return new StaticAuditRequest(absolutePath, bytes);
+    }
+
+    private static void ValidateStaticAuditRequestBytes(byte[] bytes, string repoRoot, string step)
+    {
+        if (bytes.Length == 0 || !IsTextBytes(bytes))
+        {
+            throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-REQUEST-INVALID", $"{StaticAuditRequestSourcePath} is empty or not UTF-8 text.");
+        }
+
+        var text = Encoding.UTF8.GetString(bytes);
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-REQUEST-INVALID", $"{StaticAuditRequestSourcePath} is empty.");
+        }
+
+        var meaningfulLines = text
+            .Split('\n')
+            .Count(line => !string.IsNullOrWhiteSpace(line));
+        if (meaningfulLines <= 1)
+        {
+            throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-REQUEST-INVALID", $"{StaticAuditRequestSourcePath} looks like a one-line stub.");
+        }
+
+        ValidateMachineLocalPathText(text, StaticAuditRequestSourcePath, repoRoot);
+        ValidateSecretText(text, StaticAuditRequestSourcePath, step);
+        foreach (var marker in StaticAuditRequestRequiredMarkers)
+        {
+            if (!text.Contains(marker, StringComparison.Ordinal))
+            {
+                throw new AuditPackageFailure(
+                    step,
+                    "E2D-BUILD-AUDIT-REQUEST-INVALID",
+                    $"{StaticAuditRequestSourcePath} is missing required marker: {marker}");
+            }
+        }
     }
 
     private static string CreateManifest(
@@ -1175,6 +1212,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         builder.AppendLine($"- baseline: `{config.Baseline}`");
         builder.AppendLine($"- branch: `{config.Branch}`");
         builder.AppendLine($"- domain: `{config.Domain}`");
+        builder.AppendLine($"- requestSource: `{StaticAuditRequestSourcePath}`");
         builder.AppendLine();
         builder.AppendLine("## Diff Name-Status");
         builder.AppendLine("```text");
@@ -1233,21 +1271,6 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         return builder.ToString();
-    }
-
-    private static void AppendList(StringBuilder builder, IEnumerable<string> items)
-    {
-        var any = false;
-        foreach (var item in items)
-        {
-            builder.AppendLine($"- {item}");
-            any = true;
-        }
-
-        if (!any)
-        {
-            builder.AppendLine("- none");
-        }
     }
 
     private static void ValidateArchiveFiles(
@@ -1572,13 +1595,6 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             }
         }
 
-        var request = Encoding.UTF8.GetString(entries["AUDIT-REQUEST.md"]);
-        if (!request.Contains($"# {taskId} audit {iteration}", StringComparison.Ordinal) ||
-            !request.Contains($"- Archive: `{taskId}-audit-{iteration}.zip`", StringComparison.Ordinal))
-        {
-            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-TASK-ID-MISMATCH", "AUDIT-REQUEST.md task header or archive name does not match metadata.");
-        }
-
         var manifest = Encoding.UTF8.GetString(entries["AUDIT-MANIFEST.md"]);
         if (!manifest.Contains($"- taskId: `{taskId}`", StringComparison.Ordinal) ||
             !manifest.Contains($"- iteration: `{iteration}`", StringComparison.Ordinal) ||
@@ -1591,6 +1607,11 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     private static void VerifyManifestInventory(Dictionary<string, byte[]> entries)
     {
         var manifest = Encoding.UTF8.GetString(entries["AUDIT-MANIFEST.md"]);
+        if (!manifest.Contains($"- requestSource: `{StaticAuditRequestSourcePath}`", StringComparison.Ordinal))
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-MANIFEST-INCOMPLETE", $"Manifest does not list static audit request source: {StaticAuditRequestSourcePath}");
+        }
+
         foreach (var path in entries.Keys.Order(StringComparer.Ordinal))
         {
             if (!manifest.Contains(path, StringComparison.Ordinal))
@@ -1781,6 +1802,31 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             {
                 throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-RESTORE-MISMATCH", $"Deleted file still exists after restore: {file}");
             }
+        }
+    }
+
+    private static async Task VerifyStaticAuditRequestMatchesRestoredSourceAsync(
+        string repoRoot,
+        byte[] archiveRequestBytes,
+        CancellationToken cancellationToken)
+    {
+        var sourcePath = Path.Combine(repoRoot, StaticAuditRequestSourcePath.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(sourcePath))
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-REQUEST-MISMATCH",
+                $"Restored static audit request was not found: {StaticAuditRequestSourcePath}");
+        }
+
+        var restoredBytes = await File.ReadAllBytesAsync(sourcePath, cancellationToken).ConfigureAwait(false);
+        ValidateStaticAuditRequestBytes(restoredBytes, repoRoot, "audit package verify");
+        if (!archiveRequestBytes.SequenceEqual(restoredBytes))
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-REQUEST-MISMATCH",
+                $"Archive {StaticAuditRequestArchivePath} differs from restored {StaticAuditRequestSourcePath}.");
         }
     }
 
@@ -2396,6 +2442,8 @@ internal sealed class AuditCheckConfiguration
 }
 
 internal sealed record SelectedRepositoryFile(string Path, string AbsolutePath, bool Exists, bool ExistsInBaseline);
+
+internal sealed record StaticAuditRequest(string AbsolutePath, byte[] Bytes);
 
 internal sealed record EvidenceSourceFile(string SourcePath, string ArchivePath);
 

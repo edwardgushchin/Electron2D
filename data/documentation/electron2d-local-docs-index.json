@@ -384,12 +384,16 @@
                                                     "sha256":  "641f609b4df60ec9c07831be48865d34ba2e0af865d85b8f96340e494bfe8cc6"
                                                 },
                                                 {
+                                                    "path":  "docs/release-management/AUDIT-REQUEST.md",
+                                                    "sha256":  "c91bd33da8357b2bc51f7ace463d66cb1f5dc37eb6bb99b93090a4529ae2e9ea"
+                                                },
+                                                {
                                                     "path":  "docs/release-management/api-compatibility.md",
                                                     "sha256":  "e8b2b41feeb3d361bafb912019e5cc42b24e839b78131816c22243114fc4b9d1"
                                                 },
                                                 {
                                                     "path":  "docs/release-management/audit-package.md",
-                                                    "sha256":  "e8037ee6573d97acebd49ac3614ab841b2eb8dce3b68990d0ed5cb9f980da931"
+                                                    "sha256":  "c8872b7df4eec8e21b485e9719633fbbd6e0c596eced9f358d6eec8a4c28eca0"
                                                 },
                                                 {
                                                     "path":  "docs/release-management/ci-matrix.md",
@@ -684,6 +688,14 @@
                                                     "sha256":  "c2c9258eea423b71100c606d1230279746e65d9ccdd76f2c7357d30ca45c9bec"
                                                 },
                                                 {
+                                                    "path":  "docs/verdicts/release-management/t-0229-audit-r01.md",
+                                                    "sha256":  "55458db50049f6605096a896eca1c5e0f869be57f72ebf892b7933de7e888cd2"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0229-audit-r02.md",
+                                                    "sha256":  "79353337ef2a3472aa5e68481030d65255618519e1e3c31d9c4383d00bced90b"
+                                                },
+                                                {
                                                     "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
                                                     "sha256":  "64f5edf9155455623cf21f7e0bf7a18807b08023eda6c06a5da2ac93e341c5d9"
                                                 },
@@ -877,6 +889,7 @@
                                                         "docs/project-system/workspace-transactions.md",
                                                         "docs/quality/leak-verification.md",
                                                         "docs/quality/performance-verification.md",
+                                                        "docs/release-management/AUDIT-REQUEST.md",
                                                         "docs/release-management/api-compatibility.md",
                                                         "docs/release-management/audit-package.md",
                                                         "docs/release-management/ci-matrix.md",
@@ -952,6 +965,8 @@
                                                         "docs/verdicts/release-management/t-0228-audit-r02.md",
                                                         "docs/verdicts/release-management/t-0228-audit-r03.md",
                                                         "docs/verdicts/release-management/t-0228-audit-r04.md",
+                                                        "docs/verdicts/release-management/t-0229-audit-r01.md",
+                                                        "docs/verdicts/release-management/t-0229-audit-r02.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
@@ -76949,6 +76964,34 @@
                                       ]
                     },
                     {
+                        "id":  "doc:release-management.AUDIT-REQUEST",
+                        "kind":  "documentation",
+                        "title":  "Запрос внешнего аудита Electron2D",
+                        "summary":  "Вы проводите глубокий внешний аудит audit package для Electron2D. Ваша задача - независимо проверить, что архив самодостаточно и воспроизводимо доказывает заявленное изменение, а не только выглядит формально полным. Не останавливайтесь на первом найденном blocker-е: нужен полный список доказуемых проблем в пределах области задачи.",
+                        "keywords":  [
+                                         "2",
+                                         "audit",
+                                         "blocker",
+                                         "d",
+                                         "docs",
+                                         "electron",
+                                         "electron2d",
+                                         "management",
+                                         "md",
+                                         "package",
+                                         "release",
+                                         "request"
+                                     ],
+                        "sourcePath":  "docs/release-management/AUDIT-REQUEST.md",
+                        "sourceId":  "doc:release-management.AUDIT-REQUEST",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
                         "id":  "doc:release-management.api-compatibility",
                         "kind":  "documentation",
                         "title":  "Таблица совместимости Electron2D API",
@@ -78981,6 +79024,60 @@
                                      ],
                         "sourcePath":  "docs/verdicts/release-management/t-0228-audit-r04.md",
                         "sourceId":  "doc:verdicts.release-management.t-0228-audit-r04",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0229-audit-r01",
+                        "kind":  "documentation",
+                        "title":  "T-0229 audit r01",
+                        "summary":  "- Задача: T-0229",
+                        "keywords":  [
+                                         "01",
+                                         "0229",
+                                         "audit",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r01",
+                                         "release",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0229-audit-r01.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0229-audit-r01",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0229-audit-r02",
+                        "kind":  "documentation",
+                        "title":  "T-0229 audit r02",
+                        "summary":  "- Задача: T-0229",
+                        "keywords":  [
+                                         "02",
+                                         "0229",
+                                         "audit",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r02",
+                                         "release",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0229-audit-r02.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0229-audit-r02",
                         "audiences":  [
                                           "human",
                                           "ai",
