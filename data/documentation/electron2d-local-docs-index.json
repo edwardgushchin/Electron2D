@@ -97,7 +97,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/local-documentation-pipeline.md",
-                                                    "sha256":  "09f8701972b8144e70c2cee141a7ffe880039e502306b016e340040b8e3023b1"
+                                                    "sha256":  "eac778497556397319f5c4cdbd92ff88ab1e037557f6630620f6670cc7cf8274"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/public-api-xml-documentation.md",
@@ -109,7 +109,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/documentation/repository-readme.md",
-                                                    "sha256":  "cd37aab6234d9332f52dc795247b247d4ac1ddeae6737d4dd5e383fed273ba43"
+                                                    "sha256":  "2ac23c1bb2feac878d24216325c44663387ed6ed969efd51a2b1e73772445fae"
                                                 },
                                                 {
                                                     "path":  "docs/documentation/troubleshooting-release-checklist.md",
@@ -389,11 +389,11 @@
                                                 },
                                                 {
                                                     "path":  "docs/release-management/audit-package.md",
-                                                    "sha256":  "fe6d095afc90ce60d8867afd096e2b5b1a46a7096261400ffc2c8a3ab5398744"
+                                                    "sha256":  "e8037ee6573d97acebd49ac3614ab841b2eb8dce3b68990d0ed5cb9f980da931"
                                                 },
                                                 {
                                                     "path":  "docs/release-management/ci-matrix.md",
-                                                    "sha256":  "1882d6720d01adf46f07efbd9945683601f4b71945c5a5e08740e2fed7ade7a3"
+                                                    "sha256":  "0dcaf95512618aadf5fa84bde8754953ca768061cf46df80836d649cbf7744e7"
                                                 },
                                                 {
                                                     "path":  "docs/release-management/performance-budgets.md",
@@ -417,7 +417,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/releases/0.1.0-preview.md",
-                                                    "sha256":  "f2ad7a4af6401c6a73e211d7d97727733e59bc6c246d7fea9528a91fc7a8b5c7"
+                                                    "sha256":  "3e72045c6858e4060fdc00dc55d20ddf8d1bcf257e2d8e2374fe1e457eeb4e74"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -632,6 +632,26 @@
                                                     "sha256":  "9ec3dbb2511d8199ce4b3383d1f11d5c8bb32914e17a02797f236fca0dcb6830"
                                                 },
                                                 {
+                                                    "path":  "docs/verdicts/documentation/t-0213-audit-r01.md",
+                                                    "sha256":  "f40e9cb3932de4ae6136c3573f0aabb644a23e3095056b7907f33eb6b7483595"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/documentation/t-0213-audit-r02.md",
+                                                    "sha256":  "990ff85187297805fa21a4b9347b5d816d9a44adb2d5e6d6d5ada4baa1185edc"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/documentation/t-0213-audit-r03.md",
+                                                    "sha256":  "28bfe68e65fd465778ec3698b3c01c566bc2d434b153bcaba304c79a443e5454"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/documentation/t-0213-audit-r04.md",
+                                                    "sha256":  "97c850e0e59c667234f7455df2431b55619587eed49a0958f0d2e17873812d86"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/documentation/t-0213-audit-r05.md",
+                                                    "sha256":  "d7f449ff1e3a1886f14ccede1c0ec8feedfc6ebf11f274ef8402c7abbb55f95a"
+                                                },
+                                                {
                                                     "path":  "docs/verdicts/release-management/t-0207-audit-r01.md",
                                                     "sha256":  "5a3c64c56f24533878b39c1bc4d642575debcbc49e29bf1b4abad09cd3b9e1d8"
                                                 },
@@ -657,7 +677,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/verdicts/release-management/t-0228-audit-r03.md",
-                                                    "sha256":  "3e994c9cf6db00303405926e49f4186a1e170d90e1b61d830f3916df067ceb3d"
+                                                    "sha256":  "0fcb473dff7d8d5b7e881bb95c77e828d05ff7be79964c0a6d3a85d621f49977"
                                                 },
                                                 {
                                                     "path":  "docs/verdicts/release-management/t-0228-audit-r04.md",
@@ -919,6 +939,11 @@
                                                         "docs/ui/public-api-gate.md",
                                                         "docs/ui/structured-controls.md",
                                                         "docs/ui/theme-tooltips.md",
+                                                        "docs/verdicts/documentation/t-0213-audit-r01.md",
+                                                        "docs/verdicts/documentation/t-0213-audit-r02.md",
+                                                        "docs/verdicts/documentation/t-0213-audit-r03.md",
+                                                        "docs/verdicts/documentation/t-0213-audit-r04.md",
+                                                        "docs/verdicts/documentation/t-0213-audit-r05.md",
                                                         "docs/verdicts/release-management/t-0207-audit-r01.md",
                                                         "docs/verdicts/release-management/t-0207-audit-r02.md",
                                                         "docs/verdicts/release-management/t-0207-audit-r03.md",
@@ -74958,11 +74983,11 @@
                         "id":  "doc:documentation.local-documentation-pipeline",
                         "kind":  "documentation",
                         "title":  "Local documentation pipeline",
-                        "summary":  "Обновлено: 2026-06-23.",
+                        "summary":  "Обновлено: 2026-06-26.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "23",
+                                         "26",
                                          "docs",
                                          "documentation",
                                          "local",
@@ -75031,11 +75056,11 @@
                         "id":  "doc:documentation.repository-readme",
                         "kind":  "documentation",
                         "title":  "Публичный README репозитория",
-                        "summary":  "Обновлено: 2026-06-24.",
+                        "summary":  "Обновлено: 2026-06-26.",
                         "keywords":  [
                                          "06",
                                          "2026",
-                                         "24",
+                                         "26",
                                          "docs",
                                          "documentation",
                                          "md",
@@ -78588,6 +78613,146 @@
                                      ],
                         "sourcePath":  "docs/ui/theme-tooltips.md",
                         "sourceId":  "doc:ui.theme-tooltips",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.documentation.t-0213-audit-r01",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0213 r01: README/docs verifier-ы в C# repository tool",
+                        "summary":  "- Задача: `T-0213`",
+                        "keywords":  [
+                                         "01",
+                                         "0213",
+                                         "audit",
+                                         "c",
+                                         "docs",
+                                         "documentation",
+                                         "md",
+                                         "r",
+                                         "r01",
+                                         "readme",
+                                         "repository",
+                                         "t",
+                                         "tool",
+                                         "verdicts",
+                                         "verifier"
+                                     ],
+                        "sourcePath":  "docs/verdicts/documentation/t-0213-audit-r01.md",
+                        "sourceId":  "doc:verdicts.documentation.t-0213-audit-r01",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.documentation.t-0213-audit-r02",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0213 r02: README/docs verifier-ы в C# repository tool",
+                        "summary":  "- Задача: `T-0213`",
+                        "keywords":  [
+                                         "02",
+                                         "0213",
+                                         "audit",
+                                         "c",
+                                         "docs",
+                                         "documentation",
+                                         "md",
+                                         "r",
+                                         "r02",
+                                         "readme",
+                                         "repository",
+                                         "t",
+                                         "tool",
+                                         "verdicts",
+                                         "verifier"
+                                     ],
+                        "sourcePath":  "docs/verdicts/documentation/t-0213-audit-r02.md",
+                        "sourceId":  "doc:verdicts.documentation.t-0213-audit-r02",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.documentation.t-0213-audit-r03",
+                        "kind":  "documentation",
+                        "title":  "T-0213 audit r03",
+                        "summary":  "- Задача: T-0213",
+                        "keywords":  [
+                                         "0213",
+                                         "03",
+                                         "audit",
+                                         "docs",
+                                         "documentation",
+                                         "md",
+                                         "r",
+                                         "r03",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/documentation/t-0213-audit-r03.md",
+                        "sourceId":  "doc:verdicts.documentation.t-0213-audit-r03",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.documentation.t-0213-audit-r04",
+                        "kind":  "documentation",
+                        "title":  "T-0213 audit r04",
+                        "summary":  "- Задача: T-0213",
+                        "keywords":  [
+                                         "0213",
+                                         "04",
+                                         "audit",
+                                         "docs",
+                                         "documentation",
+                                         "md",
+                                         "r",
+                                         "r04",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/documentation/t-0213-audit-r04.md",
+                        "sourceId":  "doc:verdicts.documentation.t-0213-audit-r04",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.documentation.t-0213-audit-r05",
+                        "kind":  "documentation",
+                        "title":  "T-0213 audit r05",
+                        "summary":  "- Задача: T-0213",
+                        "keywords":  [
+                                         "0213",
+                                         "05",
+                                         "audit",
+                                         "docs",
+                                         "documentation",
+                                         "md",
+                                         "r",
+                                         "r05",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/documentation/t-0213-audit-r05.md",
+                        "sourceId":  "doc:verdicts.documentation.t-0213-audit-r05",
                         "audiences":  [
                                           "human",
                                           "ai",

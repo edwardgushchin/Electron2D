@@ -55,8 +55,6 @@ public sealed class RepositoryBuildToolTests
     [Theory]
     [InlineData("test", "test")]
     [InlineData("verify", "verify")]
-    [InlineData("verify readme", "verify", "readme")]
-    [InlineData("verify docs", "verify", "docs")]
     [InlineData("update wiki --check", "update", "wiki", "--check")]
     public async Task SkeletonCommandsRouteToStableDiagnosticShape(string expectedStep, params string[] arguments)
     {
@@ -70,6 +68,212 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal("E2D-BUILD-ROUTED", diagnostic.RootElement.GetProperty("code").GetString());
         Assert.False(diagnostic.RootElement.TryGetProperty("processExitCode", out _));
         Assert.False(diagnostic.RootElement.TryGetProperty("timedOut", out _));
+    }
+
+    [Fact]
+    public async Task VerifyReadmeRunsRepositoryReadmeContract()
+    {
+        var result = await RunBuildToolAsync("verify", "readme");
+
+        Assert.Equal(0, result.ExitCode);
+        using var diagnostics = ReadDiagnostics(result);
+        var diagnostic = Assert.Single(diagnostics.RootElement.EnumerateArray());
+        Assert.Equal("verify", diagnostic.GetProperty("command").GetString());
+        Assert.Equal("verify readme", diagnostic.GetProperty("step").GetString());
+        Assert.Equal("info", diagnostic.GetProperty("severity").GetString());
+        Assert.Equal("E2D-BUILD-README-VERIFY-PASSED", diagnostic.GetProperty("code").GetString());
+        Assert.Contains("README.md", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task VerifyReadmeAcceptsFixtureAndIgnoresHistoricalForbiddenMentionsOutsideReadme()
+    {
+        using var workspace = CreateReadmeFixture("readme-historical-mentions");
+        WriteText(
+            workspace.Root,
+            "docs/history.md",
+            """
+            # Migration note
+
+            Historical README variants mentioned PowerShell, verify readme, TASKS.md and UI-heavy examples.
+            """);
+        WriteText(
+            workspace.Root,
+            "TASKS.md",
+            """
+            ## T-9999 [ ] Historical task
+
+            This local task may mention PowerShell and verify docs without becoming public README content.
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "readme");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-README-VERIFY-PASSED", "valid README fixture");
+    }
+
+    [Fact]
+    public async Task VerifyReadmeRejectsFixtureContractViolations()
+    {
+        var cases = new ReadmeFixtureCase[]
+        {
+            new(
+                "duplicate tagline",
+                root => AppendToReadme(root, $"{Environment.NewLine}Agent-native cross-platform 2D game engine{Environment.NewLine}"),
+                "E2D-BUILD-README-TAGLINE-COUNT"),
+            new(
+                "forbidden wording",
+                root => AppendToReadme(root, $"{Environment.NewLine}PowerShell verifier command.{Environment.NewLine}"),
+                "E2D-BUILD-README-FORBIDDEN-CONTENT"),
+            new(
+                "non-allowlisted README SVG",
+                root => AppendToReadme(root, $"{Environment.NewLine}<img src=\"data/assets/branding/readme/experimental.svg\" alt=\"Experimental\">{Environment.NewLine}"),
+                "E2D-BUILD-README-ASSET-NOT-ALLOWED"),
+            new(
+                "backtick-wrapped platform status",
+                root => ReplaceInReadme(
+                    root,
+                    $"| Windows | {DoneStatus} | {DoneStatus} |",
+                    $"| Windows | `{DoneStatus}` | `{DoneStatus}` |"),
+                "E2D-BUILD-README-PLATFORM-ROW-MISSING")
+        };
+
+        foreach (var testCase in cases)
+        {
+            using var workspace = CreateReadmeFixture($"readme-{testCase.Name}");
+            testCase.Mutate(workspace.Root);
+
+            var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "readme");
+
+            Assert.NotEqual(0, result.ExitCode);
+            AssertDiagnosticCode(result, testCase.ExpectedCode, testCase.Name);
+        }
+    }
+
+    [Fact]
+    public async Task VerifyDocsRunsLocalDocumentationContourAndChecksGeneratedIndexMetadata()
+    {
+        var result = await RunBuildToolAsync(TimeSpan.FromMinutes(5), "verify", "docs");
+
+        Assert.Equal(0, result.ExitCode);
+        using var diagnostics = ReadDiagnostics(result);
+        var codes = diagnostics.RootElement
+            .EnumerateArray()
+            .Select(diagnostic => diagnostic.GetProperty("code").GetString())
+            .ToArray();
+
+        Assert.Contains("E2D-BUILD-DOCS-LOCAL-CHECK-PASSED", codes);
+        Assert.Contains("E2D-BUILD-DOCS-VERIFY-PASSED", codes);
+        Assert.DoesNotContain("E2D-BUILD-ROUTED", codes);
+    }
+
+    [Fact]
+    public async Task UpdateDocsCheckRunsGeneratedDocumentationIndexCheck()
+    {
+        using var workspace = CreateDocumentationUpdateFixture("update-docs-check");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs", "--check");
+
+        Assert.Equal(0, result.ExitCode);
+        using var diagnostics = ReadDiagnostics(result);
+        var diagnostic = Assert.Single(diagnostics.RootElement.EnumerateArray());
+        Assert.Equal("update", diagnostic.GetProperty("command").GetString());
+        Assert.Equal("update docs --check", diagnostic.GetProperty("step").GetString());
+        Assert.Equal("info", diagnostic.GetProperty("severity").GetString());
+        Assert.Equal("E2D-BUILD-DOCS-INDEX-CHECK-PASSED", diagnostic.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public async Task UpdateDocsRefreshesGeneratedDocumentationIndex()
+    {
+        using var workspace = CreateDocumentationUpdateFixture("update-docs-refresh", initialIndex: "stale\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs");
+
+        Assert.Equal(0, result.ExitCode);
+        using var diagnostics = ReadDiagnostics(result);
+        var diagnostic = Assert.Single(diagnostics.RootElement.EnumerateArray());
+        Assert.Equal("update", diagnostic.GetProperty("command").GetString());
+        Assert.Equal("update docs", diagnostic.GetProperty("step").GetString());
+        Assert.Equal("info", diagnostic.GetProperty("severity").GetString());
+        Assert.Equal("E2D-BUILD-DOCS-INDEX-UPDATED", diagnostic.GetProperty("code").GetString());
+        Assert.Equal("fresh\n", ReadText(workspace.Root, "data/documentation/electron2d-local-docs-index.json"));
+    }
+
+    [Fact]
+    public async Task VerifyDocsAcceptsValidGeneratedIndexFixture()
+    {
+        using var workspace = CreateDocumentationFixture("docs-valid");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "docs");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-DOCS-LOCAL-CHECK-PASSED", "valid docs fixture");
+        AssertDiagnosticCode(result, "E2D-BUILD-DOCS-VERIFY-PASSED", "valid docs fixture");
+    }
+
+    [Fact]
+    public async Task VerifyDocsRejectsInvalidGeneratedIndexFixtures()
+    {
+        var cases = new DocumentationFixtureCase[]
+        {
+            new(
+                "stale generated index",
+                root => WriteText(root, DocumentationSourceRelativePath, "# Changed source\n"),
+                "E2D-BUILD-DOCS-INDEX-SOURCE-HASH"),
+            new(
+                "missing command metadata",
+                root => WriteDocumentationIndex(root, includeDocsExampleCommand: false),
+                "E2D-BUILD-DOCS-INDEX-COMMANDS"),
+            new(
+                "missing API reference",
+                root => WriteDocumentationIndex(root, apiMemberApiId: "Electron2D.CharacterBody2D.MissingMember"),
+                "E2D-BUILD-DOCS-INDEX-ENTRY-API-ID"),
+            new(
+                "missing source path",
+                root => WriteDocumentationIndex(root, documentationEntrySourcePath: "docs/missing-source.md"),
+                "E2D-BUILD-DOCS-INDEX-SOURCE-MISSING"),
+            new(
+                "sources.wiki wrong JSON kind",
+                root => WriteDocumentationIndex(root, wikiSourceJson: "\"bad\""),
+                "E2D-BUILD-DOCS-INDEX-SOURCES")
+        };
+
+        foreach (var testCase in cases)
+        {
+            using var workspace = CreateDocumentationFixture($"docs-{testCase.Name}");
+            testCase.Mutate(workspace.Root);
+
+            var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "docs");
+
+            Assert.NotEqual(0, result.ExitCode);
+            AssertDiagnosticCode(result, testCase.ExpectedCode, testCase.Name);
+        }
+    }
+
+    [Fact]
+    public async Task UpdateDocsCommandsUseFixtureRepositoryWithoutMutatingMainIndex()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var mainIndexBefore = File.ReadAllText(Path.Combine(repositoryRoot, "data", "documentation", "electron2d-local-docs-index.json"), Encoding.UTF8);
+        using var workspace = CreateDocumentationUpdateFixture("update-docs-isolated", initialIndex: "stale\n");
+
+        var staleCheck = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs", "--check");
+        Assert.NotEqual(0, staleCheck.ExitCode);
+        Assert.Equal("stale\n", ReadText(workspace.Root, "data/documentation/electron2d-local-docs-index.json"));
+        AssertDiagnosticCode(staleCheck, "E2D-BUILD-DOCS-INDEX-CHECK-FAILED", "stale fixture check");
+
+        var update = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs");
+        Assert.Equal(0, update.ExitCode);
+        Assert.Equal("fresh\n", ReadText(workspace.Root, "data/documentation/electron2d-local-docs-index.json"));
+        AssertDiagnosticCode(update, "E2D-BUILD-DOCS-INDEX-UPDATED", "fixture update");
+
+        var freshCheck = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs", "--check");
+        Assert.Equal(0, freshCheck.ExitCode);
+        AssertDiagnosticCode(freshCheck, "E2D-BUILD-DOCS-INDEX-CHECK-PASSED", "fresh fixture check");
+
+        var mainIndexAfter = File.ReadAllText(Path.Combine(repositoryRoot, "data", "documentation", "electron2d-local-docs-index.json"), Encoding.UTF8);
+        Assert.Equal(mainIndexBefore, mainIndexAfter);
     }
 
     [Fact]
@@ -169,6 +373,7 @@ public sealed class RepositoryBuildToolTests
             using System.Threading;
 
             Console.WriteLine("timeout child started");
+            Console.Out.Flush();
             Thread.Sleep(TimeSpan.FromSeconds(30));
             """);
 
@@ -448,7 +653,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task AuditPackageCopiesFocusedTestTrxWithSyntheticSecretCaseNames()
+    public async Task AuditPackageCopiesFocusedTestTrxWithSafeSyntheticCaseNames()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-focused-trx-secret-fixtures");
         const string taskId = "T-0001";
@@ -461,12 +666,9 @@ public sealed class RepositoryBuildToolTests
             "net10.0",
             "Electron2D.Tests.Integration.dll");
         var storagePath = codeBasePath.ToLowerInvariant();
-        var syntheticTokenValue = SecretAssignment("token", "not-a-real-token-value");
-        var syntheticPasswordValue = SecretAssignment("password", "not-a-real-password-value");
-        var syntheticPrivateKeyValue = PrivateKeyStartMarker();
-        var syntheticTokenCaseName = SecretFixtureCaseName(syntheticTokenValue);
-        var syntheticPasswordCaseName = SecretFixtureCaseName(syntheticPasswordValue);
-        var syntheticPrivateKeyCaseName = SecretFixtureCaseName(syntheticPrivateKeyValue);
+        var syntheticTokenCaseName = SecretFixtureCaseName(SecretValueCaseTokenAssignment);
+        var syntheticPasswordCaseName = SecretFixtureCaseName(SecretValueCasePasswordAssignment);
+        var syntheticPrivateKeyCaseName = SecretFixtureCaseName(SecretValueCasePrivateKeyMarker);
         fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
         # Audit fixture
 
@@ -512,7 +714,11 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Contains(trxPath, ReadZipEntryNames(zipPath));
         Assert.Contains($"`{trxPath}`", manifest, StringComparison.Ordinal);
-        Assert.Contains(syntheticTokenValue, trxText, StringComparison.Ordinal);
+        Assert.Contains(syntheticTokenCaseName, trxText, StringComparison.Ordinal);
+        Assert.DoesNotContain(SyntheticTokenSecretValue(), trxText, StringComparison.Ordinal);
+        Assert.DoesNotContain(SyntheticPasswordSecretValue(), trxText, StringComparison.Ordinal);
+        Assert.DoesNotContain(SyntheticApiKeySecretValue(), trxText, StringComparison.Ordinal);
+        Assert.DoesNotContain(PrivateKeyStartMarker(), trxText, StringComparison.Ordinal);
         Assert.Contains("&lt;repo-root&gt;/tests/Electron2D.Tests.Integration", trxText, StringComparison.Ordinal);
         Assert.DoesNotContain(fixture.RepositoryRoot, trxText, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain(fixture.RepositoryRoot.Replace('\\', '/'), trxText, StringComparison.OrdinalIgnoreCase);
@@ -811,10 +1017,11 @@ public sealed class RepositoryBuildToolTests
 
     [Theory]
     [MemberData(nameof(SecretValueCases))]
-    public async Task AuditPackageRejectsSecretValuesInSelectedTextFiles(string secretLine)
+    public async Task AuditPackageRejectsSecretValuesInSelectedTextFiles(string secretCase)
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-secret-values");
         const string taskId = "T-0001";
+        var secretLine = CreateSecretLine(secretCase);
         fixture.WriteTextFile("docs/release-management/credential-fixture.md", $"""
         # Credential fixture
 
@@ -829,12 +1036,86 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
     }
 
+    [Fact]
+    public async Task AuditPackageUsesBinaryPatchForSecretLikeDeletedBaselineLinesInOrdinaryFiles()
+    {
+        var deletedBaselineLine = string.Concat(
+            "Removed baseline line: return string.Concat(\"-----",
+            "BEGIN \", \"PRIVATE ",
+            "KEY-----\");");
+        var privateKeyPhrase = string.Concat("PRIVATE ", "KEY");
+        var privateKeyMarker = string.Concat("-----", "BEGIN ", "PRIVATE ", "KEY-----");
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-deleted-baseline-secret-like-patch",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["docs/release-management/audit-fixture.md"] = $"""
+                # Audit fixture
+
+                {deletedBaselineLine}
+                kept baseline context.
+                """,
+                ["docs/release-management/clean-fixture.md"] = """
+                # Clean fixture
+
+                clean baseline context.
+                """
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        kept current context.
+        """);
+        fixture.WriteTextFile("docs/release-management/clean-fixture.md", """
+        # Clean fixture
+
+        clean current context.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-PACKAGE-CREATED");
+
+        var zipPath = fixture.ZipPath(taskId);
+        var patch = ReadZipEntryText(zipPath, $"{taskId}.patch");
+
+        Assert.Contains("diff --git a/docs/release-management/audit-fixture.md b/docs/release-management/audit-fixture.md", patch, StringComparison.Ordinal);
+        Assert.Contains("diff --git a/docs/release-management/clean-fixture.md b/docs/release-management/clean-fixture.md", patch, StringComparison.Ordinal);
+        Assert.Contains("GIT binary patch", patch, StringComparison.Ordinal);
+        Assert.Single(Regex.Matches(patch, "GIT binary patch", RegexOptions.CultureInvariant).Cast<Match>());
+        Assert.Contains("+clean current context.", patch, StringComparison.Ordinal);
+        Assert.DoesNotContain(deletedBaselineLine, patch, StringComparison.Ordinal);
+        Assert.DoesNotContain(privateKeyPhrase, patch, StringComparison.Ordinal);
+        Assert.DoesNotContain(privateKeyMarker, patch, StringComparison.Ordinal);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-binary-secret-like-baseline");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+    }
+
     public static IEnumerable<object[]> SecretValueCases()
     {
-        yield return [SecretAssignment("token", "not-a-real-token-value")];
-        yield return [SecretAssignment("password", "not-a-real-password-value")];
-        yield return [SecretAssignment("api_key", "not-a-real-api-key-value", separator: " = ")];
-        yield return [PrivateKeyStartMarker()];
+        yield return [SecretValueCaseTokenAssignment];
+        yield return [SecretValueCasePasswordAssignment];
+        yield return [SecretValueCaseApiKeyAssignment];
+        yield return [SecretValueCasePrivateKeyMarker];
+    }
+
+    private static string CreateSecretLine(string secretCase)
+    {
+        return secretCase switch
+        {
+            SecretValueCaseTokenAssignment => TokenSecretAssignment(SyntheticTokenSecretValue()),
+            SecretValueCasePasswordAssignment => PasswordSecretAssignment(SyntheticPasswordSecretValue()),
+            SecretValueCaseApiKeyAssignment => ApiKeySecretAssignment(SyntheticApiKeySecretValue()),
+            SecretValueCasePrivateKeyMarker => PrivateKeyStartMarker(),
+            _ => throw new ArgumentOutOfRangeException(nameof(secretCase), secretCase, "Unknown secret fixture case.")
+        };
     }
 
     private static string SecretAssignment(string key, string value, string separator = "=")
@@ -842,14 +1123,54 @@ public sealed class RepositoryBuildToolTests
         return string.Concat(key, separator, value);
     }
 
-    private static string PrivateKeyStartMarker()
+    private static string TokenSecretAssignment(string value)
     {
-        return string.Concat("-----BEGIN ", "PRIVATE KEY-----");
+        return SecretAssignment(string.Concat("to", "ken"), value);
     }
 
-    private static string SecretFixtureCaseName(string secretLine)
+    private static string PasswordSecretAssignment(string value)
     {
-        return $"Electron2D.Tests.Integration.RepositoryBuildToolTests.AuditPackageRejectsSecretValuesInSelectedTextFiles(secretLine: &quot;{secretLine}&quot;)";
+        return SecretAssignment(string.Concat("pass", "word"), value);
+    }
+
+    private static string ApiKeySecretAssignment(string value)
+    {
+        return SecretAssignment(string.Concat("api", "_key"), value, separator: " = ");
+    }
+
+    private static string SyntheticTokenSecretValue()
+    {
+        return string.Concat("not-a-real-", "token-", "value");
+    }
+
+    private static string SyntheticPasswordSecretValue()
+    {
+        return string.Concat("not-a-real-", "password-", "value");
+    }
+
+    private static string SyntheticApiKeySecretValue()
+    {
+        return string.Concat("not-a-real-", "api-", "key-", "value");
+    }
+
+    private static string QuotedReviewerEvidenceValue()
+    {
+        return string.Concat("quoted-", "reviewer-", "evidence");
+    }
+
+    private static string TaskOwnedSecretEvidenceValue()
+    {
+        return string.Concat("task-owned-", "secret-", "evidence");
+    }
+
+    private static string PrivateKeyStartMarker()
+    {
+        return string.Concat("-----", "BEGIN ", "PRIVATE ", "KEY-----");
+    }
+
+    private static string SecretFixtureCaseName(string secretCase)
+    {
+        return $"Electron2D.Tests.Integration.RepositoryBuildToolTests.AuditPackageRejectsSecretValuesInSelectedTextFiles(secretCase: &quot;{secretCase}&quot;)";
     }
 
     [Theory]
@@ -1189,6 +1510,26 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task AuditPackageRejectsPreviousVerdictChainPathOutsideVerdictDocs()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-path-scope");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This ordinary task file must not become a previous-verdict exception.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: ["docs/release-management/audit-fixture.md"]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+    }
+
+    [Fact]
     public async Task AuditPackageIncludesExistingPreviousVerdictsInRestoreModel()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-restore");
@@ -1244,6 +1585,88 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Equal(0, verify.ExitCode);
         Assert.True(File.Exists(Path.Combine(cleanRepo.Root, previousVerdictPath.Replace('/', Path.DirectorySeparatorChar))));
+    }
+
+    [Fact]
+    public async Task AuditPackageIncludesPreviousVerdictWithQuotedSecretEvidenceVerbatim()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-secret-evidence");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var quotedSecretEvidence = TokenSecretAssignment(QuotedReviewerEvidenceValue());
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        # Аудит T-0001 r00
+
+        VERDICT: NEEDS_FIXES
+
+        Исторический внешний ответ процитировал строку из прежнего доказательства:
+        {quotedSecretEvidence}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var zipPath = fixture.ZipPath(taskId);
+        var patch = ReadZipEntryText(zipPath, $"{taskId}.patch");
+        using var restoreManifest = JsonDocument.Parse(ReadZipEntryText(zipPath, "repo-file-hashes.json"));
+
+        Assert.Contains(previousVerdictPath, patch, StringComparison.Ordinal);
+        Assert.Contains(quotedSecretEvidence, patch, StringComparison.Ordinal);
+        Assert.Contains(
+            restoreManifest.RootElement.GetProperty("repoFiles").EnumerateArray(),
+            file => string.Equals(file.GetProperty("path").GetString(), previousVerdictPath, StringComparison.Ordinal));
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-previous-verdict-secret-evidence");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+        Assert.Contains(quotedSecretEvidence, File.ReadAllText(Path.Combine(cleanRepo.Root, previousVerdictPath.Replace('/', Path.DirectorySeparatorChar)), Encoding.UTF8), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditPackageRejectsSecretValuesInTaskOwnedFilesEvenWithPreviousVerdictException()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-secret-scope");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var quotedSecretEvidence = TokenSecretAssignment(QuotedReviewerEvidenceValue());
+        var taskOwnedSecret = PasswordSecretAssignment(TaskOwnedSecretEvidenceValue());
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        This task-owned file must still be rejected:
+        {taskOwnedSecret}
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        # Аудит T-0001 r00
+
+        VERDICT: NEEDS_FIXES
+
+        Исторический внешний ответ процитировал строку из прежнего доказательства:
+        {quotedSecretEvidence}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+        using var diagnostics = ReadDiagnostics(package);
+        Assert.Contains(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic =>
+                string.Equals(diagnostic.GetProperty("code").GetString(), "E2D-BUILD-AUDIT-SECRET-DETECTED", StringComparison.Ordinal) &&
+                diagnostic.GetProperty("message").GetString()?.Contains("docs/release-management/audit-fixture.md", StringComparison.Ordinal) == true);
     }
 
     [Fact]
@@ -1417,14 +1840,24 @@ public sealed class RepositoryBuildToolTests
         return await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), arguments);
     }
 
+    private static async Task<CommandResult> RunBuildToolAsync(TimeSpan timeout, params string[] arguments)
+    {
+        return await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), timeout, arguments);
+    }
+
     private static async Task<CommandResult> RunBuildToolFromDirectoryAsync(string workingDirectory, params string[] arguments)
+    {
+        return await RunBuildToolFromDirectoryAsync(workingDirectory, TimeSpan.FromSeconds(120), arguments);
+    }
+
+    private static async Task<CommandResult> RunBuildToolFromDirectoryAsync(string workingDirectory, TimeSpan timeout, params string[] arguments)
     {
         var root = FindRepositoryRoot();
         return await RunProcessAsync(
             DotnetExecutable,
             ["run", "--project", BuildToolProjectPath(root), "--", .. arguments],
             workingDirectory,
-            TimeSpan.FromSeconds(120));
+            timeout);
     }
 
     private static async Task<CommandResult> RunProcessAsync(
@@ -1480,27 +1913,423 @@ public sealed class RepositoryBuildToolTests
 
     private static void AssertDiagnosticCode(CommandResult result, string expectedCode)
     {
-        var diagnostics = ReadDiagnosticCodes(result);
-
-        Assert.True(
-            diagnostics.Contains(expectedCode, StringComparer.Ordinal),
-            $"Expected diagnostic code '{expectedCode}'. Actual codes: {string.Join(", ", diagnostics)}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        AssertDiagnosticCode(result, expectedCode, expectedCode);
     }
 
-    private static List<string> ReadDiagnosticCodes(CommandResult result)
+    private static JsonDocument ReadDiagnostics(CommandResult result)
     {
-        var codes = new List<string>();
-        foreach (var line in result.Stdout.Split([Environment.NewLine, "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-        {
-            using var document = JsonDocument.Parse(line);
-            if (document.RootElement.TryGetProperty("code", out var code))
-            {
-                codes.Add(code.GetString() ?? string.Empty);
+        var lines = result.Stdout
+            .Split([Environment.NewLine, "\n"], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToArray();
+
+        Assert.NotEmpty(lines);
+
+        var json = "[" + string.Join(",", lines) + "]";
+        return JsonDocument.Parse(json);
+    }
+
+    private static void AssertDiagnosticCode(CommandResult result, string expectedCode, string caseName)
+    {
+        using var diagnostics = ReadDiagnostics(result);
+        var codes = diagnostics.RootElement
+            .EnumerateArray()
+            .Select(diagnostic => diagnostic.GetProperty("code").GetString())
+            .ToArray();
+
+        Assert.True(
+            codes.Contains(expectedCode, StringComparer.Ordinal),
+            $"Expected diagnostic '{expectedCode}' for case '{caseName}'. Actual codes: {string.Join(", ", codes)}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+    }
+
+    private static TemporaryDirectory CreateReadmeFixture(string name)
+    {
+        var workspace = TemporaryDirectory.Create(name);
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteReadmeAssets(workspace.Root);
+        WriteText(workspace.Root, "README.md", CreateValidReadme());
+        return workspace;
+    }
+
+    private static TemporaryDirectory CreateDocumentationFixture(string name)
+    {
+        var workspace = TemporaryDirectory.Create(name);
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(workspace.Root, "tools/Verify-LocalDocumentation.ps1", "exit 0\n");
+        WriteText(workspace.Root, ApiManifestRelativePath, CreateApiManifest());
+        WriteText(workspace.Root, ExamplesRelativePath, "{\n  \"examples\": []\n}\n");
+        WriteText(workspace.Root, DocumentationSourceRelativePath, "# Agent workflow\n");
+        WriteDocumentationIndex(workspace.Root);
+        return workspace;
+    }
+
+    private static TemporaryDirectory CreateDocumentationUpdateFixture(string name, string initialIndex = "fresh\n")
+    {
+        var workspace = TemporaryDirectory.Create(name);
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(workspace.Root, "data/documentation/electron2d-local-docs-index.json", initialIndex);
+        WriteText(
+            workspace.Root,
+            "tools/Update-LocalDocumentationIndex.ps1",
+            """
+            param([switch]$Check)
+            $ErrorActionPreference = 'Stop'
+            $IndexPath = Join-Path $PSScriptRoot '..\data\documentation\electron2d-local-docs-index.json'
+            if ($Check) {
+                $Content = Get-Content -LiteralPath $IndexPath -Raw
+                if ($Content -ne "fresh`n") {
+                    Write-Error 'Generated index is stale.'
+                    exit 1
+                }
+
+                exit 0
             }
+
+            Set-Content -LiteralPath $IndexPath -Value "fresh`n" -Encoding utf8 -NoNewline
+            exit 0
+            """);
+        return workspace;
+    }
+
+    private static void CreateRepositoryRootMarkers(string root)
+    {
+        WriteText(root, "AGENTS.md", "# Test repository instructions\n");
+        WriteText(root, "README.md", "# Temporary repository\n");
+        Directory.CreateDirectory(Path.Combine(root, "src"));
+    }
+
+    private static void WriteReadmeAssets(string root)
+    {
+        WriteText(root, DarkReadmeAssetRelativePath, CreateReadmeSvg());
+        WriteText(root, LightReadmeAssetRelativePath, CreateReadmeSvg());
+    }
+
+    private static string CreateReadmeSvg()
+    {
+        return """
+        <svg xmlns="http://www.w3.org/2000/svg">
+          <text aria-label="Agent-native cross-platform 2D game engine">Electron2D</text>
+        </svg>
+        """;
+    }
+
+    private static string CreateValidReadme()
+    {
+        return $$"""
+        <div align="center">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="{{DarkReadmeAssetRelativePath}}">
+          <source media="(prefers-color-scheme: light)" srcset="{{LightReadmeAssetRelativePath}}">
+          <img alt="Electron2D" src="{{LightReadmeAssetRelativePath}}">
+        </picture>
+        </div>
+
+        <div align="center">
+
+        ![Contributors](https://img.shields.io/github/contributors/edwardgushchin/Electron2D)
+        ![Last commit](https://img.shields.io/github/last-commit/edwardgushchin/Electron2D)
+        ![License](https://img.shields.io/badge/license-MIT-green)
+
+        ![.NET](https://img.shields.io/badge/.NET-10-512BD4)
+        ![C#](https://img.shields.io/badge/C%23-14-239120)
+        ![Version](https://img.shields.io/badge/version-0.1.0--preview-blue)
+
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#platforms">Platforms</a>
+        <a href="#installation">Installation</a>
+        <a href="#quick-start">Quick Start</a>
+        <a href="#documentation">Documentation</a>
+        <a href="#examples">Examples</a>
+        <a href="#feedback-and-contributing">Feedback</a>
+        <a href="#license">License</a>
+
+        {{StarSymbol}} Star us on GitHub - it motivates us a lot!
+
+        </div>
+
+        <a id="about"></a>
+        ## {{CompassSymbol}} About
+
+        Electron2D is an agent-native, cross-platform 2D game engine for .NET.
+
+        Developers and local coding agents work on the same scenes, scripts, resources, diagnostics and undo history through the editor.
+
+        <a id="features"></a>
+        ## {{SparklesSymbol}} Features
+
+        - **Agent-native workflow** - Humans and agents can collaborate inside the same project.
+        - **Trello-style task board** - Use shared task columns, cards, assignees, labels, review states and editor-visible project context.
+        - **Built-in editor** - Open projects, inspect scenes and manage game content.
+        - **C# scripting** - Build gameplay using modern .NET.
+        - **Node-based scenes** - Compose game objects as scene nodes.
+        - **2D rendering** - Draw sprites, tilemaps, text and custom materials.
+        - **2D physics** - Build platformers, triggers and collision-driven gameplay.
+        - **Asset workflow** - Import and reuse game resources.
+        - **Cross-platform runtime** - Build and run games on Windows, Linux, macOS and Android. iOS and Web are planned as future runtime targets.
+
+        <a id="platforms"></a>
+        ## {{DesktopSymbol}} Platforms
+
+        | Platform | Editor | Runtime |
+        | --- | --- | --- |
+        | Windows | {{DoneStatus}} | {{DoneStatus}} |
+        | Linux | {{DoneStatus}} | {{DoneStatus}} |
+        | macOS | {{DoneStatus}} | {{DoneStatus}} |
+        | Android | {{NotPlannedStatus}} | {{DoneStatus}} |
+        | iOS | {{NotPlannedStatus}} | {{PlannedStatus}} |
+        | Web | {{NotPlannedStatus}} | {{PlannedStatus}} |
+
+        <a id="installation"></a>
+        ## {{PackageSymbol}} Installation
+
+        ```bash
+        git clone https://github.com/edwardgushchin/Electron2D.git
+        cd Electron2D
+        dotnet build src/Electron2D.sln -c Release
+        ```
+
+        <a id="quick-start"></a>
+        ## {{RocketSymbol}} Quick Start
+
+        ```bash
+        dotnet run --project src/Electron2D.Editor/Electron2D.Editor.csproj -c Release
+        ```
+
+        <a id="documentation"></a>
+        ## {{BooksSymbol}} Documentation
+
+        [Electron2D Wiki](https://github.com/edwardgushchin/Electron2D/wiki)
+
+        <a id="examples"></a>
+        ## {{GameSymbol}} Examples
+
+        - **[Platformer](https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer)** - A 2D platformer example built with Electron2D.
+
+        <a id="feedback-and-contributing"></a>
+        ## {{SpeechSymbol}} Feedback and Contributing
+
+        Report issues at https://github.com/edwardgushchin/Electron2D/issues and send pull requests at https://github.com/edwardgushchin/Electron2D/pulls.
+
+        See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+        <a id="contributors"></a>
+        ## {{PeopleSymbol}} Contributors
+
+        See https://github.com/edwardgushchin/Electron2D/graphs/contributors.
+
+        <a id="license"></a>
+        ## {{LicenseSymbol}} License
+
+        Electron2D is distributed under the [MIT License](LICENSE).
+        """;
+    }
+
+    private static string CreateApiManifest()
+    {
+        return """
+        {
+          "types": [
+            {
+              "id": "Electron2D.CharacterBody2D",
+              "members": [
+                {
+                  "id": "Electron2D.CharacterBody2D.MoveAndSlide"
+                }
+              ]
+            }
+          ]
+        }
+        """;
+    }
+
+    private static void WriteDocumentationIndex(
+        string root,
+        string? wikiSourceJson = null,
+        bool includeDocsExampleCommand = true,
+        string? apiMemberApiId = null,
+        string? documentationEntrySourcePath = null)
+    {
+        var commands = new List<string>
+        {
+            CreateDocumentationCommandJson("docs search"),
+            CreateDocumentationCommandJson("docs type"),
+            CreateDocumentationCommandJson("docs member")
+        };
+        if (includeDocsExampleCommand)
+        {
+            commands.Add(CreateDocumentationCommandJson("docs example"));
         }
 
-        Assert.NotEmpty(codes);
-        return codes;
+        var apiManifestHash = ComputeNormalizedSha256(Path.Combine(root, ApiManifestRelativePath.Replace('/', Path.DirectorySeparatorChar)));
+        var examplesHash = ComputeNormalizedSha256(Path.Combine(root, ExamplesRelativePath.Replace('/', Path.DirectorySeparatorChar)));
+        var documentationHash = ComputeNormalizedSha256(Path.Combine(root, DocumentationSourceRelativePath.Replace('/', Path.DirectorySeparatorChar)));
+        var wikiJson = wikiSourceJson ?? """
+        {
+          "generator": "tools/Update-ApiWiki.ps1",
+          "compatibilityPage": ".github/wiki/API-Compatibility.md"
+        }
+        """;
+        var memberApiId = apiMemberApiId ?? "Electron2D.CharacterBody2D.MoveAndSlide";
+        var docEntrySourcePath = documentationEntrySourcePath ?? DocumentationSourceRelativePath;
+
+        var index = $$"""
+        {
+          "schemaVersion": 1,
+          "manifestVersion": "0.1.0-preview",
+          "generatedFrom": {
+            "apiManifest": {
+              "path": "{{ApiManifestRelativePath}}",
+              "sha256": "{{apiManifestHash}}"
+            },
+            "documentation": [
+              {
+                "path": "{{DocumentationSourceRelativePath}}",
+                "sha256": "{{documentationHash}}"
+              }
+            ],
+            "examples": {
+              "path": "{{ExamplesRelativePath}}",
+              "sha256": "{{examplesHash}}"
+            }
+          },
+          "audiences": [
+            "human",
+            "ai",
+            "cli",
+            "ide",
+            "wiki",
+            "inspector",
+            "generator"
+          ],
+          "commands": [
+        {{string.Join(",\n", commands)}}
+          ],
+          "sources": {
+            "apiManifest": {
+              "path": "{{ApiManifestRelativePath}}"
+            },
+            "documentation": {
+              "paths": [
+                "{{DocumentationSourceRelativePath}}"
+              ]
+            },
+            "examples": {
+              "path": "{{ExamplesRelativePath}}"
+            },
+            "wiki": {{wikiJson}}
+          },
+          "entries": [
+            {
+              "id": "api-member:Electron2D.CharacterBody2D.MoveAndSlide",
+              "kind": "api-member",
+              "title": "CharacterBody2D.MoveAndSlide",
+              "summary": "Moves a character body.",
+              "keywords": [
+                "character",
+                "movement"
+              ],
+              "audiences": [
+                "human"
+              ],
+              "sourcePath": "{{ApiManifestRelativePath}}",
+              "apiId": "{{memberApiId}}"
+            },
+            {
+              "id": "api-type:Electron2D.CharacterBody2D",
+              "kind": "api-type",
+              "title": "CharacterBody2D",
+              "summary": "Character body type.",
+              "keywords": [
+                "character"
+              ],
+              "audiences": [
+                "human"
+              ],
+              "sourcePath": "{{ApiManifestRelativePath}}",
+              "apiId": "Electron2D.CharacterBody2D"
+            },
+            {
+              "id": "doc:architecture.agent-native-workflow",
+              "kind": "documentation",
+              "title": "Agent workflow",
+              "summary": "Agent workflow documentation.",
+              "keywords": [
+                "agent"
+              ],
+              "audiences": [
+                "human"
+              ],
+              "sourcePath": "{{docEntrySourcePath}}",
+              "sourceId": "architecture.agent-native-workflow"
+            },
+            {
+              "id": "example:platformer-movement",
+              "kind": "example",
+              "title": "Platformer movement",
+              "summary": "Platformer movement example.",
+              "keywords": [
+                "platformer"
+              ],
+              "audiences": [
+                "human"
+              ],
+              "sourcePath": "{{ExamplesRelativePath}}",
+              "sourceId": "platformer-movement"
+            }
+          ]
+        }
+        """;
+
+        WriteText(root, "data/documentation/electron2d-local-docs-index.json", index);
+    }
+
+    private static string CreateDocumentationCommandJson(string commandName)
+    {
+        return $$"""
+            {
+              "name": "{{commandName}}",
+              "description": "Fixture command metadata.",
+              "formats": [
+                "text",
+                "json"
+              ]
+            }
+        """;
+    }
+
+    private static void AppendToReadme(string root, string value)
+    {
+        var readmePath = Path.Combine(root, "README.md");
+        File.AppendAllText(readmePath, value, Encoding.UTF8);
+    }
+
+    private static void ReplaceInReadme(string root, string oldValue, string newValue)
+    {
+        var readmePath = Path.Combine(root, "README.md");
+        var readme = File.ReadAllText(readmePath, Encoding.UTF8);
+        Assert.Contains(oldValue, readme, StringComparison.Ordinal);
+        File.WriteAllText(readmePath, readme.Replace(oldValue, newValue, StringComparison.Ordinal), Encoding.UTF8);
+    }
+
+    private static void WriteText(string root, string relativePath, string content)
+    {
+        var path = Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, content.Replace("\r\n", "\n").Replace('\r', '\n'), Encoding.UTF8);
+    }
+
+    private static string ReadText(string root, string relativePath)
+    {
+        return File.ReadAllText(Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar)), Encoding.UTF8)
+            .Replace("\r\n", "\n")
+            .Replace('\r', '\n');
+    }
+
+    private static string ComputeNormalizedSha256(string path)
+    {
+        var text = File.ReadAllText(path, Encoding.UTF8).Replace("\r\n", "\n").Replace('\r', '\n');
+        var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
+        return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
     }
 
     private static List<object> GetDiagnostics(object result)
@@ -1842,6 +2671,33 @@ public sealed class RepositoryBuildToolTests
     private const string DotnetExecutable = "dotnet";
     private static readonly DateTimeOffset DeterministicZipTimestamp = new(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
     private static readonly Regex TaskIdPattern = new(@"\bT-\d{4}\b", RegexOptions.CultureInvariant);
+    private const string SecretValueCaseTokenAssignment = "negative-case-01";
+    private const string SecretValueCasePasswordAssignment = "negative-case-02";
+    private const string SecretValueCaseApiKeyAssignment = "negative-case-03";
+    private const string SecretValueCasePrivateKeyMarker = "negative-case-04";
+    private const string DarkReadmeAssetRelativePath = "data/assets/branding/readme/electron2d_readme_dark.svg";
+    private const string LightReadmeAssetRelativePath = "data/assets/branding/readme/electron2d_readme_light.svg";
+    private const string ApiManifestRelativePath = "data/api/electron2d-api-manifest.json";
+    private const string ExamplesRelativePath = "data/documentation/electron2d-doc-examples.json";
+    private const string DocumentationSourceRelativePath = "docs/architecture/agent-native-workflow.md";
+    private const string CompassSymbol = "\U0001F9ED";
+    private const string SparklesSymbol = "\u2728";
+    private const string DesktopSymbol = "\U0001F5A5\uFE0F";
+    private const string PackageSymbol = "\U0001F4E6";
+    private const string RocketSymbol = "\U0001F680";
+    private const string BooksSymbol = "\U0001F4DA";
+    private const string GameSymbol = "\U0001F3AE";
+    private const string SpeechSymbol = "\U0001F4AC";
+    private const string PeopleSymbol = "\U0001F465";
+    private const string LicenseSymbol = "\U0001F4C4";
+    private const string StarSymbol = "\u2B50";
+    private const string DoneStatus = "\u2705 Done";
+    private const string PlannedStatus = "\U0001F553 Planned";
+    private const string NotPlannedStatus = "\u274C Not planned";
+
+    private sealed record ReadmeFixtureCase(string Name, Action<string> Mutate, string ExpectedCode);
+
+    private sealed record DocumentationFixtureCase(string Name, Action<string> Mutate, string ExpectedCode);
 
     private sealed record CommandResult(int ExitCode, string Stdout, string Stderr);
 

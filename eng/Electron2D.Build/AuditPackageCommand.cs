@@ -57,7 +57,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         @"(?im)(?:^|[^\p{L}\p{N}_-])[""']?(?:api[_-]?key|password|secret|token)[""']?\s*[:=]\s*[""']?(?<value>[^""'\s#][^#\r\n]*)",
         RegexOptions.CultureInvariant);
     private static readonly Regex PrivateKeyPattern = new(
-        @"(?im)-----BEGIN [A-Z ]*PRIVATE\s+KEY-----|\bBEGIN\s+PRIVATE\s+KEY\b",
+        @"(?im)-----BEGIN [A-Z ]*PRIVATE\s+KEY-----|-----BEGIN[^\r\n]*PRIVATE\s+KEY|\bBEGIN\s+PRIVATE\s+KEY\b",
         RegexOptions.CultureInvariant);
     private static readonly Regex WindowsDrivePathPattern = new(
         @"(?i)\b[A-Z]:(?:\\|/)",
@@ -147,11 +147,14 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         var evidenceFiles = importedEvidence.Concat(checkEvidence).OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
         var firstSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, cancellationToken).ConfigureAwait(false);
 
-        var patch = await CreatePatchAsync(repoRoot, staging.Root, options.Baseline, repoFiles, cancellationToken).ConfigureAwait(false);
+        var previousVerdictPaths = SelectPreviousVerdictPaths(config);
+        var patch = await CreatePatchAsync(repoRoot, staging.Root, options.Baseline, repoFiles, previousVerdictPaths, cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(patch.PatchText))
         {
             throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-PATCH-EMPTY", "Selected repository files do not produce a patch.");
         }
+
+        ValidatePatchText(patch.PatchText, $"{options.TaskId}.patch", repoRoot, previousVerdictPaths);
 
         var restoreManifest = await CreateRestoreManifestAsync(repoRoot, config, repoFiles, cancellationToken).ConfigureAwait(false);
         var normalizedConfigJson = JsonSerializer.Serialize(config, JsonWriteOptions) + "\n";
@@ -177,7 +180,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         archiveFiles["AUDIT-MANIFEST.md"] = Encoding.UTF8.GetBytes(manifest);
         archiveFiles["SHA256SUMS.txt"] = CreateChecksumFile(archiveFiles);
 
-        ValidateArchiveFiles(archiveFiles, repoRoot, SelectPreviousVerdictPaths(config));
+        ValidateArchiveFiles(archiveFiles, repoRoot, previousVerdictPaths);
         var secondSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, cancellationToken).ConfigureAwait(false);
         if (!SnapshotsEqual(firstSnapshot, secondSnapshot))
         {
@@ -558,7 +561,10 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             if (file.Exists)
             {
                 ValidateInputFileSize(file.AbsolutePath, file.Path, config.MaxFileSize);
-                ValidateSecretPolicy(file.AbsolutePath, file.Path, config.SecretScanPolicy);
+                if (!existingPreviousVerdicts.Contains(file.Path))
+                {
+                    ValidateSecretPolicy(file.AbsolutePath, file.Path, config.SecretScanPolicy);
+                }
             }
         }
 
@@ -579,9 +585,28 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static HashSet<string> SelectPreviousVerdictPaths(AuditPackageConfiguration config)
     {
-        return config.PreviousVerdictChain
-            .Select(path => AuditPath.NormalizeRelativePath(path, "previousVerdictChain", allowCurrentDirectory: false))
-            .ToHashSet(StringComparer.Ordinal);
+        var paths = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var path in config.PreviousVerdictChain)
+        {
+            var normalized = AuditPath.NormalizeRelativePath(path, "previousVerdictChain", allowCurrentDirectory: false);
+            if (!IsPreviousVerdictPath(normalized))
+            {
+                throw new AuditPackageFailure(
+                    "audit package",
+                    "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                    $"previousVerdictChain must reference Markdown verdict files under docs/verdicts: {normalized}");
+            }
+
+            paths.Add(normalized);
+        }
+
+        return paths;
+    }
+
+    private static bool IsPreviousVerdictPath(string path)
+    {
+        return path.StartsWith("docs/verdicts/", StringComparison.Ordinal) &&
+            path.EndsWith(".md", StringComparison.OrdinalIgnoreCase);
     }
 
     private static SelectedRepositoryFile CreateSelectedRepositoryFile(string repoRoot, string path, bool existsInBaseline)
@@ -801,6 +826,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         string stagingRoot,
         string baseline,
         SelectedRepositoryFile[] repoFiles,
+        ISet<string> previousVerdictPaths,
         CancellationToken cancellationToken)
     {
         var tempIndex = Path.Combine(stagingRoot, "git-index");
@@ -821,14 +847,11 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             }
         }
 
-        var patch = await GitRunner.RunAsync(
-            repoRoot,
-            ["diff", "--cached", "--binary", "--full-index", "--no-ext-diff", baseline, "--"],
-            env,
-            cancellationToken).ConfigureAwait(false);
-        if (patch.ExitCode != 0)
+        var patchText = await CreatePatchTextFromTemporaryIndexAsync(repoRoot, stagingRoot, baseline, env, Array.Empty<string>(), cancellationToken).ConfigureAwait(false);
+        var binaryFallbackPaths = SelectBinaryPatchFallbackPaths(patchText, previousVerdictPaths);
+        if (binaryFallbackPaths.Count > 0)
         {
-            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-GIT-FAILED", $"git diff failed: {patch.StandardError}");
+            patchText = await CreatePatchTextFromTemporaryIndexAsync(repoRoot, stagingRoot, baseline, env, binaryFallbackPaths, cancellationToken).ConfigureAwait(false);
         }
 
         var nameStatus = await GitRunner.RunAsync(
@@ -841,8 +864,147 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-GIT-FAILED", $"git diff --name-status failed: {nameStatus.StandardError}");
         }
 
-        VerifyPatchControlPaths(patch.StandardOutput);
-        return new PatchResult(patch.StandardOutput, nameStatus.StandardOutput);
+        VerifyPatchControlPaths(patchText);
+        return new PatchResult(patchText, nameStatus.StandardOutput);
+    }
+
+    private static async Task<string> CreatePatchTextFromTemporaryIndexAsync(
+        string repoRoot,
+        string stagingRoot,
+        string baseline,
+        Dictionary<string, string> environment,
+        IReadOnlyCollection<string> binaryDiffPaths,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>();
+        if (binaryDiffPaths.Count > 0)
+        {
+            var attributesPath = await WriteBinaryDiffAttributesAsync(stagingRoot, binaryDiffPaths, cancellationToken).ConfigureAwait(false);
+            arguments.Add("-c");
+            arguments.Add($"core.attributesFile={attributesPath.Replace('\\', '/')}");
+        }
+
+        arguments.AddRange(["diff", "--cached", "--binary", "--full-index", "--no-ext-diff", baseline, "--"]);
+
+        var patch = await GitRunner.RunAsync(
+            repoRoot,
+            arguments.ToArray(),
+            environment,
+            cancellationToken).ConfigureAwait(false);
+        if (patch.ExitCode != 0)
+        {
+            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-GIT-FAILED", $"git diff failed: {patch.StandardError}");
+        }
+
+        return patch.StandardOutput;
+    }
+
+    private static async Task<string> WriteBinaryDiffAttributesAsync(
+        string stagingRoot,
+        IEnumerable<string> binaryDiffPaths,
+        CancellationToken cancellationToken)
+    {
+        var attributesPath = Path.Combine(stagingRoot, "binary-diff.gitattributes");
+        var builder = new StringBuilder();
+        foreach (var path in binaryDiffPaths.Order(StringComparer.Ordinal))
+        {
+            builder.Append(FormatGitAttributesPathPattern(path));
+            builder.AppendLine(" -diff");
+        }
+
+        await File.WriteAllTextAsync(attributesPath, builder.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), cancellationToken).ConfigureAwait(false);
+        return attributesPath;
+    }
+
+    private static string FormatGitAttributesPathPattern(string path)
+    {
+        if (path.Length == 0 ||
+            path[0] is '#' or '!' ||
+            path.Any(character => char.IsWhiteSpace(character) || character is '"' or '\\'))
+        {
+            return "\"" + path.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal) + "\"";
+        }
+
+        return path;
+    }
+
+    private static HashSet<string> SelectBinaryPatchFallbackPaths(string patch, ISet<string> previousVerdictPaths)
+    {
+        var paths = new HashSet<string>(StringComparer.Ordinal);
+        var currentHeader = string.Empty;
+        var currentBlock = new StringBuilder();
+
+        foreach (var line in patch.Split('\n'))
+        {
+            if (line.StartsWith("diff --git ", StringComparison.Ordinal))
+            {
+                AddCurrentBlock();
+                currentHeader = line.TrimEnd('\r');
+                currentBlock.Clear();
+            }
+
+            if (currentHeader.Length > 0)
+            {
+                currentBlock.Append(line);
+                currentBlock.Append('\n');
+            }
+        }
+
+        AddCurrentBlock();
+        return paths;
+
+        void AddCurrentBlock()
+        {
+            if (currentHeader.Length == 0)
+            {
+                return;
+            }
+
+            var blockPaths = GetPatchDiffLinePaths(currentHeader);
+            if (blockPaths.Length == 0 ||
+                blockPaths.Any(path => previousVerdictPaths.Contains(path)) ||
+                !PatchDiffBlockContainsSecret(currentBlock.ToString()))
+            {
+                return;
+            }
+
+            foreach (var path in blockPaths)
+            {
+                paths.Add(path);
+            }
+        }
+    }
+
+    private static string[] GetPatchDiffLinePaths(string line)
+    {
+        var normalizedLine = line.TrimEnd('\r');
+        const string prefix = "diff --git a/";
+        if (!normalizedLine.StartsWith(prefix, StringComparison.Ordinal))
+        {
+            return [];
+        }
+
+        var separator = normalizedLine.IndexOf(" b/", prefix.Length, StringComparison.Ordinal);
+        if (separator < 0)
+        {
+            return [];
+        }
+
+        var left = normalizedLine[prefix.Length..separator];
+        var right = normalizedLine[(separator + " b/".Length)..];
+        if (left.Length == 0 || right.Length == 0)
+        {
+            return [];
+        }
+
+        return string.Equals(left, right, StringComparison.Ordinal)
+            ? [left]
+            : [left, right];
+    }
+
+    private static bool PatchDiffBlockContainsSecret(string block)
+    {
+        return PrivateKeyPattern.IsMatch(block) || ContainsSecretAssignment(block);
     }
 
     private static async Task AddNormalizedFileToTemporaryIndexAsync(
@@ -1743,10 +1905,13 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         var text = Encoding.UTF8.GetString(bytes);
-        var machinePathScanText = IsPatchPath(archivePath) && previousVerdictPaths.Count > 0
-            ? OmitPreviousVerdictPatchBlocks(text, previousVerdictPaths)
-            : text;
-        ValidateMachineLocalPathText(machinePathScanText, archivePath, repoRoot);
+        if (IsPatchPath(archivePath))
+        {
+            ValidatePatchText(text, archivePath, repoRoot, previousVerdictPaths);
+            return;
+        }
+
+        ValidateMachineLocalPathText(text, archivePath, repoRoot);
 
         if (IsTrxPath(archivePath))
         {
@@ -1755,6 +1920,19 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         ValidateSecretText(text, archivePath, "audit package");
+    }
+
+    private static void ValidatePatchText(
+        string patch,
+        string archivePath,
+        string repoRoot,
+        ISet<string> previousVerdictPaths)
+    {
+        var scanText = previousVerdictPaths.Count > 0
+            ? OmitPreviousVerdictPatchBlocks(patch, previousVerdictPaths)
+            : patch;
+        ValidateMachineLocalPathText(scanText, archivePath, repoRoot);
+        ValidateSecretText(scanText, archivePath, "audit package");
     }
 
     private static void ValidateMachineLocalPathText(string text, string archivePath, string repoRoot)
@@ -1794,10 +1972,10 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static bool PatchDiffLineReferencesAnyPath(string line, ISet<string> paths)
     {
+        var normalizedLine = line.TrimEnd('\r');
         foreach (var path in paths)
         {
-            if (line.Contains($" a/{path}", StringComparison.Ordinal) ||
-                line.Contains($" b/{path}", StringComparison.Ordinal))
+            if (string.Equals(normalizedLine, $"diff --git a/{path} b/{path}", StringComparison.Ordinal))
             {
                 return true;
             }

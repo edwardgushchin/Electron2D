@@ -71,6 +71,8 @@ dotnet run --project eng/Electron2D.Build -- verify
 dotnet run --project eng/Electron2D.Build -- verify readme
 dotnet run --project eng/Electron2D.Build -- verify docs
 dotnet run --project eng/Electron2D.Build -- update wiki --check
+dotnet run --project eng/Electron2D.Build -- update docs --check
+dotnet run --project eng/Electron2D.Build -- update docs
 dotnet run --project eng/Electron2D.Build -- package --rid win-x64
 dotnet run --project eng/Electron2D.Build -- release verify
 ```
@@ -78,7 +80,10 @@ dotnet run --project eng/Electron2D.Build -- release verify
 Границы инструмента:
 
 - `test` и базовый `verify` могут выполнять только лёгкие проверки репозитория или возвращать структурированное сообщение о выбранном шаге; они не должны неявно запускать полный релизный прогон.
-- `verify readme`, `verify docs` и `update wiki --check` являются отдельными маршрутами для будущей миграции существующих проверок из PowerShell в C#.
+- `verify readme` выполняет C#-проверку публичного `README.md` и возвращает структурированные диагностики.
+- `verify docs` выполняет полный локальный документационный контур через текущий нижний PowerShell-проверяющий скрипт, а затем валидирует пересоздаваемый индекс и ссылки на API manifest в C#.
+- `update docs --check` проверяет синхронизацию `data/documentation/electron2d-local-docs-index.json`, а `update docs` пересоздаёт этот файл через текущий нижний генератор.
+- `update wiki --check` остаётся отдельным маршрутом для будущей миграции Wiki/API-проверок из PowerShell в C#.
 - `package --rid <rid>` обязан принимать только точную форму из трёх аргументов: команда `package`, флаг `--rid` и непустой runtime identifier, то есть идентификатор целевой платформы .NET. Лишние, переставленные, повторные или пустые аргументы должны завершаться ненулевым кодом и диагностикой `E2D-BUILD-CLI-INVALID-ARGUMENTS`. Пока сборка архивов не реализована, корректная форма команды должна завершаться закрытым отказом, то есть ненулевым кодом, явной причиной блокировки и выбранным `rid` в диагностическом сообщении.
 - `release verify` обязан быть отдельным маршрутом для будущей проверки релизного кандидата (`release candidate`). Пока полный релизный сценарий не реализован, команда должна завершаться закрытым отказом и не должна создавать теги, архивы или GitHub Release.
 
@@ -88,8 +93,8 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: реализованная CI-конфигурация и новый рабочий C#-слой репозитория для `T-0207`.
-Задача: `T-0003`, дополнение `T-0207`.
+Статус: реализованная CI-конфигурация и рабочий C#-слой репозитория для `T-0207` с текущим переносом README/docs-проверок в `T-0213`.
+Задача: `T-0003`, дополнения `T-0207` и `T-0213`.
 Обновлено: 2026-06-26.
 
 ## Workflow
@@ -152,11 +157,14 @@ powershell -ExecutionPolicy Bypass -File tools/Verify-CiMatrix.ps1
 dotnet run --project eng/Electron2D.Build -- verify
 ```
 
-На этапе `T-0207` этот инструмент предоставляет рабочий C#-каркас команд и переносимый механизм запуска дочерних процессов. Полная замена существующих PowerShell-проверок остаётся отдельной работой, поэтому workflow CI пока продолжает запускать перечисленные выше `tools/*.ps1`.
+На этапе `T-0207` этот инструмент предоставил рабочий C#-каркас команд и переносимый механизм запуска дочерних процессов. В `T-0213` команды `verify readme`, `verify docs`, `update docs --check` и `update docs` уже выполняют реальные проверки или генерацию, но CI пока продолжает запускать перечисленные выше `tools/*.ps1`, пока отдельное переключение workflow не будет принято.
 
-Фактическое поведение `T-0207`:
+Фактическое поведение текущего C#-инструмента:
 
-- `test`, `verify`, `verify readme`, `verify docs` и `update wiki --check` возвращают код `0` и диагностический код `E2D-BUILD-ROUTED`; они только подтверждают маршрут команды и не запускают полный набор проверок.
+- `test`, `verify` и `update wiki --check` возвращают код `0` и диагностический код `E2D-BUILD-ROUTED`; они только подтверждают маршрут команды и не запускают полный набор проверок.
+- `verify readme` проверяет публичный `README.md` по C#-контракту и при успехе возвращает диагностический код `E2D-BUILD-README-VERIFY-PASSED`.
+- `verify docs` запускает полный локальный документационный контур через `tools\Verify-LocalDocumentation.ps1`, затем выполняет C#-валидацию пересоздаваемого индекса, обязательных метаданных и ссылок на API manifest.
+- `update docs --check` проверяет синхронизацию пересоздаваемого индекса, а `update docs` пересоздаёт `data/documentation/electron2d-local-docs-index.json`.
 - неизвестная команда возвращает ненулевой код и диагностический код `E2D-BUILD-CLI-UNKNOWN-COMMAND`.
 - `package` без точной формы `package --rid <rid>` возвращает ненулевой код и диагностический код `E2D-BUILD-CLI-INVALID-ARGUMENTS`.
 - `package --rid <rid>` возвращает ненулевой код, диагностический код `E2D-BUILD-PACKAGE-BLOCKED` и поле `runtimeIdentifier`; архивы, `release-manifest.json`, файлы контрольных сумм, каталог `artifacts/` и выходные каталоги релиза не создаются.

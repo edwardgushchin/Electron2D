@@ -65,15 +65,15 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test, verify, update wiki --check, package --rid <rid>, release verify."));
+                "Expected one of: test, verify, verify readme, verify docs, update wiki --check, update docs --check, update docs, package --rid <rid>, release verify, audit package."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
         return args[0] switch
         {
             "test" => RouteExactAsync(args, "test", "test"),
-            "verify" => RouteVerifyAsync(args),
-            "update" => RouteUpdateAsync(args),
+            "verify" => RouteVerifyAsync(args, cancellationToken),
+            "update" => RouteUpdateAsync(args, cancellationToken),
             "package" => RoutePackageAsync(args),
             "release" => RouteReleaseAsync(args),
             "audit" => RouteAuditAsync(args, cancellationToken),
@@ -86,7 +86,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         return new AuditPackageCommand(diagnostics).RunAsync(args, cancellationToken);
     }
 
-    private Task<int> RouteVerifyAsync(string[] args)
+    private Task<int> RouteVerifyAsync(string[] args, CancellationToken cancellationToken)
     {
         if (args.Length == 1)
         {
@@ -95,25 +95,35 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
 
         if (args is ["verify", "readme"])
         {
-            return RouteAsync("verify", "verify readme");
+            return VerifyReadmeAsync();
         }
 
         if (args is ["verify", "docs"])
         {
-            return RouteAsync("verify", "verify docs");
+            return VerifyDocsAsync(cancellationToken);
         }
 
         return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, or verify docs.");
     }
 
-    private Task<int> RouteUpdateAsync(string[] args)
+    private Task<int> RouteUpdateAsync(string[] args, CancellationToken cancellationToken)
     {
         if (args is ["update", "wiki", "--check"])
         {
             return RouteAsync("update", "update wiki --check");
         }
 
-        return InvalidArgumentsAsync("update", "update", "Expected: update wiki --check.");
+        if (args is ["update", "docs", "--check"])
+        {
+            return RunDocumentationIndexUpdateAsync(check: true, cancellationToken);
+        }
+
+        if (args is ["update", "docs"])
+        {
+            return RunDocumentationIndexUpdateAsync(check: false, cancellationToken);
+        }
+
+        return InvalidArgumentsAsync("update", "update", "Expected: update wiki --check, update docs --check, or update docs.");
     }
 
     private Task<int> RoutePackageAsync(string[] args)
@@ -169,6 +179,66 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             "E2D-BUILD-ROUTED",
             $"Routed repository build command '{step}'."));
         return Task.FromResult(RepositoryBuildExitCodes.Success);
+    }
+
+    private Task<int> VerifyReadmeAsync()
+    {
+        var repositoryRoot = RepositoryPaths.FindRepositoryRoot(Directory.GetCurrentDirectory());
+        if (repositoryRoot is null)
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                "verify",
+                "verify readme",
+                "error",
+                "E2D-BUILD-REPOSITORY-ROOT-NOT-FOUND",
+                "Repository root was not found from the current working directory."));
+            return Task.FromResult(RepositoryBuildExitCodes.Failed);
+        }
+
+        var verifier = new RepositoryReadmeVerifier(repositoryRoot);
+        var verifierDiagnostics = verifier.Verify();
+        foreach (var diagnostic in verifierDiagnostics)
+        {
+            diagnostics.Write(diagnostic);
+        }
+
+        return Task.FromResult(verifierDiagnostics.Any(diagnostic => string.Equals(diagnostic.Severity, "error", StringComparison.Ordinal))
+            ? RepositoryBuildExitCodes.Failed
+            : RepositoryBuildExitCodes.Success);
+    }
+
+    private Task<int> VerifyDocsAsync(CancellationToken cancellationToken)
+    {
+        var verifier = CreateLocalDocumentationVerifier("verify", "verify docs");
+        return verifier is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : verifier.VerifyAsync(cancellationToken);
+    }
+
+    private Task<int> RunDocumentationIndexUpdateAsync(bool check, CancellationToken cancellationToken)
+    {
+        var step = check ? "update docs --check" : "update docs";
+        var verifier = CreateLocalDocumentationVerifier("update", step);
+        return verifier is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : verifier.RunGeneratedIndexCommandAsync(check, cancellationToken);
+    }
+
+    private LocalDocumentationVerifier? CreateLocalDocumentationVerifier(string command, string step)
+    {
+        var repositoryRoot = RepositoryPaths.FindRepositoryRoot(Directory.GetCurrentDirectory());
+        if (repositoryRoot is null)
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                command,
+                step,
+                "error",
+                "E2D-BUILD-REPOSITORY-ROOT-NOT-FOUND",
+                "Repository root was not found from the current working directory."));
+            return null;
+        }
+
+        return new LocalDocumentationVerifier(repositoryRoot, diagnostics, new ProcessRunner());
     }
 
     private Task<int> UnknownCommandAsync(string command)
@@ -419,7 +489,8 @@ internal sealed record BuildDiagnostic(
     bool? TimedOut = null,
     string? RuntimeIdentifier = null,
     string? ZipPath = null,
-    bool? Force = null);
+    bool? Force = null,
+    string? Path = null);
 
 internal static class RepositoryBuildExitCodes
 {

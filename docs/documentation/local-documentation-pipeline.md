@@ -1,6 +1,6 @@
 # Local documentation pipeline
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-26.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -12,8 +12,8 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `T-0127`.
-Обновлено: 2026-06-22.
+Статус: целевая спецификация для `T-0127` и проверки `T-0213`.
+Обновлено: 2026-06-26.
 
 ## Назначение
 
@@ -77,6 +77,8 @@ Local docs index должен содержать:
 - `sources` с категориями `apiManifest`, `documentation`, `examples`, `wiki`;
 - `entries`, отсортированные по `id`.
 
+`sources.wiki` должен быть объектом JSON с полями `generator` и `compatibilityPage`; строка, массив, `null` или другое значение считаются ошибкой схемы.
+
 Entry должен содержать:
 
 - stable `id`;
@@ -126,6 +128,18 @@ e2d docs example "platformer movement" --format json
 CLI должен fail-closed: если local docs index или API manifest отсутствуют, устарели или не парсятся как JSON, команда должна завершиться с ошибкой и указать verifier command.
 
 ## CI и verifier
+
+Внутренний C#-инструмент репозитория `eng/Electron2D.Build` должен иметь отдельную поверхность команд для пересоздаваемого индекса локальной документации:
+
+```bash
+dotnet run --project eng/Electron2D.Build -- verify docs
+dotnet run --project eng/Electron2D.Build -- update docs --check
+dotnet run --project eng/Electron2D.Build -- update docs
+```
+
+`update docs --check` проверяет, что `data/documentation/electron2d-local-docs-index.json` совпадает с ожидаемым результатом генерации. `update docs` пересоздаёт этот файл. `verify docs` сначала выполняет весь локальный документационный контур через `tools\Verify-LocalDocumentation.ps1`, а затем валидирует пересоздаваемый индекс на стороне C#: JSON-схему, обязательные `commands`, `sources`, `audiences`, ссылки `apiId` на API manifest, исходные пути и обязательные записи.
+
+На этапе `T-0213` C#-команды используют `tools\Verify-LocalDocumentation.ps1` как источник текущего полного локального контура и `tools\Update-LocalDocumentationIndex.ps1 -Check` как источник детерминированной генерации индекса, потому что PowerShell-скрипты уже задают порядок обхода документов, вычисление хешей, формат JSON, сборку CLI и проверку команд `e2d docs`. C#-слой отвечает за стабильную командную поверхность, структурированные JSON-диагностики и ненулевой код завершения при ошибке. Проверка не должна делать необработанный поиск через `grep` по всему репозиторию: исторические и миграционные документы допускаются как источники индекса, а `verify docs` проверяет локальный документационный контур, контракт пересоздаваемого индекса и существование перечисленных источников.
 
 `tools\Verify-LocalDocumentation.ps1` должен проверять:
 
@@ -194,10 +208,28 @@ powershell -ExecutionPolicy Bypass -File tools\Update-LocalDocumentationIndex.ps
 powershell -ExecutionPolicy Bypass -File tools\Update-LocalDocumentationIndex.ps1 -Check
 ```
 
+Проверить синхронизацию index через C#-инструмент:
+
+```powershell
+dotnet run --project eng\Electron2D.Build -- update docs --check
+```
+
+Пересоздать index через C#-инструмент:
+
+```powershell
+dotnet run --project eng\Electron2D.Build -- update docs
+```
+
 Проверить весь локальный документационный контур:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\Verify-LocalDocumentation.ps1
+```
+
+Проверить весь локальный документационный контур и обязательные метаданные через C#-инструмент:
+
+```powershell
+dotnet run --project eng\Electron2D.Build -- verify docs
 ```
 
 Локальные команды CLI:
@@ -243,7 +275,19 @@ Headless CI workflow описывается отдельно: если Editor з
 
 ## Что проверяет verifier
 
-`tools\Verify-LocalDocumentation.ps1` выполняет:
+`dotnet run --project eng\Electron2D.Build -- verify docs` выполняет:
+
+- `tools\Verify-LocalDocumentation.ps1`, который собирает CLI и проверяет команды `e2d docs search/type/member/example`;
+- проверку, что `data/documentation/electron2d-local-docs-index.json` существует и парсится как JSON;
+- проверку `schemaVersion`, `manifestVersion`, `generatedFrom`, `audiences`, `commands`, `sources` и `entries`;
+- проверку, что `sources.wiki` является объектом JSON и ссылается на генератор Wiki/API compatibility;
+- проверку обязательных команд `docs search`, `docs type`, `docs member`, `docs example` и форматов `text`/`json`;
+- проверку, что `api-type` и `api-member` entries ссылаются на существующие stable identifiers из `data/api/electron2d-api-manifest.json`;
+- проверку, что исходные пути из индекса существуют в репозитории.
+
+Если `tools\Verify-LocalDocumentation.ps1` или последующая C#-валидация индекса завершаются ошибкой, команда возвращает ненулевой код и печатает только структурированные JSON-диагностики на стандартный вывод.
+
+`tools\Verify-LocalDocumentation.ps1` остаётся более широким локальным контуром и выполняет:
 
 - `tools\Update-LocalDocumentationIndex.ps1 -Check`;
 - проверку, что `Electron2D.Cli` входит в `src/Electron2D.sln`;
