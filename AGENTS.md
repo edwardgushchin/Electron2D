@@ -92,6 +92,12 @@ These instructions are global defaults for Codex agents across projects. They ap
 - A missing shared UI capability blocks only the concrete editor feature that needs it and must be fixed in the runtime UI stack before that feature is accepted. It does not block all editor implementation work and does not require exposing low-level host internals as public game API.
 - User-facing editor extension/plugin APIs are separate from internal editor host APIs. When plugin support is implemented, expose stable public editor-extension surfaces deliberately instead of treating all internal editor infrastructure as public API.
 
+## External Audit Packages
+- After `T-0228`, do not assemble external audit ZIP files manually. Use `dotnet run --project eng\Electron2D.Build -- audit package --task <task-id> --iteration rNN --baseline <sha> --config <path> --out .temp/audit`.
+- Before sending any package to an external auditor, verify it against a separate clean checkout at the requested baseline with `dotnet run --project eng\Electron2D.Build -- audit package verify --zip <path> --baseline <sha> --repo <clean-repo-path>`.
+- If package creation or restore verification fails, do not send the audit package. Fix the source, configuration, checks, or evidence first and create a new verified package.
+- Audit packages, generated audit manifests, and raw evidence are local working artifacts. Do not stage or commit them unless a task explicitly changes test fixtures or repository-owned documentation for the audit package command.
+
 ## Development Diary
 - Every agent session that works in this repository must keep a local development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product domain documents, and must not be used as a future-work backlog. `dev-diary/` is intentionally ignored by Git and must not be staged or pushed.
 - Use the local date for the file path: `dev-diary/YYYY/MM Месяц/DD-MM-YYYY.md`, for example `dev-diary/2026/06 Июнь/21-06-2026.md`. `YYYY` is the local four-digit year. Month directory names use Russian month names.

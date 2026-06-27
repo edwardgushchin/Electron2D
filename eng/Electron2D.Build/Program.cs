@@ -76,8 +76,14 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             "update" => RouteUpdateAsync(args),
             "package" => RoutePackageAsync(args),
             "release" => RouteReleaseAsync(args),
+            "audit" => RouteAuditAsync(args, cancellationToken),
             _ => UnknownCommandAsync(args[0])
         };
+    }
+
+    private Task<int> RouteAuditAsync(string[] args, CancellationToken cancellationToken)
+    {
+        return new AuditPackageCommand(diagnostics).RunAsync(args, cancellationToken);
     }
 
     private Task<int> RouteVerifyAsync(string[] args)
@@ -411,7 +417,9 @@ internal sealed record BuildDiagnostic(
     string Message,
     int? ProcessExitCode = null,
     bool? TimedOut = null,
-    string? RuntimeIdentifier = null);
+    string? RuntimeIdentifier = null,
+    string? ZipPath = null,
+    bool? Force = null);
 
 internal static class RepositoryBuildExitCodes
 {

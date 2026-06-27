@@ -388,6 +388,10 @@
                                                     "sha256":  "e8b2b41feeb3d361bafb912019e5cc42b24e839b78131816c22243114fc4b9d1"
                                                 },
                                                 {
+                                                    "path":  "docs/release-management/audit-package.md",
+                                                    "sha256":  "fe6d095afc90ce60d8867afd096e2b5b1a46a7096261400ffc2c8a3ab5398744"
+                                                },
+                                                {
                                                     "path":  "docs/release-management/ci-matrix.md",
                                                     "sha256":  "1882d6720d01adf46f07efbd9945683601f4b71945c5a5e08740e2fed7ade7a3"
                                                 },
@@ -413,7 +417,7 @@
                                                 },
                                                 {
                                                     "path":  "docs/releases/0.1.0-preview.md",
-                                                    "sha256":  "91f36097651372e2c07938d6184d4491457abe08a419f5930aa77decd1ea30b6"
+                                                    "sha256":  "f2ad7a4af6401c6a73e211d7d97727733e59bc6c246d7fea9528a91fc7a8b5c7"
                                                 },
                                                 {
                                                     "path":  "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -644,6 +648,22 @@
                                                     "sha256":  "d9935a56de99897c7a2991ae42414645ee577694d008bfffb4b354e830fbed84"
                                                 },
                                                 {
+                                                    "path":  "docs/verdicts/release-management/t-0228-audit-r01.md",
+                                                    "sha256":  "0c24ce034e9824eb82d8eb4e5dfd3921968b333c1491b76355d56cc09dce77fe"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0228-audit-r02.md",
+                                                    "sha256":  "8b0b4c65c08212cb446003511a2d7ba26dfb745c46963ce649ca6853f0282698"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0228-audit-r03.md",
+                                                    "sha256":  "3e994c9cf6db00303405926e49f4186a1e170d90e1b61d830f3916df067ceb3d"
+                                                },
+                                                {
+                                                    "path":  "docs/verdicts/release-management/t-0228-audit-r04.md",
+                                                    "sha256":  "c2c9258eea423b71100c606d1230279746e65d9ccdd76f2c7357d30ca45c9bec"
+                                                },
+                                                {
                                                     "path":  "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
                                                     "sha256":  "64f5edf9155455623cf21f7e0bf7a18807b08023eda6c06a5da2ac93e341c5d9"
                                                 },
@@ -838,6 +858,7 @@
                                                         "docs/quality/leak-verification.md",
                                                         "docs/quality/performance-verification.md",
                                                         "docs/release-management/api-compatibility.md",
+                                                        "docs/release-management/audit-package.md",
                                                         "docs/release-management/ci-matrix.md",
                                                         "docs/release-management/performance-budgets.md",
                                                         "docs/release-management/project-template.md",
@@ -902,6 +923,10 @@
                                                         "docs/verdicts/release-management/t-0207-audit-r02.md",
                                                         "docs/verdicts/release-management/t-0207-audit-r03.md",
                                                         "docs/verdicts/release-management/t-0207-audit-r04.md",
+                                                        "docs/verdicts/release-management/t-0228-audit-r01.md",
+                                                        "docs/verdicts/release-management/t-0228-audit-r02.md",
+                                                        "docs/verdicts/release-management/t-0228-audit-r03.md",
+                                                        "docs/verdicts/release-management/t-0228-audit-r04.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
                                                         "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
@@ -76928,6 +76953,31 @@
                                       ]
                     },
                     {
+                        "id":  "doc:release-management.audit-package",
+                        "kind":  "documentation",
+                        "title":  "Детерминированный `audit package`",
+                        "summary":  "Обновлено: 2026-06-27.",
+                        "keywords":  [
+                                         "06",
+                                         "2026",
+                                         "27",
+                                         "audit",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "package",
+                                         "release"
+                                     ],
+                        "sourcePath":  "docs/release-management/audit-package.md",
+                        "sourceId":  "doc:release-management.audit-package",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
                         "id":  "doc:release-management.ci-matrix",
                         "kind":  "documentation",
                         "title":  "CI-матрица `0.1.0 Preview`",
@@ -77104,14 +77154,14 @@
                         "id":  "doc:releases.0.1.0-preview",
                         "kind":  "documentation",
                         "title":  "Electron2D 0.1.0 Preview",
-                        "summary":  "Обновлено: 2026-06-26.",
+                        "summary":  "Обновлено: 2026-06-27.",
                         "keywords":  [
                                          "0",
                                          "06",
                                          "1",
                                          "2",
                                          "2026",
-                                         "26",
+                                         "27",
                                          "d",
                                          "docs",
                                          "electron",
@@ -78658,6 +78708,114 @@
                                      ],
                         "sourcePath":  "docs/verdicts/release-management/t-0207-audit-r04.md",
                         "sourceId":  "doc:verdicts.release-management.t-0207-audit-r04",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0228-audit-r01",
+                        "kind":  "documentation",
+                        "title":  "T-0228 audit r01",
+                        "summary":  "- Задача: T-0228",
+                        "keywords":  [
+                                         "01",
+                                         "0228",
+                                         "audit",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r01",
+                                         "release",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0228-audit-r01.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0228-audit-r01",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0228-audit-r02",
+                        "kind":  "documentation",
+                        "title":  "T-0228 audit r02",
+                        "summary":  "- Задача: T-0228",
+                        "keywords":  [
+                                         "02",
+                                         "0228",
+                                         "audit",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r02",
+                                         "release",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0228-audit-r02.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0228-audit-r02",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0228-audit-r03",
+                        "kind":  "documentation",
+                        "title":  "Аудит T-0228 r03",
+                        "summary":  "- Задача: T-0228",
+                        "keywords":  [
+                                         "0228",
+                                         "03",
+                                         "audit",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r03",
+                                         "release",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0228-audit-r03.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0228-audit-r03",
+                        "audiences":  [
+                                          "human",
+                                          "ai",
+                                          "cli",
+                                          "wiki"
+                                      ]
+                    },
+                    {
+                        "id":  "doc:verdicts.release-management.t-0228-audit-r04",
+                        "kind":  "documentation",
+                        "title":  "T-0228 audit r04",
+                        "summary":  "- Задача: T-0228",
+                        "keywords":  [
+                                         "0228",
+                                         "04",
+                                         "audit",
+                                         "docs",
+                                         "management",
+                                         "md",
+                                         "r",
+                                         "r04",
+                                         "release",
+                                         "t",
+                                         "verdicts"
+                                     ],
+                        "sourcePath":  "docs/verdicts/release-management/t-0228-audit-r04.md",
+                        "sourceId":  "doc:verdicts.release-management.t-0228-audit-r04",
                         "audiences":  [
                                           "human",
                                           "ai",

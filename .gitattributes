@@ -1,1 +1,10 @@
 data/assets/reference-games/** binary
+
+AGENTS.md text eol=lf
+.gitattributes text eol=lf
+data/documentation/electron2d-local-docs-index.json text eol=lf
+docs/release-management/audit-package.md text eol=lf
+docs/releases/0.1.0-preview.md text eol=lf
+eng/Electron2D.Build/AuditPackageCommand.cs text eol=lf
+eng/Electron2D.Build/Program.cs text eol=lf
+tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs text eol=lf
