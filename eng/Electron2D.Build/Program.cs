@@ -65,7 +65,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test, verify, verify readme, verify docs, update wiki --check, update docs --check, update docs, package --rid <rid>, release verify, audit package."));
+                "Expected one of: test, verify, verify readme, verify docs, verify licenses, verify manifests, verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
@@ -103,14 +103,50 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return VerifyDocsAsync(cancellationToken);
         }
 
-        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, or verify docs.");
+        if (args is ["verify", "licenses"])
+        {
+            return VerifyLicensesAsync(cancellationToken);
+        }
+
+        if (args is ["verify", "release-metadata"])
+        {
+            return VerifyReleaseMetadataAsync(cancellationToken);
+        }
+
+        if (args is ["verify", "project-template"])
+        {
+            return VerifyProjectTemplateAsync();
+        }
+
+        if (args.Length >= 2 && args[1] == "api-compatibility")
+        {
+            return VerifyApiCompatibilityAsync(args);
+        }
+
+        if (args is ["verify", "manifests"])
+        {
+            return VerifyManifestsAsync(cancellationToken);
+        }
+
+        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify docs, verify licenses, verify manifests, verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
     }
 
     private Task<int> RouteUpdateAsync(string[] args, CancellationToken cancellationToken)
     {
-        if (args is ["update", "wiki", "--check"])
+        if (args.Length >= 2 && args[1] == "wiki")
         {
-            return RouteAsync("update", "update wiki --check");
+            var command = CreateApiWikiCommand();
+            return command is null
+                ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+                : command.RunAsync(args, cancellationToken);
+        }
+
+        if (args.Length >= 2 && args[1] == "api-manifest")
+        {
+            var command = CreateApiManifestCommand();
+            return command is null
+                ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+                : command.RunAsync(args, cancellationToken);
         }
 
         if (args is ["update", "docs", "--check"])
@@ -123,7 +159,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return RunDocumentationIndexUpdateAsync(check: false, cancellationToken);
         }
 
-        return InvalidArgumentsAsync("update", "update", "Expected: update wiki --check, update docs --check, or update docs.");
+        return InvalidArgumentsAsync("update", "update", "Expected: update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, or update docs.");
     }
 
     private Task<int> RoutePackageAsync(string[] args)
@@ -224,6 +260,43 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             : verifier.RunGeneratedIndexCommandAsync(check, cancellationToken);
     }
 
+    private Task<int> VerifyLicensesAsync(CancellationToken cancellationToken)
+    {
+        var command = CreateLicensePolicyVerifier();
+        return command is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : command.VerifyAsync(cancellationToken);
+    }
+
+    private Task<int> VerifyReleaseMetadataAsync(CancellationToken cancellationToken)
+    {
+        var command = CreateReleaseMetadataVerifier();
+        return command is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : command.VerifyAsync(cancellationToken);
+    }
+
+    private Task<int> VerifyProjectTemplateAsync()
+    {
+        var command = CreateProjectTemplateVerifier();
+        return Task.FromResult(command is null ? RepositoryBuildExitCodes.Failed : command.Verify());
+    }
+
+    private Task<int> VerifyApiCompatibilityAsync(string[] args)
+    {
+        var command = CreateApiCompatibilityVerifier();
+        return Task.FromResult(command is null ? RepositoryBuildExitCodes.Failed : command.Verify(args));
+    }
+
+    private async Task<int> VerifyManifestsAsync(CancellationToken cancellationToken)
+    {
+        var release = await VerifyReleaseMetadataAsync(cancellationToken).ConfigureAwait(false);
+        var template = await VerifyProjectTemplateAsync().ConfigureAwait(false);
+        return release == RepositoryBuildExitCodes.Success && template == RepositoryBuildExitCodes.Success
+            ? RepositoryBuildExitCodes.Success
+            : RepositoryBuildExitCodes.Failed;
+    }
+
     private LocalDocumentationVerifier? CreateLocalDocumentationVerifier(string command, string step)
     {
         var repositoryRoot = RepositoryPaths.FindRepositoryRoot(Directory.GetCurrentDirectory());
@@ -239,6 +312,76 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         }
 
         return new LocalDocumentationVerifier(repositoryRoot, diagnostics, new ProcessRunner());
+    }
+
+    private LicensePolicyVerifier? CreateLicensePolicyVerifier()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify licenses");
+        return repositoryRoot is null
+            ? null
+            : new LicensePolicyVerifier(repositoryRoot, diagnostics, new ProcessRunner());
+    }
+
+    private ReleaseMetadataVerifier? CreateReleaseMetadataVerifier()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify release-metadata");
+        return repositoryRoot is null
+            ? null
+            : new ReleaseMetadataVerifier(repositoryRoot, diagnostics, new ProcessRunner());
+    }
+
+    private ProjectTemplateVerifier? CreateProjectTemplateVerifier()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify project-template");
+        return repositoryRoot is null
+            ? null
+            : new ProjectTemplateVerifier(repositoryRoot, diagnostics);
+    }
+
+    private ApiCompatibilityVerifier? CreateApiCompatibilityVerifier()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify api-compatibility");
+        return repositoryRoot is null
+            ? null
+            : new ApiCompatibilityVerifier(repositoryRoot, diagnostics, CreateApiManifestCommandForRoot(repositoryRoot));
+    }
+
+    private ApiManifestCommand? CreateApiManifestCommand()
+    {
+        var repositoryRoot = FindRepositoryRoot("update", "update api-manifest");
+        return repositoryRoot is null
+            ? null
+            : CreateApiManifestCommandForRoot(repositoryRoot);
+    }
+
+    private ApiWikiCommand? CreateApiWikiCommand()
+    {
+        var repositoryRoot = FindRepositoryRoot("update", "update wiki");
+        return repositoryRoot is null
+            ? null
+            : new ApiWikiCommand(repositoryRoot, diagnostics, CreateApiManifestCommandForRoot(repositoryRoot), new ProcessRunner());
+    }
+
+    private ApiManifestCommand CreateApiManifestCommandForRoot(string repositoryRoot)
+    {
+        return new ApiManifestCommand(repositoryRoot, diagnostics, new ProcessRunner());
+    }
+
+    private string? FindRepositoryRoot(string command, string step)
+    {
+        var repositoryRoot = RepositoryPaths.FindRepositoryRoot(Directory.GetCurrentDirectory());
+        if (repositoryRoot is not null)
+        {
+            return repositoryRoot;
+        }
+
+        diagnostics.Write(new BuildDiagnostic(
+            command,
+            step,
+            "error",
+            "E2D-BUILD-REPOSITORY-ROOT-NOT-FOUND",
+            "Repository root was not found from the current working directory."));
+        return null;
     }
 
     private Task<int> UnknownCommandAsync(string command)

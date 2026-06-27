@@ -1,6 +1,6 @@
 # Таблица совместимости Electron2D API
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-27.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация.
 Задача: `T-0004`.
-Обновлено: 2026-06-20.
+Обновлено: 2026-06-27.
 
 ## Цель
 
@@ -52,7 +52,7 @@ API-Compatibility.md
 
 Запрещено переводить UI rows из `Partial` в `Supported` только ради разблокировки редактора. Если для редактора, Project Manager, Inspector, dock UI, встроенного редактора кода или Agent Workspace panel не хватает публичного UI API, соответствующая задача должна оставаться заблокированной до реализации этого API в runtime.
 
-Список UI/Text rows берётся из generated GitHub Wiki page `API-UI-and-Text.md`. Локальная и CI-проверка `tools/Verify-UiPublicApiGate.ps1` должна падать, если любая строка из этого списка отсутствует в `API-Compatibility.md` или имеет статус не `Supported`.
+Список UI/Text rows берётся из generated GitHub Wiki page `API-UI-and-Text.md`. Текущая целевая поверхность `T-0214` для таблицы совместимости — C#-команда `verify api-compatibility --wiki-path .github/wiki`; расширение этой проверки отдельными UI/Text-правилами остаётся C#-миграционным долгом, если проверка должна стать самостоятельной.
 
 ## Запрещённый API
 
@@ -71,18 +71,17 @@ API-Compatibility.md
 
 ## Верификация
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1
-powershell -ExecutionPolicy Bypass -File tools/Verify-UiPublicApiGate.ps1 -WikiPath .github/wiki
+```bash
+dotnet run --project eng\Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 ```
 
-Verifier должен собрать runtime, прочитать exported public types и убедиться, что каждый публичный тип отражён в GitHub Wiki clone с допустимым статусом. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki.
+Verifier должен сверить tracked API manifest, который пересоздаётся из compiled runtime, XML documentation и compatibility table, с GitHub Wiki clone и убедиться, что каждый публичный тип отражён в `API-Compatibility.md` с допустимым статусом. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki. Для `T-0214` целевая поверхность проверки - C#-команда `verify api-compatibility --wiki-path .github/wiki`.
 
 ## Фактическое состояние, ограничения и проверки
 
 Статус: реализованная проверка compatibility baseline.
 Задача: `T-0004`.
-Обновлено: 2026-06-22.
+Обновлено: 2026-06-27.
 
 ## Где находится таблица
 
@@ -227,16 +226,10 @@ UI public API gate закрывается отдельной проверкой 
 
 ## Локальная проверка
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1
+```bash
+dotnet run --project eng\Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 ```
 
-Verifier собирает `src/Electron2D/Electron2D.csproj`, читает exported public types из `Electron2D.dll`, сверяет их с `API-Compatibility.md` в клоне `Electron2D.wiki.git` и запрещает возврат legacy/component типов без публикации отдельного legacy-блока в Wiki.
+Verifier читает `data/api/electron2d-api-manifest.json`, проверяет его форму, сверяет public type entries с `API-Compatibility.md` в клоне `Electron2D.wiki.git` и запрещает возврат legacy/component типов без публикации отдельного legacy-блока в Wiki. Сам manifest пересоздаётся отдельной командой `update api-manifest --wiki-path .github/wiki --check`, которая строит проверяемый снимок из compiled runtime и XML documentation.
 
-UI gate проверяется отдельно:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-UiPublicApiGate.ps1 -WikiPath .github/wiki
-```
-
-Эта проверка читает generated Wiki category `API-UI-and-Text.md` и падает, если хотя бы один UI/Text public type отсутствует в `API-Compatibility.md` или имеет статус не `Supported`.
+UI gate остаётся правилом совместимости: generated Wiki category `API-UI-and-Text.md` должна соответствовать `API-Compatibility.md`, а UI/Text public types должны получить статус `Supported` только после фактической реализации и проверок. Отдельная командная проверка этого правила должна быть перенесена в C#-инструмент перед тем, как её объявлять текущим gate.

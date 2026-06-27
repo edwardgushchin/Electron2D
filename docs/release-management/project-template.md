@@ -1,6 +1,6 @@
 # Формат проекта и шаблон `electron2d-empty`
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-27.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация.
 Задачи: `T-0006`, `T-0148`.
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-27.
 
 ## Цель
 
@@ -143,23 +143,21 @@ JSON-результат должен содержать:
 
 ## Верификация
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-ProjectTemplate.ps1
+```bash
+dotnet run --project eng\Electron2D.Build -- verify project-template
 ```
 
 Verifier должен:
 
-1. собрать локальный package `Electron2D.0.1.0-preview`;
-2. создать временный проект из шаблона;
-3. восстановить зависимости из локального package source;
-4. собрать проект;
-5. запустить проект и подтвердить, что пустая сцена найдена;
-6. подтвердить, что C# script sample получил `_EnterTree()`/`_Ready()`;
-7. подтвердить, что script sample увидел `GetTree()` и `RenderingServer`.
-8. подтвердить наличие `AGENTS.md`, `.gitignore`, стартовых skills и `.electron2d/tasks/`.
-9. подтвердить отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`.
-10. подтвердить, что `.gitignore` не исключает `.electron2d/tasks/`.
-11. focused integration tests должны проверять Project Manager и CLI `project create`.
+1. подтвердить наличие обязательных файлов шаблона;
+2. проверить JSON-форму `project.e2d.json`;
+3. проверить JSON-форму `.electron2d/tasks/board.e2tasks` и `.electron2d/tasks/welcome.e2task`;
+4. подтвердить наличие `AGENTS.md`, `.gitignore`, пяти стартовых skills и `.electron2d/tasks/`;
+5. подтвердить отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`;
+6. подтвердить, что `.gitignore` не исключает `.electron2d/tasks/`;
+7. вернуть структурированные JSON-диагностики.
+
+Эта C#-команда является manifest/shape check, то есть проверкой состава и формы файлов. Для `T-0214` именно она является целевой поверхностью проверки формы шаблона и стартовых manifest-файлов. Полный pack/restore/build/run сценарий остаётся миграционным долгом для будущего C#-маршрута и не входит в текущую поддержанную поверхность проверки `T-0214`.
 
 ## Editor run override
 
@@ -169,7 +167,7 @@ Verifier должен:
 
 Статус: реализованный AI-ready шаблон.
 Задачи: `T-0006`, `T-0148`.
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-27.
 
 ## Где находится шаблон
 
@@ -217,21 +215,19 @@ JSON-результат содержит `projectName`, `projectPath`, `projectS
 
 ## Как проверять
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-ProjectTemplate.ps1
+```bash
+dotnet run --project eng\Electron2D.Build -- verify project-template
 ```
 
-Команда собирает локальный package `Electron2D.0.1.0-preview`, копирует шаблон во временную директорию, восстанавливает проект из fresh local package source и NuGet.org в изолированный packages folder, собирает и запускает его.
+Команда выполняет C# manifest/shape check для `data/templates/electron2d-empty`: проверяет обязательные файлы, JSON-форму project settings и стартовых задач, `AGENTS.md`, `.gitignore`, пять starter skills, `.electron2d/tasks/board.e2tasks`, `.electron2d/tasks/welcome.e2task`, отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`, а также то, что `.gitignore` не скрывает `.electron2d/tasks/`.
 
-Verifier проверяет output:
+Полный pack/restore/build/run verifier должен быть перенесён в C#-инструмент перед тем, как его можно будет объявить текущим gate. Именно полный verifier должен проверять output запуска созданного проекта:
 
 ```text
 Electron2D empty scene loaded: scenes/main.scene.json
 Electron2D C# script lifecycle: _EnterTree,_Ready
 Electron2D C# script services: tree=True,text=True
 ```
-
-Verifier также проверяет `AGENTS.md`, `.gitignore`, пять starter skills, `.electron2d/tasks/board.e2tasks`, `.electron2d/tasks/welcome.e2task`, отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`, а также то, что `.gitignore` не скрывает `.electron2d/tasks/`.
 
 При запуске из редактора template также понимает переменную процесса `ELECTRON2D_CURRENT_SCENE`. Это относительный project path для запуска выбранной scene без изменения `project.e2d.json`.
 

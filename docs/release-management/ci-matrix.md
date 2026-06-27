@@ -1,6 +1,6 @@
 # CI-матрица `0.1.0 Preview`
 
-Обновлено: 2026-06-26.
+Обновлено: 2026-06-27.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация.
 Задача: `T-0003`, дополнение `T-0207`.
-Обновлено: 2026-06-26.
+Обновлено: 2026-06-27.
 
 ## Цель
 
@@ -33,16 +33,17 @@ CI должен проверять новый clean runtime baseline на Tier 1
 - восстанавливать `src/Electron2D.sln`;
 - запускать `tools/Run-Tests.ps1` без `-IncludeBaseline`.
 - запускать `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`.
-- запускать `tools/Verify-ProjectTemplate.ps1`.
+- запускать `dotnet run --project eng/Electron2D.Build -- verify project-template`.
 - запускать `tools/Verify-UserDocumentation.ps1`.
-- запускать `tools/Verify-LocalDocumentation.ps1`.
+- запускать `dotnet run --project eng/Electron2D.Build -- verify docs`.
 - запускать `tools/Verify-CanonicalGoalAlignment.ps1`.
 - запускать `tools/Verify-ExportDocumentation.ps1`.
-- запускать `tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues`.
+- фиксировать, что strict XML documentation audit ждёт отдельного C#-маршрута и не является целевой командой `T-0214`.
 - клонировать `Electron2D.wiki.git` в `.github/wiki`.
-- запускать `tools/Update-ApiManifest.ps1 -WikiPath .github/wiki -Check`.
-- запускать `tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check`.
-- запускать `tools/Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki`.
+- запускать `dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check`.
+- запускать `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`.
+- запускать `dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki`.
+- фиксировать, что consolidated public API documentation audit ждёт отдельного C#-маршрута и не является целевой командой `T-0214`.
 - запускать `tools/Verify-PerformanceBudgets.ps1`.
 
 ## Baseline и gaps
@@ -57,7 +58,7 @@ CI не запускает `Category=Baseline` по умолчанию, пото
 powershell -ExecutionPolicy Bypass -File tools/Verify-CiMatrix.ps1
 ```
 
-Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1`, запуск `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`, API manifest gate, local documentation gate, canonical goal alignment audit, документационные проверки и явное упоминание mobile/export status gap.
+Verifier проверяет наличие workflow, desktop-матрицу, .NET SDK `10.0.x`, запуск `tools/Run-Tests.ps1`, запуск `tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot`, API manifest gate, C#-проверку локальной документации, canonical goal alignment audit, документационные проверки и явное упоминание mobile/export status gap.
 
 ## Внутренний инструмент репозитория
 
@@ -70,7 +71,14 @@ dotnet run --project eng/Electron2D.Build -- test
 dotnet run --project eng/Electron2D.Build -- verify
 dotnet run --project eng/Electron2D.Build -- verify readme
 dotnet run --project eng/Electron2D.Build -- verify docs
+dotnet run --project eng/Electron2D.Build -- verify licenses
+dotnet run --project eng/Electron2D.Build -- verify manifests
+dotnet run --project eng/Electron2D.Build -- verify release-metadata
+dotnet run --project eng/Electron2D.Build -- verify project-template
+dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 dotnet run --project eng/Electron2D.Build -- update wiki --check
+dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki
+dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
 dotnet run --project eng/Electron2D.Build -- update docs --check
 dotnet run --project eng/Electron2D.Build -- update docs
 dotnet run --project eng/Electron2D.Build -- package --rid win-x64
@@ -81,9 +89,16 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 - `test` и базовый `verify` могут выполнять только лёгкие проверки репозитория или возвращать структурированное сообщение о выбранном шаге; они не должны неявно запускать полный релизный прогон.
 - `verify readme` выполняет C#-проверку публичного `README.md` и возвращает структурированные диагностики.
-- `verify docs` выполняет полный локальный документационный контур через текущий нижний PowerShell-проверяющий скрипт, а затем валидирует пересоздаваемый индекс и ссылки на API manifest в C#.
-- `update docs --check` проверяет синхронизацию `data/documentation/electron2d-local-docs-index.json`, а `update docs` пересоздаёт этот файл через текущий нижний генератор.
-- `update wiki --check` остаётся отдельным маршрутом для будущей миграции Wiki/API-проверок из PowerShell в C#.
+- `verify docs` строит ожидаемый индекс локальной документации C#-логикой, сверяет его с отслеживаемым JSON и валидирует схему, источники, команды, аудитории, ссылки на API manifest и метаданные генератора Wiki.
+- `verify licenses` проверяет текст `LICENSE` и MIT-заголовки отслеживаемых C# и PowerShell файлов через C#-код.
+- `verify manifests` объединяет лёгкие C#-проверки release metadata и проектного шаблона, где manifest означает JSON-описания проекта, шаблона, стартовой доски задач и релизных метаданных.
+- `verify release-metadata` проверяет package metadata, README, брендовые файлы и отсутствие отслеживаемых локальных release/task drafts через C#-код.
+- `verify project-template` проверяет состав шаблона `data/templates/electron2d-empty`, JSON-манифесты шаблона и стартовых задач, `.gitignore` и отсутствие репозиторных workflow-файлов в пользовательском шаблоне. Это shape-check, то есть проверка формы и состава; он не заменяет полный pack/restore/build/run verifier.
+- `verify api-compatibility --wiki-path .github/wiki` сверяет API manifest с GitHub Wiki `API-Compatibility.md` и запрещает legacy/component public types.
+- XML documentation audit и consolidated public API documentation audit остаются миграционным долгом до отдельного C#-переноса и не объявляются целевыми командами `T-0214`.
+- `update docs --check` проверяет синхронизацию `data/documentation/electron2d-local-docs-index.json`, а `update docs` пересоздаёт этот файл через текущий генератор.
+- `update wiki --check` генерирует ожидаемые Wiki pages в C# и проверяет API manifest; с `--output .github/wiki` дополнительно сверяет рабочий Wiki clone.
+- `update api-manifest --wiki-path .github/wiki --check` пересоздаёт ожидаемый API manifest и сравнивает его с `data/api/electron2d-api-manifest.json`.
 - `package --rid <rid>` обязан принимать только точную форму из трёх аргументов: команда `package`, флаг `--rid` и непустой runtime identifier, то есть идентификатор целевой платформы .NET. Лишние, переставленные, повторные или пустые аргументы должны завершаться ненулевым кодом и диагностикой `E2D-BUILD-CLI-INVALID-ARGUMENTS`. Пока сборка архивов не реализована, корректная форма команды должна завершаться закрытым отказом, то есть ненулевым кодом, явной причиной блокировки и выбранным `rid` в диагностическом сообщении.
 - `release verify` обязан быть отдельным маршрутом для будущей проверки релизного кандидата (`release candidate`). Пока полный релизный сценарий не реализован, команда должна завершаться закрытым отказом и не должна создавать теги, архивы или GitHub Release.
 
@@ -93,9 +108,9 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: реализованная CI-конфигурация и рабочий C#-слой репозитория для `T-0207` с текущим переносом README/docs-проверок в `T-0213`.
-Задача: `T-0003`, дополнения `T-0207` и `T-0213`.
-Обновлено: 2026-06-26.
+Статус: реализованная CI-конфигурация и рабочий C#-слой репозитория для `T-0207` с текущим переносом README/docs-проверок в `T-0213`/`T-0214`.
+Задача: `T-0003`, дополнения `T-0207`, `T-0213` и `T-0214`.
+Обновлено: 2026-06-27.
 
 ## Workflow
 
@@ -112,24 +127,24 @@ CI описан в `.github/workflows/ci.yml`.
 ```powershell
 ./tools/Run-Tests.ps1
 ./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
-./tools/Verify-ProjectTemplate.ps1
+dotnet run --project eng/Electron2D.Build -- verify project-template
 ./tools/Verify-UserDocumentation.ps1
-./tools/Verify-LocalDocumentation.ps1
+dotnet run --project eng/Electron2D.Build -- verify docs
 ./tools/Verify-CanonicalGoalAlignment.ps1
 ./tools/Verify-ExportDocumentation.ps1
-./tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues
-./tools/Update-ApiManifest.ps1 -WikiPath .github/wiki -Check
-./tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
-./tools/Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki
+dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
+dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki
+dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 ./tools/Verify-PerformanceBudgets.ps1
 ```
 
-`Verify-PublicApiXmlDocs.ps1 -FailOnIssues` является gate публичной XML documentation: недокументированный или неполный public API ломает CI.
-`Verify-LocalDocumentation.ps1` является gate локальной документации: generated local-docs index, `e2d docs search/type/member/example`, examples source и documentation pipeline должны оставаться синхронизированными.
+Строгая проверка публичной XML documentation должна стать C#-проверкой отдельным переносом: недокументированный или неполный public API должен ломать CI после подключения этого маршрута.
+`verify docs` является C#-проверкой локальной документации: пересоздаваемый local docs index, команды `e2d docs search/type/member/example`, источник примеров и документационный контур должны оставаться синхронизированными.
 `Verify-CanonicalGoalAlignment.ps1` является gate для исторических goal/architecture материалов: старое component-first или four-platform позиционирование не должно возвращаться как актуальный контракт.
-`Update-ApiManifest.ps1 -WikiPath .github/wiki -Check` является gate machine-readable API manifest: tracked JSON должен совпадать с compiled public API, XML documentation и GitHub Wiki compatibility table.
-`Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` является объединённым gate для XML documentation, GitHub Wiki API reference и public API documentation wording.
-Этот audit запускает вложенные verifier-скрипты через доступный PowerShell executable, поэтому один и тот же gate работает на Windows, Linux и macOS runners.
+`update api-manifest --wiki-path .github/wiki --check` является gate machine-readable API manifest: tracked JSON должен совпадать с compiled public API, XML documentation и GitHub Wiki compatibility table.
+`verify api-compatibility --wiki-path .github/wiki` является C#-проверкой соответствия API manifest и compatibility table.
+Объединённая проверка публичной API-документации должна стать C#-проверкой отдельным переносом и сверять XML documentation, GitHub Wiki API reference и public API documentation wording.
+Проверки, уже перенесённые в `eng\Electron2D.Build`, возвращают структурированные JSON-диагностики. Проверки XML documentation и consolidated public API documentation пока остаются миграционным долгом и не объявляются текущими маршрутами.
 
 Platform-specific export verifiers запускаются только на соответствующих runners:
 
@@ -157,14 +172,18 @@ powershell -ExecutionPolicy Bypass -File tools/Verify-CiMatrix.ps1
 dotnet run --project eng/Electron2D.Build -- verify
 ```
 
-На этапе `T-0207` этот инструмент предоставил рабочий C#-каркас команд и переносимый механизм запуска дочерних процессов. В `T-0213` команды `verify readme`, `verify docs`, `update docs --check` и `update docs` уже выполняют реальные проверки или генерацию, но CI пока продолжает запускать перечисленные выше `tools/*.ps1`, пока отдельное переключение workflow не будет принято.
+На этапе `T-0207` этот инструмент предоставил рабочий C#-каркас команд и переносимый механизм запуска дочерних процессов. В `T-0213` команды `verify readme`, `verify docs`, `update docs --check` и `update docs` начали выполнять реальные проверки или генерацию. В `T-0214` локальная документация, API manifest, вывод GitHub Wiki, политика лицензий и проверки JSON-манифестов имеют C#-команды `eng\Electron2D.Build` как единственную целевую поверхность. Старые `tools/*.ps1` для этих участков допустимы только как историческое или нецелевое состояние до удаления и зачистки старых вызовов в отдельной `T-0210`.
 
 Фактическое поведение текущего C#-инструмента:
 
-- `test`, `verify` и `update wiki --check` возвращают код `0` и диагностический код `E2D-BUILD-ROUTED`; они только подтверждают маршрут команды и не запускают полный набор проверок.
+- `test` и базовый `verify` возвращают код `0` и диагностический код `E2D-BUILD-ROUTED`; они только подтверждают маршрут команды и не запускают полный набор проверок.
 - `verify readme` проверяет публичный `README.md` по C#-контракту и при успехе возвращает диагностический код `E2D-BUILD-README-VERIFY-PASSED`.
-- `verify docs` запускает полный локальный документационный контур через `tools\Verify-LocalDocumentation.ps1`, затем выполняет C#-валидацию пересоздаваемого индекса, обязательных метаданных и ссылок на API manifest.
+- `verify docs` строит ожидаемый индекс локальной документации C#-логикой `eng\Electron2D.Build`, сверяет его с `data/documentation/electron2d-local-docs-index.json`, затем валидирует JSON-схему, обязательные метаданные, ссылки на API manifest, хеши документов и `sources.wiki.generator = "eng/Electron2D.Build update wiki"`.
 - `update docs --check` проверяет синхронизацию пересоздаваемого индекса, а `update docs` пересоздаёт `data/documentation/electron2d-local-docs-index.json`.
+- `update wiki --check` и `update wiki --check --output .github/wiki` выполняют C#-проверку сгенерированных Wiki pages и API manifest.
+- `update api-manifest --wiki-path .github/wiki --check` выполняет C#-проверку JSON manifest.
+- `verify api-compatibility --wiki-path .github/wiki` выполняет C#-проверку API manifest против `API-Compatibility.md` и запрещённого legacy/component public surface.
+- `verify licenses`, `verify release-metadata`, `verify project-template` и `verify manifests` выполняют C#-проверки политики лицензий, релизных метаданных и проектного шаблона.
 - неизвестная команда возвращает ненулевой код и диагностический код `E2D-BUILD-CLI-UNKNOWN-COMMAND`.
 - `package` без точной формы `package --rid <rid>` возвращает ненулевой код и диагностический код `E2D-BUILD-CLI-INVALID-ARGUMENTS`.
 - `package --rid <rid>` возвращает ненулевой код, диагностический код `E2D-BUILD-PACKAGE-BLOCKED` и поле `runtimeIdentifier`; архивы, `release-manifest.json`, файлы контрольных сумм, каталог `artifacts/` и выходные каталоги релиза не создаются.

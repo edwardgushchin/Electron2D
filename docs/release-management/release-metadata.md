@@ -1,6 +1,6 @@
 # Версионирование и release metadata `0.1.0 Preview`
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-27.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация.
 Задача: `T-0005`.
-Обновлено: 2026-06-20.
+Обновлено: 2026-06-27.
 
 ## Цель
 
@@ -53,17 +53,17 @@ Maintainer может держать такие файлы локально ка
 
 ## Верификация
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-ReleaseMetadata.ps1
+```bash
+dotnet run --project eng\Electron2D.Build -- verify release-metadata
 ```
 
-Verifier сверяет package metadata в `src/Electron2D/Electron2D.csproj`, иконку `Electron2D.Editor`, наличие брендовых файлов, ссылки README на брендовые SVG, отсутствие tracked release draft файлов и упоминание package version `0.1.0-preview` в README.
+Verifier сверяет package metadata в `src/Electron2D/Electron2D.csproj`, иконку `Electron2D.Editor`, наличие брендовых файлов, ссылки README на брендовые SVG, отсутствие tracked release draft файлов и упоминание package version `0.1.0-preview` в README. Команда выполняется C#-инструментом репозитория и выводит структурированные JSON-диагностики. Для `T-0214` `verify release-metadata` является единственной целевой поверхностью проверки release metadata.
 
 ## Фактическое состояние, ограничения и проверки
 
 Статус: реализованный metadata baseline.
 Задача: `T-0005`.
-Обновлено: 2026-06-20.
+Обновлено: 2026-06-27.
 
 ## Package metadata
 
@@ -91,8 +91,8 @@ Runtime package пакует `data/assets/branding/icon/electron2d_windows_icon_
 
 ## Проверка
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-ReleaseMetadata.ps1
+```bash
+dotnet run --project eng\Electron2D.Build -- verify release-metadata
 ```
 
 Команда проверяет согласованность package metadata, README, брендовых файлов, иконки `Electron2D.Editor` и отсутствие tracked release draft файлов.

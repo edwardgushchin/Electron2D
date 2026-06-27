@@ -26,6 +26,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace Electron2D.Build;
 
@@ -37,8 +39,12 @@ internal sealed class LocalDocumentationVerifier(
     private const string IndexRelativePath = "data/documentation/electron2d-local-docs-index.json";
     private const string ApiManifestRelativePath = "data/api/electron2d-api-manifest.json";
     private const string ExamplesRelativePath = "data/documentation/electron2d-doc-examples.json";
-    private const string UpdateScriptRelativePath = "tools/Update-LocalDocumentationIndex.ps1";
-    private const string VerifyScriptRelativePath = "tools/Verify-LocalDocumentation.ps1";
+    private const string WikiGenerator = "eng/Electron2D.Build update wiki";
+
+    private static readonly JsonSerializerOptions GeneratedIndexJsonOptions = new()
+    {
+        WriteIndented = true
+    };
 
     private static readonly string[] RequiredAudiences =
     [
@@ -78,62 +84,39 @@ internal sealed class LocalDocumentationVerifier(
     public async Task<int> VerifyAsync(CancellationToken cancellationToken)
     {
         var localDocumentationResult = await RunLocalDocumentationCommandAsync(cancellationToken).ConfigureAwait(false);
-        if (localDocumentationResult != RepositoryBuildExitCodes.Success)
-        {
-            return localDocumentationResult;
-        }
-
         var validationDiagnostics = VerifyIndex();
         foreach (var diagnostic in validationDiagnostics)
         {
             diagnostics.Write(diagnostic);
         }
 
-        return validationDiagnostics.Any(diagnostic => string.Equals(diagnostic.Severity, "error", StringComparison.Ordinal))
+        return localDocumentationResult != RepositoryBuildExitCodes.Success ||
+            validationDiagnostics.Any(diagnostic => string.Equals(diagnostic.Severity, "error", StringComparison.Ordinal))
             ? RepositoryBuildExitCodes.Failed
             : RepositoryBuildExitCodes.Success;
     }
 
     private async Task<int> RunLocalDocumentationCommandAsync(CancellationToken cancellationToken)
     {
-        if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, VerifyScriptRelativePath, out var scriptPath) ||
-            !File.Exists(scriptPath))
+        await Task.CompletedTask.ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!TryGenerateIndex("verify docs", out var generatedIndex))
         {
-            diagnostics.Write(new BuildDiagnostic(
-                "verify",
-                "verify docs",
-                "error",
-                "E2D-BUILD-DOCS-LOCAL-SCRIPT-MISSING",
-                $"Local documentation verifier was not found: {VerifyScriptRelativePath}.",
-                Path: VerifyScriptRelativePath));
             return RepositoryBuildExitCodes.Failed;
         }
 
-        var process = await processRunner.RunAsync(
-            new ProcessRunRequest(
-                "verify docs",
-                GetPowerShellExecutable(),
-                ["-ExecutionPolicy", "Bypass", "-File", scriptPath],
-                repositoryRoot,
-                TimeSpan.FromMinutes(5)),
-            cancellationToken).ConfigureAwait(false);
-
-        if (process.ExitCode != 0)
+        if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, IndexRelativePath, out var indexPath) ||
+            !File.Exists(indexPath) ||
+            !GeneratedIndexMatches(generatedIndex, indexPath, "verify docs"))
         {
-            foreach (var diagnostic in process.Diagnostics)
-            {
-                diagnostics.Write(diagnostic);
-            }
-
             diagnostics.Write(new BuildDiagnostic(
                 "verify",
                 "verify docs",
                 "error",
                 "E2D-BUILD-DOCS-LOCAL-CHECK-FAILED",
-                "Local documentation verifier failed.",
-                ProcessExitCode: process.ExitCode,
-                TimedOut: process.TimedOut,
-                Path: VerifyScriptRelativePath));
+                "Local documentation index does not match the C# generated index.",
+                Path: IndexRelativePath));
             return RepositoryBuildExitCodes.Failed;
         }
 
@@ -142,58 +125,52 @@ internal sealed class LocalDocumentationVerifier(
             "verify docs",
             "info",
             "E2D-BUILD-DOCS-LOCAL-CHECK-PASSED",
-            "Local documentation verifier passed.",
-            Path: VerifyScriptRelativePath));
+            "Local documentation index matches the C# generated index.",
+            Path: IndexRelativePath));
         return RepositoryBuildExitCodes.Success;
     }
 
     public async Task<int> RunGeneratedIndexCommandAsync(bool check, CancellationToken cancellationToken)
     {
-        if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, UpdateScriptRelativePath, out var scriptPath) ||
-            !File.Exists(scriptPath))
+        await Task.CompletedTask.ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var step = check ? "update docs --check" : "update docs";
+        if (!TryGenerateIndex(step, out var generatedIndex))
         {
-            diagnostics.Write(new BuildDiagnostic(
-                check ? "update" : "update",
-                check ? "update docs --check" : "update docs",
-                "error",
-                "E2D-BUILD-DOCS-INDEX-SCRIPT-MISSING",
-                $"Local documentation index updater was not found: {UpdateScriptRelativePath}.",
-                Path: UpdateScriptRelativePath));
             return RepositoryBuildExitCodes.Failed;
         }
 
-        var arguments = check
-            ? new[] { "-ExecutionPolicy", "Bypass", "-File", scriptPath, "-Check" }
-            : new[] { "-ExecutionPolicy", "Bypass", "-File", scriptPath };
-        var step = check ? "update docs --check" : "update docs";
-        var process = await processRunner.RunAsync(
-            new ProcessRunRequest(
-                step,
-                GetPowerShellExecutable(),
-                arguments,
-                repositoryRoot,
-                TimeSpan.FromMinutes(2)),
-            cancellationToken).ConfigureAwait(false);
-
-        if (process.ExitCode != 0)
+        if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, IndexRelativePath, out var indexPath))
         {
-            foreach (var diagnostic in process.Diagnostics)
-            {
-                diagnostics.Write(diagnostic);
-            }
-
             diagnostics.Write(new BuildDiagnostic(
                 "update",
                 step,
                 "error",
-                check ? "E2D-BUILD-DOCS-INDEX-CHECK-FAILED" : "E2D-BUILD-DOCS-INDEX-UPDATE-FAILED",
-                check
-                    ? "Generated local documentation index is out of date or invalid."
-                    : "Generated local documentation index could not be updated.",
-                ProcessExitCode: process.ExitCode,
-                TimedOut: process.TimedOut,
+                "E2D-BUILD-DOCS-INDEX-PATH",
+                $"Local documentation index path could not be resolved: {IndexRelativePath}.",
                 Path: IndexRelativePath));
             return RepositoryBuildExitCodes.Failed;
+        }
+
+        if (check)
+        {
+            if (!File.Exists(indexPath) || !GeneratedIndexMatches(generatedIndex, indexPath, step))
+            {
+                diagnostics.Write(new BuildDiagnostic(
+                    "update",
+                    step,
+                    "error",
+                    "E2D-BUILD-DOCS-INDEX-CHECK-FAILED",
+                    "Generated local documentation index is out of date or invalid.",
+                    Path: IndexRelativePath));
+                return RepositoryBuildExitCodes.Failed;
+            }
+        }
+        else
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(indexPath)!);
+            File.WriteAllText(indexPath, generatedIndex, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         }
 
         diagnostics.Write(new BuildDiagnostic(
@@ -206,6 +183,448 @@ internal sealed class LocalDocumentationVerifier(
                 : "Generated local documentation index was updated from its sources.",
             Path: IndexRelativePath));
         return RepositoryBuildExitCodes.Success;
+    }
+
+    private bool TryGenerateIndex(string step, out string generatedIndex)
+    {
+        generatedIndex = string.Empty;
+        try
+        {
+            if (!TryResolveRequiredFile(ApiManifestRelativePath, step, out var apiManifestPath) ||
+                !TryResolveRequiredFile(ExamplesRelativePath, step, out var examplesPath))
+            {
+                return false;
+            }
+
+            var docsRoot = Path.Combine(repositoryRoot, "docs");
+            if (!Directory.Exists(docsRoot))
+            {
+                diagnostics.Write(new BuildDiagnostic(
+                    DiagnosticCommand(step),
+                    step,
+                    "error",
+                    "E2D-BUILD-DOCS-INDEX-SOURCE-MISSING",
+                    "Documentation source directory was not found: docs.",
+                    Path: "docs"));
+                return false;
+            }
+
+            using var apiManifest = JsonDocument.Parse(File.ReadAllText(apiManifestPath, Encoding.UTF8));
+            using var examples = JsonDocument.Parse(File.ReadAllText(examplesPath, Encoding.UTF8));
+            var documentationFiles = Directory
+                .EnumerateFiles(docsRoot, "*.md", SearchOption.AllDirectories)
+                .Select(Path.GetFullPath)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            var documentationHashRecords = documentationFiles.Select(NewHashRecord).ToArray();
+
+            var entries = new List<JsonObject>();
+            foreach (var type in EnumerateArray(apiManifest.RootElement, "types")
+                .OrderBy(type => RequiredString(type, "fullName"), StringComparer.Ordinal))
+            {
+                entries.Add(NewTypeEntry(type));
+
+                var duplicateKeys = new Dictionary<string, int>(StringComparer.Ordinal);
+                foreach (var member in EnumerateArray(type, "members")
+                    .OrderBy(member => RequiredString(member, "name"), StringComparer.Ordinal)
+                    .ThenBy(member => RequiredString(member, "id"), StringComparer.Ordinal))
+                {
+                    var key = $"{RequiredString(member, "declaringType")}.{RequiredString(member, "name")}";
+                    duplicateKeys.TryGetValue(key, out var duplicateIndex);
+                    duplicateKeys[key] = duplicateIndex + 1;
+                    entries.Add(NewMemberEntry(type, member, duplicateIndex));
+                }
+            }
+
+            foreach (var documentationFile in documentationFiles)
+            {
+                entries.Add(NewDocumentationEntry(documentationFile));
+            }
+
+            foreach (var example in EnumerateArray(examples.RootElement, "examples")
+                .OrderBy(example => RequiredString(example, "id"), StringComparer.Ordinal))
+            {
+                entries.Add(NewExampleEntry(example));
+            }
+
+            var root = new JsonObject
+            {
+                ["schemaVersion"] = 1,
+                ["manifestVersion"] = "0.1.0-preview",
+                ["generatedFrom"] = new JsonObject
+                {
+                    ["apiManifest"] = HashRecordJson(NewHashRecord(apiManifestPath)),
+                    ["documentation"] = JsonArrayFrom(documentationHashRecords.Select(HashRecordJson)),
+                    ["examples"] = HashRecordJson(NewHashRecord(examplesPath))
+                },
+                ["audiences"] = StringArray(["human", "ai", "cli", "ide", "wiki", "inspector", "generator"]),
+                ["commands"] = new JsonArray
+                {
+                    NewCommand("docs search", "Searches local API, documentation and examples index."),
+                    NewCommand("docs type", "Returns a public API type from the API manifest."),
+                    NewCommand("docs member", "Returns a public API member from the API manifest."),
+                    NewCommand("docs example", "Returns a local documentation example.")
+                },
+                ["sources"] = new JsonObject
+                {
+                    ["apiManifest"] = new JsonObject
+                    {
+                        ["path"] = ApiManifestRelativePath,
+                        ["contract"] = "Public API metadata generated from compiled assembly, XML documentation and GitHub Wiki compatibility table."
+                    },
+                    ["documentation"] = new JsonObject
+                    {
+                        ["paths"] = StringArray(documentationHashRecords.Select(record => record.Path)),
+                        ["contract"] = "Current implementation documentation and Agent-native cross-platform 2D game engine architecture notes."
+                    },
+                    ["examples"] = new JsonObject
+                    {
+                        ["path"] = ExamplesRelativePath,
+                        ["contract"] = "Curated local examples for CLI and AI agents."
+                    },
+                    ["wiki"] = new JsonObject
+                    {
+                        ["generator"] = WikiGenerator,
+                        ["compatibilityPage"] = ".github/wiki/API-Compatibility.md"
+                    }
+                },
+                ["entries"] = JsonArrayFrom(entries
+                    .OrderBy(entry => entry["id"]?.GetValue<string>() ?? string.Empty, StringComparer.Ordinal)
+                    .ToArray())
+            };
+
+            generatedIndex = Normalize(JsonSerializer.Serialize(root, GeneratedIndexJsonOptions)).TrimEnd() + "\n";
+            return CanParseJson(generatedIndex, step, "Generated local documentation index is not valid JSON.");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                DiagnosticCommand(step),
+                step,
+                "error",
+                "E2D-BUILD-DOCS-INDEX-GENERATE-FAILED",
+                $"Generated local documentation index could not be created: {ex.Message}.",
+                Path: IndexRelativePath));
+            return false;
+        }
+    }
+
+    private bool TryResolveRequiredFile(string relativePath, string step, out string fullPath)
+    {
+        if (RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, relativePath, out fullPath) &&
+            File.Exists(fullPath))
+        {
+            return true;
+        }
+
+        diagnostics.Write(new BuildDiagnostic(
+            DiagnosticCommand(step),
+            step,
+            "error",
+            "E2D-BUILD-DOCS-INDEX-SOURCE-MISSING",
+            $"Required documentation source file was not found: {relativePath}.",
+            Path: relativePath));
+        fullPath = string.Empty;
+        return false;
+    }
+
+    private DocumentationHashRecord NewHashRecord(string fullPath)
+    {
+        return new DocumentationHashRecord(GetRelativeUnixPath(fullPath), ComputeNormalizedSha256(fullPath));
+    }
+
+    private static JsonObject HashRecordJson(DocumentationHashRecord record)
+    {
+        return new JsonObject
+        {
+            ["path"] = record.Path,
+            ["sha256"] = record.Sha256
+        };
+    }
+
+    private JsonObject NewDocumentationEntry(string fullPath)
+    {
+        var relativePath = GetRelativeUnixPath(fullPath);
+        var text = File.ReadAllText(fullPath, Encoding.UTF8);
+        var stem = relativePath.StartsWith("docs/", StringComparison.Ordinal)
+            ? relativePath["docs/".Length..]
+            : relativePath;
+        if (stem.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+        {
+            stem = stem[..^".md".Length];
+        }
+
+        var id = string.Equals(relativePath, "docs/architecture/agent-native-workflow.md", StringComparison.Ordinal)
+            ? "doc:architecture.agent-native-workflow"
+            : "doc:" + stem.Replace('/', '.');
+        var title = MarkdownTitle(text, stem);
+        var summary = MarkdownSummary(text);
+        return new JsonObject
+        {
+            ["id"] = id,
+            ["kind"] = "documentation",
+            ["title"] = title,
+            ["summary"] = summary,
+            ["keywords"] = StringArray(SplitSearchWords([title, summary, relativePath])),
+            ["sourcePath"] = relativePath,
+            ["sourceId"] = id,
+            ["audiences"] = StringArray(["human", "ai", "cli", "wiki"])
+        };
+    }
+
+    private static JsonObject NewTypeEntry(JsonElement type)
+    {
+        var fullName = RequiredString(type, "fullName");
+        var name = RequiredString(type, "name");
+        var category = RequiredString(type, "category");
+        var summary = RequiredString(type, "summary");
+        return new JsonObject
+        {
+            ["id"] = "api-type:" + fullName,
+            ["kind"] = "api-type",
+            ["title"] = name,
+            ["summary"] = summary,
+            ["keywords"] = StringArray(SplitSearchWords([fullName, name, category, summary])),
+            ["sourcePath"] = ApiManifestRelativePath,
+            ["apiId"] = RequiredString(type, "id"),
+            ["audiences"] = StringArray(["ai", "cli", "ide", "wiki", "inspector", "generator"])
+        };
+    }
+
+    private static JsonObject NewMemberEntry(JsonElement type, JsonElement member, int duplicateIndex)
+    {
+        var declaringType = RequiredString(member, "declaringType");
+        var memberName = RequiredString(member, "name");
+        var baseId = $"api-member:{declaringType}.{memberName}";
+        var title = $"{RequiredString(type, "name")}.{memberName}";
+        var signature = RequiredString(member, "signature");
+        var summary = RequiredString(member, "summary");
+        return new JsonObject
+        {
+            ["id"] = duplicateIndex == 0 ? baseId : $"{baseId}#{duplicateIndex}",
+            ["kind"] = "api-member",
+            ["title"] = title,
+            ["summary"] = summary,
+            ["keywords"] = StringArray(SplitSearchWords([title, memberName, signature, summary, RequiredString(type, "category")])),
+            ["sourcePath"] = ApiManifestRelativePath,
+            ["apiId"] = RequiredString(member, "id"),
+            ["audiences"] = StringArray(["ai", "cli", "ide", "wiki", "inspector", "generator"])
+        };
+    }
+
+    private static JsonObject NewExampleEntry(JsonElement example)
+    {
+        var id = RequiredString(example, "id");
+        var title = RequiredString(example, "title");
+        var summary = RequiredString(example, "summary");
+        var keywordSources = new List<string> { id, title, summary };
+        keywordSources.AddRange(EnumerateStringArray(example, "keywords"));
+        return new JsonObject
+        {
+            ["id"] = id,
+            ["kind"] = "example",
+            ["title"] = title,
+            ["summary"] = summary,
+            ["keywords"] = StringArray(SplitSearchWords(keywordSources)),
+            ["sourcePath"] = ExamplesRelativePath,
+            ["sourceId"] = id,
+            ["apiIds"] = StringArray(EnumerateStringArray(example, "apiIds")),
+            ["code"] = RequiredString(example, "code"),
+            ["audiences"] = StringArray(["human", "ai", "cli", "ide"])
+        };
+    }
+
+    private static JsonObject NewCommand(string name, string description)
+    {
+        return new JsonObject
+        {
+            ["name"] = name,
+            ["description"] = description,
+            ["formats"] = StringArray(["text", "json"])
+        };
+    }
+
+    private string GetRelativeUnixPath(string fullPath)
+    {
+        return Path.GetRelativePath(repositoryRoot, fullPath).Replace('\\', '/');
+    }
+
+    private static string MarkdownTitle(string text, string fallback)
+    {
+        var match = Regex.Match(text, @"(?m)^#\s+(.+)$", RegexOptions.CultureInvariant);
+        return match.Success ? NormalizeWhitespace(match.Groups[1].Value) : fallback;
+    }
+
+    private static string MarkdownSummary(string text)
+    {
+        var withoutCodeBlocks = Regex.Replace(text, "(?s)```.*?```", " ", RegexOptions.CultureInvariant);
+        foreach (var line in Regex.Split(withoutCodeBlocks, "\r?\n"))
+        {
+            var trimmed = line.Trim();
+            if (string.IsNullOrWhiteSpace(trimmed) ||
+                trimmed.StartsWith('#') ||
+                trimmed.StartsWith("<!--", StringComparison.Ordinal) ||
+                trimmed.StartsWith('|'))
+            {
+                continue;
+            }
+
+            return NormalizeWhitespace(trimmed);
+        }
+
+        return string.Empty;
+    }
+
+    private static IEnumerable<string> SplitSearchWords(IEnumerable<string> values)
+    {
+        var words = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var value in values)
+        {
+            foreach (var word in SplitSearchWords(value))
+            {
+                words.Add(word);
+            }
+        }
+
+        return words.OrderBy(word => word, StringComparer.Ordinal);
+    }
+
+    private static IEnumerable<string> SplitSearchWords(string value)
+    {
+        var words = new List<string>();
+        foreach (Match match in Regex.Matches(value, "[A-Z]?[a-z]+|[A-Z]+(?![a-z])|\\d+", RegexOptions.CultureInvariant))
+        {
+            if (!string.IsNullOrWhiteSpace(match.Value))
+            {
+                words.Add(match.Value.ToLowerInvariant());
+            }
+        }
+
+        foreach (Match match in Regex.Matches(value.ToLowerInvariant(), "[a-z0-9]+", RegexOptions.CultureInvariant))
+        {
+            if (!words.Contains(match.Value, StringComparer.Ordinal))
+            {
+                words.Add(match.Value);
+            }
+        }
+
+        return words
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(word => word, StringComparer.Ordinal);
+    }
+
+    private static string NormalizeWhitespace(string value)
+    {
+        return Regex.Replace(value, "\\s+", " ", RegexOptions.CultureInvariant).Trim();
+    }
+
+    private static IEnumerable<JsonElement> EnumerateArray(JsonElement element, string propertyName)
+    {
+        return element.TryGetProperty(propertyName, out var property) && property.ValueKind == JsonValueKind.Array
+            ? property.EnumerateArray()
+            : [];
+    }
+
+    private static string RequiredString(JsonElement element, string propertyName)
+    {
+        return element.TryGetProperty(propertyName, out var property) && property.ValueKind == JsonValueKind.String
+            ? property.GetString() ?? string.Empty
+            : string.Empty;
+    }
+
+    private static IEnumerable<string> EnumerateStringArray(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var property) || property.ValueKind != JsonValueKind.Array)
+        {
+            return [];
+        }
+
+        return property
+            .EnumerateArray()
+            .Where(item => item.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(item.GetString()))
+            .Select(item => item.GetString()!)
+            .ToArray();
+    }
+
+    private static JsonArray StringArray(IEnumerable<string> values)
+    {
+        var array = new JsonArray();
+        foreach (var value in values)
+        {
+            array.Add(value);
+        }
+
+        return array;
+    }
+
+    private static JsonArray JsonArrayFrom(IEnumerable<JsonObject> values)
+    {
+        var array = new JsonArray();
+        foreach (var value in values)
+        {
+            array.Add(value);
+        }
+
+        return array;
+    }
+
+    private sealed record DocumentationHashRecord(string Path, string Sha256);
+
+    private bool GeneratedIndexMatches(string generatedIndex, string indexPath, string step)
+    {
+        try
+        {
+            var expected = ComparableJson(generatedIndex);
+            var actual = ComparableJson(File.ReadAllText(indexPath, Encoding.UTF8));
+            return string.Equals(expected, actual, StringComparison.Ordinal);
+        }
+        catch (JsonException ex)
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                DiagnosticCommand(step),
+                step,
+                "error",
+                "E2D-BUILD-DOCS-INDEX-INVALID-JSON",
+                $"Local documentation index is not valid JSON: {ex.Message}.",
+                Path: IndexRelativePath));
+            return false;
+        }
+    }
+
+    private bool CanParseJson(string text, string step, string message)
+    {
+        try
+        {
+            using var _ = JsonDocument.Parse(text);
+            return true;
+        }
+        catch (JsonException ex)
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                DiagnosticCommand(step),
+                step,
+                "error",
+                "E2D-BUILD-DOCS-INDEX-INVALID-JSON",
+                $"{message} {ex.Message}.",
+                Path: IndexRelativePath));
+            return false;
+        }
+    }
+
+    private static string ComparableJson(string text)
+    {
+        using var document = JsonDocument.Parse(text);
+        return JsonSerializer.Serialize(document.RootElement);
+    }
+
+    private static string Normalize(string text)
+    {
+        return text.Replace("\r\n", "\n").Replace('\r', '\n');
+    }
+
+    private static string DiagnosticCommand(string step)
+    {
+        return step.StartsWith("verify", StringComparison.Ordinal) ? "verify" : "update";
     }
 
     private IReadOnlyList<BuildDiagnostic> VerifyIndex()
@@ -444,9 +863,9 @@ internal sealed class LocalDocumentationVerifier(
             }
 
             if (!TryGetString(wiki, "generator", out var generator) ||
-                !string.Equals(generator, "tools/Update-ApiWiki.ps1", StringComparison.Ordinal))
+                !string.Equals(generator, WikiGenerator, StringComparison.Ordinal))
             {
-                result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SOURCES", "Local documentation wiki source must reference tools/Update-ApiWiki.ps1.", IndexRelativePath));
+                result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SOURCES", $"Local documentation wiki source must reference {WikiGenerator}.", IndexRelativePath));
             }
 
             if (!TryGetString(wiki, "compatibilityPage", out var compatibilityPage) ||
@@ -676,11 +1095,6 @@ internal sealed class LocalDocumentationVerifier(
         var text = File.ReadAllText(path, Encoding.UTF8).Replace("\r\n", "\n").Replace('\r', '\n');
         var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
         return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
-    }
-
-    private static string GetPowerShellExecutable()
-    {
-        return OperatingSystem.IsWindows() ? "powershell" : "pwsh";
     }
 
     private static BuildDiagnostic CreateError(string code, string message, string path)
