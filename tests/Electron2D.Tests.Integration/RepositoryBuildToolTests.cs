@@ -399,6 +399,51 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(result, "E2D-BUILD-PROJECT-TEMPLATE-PROJECT-MANIFEST", "invalid project.e2d.json");
     }
 
+    [Fact]
+    public void GitAttributesDefinesRepositoryWideLineEndingPolicy()
+    {
+        var attributes = ReadText(FindRepositoryRoot(), ".gitattributes");
+
+        Assert.Contains("* text=auto eol=lf\n", attributes, StringComparison.Ordinal);
+        Assert.Contains("*.bat text eol=crlf\n", attributes, StringComparison.Ordinal);
+        Assert.Contains("*.cmd text eol=crlf\n", attributes, StringComparison.Ordinal);
+        Assert.Contains("*.png binary\n", attributes, StringComparison.Ordinal);
+        Assert.Contains("*.sqlite binary\n", attributes, StringComparison.Ordinal);
+        Assert.Contains("*.zip binary\n", attributes, StringComparison.Ordinal);
+        Assert.DoesNotContain("data/assets/reference-games/** binary", attributes, StringComparison.Ordinal);
+        Assert.DoesNotContain("docs/release-management/audit-package.md text eol=lf", attributes, StringComparison.Ordinal);
+        Assert.DoesNotContain("eng/Electron2D.Build/AuditPackageCommand.cs text eol=lf", attributes, StringComparison.Ordinal);
+        Assert.DoesNotContain("tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs text eol=lf", attributes, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task VerifyLineEndingsPassesCurrentRepository()
+    {
+        var result = await RunBuildToolAsync("verify", "line-endings");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-LINE-ENDINGS-PASSED", "current repository line endings");
+    }
+
+    [Fact]
+    public async Task VerifyLineEndingsRejectsUnexpectedTrackedCrlfTextFile()
+    {
+        using var workspace = await CreateLineEndingFixtureAsync("line-endings-crlf");
+        WriteRawText(workspace.Root, "docs/policy.md", "first\r\nsecond\r\n");
+        await RunGitAsync(workspace.Root, "add", ".");
+        await RunGitAsync(workspace.Root, "commit", "-m", "add tracked crlf file");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "line-endings");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-LINE-ENDINGS-CRLF", "tracked CRLF text file");
+        using var diagnostics = ReadDiagnostics(result);
+        var diagnostic = diagnostics.RootElement
+            .EnumerateArray()
+            .Single(item => item.GetProperty("code").GetString() == "E2D-BUILD-LINE-ENDINGS-CRLF");
+        Assert.Contains("docs/policy.md", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("project.e2d.json", "[]\n", "E2D-BUILD-PROJECT-TEMPLATE-PROJECT-MANIFEST")]
     [InlineData("project.e2d.json", "\"text\"\n", "E2D-BUILD-PROJECT-TEMPLATE-PROJECT-MANIFEST")]
@@ -481,6 +526,65 @@ public sealed class RepositoryBuildToolTests
         using (JsonDocument.Parse(index))
         {
         }
+    }
+
+    [Fact]
+    public async Task UpdateDocsRefreshesManifestShardsAndSqliteSearchCache()
+    {
+        using var workspace = CreateDocumentationGenerationFixture("update-docs-shards", initialIndex: "stale\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs");
+
+        Assert.Equal(0, result.ExitCode);
+        using var manifest = JsonDocument.Parse(ReadText(workspace.Root, LocalDocumentationIndexRelativePath));
+        var root = manifest.RootElement;
+        Assert.Equal(2, root.GetProperty("schemaVersion").GetInt32());
+        Assert.False(root.TryGetProperty("entries", out _));
+        Assert.True(root.TryGetProperty("shards", out var shards));
+        Assert.Equal(JsonValueKind.Array, shards.ValueKind);
+        AssertShardContract(workspace.Root, shards, ApiTypesShardRelativePath, "api-type");
+        AssertShardContract(workspace.Root, shards, ApiMembersShardRelativePath, "api-member");
+        AssertShardContract(workspace.Root, shards, DocumentationShardRelativePath, "documentation");
+        AssertShardContract(workspace.Root, shards, ExamplesShardRelativePath, "example");
+
+        var cache = root.GetProperty("sqliteCache");
+        Assert.Equal(LocalDocumentationSqliteCacheRelativePath, cache.GetProperty("path").GetString());
+        Assert.Equal(1, cache.GetProperty("schemaVersion").GetInt32());
+        Assert.Equal("entries", cache.GetProperty("entriesTable").GetString());
+        Assert.Equal("entries_fts", cache.GetProperty("ftsTable").GetString());
+        Assert.False(string.IsNullOrWhiteSpace(cache.GetProperty("sourceDigest").GetString()));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, LocalDocumentationSqliteCacheRelativePath.Replace('/', Path.DirectorySeparatorChar))));
+    }
+
+    [Fact]
+    public async Task UpdateDocsCheckRejectsStaleShardContent()
+    {
+        using var workspace = CreateDocumentationGenerationFixture("update-docs-stale-shard", initialIndex: "stale\n");
+        var update = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs");
+        AssertCommandSucceeded(update, "update docs");
+        ReplaceInFile(workspace.Root, ApiMembersShardRelativePath, "Moves a character body.", "Moves a stale character body.");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs", "--check");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-DOCS-SHARD-CHECK-FAILED", "stale generated shard content");
+    }
+
+    [Fact]
+    public async Task VerifyDocsBuildsTemporarySqliteCacheWithoutWorkingTreeCache()
+    {
+        using var workspace = CreateDocumentationGenerationFixture("verify-docs-temp-sqlite", initialIndex: "stale\n");
+        var update = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs");
+        AssertCommandSucceeded(update, "update docs");
+        var cachePath = Path.Combine(workspace.Root, LocalDocumentationSqliteCacheRelativePath.Replace('/', Path.DirectorySeparatorChar));
+        Assert.True(File.Exists(cachePath));
+        File.Delete(cachePath);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "docs");
+
+        Assert.Equal(0, result.ExitCode);
+        Assert.False(File.Exists(cachePath));
+        AssertDiagnosticCode(result, "E2D-BUILD-DOCS-SQLITE-CACHE-PASSED", "temporary SQLite search cache");
     }
 
     [Fact]
@@ -1144,6 +1248,9 @@ public sealed class RepositoryBuildToolTests
         - EVIDENCE_REVIEW
         - RISKS_AND_NOTES
         - CLOSURE_DECISION
+        - metadata.scopeTaskIds
+        - metadata.scopeSummary
+        - combined scope
         - metadata.previousVerdictChain
         - metadata.blockerClosureList
         - previous verdict files
@@ -1370,6 +1477,7 @@ public sealed class RepositoryBuildToolTests
             "AUDIT-REQUEST.md",
             request => request + "\narchive-only request drift\n",
             updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-static-request-mismatch");
 
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
@@ -1402,6 +1510,9 @@ public sealed class RepositoryBuildToolTests
         EVIDENCE_REVIEW
         RISKS_AND_NOTES
         CLOSURE_DECISION
+        metadata.scopeTaskIds
+        metadata.scopeSummary
+        combined scope
         metadata.previousVerdictChain
         metadata.blockerClosureList
         previous verdict files
@@ -1562,6 +1673,9 @@ public sealed class RepositoryBuildToolTests
             Assert.Contains("no baseline payload requirement", text, StringComparison.Ordinal);
             Assert.Contains("restored repo-owned model", text, StringComparison.Ordinal);
             Assert.Contains("no previous audit packages or detached historical checksums required", text, StringComparison.Ordinal);
+            Assert.Contains("metadata.scopeTaskIds", text, StringComparison.Ordinal);
+            Assert.Contains("metadata.scopeSummary", text, StringComparison.Ordinal);
+            Assert.Contains("combined scope", text, StringComparison.Ordinal);
         }
     }
 
@@ -2352,6 +2466,135 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("-line two", patch, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task AuditPackageVerifyPreparesAutocrlfCheckoutBeforeRestore()
+    {
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-verify-autocrlf",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["docs/release-management/audit-fixture.md"] = "# Audit fixture\n\nBaseline line.\n"
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        Baseline line.
+        Added line.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            repoFileGlobs: [],
+            repoFileAllowlist: ["docs/release-management/audit-fixture.md"],
+            archiveOnlyEvidenceGlobs: []);
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+        Assert.Equal(0, package.ExitCode);
+
+        using var cleanRepo = await CreateAutocrlfCleanCloneAsync(fixture, "verify-autocrlf");
+        var checkoutBytes = File.ReadAllBytes(Path.Combine(cleanRepo.Root, "docs", "release-management", "audit-fixture.md"));
+        Assert.Contains((byte)'\r', checkoutBytes);
+
+        var verify = await RunAuditVerifyAsync(fixture, fixture.ZipPath(taskId), cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+        var restoredBytes = File.ReadAllBytes(Path.Combine(cleanRepo.Root, "docs", "release-management", "audit-fixture.md"));
+        Assert.DoesNotContain((byte)'\r', restoredBytes);
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyCleansIgnoredBuildArtifactsBeforeRestoreFileSetComparison()
+    {
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-verify-ignored-artifacts",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                [".gitignore"] = "bin/\nobj/\n"
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ignored build artifacts are cleaned before restore comparison.
+        """);
+        var configPath = fixture.WriteConfig(taskId, archiveOnlyEvidenceGlobs: []);
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+        Assert.Equal(0, package.ExitCode);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-ignored-artifacts");
+        WriteText(cleanRepo.Root, "obj/generated.g.cs", "ignored build output\n");
+        WriteText(cleanRepo.Root, "bin/output.txt", "ignored build output\n");
+
+        var verify = await RunAuditVerifyAsync(fixture, fixture.ZipPath(taskId), cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+        Assert.False(Directory.Exists(Path.Combine(cleanRepo.Root, "obj")));
+        Assert.False(Directory.Exists(Path.Combine(cleanRepo.Root, "bin")));
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyCleansIgnoredBuildArtifactsCreatedByAppliedPatchBeforeRestoreFileSetComparison()
+    {
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-verify-post-apply-ignored-artifacts",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                [".gitignore"] = "bin/\nobj/\n"
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves post-apply ignored build artifacts do not affect restore comparison.
+        """);
+        var configPath = fixture.WriteConfig(taskId, archiveOnlyEvidenceGlobs: []);
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+        Assert.Equal(0, package.ExitCode);
+
+        const string ignoredArtifactPath = "obj/Debug/net10.0/Electron2D.Tests.GoldenData.AssemblyInfo.cs";
+        fixture.WriteTextFile(ignoredArtifactPath, """
+        // <auto-generated />
+        """);
+        var ignoredArtifactPatch = await fixture.CreateDiffForIgnoredCurrentPathAsync(ignoredArtifactPath);
+        var zipPath = fixture.ZipPath(taskId);
+        ReplaceZipEntryText(
+            zipPath,
+            $"{taskId}.patch",
+            patch => patch.EndsWith('\n') ? patch + ignoredArtifactPatch : patch + "\n" + ignoredArtifactPatch,
+            updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-post-apply-ignored-artifacts");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.True(
+            verify.ExitCode == 0,
+            $"audit package verify failed with exit code {verify.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{verify.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{verify.Stderr}");
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+        Assert.False(File.Exists(Path.Combine(cleanRepo.Root, ignoredArtifactPath.Replace('/', Path.DirectorySeparatorChar))));
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyDirtyRepoDiagnosticIncludesPorcelainStatus()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-verify-dirty-details", "T-0001");
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-dirty-details");
+        WriteText(cleanRepo.Root, "untracked-note.txt", "unexpected untracked file\n");
+
+        var verify = await RunAuditVerifyAsync(fixture, fixture.ZipPath("T-0001"), cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-REPO-DIRTY");
+        using var diagnostics = ReadDiagnostics(verify);
+        var diagnostic = diagnostics.RootElement
+            .EnumerateArray()
+            .Single(item => item.GetProperty("code").GetString() == "E2D-BUILD-AUDIT-REPO-DIRTY");
+        var message = diagnostic.GetProperty("message").GetString();
+        Assert.Contains("git status --porcelain", message, StringComparison.Ordinal);
+        Assert.Contains("?? untracked-note.txt", message, StringComparison.Ordinal);
+        Assert.DoesNotContain(cleanRepo.Root, message, StringComparison.OrdinalIgnoreCase);
+    }
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
@@ -2403,6 +2646,7 @@ public sealed class RepositoryBuildToolTests
             "T-0001.patch",
             patch => patch.Replace("@@ -0,0", "@@ -broken", StringComparison.Ordinal),
             updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-broken-patch");
 
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
@@ -2431,6 +2675,7 @@ public sealed class RepositoryBuildToolTests
         using var fixture = await CreatePackagedFixtureAsync("audit-package-incomplete-patch", "T-0001");
         var zipPath = fixture.ZipPath("T-0001");
         ReplaceZipEntryText(zipPath, "T-0001.patch", _ => string.Empty, updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-incomplete-patch");
 
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
@@ -2467,6 +2712,7 @@ public sealed class RepositoryBuildToolTests
             $"{taskId}.patch",
             patch => patch.EndsWith('\n') ? patch + extraPatch : patch + "\n" + extraPatch,
             updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-extra-restore-path");
 
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
@@ -2595,6 +2841,50 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("T-0207", metadata, StringComparison.Ordinal);
 
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-historical-task-ids");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+    }
+
+    [Fact]
+    public async Task AuditPackageWritesCombinedScopeMetadataAndClosureIntoManifest()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-combined-scope");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the combined scope package a repository-owned change.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            scopeTaskIds: ["T-0001", "T-0002"],
+            scopeSummary: "Combined audit scope for the primary task and its required dependency.",
+            previousVerdictChain: ["docs/verdicts/release-management/t-0001-audit-r00.md"],
+            blockerClosureList:
+            [
+                "B1 r00 closed: scopeTaskIds declares the required dependency.",
+                "B2 r00 closed: blockerClosureList records the previous blocker closure."
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var zipPath = fixture.ZipPath(taskId);
+        var metadata = ReadZipEntryText(zipPath, "metadata/audit-package.input.json");
+        var manifest = ReadZipEntryText(zipPath, "AUDIT-MANIFEST.md");
+        Assert.Contains("\"scopeTaskIds\": [", metadata, StringComparison.Ordinal);
+        Assert.Contains("\"T-0002\"", metadata, StringComparison.Ordinal);
+        Assert.Contains("\"scopeSummary\": \"Combined audit scope for the primary task and its required dependency.\"", metadata, StringComparison.Ordinal);
+        Assert.Contains("B1 r00 closed: scopeTaskIds declares the required dependency.", metadata, StringComparison.Ordinal);
+        Assert.Contains("- scopeTaskIds: `T-0001`, `T-0002`", manifest, StringComparison.Ordinal);
+        Assert.Contains("## Previous Verdict Chain", manifest, StringComparison.Ordinal);
+        Assert.Contains("docs/verdicts/release-management/t-0001-audit-r00.md", manifest, StringComparison.Ordinal);
+        Assert.Contains("## Blocker Closure List", manifest, StringComparison.Ordinal);
+        Assert.Contains("B2 r00 closed: blockerClosureList records the previous blocker closure.", manifest, StringComparison.Ordinal);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-combined-scope");
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
 
         Assert.Equal(0, verify.ExitCode);
@@ -3397,6 +3687,81 @@ public sealed class RepositoryBuildToolTests
         Directory.CreateDirectory(Path.Combine(root, "src"));
     }
 
+    private static async Task<TemporaryDirectory> CreateLineEndingFixtureAsync(string name)
+    {
+        var workspace = TemporaryDirectory.Create(name);
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(workspace.Root, ".gitattributes", """
+        * text=auto eol=lf
+        *.bat text eol=crlf
+        *.cmd text eol=crlf
+        *.png binary
+        *.sqlite binary
+        *.zip binary
+        """);
+        await RunGitAsync(workspace.Root, "init");
+        await RunGitAsync(workspace.Root, "config", "user.email", "fixture@example.invalid");
+        await RunGitAsync(workspace.Root, "config", "user.name", "Fixture User");
+        return workspace;
+    }
+
+    private static async Task<TemporaryDirectory> CreateAutocrlfCleanCloneAsync(AuditFixture fixture, string name)
+    {
+        var cloneRoot = Path.Combine(fixture.Root, name);
+        await RunGitAsync(fixture.Root, "clone", fixture.RepositoryRoot, cloneRoot);
+        await RunGitAsync(cloneRoot, "config", "core.autocrlf", "true");
+        await RunGitAsync(cloneRoot, "config", "core.eol", "crlf");
+        await DeleteTrackedWorkingTreeFilesAsync(cloneRoot);
+        await RunGitAutocrlfAsync(cloneRoot, "checkout", "-f", fixture.Baseline);
+        await RunGitAutocrlfAsync(cloneRoot, "clean", "-fdx");
+        return new TemporaryDirectory(cloneRoot);
+    }
+
+    private static async Task DeleteTrackedWorkingTreeFilesAsync(string repositoryRoot)
+    {
+        var result = await RunProcessAsync(
+            "git",
+            ["-c", "core.quotepath=false", "ls-files", "-z"],
+            repositoryRoot,
+            TimeSpan.FromSeconds(30));
+        Assert.True(
+            result.ExitCode == 0,
+            $"git ls-files failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+
+        foreach (var relativePath in result.Stdout.Split('\0', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var fullPath = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+        }
+    }
+
+    private static async Task RunGitAsync(string workingDirectory, params string[] arguments)
+    {
+        var result = await RunProcessAsync(
+            "git",
+            ["-c", "core.quotepath=false", "-c", "core.autocrlf=false", "-c", "core.safecrlf=false", .. arguments],
+            workingDirectory,
+            TimeSpan.FromSeconds(30));
+        Assert.True(
+            result.ExitCode == 0,
+            $"git {string.Join(" ", arguments)} failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+    }
+
+    private static async Task RunGitAutocrlfAsync(string workingDirectory, params string[] arguments)
+    {
+        var result = await RunProcessAsync(
+            "git",
+            ["-c", "core.quotepath=false", "-c", "core.autocrlf=true", "-c", "core.eol=crlf", "-c", "core.safecrlf=false", .. arguments],
+            workingDirectory,
+            TimeSpan.FromSeconds(30));
+        Assert.True(
+            result.ExitCode == 0,
+            $"git {string.Join(" ", arguments)} failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+    }
+
     private static void WriteReadmeAssets(string root)
     {
         WriteText(root, DarkReadmeAssetRelativePath, CreateReadmeSvg());
@@ -3571,10 +3936,43 @@ public sealed class RepositoryBuildToolTests
         """;
         var memberApiId = apiMemberApiId ?? "Electron2D.CharacterBody2D.MoveAndSlide";
         var docEntrySourcePath = documentationEntrySourcePath ?? DocumentationSourceRelativePath;
+        var apiTypesShard = WriteDocumentationShardFixture(
+            root,
+            ApiTypesShardRelativePath,
+            "api-type",
+            $$"""
+            {"id":"api-type:Electron2D.CharacterBody2D","kind":"api-type","title":"CharacterBody2D","summary":"Character body type.","keywords":["character"],"audiences":["human"],"sourcePath":"{{ApiManifestRelativePath}}","apiId":"Electron2D.CharacterBody2D"}
+            """);
+        var apiMembersShard = WriteDocumentationShardFixture(
+            root,
+            ApiMembersShardRelativePath,
+            "api-member",
+            $$"""
+            {"id":"api-member:Electron2D.CharacterBody2D.MoveAndSlide","kind":"api-member","title":"CharacterBody2D.MoveAndSlide","summary":"Moves a character body.","keywords":["character","movement"],"audiences":["human"],"sourcePath":"{{ApiManifestRelativePath}}","apiId":"{{memberApiId}}"}
+            """);
+        var documentationShard = WriteDocumentationShardFixture(
+            root,
+            DocumentationShardRelativePath,
+            "documentation",
+            $$"""
+            {"id":"doc:architecture.agent-native-workflow","kind":"documentation","title":"Agent workflow","summary":"Agent workflow documentation.","keywords":["agent"],"audiences":["human"],"sourcePath":"{{docEntrySourcePath}}","sourceId":"architecture.agent-native-workflow"}
+            """);
+        var examplesShard = WriteDocumentationShardFixture(
+            root,
+            ExamplesShardRelativePath,
+            "example",
+            $$"""
+            {"id":"example:platformer-movement","kind":"example","title":"Platformer movement","summary":"Platformer movement example.","keywords":["platformer"],"audiences":["human"],"sourcePath":"{{ExamplesRelativePath}}","sourceId":"platformer-movement"}
+            """);
+        var sourceDigest = ComputeDocumentationFixtureSourceDigest(
+            new DocumentationFixtureHashRecord(ApiManifestRelativePath, apiManifestHash),
+            [new DocumentationFixtureHashRecord(DocumentationSourceRelativePath, documentationHash)],
+            new DocumentationFixtureHashRecord(ExamplesRelativePath, examplesHash),
+            [apiTypesShard, apiMembersShard, documentationShard, examplesShard]);
 
         var index = $$"""
         {
-          "schemaVersion": 1,
+          "schemaVersion": 2,
           "manifestVersion": "0.1.0-preview",
           "generatedFrom": {
             "apiManifest": {
@@ -3618,69 +4016,96 @@ public sealed class RepositoryBuildToolTests
             },
             "wiki": {{wikiJson}}
           },
-          "entries": [
+          "shards": [
             {
-              "id": "api-member:Electron2D.CharacterBody2D.MoveAndSlide",
-              "kind": "api-member",
-              "title": "CharacterBody2D.MoveAndSlide",
-              "summary": "Moves a character body.",
-              "keywords": [
-                "character",
-                "movement"
-              ],
-              "audiences": [
-                "human"
-              ],
-              "sourcePath": "{{ApiManifestRelativePath}}",
-              "apiId": "{{memberApiId}}"
+              "path": "{{apiTypesShard.Path}}",
+              "kind": "{{apiTypesShard.Kind}}",
+              "count": {{apiTypesShard.Count}},
+              "sha256": "{{apiTypesShard.Sha256}}"
             },
             {
-              "id": "api-type:Electron2D.CharacterBody2D",
-              "kind": "api-type",
-              "title": "CharacterBody2D",
-              "summary": "Character body type.",
-              "keywords": [
-                "character"
-              ],
-              "audiences": [
-                "human"
-              ],
-              "sourcePath": "{{ApiManifestRelativePath}}",
-              "apiId": "Electron2D.CharacterBody2D"
+              "path": "{{apiMembersShard.Path}}",
+              "kind": "{{apiMembersShard.Kind}}",
+              "count": {{apiMembersShard.Count}},
+              "sha256": "{{apiMembersShard.Sha256}}"
             },
             {
-              "id": "doc:architecture.agent-native-workflow",
-              "kind": "documentation",
-              "title": "Agent workflow",
-              "summary": "Agent workflow documentation.",
-              "keywords": [
-                "agent"
-              ],
-              "audiences": [
-                "human"
-              ],
-              "sourcePath": "{{docEntrySourcePath}}",
-              "sourceId": "architecture.agent-native-workflow"
+              "path": "{{documentationShard.Path}}",
+              "kind": "{{documentationShard.Kind}}",
+              "count": {{documentationShard.Count}},
+              "sha256": "{{documentationShard.Sha256}}"
             },
             {
-              "id": "example:platformer-movement",
-              "kind": "example",
-              "title": "Platformer movement",
-              "summary": "Platformer movement example.",
-              "keywords": [
-                "platformer"
-              ],
-              "audiences": [
-                "human"
-              ],
-              "sourcePath": "{{ExamplesRelativePath}}",
-              "sourceId": "platformer-movement"
+              "path": "{{examplesShard.Path}}",
+              "kind": "{{examplesShard.Kind}}",
+              "count": {{examplesShard.Count}},
+              "sha256": "{{examplesShard.Sha256}}"
             }
-          ]
+          ],
+          "sqliteCache": {
+            "path": "{{LocalDocumentationSqliteCacheRelativePath}}",
+            "schemaVersion": 1,
+            "sourceDigest": "{{sourceDigest}}",
+            "entriesTable": "entries",
+            "ftsTable": "entries_fts"
+          }
         }
         """;
 
         WriteText(root, "data/documentation/electron2d-local-docs-index.json", index);
+    }
+
+    private static DocumentationFixtureShard WriteDocumentationShardFixture(string root, string relativePath, string kind, string content)
+    {
+        var normalized = content.TrimEnd().Replace("\r\n", "\n").Replace('\r', '\n') + "\n";
+        var fullPath = Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+        File.WriteAllText(fullPath, normalized, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        return new DocumentationFixtureShard(relativePath, kind, 1, ComputeNormalizedSha256(fullPath));
+    }
+
+    private static string ComputeDocumentationFixtureSourceDigest(
+        DocumentationFixtureHashRecord apiManifest,
+        IReadOnlyList<DocumentationFixtureHashRecord> documentationRecords,
+        DocumentationFixtureHashRecord examples,
+        IReadOnlyList<DocumentationFixtureShard> shards)
+    {
+        var builder = new StringBuilder();
+        AppendDocumentationFixtureDigestRecord(builder, "apiManifest", apiManifest.Path, apiManifest.Sha256);
+        foreach (var record in documentationRecords.OrderBy(record => record.Path, StringComparer.Ordinal))
+        {
+            AppendDocumentationFixtureDigestRecord(builder, "documentation", record.Path, record.Sha256);
+        }
+
+        AppendDocumentationFixtureDigestRecord(builder, "examples", examples.Path, examples.Sha256);
+        foreach (var shard in shards.OrderBy(shard => shard.Path, StringComparer.Ordinal))
+        {
+            builder
+                .Append("shard")
+                .Append('\t')
+                .Append(shard.Path)
+                .Append('\t')
+                .Append(shard.Kind)
+                .Append('\t')
+                .Append(shard.Count)
+                .Append('\t')
+                .Append(shard.Sha256)
+                .Append('\n');
+        }
+
+        var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(builder.ToString());
+        return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
+    }
+
+    private static void AppendDocumentationFixtureDigestRecord(StringBuilder builder, string group, string path, string sha256)
+    {
+        builder
+            .Append(group)
+            .Append('\t')
+            .Append(path)
+            .Append('\t')
+            .Append(sha256)
+            .Append('\n');
     }
 
     private static string CreateDocumentationCommandJson(string commandName)
@@ -3732,11 +4157,59 @@ public sealed class RepositoryBuildToolTests
         File.WriteAllText(path, content.Replace("\r\n", "\n").Replace('\r', '\n'), Encoding.UTF8);
     }
 
+    private static void WriteRawText(string root, string relativePath, string content)
+    {
+        var path = Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, content, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+    }
+
     private static string ReadText(string root, string relativePath)
     {
         return File.ReadAllText(Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar)), Encoding.UTF8)
             .Replace("\r\n", "\n")
             .Replace('\r', '\n');
+    }
+
+    private static void AssertShardContract(string root, JsonElement shards, string relativePath, string kind)
+    {
+        var shard = shards
+            .EnumerateArray()
+            .Single(item =>
+                item.TryGetProperty("path", out var path) &&
+                string.Equals(path.GetString(), relativePath, StringComparison.Ordinal));
+        Assert.Equal(kind, shard.GetProperty("kind").GetString());
+
+        var fullPath = Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        Assert.True(File.Exists(fullPath), $"Shard file must exist: {relativePath}");
+        var bytes = File.ReadAllBytes(fullPath);
+        Assert.False(bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF, "Shard must be UTF-8 without BOM.");
+        var text = Encoding.UTF8.GetString(bytes);
+        Assert.DoesNotContain("\r", text, StringComparison.Ordinal);
+        Assert.EndsWith("\n", text, StringComparison.Ordinal);
+
+        var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        Assert.Equal(shard.GetProperty("count").GetInt32(), lines.Length);
+        Assert.Equal(ComputeNormalizedSha256(fullPath), shard.GetProperty("sha256").GetString());
+
+        string? previousId = null;
+        foreach (var line in lines)
+        {
+            using var entry = JsonDocument.Parse(line);
+            var entryRoot = entry.RootElement;
+            Assert.Equal(JsonValueKind.Object, entryRoot.ValueKind);
+            Assert.Equal(kind, entryRoot.GetProperty("kind").GetString());
+            var id = entryRoot.GetProperty("id").GetString();
+            Assert.False(string.IsNullOrWhiteSpace(id));
+            if (previousId is not null)
+            {
+                Assert.True(
+                    string.CompareOrdinal(previousId, id) < 0,
+                    $"Shard {relativePath} must be sorted by id: {previousId} before {id}.");
+            }
+
+            previousId = id;
+        }
     }
 
     private static string ComputeNormalizedSha256(string path)
@@ -4048,6 +4521,144 @@ public sealed class RepositoryBuildToolTests
             });
     }
 
+    private static void RefreshOperatorWorkflowSidecarPayload(string zipPath)
+    {
+        var sidecarPath = Path.ChangeExtension(zipPath, ".operator-workflow.zip");
+        var archiveEntries = ReadZipEntryNames(zipPath).ToArray();
+        var archiveEntriesText = string.Concat(archiveEntries.Select(path => path + "\n"));
+        var messageStdout = StripFirstMarkdownH1ForTest(ReadZipEntryText(zipPath, "AUDIT-REQUEST.md"));
+        using var currentMetadata = JsonDocument.Parse(ReadZipEntryText(sidecarPath, "payload/metadata.json"));
+        var payloadPath = currentMetadata.RootElement.GetProperty("payloadPath").GetString()
+            ?? throw new InvalidOperationException("Operator workflow sidecar payload path was empty.");
+        var payloadSha256 = Sha256File(zipPath);
+        var auditManifestSha256 = Sha256ZipEntry(zipPath, "AUDIT-MANIFEST.md");
+        var sha256SumsSha256 = Sha256ZipEntry(zipPath, "SHA256SUMS.txt");
+        var archiveEntriesSha256 = Sha256Text(archiveEntriesText);
+        var evidencePaths = ReadZipEntryNames(sidecarPath)
+            .Where(path => path.StartsWith("evidence/", StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        RewriteZip(
+            sidecarPath,
+            entries =>
+            {
+                entries["payload/metadata.json"] = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(
+                    new
+                    {
+                        payloadPath,
+                        payloadSha256,
+                        auditManifestSha256,
+                        sha256SumsSha256,
+                        archiveEntriesSha256,
+                        archiveEntries
+                    },
+                    new JsonSerializerOptions { WriteIndented = true }) + "\n");
+                entries["payload/sha256.txt"] = Encoding.UTF8.GetBytes(payloadSha256 + "\n");
+                entries["payload/AUDIT-MANIFEST.sha256"] = Encoding.UTF8.GetBytes(auditManifestSha256 + "\n");
+                entries["payload/SHA256SUMS.sha256"] = Encoding.UTF8.GetBytes(sha256SumsSha256 + "\n");
+                entries["payload/archive-entries.sha256"] = Encoding.UTF8.GetBytes(archiveEntriesSha256 + "\n");
+                entries["payload/archive-entries.txt"] = Encoding.UTF8.GetBytes(archiveEntriesText);
+                entries["OPERATOR-WORKFLOW.md"] = Encoding.UTF8.GetBytes(CreateOperatorWorkflowManifestForTest(
+                    payloadPath,
+                    payloadSha256,
+                    auditManifestSha256,
+                    sha256SumsSha256,
+                    archiveEntriesSha256,
+                    evidencePaths));
+                RefreshOperatorWorkflowMessageEvidenceForTest(entries, messageStdout);
+                entries["SHA256SUMS.txt"] = CreateChecksumFile(entries);
+            });
+    }
+
+    private static void RefreshOperatorWorkflowMessageEvidenceForTest(Dictionary<string, byte[]> entries, string stdout)
+    {
+        var stdoutPath = entries.Keys.Single(path => path.EndsWith("/checks/audit-package-message/stdout.txt", StringComparison.Ordinal));
+        var root = stdoutPath[..^"/stdout.txt".Length];
+        entries[stdoutPath] = Encoding.UTF8.GetBytes(stdout);
+
+        var metadataPath = $"{root}/metadata.json";
+        var metadataText = Encoding.UTF8.GetString(entries[metadataPath]);
+        using var metadata = JsonDocument.Parse(metadataText);
+        var currentStdoutSha256 = metadata.RootElement.GetProperty("stdoutSha256").GetString()
+            ?? throw new InvalidOperationException("Operator workflow message metadata stdoutSha256 was empty.");
+        var updatedStdoutSha256 = Sha256Bytes(entries[stdoutPath]);
+        entries[metadataPath] = Encoding.UTF8.GetBytes(metadataText.Replace(currentStdoutSha256, updatedStdoutSha256, StringComparison.Ordinal));
+    }
+
+    private static string StripFirstMarkdownH1ForTest(string text)
+    {
+        var normalized = text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
+        if (normalized.StartsWith('\uFEFF'))
+        {
+            normalized = normalized[1..];
+        }
+
+        var firstLineEnd = normalized.IndexOf('\n');
+        var firstLine = firstLineEnd >= 0 ? normalized[..firstLineEnd] : normalized;
+        if (Regex.IsMatch(firstLine, @"\A#(?!#)\s+.+\z", RegexOptions.CultureInvariant))
+        {
+            normalized = firstLineEnd >= 0 ? normalized[(firstLineEnd + 1)..] : string.Empty;
+        }
+
+        return TrimLeadingBlankLinesForTest(normalized);
+    }
+
+    private static string TrimLeadingBlankLinesForTest(string text)
+    {
+        var start = 0;
+        while (start < text.Length)
+        {
+            var nextLineBreak = text.IndexOf('\n', start);
+            var line = nextLineBreak >= 0 ? text[start..nextLineBreak] : text[start..];
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                break;
+            }
+
+            if (nextLineBreak < 0)
+            {
+                return string.Empty;
+            }
+
+            start = nextLineBreak + 1;
+        }
+
+        return text[start..];
+    }
+
+    private static string CreateOperatorWorkflowManifestForTest(
+        string payloadPath,
+        string payloadSha256,
+        string auditManifestSha256,
+        string sha256SumsSha256,
+        string archiveEntriesSha256,
+        IEnumerable<string> evidencePaths)
+    {
+        var builder = new StringBuilder();
+        builder.AppendLine("# OPERATOR-WORKFLOW");
+        builder.AppendLine();
+        builder.AppendLine("## Payload");
+        builder.AppendLine($"- path: `{payloadPath}`");
+        builder.AppendLine($"- sha256: `{payloadSha256}`");
+        builder.AppendLine($"- AUDIT-MANIFEST.md sha256: `{auditManifestSha256}`");
+        builder.AppendLine($"- SHA256SUMS.txt sha256: `{sha256SumsSha256}`");
+        builder.AppendLine($"- archive entries sha256: `{archiveEntriesSha256}`");
+        builder.AppendLine();
+        builder.AppendLine("## Evidence Links");
+        foreach (var path in evidencePaths.Order(StringComparer.Ordinal))
+        {
+            builder.AppendLine($"- `{path}`");
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("## Contract");
+        builder.AppendLine("- Operator workflow evidence is stored outside the primary audit ZIP.");
+        builder.AppendLine("- The primary audit ZIP is the immutable payload; this sidecar records its SHA-256, manifest hash, checksum-file hash and archive-entry list hash.");
+        builder.AppendLine("- `audit-package-verify` and `audit-package-message` evidence is collected through documented CLI subprocesses after the primary payload is written.");
+        return builder.ToString();
+    }
+
     private static void RewriteZip(
         string zipPath,
         Action<Dictionary<string, byte[]>> mutate,
@@ -4104,6 +4715,11 @@ public sealed class RepositoryBuildToolTests
     private static string Sha256Bytes(byte[] bytes)
     {
         return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
+    }
+
+    private static string Sha256Text(string text)
+    {
+        return Sha256Bytes(Encoding.UTF8.GetBytes(text));
     }
 
     private static bool ContainsCommandTokens(string line, params string[] tokens)
@@ -4297,6 +4913,9 @@ public sealed class RepositoryBuildToolTests
         "EVIDENCE_REVIEW",
         "RISKS_AND_NOTES",
         "CLOSURE_DECISION",
+        "metadata.scopeTaskIds",
+        "metadata.scopeSummary",
+        "combined scope",
         "metadata.previousVerdictChain",
         "metadata.blockerClosureList",
         "previous verdict files",
@@ -4329,6 +4948,9 @@ public sealed class RepositoryBuildToolTests
     EVIDENCE_REVIEW
     RISKS_AND_NOTES
     CLOSURE_DECISION
+    metadata.scopeTaskIds
+    metadata.scopeSummary
+    combined scope
     metadata.previousVerdictChain
     metadata.blockerClosureList
     previous verdict files
@@ -4354,6 +4976,12 @@ public sealed class RepositoryBuildToolTests
     private const string ApiManifestRelativePath = "data/api/electron2d-api-manifest.json";
     private const string ExamplesRelativePath = "data/documentation/electron2d-doc-examples.json";
     private const string DocumentationSourceRelativePath = "docs/architecture/agent-native-workflow.md";
+    private const string LocalDocumentationIndexRelativePath = "data/documentation/electron2d-local-docs-index.json";
+    private const string LocalDocumentationSqliteCacheRelativePath = "data/documentation/electron2d-local-docs-search.sqlite";
+    private const string ApiTypesShardRelativePath = "data/documentation/local-docs-index/api-types.ndjson";
+    private const string ApiMembersShardRelativePath = "data/documentation/local-docs-index/api-members.ndjson";
+    private const string DocumentationShardRelativePath = "data/documentation/local-docs-index/documentation.ndjson";
+    private const string ExamplesShardRelativePath = "data/documentation/local-docs-index/examples.ndjson";
     private const string CompassSymbol = "\U0001F9ED";
     private const string SparklesSymbol = "\u2728";
     private const string DesktopSymbol = "\U0001F5A5\uFE0F";
@@ -4384,6 +5012,10 @@ public sealed class RepositoryBuildToolTests
     private sealed record ReadmeFixtureCase(string Name, Action<string> Mutate, string ExpectedCode);
 
     private sealed record DocumentationFixtureCase(string Name, Action<string> Mutate, string ExpectedCode);
+
+    private sealed record DocumentationFixtureHashRecord(string Path, string Sha256);
+
+    private sealed record DocumentationFixtureShard(string Path, string Kind, int Count, string Sha256);
 
     private sealed record CommandResult(int ExitCode, string Stdout, string Stderr);
 
@@ -4514,6 +5146,8 @@ public sealed class RepositoryBuildToolTests
             string[]? repoFileAllowlist = null,
             string[]? archiveOnlyEvidenceGlobs = null,
             AuditFixtureCheck[]? checks = null,
+            string[]? scopeTaskIds = null,
+            string? scopeSummary = null,
             string[]? previousVerdictChain = null,
             string[]? blockerClosureList = null)
         {
@@ -4524,6 +5158,8 @@ public sealed class RepositoryBuildToolTests
                 baseline = Baseline,
                 branch = "codex/audit-package-fixture",
                 domain = "release-management",
+                scopeTaskIds = scopeTaskIds ?? Array.Empty<string>(),
+                scopeSummary = scopeSummary ?? string.Empty,
                 repoFileGlobs = repoFileGlobs ?? ["docs/release-management/*.md"],
                 repoFileAllowlist = (repoFileAllowlist ?? Array.Empty<string>())
                     .Prepend("docs/release-management/AUDIT-REQUEST.md")
@@ -4579,6 +5215,19 @@ public sealed class RepositoryBuildToolTests
                 result = await CreateDiffAsync(relativePath);
             }
 
+            Assert.False(string.IsNullOrWhiteSpace(result.Stdout), $"git diff for {relativePath} was empty.");
+            return result.Stdout;
+        }
+
+        public async Task<string> CreateDiffForIgnoredCurrentPathAsync(string relativePath)
+        {
+            await RunGitAsync(RepositoryRoot, "add", "--force", "--intent-to-add", "--", relativePath);
+            var result = await CreateDiffAsync(relativePath);
+            await RunGitAsync(RepositoryRoot, "reset", "--", relativePath);
+
+            Assert.True(
+                result.ExitCode == 0,
+                $"git diff for {relativePath} failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
             Assert.False(string.IsNullOrWhiteSpace(result.Stdout), $"git diff for {relativePath} was empty.");
             return result.Stdout;
         }

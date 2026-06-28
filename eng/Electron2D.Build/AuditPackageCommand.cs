@@ -74,6 +74,9 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         "EVIDENCE_REVIEW",
         "RISKS_AND_NOTES",
         "CLOSURE_DECISION",
+        "metadata.scopeTaskIds",
+        "metadata.scopeSummary",
+        "combined scope",
         "metadata.previousVerdictChain",
         "metadata.blockerClosureList",
         "previous verdict files",
@@ -344,7 +347,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         VerifyPatchControlPaths(Encoding.UTF8.GetString(entries[patchName]));
-        await VerifyCleanRepositoryAsync(options.RepositoryPath, options.Baseline, cancellationToken).ConfigureAwait(false);
+        await PrepareCleanRepositoryAsync(options.RepositoryPath, options.Baseline, cancellationToken).ConfigureAwait(false);
 
         var patchPath = Path.Combine(extractRoot.Root, patchName);
         var applyCheck = await GitRunner.RunAsync(
@@ -378,6 +381,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "E2D-BUILD-AUDIT-RESTORE-MANIFEST-INVALID",
                 "repo-file-hashes.json is empty or invalid.");
         VerifyRestoreManifestMetadata(config, restoreManifest);
+        await CleanIgnoredArtifactsAfterPatchApplyAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyRestoredFileSetAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyRestoredHashesAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyStaticAuditRequestMatchesRestoredSourceAsync(options.RepositoryPath, entries[StaticAuditRequestArchivePath], cancellationToken).ConfigureAwait(false);
@@ -511,6 +515,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         config.Baseline ??= string.Empty;
         config.Branch ??= string.Empty;
         config.Domain ??= string.Empty;
+        config.ScopeTaskIds ??= [];
+        config.ScopeSummary ??= string.Empty;
         config.RepoFileGlobs ??= [];
         config.RepoFileAllowlist ??= [];
         config.ArchiveOnlyEvidenceGlobs ??= [];
@@ -572,9 +578,33 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         ValidateConfiguredPathList(config.PreviousVerdictChain, "previousVerdictChain");
         ValidateConfiguredPathList(config.ForbiddenPatterns, "forbiddenPatterns");
         ValidateConfiguredPathList(config.OneLineStubAllowlist, "oneLineStubAllowlist");
+        ValidateScopeMetadata(config);
         foreach (var check in config.Checks)
         {
             ValidateCheck(check);
+        }
+    }
+
+    private static void ValidateScopeMetadata(AuditPackageConfiguration config)
+    {
+        if (config.ScopeSummary.Any(char.IsControl))
+        {
+            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", "scopeSummary must not contain control characters.");
+        }
+
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var taskId in config.ScopeTaskIds)
+        {
+            ValidateTaskId(taskId, "audit package");
+            if (!seen.Add(taskId))
+            {
+                throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", $"scopeTaskIds contains a duplicate task id: {taskId}");
+            }
+        }
+
+        if (config.ScopeTaskIds.Count > 0 && !config.ScopeTaskIds.Contains(config.TaskId, StringComparer.Ordinal))
+        {
+            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", "scopeTaskIds must include the primary taskId.");
         }
     }
 
@@ -1947,6 +1977,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         builder.AppendLine($"- baseline: `{config.Baseline}`");
         builder.AppendLine($"- branch: `{config.Branch}`");
         builder.AppendLine($"- domain: `{config.Domain}`");
+        builder.AppendLine($"- scopeTaskIds: {FormatManifestTaskIdList(GetEffectiveScopeTaskIds(config))}");
+        if (!string.IsNullOrWhiteSpace(config.ScopeSummary))
+        {
+            builder.AppendLine($"- scopeSummary: {config.ScopeSummary}");
+        }
+
         builder.AppendLine($"- requestSource: `{StaticAuditRequestSourcePath}`");
         builder.AppendLine();
         builder.AppendLine("## Diff Name-Status");
@@ -1975,6 +2011,46 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         foreach (var path in restoreManifest.DeletedRepoFiles.OrderBy(path => path, StringComparer.Ordinal))
         {
             builder.AppendLine($"- `{path}` `<deleted>`");
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("## Scope");
+        foreach (var taskId in GetEffectiveScopeTaskIds(config))
+        {
+            builder.AppendLine($"- `{taskId}`");
+        }
+
+        if (!string.IsNullOrWhiteSpace(config.ScopeSummary))
+        {
+            builder.AppendLine($"- summary: {config.ScopeSummary}");
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("## Previous Verdict Chain");
+        if (config.PreviousVerdictChain.Count == 0)
+        {
+            builder.AppendLine("- <none>");
+        }
+        else
+        {
+            foreach (var path in config.PreviousVerdictChain.Order(StringComparer.Ordinal))
+            {
+                builder.AppendLine($"- `{path}`");
+            }
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("## Blocker Closure List");
+        if (config.BlockerClosureList.Count == 0)
+        {
+            builder.AppendLine("- <none>");
+        }
+        else
+        {
+            foreach (var closure in config.BlockerClosureList)
+            {
+                builder.AppendLine($"- {closure}");
+            }
         }
 
         builder.AppendLine();
@@ -2012,6 +2088,16 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         return builder.ToString();
+    }
+
+    private static IReadOnlyList<string> GetEffectiveScopeTaskIds(AuditPackageConfiguration config)
+    {
+        return config.ScopeTaskIds.Count > 0 ? config.ScopeTaskIds : [config.TaskId];
+    }
+
+    private static string FormatManifestTaskIdList(IEnumerable<string> taskIds)
+    {
+        return string.Join(", ", taskIds.Select(taskId => $"`{taskId}`"));
     }
 
     private static void RefreshManifestAndChecksums(
@@ -2553,18 +2639,39 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
     }
 
-    private static async Task VerifyCleanRepositoryAsync(string repoRoot, string baseline, CancellationToken cancellationToken)
+    private static async Task PrepareCleanRepositoryAsync(string repoRoot, string baseline, CancellationToken cancellationToken)
     {
+        var workTree = await GitRunner.RunAsync(repoRoot, ["rev-parse", "--is-inside-work-tree"], cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (workTree.ExitCode != 0 || !string.Equals(workTree.StandardOutput.Trim(), "true", StringComparison.Ordinal))
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-GIT-FAILED", $"git rev-parse --is-inside-work-tree failed: {workTree.StandardError}");
+        }
+
+        await RunGitPreparationAsync(repoRoot, ["config", "--local", "core.autocrlf", "false"], cancellationToken).ConfigureAwait(false);
+        await RunGitPreparationAsync(repoRoot, ["config", "--local", "core.eol", "lf"], cancellationToken).ConfigureAwait(false);
+
+        var baselineCommit = await GitRunner.RunAsync(repoRoot, ["rev-parse", "--verify", $"{baseline}^{{commit}}"], cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (baselineCommit.ExitCode != 0)
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-GIT-FAILED", $"git rev-parse --verify baseline failed: {baselineCommit.StandardError}");
+        }
+
+        var resolvedBaseline = baselineCommit.StandardOutput.Trim();
+        await RunGitPreparationAsync(repoRoot, ["reset", "--hard", resolvedBaseline], cancellationToken).ConfigureAwait(false);
+
         var head = await GitRunner.RunAsync(repoRoot, ["rev-parse", "HEAD"], cancellationToken: cancellationToken).ConfigureAwait(false);
         if (head.ExitCode != 0)
         {
             throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-GIT-FAILED", $"git rev-parse failed: {head.StandardError}");
         }
 
-        if (!string.Equals(head.StandardOutput.Trim(), baseline, StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(head.StandardOutput.Trim(), resolvedBaseline, StringComparison.OrdinalIgnoreCase))
         {
             throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-BASELINE-MISMATCH", "Clean repository HEAD does not match baseline.");
         }
+
+        await RematerializeTrackedFilesAsync(repoRoot, resolvedBaseline, cancellationToken).ConfigureAwait(false);
+        await RunGitPreparationAsync(repoRoot, ["clean", "-fdX"], cancellationToken).ConfigureAwait(false);
 
         var status = await GitRunner.RunAsync(repoRoot, ["status", "--porcelain"], cancellationToken: cancellationToken).ConfigureAwait(false);
         if (status.ExitCode != 0)
@@ -2574,7 +2681,138 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         if (!string.IsNullOrWhiteSpace(status.StandardOutput))
         {
-            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-REPO-DIRTY", "Clean repository path has local changes before restore verification.");
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-REPO-DIRTY",
+                $"Clean repository path has local changes before restore verification. git status --porcelain output:{Environment.NewLine}{status.StandardOutput.TrimEnd()}");
+        }
+    }
+
+    private static async Task RematerializeTrackedFilesAsync(string repoRoot, string baseline, CancellationToken cancellationToken)
+    {
+        var root = Path.GetFullPath(repoRoot);
+        foreach (var path in await GitListForVerifyAsync(repoRoot, ["ls-files", "-z"], cancellationToken).ConfigureAwait(false))
+        {
+            var normalized = AuditPath.NormalizeRelativePath(path, "tracked Git path", allowCurrentDirectory: false);
+            var fullPath = Path.GetFullPath(Path.Combine(root, normalized.Replace('/', Path.DirectorySeparatorChar)));
+            EnsureRepositoryChildPath(root, fullPath, normalized);
+            if (!File.Exists(fullPath))
+            {
+                continue;
+            }
+
+            try
+            {
+                File.SetAttributes(fullPath, File.GetAttributes(fullPath) & ~FileAttributes.ReadOnly);
+                File.Delete(fullPath);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                throw new AuditPackageFailure(
+                    "audit package verify",
+                    "E2D-BUILD-AUDIT-GIT-FAILED",
+                    $"Failed to rematerialize tracked file {normalized}: {ex.Message}");
+            }
+        }
+
+        await RunGitPreparationAsync(repoRoot, ["reset", "--hard", baseline], cancellationToken).ConfigureAwait(false);
+    }
+
+    private static void EnsureRepositoryChildPath(string repoRoot, string fullPath, string relativePath)
+    {
+        var root = Path.GetFullPath(repoRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        if (!fullPath.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-PATH-INVALID",
+                $"Tracked Git path resolves outside the clean repository: {relativePath}");
+        }
+    }
+
+    private static async Task RunGitPreparationAsync(string repoRoot, string[] arguments, CancellationToken cancellationToken)
+    {
+        var result = await GitRunner.RunAsync(repoRoot, arguments, cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (result.ExitCode != 0)
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-GIT-FAILED", $"git {string.Join(" ", arguments)} failed: {result.StandardError}");
+        }
+    }
+
+    private static async Task CleanIgnoredArtifactsAfterPatchApplyAsync(string repoRoot, RestoreManifest manifest, CancellationToken cancellationToken)
+    {
+        var expectedRestoredFiles = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var file in manifest.RepoFiles.OrderBy(file => file.Path, StringComparer.Ordinal))
+        {
+            expectedRestoredFiles.Add(AuditPath.NormalizeRelativePath(file.Path, "repo-file-hashes.json", allowCurrentDirectory: false));
+        }
+
+        var ignoredPaths = (await GitListForVerifyAsync(repoRoot, ["ls-files", "--others", "--ignored", "--exclude-standard", "-z"], cancellationToken).ConfigureAwait(false))
+            .Select(path => AuditPath.NormalizeRelativePath(path, "post-apply ignored file", allowCurrentDirectory: false))
+            .Distinct(StringComparer.Ordinal)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        var extraIgnoredPaths = ignoredPaths
+            .Where(path => !expectedRestoredFiles.Contains(path))
+            .ToArray();
+        if (extraIgnoredPaths.Length == 0)
+        {
+            return;
+        }
+
+        if (!ignoredPaths.Any(expectedRestoredFiles.Contains))
+        {
+            await RunGitPreparationAsync(repoRoot, ["clean", "-fdX"], cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        DeleteExtraIgnoredPaths(repoRoot, extraIgnoredPaths, cancellationToken);
+    }
+
+    private static void DeleteExtraIgnoredPaths(string repoRoot, IReadOnlyList<string> relativePaths, CancellationToken cancellationToken)
+    {
+        var root = Path.GetFullPath(repoRoot);
+        foreach (var relativePath in relativePaths.OrderByDescending(path => path.Length).ThenBy(path => path, StringComparer.Ordinal))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var fullPath = Path.GetFullPath(Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar)));
+            EnsureRepositoryChildPath(root, fullPath, relativePath);
+            try
+            {
+                if (File.Exists(fullPath))
+                {
+                    File.SetAttributes(fullPath, File.GetAttributes(fullPath) & ~FileAttributes.ReadOnly);
+                    File.Delete(fullPath);
+                    DeleteEmptyParentDirectories(root, fullPath);
+                }
+                else if (Directory.Exists(fullPath) && !Directory.EnumerateFileSystemEntries(fullPath).Any())
+                {
+                    Directory.Delete(fullPath);
+                    DeleteEmptyParentDirectories(root, fullPath);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                throw new AuditPackageFailure(
+                    "audit package verify",
+                    "E2D-BUILD-AUDIT-GIT-FAILED",
+                    $"Failed to clean ignored post-apply artifact {relativePath}: {ex.Message}");
+            }
+        }
+    }
+
+    private static void DeleteEmptyParentDirectories(string repoRoot, string path)
+    {
+        var root = Path.GetFullPath(repoRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var directory = Directory.Exists(path) ? path : Path.GetDirectoryName(path);
+        while (!string.IsNullOrEmpty(directory) &&
+            !string.Equals(directory, root, StringComparison.OrdinalIgnoreCase) &&
+            Directory.Exists(directory) &&
+            !Directory.EnumerateFileSystemEntries(directory).Any())
+        {
+            Directory.Delete(directory);
+            directory = Path.GetDirectoryName(directory);
         }
     }
 
@@ -3349,6 +3587,8 @@ internal sealed class AuditPackageConfiguration
     public string Baseline { get; set; } = string.Empty;
     public string Branch { get; set; } = string.Empty;
     public string Domain { get; set; } = string.Empty;
+    public List<string> ScopeTaskIds { get; set; } = [];
+    public string ScopeSummary { get; set; } = string.Empty;
     public List<string> RepoFileGlobs { get; set; } = [];
     public List<string> RepoFileAllowlist { get; set; } = [];
     public List<string> ArchiveOnlyEvidenceGlobs { get; set; } = [];

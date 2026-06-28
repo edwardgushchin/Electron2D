@@ -26,6 +26,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
+using Microsoft.Data.Sqlite;
 
 try
 {
@@ -84,13 +86,13 @@ internal static partial class Electron2DCommandLine
         {
             error.WriteLine("Local documentation data could not be read as JSON.");
             error.WriteLine(exception.Message);
-            error.WriteLine("Run `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`.");
+            error.WriteLine("Run `dotnet run --project eng\\Electron2D.Build -- verify docs`.");
             return 1;
         }
         catch (IOException exception)
         {
             error.WriteLine(exception.Message);
-            error.WriteLine("Run `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`.");
+            error.WriteLine("Run `dotnet run --project eng\\Electron2D.Build -- verify docs`.");
             return 1;
         }
     }
@@ -341,24 +343,44 @@ internal sealed class LocalDocumentationStore
 {
     public const string ApiManifestPath = "data/api/electron2d-api-manifest.json";
     public const string IndexPath = "data/documentation/electron2d-local-docs-index.json";
+    public const string SqliteCachePath = "data/documentation/electron2d-local-docs-search.sqlite";
+
+    private const int ManifestSchemaVersion = 2;
+    private const int SqliteCacheSchemaVersion = 1;
+    private const string SqliteEntriesTable = "entries";
+    private const string SqliteFtsTable = "entries_fts";
+
+    private static readonly ShardRequirement[] RequiredShards =
+    [
+        new("data/documentation/local-docs-index/api-types.ndjson", "api-type"),
+        new("data/documentation/local-docs-index/api-members.ndjson", "api-member"),
+        new("data/documentation/local-docs-index/documentation.ndjson", "documentation"),
+        new("data/documentation/local-docs-index/examples.ndjson", "example")
+    ];
 
     private readonly JsonObject apiManifest;
     private readonly JsonObject index;
+    private readonly IReadOnlyList<JsonObject> entries;
+    private readonly string? sqlitePath;
 
-    private LocalDocumentationStore(string repositoryRoot, JsonObject apiManifest, JsonObject index)
+    private LocalDocumentationStore(
+        string repositoryRoot,
+        JsonObject apiManifest,
+        JsonObject index,
+        IReadOnlyList<JsonObject> entries,
+        string? sqlitePath)
     {
         RepositoryRoot = repositoryRoot;
         this.apiManifest = apiManifest;
         this.index = index;
+        this.entries = entries;
+        this.sqlitePath = sqlitePath;
     }
 
     public string RepositoryRoot { get; }
 
     private JsonArray Types => apiManifest["types"]?.AsArray()
         ?? throw new CommandLineException("API manifest is missing `types`.");
-
-    private JsonArray Entries => index["entries"]?.AsArray()
-        ?? throw new CommandLineException("Local documentation index is missing `entries`.");
 
     public static LocalDocumentationStore Load(string repositoryRoot)
     {
@@ -380,30 +402,30 @@ internal sealed class LocalDocumentationStore
         var index = JsonNode.Parse(File.ReadAllText(indexPath))?.AsObject()
             ?? throw new CommandLineException("Local documentation index root must be a JSON object.");
 
-        return new LocalDocumentationStore(repositoryRoot, apiManifest, index);
+        var shardRecords = ReadShardRecords(repositoryRoot, index);
+        var cachePath = Path.Combine(repositoryRoot, SqliteCachePath.Replace('/', Path.DirectorySeparatorChar));
+        var entries = TryLoadEntriesFromSqlite(cachePath, index, shardRecords, out var sqliteEntries)
+            ? sqliteEntries
+            : LoadEntriesFromShards(repositoryRoot, shardRecords);
+        var sqlitePath = ReferenceEquals(entries, sqliteEntries) ? cachePath : null;
+
+        return new LocalDocumentationStore(repositoryRoot, apiManifest, index, entries, sqlitePath);
     }
 
     public IEnumerable<SearchResult> Search(string query)
     {
-        var tokens = Tokenize(query).ToArray();
-        if (tokens.Length == 0)
+        var searchTerms = SplitSearchTerms(query).ToArray();
+        if (searchTerms.Length == 0)
         {
             throw new CommandLineException("Search query must not be empty.");
         }
 
-        foreach (var node in Entries)
+        if (sqlitePath is not null && TrySearchSqlite(searchTerms, out var sqliteResults))
         {
-            if (node is not JsonObject entry)
-            {
-                continue;
-            }
-
-            var score = Score(entry, tokens);
-            if (score > 0)
-            {
-                yield return new SearchResult(entry, score);
-            }
+            return ScoreEntries(sqliteResults, searchTerms);
         }
+
+        return ScoreEntries(entries, searchTerms);
     }
 
     public JsonObject? FindType(string query)
@@ -467,7 +489,233 @@ internal sealed class LocalDocumentationStore
         return result?.Entry;
     }
 
-    private static int Score(JsonObject entry, IReadOnlyCollection<string> tokens)
+    private static IReadOnlyList<ShardRecord> ReadShardRecords(string repositoryRoot, JsonObject index)
+    {
+        if (index["schemaVersion"]?.GetValue<int>() != ManifestSchemaVersion)
+        {
+            throw new CommandLineException("Local documentation index schemaVersion must be 2.");
+        }
+
+        if (index.ContainsKey("entries"))
+        {
+            throw new CommandLineException("Local documentation index schemaVersion 2 must not contain root `entries`.");
+        }
+
+        var shards = index["shards"]?.AsArray()
+            ?? throw new CommandLineException("Local documentation index is missing `shards`.");
+        var shardMap = new Dictionary<string, JsonObject>(StringComparer.Ordinal);
+        foreach (var node in shards)
+        {
+            if (node is JsonObject shard && !string.IsNullOrWhiteSpace(Value(shard, "path")))
+            {
+                shardMap[Value(shard, "path")] = shard;
+            }
+        }
+
+        var records = new List<ShardRecord>();
+        foreach (var required in RequiredShards)
+        {
+            if (!shardMap.TryGetValue(required.Path, out var shard))
+            {
+                throw new CommandLineException($"Local documentation index is missing shard metadata: {required.Path}");
+            }
+
+            if (!string.Equals(Value(shard, "kind"), required.Kind, StringComparison.Ordinal) ||
+                shard["count"] is null ||
+                !int.TryParse(shard["count"]!.ToJsonString(), out var count) ||
+                count < 0 ||
+                string.IsNullOrWhiteSpace(Value(shard, "sha256")))
+            {
+                throw new CommandLineException($"Local documentation shard metadata is incomplete: {required.Path}");
+            }
+
+            var fullPath = Path.Combine(repositoryRoot, required.Path.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(fullPath))
+            {
+                throw new FileNotFoundException($"Local documentation shard was not found: {fullPath}");
+            }
+
+            var actualHash = ComputeNormalizedSha256(fullPath);
+            var expectedHash = Value(shard, "sha256");
+            if (!string.Equals(actualHash, expectedHash, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new CommandLineException($"Local documentation shard is stale: {required.Path}");
+            }
+
+            records.Add(new ShardRecord(required.Path, required.Kind, count, expectedHash));
+        }
+
+        return records;
+    }
+
+    private static IReadOnlyList<JsonObject> LoadEntriesFromShards(string repositoryRoot, IReadOnlyList<ShardRecord> shardRecords)
+    {
+        var entries = new List<JsonObject>();
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var shard in shardRecords)
+        {
+            var fullPath = Path.Combine(repositoryRoot, shard.Path.Replace('/', Path.DirectorySeparatorChar));
+            var text = File.ReadAllText(fullPath, Encoding.UTF8).Replace("\r\n", "\n").Replace('\r', '\n');
+            var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length != shard.Count)
+            {
+                throw new CommandLineException($"Local documentation shard count is stale: {shard.Path}");
+            }
+
+            string? previousId = null;
+            foreach (var line in lines)
+            {
+                var entry = JsonNode.Parse(line)?.AsObject()
+                    ?? throw new CommandLineException($"Local documentation shard entry root must be a JSON object: {shard.Path}");
+                var id = Value(entry, "id");
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    throw new CommandLineException($"Local documentation shard entry is missing id: {shard.Path}");
+                }
+
+                if (!string.Equals(Value(entry, "kind"), shard.Kind, StringComparison.Ordinal))
+                {
+                    throw new CommandLineException($"Local documentation shard entry has wrong kind: {id}");
+                }
+
+                if (previousId is not null && string.CompareOrdinal(previousId, id) > 0)
+                {
+                    throw new CommandLineException($"Local documentation shard entries are not sorted by id: {shard.Path}");
+                }
+
+                if (!ids.Add(id))
+                {
+                    throw new CommandLineException($"Local documentation shard entry id is duplicated: {id}");
+                }
+
+                previousId = id;
+                entries.Add(entry);
+            }
+        }
+
+        return entries;
+    }
+
+    private static bool TryLoadEntriesFromSqlite(
+        string cachePath,
+        JsonObject index,
+        IReadOnlyList<ShardRecord> shardRecords,
+        out IReadOnlyList<JsonObject> entries)
+    {
+        entries = [];
+        if (!File.Exists(cachePath) ||
+            index["sqliteCache"] is not JsonObject cache)
+        {
+            return false;
+        }
+
+        var sourceDigest = Value(cache, "sourceDigest");
+        if (string.IsNullOrWhiteSpace(sourceDigest))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = cachePath, Mode = SqliteOpenMode.ReadOnly, Pooling = false }.ToString());
+            connection.Open();
+            var cacheSchemaVersion = ExecuteScalarString(connection, "SELECT value FROM metadata WHERE key = 'schemaVersion';");
+            var cacheSourceDigest = ExecuteScalarString(connection, "SELECT value FROM metadata WHERE key = 'sourceDigest';");
+            if (!string.Equals(cacheSchemaVersion, SqliteCacheSchemaVersion.ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal) ||
+                !string.Equals(cacheSourceDigest, sourceDigest, StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var expectedCount = shardRecords.Sum(shard => shard.Count);
+            if (ExecuteScalarInt64(connection, "SELECT COUNT(*) FROM entries;") != expectedCount)
+            {
+                return false;
+            }
+
+            if (ExecuteScalarInt64(connection, "SELECT COUNT(*) FROM entries_fts WHERE entries_fts MATCH 'moveandslide';") <= 0)
+            {
+                return false;
+            }
+
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT payload_json FROM entries ORDER BY id;";
+            using var reader = command.ExecuteReader();
+            var loadedEntries = new List<JsonObject>();
+            while (reader.Read())
+            {
+                loadedEntries.Add(JsonNode.Parse(reader.GetString(0))?.AsObject()
+                    ?? throw new CommandLineException("SQLite local documentation entry payload must be a JSON object."));
+            }
+
+            entries = loadedEntries;
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or SqliteException or CommandLineException)
+        {
+            entries = [];
+            return false;
+        }
+    }
+
+    private bool TrySearchSqlite(IReadOnlyList<string> searchTerms, out IReadOnlyList<JsonObject> results)
+    {
+        results = [];
+        if (sqlitePath is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = sqlitePath, Mode = SqliteOpenMode.ReadOnly, Pooling = false }.ToString());
+            connection.Open();
+            using var command = connection.CreateCommand();
+            command.CommandText =
+                """
+                SELECT e.payload_json
+                FROM entries_fts
+                JOIN entries e ON e.rowid = entries_fts.rowid
+                WHERE entries_fts MATCH $query
+                ORDER BY e.id
+                LIMIT 50;
+                """;
+            command.Parameters.AddWithValue("$query", BuildFtsQuery(searchTerms));
+
+            using var reader = command.ExecuteReader();
+            var matches = new List<JsonObject>();
+            while (reader.Read())
+            {
+                matches.Add(JsonNode.Parse(reader.GetString(0))?.AsObject()
+                    ?? throw new CommandLineException("SQLite local documentation entry payload must be a JSON object."));
+            }
+
+            results = matches;
+            return true;
+        }
+        catch (Exception ex) when (ex is JsonException or SqliteException or CommandLineException or IOException or UnauthorizedAccessException)
+        {
+            results = [];
+            return false;
+        }
+    }
+
+    private static IEnumerable<SearchResult> ScoreEntries(IEnumerable<JsonObject> entries, IReadOnlyCollection<string> searchTerms)
+    {
+        var results = new List<SearchResult>();
+        foreach (var entry in entries)
+        {
+            var score = Score(entry, searchTerms);
+            if (score > 0)
+            {
+                results.Add(new SearchResult(entry, score));
+            }
+        }
+
+        return results;
+    }
+
+    private static int Score(JsonObject entry, IReadOnlyCollection<string> searchTerms)
     {
         var haystack = new StringBuilder();
         haystack.Append(Value(entry, "id")).Append(' ');
@@ -484,18 +732,18 @@ internal sealed class LocalDocumentationStore
 
         var text = haystack.ToString().ToLowerInvariant();
         var score = 0;
-        foreach (var token in tokens)
+        foreach (var term in searchTerms)
         {
-            if (text.Contains(token, StringComparison.Ordinal))
+            if (text.Contains(term, StringComparison.Ordinal))
             {
-                score += token.Length <= 3 ? 1 : 3;
+                score += term.Length <= 3 ? 1 : 3;
             }
         }
 
         return score;
     }
 
-    private static IEnumerable<string> Tokenize(string value)
+    private static IEnumerable<string> SplitSearchTerms(string value)
     {
         foreach (Match match in Regex.Matches(value.ToLowerInvariant(), "[a-z0-9]+"))
         {
@@ -512,10 +760,46 @@ internal sealed class LocalDocumentationStore
             : value;
     }
 
+    private static string BuildFtsQuery(IEnumerable<string> searchTerms)
+    {
+        var ftsTerms = searchTerms.Where(term => term.Length > 3).ToArray();
+        if (ftsTerms.Length == 0)
+        {
+            ftsTerms = searchTerms.ToArray();
+        }
+
+        return string.Join(" OR ", ftsTerms.Select(term => "\"" + term.Replace("\"", "\"\"", StringComparison.Ordinal) + "\""));
+    }
+
+    private static string ComputeNormalizedSha256(string path)
+    {
+        var text = File.ReadAllText(path, Encoding.UTF8).Replace("\r\n", "\n").Replace('\r', '\n');
+        var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
+        return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
+    }
+
+    private static string ExecuteScalarString(SqliteConnection connection, string commandText)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        return command.ExecuteScalar()?.ToString() ?? string.Empty;
+    }
+
+    private static long ExecuteScalarInt64(SqliteConnection connection, string commandText)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        return Convert.ToInt64(command.ExecuteScalar(), System.Globalization.CultureInfo.InvariantCulture);
+    }
+
     private static string Value(JsonObject obj, string property)
     {
         return obj[property]?.GetValue<string>() ?? string.Empty;
     }
+
+    private sealed record ShardRequirement(string Path, string Kind);
+
+    private sealed record ShardRecord(string Path, string Kind, int Count, string Sha256);
 }
 
 internal sealed record SearchResult(JsonObject Entry, int Score);

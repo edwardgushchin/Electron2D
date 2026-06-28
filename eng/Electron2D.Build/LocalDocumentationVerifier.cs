@@ -28,18 +28,35 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Microsoft.Data.Sqlite;
 
 namespace Electron2D.Build;
 
 internal sealed class LocalDocumentationVerifier(
     string repositoryRoot,
-    JsonDiagnosticSink diagnostics,
-    ProcessRunner processRunner)
+    JsonDiagnosticSink diagnostics)
 {
     private const string IndexRelativePath = "data/documentation/electron2d-local-docs-index.json";
     private const string ApiManifestRelativePath = "data/api/electron2d-api-manifest.json";
     private const string ExamplesRelativePath = "data/documentation/electron2d-doc-examples.json";
+    private const string SqliteCacheRelativePath = "data/documentation/electron2d-local-docs-search.sqlite";
+    private const string ApiTypesShardRelativePath = "data/documentation/local-docs-index/api-types.ndjson";
+    private const string ApiMembersShardRelativePath = "data/documentation/local-docs-index/api-members.ndjson";
+    private const string DocumentationShardRelativePath = "data/documentation/local-docs-index/documentation.ndjson";
+    private const string ExamplesShardRelativePath = "data/documentation/local-docs-index/examples.ndjson";
     private const string WikiGenerator = "eng/Electron2D.Build update wiki";
+    private const int ManifestSchemaVersion = 2;
+    private const int SqliteCacheSchemaVersion = 1;
+    private const string SqliteEntriesTable = "entries";
+    private const string SqliteFtsTable = "entries_fts";
+
+    private static readonly DocumentationShardDefinition[] RequiredShards =
+    [
+        new(ApiTypesShardRelativePath, "api-type"),
+        new(ApiMembersShardRelativePath, "api-member"),
+        new(DocumentationShardRelativePath, "documentation"),
+        new(ExamplesShardRelativePath, "example")
+    ];
 
     private static readonly JsonSerializerOptions GeneratedIndexJsonOptions = new()
     {
@@ -108,15 +125,16 @@ internal sealed class LocalDocumentationVerifier(
 
         if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, IndexRelativePath, out var indexPath) ||
             !File.Exists(indexPath) ||
-            !GeneratedIndexMatches(generatedIndex, indexPath, "verify docs"))
+            !GeneratedManifestMatches(generatedIndex.ManifestJson, indexPath, "verify docs") ||
+            !GeneratedShardsMatch(generatedIndex.Shards, "verify docs", emitDiagnostics: false))
         {
             diagnostics.Write(new BuildDiagnostic(
                 "verify",
                 "verify docs",
                 "error",
                 "E2D-BUILD-DOCS-LOCAL-CHECK-FAILED",
-                "Local documentation index does not match the C# generated index.",
-                Path: IndexRelativePath));
+                    "Local documentation manifest or shards do not match the C# generated local documentation index.",
+                    Path: IndexRelativePath));
             return RepositoryBuildExitCodes.Failed;
         }
 
@@ -125,7 +143,7 @@ internal sealed class LocalDocumentationVerifier(
             "verify docs",
             "info",
             "E2D-BUILD-DOCS-LOCAL-CHECK-PASSED",
-            "Local documentation index matches the C# generated index.",
+            "Local documentation manifest and shards match the C# generated local documentation index.",
             Path: IndexRelativePath));
         return RepositoryBuildExitCodes.Success;
     }
@@ -155,7 +173,10 @@ internal sealed class LocalDocumentationVerifier(
 
         if (check)
         {
-            if (!File.Exists(indexPath) || !GeneratedIndexMatches(generatedIndex, indexPath, step))
+            var manifestMatches = File.Exists(indexPath) && GeneratedManifestMatches(generatedIndex.ManifestJson, indexPath, step);
+            var shardsMatch = GeneratedShardsMatch(generatedIndex.Shards, step, emitDiagnostics: true);
+            var sqliteValid = manifestMatches && shardsMatch && TryBuildAndValidateTemporarySqliteCache(generatedIndex, step, emitSuccessDiagnostic: false);
+            if (!manifestMatches || !shardsMatch || !sqliteValid)
             {
                 diagnostics.Write(new BuildDiagnostic(
                     "update",
@@ -170,7 +191,12 @@ internal sealed class LocalDocumentationVerifier(
         else
         {
             Directory.CreateDirectory(Path.GetDirectoryName(indexPath)!);
-            File.WriteAllText(indexPath, generatedIndex, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            File.WriteAllText(indexPath, generatedIndex.ManifestJson, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            WriteGeneratedShards(generatedIndex.Shards);
+            if (!RefreshSqliteCache(generatedIndex, step))
+            {
+                return RepositoryBuildExitCodes.Failed;
+            }
         }
 
         diagnostics.Write(new BuildDiagnostic(
@@ -185,9 +211,9 @@ internal sealed class LocalDocumentationVerifier(
         return RepositoryBuildExitCodes.Success;
     }
 
-    private bool TryGenerateIndex(string step, out string generatedIndex)
+    private bool TryGenerateIndex(string step, out GeneratedDocumentationIndex generatedIndex)
     {
-        generatedIndex = string.Empty;
+        generatedIndex = GeneratedDocumentationIndex.Empty;
         try
         {
             if (!TryResolveRequiredFile(ApiManifestRelativePath, step, out var apiManifestPath) ||
@@ -247,9 +273,19 @@ internal sealed class LocalDocumentationVerifier(
                 entries.Add(NewExampleEntry(example));
             }
 
+            var sortedEntries = entries
+                .OrderBy(entry => entry["id"]?.GetValue<string>() ?? string.Empty, StringComparer.Ordinal)
+                .ToArray();
+            var shards = CreateGeneratedShards(sortedEntries);
+            var sourceDigest = ComputeSourceDigest(
+                NewHashRecord(apiManifestPath),
+                documentationHashRecords,
+                NewHashRecord(examplesPath),
+                shards);
+
             var root = new JsonObject
             {
-                ["schemaVersion"] = 1,
+                ["schemaVersion"] = ManifestSchemaVersion,
                 ["manifestVersion"] = "0.1.0-preview",
                 ["generatedFrom"] = new JsonObject
                 {
@@ -288,13 +324,26 @@ internal sealed class LocalDocumentationVerifier(
                         ["compatibilityPage"] = ".github/wiki/API-Compatibility.md"
                     }
                 },
-                ["entries"] = JsonArrayFrom(entries
-                    .OrderBy(entry => entry["id"]?.GetValue<string>() ?? string.Empty, StringComparer.Ordinal)
-                    .ToArray())
+                ["shards"] = JsonArrayFrom(shards.Select(ShardRecordJson)),
+                ["sqliteCache"] = new JsonObject
+                {
+                    ["path"] = SqliteCacheRelativePath,
+                    ["schemaVersion"] = SqliteCacheSchemaVersion,
+                    ["sourceDigest"] = sourceDigest,
+                    ["entriesTable"] = SqliteEntriesTable,
+                    ["ftsTable"] = SqliteFtsTable,
+                    ["contract"] = "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."
+                }
             };
 
-            generatedIndex = Normalize(JsonSerializer.Serialize(root, GeneratedIndexJsonOptions)).TrimEnd() + "\n";
-            return CanParseJson(generatedIndex, step, "Generated local documentation index is not valid JSON.");
+            var manifestJson = Normalize(JsonSerializer.Serialize(root, GeneratedIndexJsonOptions)).TrimEnd() + "\n";
+            if (!CanParseJson(manifestJson, step, "Generated local documentation index manifest is not valid JSON."))
+            {
+                return false;
+            }
+
+            generatedIndex = new GeneratedDocumentationIndex(manifestJson, shards, sourceDigest, sortedEntries);
+            return true;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
         {
@@ -568,9 +617,104 @@ internal sealed class LocalDocumentationVerifier(
         return array;
     }
 
+    private static IReadOnlyList<GeneratedDocumentationShard> CreateGeneratedShards(IReadOnlyList<JsonObject> entries)
+    {
+        var shards = new List<GeneratedDocumentationShard>();
+        foreach (var definition in RequiredShards)
+        {
+            var shardEntries = entries
+                .Where(entry => string.Equals(entry["kind"]?.GetValue<string>(), definition.Kind, StringComparison.Ordinal))
+                .OrderBy(entry => entry["id"]?.GetValue<string>() ?? string.Empty, StringComparer.Ordinal)
+                .ToArray();
+            var builder = new StringBuilder();
+            foreach (var entry in shardEntries)
+            {
+                builder.Append(Normalize(entry.ToJsonString()));
+                builder.Append('\n');
+            }
+
+            var content = builder.ToString();
+            shards.Add(new GeneratedDocumentationShard(
+                definition.Path,
+                definition.Kind,
+                content,
+                shardEntries.Length,
+                ComputeNormalizedTextSha256(content)));
+        }
+
+        return shards;
+    }
+
+    private static JsonObject ShardRecordJson(GeneratedDocumentationShard shard)
+    {
+        return new JsonObject
+        {
+            ["path"] = shard.Path,
+            ["kind"] = shard.Kind,
+            ["count"] = shard.Count,
+            ["sha256"] = shard.Sha256
+        };
+    }
+
+    private static string ComputeSourceDigest(
+        DocumentationHashRecord apiManifest,
+        IReadOnlyList<DocumentationHashRecord> documentationRecords,
+        DocumentationHashRecord examples,
+        IReadOnlyList<GeneratedDocumentationShard> shards)
+    {
+        var builder = new StringBuilder();
+        AppendDigestRecord(builder, "apiManifest", apiManifest.Path, apiManifest.Sha256);
+        foreach (var record in documentationRecords.OrderBy(record => record.Path, StringComparer.Ordinal))
+        {
+            AppendDigestRecord(builder, "documentation", record.Path, record.Sha256);
+        }
+
+        AppendDigestRecord(builder, "examples", examples.Path, examples.Sha256);
+        foreach (var shard in shards.OrderBy(shard => shard.Path, StringComparer.Ordinal))
+        {
+            builder
+                .Append("shard")
+                .Append('\t')
+                .Append(shard.Path)
+                .Append('\t')
+                .Append(shard.Kind)
+                .Append('\t')
+                .Append(shard.Count)
+                .Append('\t')
+                .Append(shard.Sha256)
+                .Append('\n');
+        }
+
+        return ComputeNormalizedTextSha256(builder.ToString());
+    }
+
+    private static void AppendDigestRecord(StringBuilder builder, string group, string path, string sha256)
+    {
+        builder
+            .Append(group)
+            .Append('\t')
+            .Append(path)
+            .Append('\t')
+            .Append(sha256)
+            .Append('\n');
+    }
+
     private sealed record DocumentationHashRecord(string Path, string Sha256);
 
-    private bool GeneratedIndexMatches(string generatedIndex, string indexPath, string step)
+    private sealed record DocumentationShardDefinition(string Path, string Kind);
+
+    private sealed record GeneratedDocumentationShard(string Path, string Kind, string Content, int Count, string Sha256);
+
+    private sealed record GeneratedDocumentationIndex(
+        string ManifestJson,
+        IReadOnlyList<GeneratedDocumentationShard> Shards,
+        string SourceDigest,
+        IReadOnlyList<JsonObject> Entries)
+    {
+        public static GeneratedDocumentationIndex Empty { get; } = new(string.Empty, [], string.Empty, []);
+    }
+
+    private bool GeneratedManifestMatches(string generatedIndex, string indexPath, string step)
     {
         try
         {
@@ -588,6 +732,381 @@ internal sealed class LocalDocumentationVerifier(
                 $"Local documentation index is not valid JSON: {ex.Message}.",
                 Path: IndexRelativePath));
             return false;
+        }
+    }
+
+    private bool GeneratedShardsMatch(IReadOnlyList<GeneratedDocumentationShard> generatedShards, string step, bool emitDiagnostics)
+    {
+        var matches = true;
+        foreach (var shard in generatedShards)
+        {
+            if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, shard.Path, out var shardPath) ||
+                !File.Exists(shardPath))
+            {
+                matches = false;
+                if (emitDiagnostics)
+                {
+                    diagnostics.Write(new BuildDiagnostic(
+                        DiagnosticCommand(step),
+                        step,
+                        "error",
+                        "E2D-BUILD-DOCS-SHARD-CHECK-FAILED",
+                        $"Generated local documentation shard is missing: {shard.Path}.",
+                        Path: shard.Path));
+                }
+
+                continue;
+            }
+
+            var actual = File.ReadAllText(shardPath, Encoding.UTF8);
+            if (!string.Equals(actual, shard.Content, StringComparison.Ordinal))
+            {
+                matches = false;
+                if (emitDiagnostics)
+                {
+                    diagnostics.Write(new BuildDiagnostic(
+                        DiagnosticCommand(step),
+                        step,
+                        "error",
+                        "E2D-BUILD-DOCS-SHARD-CHECK-FAILED",
+                        $"Generated local documentation shard is out of date: {shard.Path}.",
+                        Path: shard.Path));
+                }
+            }
+        }
+
+        return matches;
+    }
+
+    private void WriteGeneratedShards(IReadOnlyList<GeneratedDocumentationShard> generatedShards)
+    {
+        foreach (var shard in generatedShards)
+        {
+            if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, shard.Path, out var shardPath))
+            {
+                throw new IOException($"Local documentation shard path could not be resolved: {shard.Path}.");
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(shardPath)!);
+            File.WriteAllText(shardPath, shard.Content, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        }
+    }
+
+    private bool TryBuildAndValidateTemporarySqliteCache(
+        GeneratedDocumentationIndex generatedIndex,
+        string step,
+        bool emitSuccessDiagnostic)
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "Electron2D-local-docs-cache", Guid.NewGuid().ToString("N"));
+        var tempPath = Path.Combine(tempRoot, "electron2d-local-docs-search.sqlite");
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            BuildSqliteCache(generatedIndex, tempPath);
+            if (!ValidateSqliteCache(generatedIndex, tempPath, step))
+            {
+                return false;
+            }
+
+            if (emitSuccessDiagnostic)
+            {
+                diagnostics.Write(new BuildDiagnostic(
+                    DiagnosticCommand(step),
+                    step,
+                    "info",
+                    "E2D-BUILD-DOCS-SQLITE-CACHE-PASSED",
+                    "Temporary SQLite local documentation search cache is valid.",
+                    Path: SqliteCacheRelativePath));
+            }
+
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SqliteException or InvalidOperationException)
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                DiagnosticCommand(step),
+                step,
+                "error",
+                "E2D-BUILD-DOCS-SQLITE-CACHE-FAILED",
+                $"SQLite local documentation search cache could not be built: {ex.Message}.",
+                Path: SqliteCacheRelativePath));
+            return false;
+        }
+        finally
+        {
+            TryDeleteDirectory(tempRoot);
+        }
+    }
+
+    private bool RefreshSqliteCache(GeneratedDocumentationIndex generatedIndex, string step)
+    {
+        if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, SqliteCacheRelativePath, out var cachePath))
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                DiagnosticCommand(step),
+                step,
+                "error",
+                "E2D-BUILD-DOCS-SQLITE-CACHE-PATH",
+                $"SQLite local documentation search cache path could not be resolved: {SqliteCacheRelativePath}.",
+                Path: SqliteCacheRelativePath));
+            return false;
+        }
+
+        var directory = Path.GetDirectoryName(cachePath)!;
+        var tempPath = Path.Combine(directory, $".{Path.GetFileName(cachePath)}.{Guid.NewGuid():N}.tmp");
+        try
+        {
+            Directory.CreateDirectory(directory);
+            BuildSqliteCache(generatedIndex, tempPath);
+            if (!ValidateSqliteCache(generatedIndex, tempPath, step))
+            {
+                TryDeleteFile(tempPath);
+                return false;
+            }
+
+            File.Move(tempPath, cachePath, overwrite: true);
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SqliteException or InvalidOperationException)
+        {
+            TryDeleteFile(tempPath);
+            diagnostics.Write(new BuildDiagnostic(
+                DiagnosticCommand(step),
+                step,
+                "error",
+                "E2D-BUILD-DOCS-SQLITE-CACHE-FAILED",
+                $"SQLite local documentation search cache could not be refreshed: {ex.Message}.",
+                Path: SqliteCacheRelativePath));
+            return false;
+        }
+    }
+
+    private static void BuildSqliteCache(GeneratedDocumentationIndex generatedIndex, string sqlitePath)
+    {
+        TryDeleteFile(sqlitePath);
+        using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = sqlitePath, Pooling = false }.ToString());
+        connection.Open();
+        ExecuteNonQuery(connection, "PRAGMA journal_mode=DELETE;");
+        ExecuteNonQuery(connection, "CREATE TABLE metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);");
+        ExecuteNonQuery(
+            connection,
+            """
+            CREATE TABLE entries(
+              rowid INTEGER PRIMARY KEY,
+              id TEXT NOT NULL UNIQUE,
+              kind TEXT NOT NULL,
+              title TEXT NOT NULL,
+              summary TEXT NOT NULL,
+              source_path TEXT NOT NULL,
+              api_id TEXT,
+              source_id TEXT,
+              payload_json TEXT NOT NULL
+            );
+            """);
+        ExecuteNonQuery(connection, "CREATE VIRTUAL TABLE entries_fts USING fts5(id, title, summary, keywords);");
+
+        using var transaction = connection.BeginTransaction();
+        InsertMetadata(connection, transaction, "schemaVersion", SqliteCacheSchemaVersion.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        InsertMetadata(connection, transaction, "manifestPath", IndexRelativePath);
+        InsertMetadata(connection, transaction, "sourceDigest", generatedIndex.SourceDigest);
+        InsertMetadata(connection, transaction, "manifestSha256", ComputeNormalizedTextSha256(generatedIndex.ManifestJson));
+        foreach (var shard in generatedIndex.Shards)
+        {
+            InsertMetadata(connection, transaction, $"shard:{shard.Path}", $"{shard.Kind}|{shard.Count}|{shard.Sha256}");
+        }
+
+        var rowId = 1;
+        foreach (var entry in generatedIndex.Entries)
+        {
+            InsertSqliteEntry(connection, transaction, rowId, entry);
+            rowId++;
+        }
+
+        transaction.Commit();
+    }
+
+    private bool ValidateSqliteCache(GeneratedDocumentationIndex generatedIndex, string sqlitePath, string step)
+    {
+        try
+        {
+            using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = sqlitePath, Mode = SqliteOpenMode.ReadOnly, Pooling = false }.ToString());
+            connection.Open();
+
+            var sourceDigest = ExecuteScalarString(connection, "SELECT value FROM metadata WHERE key = 'sourceDigest';");
+            if (!string.Equals(sourceDigest, generatedIndex.SourceDigest, StringComparison.Ordinal))
+            {
+                diagnostics.Write(new BuildDiagnostic(
+                    DiagnosticCommand(step),
+                    step,
+                    "error",
+                    "E2D-BUILD-DOCS-SQLITE-CACHE-FAILED",
+                    "SQLite local documentation search cache metadata sourceDigest is stale.",
+                    Path: SqliteCacheRelativePath));
+                return false;
+            }
+
+            var entryCount = ExecuteScalarInt64(connection, "SELECT COUNT(*) FROM entries;");
+            if (entryCount != generatedIndex.Entries.Count)
+            {
+                diagnostics.Write(new BuildDiagnostic(
+                    DiagnosticCommand(step),
+                    step,
+                    "error",
+                    "E2D-BUILD-DOCS-SQLITE-CACHE-FAILED",
+                    "SQLite local documentation search cache entry count does not match the generated shards.",
+                    Path: SqliteCacheRelativePath));
+                return false;
+            }
+
+            var matchCount = ExecuteScalarInt64(connection, "SELECT COUNT(*) FROM entries_fts WHERE entries_fts MATCH 'moveandslide';");
+            if (matchCount <= 0)
+            {
+                diagnostics.Write(new BuildDiagnostic(
+                    DiagnosticCommand(step),
+                    step,
+                    "error",
+                    "E2D-BUILD-DOCS-SQLITE-CACHE-FAILED",
+                    "SQLite local documentation search cache FTS surface did not find CharacterBody2D.MoveAndSlide.",
+                    Path: SqliteCacheRelativePath));
+                return false;
+            }
+
+            return true;
+        }
+        catch (SqliteException ex)
+        {
+            diagnostics.Write(new BuildDiagnostic(
+                DiagnosticCommand(step),
+                step,
+                "error",
+                "E2D-BUILD-DOCS-SQLITE-CACHE-FAILED",
+                $"SQLite local documentation search cache validation failed: {ex.Message}.",
+                Path: SqliteCacheRelativePath));
+            return false;
+        }
+    }
+
+    private static void InsertMetadata(SqliteConnection connection, SqliteTransaction transaction, string key, string value)
+    {
+        using var command = connection.CreateCommand();
+        command.Transaction = transaction;
+        command.CommandText = "INSERT INTO metadata(key, value) VALUES ($key, $value);";
+        command.Parameters.AddWithValue("$key", key);
+        command.Parameters.AddWithValue("$value", value);
+        command.ExecuteNonQuery();
+    }
+
+    private static void InsertSqliteEntry(SqliteConnection connection, SqliteTransaction transaction, int rowId, JsonObject entry)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText =
+                """
+                INSERT INTO entries(rowid, id, kind, title, summary, source_path, api_id, source_id, payload_json)
+                VALUES ($rowid, $id, $kind, $title, $summary, $sourcePath, $apiId, $sourceId, $payloadJson);
+                """;
+            command.Parameters.AddWithValue("$rowid", rowId);
+            command.Parameters.AddWithValue("$id", RequiredNodeString(entry, "id"));
+            command.Parameters.AddWithValue("$kind", RequiredNodeString(entry, "kind"));
+            command.Parameters.AddWithValue("$title", RequiredNodeString(entry, "title"));
+            command.Parameters.AddWithValue("$summary", RequiredNodeString(entry, "summary"));
+            command.Parameters.AddWithValue("$sourcePath", RequiredNodeString(entry, "sourcePath"));
+            command.Parameters.AddWithValue("$apiId", OptionalNodeString(entry, "apiId") is { } apiId ? apiId : DBNull.Value);
+            command.Parameters.AddWithValue("$sourceId", OptionalNodeString(entry, "sourceId") is { } sourceId ? sourceId : DBNull.Value);
+            command.Parameters.AddWithValue("$payloadJson", entry.ToJsonString());
+            command.ExecuteNonQuery();
+        }
+
+        using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = "INSERT INTO entries_fts(rowid, id, title, summary, keywords) VALUES ($rowid, $id, $title, $summary, $keywords);";
+            command.Parameters.AddWithValue("$rowid", rowId);
+            command.Parameters.AddWithValue("$id", RequiredNodeString(entry, "id"));
+            command.Parameters.AddWithValue("$title", RequiredNodeString(entry, "title"));
+            command.Parameters.AddWithValue("$summary", RequiredNodeString(entry, "summary"));
+            command.Parameters.AddWithValue("$keywords", KeywordsText(entry));
+            command.ExecuteNonQuery();
+        }
+    }
+
+    private static string KeywordsText(JsonObject entry)
+    {
+        if (entry["keywords"] is not JsonArray keywords)
+        {
+            return string.Empty;
+        }
+
+        return string.Join(
+            ' ',
+            keywords
+                .Select(keyword => keyword?.GetValue<string>())
+                .Where(keyword => !string.IsNullOrWhiteSpace(keyword)));
+    }
+
+    private static string RequiredNodeString(JsonObject entry, string propertyName)
+    {
+        return entry[propertyName]?.GetValue<string>() ?? string.Empty;
+    }
+
+    private static string? OptionalNodeString(JsonObject entry, string propertyName)
+    {
+        return entry[propertyName]?.GetValue<string>();
+    }
+
+    private static void ExecuteNonQuery(SqliteConnection connection, string commandText)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        command.ExecuteNonQuery();
+    }
+
+    private static string ExecuteScalarString(SqliteConnection connection, string commandText)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        return command.ExecuteScalar()?.ToString() ?? string.Empty;
+    }
+
+    private static long ExecuteScalarInt64(SqliteConnection connection, string commandText)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        return Convert.ToInt64(command.ExecuteScalar(), System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static void TryDeleteFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+        catch (IOException)
+        {
+        }
+        catch (UnauthorizedAccessException)
+        {
+        }
+    }
+
+    private static void TryDeleteDirectory(string path)
+    {
+        try
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, recursive: true);
+            }
+        }
+        catch (IOException)
+        {
+        }
+        catch (UnauthorizedAccessException)
+        {
         }
     }
 
@@ -669,7 +1188,23 @@ internal sealed class LocalDocumentationVerifier(
             VerifyAudiences(root, result);
             VerifyCommands(root, result);
             VerifySources(root, result);
-            VerifyEntries(root, LoadApiManifestIds(apiManifestPath, result), result);
+            var entries = VerifyShards(root, LoadApiManifestIds(apiManifestPath, result), result);
+            VerifySqliteCacheMetadata(root, result);
+            if (result.Count == 0)
+            {
+                var generatedIndex = new GeneratedDocumentationIndex(
+                    File.ReadAllText(indexPath, Encoding.UTF8),
+                    LoadManifestShards(root),
+                    ReadSqliteCacheSourceDigest(root),
+                    entries);
+                if (!TryBuildAndValidateTemporarySqliteCache(generatedIndex, "verify docs", emitSuccessDiagnostic: true))
+                {
+                    result.Add(CreateError(
+                        "E2D-BUILD-DOCS-SQLITE-CACHE-FAILED",
+                        "Temporary SQLite local documentation search cache validation failed.",
+                        SqliteCacheRelativePath));
+                }
+            }
         }
 
         if (result.Count == 0)
@@ -688,15 +1223,20 @@ internal sealed class LocalDocumentationVerifier(
 
     private static void VerifyRootMetadata(JsonElement root, List<BuildDiagnostic> result)
     {
-        if (!TryGetInt32(root, "schemaVersion", out var schemaVersion) || schemaVersion != 1)
+        if (!TryGetInt32(root, "schemaVersion", out var schemaVersion) || schemaVersion != ManifestSchemaVersion)
         {
-            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SCHEMA", "Local documentation index schemaVersion must be 1.", IndexRelativePath));
+            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SCHEMA", "Local documentation index schemaVersion must be 2.", IndexRelativePath));
         }
 
         if (!TryGetString(root, "manifestVersion", out var manifestVersion) ||
             !string.Equals(manifestVersion, "0.1.0-preview", StringComparison.Ordinal))
         {
             result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SCHEMA", "Local documentation index manifestVersion must be 0.1.0-preview.", IndexRelativePath));
+        }
+
+        if (root.TryGetProperty("entries", out _))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SCHEMA", "Local documentation index schemaVersion 2 must not contain root entries.", IndexRelativePath));
         }
     }
 
@@ -890,36 +1430,34 @@ internal sealed class LocalDocumentationVerifier(
         VerifyExistingRelativePath(actualPath, result);
     }
 
-    private void VerifyEntries(JsonElement root, HashSet<string> apiIds, List<BuildDiagnostic> result)
+    private List<JsonObject> VerifyShards(JsonElement root, HashSet<string> apiIds, List<BuildDiagnostic> result)
     {
-        if (!root.TryGetProperty("entries", out var entries) || entries.ValueKind != JsonValueKind.Array)
+        var entries = new List<JsonObject>();
+        if (!root.TryGetProperty("shards", out var shards) || shards.ValueKind != JsonValueKind.Array)
         {
-            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRIES", "Local documentation index is missing entries.", IndexRelativePath));
-            return;
+            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SHARDS", "Local documentation index is missing shards metadata.", IndexRelativePath));
+            return entries;
+        }
+
+        var shardMap = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
+        foreach (var shard in shards.EnumerateArray())
+        {
+            if (TryGetString(shard, "path", out var path))
+            {
+                shardMap[path] = shard;
+            }
         }
 
         var entryIds = new HashSet<string>(StringComparer.Ordinal);
-        string? previousId = null;
-        foreach (var entry in entries.EnumerateArray())
+        foreach (var definition in RequiredShards)
         {
-            if (!TryGetString(entry, "id", out var id))
+            if (!shardMap.TryGetValue(definition.Path, out var shard))
             {
-                result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-SCHEMA", "Local documentation entry is missing id.", IndexRelativePath));
+                result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SHARDS", $"Local documentation index is missing shard metadata: {definition.Path}.", IndexRelativePath));
                 continue;
             }
 
-            if (!entryIds.Add(id))
-            {
-                result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-DUPLICATE", $"Local documentation entry id is duplicated: {id}.", IndexRelativePath));
-            }
-
-            if (previousId is not null && string.CompareOrdinal(previousId, id) > 0)
-            {
-                result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-ORDER", $"Local documentation entries are not sorted by id: {previousId} before {id}.", IndexRelativePath));
-            }
-
-            previousId = id;
-            VerifyEntry(entry, id, apiIds, result);
+            VerifyShard(definition, shard, apiIds, entryIds, entries, result);
         }
 
         foreach (var requiredEntryId in RequiredEntryIds)
@@ -927,6 +1465,114 @@ internal sealed class LocalDocumentationVerifier(
             if (!entryIds.Contains(requiredEntryId))
             {
                 result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-MISSING", $"Local documentation index is missing required entry: {requiredEntryId}.", IndexRelativePath));
+            }
+        }
+
+        return entries;
+    }
+
+    private void VerifyShard(
+        DocumentationShardDefinition definition,
+        JsonElement shard,
+        HashSet<string> apiIds,
+        HashSet<string> entryIds,
+        List<JsonObject> entries,
+        List<BuildDiagnostic> result)
+    {
+        if (!TryGetString(shard, "kind", out var kind) ||
+            !string.Equals(kind, definition.Kind, StringComparison.Ordinal) ||
+            !TryGetInt32(shard, "count", out var expectedCount) ||
+            expectedCount < 0 ||
+            !TryGetString(shard, "sha256", out var expectedSha256))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SHARDS", $"Local documentation shard metadata is incomplete: {definition.Path}.", IndexRelativePath));
+            return;
+        }
+
+        if (!RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, definition.Path, out var shardPath) ||
+            !File.Exists(shardPath))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SHARD-MISSING", $"Local documentation shard file was not found: {definition.Path}.", definition.Path));
+            return;
+        }
+
+        var bytes = File.ReadAllBytes(shardPath);
+        if (bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SHARD-ENCODING", $"Local documentation shard must be UTF-8 without BOM: {definition.Path}.", definition.Path));
+        }
+
+        var text = Encoding.UTF8.GetString(bytes);
+        if (text.Contains('\r'))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SHARD-LINE-ENDINGS", $"Local documentation shard must use LF line endings: {definition.Path}.", definition.Path));
+        }
+
+        if (text.Length > 0 && !text.EndsWith('\n'))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SHARD-LINE-ENDINGS", $"Local documentation shard must end with LF: {definition.Path}.", definition.Path));
+        }
+
+        var actualSha256 = ComputeNormalizedSha256(shardPath);
+        if (!string.Equals(actualSha256, expectedSha256, StringComparison.OrdinalIgnoreCase))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SHARD-HASH", $"Local documentation shard hash is stale: {definition.Path}.", definition.Path));
+        }
+
+        var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        if (lines.Length != expectedCount)
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SHARD-COUNT", $"Local documentation shard count is stale: {definition.Path}.", definition.Path));
+        }
+
+        string? previousId = null;
+        foreach (var line in lines)
+        {
+            JsonDocument entryDocument;
+            try
+            {
+                entryDocument = JsonDocument.Parse(line);
+            }
+            catch (JsonException ex)
+            {
+                result.Add(CreateError("E2D-BUILD-DOCS-SHARD-INVALID-JSON", $"Local documentation shard contains invalid JSON: {ex.Message}.", definition.Path));
+                continue;
+            }
+
+            using (entryDocument)
+            {
+                var entry = entryDocument.RootElement;
+                if (entry.ValueKind != JsonValueKind.Object)
+                {
+                    result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-SCHEMA", $"Local documentation shard entry root must be an object: {definition.Path}.", definition.Path));
+                    continue;
+                }
+
+                if (!TryGetString(entry, "id", out var id))
+                {
+                    result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-SCHEMA", $"Local documentation entry is missing id: {definition.Path}.", definition.Path));
+                    continue;
+                }
+
+                if (!entryIds.Add(id))
+                {
+                    result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-DUPLICATE", $"Local documentation entry id is duplicated: {id}.", definition.Path));
+                }
+
+                if (previousId is not null && string.CompareOrdinal(previousId, id) > 0)
+                {
+                    result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-ORDER", $"Local documentation shard entries are not sorted by id: {previousId} before {id}.", definition.Path));
+                }
+
+                previousId = id;
+                VerifyEntry(entry, id, apiIds, result);
+                if (TryGetString(entry, "kind", out var entryKind) &&
+                    !string.Equals(entryKind, definition.Kind, StringComparison.Ordinal))
+                {
+                    result.Add(CreateError("E2D-BUILD-DOCS-INDEX-ENTRY-SCHEMA", $"Local documentation shard entry has wrong kind: {id}.", definition.Path));
+                }
+
+                entries.Add(JsonNode.Parse(line)?.AsObject() ?? new JsonObject());
             }
         }
     }
@@ -983,6 +1629,130 @@ internal sealed class LocalDocumentationVerifier(
         {
             result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SOURCE-MISSING", $"Local documentation index references missing source file: {relativePath}.", relativePath));
         }
+    }
+
+    private static void VerifySqliteCacheMetadata(JsonElement root, List<BuildDiagnostic> result)
+    {
+        if (!TryGetObject(root, "sqliteCache", out var cache))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SQLITE-CACHE-METADATA", "Local documentation index is missing sqliteCache metadata.", IndexRelativePath));
+            return;
+        }
+
+        if (!TryGetString(cache, "path", out var path) ||
+            !string.Equals(path, SqliteCacheRelativePath, StringComparison.Ordinal) ||
+            !TryGetInt32(cache, "schemaVersion", out var schemaVersion) ||
+            schemaVersion != SqliteCacheSchemaVersion ||
+            !TryGetString(cache, "entriesTable", out var entriesTable) ||
+            !string.Equals(entriesTable, SqliteEntriesTable, StringComparison.Ordinal) ||
+            !TryGetString(cache, "ftsTable", out var ftsTable) ||
+            !string.Equals(ftsTable, SqliteFtsTable, StringComparison.Ordinal) ||
+            !TryGetString(cache, "sourceDigest", out var sourceDigest))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SQLITE-CACHE-METADATA", "Local documentation sqliteCache metadata is incomplete.", IndexRelativePath));
+            return;
+        }
+
+        var expectedDigest = ComputeSourceDigestFromManifest(root);
+        if (!string.IsNullOrWhiteSpace(expectedDigest) &&
+            !string.Equals(sourceDigest, expectedDigest, StringComparison.OrdinalIgnoreCase))
+        {
+            result.Add(CreateError("E2D-BUILD-DOCS-SQLITE-CACHE-METADATA", "Local documentation sqliteCache sourceDigest is stale.", IndexRelativePath));
+        }
+    }
+
+    private static string ReadSqliteCacheSourceDigest(JsonElement root)
+    {
+        return root.TryGetProperty("sqliteCache", out var cache) && TryGetString(cache, "sourceDigest", out var sourceDigest)
+            ? sourceDigest
+            : string.Empty;
+    }
+
+    private IReadOnlyList<GeneratedDocumentationShard> LoadManifestShards(JsonElement root)
+    {
+        var shards = new List<GeneratedDocumentationShard>();
+        if (!root.TryGetProperty("shards", out var shardArray) || shardArray.ValueKind != JsonValueKind.Array)
+        {
+            return shards;
+        }
+
+        foreach (var shard in shardArray.EnumerateArray())
+        {
+            if (!TryGetString(shard, "path", out var path) ||
+                !TryGetString(shard, "kind", out var kind) ||
+                !TryGetInt32(shard, "count", out var count) ||
+                !TryGetString(shard, "sha256", out var sha256) ||
+                !RepositoryPaths.TryResolveRepositoryPath(repositoryRoot, path, out var fullPath) ||
+                !File.Exists(fullPath))
+            {
+                continue;
+            }
+
+            shards.Add(new GeneratedDocumentationShard(path, kind, File.ReadAllText(fullPath, Encoding.UTF8), count, sha256));
+        }
+
+        return shards;
+    }
+
+    private static string ComputeSourceDigestFromManifest(JsonElement root)
+    {
+        if (!TryGetObject(root, "generatedFrom", out var generatedFrom) ||
+            !TryReadHashRecord(generatedFrom, "apiManifest", out var apiManifest) ||
+            !TryReadHashRecord(generatedFrom, "examples", out var examples) ||
+            !generatedFrom.TryGetProperty("documentation", out var documentation) ||
+            documentation.ValueKind != JsonValueKind.Array ||
+            !root.TryGetProperty("shards", out var shards) ||
+            shards.ValueKind != JsonValueKind.Array)
+        {
+            return string.Empty;
+        }
+
+        var documentationRecords = new List<DocumentationHashRecord>();
+        foreach (var record in documentation.EnumerateArray())
+        {
+            if (TryReadHashRecord(record, out var documentationRecord))
+            {
+                documentationRecords.Add(documentationRecord);
+            }
+        }
+
+        var generatedShards = new List<GeneratedDocumentationShard>();
+        foreach (var shard in shards.EnumerateArray())
+        {
+            if (TryGetString(shard, "path", out var path) &&
+                TryGetString(shard, "kind", out var kind) &&
+                TryGetInt32(shard, "count", out var count) &&
+                TryGetString(shard, "sha256", out var sha256))
+            {
+                generatedShards.Add(new GeneratedDocumentationShard(path, kind, string.Empty, count, sha256));
+            }
+        }
+
+        return ComputeSourceDigest(apiManifest, documentationRecords, examples, generatedShards);
+    }
+
+    private static bool TryReadHashRecord(JsonElement parent, string propertyName, out DocumentationHashRecord record)
+    {
+        if (parent.TryGetProperty(propertyName, out var property))
+        {
+            return TryReadHashRecord(property, out record);
+        }
+
+        record = new DocumentationHashRecord(string.Empty, string.Empty);
+        return false;
+    }
+
+    private static bool TryReadHashRecord(JsonElement element, out DocumentationHashRecord record)
+    {
+        if (TryGetString(element, "path", out var path) &&
+            TryGetString(element, "sha256", out var sha256))
+        {
+            record = new DocumentationHashRecord(path, sha256);
+            return true;
+        }
+
+        record = new DocumentationHashRecord(string.Empty, string.Empty);
+        return false;
     }
 
     private static HashSet<string> LoadApiManifestIds(string apiManifestPath, List<BuildDiagnostic> result)
@@ -1093,6 +1863,11 @@ internal sealed class LocalDocumentationVerifier(
     private static string ComputeNormalizedSha256(string path)
     {
         var text = File.ReadAllText(path, Encoding.UTF8).Replace("\r\n", "\n").Replace('\r', '\n');
+        return ComputeNormalizedTextSha256(text);
+    }
+
+    private static string ComputeNormalizedTextSha256(string text)
+    {
         var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
         return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
     }

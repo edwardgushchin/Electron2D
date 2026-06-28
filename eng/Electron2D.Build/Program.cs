@@ -67,7 +67,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test, verify, verify readme, verify docs, verify licenses, verify manifests, verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message."));
+                "Expected one of: test, verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
@@ -105,6 +105,11 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return VerifyDocsAsync(cancellationToken);
         }
 
+        if (args is ["verify", "line-endings"])
+        {
+            return VerifyLineEndingsAsync(cancellationToken);
+        }
+
         if (args is ["verify", "licenses"])
         {
             return VerifyLicensesAsync(cancellationToken);
@@ -130,7 +135,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return VerifyManifestsAsync(cancellationToken);
         }
 
-        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify docs, verify licenses, verify manifests, verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
+        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
     }
 
     private Task<int> RouteUpdateAsync(string[] args, CancellationToken cancellationToken)
@@ -253,6 +258,14 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             : verifier.VerifyAsync(cancellationToken);
     }
 
+    private Task<int> VerifyLineEndingsAsync(CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify line-endings");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new LineEndingVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(cancellationToken);
+    }
+
     private Task<int> RunDocumentationIndexUpdateAsync(bool check, CancellationToken cancellationToken)
     {
         var step = check ? "update docs --check" : "update docs";
@@ -313,7 +326,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return null;
         }
 
-        return new LocalDocumentationVerifier(repositoryRoot, diagnostics, new ProcessRunner());
+        return new LocalDocumentationVerifier(repositoryRoot, diagnostics);
     }
 
     private LicensePolicyVerifier? CreateLicensePolicyVerifier()

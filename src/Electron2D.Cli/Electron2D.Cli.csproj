@@ -12,6 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Electron2D\Electron2D.csproj" />
     <ProjectReference Include="..\Electron2D.ProjectSystem\Electron2D.ProjectSystem.csproj" />
     <ProjectReference Include="..\Electron2D.Mcp\Electron2D.Mcp.csproj" />

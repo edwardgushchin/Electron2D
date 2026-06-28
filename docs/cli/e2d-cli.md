@@ -1,6 +1,6 @@
 # `e2d` CLI для headless, CI и active Editor routing
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-28.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -12,8 +12,8 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `T-0116`.
-Обновлено: 2026-06-22.
+Статус: целевая спецификация для `T-0116` с дополнением `T-0231` для локальной документации.
+Обновлено: 2026-06-28.
 Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
 
 ## Назначение
@@ -199,7 +199,9 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 
 ## Documentation commands
 
-`docs search/type/member/example` сохраняют существующее поведение. Они должны поддерживать `--project`, `--quiet`, `--verbose` и `--format text|json`, но `jsonl` и `sarif` для docs недопустимы и возвращают ошибку формата.
+`docs search/type/member/example` сохраняют существующую форму вывода. Они должны поддерживать `--project`, `--quiet`, `--verbose` и `--format text|json`, но `jsonl` и `sarif` для docs недопустимы и возвращают ошибку формата.
+
+`docs type` и `docs member` читают полные сведения из `data/api/electron2d-api-manifest.json`. `docs search` и `docs example` сначала используют SQLite-кэш `data/documentation/electron2d-local-docs-search.sqlite`, если он существует и совпадает с текущими `data/documentation/electron2d-local-docs-index.json` и `data/documentation/local-docs-index/*.ndjson`. Если кэш отсутствует, устарел или повреждён, команды читают manifest и NDJSON-shard-файлы напрямую и не создают SQLite-файл в рабочей копии.
 
 ## Project Tasks report command
 
@@ -243,8 +245,8 @@ e2d tasks export --project <path> --status done --format markdown
 ## Фактическое состояние, ограничения и проверки
 
 Статус: реализованная внутренняя основа.
-Задачи: `T-0116`, `T-0148`.
-Обновлено: 2026-06-23.
+Задачи: `T-0116`, `T-0148`, `T-0231`.
+Обновлено: 2026-06-28.
 
 ## Назначение
 
@@ -306,7 +308,7 @@ e2d docs member CharacterBody2D.MoveAndSlide --format json
 e2d docs example "platformer movement" --format json
 ```
 
-Они читают `data/api/electron2d-api-manifest.json` и `data/documentation/electron2d-local-docs-index.json`.
+`docs type` и `docs member` читают `data/api/electron2d-api-manifest.json`. `docs search` и `docs example` читают SQLite-кэш локальной документации, если он пригоден; иначе используют `data/documentation/electron2d-local-docs-index.json` и четыре NDJSON-shard-файла под `data/documentation/local-docs-index/` без записи новых файлов.
 
 ### `api compare-godot`
 

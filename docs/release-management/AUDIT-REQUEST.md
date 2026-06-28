@@ -5,7 +5,7 @@
 Используйте динамические сведения только из файлов основного архива и сопровождающего ZIP с операторскими доказательствами:
 
 - `AUDIT-MANIFEST.md` - инвентарь архива, задача, итерация, исходная ревизия, patch, доказательства и проверки.
-- `metadata/audit-package.input.json` - нормализованная входная конфигурация.
+- `metadata/audit-package.input.json` - нормализованная входная конфигурация, включая `metadata.scopeTaskIds`, `metadata.scopeSummary`, `metadata.previousVerdictChain` и `metadata.blockerClosureList`.
 - `repo-file-hashes.json` - ожидаемая модель восстановления файлов репозитория.
 - `SHA256SUMS.txt` - контрольные суммы содержимого архива.
 - `<task-id>.patch` - patch, который должен применяться к исходной ревизии.
@@ -27,6 +27,14 @@
 5. Прочитайте изменённые файлы репозитория и оцените, закрывают ли тесты и документация фактический риск задачи.
 6. Проверьте, что архив не требует незафиксированных файлов, локальных путей машины, внешних конфиденциальных значений или ручных догадок.
 
+Обязательная проверка области пакета:
+
+1. Прочитайте `metadata.scopeTaskIds` и `metadata.scopeSummary` из `metadata/audit-package.input.json`.
+2. Если `metadata.scopeTaskIds` пуст или отсутствует, область пакета равна одиночному `taskId` из metadata.
+3. Если `metadata.scopeTaskIds` содержит несколько задач, проверяйте пакет как `combined scope`, то есть явно комбинированную область: `AUDIT-MANIFEST.md`, metadata, patch, `repo-file-hashes.json` и evidence должны согласованно объяснять, какие задачи входят в текущее содержимое пакета и почему их можно принимать одним verdict-ом.
+4. Проверьте, что `AUDIT-MANIFEST.md` перечисляет ту же область, а `metadata.scopeSummary` не противоречит фактическому diff.
+5. Если в diff есть изменения вне `metadata.scopeTaskIds` или summary, это blocker области задачи, даже когда отдельные проверки прошли.
+
 Обязательная проверка цепочки предыдущих внешних verdict-ов:
 
 1. Прочитайте `metadata.previousVerdictChain` из `metadata/audit-package.input.json`.
@@ -43,7 +51,7 @@
 - Выполните restore scanning: убедитесь, что patch, `repo-file-hashes.json`, `AUDIT-MANIFEST.md` и чистая копия восстанавливают один и тот же набор файлов и байтов.
 - Выполните evidence scanning: проверьте сырые доказательства команд, коды завершения, вывод, TRX-файлы при наличии, `operator workflow evidence` из сопровождающего ZIP, связь доказательств с изменёнными файлами и то, что вывод `audit package message` является текстом, который должен быть отправлен во внешний аудит в режиме `Глубокое исследование`.
 - Выполните secret scanning: проверьте архив, patch, доказательства, metadata и восстановленные текущие файлы на реальные секретные значения, приватные ключи, локальные абсолютные пути и конфиденциальные данные.
-- Выполните scope scanning: проверьте, что изменения находятся в заявленной области задачи, а исключения для исторических previous verdict-файлов не скрывают новые изменения текущей задачи.
+- Выполните scope scanning: проверьте, что изменения находятся в заявленной области `metadata.scopeTaskIds` и `metadata.scopeSummary`, а исключения для исторических previous verdict-файлов не скрывают новые изменения текущей задачи.
 
 Контракт финального ответа:
 
@@ -53,7 +61,7 @@
 - Первая непустая строка финального отчёта должна быть строго `VERDICT: ACCEPT` или `VERDICT: NEEDS_FIXES`.
 - Если ответ нарушает этот контракт, сторона приёмки обязана считать аудит неполным, даже если в тексте встречается `VERDICT: ACCEPT`.
 
-Машинные маркеры этого контракта: `metadata.previousVerdictChain`, `metadata.blockerClosureList`, `previous verdict files`, `verbatim preservation`, `previous blockers closure`, `external baseline REQUIRED input`, `no baseline payload requirement`, `restored repo-owned model`, `no previous audit packages or detached historical checksums required`, `restore scanning`, `evidence scanning`, `operator workflow evidence`, `baseline availability evidence`, `audit package verify evidence`, `audit package message evidence`, `secret scanning`, `scope scanning`, `single final report`, `no intermediate VERDICT`.
+Машинные маркеры этого контракта: `metadata.scopeTaskIds`, `metadata.scopeSummary`, `combined scope`, `metadata.previousVerdictChain`, `metadata.blockerClosureList`, `previous verdict files`, `verbatim preservation`, `previous blockers closure`, `external baseline REQUIRED input`, `no baseline payload requirement`, `restored repo-owned model`, `no previous audit packages or detached historical checksums required`, `restore scanning`, `evidence scanning`, `operator workflow evidence`, `baseline availability evidence`, `audit package verify evidence`, `audit package message evidence`, `secret scanning`, `scope scanning`, `single final report`, `no intermediate VERDICT`.
 
 Ответ должен быть строгим и пригодным для сохранения в `docs/verdicts/`. Первая строка ответа должна быть строго одной из двух:
 

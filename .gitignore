@@ -33,6 +33,9 @@ coverage.*
 *.temp
 .temp/
 
+# Generated local documentation search cache.
+/data/documentation/electron2d-local-docs-search.sqlite
+
 # Local project management notes and release drafting files.
 /TASKS.md
 /completed-tasks/
