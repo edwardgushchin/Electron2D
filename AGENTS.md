@@ -130,6 +130,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 ## Testing And Verification
 - Run the narrowest useful checks first, then broader checks when risk or blast radius justifies them.
 - Use the repository's documented commands for linting, formatting, tests, builds, contract checks, and generated artifact verification.
+- For repeated runs of `tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj`, build once first and then run focused tests with `--filter`, `--no-build`, and `--no-restore`. Prefer class or test-name filters such as `--filter "FullyQualifiedName~LocalDocumentationCliTests"` over running the entire integration project. Run the full integration project only when the current change genuinely needs the whole suite, and state that reason before running it.
 - Do not run the full `RepositoryBuildToolTests` suite until the local documentation index has been rebuilt for the current working tree with `dotnet run --project eng\Electron2D.Build -- update docs` or an equivalent repository-owned index rebuild. Before that rebuild, run only focused `RepositoryBuildToolTests` filters that do not require a current generated index.
 - Do not claim a check passed unless it was run in the current work session. If a check cannot run, state the blocker and residual risk.
 - For frontend changes, run the relevant lint/build/test command and visually verify the affected local experience when a local server or static file makes that practical.
