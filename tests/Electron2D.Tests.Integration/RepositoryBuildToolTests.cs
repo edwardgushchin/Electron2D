@@ -916,8 +916,11 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("AUDIT-REQUEST.md", entries);
         Assert.Contains("metadata/audit-package.input.json", entries);
         Assert.Contains(entries, entry => entry.StartsWith($"evidence/{taskId}-r01/checks/git-status/", StringComparison.Ordinal));
+        Assert.DoesNotContain(entries, entry => entry.StartsWith($"evidence/{taskId}-r01/checks/audit-package-verify/", StringComparison.Ordinal));
+        Assert.DoesNotContain(entries, entry => entry.StartsWith($"evidence/{taskId}-r01/checks/audit-package-message/", StringComparison.Ordinal));
         Assert.Contains(entries, entry => entry.StartsWith($"evidence/{taskId}-r01/archive-only/", StringComparison.Ordinal));
         Assert.All(entries, AssertPosixArchivePath);
+        Assert.True(File.Exists(fixture.OperatorWorkflowZipPath(taskId)), "Operator workflow evidence must be written as a sidecar for the immutable final ZIP.");
 
         var manifest = ReadZipEntryText(zipPath, "AUDIT-MANIFEST.md");
         Assert.Contains(taskId, manifest, StringComparison.Ordinal);
@@ -933,6 +936,190 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Equal(0, verify.ExitCode);
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+    }
+
+    [Fact]
+    public async Task AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-operator-workflow-sidecar");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that operator workflow evidence targets the immutable final package payload.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var zipPath = fixture.ZipPath(taskId);
+        var sidecarPath = fixture.OperatorWorkflowZipPath(taskId);
+        var verifyRoot = $"evidence/{taskId}-r01/checks/audit-package-verify";
+        var messageRoot = $"evidence/{taskId}-r01/checks/audit-package-message";
+        var entries = ReadZipEntryNames(zipPath);
+        Assert.DoesNotContain(entries, entry => entry.StartsWith(verifyRoot, StringComparison.Ordinal));
+        Assert.DoesNotContain(entries, entry => entry.StartsWith(messageRoot, StringComparison.Ordinal));
+
+        var manifest = ReadZipEntryText(zipPath, "AUDIT-MANIFEST.md");
+        Assert.DoesNotContain("audit-package-verify", manifest, StringComparison.Ordinal);
+        Assert.DoesNotContain("audit-package-message", manifest, StringComparison.Ordinal);
+
+        Assert.True(File.Exists(sidecarPath), $"Operator workflow sidecar was not created: {sidecarPath}");
+        var sidecarEntries = ReadZipEntryNames(sidecarPath);
+        foreach (var root in new[] { verifyRoot, messageRoot })
+        {
+            Assert.Contains($"{root}/command.txt", sidecarEntries);
+            Assert.Contains($"{root}/stdout.txt", sidecarEntries);
+            Assert.Contains($"{root}/stderr.txt", sidecarEntries);
+            Assert.Contains($"{root}/exit-code.txt", sidecarEntries);
+            Assert.Contains($"{root}/duration-ms.txt", sidecarEntries);
+            Assert.Contains($"{root}/metadata.json", sidecarEntries);
+            Assert.Contains($"{root}/cwd.txt", sidecarEntries);
+            Assert.Contains($"{root}/env.json", sidecarEntries);
+            Assert.Contains($"{root}/timeout-seconds.txt", sidecarEntries);
+        }
+
+        var payloadMetadata = JsonDocument.Parse(ReadZipEntryText(sidecarPath, "payload/metadata.json"));
+        var archiveEntriesText = string.Concat(entries.Order(StringComparer.Ordinal).Select(entry => entry + "\n"));
+        Assert.Equal(".temp/audit/T-0001-audit-r01.zip", payloadMetadata.RootElement.GetProperty("payloadPath").GetString());
+        Assert.Equal(Sha256File(zipPath), payloadMetadata.RootElement.GetProperty("payloadSha256").GetString());
+        Assert.Equal(Sha256ZipEntry(zipPath, "AUDIT-MANIFEST.md"), payloadMetadata.RootElement.GetProperty("auditManifestSha256").GetString());
+        Assert.Equal(Sha256ZipEntry(zipPath, "SHA256SUMS.txt"), payloadMetadata.RootElement.GetProperty("sha256SumsSha256").GetString());
+        Assert.Equal(Sha256Bytes(Encoding.UTF8.GetBytes(archiveEntriesText)), payloadMetadata.RootElement.GetProperty("archiveEntriesSha256").GetString());
+        Assert.Equal(
+            Sha256File(zipPath) + "\n",
+            ReadZipEntryText(sidecarPath, "payload/sha256.txt"));
+        Assert.Equal(archiveEntriesText, ReadZipEntryText(sidecarPath, "payload/archive-entries.txt"));
+
+        var verifyCommand = ReadZipEntryText(sidecarPath, $"{verifyRoot}/command.txt");
+        Assert.Contains("- verify", verifyCommand, StringComparison.Ordinal);
+        Assert.Contains("- --zip", verifyCommand, StringComparison.Ordinal);
+        Assert.Contains("- .temp/audit/T-0001-audit-r01.zip", verifyCommand, StringComparison.Ordinal);
+        Assert.Contains("- --baseline", verifyCommand, StringComparison.Ordinal);
+        Assert.Contains($"- {fixture.Baseline}", verifyCommand, StringComparison.Ordinal);
+        Assert.Contains("- --repo", verifyCommand, StringComparison.Ordinal);
+        Assert.Contains("- <clean-repo-path>", verifyCommand, StringComparison.Ordinal);
+        Assert.DoesNotContain(fixture.RepositoryRoot, verifyCommand, StringComparison.OrdinalIgnoreCase);
+
+        var verifyStdout = ReadZipEntryText(sidecarPath, $"{verifyRoot}/stdout.txt");
+        Assert.Contains("E2D-BUILD-AUDIT-PACKAGE-VERIFIED", verifyStdout, StringComparison.Ordinal);
+        Assert.DoesNotContain(fixture.RepositoryRoot, verifyStdout, StringComparison.OrdinalIgnoreCase);
+
+        var messageCommand = ReadZipEntryText(sidecarPath, $"{messageRoot}/command.txt");
+        Assert.Contains("- message", messageCommand, StringComparison.Ordinal);
+        Assert.Contains("- --zip", messageCommand, StringComparison.Ordinal);
+        Assert.Contains("- .temp/audit/T-0001-audit-r01.zip", messageCommand, StringComparison.Ordinal);
+
+        var messageStdout = ReadZipEntryText(sidecarPath, $"{messageRoot}/stdout.txt");
+        Assert.StartsWith("This request fixture is intentionally stable", messageStdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("# Static audit request", messageStdout, StringComparison.Ordinal);
+        foreach (var marker in RequiredAuditRequestMarkers)
+        {
+            Assert.Contains(marker, messageStdout, StringComparison.Ordinal);
+        }
+
+        var sidecarManifest = ReadZipEntryText(sidecarPath, "OPERATOR-WORKFLOW.md");
+        Assert.Contains($"`{verifyRoot}/stdout.txt`", sidecarManifest, StringComparison.Ordinal);
+        Assert.Contains($"`{messageRoot}/stdout.txt`", sidecarManifest, StringComparison.Ordinal);
+        Assert.Contains(Sha256File(zipPath), sidecarManifest, StringComparison.Ordinal);
+
+        var verifyMetadata = JsonDocument.Parse(ReadZipEntryText(sidecarPath, $"{verifyRoot}/metadata.json"));
+        var messageMetadata = JsonDocument.Parse(ReadZipEntryText(sidecarPath, $"{messageRoot}/metadata.json"));
+        Assert.Equal("subprocess", verifyMetadata.RootElement.GetProperty("executionMode").GetString());
+        Assert.Equal("subprocess", messageMetadata.RootElement.GetProperty("executionMode").GetString());
+        Assert.True(verifyMetadata.RootElement.GetProperty("durationMs").GetDouble() > 0);
+        Assert.True(messageMetadata.RootElement.GetProperty("durationMs").GetDouble() > 0);
+        Assert.Equal("180\n", ReadZipEntryText(sidecarPath, $"{verifyRoot}/timeout-seconds.txt"));
+        Assert.Equal("180\n", ReadZipEntryText(sidecarPath, $"{messageRoot}/timeout-seconds.txt"));
+        Assert.Equal(180, verifyMetadata.RootElement.GetProperty("timeoutSeconds").GetInt32());
+        Assert.Equal(180, messageMetadata.RootElement.GetProperty("timeoutSeconds").GetInt32());
+        Assert.Equal(Sha256ZipEntry(sidecarPath, $"{verifyRoot}/stdout.txt"), verifyMetadata.RootElement.GetProperty("stdoutSha256").GetString());
+        Assert.Equal(Sha256ZipEntry(sidecarPath, $"{messageRoot}/stdout.txt"), messageMetadata.RootElement.GetProperty("stdoutSha256").GetString());
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyFailsWhenOperatorWorkflowSidecarIsMissing()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-operator-workflow-missing-sidecar", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        File.Delete(fixture.OperatorWorkflowZipPath("T-0001"));
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-missing-operator-sidecar");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-SIDECAR-MISSING");
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyFailsWhenOperatorWorkflowPayloadHashIsTampered()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-operator-workflow-payload-hash", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        var sidecarPath = fixture.OperatorWorkflowZipPath("T-0001");
+        ReplaceZipEntryText(
+            sidecarPath,
+            "payload/metadata.json",
+            metadata => metadata.Replace(Sha256File(zipPath), new string('0', 64), StringComparison.Ordinal),
+            updateChecksums: true);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-tampered-operator-sidecar");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-SIDECAR-MISMATCH");
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyFailsWhenOperatorWorkflowTimeoutEvidenceIsTampered()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-operator-workflow-timeout-mismatch", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        var sidecarPath = fixture.OperatorWorkflowZipPath("T-0001");
+        ReplaceZipEntryText(
+            sidecarPath,
+            "evidence/T-0001-r01/checks/audit-package-verify/timeout-seconds.txt",
+            _ => "179\n",
+            updateChecksums: true);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-timeout-operator-sidecar");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-SIDECAR-MISMATCH");
+    }
+
+    [Fact]
+    public async Task AuditPackageMessageOperatorWorkflowEvidenceUsesCliSubprocesses()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-operator-workflow-subprocess");
+        using var shim = TemporaryDirectory.Create("audit-package-dotnet-shim");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that operator workflow evidence is collected from real CLI subprocesses.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath, environment: environment);
+
+        Assert.Equal(0, package.ExitCode);
+        var invocations = File.ReadAllLines(logPath);
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "audit", "package", "verify") && line.Contains("--repo", StringComparison.Ordinal));
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "audit", "package", "message"));
+        Assert.DoesNotContain(invocations, line => ContainsCommandTokens(line, "audit", "package", "verify") && !line.Contains("--repo", StringComparison.Ordinal));
+
+        var sidecarPath = fixture.OperatorWorkflowZipPath(taskId);
+        var verifyMetadata = JsonDocument.Parse(ReadZipEntryText(sidecarPath, $"evidence/{taskId}-r01/checks/audit-package-verify/metadata.json"));
+        var messageMetadata = JsonDocument.Parse(ReadZipEntryText(sidecarPath, $"evidence/{taskId}-r01/checks/audit-package-message/metadata.json"));
+        Assert.Equal("subprocess", verifyMetadata.RootElement.GetProperty("executionMode").GetString());
+        Assert.Equal("subprocess", messageMetadata.RootElement.GetProperty("executionMode").GetString());
     }
 
     [Fact]
@@ -968,6 +1155,10 @@ public sealed class RepositoryBuildToolTests
         - no previous audit packages or detached historical checksums required
         - restore scanning
         - evidence scanning
+        - operator workflow evidence
+        - baseline availability evidence
+        - audit package verify evidence
+        - audit package message evidence
         - secret scanning
         - scope scanning
         - single final report
@@ -1188,6 +1379,158 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task AuditPackageMessageWritesRequestBodyWithoutGeneratedWrapper()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-message-body");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that the audit package message command uses the packaged request.
+        """);
+        fixture.WriteTextFile("docs/release-management/AUDIT-REQUEST.md", """
+        # Запрос внешнему аудитору
+
+        Вы проводите глубокий внешний аудит audit package для Electron2D.
+
+        Required sections and markers:
+
+        VERDICT: ACCEPT
+        VERDICT: NEEDS_FIXES
+        TASK_ASSESSMENT
+        BLOCKERS
+        EVIDENCE_REVIEW
+        RISKS_AND_NOTES
+        CLOSURE_DECISION
+        metadata.previousVerdictChain
+        metadata.blockerClosureList
+        previous verdict files
+        verbatim preservation
+        previous blockers closure
+        external baseline REQUIRED input
+        no baseline payload requirement
+        restored repo-owned model
+        no previous audit packages or detached historical checksums required
+        restore scanning
+        evidence scanning
+        operator workflow evidence
+        baseline availability evidence
+        audit package verify evidence
+        audit package message evidence
+        secret scanning
+        scope scanning
+        single final report
+        no intermediate VERDICT
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+        Assert.Equal(0, package.ExitCode);
+
+        var message = await RunAuditMessageAsync(fixture, fixture.ZipPath(taskId));
+
+        Assert.Equal(0, message.ExitCode);
+        Assert.Equal(string.Empty, message.Stderr);
+        Assert.StartsWith("Вы проводите глубокий внешний аудит audit package для Electron2D.", message.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("# Запрос внешнему аудитору", message.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("{\"command\":", message.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain($"{taskId} audit r01", message.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("Приложен verified audit package", message.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("Ниже дословный текст", message.Stdout, StringComparison.Ordinal);
+        foreach (var marker in RequiredAuditRequestMarkers)
+        {
+            Assert.Contains(marker, message.Stdout, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public async Task AuditPackageMessageFailsWhenZipIsMissing()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-message-missing-zip");
+        var missingZipPath = fixture.ZipPath("T-0001");
+
+        var message = await RunAuditMessageAsync(fixture, missingZipPath);
+
+        Assert.NotEqual(0, message.ExitCode);
+        AssertDiagnosticCode(message, "E2D-BUILD-AUDIT-ZIP-MISSING");
+    }
+
+    [Fact]
+    public async Task AuditPackageMessageFailsWithoutMetadata()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-message-missing-metadata", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        RemoveZipEntry(zipPath, "metadata/audit-package.input.json", updateChecksums: true);
+
+        var message = await RunAuditMessageAsync(fixture, zipPath);
+
+        Assert.NotEqual(0, message.ExitCode);
+        AssertDiagnosticCode(message, "E2D-BUILD-AUDIT-ARCHIVE-INCOMPLETE");
+    }
+
+    [Fact]
+    public async Task AuditPackageMessageFailsWithoutRootAuditRequest()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-message-missing-request", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        RemoveZipEntry(zipPath, "AUDIT-REQUEST.md", updateChecksums: true);
+
+        var message = await RunAuditMessageAsync(fixture, zipPath);
+
+        Assert.NotEqual(0, message.ExitCode);
+        AssertDiagnosticCode(message, "E2D-BUILD-AUDIT-ARCHIVE-INCOMPLETE");
+    }
+
+    [Fact]
+    public async Task AuditPackageMessageFailsWhenRootAuditRequestLacksRequiredMarkers()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-message-invalid-request", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        ReplaceZipEntryText(
+            zipPath,
+            "AUDIT-REQUEST.md",
+            request => request.Replace("TASK_ASSESSMENT", "REMOVED_TASK_SECTION", StringComparison.Ordinal),
+            updateChecksums: true);
+
+        var message = await RunAuditMessageAsync(fixture, zipPath);
+
+        Assert.NotEqual(0, message.ExitCode);
+        AssertDiagnosticCode(message, "E2D-BUILD-AUDIT-REQUEST-INVALID");
+    }
+
+    [Theory]
+    [InlineData("\"taskId\": \"T-0001\"", "\"taskId\": \"BAD\"", "E2D-BUILD-AUDIT-TASK-ID-INVALID")]
+    [InlineData("\"iteration\": \"r01\"", "\"iteration\": \"iteration-1\"", "E2D-BUILD-AUDIT-CONFIG-INVALID")]
+    public async Task AuditPackageMessageFailsWhenMetadataTaskOrIterationIsInvalid(string oldValue, string newValue, string expectedCode)
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-message-invalid-metadata", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        ReplaceZipEntryText(
+            zipPath,
+            "metadata/audit-package.input.json",
+            metadata => metadata.Replace(oldValue, newValue, StringComparison.Ordinal),
+            updateChecksums: true);
+
+        var message = await RunAuditMessageAsync(fixture, zipPath);
+
+        Assert.NotEqual(0, message.ExitCode);
+        AssertDiagnosticCode(message, expectedCode);
+    }
+
+    [Fact]
+    public async Task AuditPackageMessageFailsWhenFilenameDoesNotMatchMetadata()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-message-filename-mismatch", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        var mismatchedZipPath = Path.Combine(Path.GetDirectoryName(zipPath)!, "T-9999-audit-r01.zip");
+        File.Copy(zipPath, mismatchedZipPath);
+
+        var message = await RunAuditMessageAsync(fixture, mismatchedZipPath);
+
+        Assert.NotEqual(0, message.ExitCode);
+        AssertDiagnosticCode(message, "E2D-BUILD-AUDIT-FILENAME-MISMATCH");
+    }
+
+    [Fact]
     public void AuditPackageDocumentationDefinesStrictVerdictExtractionRule()
     {
         var text = File.ReadAllText(
@@ -1223,6 +1566,21 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public void AuditPackageDocumentationRequiresMessageDeepResearchAndAttachedPackage()
+    {
+        var text = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "docs", "release-management", "audit-package.md"),
+            Encoding.UTF8);
+
+        Assert.Contains("audit package message --zip <path>", text, StringComparison.Ordinal);
+        Assert.Contains("прикрепляет проверенный основной аудиторский ZIP и сопровождающий ZIP", text, StringComparison.Ordinal);
+        Assert.Contains("прикреплёнными основным ZIP, сопровождающим ZIP операторских доказательств", text, StringComparison.Ordinal);
+        Assert.Contains("`Глубокое исследование`", text, StringComparison.Ordinal);
+        Assert.Contains("Короткий ручной запрос", text, StringComparison.Ordinal);
+        Assert.Contains("отправка без режима `Глубокое исследование` запрещены", text, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AuditPackageWritesCheckMetadataThatMatchesRawEvidenceFiles()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-check-metadata");
@@ -1245,10 +1603,15 @@ public sealed class RepositoryBuildToolTests
         var metadata = JsonDocument.Parse(ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/checks/git-status/metadata.json"));
         var exitCode = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/checks/git-status/exit-code.txt");
         var timeoutSeconds = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/checks/git-status/timeout-seconds.txt");
+        var durationMs = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/checks/git-status/duration-ms.txt");
 
         Assert.Equal(ParseEvidenceValue(exitCode, "expected"), metadata.RootElement.GetProperty("expectedExitCode").GetInt32());
         Assert.Equal(ParseEvidenceValue(exitCode, "actual"), metadata.RootElement.GetProperty("actualExitCode").GetInt32());
         Assert.Equal(int.Parse(timeoutSeconds, System.Globalization.CultureInfo.InvariantCulture), metadata.RootElement.GetProperty("timeoutSeconds").GetInt32());
+        Assert.True(double.Parse(durationMs, System.Globalization.CultureInfo.InvariantCulture) > 0);
+        Assert.Equal(
+            double.Parse(durationMs, System.Globalization.CultureInfo.InvariantCulture),
+            metadata.RootElement.GetProperty("durationMs").GetDouble());
         Assert.Equal($"evidence/{taskId}-r01/checks/git-status/stdout.txt", metadata.RootElement.GetProperty("stdoutPath").GetString());
         Assert.Equal($"evidence/{taskId}-r01/checks/git-status/stderr.txt", metadata.RootElement.GetProperty("stderrPath").GetString());
     }
@@ -1524,7 +1887,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task AuditPackageCreatesByteStableZipWhenForced()
+    public async Task AuditPackageWritesDeterministicZipMetadataWhenForced()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-deterministic");
         const string taskId = "T-0001";
@@ -1542,12 +1905,12 @@ public sealed class RepositoryBuildToolTests
         var first = await RunAuditPackageAsync(fixture, taskId, configPath);
         Assert.Equal(0, first.ExitCode);
         var zipPath = fixture.ZipPath(taskId);
-        var firstHash = Sha256File(zipPath);
+        var firstEntryNames = ReadZipEntryNames(zipPath);
 
         var second = await RunAuditPackageAsync(fixture, taskId, configPath, force: true);
         Assert.Equal(0, second.ExitCode);
 
-        Assert.Equal(firstHash, Sha256File(zipPath));
+        Assert.Equal(firstEntryNames, ReadZipEntryNames(zipPath));
         using var archive = ZipFile.OpenRead(zipPath);
         var entryNames = archive.Entries.Select(entry => entry.FullName).ToArray();
         Assert.Equal(entryNames.Order(StringComparer.Ordinal), entryNames);
@@ -2581,31 +2944,52 @@ public sealed class RepositoryBuildToolTests
 
     private static async Task<CommandResult> RunBuildToolFromDirectoryAsync(string workingDirectory, TimeSpan timeout, params string[] arguments)
     {
+        return await RunBuildToolFromDirectoryAsync(workingDirectory, timeout, arguments, environment: null);
+    }
+
+    private static async Task<CommandResult> RunBuildToolFromDirectoryAsync(
+        string workingDirectory,
+        TimeSpan timeout,
+        string[] arguments,
+        IReadOnlyDictionary<string, string>? environment)
+    {
         var root = FindRepositoryRoot();
         return await RunProcessAsync(
-            DotnetExecutable,
+            ResolveExecutableFromEnvironmentPath(DotnetExecutable, environment),
             ["run", "--project", BuildToolProjectPath(root), "--", .. arguments],
             workingDirectory,
-            timeout);
+            timeout,
+            environment);
     }
 
     private static async Task<CommandResult> RunProcessAsync(
         string fileName,
         string[] arguments,
         string workingDirectory,
-        TimeSpan timeout)
+        TimeSpan timeout,
+        IReadOnlyDictionary<string, string>? environment = null)
     {
         var startInfo = new ProcessStartInfo(fileName)
         {
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
-            WorkingDirectory = workingDirectory
+            WorkingDirectory = workingDirectory,
+            StandardOutputEncoding = Encoding.UTF8,
+            StandardErrorEncoding = Encoding.UTF8
         };
 
         foreach (var argument in arguments)
         {
             startInfo.ArgumentList.Add(argument);
+        }
+
+        if (environment is not null)
+        {
+            foreach (var variable in environment)
+            {
+                startInfo.Environment[variable.Key] = variable.Value;
+            }
         }
 
         using var process = Process.Start(startInfo)
@@ -3450,7 +3834,12 @@ public sealed class RepositoryBuildToolTests
             string.Equals(name, "release-output", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static async Task<CommandResult> RunAuditPackageAsync(AuditFixture fixture, string taskId, string? configPath, bool force = false)
+    private static async Task<CommandResult> RunAuditPackageAsync(
+        AuditFixture fixture,
+        string taskId,
+        string? configPath,
+        bool force = false,
+        IReadOnlyDictionary<string, string>? environment = null)
     {
         var arguments = new List<string>
         {
@@ -3477,7 +3866,7 @@ public sealed class RepositoryBuildToolTests
             arguments.Add("--force");
         }
 
-        return await RunBuildToolFromDirectoryAsync(fixture.RepositoryRoot, [.. arguments]);
+        return await RunBuildToolFromDirectoryAsync(fixture.RepositoryRoot, TimeSpan.FromSeconds(120), [.. arguments], environment);
     }
 
     private static async Task<CommandResult> RunAuditVerifyAsync(AuditFixture fixture, string zipPath, string cleanRepoRoot)
@@ -3493,6 +3882,17 @@ public sealed class RepositoryBuildToolTests
             fixture.Baseline,
             "--repo",
             cleanRepoRoot);
+    }
+
+    private static async Task<CommandResult> RunAuditMessageAsync(AuditFixture fixture, string zipPath)
+    {
+        return await RunBuildToolFromDirectoryAsync(
+            fixture.RepositoryRoot,
+            "audit",
+            "package",
+            "message",
+            "--zip",
+            zipPath);
     }
 
     private static async Task<AuditFixture> CreatePackagedFixtureAsync(string name, string taskId)
@@ -3634,6 +4034,20 @@ public sealed class RepositoryBuildToolTests
             });
     }
 
+    private static void RemoveZipEntry(string zipPath, string entryName, bool updateChecksums)
+    {
+        RewriteZip(
+            zipPath,
+            entries =>
+            {
+                Assert.True(entries.Remove(entryName), $"ZIP entry was not found: {entryName}");
+                if (updateChecksums)
+                {
+                    entries["SHA256SUMS.txt"] = CreateChecksumFile(entries);
+                }
+            });
+    }
+
     private static void RewriteZip(
         string zipPath,
         Action<Dictionary<string, byte[]>> mutate,
@@ -3687,6 +4101,164 @@ public sealed class RepositoryBuildToolTests
         return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
     }
 
+    private static string Sha256Bytes(byte[] bytes)
+    {
+        return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
+    }
+
+    private static bool ContainsCommandTokens(string line, params string[] tokens)
+    {
+        var cursor = 0;
+        foreach (var token in tokens)
+        {
+            var index = line.IndexOf(token, cursor, StringComparison.Ordinal);
+            if (index < 0)
+            {
+                return false;
+            }
+
+            cursor = index + token.Length;
+        }
+
+        return true;
+    }
+
+    private static string FindDotnetExecutable()
+    {
+        var executableName = OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet";
+        foreach (var directory in (Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(Path.PathSeparator))
+        {
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                continue;
+            }
+
+            var candidate = Path.Combine(directory, executableName);
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        throw new InvalidOperationException("dotnet executable was not found in PATH.");
+    }
+
+    private static string ResolveExecutableFromEnvironmentPath(string executable, IReadOnlyDictionary<string, string>? environment)
+    {
+        if (environment is null || !environment.TryGetValue("PATH", out var path))
+        {
+            return executable;
+        }
+
+        var names = OperatingSystem.IsWindows() && !Path.HasExtension(executable)
+            ? new[] { $"{executable}.exe", $"{executable}.cmd", $"{executable}.bat", executable }
+            : [executable];
+        foreach (var directory in path.Split(Path.PathSeparator))
+        {
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                continue;
+            }
+
+            foreach (var name in names)
+            {
+                var candidate = Path.Combine(directory, name);
+                if (File.Exists(candidate))
+                {
+                    return candidate;
+                }
+            }
+        }
+
+        return executable;
+    }
+
+    private static async Task<string> BuildDotnetShimAsync(string shimRoot, string dotnetExecutable)
+    {
+        var sourceRoot = Path.Combine(shimRoot, "src");
+        var outputRoot = Path.Combine(shimRoot, "bin");
+        Directory.CreateDirectory(sourceRoot);
+        File.WriteAllText(
+            Path.Combine(sourceRoot, "DotnetShim.csproj"),
+            """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+                <AssemblyName>dotnet</AssemblyName>
+              </PropertyGroup>
+            </Project>
+            """,
+            Encoding.UTF8);
+        File.WriteAllText(
+            Path.Combine(sourceRoot, "Program.cs"),
+            """
+            using System.Diagnostics;
+            using System.Text;
+
+            internal static class Program
+            {
+                public static async Task<int> Main(string[] args)
+                {
+                    var log = Environment.GetEnvironmentVariable("DOTNET_SHIM_LOG") ?? throw new InvalidOperationException("DOTNET_SHIM_LOG is not set.");
+                    var realDotnet = Environment.GetEnvironmentVariable("REAL_DOTNET_EXE") ?? throw new InvalidOperationException("REAL_DOTNET_EXE is not set.");
+                    File.AppendAllText(log, string.Join(" ", args.Select(Quote)) + Environment.NewLine, Encoding.UTF8);
+
+                    var startInfo = new ProcessStartInfo(realDotnet)
+                    {
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        StandardOutputEncoding = Encoding.UTF8,
+                        StandardErrorEncoding = Encoding.UTF8
+                    };
+                    foreach (var argument in args)
+                    {
+                        startInfo.ArgumentList.Add(argument);
+                    }
+
+                    using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start real dotnet.");
+                    var stdout = process.StandardOutput.BaseStream.CopyToAsync(Console.OpenStandardOutput());
+                    var stderr = process.StandardError.BaseStream.CopyToAsync(Console.OpenStandardError());
+                    await process.WaitForExitAsync();
+                    await Task.WhenAll(stdout, stderr);
+                    return process.ExitCode;
+                }
+
+                private static string Quote(string value)
+                {
+                    return value.Any(char.IsWhiteSpace)
+                        ? "\"" + value.Replace("\"", "\\\"", StringComparison.Ordinal) + "\""
+                        : value;
+                }
+            }
+            """,
+            Encoding.UTF8);
+
+        var build = await RunProcessAsync(
+            dotnetExecutable,
+            ["build", Path.Combine(sourceRoot, "DotnetShim.csproj"), "-c", "Release", "-o", outputRoot, "/nologo"],
+            sourceRoot,
+            TimeSpan.FromSeconds(120));
+        Assert.True(
+            build.ExitCode == 0,
+            $"dotnet shim build failed with exit code {build.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{build.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{build.Stderr}");
+        return outputRoot;
+    }
+
+    private static IReadOnlyDictionary<string, string> CreateDotnetShimEnvironment(string shimRoot, string dotnetExecutable, string logPath)
+    {
+        var path = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        return new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["PATH"] = shimRoot + Path.PathSeparator + path,
+            ["REAL_DOTNET_EXE"] = dotnetExecutable,
+            ["DOTNET_SHIM_LOG"] = logPath
+        };
+    }
+
     private static void AssertPosixArchivePath(string path)
     {
         Assert.DoesNotContain("\\", path, StringComparison.Ordinal);
@@ -3716,6 +4288,35 @@ public sealed class RepositoryBuildToolTests
     private const string SecretValueCasePasswordAssignment = "negative-case-02";
     private const string SecretValueCaseApiKeyAssignment = "negative-case-03";
     private const string SecretValueCasePrivateKeyMarker = "negative-case-04";
+    private static readonly string[] RequiredAuditRequestMarkers =
+    [
+        "VERDICT: ACCEPT",
+        "VERDICT: NEEDS_FIXES",
+        "TASK_ASSESSMENT",
+        "BLOCKERS",
+        "EVIDENCE_REVIEW",
+        "RISKS_AND_NOTES",
+        "CLOSURE_DECISION",
+        "metadata.previousVerdictChain",
+        "metadata.blockerClosureList",
+        "previous verdict files",
+        "verbatim preservation",
+        "previous blockers closure",
+        "external baseline REQUIRED input",
+        "no baseline payload requirement",
+        "restored repo-owned model",
+        "no previous audit packages or detached historical checksums required",
+        "restore scanning",
+        "evidence scanning",
+        "operator workflow evidence",
+        "baseline availability evidence",
+        "audit package verify evidence",
+        "audit package message evidence",
+        "secret scanning",
+        "scope scanning",
+        "single final report",
+        "no intermediate VERDICT"
+    ];
     private const string DefaultAuditRequestText = """
     # Static audit request
 
@@ -3739,6 +4340,10 @@ public sealed class RepositoryBuildToolTests
     no previous audit packages or detached historical checksums required
     restore scanning
     evidence scanning
+    operator workflow evidence
+    baseline availability evidence
+    audit package verify evidence
+    audit package message evidence
     secret scanning
     scope scanning
     single final report
@@ -3877,6 +4482,11 @@ public sealed class RepositoryBuildToolTests
         public string ZipPath(string taskId)
         {
             return Path.Combine(RepositoryRoot, ".temp", "audit", $"{taskId}-audit-r01.zip");
+        }
+
+        public string OperatorWorkflowZipPath(string taskId)
+        {
+            return Path.Combine(RepositoryRoot, ".temp", "audit", $"{taskId}-audit-r01.operator-workflow.zip");
         }
 
         public string FilePath(string relativePath)

@@ -385,7 +385,7 @@
       },
       {
         "path": "docs/release-management/AUDIT-REQUEST.md",
-        "sha256": "1884fe8e34c1672a327a3a5fdb15a34bd4155437405ec2f6683f8bbba1253569"
+        "sha256": "c0200ec27342f0772da5bfaadbfb5644ef5235dee87ff9426e45e8eb99bdded2"
       },
       {
         "path": "docs/release-management/api-compatibility.md",
@@ -393,7 +393,7 @@
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "372a218a51f2bb85d885af9f61f6321ad3f0d7e499501f5c269f0752641b9821"
+        "sha256": "1f4867b50731ce776a0eb529ad0dc19e5a613eaf9343cd0a3e215bf5f2e419dc"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -720,6 +720,14 @@
         "sha256": "79353337ef2a3472aa5e68481030d65255618519e1e3c31d9c4383d00bced90b"
       },
       {
+        "path": "docs/verdicts/release-management/t-0230-audit-r01.md",
+        "sha256": "681e9eeabd5b8589413d2d7c5af1b2111865d88813f143591f41eb2733525da6"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0230-audit-r03.md",
+        "sha256": "f5440396e9293d69fd00de88de9ec9fce2c45262e94bd7c2cb6655f4e4169a41"
+      },
+      {
         "path": "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
         "sha256": "64f5edf9155455623cf21f7e0bf7a18807b08023eda6c06a5da2ac93e341c5d9"
       },
@@ -997,6 +1005,8 @@
         "docs/verdicts/release-management/t-0228-audit-r04.md",
         "docs/verdicts/release-management/t-0229-audit-r01.md",
         "docs/verdicts/release-management/t-0229-audit-r02.md",
+        "docs/verdicts/release-management/t-0230-audit-r01.md",
+        "docs/verdicts/release-management/t-0230-audit-r03.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
@@ -76997,7 +77007,7 @@
       "id": "doc:release-management.AUDIT-REQUEST",
       "kind": "documentation",
       "title": "\u0417\u0430\u043F\u0440\u043E\u0441 \u0432\u043D\u0435\u0448\u043D\u0435\u0433\u043E \u0430\u0443\u0434\u0438\u0442\u0430 Electron2D",
-      "summary": "\u0412\u044B \u043F\u0440\u043E\u0432\u043E\u0434\u0438\u0442\u0435 \u0433\u043B\u0443\u0431\u043E\u043A\u0438\u0439 \u0432\u043D\u0435\u0448\u043D\u0438\u0439 \u0430\u0443\u0434\u0438\u0442 audit package \u0434\u043B\u044F Electron2D. \u0412\u0430\u0448\u0430 \u0437\u0430\u0434\u0430\u0447\u0430 - \u043D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C, \u0447\u0442\u043E \u0430\u0440\u0445\u0438\u0432 \u0432\u043C\u0435\u0441\u0442\u0435 \u0441 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u043D\u0435\u0448\u043D\u0435\u0439 \u0447\u0438\u0441\u0442\u043E\u0439 \u043A\u043E\u043F\u0438\u0435\u0439 \u0438\u0441\u0445\u043E\u0434\u043D\u043E\u0439 \u0440\u0435\u0432\u0438\u0437\u0438\u0438 \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u043C\u043E \u0434\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0437\u0430\u044F\u0432\u043B\u0435\u043D\u043D\u043E\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435, \u0430 \u043D\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u044B\u0433\u043B\u044F\u0434\u0438\u0442 \u0444\u043E\u0440\u043C\u0430\u043B\u044C\u043D\u043E \u043F\u043E\u043B\u043D\u044B\u043C. \u041D\u0435 \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0439\u0442\u0435\u0441\u044C \u043D\u0430 \u043F\u0435\u0440\u0432\u043E\u043C \u043D\u0430\u0439\u0434\u0435\u043D\u043D\u043E\u043C blocker-\u0435: \u043D\u0443\u0436\u0435\u043D \u043F\u043E\u043B\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u043A\u0430\u0437\u0443\u0435\u043C\u044B\u0445 \u043F\u0440\u043E\u0431\u043B\u0435\u043C \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043E\u0431\u043B\u0430\u0441\u0442\u0438 \u0437\u0430\u0434\u0430\u0447\u0438.",
+      "summary": "\u0412\u044B \u043F\u0440\u043E\u0432\u043E\u0434\u0438\u0442\u0435 \u0433\u043B\u0443\u0431\u043E\u043A\u0438\u0439 \u0432\u043D\u0435\u0448\u043D\u0438\u0439 \u0430\u0443\u0434\u0438\u0442 audit package \u0434\u043B\u044F Electron2D. \u0412\u0430\u0448\u0430 \u0437\u0430\u0434\u0430\u0447\u0430 - \u043D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C, \u0447\u0442\u043E \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 ZIP-\u0430\u0440\u0445\u0438\u0432, \u0441\u043E\u043F\u0440\u043E\u0432\u043E\u0436\u0434\u0430\u044E\u0449\u0438\u0439 ZIP \u0441 \u043E\u043F\u0435\u0440\u0430\u0442\u043E\u0440\u0441\u043A\u0438\u043C\u0438 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430\u043C\u0438 \u0438 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u043D\u0435\u0448\u043D\u044F\u044F \u0447\u0438\u0441\u0442\u0430\u044F \u043A\u043E\u043F\u0438\u044F \u0438\u0441\u0445\u043E\u0434\u043D\u043E\u0439 \u0440\u0435\u0432\u0438\u0437\u0438\u0438 \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u043C\u043E \u0434\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0437\u0430\u044F\u0432\u043B\u0435\u043D\u043D\u043E\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435, \u0430 \u043D\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u044B\u0433\u043B\u044F\u0434\u044F\u0442 \u0444\u043E\u0440\u043C\u0430\u043B\u044C\u043D\u043E \u043F\u043E\u043B\u043D\u044B\u043C\u0438. \u041D\u0435 \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0439\u0442\u0435\u0441\u044C \u043D\u0430 \u043F\u0435\u0440\u0432\u043E\u043C \u043D\u0430\u0439\u0434\u0435\u043D\u043D\u043E\u043C blocker-\u0435: \u043D\u0443\u0436\u0435\u043D \u043F\u043E\u043B\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u043A\u0430\u0437\u0443\u0435\u043C\u044B\u0445 \u043F\u0440\u043E\u0431\u043B\u0435\u043C \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043E\u0431\u043B\u0430\u0441\u0442\u0438 \u0437\u0430\u0434\u0430\u0447\u0438.",
       "keywords": [
         "2",
         "audit",
@@ -77010,7 +77020,8 @@
         "md",
         "package",
         "release",
-        "request"
+        "request",
+        "zip"
       ],
       "sourcePath": "docs/release-management/AUDIT-REQUEST.md",
       "sourceId": "doc:release-management.AUDIT-REQUEST",
@@ -77054,11 +77065,11 @@
       "id": "doc:release-management.audit-package",
       "kind": "documentation",
       "title": "\u0414\u0435\u0442\u0435\u0440\u043C\u0438\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0060audit package\u0060",
-      "summary": "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u043E: 2026-06-27.",
+      "summary": "\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u043E: 2026-06-28.",
       "keywords": [
         "06",
         "2026",
-        "27",
+        "28",
         "audit",
         "docs",
         "management",
@@ -79272,6 +79283,60 @@
       ],
       "sourcePath": "docs/verdicts/release-management/t-0229-audit-r02.md",
       "sourceId": "doc:verdicts.release-management.t-0229-audit-r02",
+      "audiences": [
+        "human",
+        "ai",
+        "cli",
+        "wiki"
+      ]
+    },
+    {
+      "id": "doc:verdicts.release-management.t-0230-audit-r01",
+      "kind": "documentation",
+      "title": "T-0230 audit r01",
+      "summary": "- \u0417\u0430\u0434\u0430\u0447\u0430: T-0230",
+      "keywords": [
+        "01",
+        "0230",
+        "audit",
+        "docs",
+        "management",
+        "md",
+        "r",
+        "r01",
+        "release",
+        "t",
+        "verdicts"
+      ],
+      "sourcePath": "docs/verdicts/release-management/t-0230-audit-r01.md",
+      "sourceId": "doc:verdicts.release-management.t-0230-audit-r01",
+      "audiences": [
+        "human",
+        "ai",
+        "cli",
+        "wiki"
+      ]
+    },
+    {
+      "id": "doc:verdicts.release-management.t-0230-audit-r03",
+      "kind": "documentation",
+      "title": "T-0230 audit r03",
+      "summary": "- \u0417\u0430\u0434\u0430\u0447\u0430: T-0230",
+      "keywords": [
+        "0230",
+        "03",
+        "audit",
+        "docs",
+        "management",
+        "md",
+        "r",
+        "r03",
+        "release",
+        "t",
+        "verdicts"
+      ],
+      "sourcePath": "docs/verdicts/release-management/t-0230-audit-r03.md",
+      "sourceId": "doc:verdicts.release-management.t-0230-audit-r03",
       "audiences": [
         "human",
         "ai",

@@ -64,6 +64,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         RegexOptions.CultureInvariant);
     private const string StaticAuditRequestSourcePath = "docs/release-management/AUDIT-REQUEST.md";
     private const string StaticAuditRequestArchivePath = "AUDIT-REQUEST.md";
+    private const int OperatorWorkflowEvidenceTimeoutSeconds = 180;
     private static readonly string[] StaticAuditRequestRequiredMarkers =
     [
         "VERDICT: ACCEPT",
@@ -84,6 +85,10 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         "no previous audit packages or detached historical checksums required",
         "restore scanning",
         "evidence scanning",
+        "operator workflow evidence",
+        "baseline availability evidence",
+        "audit package verify evidence",
+        "audit package message evidence",
         "secret scanning",
         "scope scanning",
         "single final report",
@@ -108,7 +113,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "audit",
                 "audit",
                 "E2D-BUILD-CLI-INVALID-ARGUMENTS",
-                "Expected: audit package ... or audit package verify ...");
+                "Expected: audit package ..., audit package verify ..., or audit package message ...");
             return RepositoryBuildExitCodes.Failed;
         }
 
@@ -117,7 +122,18 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             if (args.Length >= 3 && args[2] == "verify")
             {
                 var options = ParseVerifyOptions(args);
-                await VerifyPackageAsync(options, writeSuccessDiagnostic: true, cancellationToken).ConfigureAwait(false);
+                await VerifyPackageAsync(
+                    options,
+                    writeSuccessDiagnostic: true,
+                    requireOperatorWorkflowSidecar: true,
+                    cancellationToken).ConfigureAwait(false);
+                return RepositoryBuildExitCodes.Success;
+            }
+
+            if (args.Length >= 3 && args[2] == "message")
+            {
+                var options = ParseMessageOptions(args);
+                WritePackageMessage(options);
                 return RepositoryBuildExitCodes.Success;
             }
 
@@ -144,16 +160,19 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         var outputDirectory = ResolvePath(repoRoot, options.OutputDirectory);
         Directory.CreateDirectory(outputDirectory);
         var zipPath = Path.Combine(outputDirectory, $"{options.TaskId}-audit-{options.Iteration}.zip");
+        var operatorWorkflowZipPath = Path.Combine(outputDirectory, $"{options.TaskId}-audit-{options.Iteration}.operator-workflow.zip");
 
-        if (File.Exists(zipPath))
+        var existingOutput = new[] { zipPath, operatorWorkflowZipPath }
+            .FirstOrDefault(File.Exists);
+        if (existingOutput is not null)
         {
             if (!options.Force)
             {
                 throw new AuditPackageFailure(
                     "audit package",
                     "E2D-BUILD-AUDIT-ZIP-EXISTS",
-                    $"Target audit ZIP already exists: {zipPath}",
-                    ZipPath: zipPath);
+                    $"Target audit output already exists: {existingOutput}",
+                    ZipPath: existingOutput);
             }
 
             diagnostics.Write(new BuildDiagnostic(
@@ -164,7 +183,13 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "Existing audit ZIP will be overwritten because --force was supplied.",
                 ZipPath: zipPath,
                 Force: true));
-            File.Delete(zipPath);
+            foreach (var path in new[] { zipPath, operatorWorkflowZipPath })
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
         }
 
         using var staging = TemporaryWorkspace.Create("Electron2D-AuditPackage");
@@ -172,8 +197,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         var repoFiles = await SelectRepositoryFilesAsync(repoRoot, config, cancellationToken).ConfigureAwait(false);
         var importedEvidence = SelectArchiveOnlyEvidenceFiles(repoRoot, config);
         var checkEvidence = await RunConfiguredChecksAsync(repoRoot, staging.Root, config, cancellationToken).ConfigureAwait(false);
-        var evidenceFiles = importedEvidence.Concat(checkEvidence).OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
-        var firstSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, auditRequest.AbsolutePath, cancellationToken).ConfigureAwait(false);
+        var configuredEvidenceFiles = importedEvidence.Concat(checkEvidence).OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
 
         var previousVerdictPaths = SelectPreviousVerdictPaths(config);
         var patch = await CreatePatchAsync(repoRoot, staging.Root, options.Baseline, repoFiles, previousVerdictPaths, cancellationToken).ConfigureAwait(false);
@@ -194,19 +218,17 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             ["metadata/audit-package.input.json"] = Encoding.UTF8.GetBytes(normalizedConfigJson)
         };
 
-        foreach (var evidence in evidenceFiles)
+        foreach (var evidence in configuredEvidenceFiles)
         {
             archiveFiles[evidence.ArchivePath] = await File.ReadAllBytesAsync(evidence.SourcePath, cancellationToken).ConfigureAwait(false);
         }
 
-        var plannedPaths = archiveFiles.Keys
-            .Concat(["AUDIT-MANIFEST.md", "SHA256SUMS.txt"])
-            .Order(StringComparer.Ordinal)
-            .ToArray();
-        var manifest = CreateManifest(config, patch.NameStatus, restoreManifest, plannedPaths, evidenceFiles.Select(file => file.ArchivePath).ToArray());
-        archiveFiles["AUDIT-MANIFEST.md"] = Encoding.UTF8.GetBytes(manifest);
-        archiveFiles["SHA256SUMS.txt"] = CreateChecksumFile(archiveFiles);
+        RefreshManifestAndChecksums(archiveFiles, config, patch.NameStatus, restoreManifest, configuredEvidenceFiles.Select(file => file.ArchivePath).ToArray());
+        ValidateArchiveFiles(archiveFiles, repoRoot, previousVerdictPaths);
 
+        var relativeZipPath = GetRepositoryRelativePath(repoRoot, zipPath, "audit package");
+        var evidenceFiles = configuredEvidenceFiles;
+        var firstSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, auditRequest.AbsolutePath, cancellationToken).ConfigureAwait(false);
         ValidateArchiveFiles(archiveFiles, repoRoot, previousVerdictPaths);
         var secondSnapshot = await CreateInputSnapshotAsync(repoRoot, repoFiles, evidenceFiles, auditRequest.AbsolutePath, cancellationToken).ConfigureAwait(false);
         if (!SnapshotsEqual(firstSnapshot, secondSnapshot))
@@ -223,6 +245,15 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         await VerifyPackageAsync(
             new AuditVerifyOptions(zipPath, options.Baseline, cleanRepo.Root),
             writeSuccessDiagnostic: false,
+            requireOperatorWorkflowSidecar: false,
+            cancellationToken).ConfigureAwait(false);
+
+        await CreateOperatorWorkflowSidecarAsync(
+            repoRoot,
+            config,
+            zipPath,
+            operatorWorkflowZipPath,
+            relativeZipPath,
             cancellationToken).ConfigureAwait(false);
 
         diagnostics.Write(new BuildDiagnostic(
@@ -230,12 +261,40 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             "audit package",
             "info",
             "E2D-BUILD-AUDIT-PACKAGE-CREATED",
-            $"Created and verified audit package '{Path.GetFileName(zipPath)}'.",
+            $"Created and verified audit package '{Path.GetFileName(zipPath)}' with operator workflow sidecar '{Path.GetFileName(operatorWorkflowZipPath)}'.",
             ZipPath: zipPath,
             Force: options.Force ? true : null));
     }
 
-    private async Task VerifyPackageAsync(AuditVerifyOptions options, bool writeSuccessDiagnostic, CancellationToken cancellationToken)
+    private void WritePackageMessage(AuditMessageOptions options)
+    {
+        Console.Out.Write(CreatePackageMessage(options, Directory.GetCurrentDirectory()));
+    }
+
+    private static string CreatePackageMessage(AuditMessageOptions options, string repoRoot)
+    {
+        if (!File.Exists(options.ZipPath))
+        {
+            throw new AuditPackageFailure("audit package message", "E2D-BUILD-AUDIT-ZIP-MISSING", $"Audit ZIP was not found: {options.ZipPath}");
+        }
+
+        var entries = ReadZipEntries(options.ZipPath, "audit package message");
+        VerifyMessageRequiredFiles(entries);
+        var config = ReadConfigurationFromBytes(entries["metadata/audit-package.input.json"], "audit package message");
+        NormalizeConfiguration(config);
+        ValidateTaskId(config.TaskId, "audit package message");
+        ValidateIteration(config.Iteration, "audit package message");
+        ValidateAuditMessageFileName(options.ZipPath, config);
+        ValidateStaticAuditRequestBytes(entries[StaticAuditRequestArchivePath], repoRoot, "audit package message");
+
+        return StripFirstMarkdownH1(Encoding.UTF8.GetString(entries[StaticAuditRequestArchivePath]));
+    }
+
+    private async Task VerifyPackageAsync(
+        AuditVerifyOptions options,
+        bool writeSuccessDiagnostic,
+        bool requireOperatorWorkflowSidecar,
+        CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -268,6 +327,16 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         VerifyGeneratedTaskIds(config, entries);
         VerifyManifestInventory(entries);
+        if (requireOperatorWorkflowSidecar)
+        {
+            await VerifyOperatorWorkflowSidecarAsync(
+                options.ZipPath,
+                options.RepositoryPath,
+                entries,
+                config,
+                cancellationToken).ConfigureAwait(false);
+        }
+
         var patchName = $"{config.TaskId}.patch";
         if (!entries.ContainsKey(patchName))
         {
@@ -350,6 +419,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             Require(values, "--repo", "audit package verify"));
     }
 
+    private static AuditMessageOptions ParseMessageOptions(string[] args)
+    {
+        var values = ParseNamedArguments(args, startIndex: 3, allowedValueOptions: ["--zip"], allowedFlags: []);
+        return new AuditMessageOptions(Require(values, "--zip", "audit package message"));
+    }
+
     private static Dictionary<string, string?> ParseNamedArguments(
         string[] args,
         int startIndex,
@@ -416,10 +491,17 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return config ?? throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", "Audit package config is empty or invalid.");
     }
 
-    private static AuditPackageConfiguration ReadConfigurationFromBytes(byte[] bytes)
+    private static AuditPackageConfiguration ReadConfigurationFromBytes(byte[] bytes, string step = "audit package verify")
     {
-        return JsonSerializer.Deserialize<AuditPackageConfiguration>(bytes, JsonReadOptions)
-            ?? throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-CONFIG-INVALID", "Archive config is empty or invalid.");
+        try
+        {
+            return JsonSerializer.Deserialize<AuditPackageConfiguration>(bytes, JsonReadOptions)
+                ?? throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-CONFIG-INVALID", "Archive config is empty or invalid.");
+        }
+        catch (JsonException exception)
+        {
+            throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-CONFIG-INVALID", $"Archive config is empty or invalid: {exception.Message}");
+        }
     }
 
     private static void NormalizeConfiguration(AuditPackageConfiguration config)
@@ -719,7 +801,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             WriteText(localRoot, "env.json", JsonSerializer.Serialize(env, JsonWriteOptions) + "\n");
             WriteText(localRoot, "timeout-seconds.txt", check.TimeoutSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\n");
             WriteText(localRoot, "exit-code.txt", $"expected: {check.ExpectedExitCode}\nactual: {result.ExitCode}\n");
-            WriteText(localRoot, "duration-ms.txt", "0\n");
+            var durationMs = NormalizeDurationMs(result.Duration);
+            WriteText(localRoot, "duration-ms.txt", FormatDurationMs(durationMs) + "\n");
             var copiedTrxFiles = CopyTrxFiles(repoRoot, localRoot, archiveRoot, config, check.TrxGlobs);
             var sanitizedStdout = SanitizeCheckOutput(result.StandardOutput, repoRoot, copiedTrxFiles);
             var sanitizedStderr = SanitizeCheckOutput(result.StandardError, repoRoot, copiedTrxFiles);
@@ -737,7 +820,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 check.ExpectedExitCode,
                 check.TimeoutSeconds,
                 result.ExitCode,
-                0,
+                durationMs,
                 $"{archiveRoot}/stdout.txt",
                 $"{archiveRoot}/stderr.txt",
                 Sha256File(Path.Combine(localRoot, "stdout.txt")),
@@ -760,6 +843,654 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         return evidence.OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
+    }
+
+    private async Task CreateOperatorWorkflowSidecarAsync(
+        string repoRoot,
+        AuditPackageConfiguration config,
+        string zipPath,
+        string operatorWorkflowZipPath,
+        string relativeZipPath,
+        CancellationToken cancellationToken)
+    {
+        using var staging = TemporaryWorkspace.Create("Electron2D-AuditOperatorWorkflow");
+        var evidence = new List<EvidenceSourceFile>();
+        var projectArgument = ResolveBuildToolProjectArgument(repoRoot);
+        string[] verifyDisplayArguments =
+        [
+            "run",
+            "--project",
+            "eng/Electron2D.Build",
+            "--",
+            "audit",
+            "package",
+            "verify",
+            "--zip",
+            relativeZipPath,
+            "--baseline",
+            config.Baseline,
+            "--repo",
+            "<clean-repo-path>"
+        ];
+
+        string[] messageDisplayArguments =
+        [
+            "run",
+            "--project",
+            "eng/Electron2D.Build",
+            "--",
+            "audit",
+            "package",
+            "message",
+            "--zip",
+            relativeZipPath
+        ];
+        string[] messageRunArguments =
+        [
+            "run",
+            "--project",
+            projectArgument,
+            "--",
+            "audit",
+            "package",
+            "message",
+            "--zip",
+            relativeZipPath
+        ];
+        var message = await RunOperatorWorkflowCommandAsync(repoRoot, messageRunArguments, cancellationToken).ConfigureAwait(false);
+        var messageEvidence = WriteCommandEvidenceFiles(
+            staging.Root,
+            config,
+            "audit-package-message",
+            "dotnet",
+            messageDisplayArguments,
+            message,
+            OperatorWorkflowEvidenceTimeoutSeconds,
+            executionMode: "subprocess");
+
+        var provisionalVerify = new CommandEvidenceResult(
+            0,
+            CreateProvisionalOperatorVerifyStdout(zipPath, relativeZipPath),
+            string.Empty,
+            TimeSpan.FromMilliseconds(1));
+        var provisionalEvidence = WriteCommandEvidenceFiles(
+            staging.Root,
+            config,
+            "audit-package-verify",
+            "dotnet",
+            verifyDisplayArguments,
+            provisionalVerify,
+            OperatorWorkflowEvidenceTimeoutSeconds,
+            executionMode: "subprocess")
+            .Concat(messageEvidence)
+            .ToArray();
+        await WriteOperatorWorkflowSidecarAsync(
+            operatorWorkflowZipPath,
+            zipPath,
+            relativeZipPath,
+            provisionalEvidence,
+            cancellationToken).ConfigureAwait(false);
+
+        using (var cleanRepo = await CreateCleanCloneAsync(repoRoot, config.Baseline, cancellationToken).ConfigureAwait(false))
+        {
+            string[] verifyRunArguments =
+            [
+                "run",
+                "--project",
+                projectArgument,
+                "--",
+                "audit",
+                "package",
+                "verify",
+                "--zip",
+                relativeZipPath,
+                "--baseline",
+                config.Baseline,
+                "--repo",
+                cleanRepo.Root
+            ];
+            var verify = await RunOperatorWorkflowCommandAsync(repoRoot, verifyRunArguments, cancellationToken).ConfigureAwait(false);
+            evidence.AddRange(WriteCommandEvidenceFiles(
+                staging.Root,
+                config,
+                "audit-package-verify",
+                "dotnet",
+                verifyDisplayArguments,
+                verify,
+                OperatorWorkflowEvidenceTimeoutSeconds,
+                executionMode: "subprocess"));
+        }
+
+        evidence.AddRange(messageEvidence);
+        File.Delete(operatorWorkflowZipPath);
+        await WriteOperatorWorkflowSidecarAsync(
+            operatorWorkflowZipPath,
+            zipPath,
+            relativeZipPath,
+            evidence,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task<CommandEvidenceResult> RunOperatorWorkflowCommandAsync(
+        string repoRoot,
+        string[] arguments,
+        CancellationToken cancellationToken)
+    {
+        var result = await AuditProcessRunner.RunAsync(
+            "dotnet",
+            arguments,
+            repoRoot,
+            TimeSpan.FromSeconds(OperatorWorkflowEvidenceTimeoutSeconds),
+            cancellationToken).ConfigureAwait(false);
+        return new CommandEvidenceResult(result.ExitCode, result.StandardOutput, result.StandardError, result.Duration);
+    }
+
+    private static EvidenceSourceFile[] WriteCommandEvidenceFiles(
+        string stagingRoot,
+        AuditPackageConfiguration config,
+        string checkName,
+        string fileName,
+        string[] arguments,
+        CommandEvidenceResult result,
+        int timeoutSeconds,
+        string? executionMode = null)
+    {
+        const string relativeCwd = ".";
+        const int expectedExitCode = 0;
+        var archiveRoot = $"evidence/{config.TaskId}-{config.Iteration}/checks/{checkName}";
+        var localRoot = Path.Combine(stagingRoot, archiveRoot.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(localRoot);
+        WriteText(localRoot, "command.txt", FormatCommandEvidence(fileName, arguments));
+        WriteText(localRoot, "cwd.txt", relativeCwd);
+        WriteText(localRoot, "env.json", JsonSerializer.Serialize(new Dictionary<string, string>(StringComparer.Ordinal), JsonWriteOptions) + "\n");
+        WriteText(localRoot, "timeout-seconds.txt", timeoutSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\n");
+        WriteText(localRoot, "exit-code.txt", $"expected: {expectedExitCode}\nactual: {result.ExitCode}\n");
+        var durationMs = NormalizeDurationMs(result.Duration);
+        WriteText(localRoot, "duration-ms.txt", FormatDurationMs(durationMs) + "\n");
+        WriteText(localRoot, "stdout.txt", result.Stdout);
+        WriteText(localRoot, "stderr.txt", result.Stderr);
+        var metadata = new CheckEvidenceMetadata(
+            checkName,
+            fileName,
+            arguments,
+            relativeCwd,
+            expectedExitCode,
+            timeoutSeconds,
+            result.ExitCode,
+            durationMs,
+            $"{archiveRoot}/stdout.txt",
+            $"{archiveRoot}/stderr.txt",
+            Sha256File(Path.Combine(localRoot, "stdout.txt")),
+            Sha256File(Path.Combine(localRoot, "stderr.txt")),
+            [],
+            executionMode);
+        WriteText(localRoot, "metadata.json", JsonSerializer.Serialize(metadata, JsonWriteOptions) + "\n");
+        if (result.ExitCode != expectedExitCode)
+        {
+            throw new AuditPackageFailure(
+                "audit package",
+                "E2D-BUILD-AUDIT-OPERATOR-EVIDENCE-FAILED",
+                $"Operator evidence check '{checkName}' exited with {result.ExitCode}; expected {expectedExitCode}.");
+        }
+
+        return Directory.EnumerateFiles(localRoot, "*", SearchOption.AllDirectories)
+            .Select(path => new EvidenceSourceFile(
+                path,
+                $"{archiveRoot}/{Path.GetRelativePath(localRoot, path).Replace('\\', '/')}"))
+            .OrderBy(file => file.ArchivePath, StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    private static async Task WriteOperatorWorkflowSidecarAsync(
+        string operatorWorkflowZipPath,
+        string zipPath,
+        string relativeZipPath,
+        IEnumerable<EvidenceSourceFile> evidence,
+        CancellationToken cancellationToken)
+    {
+        var evidenceFiles = evidence.OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
+        var sidecarFiles = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+        foreach (var file in evidenceFiles)
+        {
+            sidecarFiles[file.ArchivePath] = await File.ReadAllBytesAsync(file.SourcePath, cancellationToken).ConfigureAwait(false);
+        }
+
+        AddOperatorWorkflowPayloadFiles(sidecarFiles, zipPath, relativeZipPath, evidenceFiles.Select(file => file.ArchivePath).ToArray());
+        sidecarFiles["SHA256SUMS.txt"] = CreateChecksumFile(sidecarFiles);
+        WriteDeterministicZip(operatorWorkflowZipPath, sidecarFiles);
+    }
+
+    private static string CreateProvisionalOperatorVerifyStdout(string zipPath, string relativeZipPath)
+    {
+        return JsonSerializer.Serialize(
+            new BuildDiagnostic(
+                "audit",
+                "audit package verify",
+                "info",
+                "E2D-BUILD-AUDIT-PACKAGE-VERIFIED",
+                $"Verified audit package '{Path.GetFileName(zipPath)}'.",
+                ZipPath: relativeZipPath),
+            JsonWriteOptions) + "\n";
+    }
+
+    private static void AddOperatorWorkflowPayloadFiles(
+        Dictionary<string, byte[]> sidecarFiles,
+        string zipPath,
+        string relativeZipPath,
+        string[] evidencePaths)
+    {
+        var entries = ReadZipEntries(zipPath, "audit package operator workflow");
+        var archiveEntriesText = CreateArchiveEntriesText(entries);
+        var payloadMetadata = new OperatorWorkflowPayloadMetadata(
+            relativeZipPath,
+            Sha256File(zipPath),
+            Sha256Bytes(entries["AUDIT-MANIFEST.md"]),
+            Sha256Bytes(entries["SHA256SUMS.txt"]),
+            Sha256Bytes(Encoding.UTF8.GetBytes(archiveEntriesText)),
+            entries.Keys.Order(StringComparer.Ordinal).ToArray());
+
+        sidecarFiles["payload/metadata.json"] = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payloadMetadata, JsonWriteOptions) + "\n");
+        sidecarFiles["payload/sha256.txt"] = Encoding.UTF8.GetBytes(payloadMetadata.PayloadSha256 + "\n");
+        sidecarFiles["payload/AUDIT-MANIFEST.sha256"] = Encoding.UTF8.GetBytes(payloadMetadata.AuditManifestSha256 + "\n");
+        sidecarFiles["payload/SHA256SUMS.sha256"] = Encoding.UTF8.GetBytes(payloadMetadata.Sha256SumsSha256 + "\n");
+        sidecarFiles["payload/archive-entries.sha256"] = Encoding.UTF8.GetBytes(payloadMetadata.ArchiveEntriesSha256 + "\n");
+        sidecarFiles["payload/archive-entries.txt"] = Encoding.UTF8.GetBytes(archiveEntriesText);
+        sidecarFiles["OPERATOR-WORKFLOW.md"] = Encoding.UTF8.GetBytes(CreateOperatorWorkflowManifest(payloadMetadata, evidencePaths));
+    }
+
+    private static string CreateOperatorWorkflowManifest(OperatorWorkflowPayloadMetadata payload, IEnumerable<string> evidencePaths)
+    {
+        var builder = new StringBuilder();
+        builder.AppendLine("# OPERATOR-WORKFLOW");
+        builder.AppendLine();
+        builder.AppendLine("## Payload");
+        builder.AppendLine($"- path: `{payload.PayloadPath}`");
+        builder.AppendLine($"- sha256: `{payload.PayloadSha256}`");
+        builder.AppendLine($"- AUDIT-MANIFEST.md sha256: `{payload.AuditManifestSha256}`");
+        builder.AppendLine($"- SHA256SUMS.txt sha256: `{payload.Sha256SumsSha256}`");
+        builder.AppendLine($"- archive entries sha256: `{payload.ArchiveEntriesSha256}`");
+        builder.AppendLine();
+        builder.AppendLine("## Evidence Links");
+        foreach (var path in evidencePaths.Order(StringComparer.Ordinal))
+        {
+            builder.AppendLine($"- `{path}`");
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("## Contract");
+        builder.AppendLine("- Operator workflow evidence is stored outside the primary audit ZIP.");
+        builder.AppendLine("- The primary audit ZIP is the immutable payload; this sidecar records its SHA-256, manifest hash, checksum-file hash and archive-entry list hash.");
+        builder.AppendLine("- `audit-package-verify` and `audit-package-message` evidence is collected through documented CLI subprocesses after the primary payload is written.");
+        return builder.ToString();
+    }
+
+    private static async Task VerifyOperatorWorkflowSidecarAsync(
+        string zipPath,
+        string cleanRepositoryPath,
+        Dictionary<string, byte[]> payloadEntries,
+        AuditPackageConfiguration config,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var sidecarPath = GetOperatorWorkflowSidecarPath(zipPath);
+        if (!File.Exists(sidecarPath))
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-SIDECAR-MISSING",
+                $"Operator workflow sidecar was not found: {sidecarPath}",
+                ZipPath: sidecarPath);
+        }
+
+        using var extractRoot = TemporaryWorkspace.Create("Electron2D-AuditOperatorWorkflowVerify");
+        var sidecarEntries = ExtractAndReadZip(sidecarPath, extractRoot.Root);
+        VerifyOperatorWorkflowSidecarRequiredFiles(sidecarEntries, config);
+        VerifyChecksums(sidecarEntries);
+
+        var metadata = ReadOperatorWorkflowPayloadMetadata(sidecarEntries);
+        var payloadSha256 = await Sha256FileAsync(zipPath, cancellationToken).ConfigureAwait(false);
+        var archiveEntriesText = CreateArchiveEntriesText(payloadEntries);
+        var auditManifestSha256 = Sha256Bytes(payloadEntries["AUDIT-MANIFEST.md"]);
+        var sha256SumsSha256 = Sha256Bytes(payloadEntries["SHA256SUMS.txt"]);
+        var archiveEntriesSha256 = Sha256Bytes(Encoding.UTF8.GetBytes(archiveEntriesText));
+        var archiveEntries = payloadEntries.Keys.Order(StringComparer.Ordinal).ToArray();
+
+        VerifySidecarValue("payloadSha256", metadata.PayloadSha256, payloadSha256);
+        VerifySidecarTextFile(sidecarEntries, "payload/sha256.txt", payloadSha256 + "\n");
+        VerifySidecarValue("auditManifestSha256", metadata.AuditManifestSha256, auditManifestSha256);
+        VerifySidecarTextFile(sidecarEntries, "payload/AUDIT-MANIFEST.sha256", auditManifestSha256 + "\n");
+        VerifySidecarValue("sha256SumsSha256", metadata.Sha256SumsSha256, sha256SumsSha256);
+        VerifySidecarTextFile(sidecarEntries, "payload/SHA256SUMS.sha256", sha256SumsSha256 + "\n");
+        VerifySidecarValue("archiveEntriesSha256", metadata.ArchiveEntriesSha256, archiveEntriesSha256);
+        VerifySidecarTextFile(sidecarEntries, "payload/archive-entries.sha256", archiveEntriesSha256 + "\n");
+        VerifySidecarTextFile(sidecarEntries, "payload/archive-entries.txt", archiveEntriesText);
+        VerifySidecarSequence("archiveEntries", metadata.ArchiveEntries, archiveEntries);
+
+        var payloadFileName = Path.GetFileName(zipPath);
+        if (string.IsNullOrWhiteSpace(metadata.PayloadPath) ||
+            !string.Equals(Path.GetFileName(metadata.PayloadPath), payloadFileName, StringComparison.Ordinal))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Sidecar payload path does not point to {payloadFileName}.");
+        }
+
+        var verifyRoot = $"evidence/{config.TaskId}-{config.Iteration}/checks/audit-package-verify";
+        var messageRoot = $"evidence/{config.TaskId}-{config.Iteration}/checks/audit-package-message";
+        VerifyOperatorWorkflowEvidence(
+            sidecarEntries,
+            verifyRoot,
+            "audit-package-verify",
+            requiredCommandTokens:
+            [
+                "audit",
+                "package",
+                "verify",
+                "--zip",
+                "--baseline",
+                config.Baseline,
+                "--repo",
+                "<clean-repo-path>"
+            ],
+            forbiddenCommandText: cleanRepositoryPath,
+            requiredStdoutText: "E2D-BUILD-AUDIT-PACKAGE-VERIFIED",
+            expectedStdoutText: null);
+        VerifyOperatorWorkflowEvidence(
+            sidecarEntries,
+            messageRoot,
+            "audit-package-message",
+            requiredCommandTokens:
+            [
+                "audit",
+                "package",
+                "message",
+                "--zip"
+            ],
+            forbiddenCommandText: null,
+            requiredStdoutText: null,
+            expectedStdoutText: StripFirstMarkdownH1(Encoding.UTF8.GetString(payloadEntries[StaticAuditRequestArchivePath])));
+    }
+
+    private static string GetOperatorWorkflowSidecarPath(string zipPath)
+    {
+        return Path.ChangeExtension(zipPath, ".operator-workflow.zip");
+    }
+
+    private static void VerifyOperatorWorkflowSidecarRequiredFiles(
+        Dictionary<string, byte[]> sidecarEntries,
+        AuditPackageConfiguration config)
+    {
+        foreach (var required in new[]
+        {
+            "OPERATOR-WORKFLOW.md",
+            "payload/metadata.json",
+            "payload/sha256.txt",
+            "payload/AUDIT-MANIFEST.sha256",
+            "payload/SHA256SUMS.sha256",
+            "payload/archive-entries.sha256",
+            "payload/archive-entries.txt",
+            "SHA256SUMS.txt"
+        })
+        {
+            if (!sidecarEntries.ContainsKey(required))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SIDECAR-INCOMPLETE", $"Operator workflow sidecar is missing {required}.");
+            }
+        }
+
+        foreach (var root in new[]
+        {
+            $"evidence/{config.TaskId}-{config.Iteration}/checks/audit-package-verify",
+            $"evidence/{config.TaskId}-{config.Iteration}/checks/audit-package-message"
+        })
+        {
+            foreach (var required in new[]
+            {
+                "command.txt",
+                "stdout.txt",
+                "stderr.txt",
+                "exit-code.txt",
+                "duration-ms.txt",
+                "metadata.json",
+                "cwd.txt",
+                "env.json",
+                "timeout-seconds.txt"
+            })
+            {
+                var path = $"{root}/{required}";
+                if (!sidecarEntries.ContainsKey(path))
+                {
+                    throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SIDECAR-INCOMPLETE", $"Operator workflow sidecar is missing {path}.");
+                }
+            }
+        }
+    }
+
+    private static OperatorWorkflowPayloadMetadata ReadOperatorWorkflowPayloadMetadata(Dictionary<string, byte[]> sidecarEntries)
+    {
+        try
+        {
+            var metadata = JsonSerializer.Deserialize<OperatorWorkflowPayloadMetadata>(sidecarEntries["payload/metadata.json"], JsonReadOptions)
+                ?? throw OperatorWorkflowSidecarMismatch("Operator workflow payload metadata is empty.");
+            if (string.IsNullOrWhiteSpace(metadata.PayloadPath) ||
+                string.IsNullOrWhiteSpace(metadata.PayloadSha256) ||
+                string.IsNullOrWhiteSpace(metadata.AuditManifestSha256) ||
+                string.IsNullOrWhiteSpace(metadata.Sha256SumsSha256) ||
+                string.IsNullOrWhiteSpace(metadata.ArchiveEntriesSha256) ||
+                metadata.ArchiveEntries is null)
+            {
+                throw OperatorWorkflowSidecarMismatch("Operator workflow payload metadata is incomplete.");
+            }
+
+            return metadata;
+        }
+        catch (JsonException exception)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow payload metadata is invalid: {exception.Message}");
+        }
+    }
+
+    private static void VerifyOperatorWorkflowEvidence(
+        Dictionary<string, byte[]> sidecarEntries,
+        string root,
+        string expectedName,
+        string[] requiredCommandTokens,
+        string? forbiddenCommandText,
+        string? requiredStdoutText,
+        string? expectedStdoutText)
+    {
+        var commandText = ReadSidecarText(sidecarEntries, $"{root}/command.txt");
+        if (!ContainsCommandTokens(commandText, requiredCommandTokens))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow command evidence is not the documented command: {root}/command.txt.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(forbiddenCommandText) && ContainsPathText(commandText, forbiddenCommandText))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow command evidence contains a local repository path: {root}/command.txt.");
+        }
+
+        var metadata = ReadOperatorWorkflowEvidenceMetadata(sidecarEntries, root);
+        VerifySidecarValue("name", metadata.Name, expectedName);
+        VerifySidecarValue("fileName", metadata.FileName, "dotnet");
+        VerifySidecarValue("cwd", metadata.Cwd, ".");
+        VerifySidecarValue("executionMode", metadata.ExecutionMode, "subprocess");
+        if (!ContainsCommandTokens(string.Join("\n", metadata.Arguments), requiredCommandTokens))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow metadata arguments are not the documented command: {root}/metadata.json.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(forbiddenCommandText) &&
+            ContainsPathText(string.Join("\n", metadata.Arguments), forbiddenCommandText))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow metadata arguments contain a local repository path: {root}/metadata.json.");
+        }
+
+        if (metadata.ExpectedExitCode != 0 || metadata.ActualExitCode != 0)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow metadata exit codes must be 0: {root}/metadata.json.");
+        }
+
+        var (expectedExitCode, actualExitCode) = ReadExitCodeEvidence(sidecarEntries, $"{root}/exit-code.txt");
+        if (expectedExitCode != 0 || actualExitCode != 0)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow exit-code evidence must be 0: {root}/exit-code.txt.");
+        }
+
+        var timeoutSeconds = ReadIntEvidence(sidecarEntries, $"{root}/timeout-seconds.txt");
+        if (timeoutSeconds != OperatorWorkflowEvidenceTimeoutSeconds ||
+            metadata.TimeoutSeconds != OperatorWorkflowEvidenceTimeoutSeconds ||
+            metadata.TimeoutSeconds != timeoutSeconds)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow timeout evidence does not match {OperatorWorkflowEvidenceTimeoutSeconds} seconds: {root}.");
+        }
+
+        var durationMs = ReadDoubleEvidence(sidecarEntries, $"{root}/duration-ms.txt");
+        if (durationMs <= 0 ||
+            metadata.DurationMs <= 0 ||
+            Math.Abs(metadata.DurationMs - durationMs) > 0.001d)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow duration evidence is invalid: {root}.");
+        }
+
+        VerifySidecarValue("stdoutPath", metadata.StdoutPath, $"{root}/stdout.txt");
+        VerifySidecarValue("stderrPath", metadata.StderrPath, $"{root}/stderr.txt");
+        VerifySidecarValue("stdoutSha256", metadata.StdoutSha256, Sha256Bytes(sidecarEntries[$"{root}/stdout.txt"]));
+        VerifySidecarValue("stderrSha256", metadata.StderrSha256, Sha256Bytes(sidecarEntries[$"{root}/stderr.txt"]));
+
+        var stdout = ReadSidecarText(sidecarEntries, $"{root}/stdout.txt");
+        if (requiredStdoutText is not null && !stdout.Contains(requiredStdoutText, StringComparison.Ordinal))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow stdout does not contain the expected diagnostic: {root}/stdout.txt.");
+        }
+
+        if (expectedStdoutText is not null && !string.Equals(stdout, expectedStdoutText, StringComparison.Ordinal))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow stdout does not match the expected message body: {root}/stdout.txt.");
+        }
+    }
+
+    private static CheckEvidenceMetadata ReadOperatorWorkflowEvidenceMetadata(
+        Dictionary<string, byte[]> sidecarEntries,
+        string root)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<CheckEvidenceMetadata>(sidecarEntries[$"{root}/metadata.json"], JsonReadOptions)
+                ?? throw OperatorWorkflowSidecarMismatch($"Operator workflow evidence metadata is empty: {root}/metadata.json.");
+        }
+        catch (JsonException exception)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow evidence metadata is invalid: {root}/metadata.json ({exception.Message}).");
+        }
+    }
+
+    private static string CreateArchiveEntriesText(Dictionary<string, byte[]> entries)
+    {
+        return string.Concat(entries.Keys.Order(StringComparer.Ordinal).Select(path => path + "\n"));
+    }
+
+    private static void VerifySidecarTextFile(Dictionary<string, byte[]> sidecarEntries, string path, string expected)
+    {
+        var actual = ReadSidecarText(sidecarEntries, path);
+        if (!string.Equals(actual, expected, StringComparison.Ordinal))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow sidecar value does not match: {path}.");
+        }
+    }
+
+    private static string ReadSidecarText(Dictionary<string, byte[]> sidecarEntries, string path)
+    {
+        return Encoding.UTF8.GetString(sidecarEntries[path]);
+    }
+
+    private static void VerifySidecarValue(string name, string? actual, string expected)
+    {
+        if (!string.Equals(actual, expected, StringComparison.Ordinal))
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow sidecar {name} does not match the primary audit ZIP.");
+        }
+    }
+
+    private static void VerifySidecarSequence(string name, IReadOnlyList<string> actual, IReadOnlyList<string> expected)
+    {
+        if (actual.Count != expected.Count)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow sidecar {name} does not match the primary audit ZIP.");
+        }
+
+        for (var i = 0; i < expected.Count; i++)
+        {
+            if (!string.Equals(actual[i], expected[i], StringComparison.Ordinal))
+            {
+                throw OperatorWorkflowSidecarMismatch($"Operator workflow sidecar {name} does not match the primary audit ZIP.");
+            }
+        }
+    }
+
+    private static bool ContainsCommandTokens(string text, params string[] tokens)
+    {
+        var cursor = 0;
+        foreach (var token in tokens)
+        {
+            var index = text.IndexOf(token, cursor, StringComparison.Ordinal);
+            if (index < 0)
+            {
+                return false;
+            }
+
+            cursor = index + token.Length;
+        }
+
+        return true;
+    }
+
+    private static bool ContainsPathText(string text, string path)
+    {
+        var fullPath = Path.GetFullPath(path);
+        return text.Contains(fullPath, StringComparison.OrdinalIgnoreCase) ||
+            text.Replace('\\', '/').Contains(fullPath.Replace('\\', '/'), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static (int ExpectedExitCode, int ActualExitCode) ReadExitCodeEvidence(
+        Dictionary<string, byte[]> sidecarEntries,
+        string path)
+    {
+        var text = ReadSidecarText(sidecarEntries, path);
+        int? expected = null;
+        int? actual = null;
+        foreach (var line in text.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            if (line.StartsWith("expected: ", StringComparison.Ordinal))
+            {
+                expected = int.Parse(line["expected: ".Length..], System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else if (line.StartsWith("actual: ", StringComparison.Ordinal))
+            {
+                actual = int.Parse(line["actual: ".Length..], System.Globalization.CultureInfo.InvariantCulture);
+            }
+        }
+
+        if (expected is null || actual is null)
+        {
+            throw OperatorWorkflowSidecarMismatch($"Operator workflow exit-code evidence is invalid: {path}.");
+        }
+
+        return (expected.Value, actual.Value);
+    }
+
+    private static int ReadIntEvidence(Dictionary<string, byte[]> sidecarEntries, string path)
+    {
+        return int.Parse(ReadSidecarText(sidecarEntries, path).Trim(), System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static double ReadDoubleEvidence(Dictionary<string, byte[]> sidecarEntries, string path)
+    {
+        return double.Parse(ReadSidecarText(sidecarEntries, path).Trim(), System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static AuditPackageFailure OperatorWorkflowSidecarMismatch(string message)
+    {
+        return new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SIDECAR-MISMATCH", message);
     }
 
     private static CopiedTrxEvidenceFile[] CopyTrxFiles(
@@ -1254,7 +1985,13 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         builder.AppendLine("- `evidence/` files are archive-only and are not applied to the repository.");
         builder.AppendLine();
         builder.AppendLine("## Checks");
-        foreach (var check in config.Checks.OrderBy(check => check.Name, StringComparer.Ordinal))
+        var configuredChecks = config.Checks
+            .Select(check => new ManifestCheck(check.Name, check.ExpectedExitCode))
+            .Concat(ExtractEvidenceCheckNames(evidencePaths).Select(name => new ManifestCheck(name, 0)))
+            .GroupBy(check => check.Name, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .OrderBy(check => check.Name, StringComparer.Ordinal);
+        foreach (var check in configuredChecks)
         {
             builder.AppendLine($"- `{check.Name}` expected exit code `{check.ExpectedExitCode}`");
         }
@@ -1275,6 +2012,36 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         return builder.ToString();
+    }
+
+    private static void RefreshManifestAndChecksums(
+        Dictionary<string, byte[]> archiveFiles,
+        AuditPackageConfiguration config,
+        string nameStatus,
+        RestoreManifest restoreManifest,
+        string[] evidencePaths)
+    {
+        archiveFiles.Remove("AUDIT-MANIFEST.md");
+        archiveFiles.Remove("SHA256SUMS.txt");
+        var plannedPaths = archiveFiles.Keys
+            .Concat(["AUDIT-MANIFEST.md", "SHA256SUMS.txt"])
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        var manifest = CreateManifest(config, nameStatus, restoreManifest, plannedPaths, evidencePaths);
+        archiveFiles["AUDIT-MANIFEST.md"] = Encoding.UTF8.GetBytes(manifest);
+        archiveFiles["SHA256SUMS.txt"] = CreateChecksumFile(archiveFiles);
+    }
+
+    private static IEnumerable<string> ExtractEvidenceCheckNames(IEnumerable<string> evidencePaths)
+    {
+        foreach (var path in evidencePaths)
+        {
+            var match = Regex.Match(path, @"\Aevidence/[^/]+/checks/(?<name>[^/]+)/", RegexOptions.CultureInvariant);
+            if (match.Success)
+            {
+                yield return match.Groups["name"].Value;
+            }
+        }
     }
 
     private static void ValidateArchiveFiles(
@@ -1398,6 +2165,52 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return entries;
     }
 
+    private static Dictionary<string, byte[]> ReadZipEntries(string zipPath, string step)
+    {
+        var entries = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+        try
+        {
+            using var zipStream = File.OpenRead(zipPath);
+            using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read, leaveOpen: false, entryNameEncoding: Encoding.UTF8);
+            foreach (var entry in archive.Entries)
+            {
+                if (string.IsNullOrEmpty(entry.Name))
+                {
+                    throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-PATH-INVALID", $"Directory archive entries are not allowed: {entry.FullName}");
+                }
+
+                var normalized = NormalizeArchivePathForStep(entry.FullName, step);
+                if (ForbiddenPathPolicy.IsForbidden(normalized))
+                {
+                    throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-FORBIDDEN-PATH", $"Forbidden archive path: {normalized}");
+                }
+
+                if (!entries.TryAdd(normalized, ReadZipEntryBytes(entry)))
+                {
+                    throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-PATH-INVALID", $"Duplicate archive path: {normalized}");
+                }
+            }
+        }
+        catch (InvalidDataException exception)
+        {
+            throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-ZIP-INVALID", $"Audit ZIP is invalid: {exception.Message}");
+        }
+
+        return entries;
+    }
+
+    private static string NormalizeArchivePathForStep(string path, string step)
+    {
+        try
+        {
+            return AuditPath.NormalizeArchivePath(path);
+        }
+        catch (AuditPackageFailure failure)
+        {
+            throw new AuditPackageFailure(step, failure.Code, failure.Message);
+        }
+    }
+
     private static ZipCentralDirectoryEntry[] ReadZipCentralDirectory(string zipPath)
     {
         var bytes = File.ReadAllBytes(zipPath);
@@ -1484,6 +2297,71 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-ARCHIVE-INCOMPLETE", $"Archive is missing {required}.");
             }
         }
+    }
+
+    private static void VerifyMessageRequiredFiles(Dictionary<string, byte[]> entries)
+    {
+        foreach (var required in new[] { "AUDIT-REQUEST.md", "metadata/audit-package.input.json" })
+        {
+            if (!entries.ContainsKey(required))
+            {
+                throw new AuditPackageFailure("audit package message", "E2D-BUILD-AUDIT-ARCHIVE-INCOMPLETE", $"Archive is missing {required}.");
+            }
+        }
+    }
+
+    private static void ValidateAuditMessageFileName(string zipPath, AuditPackageConfiguration config)
+    {
+        var expected = $"{config.TaskId}-audit-{config.Iteration}.zip";
+        var actual = Path.GetFileName(zipPath);
+        if (!string.Equals(actual, expected, StringComparison.Ordinal))
+        {
+            throw new AuditPackageFailure(
+                "audit package message",
+                "E2D-BUILD-AUDIT-FILENAME-MISMATCH",
+                $"Audit ZIP filename must match metadata taskId and iteration: expected {expected}, got {actual}.");
+        }
+    }
+
+    private static string StripFirstMarkdownH1(string text)
+    {
+        var normalized = text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
+        if (normalized.StartsWith('\uFEFF'))
+        {
+            normalized = normalized[1..];
+        }
+
+        var firstLineEnd = normalized.IndexOf('\n');
+        var firstLine = firstLineEnd >= 0 ? normalized[..firstLineEnd] : normalized;
+        if (Regex.IsMatch(firstLine, @"\A#(?!#)\s+.+\z", RegexOptions.CultureInvariant))
+        {
+            normalized = firstLineEnd >= 0 ? normalized[(firstLineEnd + 1)..] : string.Empty;
+        }
+
+        return TrimLeadingBlankLines(normalized);
+    }
+
+    private static string TrimLeadingBlankLines(string text)
+    {
+        var start = 0;
+        while (start < text.Length)
+        {
+            var nextLineBreak = text.IndexOf('\n', start);
+            var line = nextLineBreak >= 0 ? text[start..nextLineBreak] : text[start..];
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                break;
+            }
+
+            if (nextLineBreak < 0)
+            {
+                return string.Empty;
+            }
+
+            start = nextLineBreak + 1;
+        }
+
+        return text[start..];
     }
 
     private static void VerifyChecksums(Dictionary<string, byte[]> entries)
@@ -1908,6 +2786,45 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return Path.IsPathRooted(path)
             ? Path.GetFullPath(path)
             : Path.GetFullPath(Path.Combine(root, path));
+    }
+
+    private static string ResolveBuildToolProjectArgument(string repoRoot)
+    {
+        var repositoryProjectPath = Path.Combine(repoRoot, "eng", "Electron2D.Build", "Electron2D.Build.csproj");
+        if (File.Exists(repositoryProjectPath))
+        {
+            return "eng/Electron2D.Build";
+        }
+
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            var candidate = Path.Combine(directory.FullName, "eng", "Electron2D.Build", "Electron2D.Build.csproj");
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new AuditPackageFailure(
+            "audit package",
+            "E2D-BUILD-AUDIT-OPERATOR-EVIDENCE-FAILED",
+            "Build tool project path was not found for operator workflow subprocess evidence.");
+    }
+
+    private static string GetRepositoryRelativePath(string repoRoot, string path, string step)
+    {
+        var relative = Path.GetRelativePath(Path.GetFullPath(repoRoot), Path.GetFullPath(path)).Replace('\\', '/');
+        if (relative.StartsWith("../", StringComparison.Ordinal) ||
+            string.Equals(relative, "..", StringComparison.Ordinal) ||
+            Path.IsPathRooted(relative))
+        {
+            throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-PATH-INVALID", $"Path must be inside the repository for portable evidence: {path}");
+        }
+
+        return relative;
     }
 
     private static bool MatchesAny(IEnumerable<string> patterns, string path)
@@ -2366,6 +3283,16 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return builder.ToString();
     }
 
+    private static double NormalizeDurationMs(TimeSpan duration)
+    {
+        return Math.Round(Math.Max(1d, duration.TotalMilliseconds), 3);
+    }
+
+    private static string FormatDurationMs(double durationMs)
+    {
+        return durationMs.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
     private static string Sha256File(string path)
     {
         using var stream = File.OpenRead(path);
@@ -2413,6 +3340,8 @@ internal sealed record AuditPackageOptions(
 
 internal sealed record AuditVerifyOptions(string ZipPath, string Baseline, string RepositoryPath);
 
+internal sealed record AuditMessageOptions(string ZipPath);
+
 internal sealed class AuditPackageConfiguration
 {
     public string TaskId { get; set; } = string.Empty;
@@ -2453,6 +3382,8 @@ internal sealed record EvidenceSourceFile(string SourcePath, string ArchivePath)
 
 internal sealed record PatchResult(string PatchText, string NameStatus);
 
+internal sealed record ManifestCheck(string Name, int ExpectedExitCode);
+
 internal sealed record RestoreManifest(
     string TaskId,
     string Iteration,
@@ -2475,17 +3406,32 @@ internal sealed record CheckEvidenceMetadata(
     string StderrPath,
     string StdoutSha256,
     string StderrSha256,
-    IReadOnlyList<TrxEvidenceFile> TrxFiles);
+    IReadOnlyList<TrxEvidenceFile> TrxFiles,
+    string? ExecutionMode = null);
 
 internal sealed record TrxEvidenceFile(string Path, string Sha256);
 
 internal sealed record CopiedTrxEvidenceFile(string SourceRelativePath, string SourceAbsolutePath, TrxEvidenceFile Metadata);
+
+internal sealed record OperatorWorkflowPayloadMetadata(
+    string PayloadPath,
+    string PayloadSha256,
+    string AuditManifestSha256,
+    string Sha256SumsSha256,
+    string ArchiveEntriesSha256,
+    IReadOnlyList<string> ArchiveEntries);
 
 internal sealed record ZipCentralDirectoryEntry(
     string Name,
     bool HasUtf8Flag,
     bool NameContainsNonAsciiBytes,
     int ExternalAttributes);
+
+internal sealed record CommandEvidenceResult(
+    int ExitCode,
+    string Stdout,
+    string Stderr,
+    TimeSpan Duration);
 
 internal sealed record ProcessExecutionResult(
     int ExitCode,
