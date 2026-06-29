@@ -82,16 +82,10 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         "previous verdict files",
         "verbatim preservation",
         "previous blockers closure",
-        "external baseline REQUIRED input",
-        "no baseline payload requirement",
-        "restored repo-owned model",
-        "no previous audit packages or detached historical checksums required",
-        "restore scanning",
-        "evidence scanning",
-        "operator workflow evidence",
-        "baseline availability evidence",
-        "audit package verify evidence",
-        "audit package message evidence",
+        "implementation content review",
+        "test coverage review",
+        "documentation review",
+        "task compliance review",
         "secret scanning",
         "scope scanning",
         "single final report",
@@ -110,13 +104,27 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
     {
+        if (args.Length >= 2 && args[1] == "submit")
+        {
+            try
+            {
+                await new AuditSubmitCommand().RunAsync(args, cancellationToken).ConfigureAwait(false);
+                return RepositoryBuildExitCodes.Success;
+            }
+            catch (AuditPackageFailure failure)
+            {
+                WriteError("audit", failure.Step, failure.Code, failure.Message, force: failure.Force, zipPath: failure.ZipPath);
+                return RepositoryBuildExitCodes.Failed;
+            }
+        }
+
         if (args.Length < 2 || args[1] != "package")
         {
             WriteError(
                 "audit",
                 "audit",
                 "E2D-BUILD-CLI-INVALID-ARGUMENTS",
-                "Expected: audit package ..., audit package verify ..., or audit package message ...");
+                "Expected: audit package ..., audit package verify ..., audit package message ..., or audit submit ...");
             return RepositoryBuildExitCodes.Failed;
         }
 
@@ -274,7 +282,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         Console.Out.Write(CreatePackageMessage(options, Directory.GetCurrentDirectory()));
     }
 
-    private static string CreatePackageMessage(AuditMessageOptions options, string repoRoot)
+    internal static string CreatePackageMessage(AuditMessageOptions options, string repoRoot)
     {
         if (!File.Exists(options.ZipPath))
         {
@@ -1559,6 +1567,10 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         var sanitized = text;
         var replacements = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var fullRepoRoot = Path.GetFullPath(repoRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        replacements[fullRepoRoot] = "<repo-root>";
+        replacements[fullRepoRoot.Replace('\\', '/')] = "<repo-root>";
+
         foreach (var trxFile in trxFiles)
         {
             var sourceRelativePath = trxFile.SourceRelativePath;

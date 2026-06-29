@@ -67,7 +67,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test, verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message."));
+                "Expected one of: test, verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 

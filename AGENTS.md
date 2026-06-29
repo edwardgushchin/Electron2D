@@ -95,6 +95,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 ## External Audit Packages
 - After `T-0228`, do not assemble external audit ZIP files manually. Use `dotnet run --project eng\Electron2D.Build -- audit package --task <task-id> --iteration rNN --baseline <sha> --config <path> --out .temp/audit`.
 - Before sending any package to an external auditor, verify it against a separate clean checkout at the requested baseline with `dotnet run --project eng\Electron2D.Build -- audit package verify --zip <path> --baseline <sha> --repo <clean-repo-path>`.
+- After successful restore verification, submit the package with the deterministic C# browser tool through the installed Codex Chrome Extension, not by hand: `dotnet run --project eng\Electron2D.Build -- audit submit --zip <path> --out docs\verdicts\<domain>\<task-id>-audit-rNN.md --browser-backend codex-chrome`. The submit command is the only supported browser path; do not use a separate login-check command, another browser backend, copied cookies, copied browser session files, or a repo-local submit skill.
 - If package creation or restore verification fails, do not send the audit package. Fix the source, configuration, checks, or evidence first and create a new verified package.
 - Audit packages, generated audit manifests, and raw evidence are local working artifacts. Do not stage or commit them unless a task explicitly changes test fixtures or repository-owned documentation for the audit package command.
 
