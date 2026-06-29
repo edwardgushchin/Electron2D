@@ -74,15 +74,15 @@ These instructions are global defaults for Codex agents across projects. They ap
 - A feature or runtime change is not complete until the domain document, automated tests, and code are aligned. If the project has no viable test toolchain, add and document one or mark implementation blocked before writing production code.
 
 ## Task Workflow
-- Active tasks live in local `TASKS.md`. This file is intentionally ignored by Git and must not be staged or pushed. Every substantive project change should still be represented there before implementation when the local file is present.
-- If local `TASKS.md` is missing, create it with a minimal generic task template in the repository's default human language before making substantive changes, but keep it local-only.
+- Active tasks live in tracked `TASKS.md`. Every substantive project change should still be represented there before implementation when the file is present.
+- If `TASKS.md` is missing, create it with a minimal generic task template in the repository's default human language before making substantive changes.
 - `CHANGELOG*` and `RELEASE-NOTES*` are local release draft files. They must stay ignored by Git and must not be staged, committed, pushed, or treated as canonical remote documentation.
 - Task IDs should be stable and sequential, for example `T-0001`. Use local ISO 8601 timestamps with timezone offsets.
 - Use clear statuses such as open, in progress, blocked, and accepted/closed. Mark only the task being worked on as in progress.
 - Each task should be zero-context for another agent: include priority, dependencies, linked specs/docs/source files, a detailed brief, acceptance criteria, subtasks when useful, and agent notes.
 - Acceptance criteria for code changes must explicitly require the domain document, automated tests, and final document update described in the Feature Gate.
 - Do not close or archive a task just because implementation is finished. Close/archive only after the user explicitly accepts it.
-- Completed tasks belong in local `completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. These archives are intentionally ignored by Git and must not be staged or pushed. Do not create one-file-per-task archives such as `completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
+- Completed tasks belong in tracked `completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. Do not create one-file-per-task archives such as `completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
 - `TASKS.md` must end with a `## ROADMAP` section after all active task sections. The roadmap is a local recommended execution order for existing `T-*` tasks; it must not create new task IDs, replace dependency lines, or be treated as an acceptance state. Update it whenever task dependencies, priorities, blockers, or user-directed sequencing changes.
 - Keep the roadmap concise and zero-context: group tasks into ordered phases, mention important blockers, and keep every listed task ID traceable to an active task section above it.
 
@@ -100,7 +100,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Audit packages, generated audit manifests, and raw evidence are local working artifacts. Do not stage or commit them unless a task explicitly changes test fixtures or repository-owned documentation for the audit package command.
 
 ## Development Diary
-- Every agent session that works in this repository must keep a local development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product domain documents, and must not be used as a future-work backlog. `dev-diary/` is intentionally ignored by Git and must not be staged or pushed.
+- Every agent session that works in this repository must keep a tracked development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product domain documents, and must not be used as a future-work backlog.
 - Use the local date for the file path: `dev-diary/YYYY/MM Месяц/DD-MM-YYYY.md`, for example `dev-diary/2026/06 Июнь/21-06-2026.md`. `YYYY` is the local four-digit year. Month directory names use Russian month names.
 - New daily diary files must start with `# Дневник разработки: DD-MM-YYYY`. If a historical daily file already exists without this heading or in an older format, keep it append-only and add new entries strictly at the tail; do not rewrite old entries only to migrate formatting.
 - Add or update a diary entry when starting work in the repository, after important decisions, discoveries, file changes, checks, commits, pushes, blockers, cleanup, scope changes, and before sending the final response.
