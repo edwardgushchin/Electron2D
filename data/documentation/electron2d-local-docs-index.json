@@ -385,7 +385,7 @@
       },
       {
         "path": "docs/release-management/AUDIT-REQUEST.md",
-        "sha256": "dc8e3bfbfe393937a80439f990925638ec905089a0e6c0b13fa693efc7e7605f"
+        "sha256": "384a200865975165abced6cc29fb032bf0f39967d1e6220b3aa2774c433dfee0"
       },
       {
         "path": "docs/release-management/api-compatibility.md",
@@ -393,7 +393,7 @@
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "b94d2b5b9471f034d869ff5534cca553d70a9fba9b4c3857c3fe863b64f53d66"
+        "sha256": "f419b4f4f2515842407550da6d286c80ebf6f0a9dcab77692bc686755e270b15"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -701,7 +701,7 @@
       },
       {
         "path": "docs/verdicts/release-management/t-0001-audit-r33.md",
-        "sha256": "3fe454127adcd282cb6ca94c5faa54db52e444b45b43795e928d9dd6b4bf0b08"
+        "sha256": "38a246db6621ffa1d30abc99ffc03cf334368ec1302ccdd9eb5edbd8840de2c8"
       },
       {
         "path": "docs/verdicts/release-management/t-0001-audit-r34.md",
@@ -782,6 +782,14 @@
       {
         "path": "docs/verdicts/release-management/t-0230-audit-r04.md",
         "sha256": "c2680651a6076acbcbbccdccb981a55e4fddda0fd1ee9d7dfd5e7785e819e727"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0233-audit-r01.md",
+        "sha256": "8907b7591bf9cde3ff396b7fade744498ec578d87af8b6306c5420bf7bf18c13"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0233-audit-r03.md",
+        "sha256": "03e0cda8b2be9df43577b3479d8de4e7c4cca21a67ce7d6e604873b4a36f7645"
       },
       {
         "path": "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
@@ -1077,6 +1085,8 @@
         "docs/verdicts/release-management/t-0230-audit-r01.md",
         "docs/verdicts/release-management/t-0230-audit-r03.md",
         "docs/verdicts/release-management/t-0230-audit-r04.md",
+        "docs/verdicts/release-management/t-0233-audit-r01.md",
+        "docs/verdicts/release-management/t-0233-audit-r03.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
@@ -1116,8 +1126,8 @@
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
-      "count": 205,
-      "sha256": "6db9d38b9692574a9e483d4d37fa44d1211830b8750e2e1cec2455b4c8a6b9e6"
+      "count": 207,
+      "sha256": "2352b3794c2c72ab18244bf8b35387adc3fef74e431678c0ba1137c653a979ee"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -1129,7 +1139,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "53df8f3f60a0134f7bf89449a8527843b7ea557ab3403d7a7344eb97f4b85562",
+    "sourceDigest": "e448ff14d1084e22ef709c15a4c3ae0be095c16a797d253bbc826c1683e093fd",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

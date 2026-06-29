@@ -2467,6 +2467,85 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public void AuditWorkflowDocumentsSeparateAgentRequestAndGoalPromptResponsibilities()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var agents = File.ReadAllText(
+            Path.Combine(repositoryRoot, "AGENTS.md"),
+            Encoding.UTF8);
+        var request = File.ReadAllText(
+            Path.Combine(repositoryRoot, "docs", "release-management", "AUDIT-REQUEST.md"),
+            Encoding.UTF8);
+        var domainDocument = File.ReadAllText(
+            Path.Combine(repositoryRoot, "docs", "release-management", "audit-package.md"),
+            Encoding.UTF8);
+        var goalPrompt = File.ReadAllText(
+            Path.Combine(repositoryRoot, ".codex", "prompts", "goal-task-loop.md"),
+            Encoding.UTF8);
+
+        Assert.Contains("`AGENTS.md` задаёт правила работы агента", domainDocument, StringComparison.Ordinal);
+        Assert.Contains("`docs/release-management/AUDIT-REQUEST.md` является только текстом для внешнего аудитора", domainDocument, StringComparison.Ordinal);
+        Assert.Contains("`.codex/prompts/goal-task-loop.md` является локальным prompt-ом оркестратора", domainDocument, StringComparison.Ordinal);
+
+        Assert.Contains("docs/release-management/audit-package.md", agents, StringComparison.Ordinal);
+        Assert.Contains("VERDICT: ACCEPT", agents, StringComparison.Ordinal);
+        Assert.Contains("audit submit", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("iframe[title=\"internal://deep-research\"]", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("Копировать ответ", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("переиспользуй вкладку", agents, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("закрой", agents, StringComparison.OrdinalIgnoreCase);
+
+        Assert.DoesNotContain("Chrome", request, StringComparison.Ordinal);
+        Assert.DoesNotContain("cookies", request, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("operator workflow", request, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("операторск", request, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("контрольные суммы", request, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("локальная предварительная проверка", request, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("ручное скачивание", request, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("вклад", request, StringComparison.OrdinalIgnoreCase);
+
+        Assert.True(goalPrompt.Length <= 4000, $"goal-task-loop.md must be no longer than 4000 characters, but was {goalPrompt.Length}.");
+        foreach (var marker in new[] { "PREFLIGHT", "WORKER", "CHECKS", "PACKAGE", "VERIFY", "SUBMIT", "VERDICT", "ACCEPT/DONE" })
+        {
+            Assert.Contains(marker, goalPrompt, StringComparison.Ordinal);
+        }
+
+        Assert.Contains("docs/release-management/audit-package.md", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("TASKS.md", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("дневник", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("audit submit", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("VERDICT: ACCEPT", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("Conventional Commit", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("--browser-backend codex-chrome", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("Готовый результат принимает только сохранённый файл `--out`", goalPrompt, StringComparison.Ordinal);
+        var goalPromptWithoutBackendFlag = goalPrompt.Replace("--browser-backend codex-chrome", string.Empty, StringComparison.Ordinal);
+        Assert.DoesNotContain("eng\\Electron2D.Build", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("docs\\verdicts", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("browser", goalPromptWithoutBackendFlag, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("браузер", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Глубокое исследование", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("прикреп", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("обновление страницы", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("экспорт Markdown", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("собственной вкладки", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("чужие вкладки", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("из страницы", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("предпросмотр", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("истори", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("prompt examples", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Переиспользуй вкладку", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("старые лишние", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("chatgpt.com/g/", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Чат:", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("iframe[title=\"internal://deep-research\"]", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("Копировать ответ", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("общий DOM", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("обновляй страницу", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("В TASKS/дневник не пиши", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("<task-id> = T-", goalPrompt, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AuditPackageDocumentationRequiresMessageDeepResearchAndAttachedPackage()
     {
         var text = File.ReadAllText(
