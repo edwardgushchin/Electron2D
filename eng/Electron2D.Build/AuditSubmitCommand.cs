@@ -147,6 +147,11 @@ internal sealed class AuditSubmitCommand
         var projectUrl = values.TryGetValue("--project-url", out var configuredProjectUrl) && !string.IsNullOrWhiteSpace(configuredProjectUrl)
             ? configuredProjectUrl
             : DefaultProjectUrl;
+        if (downloadReportOnly && !AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(projectUrl))
+        {
+            throw InvalidArguments("--download-report-only requires --project-url to be a concrete ChatGPT conversation URL containing /c/<conversation-id>.");
+        }
+
         var screenshotsDirectory = values.TryGetValue("--screenshots-dir", out var configuredScreenshotsDirectory) && !string.IsNullOrWhiteSpace(configuredScreenshotsDirectory)
             ? configuredScreenshotsDirectory
             : null;
@@ -342,6 +347,32 @@ internal sealed class AuditSubmitCommand
     }
 }
 
+internal static class AuditSubmitUrlRules
+{
+    public static bool IsConcreteChatGptConversationUrl(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+            !string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase) ||
+            !string.Equals(uri.Host, "chatgpt.com", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var segments = uri.AbsolutePath
+            .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        for (var index = 0; index < segments.Length - 1; index++)
+        {
+            if (string.Equals(segments[index], "c", StringComparison.Ordinal) &&
+                !string.IsNullOrWhiteSpace(segments[index + 1]))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 internal static class AuditSubmitReportExtractor
 {
     private static readonly string[] RequiredFinalReportHeadings =
@@ -355,24 +386,37 @@ internal static class AuditSubmitReportExtractor
 
     public static AuditSubmitReportExtraction Extract(IReadOnlyList<AuditSubmitReportCandidate> reportCandidates, bool generationComplete = true)
     {
-        if (!generationComplete || reportCandidates.Count != 1)
+        if (!generationComplete)
         {
-            return new AuditSubmitReportExtraction(false, null);
+            return Invalid("Report generation is still active; a final Markdown export is not ready.");
+        }
+
+        if (reportCandidates.Count != 1)
+        {
+            return Invalid($"Expected exactly one downloaded Markdown report candidate, but found {reportCandidates.Count}.");
         }
 
         var candidate = reportCandidates[0];
         if (candidate.Source != AuditSubmitReportCandidateSource.OpenedReportCard)
         {
-            return new AuditSubmitReportExtraction(false, null);
+            return Invalid("The downloaded Markdown candidate must come from AuditSubmitReportCandidateSource.OpenedReportCard.");
         }
 
         var report = NormalizeNewlines(candidate.Text).Trim();
-        if (string.IsNullOrWhiteSpace(report) ||
-            report.StartsWith("Вы сказали", StringComparison.OrdinalIgnoreCase) ||
-            report.StartsWith("You said", StringComparison.OrdinalIgnoreCase) ||
-            LooksLikePromptTemplate(report))
+        if (string.IsNullOrWhiteSpace(report))
         {
-            return new AuditSubmitReportExtraction(false, null);
+            return Invalid("The downloaded Markdown report is empty.");
+        }
+
+        if (report.StartsWith("Вы сказали", StringComparison.OrdinalIgnoreCase) ||
+            report.StartsWith("You said", StringComparison.OrdinalIgnoreCase))
+        {
+            return Invalid("The downloaded Markdown report looks like a prompt echo, not the final audit report.");
+        }
+
+        if (LooksLikePromptTemplate(report))
+        {
+            return Invalid("The downloaded Markdown report looks like the prompt template, not the final audit report.");
         }
 
         var firstLine = report
@@ -380,17 +424,27 @@ internal static class AuditSubmitReportExtractor
             .FirstOrDefault(line => !string.IsNullOrWhiteSpace(line));
         if (firstLine is "VERDICT: ACCEPT" or "VERDICT: NEEDS_FIXES")
         {
-            if (firstLine == "VERDICT: ACCEPT" && (!AcceptHasNoNumberedBlockers(report) || !ClosureDecisionAllowsClose(report)))
+            if (firstLine == "VERDICT: ACCEPT" && !AcceptHasNoNumberedBlockers(report))
             {
-                return new AuditSubmitReportExtraction(false, null);
+                return Invalid("VERDICT: ACCEPT report contains a numbered blocker in BLOCKERS.");
             }
 
-            return HasRequiredFinalReportHeadings(report)
-                ? new AuditSubmitReportExtraction(true, report)
-                : new AuditSubmitReportExtraction(false, null);
+            if (firstLine == "VERDICT: ACCEPT" && !ClosureDecisionAllowsClose(report))
+            {
+                return Invalid("VERDICT: ACCEPT report CLOSURE_DECISION does not explicitly allow task closure.");
+            }
+
+            return TryValidateRequiredFinalReportHeadings(report, out var headingFailure)
+                ? new AuditSubmitReportExtraction(true, report, null)
+                : Invalid(headingFailure);
         }
 
-        return new AuditSubmitReportExtraction(false, null);
+        return Invalid("The first non-empty line must be exactly VERDICT: ACCEPT or VERDICT: NEEDS_FIXES.");
+    }
+
+    private static AuditSubmitReportExtraction Invalid(string reason)
+    {
+        return new AuditSubmitReportExtraction(false, null, reason);
     }
 
     private static bool LooksLikePromptTemplate(string report)
@@ -401,7 +455,7 @@ internal static class AuditSubmitReportExtractor
             report.Contains("Which files, tests, documentation, and evidence were reviewed", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool HasRequiredFinalReportHeadings(string report)
+    private static bool TryValidateRequiredFinalReportHeadings(string report, out string failureReason)
     {
         var lines = report.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         var previousIndex = -1;
@@ -410,12 +464,14 @@ internal static class AuditSubmitReportExtractor
             var index = Array.FindIndex(lines, previousIndex + 1, line => string.Equals(line, heading, StringComparison.Ordinal));
             if (index < 0)
             {
+                failureReason = $"The downloaded Markdown report is missing required heading {heading} after the previous heading.";
                 return false;
             }
 
             previousIndex = index;
         }
 
+        failureReason = string.Empty;
         return true;
     }
 
@@ -460,6 +516,8 @@ internal static class AuditSubmitReportExtractor
             @"\bclosure\s+approved\b",
             @"\bclose\s+the\s+task\b",
             @"задач[ау]\s+можно\s+закрыт[ьи]\b",
+            @"изменение\s+можно\s+закрыт[ьи]\b",
+            @"изменение\s+можно\s+закрывать\b",
             @"задача\s+может\s+быть\s+закрыта\b",
             @"закрытие\s+задачи\s+разрешено\b",
             @"разрешено\s+закрыть\s+задачу\b"
@@ -587,7 +645,7 @@ internal enum AuditSubmitPollingReason
 
 internal readonly record struct AuditSubmitPollingDecision(AuditSubmitPollingAction Action, string? Report, AuditSubmitPollingReason Reason = AuditSubmitPollingReason.None);
 
-internal sealed record AuditSubmitReportExtraction(bool Ready, string? Report);
+internal sealed record AuditSubmitReportExtraction(bool Ready, string? Report, string? FailureReason);
 
 internal enum AuditSubmitReportCandidateSource
 {

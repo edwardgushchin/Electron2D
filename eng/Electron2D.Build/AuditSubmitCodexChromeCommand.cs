@@ -27,6 +27,7 @@ using System.Globalization;
 using System.IO.Pipes;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Electron2D.Build;
 
@@ -34,6 +35,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
 {
     private static readonly TimeSpan UiActionTimeout = TimeSpan.FromSeconds(45);
     private static readonly TimeSpan ReportHydrationDelay = TimeSpan.FromSeconds(10);
+    private static readonly Regex AuditZipFileNameExpression = new(
+        @"^(?<task>T-\d+)-audit-(?<iteration>r\d+)\.zip$",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
     public async Task<string> SubmitAndWaitForReportAsync(
         AuditSubmitOptions options,
@@ -73,6 +77,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 await ClickSendAsync(browser, tabId, linked.Token).ConfigureAwait(false);
                 await screenshots.CaptureAsync(browser, tabId, "sent", linked.Token).ConfigureAwait(false);
                 await WaitForConversationMessagesAsync(browser, tabId, messageCountBeforeSend + 1, TimeSpan.FromMinutes(2), linked.Token).ConfigureAwait(false);
+                var conversationUrl = await WaitForConcreteConversationUrlAsync(browser, tabId, TimeSpan.FromSeconds(30), linked.Token).ConfigureAwait(false);
+                await WriteConversationUrlSidecarAsync(repoRoot, zipPath, conversationUrl, linked.Token).ConfigureAwait(false);
 
                 var report = await WaitForReportAsync(browser, tabId, options, screenshots, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false);
                 completed = true;
@@ -513,7 +519,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             var prefix = $"deep-target-{index:00}-{SanitizeDumpFileName(target.Url)}";
             try
             {
-                await browser.AttachTargetAsync(tabId, target.TargetId, cancellationToken).ConfigureAwait(false);
+                await browser.AttachTargetWithRecoveryAsync(tabId, target.TargetId, cancellationToken).ConfigureAwait(false);
                 attached = true;
                 await browser.ExecuteCdpOnTargetAsync(tabId, target.TargetId, "Page.enable", EmptyObject(), TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
                 await browser.ExecuteCdpOnTargetAsync(tabId, target.TargetId, "Runtime.enable", EmptyObject(), TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
@@ -1173,7 +1179,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
         throw new AuditSubmitCodexChromeException(
             "E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID",
-            "The downloaded Markdown report does not match the strict final report contract.");
+            string.IsNullOrWhiteSpace(extraction.FailureReason)
+                ? "The downloaded Markdown report does not match the strict final report contract."
+                : $"The downloaded Markdown report does not match the strict final report contract: {extraction.FailureReason}");
     }
 
     private static async Task<AuditSubmitPollingDecision> CapturePollingDecisionAsync(
@@ -1245,6 +1253,94 @@ internal sealed class AuditSubmitCodexChromeAutomation
         return currentMessageCount >= Math.Max(0, minimumMessageCount);
     }
 
+    private static async Task<string> ReadCurrentLocationHrefAsync(
+        AuditSubmitCodexChromeClient browser,
+        long tabId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var value = await browser.EvaluateAsync(
+                tabId,
+                "(() => location.href)()",
+                TimeSpan.FromSeconds(10),
+                cancellationToken).ConfigureAwait(false);
+            return value.ValueKind == JsonValueKind.String
+                ? value.GetString() ?? string.Empty
+                : string.Empty;
+        }
+        catch (AuditSubmitCodexChromeException)
+        {
+            return string.Empty;
+        }
+    }
+
+    private static async Task<string> WaitForConcreteConversationUrlAsync(
+        AuditSubmitCodexChromeClient browser,
+        long tabId,
+        TimeSpan timeout,
+        CancellationToken cancellationToken)
+    {
+        var deadline = DateTimeOffset.UtcNow + timeout;
+        var lastUrl = string.Empty;
+        while (DateTimeOffset.UtcNow < deadline)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            lastUrl = await ReadCurrentLocationHrefAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+            if (AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(lastUrl))
+            {
+                return lastUrl;
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
+        }
+
+        throw new AuditSubmitCodexChromeException(
+            "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING",
+            string.IsNullOrWhiteSpace(lastUrl)
+                ? "ChatGPT did not expose a concrete conversation URL after the audit submit message was sent."
+                : $"ChatGPT did not expose a concrete conversation URL after the audit submit message was sent. Last URL: {lastUrl}");
+    }
+
+    private static async Task WriteConversationUrlSidecarAsync(
+        string repoRoot,
+        string zipPath,
+        string conversationUrl,
+        CancellationToken cancellationToken)
+    {
+        RequireConcreteConversationUrlForSidecar(conversationUrl);
+
+        var fileName = Path.GetFileName(zipPath);
+        var match = AuditZipFileNameExpression.Match(fileName);
+        if (!match.Success)
+        {
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING",
+                $"Cannot derive task and iteration for the conversation URL sidecar from audit ZIP name: {fileName}");
+        }
+
+        var taskId = match.Groups["task"].Value.ToUpperInvariant();
+        var iteration = match.Groups["iteration"].Value.ToLowerInvariant();
+        var directory = Path.Combine(repoRoot, ".temp", "audit", taskId);
+        Directory.CreateDirectory(directory);
+        var path = Path.Combine(directory, $"conversation-url-{iteration}.txt");
+        await File.WriteAllTextAsync(
+            path,
+            conversationUrl.Trim() + Environment.NewLine,
+            new UTF8Encoding(encoderShouldEmitUTF8Identifier: false),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private static void RequireConcreteConversationUrlForSidecar(string conversationUrl)
+    {
+        if (!AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(conversationUrl))
+        {
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING",
+                "Cannot write audit submit conversation URL sidecar because ChatGPT did not provide a concrete /c/<conversation-id> URL.");
+        }
+    }
+
     private static async Task<bool> WaitForDeepResearchFrameContentAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
@@ -1295,6 +1391,18 @@ internal sealed class AuditSubmitCodexChromeAutomation
         await WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
         _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
 
+        var frameResult = await DownloadReportCandidatesFromDeepResearchFrameAsync(
+            browser,
+            tabId,
+            screenshots,
+            downloadsDirectory,
+            includeUserDownloadsFallback,
+            cancellationToken).ConfigureAwait(false);
+        if (frameResult.SurfaceSelected)
+        {
+            return frameResult.Candidates;
+        }
+
         var targetResult = await DownloadReportCandidatesFromDeepResearchTargetAsync(
             browser,
             tabId,
@@ -1306,18 +1414,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         if (targetResult.SurfaceSelected)
         {
             return targetResult.Candidates;
-        }
-
-        var frameResult = await DownloadReportCandidatesFromDeepResearchFrameAsync(
-            browser,
-            tabId,
-            screenshots,
-            downloadsDirectory,
-            includeUserDownloadsFallback,
-            cancellationToken).ConfigureAwait(false);
-        if (frameResult.SurfaceSelected)
-        {
-            return frameResult.Candidates;
         }
 
         return await ClickReportExportAndReadDownloadedMarkdownAsync(
@@ -1415,8 +1511,14 @@ internal sealed class AuditSubmitCodexChromeAutomation
         bool includeUserDownloadsFallback,
         CancellationToken cancellationToken)
     {
+        var hasVisibleIframe = await browser.EvaluateBoolAsync(tabId, DeepResearchIframeVisibleExpression, TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
+        if (!hasVisibleIframe)
+        {
+            return AuditSubmitReportCandidateResult.NoSurface;
+        }
+
         var frame = await TryCreateDeepResearchFrameContextAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        if (frame is null)
+        if (!CanUseDeepResearchFrameSurface(hasVisibleIframe, frame is not null) || frame is null)
         {
             return AuditSubmitReportCandidateResult.NoSurface;
         }
@@ -1435,6 +1537,11 @@ internal sealed class AuditSubmitCodexChromeAutomation
         return new AuditSubmitReportCandidateResult(true, candidates);
     }
 
+    private static bool CanUseDeepResearchFrameSurface(bool hasVisibleIframe, bool hasFrameContext)
+    {
+        return hasVisibleIframe && hasFrameContext;
+    }
+
     private static async Task<AuditSubmitReportCandidateResult> DownloadReportCandidatesFromDeepResearchTargetAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
@@ -1450,7 +1557,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
             return AuditSubmitReportCandidateResult.NoSurface;
         }
 
-        await browser.AttachTargetAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
+        await browser.AttachTargetWithRecoveryAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
+        await browser.EnsureTargetAttachedForReadAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
         try
         {
             await InitializeDeepResearchTargetAsync(browser, tabId, targetId, cancellationToken).ConfigureAwait(false);
@@ -1475,8 +1583,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 downloadsDirectory,
                 includeUserDownloadsFallback,
                 AuditSubmitExportSurfaceScope.DeepResearchTarget,
-                () => browser.EvaluateBoolOnTargetAsync(tabId, targetId, ReportExportButtonClickExpression, TimeSpan.FromSeconds(10), cancellationToken),
-                () => browser.EvaluateBoolOnTargetAsync(tabId, targetId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken),
+                () => browser.EvaluateBoolOnTargetAsync(tabId, targetId, ReportExportButtonClickExpression, TimeSpan.FromSeconds(10), cancellationToken, allowTransientRecovery: false),
+                () => browser.EvaluateBoolOnTargetAsync(tabId, targetId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken, allowTransientRecovery: false),
                 () => Task.FromResult(false),
                 cancellationToken).ConfigureAwait(false);
             return new AuditSubmitReportCandidateResult(true, candidates);
@@ -1511,8 +1619,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
             downloadsDirectory,
             includeUserDownloadsFallback,
             AuditSubmitExportSurfaceScope.DeepResearchTargetFrame,
-            () => browser.EvaluateBoolInContextOnTargetAsync(tabId, targetId, context.Value.ContextId, ReportExportButtonClickExpression, TimeSpan.FromSeconds(10), cancellationToken),
-            () => browser.EvaluateBoolInContextOnTargetAsync(tabId, targetId, context.Value.ContextId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken),
+            () => browser.EvaluateBoolInContextOnTargetAsync(tabId, targetId, context.Value.ContextId, ReportExportButtonClickExpression, TimeSpan.FromSeconds(10), cancellationToken, allowTransientRecovery: false),
+            () => browser.EvaluateBoolInContextOnTargetAsync(tabId, targetId, context.Value.ContextId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken, allowTransientRecovery: false),
             () => Task.FromResult(false),
             cancellationToken).ConfigureAwait(false);
         return new AuditSubmitReportCandidateResult(true, candidates);
@@ -1601,7 +1709,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             var attached = false;
             try
             {
-                await browser.AttachTargetAsync(tabId, target.TargetId, cancellationToken).ConfigureAwait(false);
+                await browser.AttachTargetWithRecoveryAsync(tabId, target.TargetId, cancellationToken).ConfigureAwait(false);
                 attached = true;
                 await InitializeDeepResearchTargetAsync(browser, tabId, target.TargetId, cancellationToken).ConfigureAwait(false);
                 var rootReady = await browser.EvaluateBoolOnTargetAsync(tabId, target.TargetId, DeepResearchReportTargetReadyExpression, TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
@@ -1979,7 +2087,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeScreenshotRecorder screenshots,
         CancellationToken cancellationToken)
     {
-        var point = await browser.EvaluatePointAsync(tabId, RateLimitDialogDismissPointExpression, TimeSpan.FromSeconds(5), cancellationToken, allowTransientRecovery: false).ConfigureAwait(false);
+        var point = await browser.EvaluatePointAsync(tabId, RateLimitDialogDismissPointExpression, TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
         if (point is null)
         {
             return false;
@@ -2772,6 +2880,34 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
 
     public async Task AttachTargetAsync(long tabId, string targetId, CancellationToken cancellationToken)
     {
+        await AttachTargetCoreAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task AttachTargetWithRecoveryAsync(long tabId, string targetId, CancellationToken cancellationToken)
+    {
+        for (var attempt = 0; attempt < 3; attempt++)
+        {
+            try
+            {
+                await AttachTargetCoreAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
+                return;
+            }
+            catch (AuditSubmitCodexChromeException ex) when (attempt < 2 && IsRecoverableCdpFailure(ex))
+            {
+                await ReattachCdpAsync(tabId, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        throw new InvalidOperationException("Target attach retry loop ended without returning or throwing a protocol error.");
+    }
+
+    public async Task EnsureTargetAttachedForReadAsync(long tabId, string targetId, CancellationToken cancellationToken)
+    {
+        await AttachTargetWithRecoveryAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task AttachTargetCoreAsync(long tabId, string targetId, CancellationToken cancellationToken)
+    {
         await RequestAsync(
             "attachTarget",
             new Dictionary<string, object?>
@@ -2871,18 +3007,31 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         string method,
         Dictionary<string, object?> commandParameters,
         TimeSpan timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool allowTransientRecovery = true)
     {
-        return await ExecuteCdpCoreAsync(
-            new Dictionary<string, object?>
+        for (var attempt = 0; attempt < 3; attempt++)
+        {
+            try
             {
-                ["tabId"] = tabId,
-                ["targetId"] = targetId
-            },
-            method,
-            commandParameters,
-            timeout,
-            cancellationToken).ConfigureAwait(false);
+                return await ExecuteCdpCoreAsync(
+                    new Dictionary<string, object?>
+                    {
+                        ["tabId"] = tabId,
+                        ["targetId"] = targetId
+                    },
+                    method,
+                    commandParameters,
+                    timeout,
+                    cancellationToken).ConfigureAwait(false);
+            }
+            catch (AuditSubmitCodexChromeException ex) when (attempt < 2 && allowTransientRecovery && IsRecoverableCdpFailure(ex))
+            {
+                await EnsureTargetAttachedForReadAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        throw new InvalidOperationException("Target CDP retry loop ended without returning or throwing a protocol error.");
     }
 
     private async Task<JsonElement> ExecuteCdpCoreAsync(
@@ -3005,7 +3154,8 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         string targetId,
         string expression,
         TimeSpan timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool allowTransientRecovery = true)
     {
         var result = await ExecuteCdpOnTargetAsync(
             tabId,
@@ -3018,7 +3168,8 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
                 ["awaitPromise"] = true
             },
             timeout,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken,
+            allowTransientRecovery).ConfigureAwait(false);
         if (result.TryGetProperty("exceptionDetails", out var exceptionDetails))
         {
             throw new AuditSubmitCodexChromeException(
@@ -3041,7 +3192,8 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         int contextId,
         string expression,
         TimeSpan timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool allowTransientRecovery = true)
     {
         var result = await ExecuteCdpOnTargetAsync(
             tabId,
@@ -3055,7 +3207,8 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
                 ["awaitPromise"] = true
             },
             timeout,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken,
+            allowTransientRecovery).ConfigureAwait(false);
         if (result.TryGetProperty("exceptionDetails", out var exceptionDetails))
         {
             throw new AuditSubmitCodexChromeException(
@@ -3113,9 +3266,10 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         string targetId,
         string expression,
         TimeSpan timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool allowTransientRecovery = true)
     {
-        var value = await EvaluateOnTargetAsync(tabId, targetId, expression, timeout, cancellationToken).ConfigureAwait(false);
+        var value = await EvaluateOnTargetAsync(tabId, targetId, expression, timeout, cancellationToken, allowTransientRecovery).ConfigureAwait(false);
         return value.ValueKind == JsonValueKind.True;
     }
 
@@ -3125,9 +3279,10 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         int contextId,
         string expression,
         TimeSpan timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool allowTransientRecovery = true)
     {
-        var value = await EvaluateInContextOnTargetAsync(tabId, targetId, contextId, expression, timeout, cancellationToken).ConfigureAwait(false);
+        var value = await EvaluateInContextOnTargetAsync(tabId, targetId, contextId, expression, timeout, cancellationToken, allowTransientRecovery).ConfigureAwait(false);
         return value.ValueKind == JsonValueKind.True;
     }
 

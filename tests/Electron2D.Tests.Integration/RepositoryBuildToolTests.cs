@@ -2170,6 +2170,35 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
     }
 
+    [Theory]
+    [InlineData("https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project")]
+    [InlineData("https://chatgpt.com/")]
+    [InlineData("https://chatgpt.com/g/example/c/")]
+    [InlineData("https://example.com/c/6a439d82-c834-83eb-8f49-2144db57f0c7")]
+    public async Task AuditSubmitDownloadReportOnlyRejectsNonConversationUrlBeforeBrowserLaunch(string projectUrl)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-download-report-conversation-url");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--download-report-only",
+            "--project-url",
+            projectUrl,
+            "--out",
+            "report.md",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
+        using var diagnostic = ReadFirstDiagnostic(submit);
+        Assert.Contains("/c/<conversation-id>", diagnostic.RootElement.GetProperty("message").GetString(), StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task AuditSubmitDownloadReportOnlyValidatesDownloadedMarkdown()
     {
@@ -2403,6 +2432,124 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public void AuditSubmitDownloadCandidatesPrefersCurrentPageFrameBeforeGlobalTargets()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        var methodBody = ExtractMethodBody(source, "private static async Task<AuditSubmitReportCandidate[]> DownloadReportCandidatesAsync");
+
+        Assert.Contains("DownloadReportCandidatesFromDeepResearchFrameAsync", methodBody, StringComparison.Ordinal);
+        Assert.Contains("DownloadReportCandidatesFromDeepResearchTargetAsync", methodBody, StringComparison.Ordinal);
+        Assert.True(
+            methodBody.IndexOf("DownloadReportCandidatesFromDeepResearchFrameAsync", StringComparison.Ordinal) <
+            methodBody.IndexOf("DownloadReportCandidatesFromDeepResearchTargetAsync", StringComparison.Ordinal),
+            "Current-page Deep Research frame must be tried before global Target.getTargets fallback.");
+    }
+
+    [Fact]
+    public void AuditSubmitAllowsPageFallbackWhenVisibleIframeHasNoFrameContext()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        var methodBody = ExtractMethodBody(source, "private static async Task<AuditSubmitReportCandidateResult> DownloadReportCandidatesFromDeepResearchFrameAsync");
+
+        Assert.Contains("DeepResearchIframeVisibleExpression", methodBody, StringComparison.Ordinal);
+        Assert.Contains("TryCreateDeepResearchFrameContextAsync", methodBody, StringComparison.Ordinal);
+        Assert.Contains("frame is null", methodBody, StringComparison.Ordinal);
+        Assert.Contains("return AuditSubmitReportCandidateResult.NoSurface;", methodBody, StringComparison.Ordinal);
+        Assert.DoesNotContain("new AuditSubmitReportCandidateResult(true, [])", methodBody, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditSubmitFrameSurfaceDecisionAllowsFallbackWhenContextIsMissing()
+    {
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: false, hasFrameContext: false));
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: false, hasFrameContext: true));
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: true, hasFrameContext: false));
+        Assert.True(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: true, hasFrameContext: true));
+    }
+
+    [Fact]
+    public void AuditSubmitWritesConversationUrlSidecarAfterSend()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        var submitBody = ExtractMethodBody(source, "public async Task<string> SubmitAndWaitForReportAsync");
+
+        Assert.Contains("WriteConversationUrlSidecarAsync", source, StringComparison.Ordinal);
+        Assert.Contains("ReadCurrentLocationHrefAsync", source, StringComparison.Ordinal);
+        Assert.Contains("WaitForConcreteConversationUrlAsync", source, StringComparison.Ordinal);
+        Assert.Contains("conversation-url-", source, StringComparison.Ordinal);
+        Assert.True(
+            submitBody.IndexOf("ClickSendAsync", StringComparison.Ordinal) <
+            submitBody.IndexOf("WaitForConcreteConversationUrlAsync", StringComparison.Ordinal),
+            "The recovery URL must be read only after the submit action.");
+        Assert.True(
+            submitBody.IndexOf("WaitForConcreteConversationUrlAsync", StringComparison.Ordinal) <
+            submitBody.IndexOf("WriteConversationUrlSidecarAsync", StringComparison.Ordinal),
+            "The recovery URL sidecar must be written only after the submit action.");
+        Assert.True(
+            submitBody.IndexOf("WriteConversationUrlSidecarAsync", StringComparison.Ordinal) <
+            submitBody.IndexOf("WaitForReportAsync", StringComparison.Ordinal),
+            "The recovery URL sidecar must be available before long report polling can fail.");
+        Assert.Contains("RequireConcreteConversationUrlForSidecar", source, StringComparison.Ordinal);
+        Assert.Contains("E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditSubmitConversationUrlSidecarWritesConcreteUrlAndRejectsMissingConcreteUrl()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-conversation-sidecar");
+        const string concreteUrl = "https://chatgpt.com/g/g-p-example/c/6a43b03e-9598-83ed-9c3d-24046e34fff3";
+        var zipPath = Path.Combine(workspace.Root, ".temp", "audit", "T-0123-audit-r09.zip");
+
+        var written = await InvokeAuditSubmitConversationUrlSidecarWriteAsync(workspace.Root, zipPath, concreteUrl);
+
+        Assert.True(written.Succeeded);
+        Assert.Equal(Path.Combine(workspace.Root, ".temp", "audit", "T-0123", "conversation-url-r09.txt"), written.Path);
+        Assert.True(File.Exists(written.Path));
+        Assert.Equal(concreteUrl, File.ReadAllText(written.Path!, Encoding.UTF8).Trim());
+
+        var nonConversationUrl = await InvokeAuditSubmitConversationUrlSidecarWriteAsync(
+            workspace.Root,
+            zipPath,
+            "https://chatgpt.com/g/g-p-example/project");
+        var malformedZipName = await InvokeAuditSubmitConversationUrlSidecarWriteAsync(
+            workspace.Root,
+            Path.Combine(workspace.Root, ".temp", "audit", "audit.zip"),
+            concreteUrl);
+
+        Assert.False(nonConversationUrl.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING", nonConversationUrl.Code);
+        Assert.False(malformedZipName.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING", malformedZipName.Code);
+    }
+
+    [Fact]
+    public void AuditSubmitTargetRecoveryKeepsExportClicksNonRetried()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+
+        Assert.Contains("AttachTargetWithRecoveryAsync", source, StringComparison.Ordinal);
+        Assert.Contains("ExecuteCdpOnTargetAsync(", source, StringComparison.Ordinal);
+        Assert.Contains("allowTransientRecovery", source, StringComparison.Ordinal);
+        Assert.Contains("EnsureTargetAttachedForReadAsync", source, StringComparison.Ordinal);
+        Assert.Contains("EvaluateBoolOnTargetAsync(tabId, targetId, ReportExportButtonClickExpression, TimeSpan.FromSeconds(10), cancellationToken, allowTransientRecovery: false)", source, StringComparison.Ordinal);
+        Assert.Contains("EvaluateBoolOnTargetAsync(tabId, targetId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken, allowTransientRecovery: false)", source, StringComparison.Ordinal);
+        Assert.Contains("EvaluateBoolInContextOnTargetAsync(tabId, targetId, context.Value.ContextId, ReportExportButtonClickExpression, TimeSpan.FromSeconds(10), cancellationToken, allowTransientRecovery: false)", source, StringComparison.Ordinal);
+        Assert.Contains("EvaluateBoolInContextOnTargetAsync(tabId, targetId, context.Value.ContextId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken, allowTransientRecovery: false)", source, StringComparison.Ordinal);
+
+        var dismissBody = ExtractMethodBody(source, "private static async Task<bool> DismissRateLimitDialogAsync");
+        Assert.Contains("EvaluatePointAsync(tabId, RateLimitDialogDismissPointExpression, TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false)", dismissBody, StringComparison.Ordinal);
+        Assert.DoesNotContain("RateLimitDialogDismissPointExpression, TimeSpan.FromSeconds(5), cancellationToken, allowTransientRecovery: false", dismissBody, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AuditSubmitReportExtractorRequiresSingleOpenedReportCardCandidate()
     {
         const string acceptedReport = """
@@ -2495,6 +2642,24 @@ public sealed class RepositoryBuildToolTests
         CLOSURE_DECISION:
         Задачу можно закрыть.
         """;
+        const string acceptedReportWithRussianChangeClosure = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Текущее изменение можно закрывать.
+        """;
         const string needsFixesReport = """
         VERDICT: NEEDS_FIXES
 
@@ -2586,10 +2751,131 @@ public sealed class RepositoryBuildToolTests
         Assert.True(GetProperty<bool>(acceptedWithRussianExplicitClosure, "Ready"));
         Assert.Equal(acceptedReportWithRussianExplicitClosure, GetProperty<string>(acceptedWithRussianExplicitClosure, "Report"));
 
+        var acceptedWithRussianChangeClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianChangeClosure, "OpenedReportCard"));
+
+        Assert.True(GetProperty<bool>(acceptedWithRussianChangeClosure, "Ready"));
+        Assert.Equal(acceptedReportWithRussianChangeClosure, GetProperty<string>(acceptedWithRussianChangeClosure, "Report"));
+
         var ready = await InvokeAuditSubmitReportExtractorAsync((needsFixesReport, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(ready, "Ready"));
         Assert.Equal(needsFixesReport, GetProperty<string>(ready, "Report"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitReportInvalidDiagnosticsExplainStrictFailure()
+    {
+        const string promptTemplate = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        - Перечислите все доказуемые blocker-ы как `B1`, `B2`, `B3` и далее.
+
+        EVIDENCE_REVIEW:
+        - Какие файлы, тесты, документация и доказательства были проверены.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Do not close.
+        """;
+        const string badFirstLine = """
+        Final report
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        None.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Do not close.
+        """;
+        const string missingHeading = """
+        VERDICT: NEEDS_FIXES
+
+        BLOCKERS:
+        B1: missing evidence.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Do not close.
+        """;
+        const string acceptedReportWithBlocker = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        B1: still not fixed.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Task can be closed.
+        """;
+        const string acceptedReportWithoutClosurePermission = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Accepted.
+        """;
+
+        var multipleCandidates = await InvokeAuditSubmitReportExtractorAsync(
+            (missingHeading, "OpenedReportCard"),
+            (missingHeading, "OpenedReportCard"));
+        var nonCardSource = await InvokeAuditSubmitReportExtractorAsync(
+            (missingHeading, "Other"));
+        var prompt = await InvokeAuditSubmitReportExtractorAsync(
+            (promptTemplate, "OpenedReportCard"));
+        var firstLine = await InvokeAuditSubmitReportExtractorAsync(
+            (badFirstLine, "OpenedReportCard"));
+        var heading = await InvokeAuditSubmitReportExtractorAsync(
+            (missingHeading, "OpenedReportCard"));
+        var blocker = await InvokeAuditSubmitReportExtractorAsync(
+            (acceptedReportWithBlocker, "OpenedReportCard"));
+        var closure = await InvokeAuditSubmitReportExtractorAsync(
+            (acceptedReportWithoutClosurePermission, "OpenedReportCard"));
+
+        Assert.Contains("exactly one", GetProperty<string>(multipleCandidates, "FailureReason"), StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("OpenedReportCard", GetProperty<string>(nonCardSource, "FailureReason"), StringComparison.Ordinal);
+        Assert.Contains("prompt", GetProperty<string>(prompt, "FailureReason"), StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("first non-empty line", GetProperty<string>(firstLine, "FailureReason"), StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("TASK_ASSESSMENT:", GetProperty<string>(heading, "FailureReason"), StringComparison.Ordinal);
+        Assert.Contains("numbered blocker", GetProperty<string>(blocker, "FailureReason"), StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("closure", GetProperty<string>(closure, "FailureReason"), StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -4736,6 +5022,44 @@ public sealed class RepositoryBuildToolTests
         catch (TargetInvocationException ex) when (ex.InnerException is not null)
         {
             return (false, null, GetProperty<string>(ex.InnerException, "Code"));
+        }
+    }
+
+    private static async Task<bool> InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(bool hasVisibleIframe, bool hasFrameContext)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("CanUseDeepResearchFrameSurface", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "CanUseDeepResearchFrameSurface");
+        return (bool)method.Invoke(null, [hasVisibleIframe, hasFrameContext])!;
+    }
+
+    private static async Task<(bool Succeeded, string? Path, string? Code)> InvokeAuditSubmitConversationUrlSidecarWriteAsync(
+        string repoRoot,
+        string zipPath,
+        string conversationUrl)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("WriteConversationUrlSidecarAsync", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "WriteConversationUrlSidecarAsync");
+        try
+        {
+            var task = (Task)method.Invoke(null, [repoRoot, zipPath, conversationUrl, CancellationToken.None])!;
+            await task.ConfigureAwait(false);
+            var match = Regex.Match(Path.GetFileName(zipPath), @"^(?<task>T-\d+)-audit-(?<iteration>r\d+)\.zip$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            var path = match.Success
+                ? Path.Combine(repoRoot, ".temp", "audit", match.Groups["task"].Value.ToUpperInvariant(), $"conversation-url-{match.Groups["iteration"].Value.ToLowerInvariant()}.txt")
+                : null;
+            return (true, path, null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, null, TryGetExceptionCode(ex.InnerException));
+        }
+        catch (Exception ex)
+        {
+            return (false, null, TryGetExceptionCode(ex));
         }
     }
 
