@@ -201,7 +201,7 @@
       },
       {
         "path": "docs/export/export-guide.md",
-        "sha256": "74d90783757655cf5330f3df79c5e03074ff2f16a0a52aaf0c2a749b578e12d1"
+        "sha256": "4b8139fed236b5cdc89160314490a1e862d6db2d14062228ae33cef244b7eebd"
       },
       {
         "path": "docs/export/export-preset-model.md",
@@ -213,11 +213,11 @@
       },
       {
         "path": "docs/export/linux-x64-export.md",
-        "sha256": "14ab379085bf8044daee1ff21f61048064b48202d02efd091d211e7c4cefa4b0"
+        "sha256": "c4f5a3247cf4350e8b7257a5194c4975aa138a412df9dd53a12d8c7bd5138d4b"
       },
       {
         "path": "docs/export/macos-arm64-export.md",
-        "sha256": "04a6a943ebcfcad075cbdd7871139772c8f25ae6c4baa061d42c22083bc81784"
+        "sha256": "f31408637c53e8a9cd416c58510423ffc099aa93bcd843a0f45a9c801da852b6"
       },
       {
         "path": "docs/export/webassembly-browser-export.md",
@@ -225,7 +225,7 @@
       },
       {
         "path": "docs/export/windows-x64-export.md",
-        "sha256": "9c3049e1a434106fee50e67f262817ecd38a904e56bcf2714efb2aa4986ecab8"
+        "sha256": "2c372c282bff66110a4930bfa3a437bf16aa43e9cfd9656ea600a55d8aa83109"
       },
       {
         "path": "docs/input/gamepad-input.md",
@@ -397,7 +397,7 @@
       },
       {
         "path": "docs/release-management/ci-matrix.md",
-        "sha256": "979ef62b140060dfb3e9ed9b5e7a597b0884bd48c681416e58ec161ecfaefe93"
+        "sha256": "59c17946f64d2c38012d6ecf3af3c949d4e48b7d2124c1a4f989f2dc39a9cd93"
       },
       {
         "path": "docs/release-management/performance-budgets.md",
@@ -413,7 +413,7 @@
       },
       {
         "path": "docs/release-management/release-packaging.md",
-        "sha256": "f45dc6d1475f01400982b976f8687b633a14e63439d6d540404f8b9b05cd3385"
+        "sha256": "a462e3cddbdc37eb0a270053f53ccfff7adccf812f3be95e9c55ba3408620f36"
       },
       {
         "path": "docs/release-management/test-infrastructure.md",
@@ -734,6 +734,26 @@
       {
         "path": "docs/verdicts/release-management/t-0208-audit-r03.md",
         "sha256": "624d7e577741e1557bf201e4a6dd360a1efa260bc90101ddbd4e0f976f64e4ad"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0209-audit-r04.md",
+        "sha256": "15dd2536af907d6fb1ce525043f0d782ef91daf6ede46b42b2ab0d54c79dd241"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0209-audit-r05.md",
+        "sha256": "ea1b4db4873a1470012faf809327c43b3dd5d2d0616755534b497210ba09a8be"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0209-audit-r07.md",
+        "sha256": "bdc222a6e06a73a32d2247a647d1e8f78f37de50d912e29ef05e48c412995750"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0209-audit-r12.md",
+        "sha256": "fcbaa752e96c0c8ecd7cc3c3344bc1560e596f1f1171f313626c89890007b4a4"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0209-audit-r13.md",
+        "sha256": "37b6b014d5514486808ae05620f59c4716eeef4e25d5355cbde18b2dae69d9db"
       },
       {
         "path": "docs/verdicts/release-management/t-0214-audit-r01.md",
@@ -1109,6 +1129,11 @@
         "docs/verdicts/release-management/t-0207-audit-r03.md",
         "docs/verdicts/release-management/t-0207-audit-r04.md",
         "docs/verdicts/release-management/t-0208-audit-r03.md",
+        "docs/verdicts/release-management/t-0209-audit-r04.md",
+        "docs/verdicts/release-management/t-0209-audit-r05.md",
+        "docs/verdicts/release-management/t-0209-audit-r07.md",
+        "docs/verdicts/release-management/t-0209-audit-r12.md",
+        "docs/verdicts/release-management/t-0209-audit-r13.md",
         "docs/verdicts/release-management/t-0214-audit-r01.md",
         "docs/verdicts/release-management/t-0214-audit-r02.md",
         "docs/verdicts/release-management/t-0214-audit-r03.md",
@@ -1171,8 +1196,8 @@
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
-      "count": 216,
-      "sha256": "1ffc4387b98a1406c4564c12570d16726ddd35d518694d7ef0d9a2330f760cdc"
+      "count": 221,
+      "sha256": "c808fc0a128c15ad2838b5f7f55c00db579da0d2b86e272484f1844831f77516"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -1184,7 +1209,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "bbf89c9bcd51bff4cbd715a0e60dc0b651cb340db9179c067fbfb9797e14bcec",
+    "sourceDigest": "ed1beb35045fff284a35a1bcf4da7fcb9aa73b934579a98ce3d1e99301d10a3d",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

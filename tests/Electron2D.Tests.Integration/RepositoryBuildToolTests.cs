@@ -25,6 +25,7 @@
 using System.Collections;
 using System.Buffers.Binary;
 using System.Diagnostics;
+using System.Formats.Tar;
 using System.IO.Compression;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -1085,36 +1086,310 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task ReleaseVerifyFailsClosedWithoutArtifacts()
+    public async Task PackageWithSupportedRidCreatesStagingArchiveChecksumManifestAndRunsReleaseBuildSteps()
     {
-        using var workspace = TemporaryDirectory.Create("release-verify");
+        using var workspace = CreateReleasePackagingFixture("package-win-x64");
+        using var shim = CreateReleaseTemporaryDirectory("package-win-x64-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
 
-        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, TimeSpan.FromSeconds(120), ["package", "--rid", "win-x64"], environment);
 
-        Assert.NotEqual(0, result.ExitCode);
-        using var diagnostic = ReadFirstDiagnostic(result);
-        Assert.Equal("release", diagnostic.RootElement.GetProperty("command").GetString());
-        Assert.Equal("release verify", diagnostic.RootElement.GetProperty("step").GetString());
-        Assert.Equal("error", diagnostic.RootElement.GetProperty("severity").GetString());
-        Assert.Equal("E2D-BUILD-RELEASE-VERIFY-BLOCKED", diagnostic.RootElement.GetProperty("code").GetString());
-        AssertNoReleaseArtifacts(workspace.Root);
+        AssertCommandSucceeded(result, "package win-x64");
+        AssertDiagnosticCode(result, "E2D-BUILD-PACKAGE-CREATED", "package win-x64");
+        using var diagnostics = ReadDiagnostics(result);
+        Assert.Contains(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-PACKAGE-CREATED" &&
+                diagnostic.GetProperty("runtimeIdentifier").GetString() == "win-x64");
+
+        var ridRoot = ReleaseArtifactRidRoot(workspace.Root, "win-x64");
+        var packageRoot = Path.Combine(ridRoot, "package");
+        var archiveName = "electron2d-0.1.0-preview-win-x64.zip";
+        var archivePath = Path.Combine(ridRoot, archiveName);
+        var checksumPath = archivePath + ".sha256";
+        AssertReleasePackageStagingLayout(packageRoot);
+        Assert.True(File.Exists(archivePath), $"Expected release archive: {archivePath}");
+        Assert.True(File.Exists(checksumPath), $"Expected release checksum: {checksumPath}");
+        Assert.Equal($"{Sha256File(archivePath)}  {archiveName}", File.ReadAllText(checksumPath, Encoding.UTF8).Trim());
+
+        var zipEntries = ReadZipEntryNames(archivePath);
+        Assert.Contains("README.md", zipEntries);
+        Assert.Contains("LICENSE", zipEntries);
+        Assert.Contains("release-manifest.json", zipEntries);
+        Assert.Contains("library/Electron2D.0.1.0-preview.nupkg", zipEntries);
+        Assert.Contains("editor/Electron2D.Editor.dll", zipEntries);
+        Assert.Contains("tools/e2d/e2d.dll", zipEntries);
+        Assert.DoesNotContain(zipEntries, ReleasePackagePathIsForbiddenForTest);
+
+        using var stagingManifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(packageRoot, "release-manifest.json"), Encoding.UTF8));
+        AssertReleaseManifestShape(stagingManifest.RootElement, "win-x64", archiveName, "zip");
+        using var archiveManifest = JsonDocument.Parse(ReadZipEntryText(archivePath, "release-manifest.json"));
+        AssertReleaseManifestShape(archiveManifest.RootElement, "win-x64", archiveName, "zip");
+
+        var invocations = File.ReadAllLines(logPath);
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "pack", "src/Electron2D/Electron2D.csproj", "-c", "Release", "-o"));
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "publish", "src/Electron2D.Editor/Electron2D.Editor.csproj", "-c", "Release", "-r", "win-x64", "--self-contained", "true", "-o"));
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "publish", "src/Electron2D.Cli/Electron2D.Cli.csproj", "-c", "Release", "-r", "win-x64", "--self-contained", "true", "-o"));
     }
 
     [Fact]
-    public async Task PackageWithRidFailsClosedWithoutArtifacts()
+    public async Task PackageWithUnsupportedRidFailsClosedWithoutArtifacts()
     {
-        using var workspace = TemporaryDirectory.Create("package-rid");
+        using var workspace = CreateReleasePackagingFixture("package-unsupported-rid");
 
-        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "package", "--rid", "win-x64");
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "package", "--rid", "freebsd-x64");
 
         Assert.NotEqual(0, result.ExitCode);
         using var diagnostic = ReadFirstDiagnostic(result);
         Assert.Equal("package", diagnostic.RootElement.GetProperty("command").GetString());
         Assert.Equal("package", diagnostic.RootElement.GetProperty("step").GetString());
         Assert.Equal("error", diagnostic.RootElement.GetProperty("severity").GetString());
-        Assert.Equal("E2D-BUILD-PACKAGE-BLOCKED", diagnostic.RootElement.GetProperty("code").GetString());
-        Assert.Equal("win-x64", diagnostic.RootElement.GetProperty("runtimeIdentifier").GetString());
+        Assert.Equal("E2D-BUILD-PACKAGE-RID-UNSUPPORTED", diagnostic.RootElement.GetProperty("code").GetString());
+        Assert.Equal("freebsd-x64", diagnostic.RootElement.GetProperty("runtimeIdentifier").GetString());
         AssertNoReleaseArtifacts(workspace.Root);
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyFailsClosedWithoutArtifacts()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-missing-artifacts");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-ARTIFACT-MISSING", "release verify without artifacts");
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyPassesForAllLocalArtifactsWithoutPublication()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-all-rids");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+
+        foreach (var rid in new[] { "win-x64", "linux-x64", "osx-arm64" })
+        {
+            var package = await RunBuildToolFromDirectoryAsync(workspace.Root, TimeSpan.FromSeconds(120), ["package", "--rid", rid], environment);
+            AssertCommandSucceeded(package, $"package {rid}");
+            AssertDiagnosticCode(package, "E2D-BUILD-PACKAGE-CREATED", $"package {rid}");
+        }
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        AssertCommandSucceeded(result, "release verify");
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-VERIFY-PASSED", "release verify");
+        using var diagnostics = ReadDiagnostics(result);
+        Assert.DoesNotContain(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic =>
+            {
+                var message = diagnostic.GetProperty("message").GetString() ?? string.Empty;
+                return message.Contains("tag", StringComparison.OrdinalIgnoreCase) ||
+                    message.Contains("GitHub Release", StringComparison.OrdinalIgnoreCase) ||
+                    message.Contains("draft release", StringComparison.OrdinalIgnoreCase) ||
+                    message.Contains("publication", StringComparison.OrdinalIgnoreCase);
+            });
+
+        var linuxArchive = Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "linux-x64"), "electron2d-0.1.0-preview-linux-x64.tar.gz");
+        var macArchive = Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "osx-arm64"), "electron2d-0.1.0-preview-osx-arm64.tar.gz");
+        Assert.Contains("release-manifest.json", ReadTarGzEntryNames(linuxArchive));
+        Assert.Contains("tools/e2d/e2d.dll", ReadTarGzEntryNames(macArchive));
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyRejectsForbiddenFileInStaging()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-forbidden-file");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-forbidden-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+
+        foreach (var rid in new[] { "win-x64", "linux-x64", "osx-arm64" })
+        {
+            var package = await RunBuildToolFromDirectoryAsync(workspace.Root, TimeSpan.FromSeconds(120), ["package", "--rid", rid], environment);
+            AssertCommandSucceeded(package, $"package {rid}");
+        }
+
+        WriteText(workspace.Root, "artifacts/release/0.1.0-preview/win-x64/package/dev-diary/notes.md", "forbidden\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-FORBIDDEN-PATH", "release verify forbidden staging file");
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyRejectsForbiddenFileInsideArchive()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-forbidden-archive-file");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-forbidden-archive-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+        await PackageAllReleaseTargetsAsync(workspace.Root, environment);
+
+        var archivePath = ReleaseArchivePath(workspace.Root, "win-x64");
+        AddZipEntryText(archivePath, "dev-diary/notes.md", "forbidden\n");
+        WriteReleaseChecksum(archivePath);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-FORBIDDEN-PATH", "release verify forbidden archive file");
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyRejectsChecksumMismatch()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-checksum-mismatch");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-checksum-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+        await PackageAllReleaseTargetsAsync(workspace.Root, environment);
+
+        var archivePath = ReleaseArchivePath(workspace.Root, "win-x64");
+        File.WriteAllText(archivePath + ".sha256", $"{new string('0', 64)}  {Path.GetFileName(archivePath)}{Environment.NewLine}", Encoding.UTF8);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-CHECKSUM-MISMATCH", "release verify checksum mismatch");
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyRejectsManifestWithoutFileInventory()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-manifest-inventory");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-manifest-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+        await PackageAllReleaseTargetsAsync(workspace.Root, environment);
+
+        var manifestPath = Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "win-x64"), "package", "release-manifest.json");
+        WriteDirectoryOnlyReleaseManifest(manifestPath, "win-x64", Path.GetFileName(ReleaseArchivePath(workspace.Root, "win-x64")), "zip");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-MANIFEST-SCHEMA", "release verify manifest inventory");
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyRejectsArchiveInventoryThatDiffersFromStaging()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-archive-inventory-mismatch");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-archive-inventory-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+        await PackageAllReleaseTargetsAsync(workspace.Root, environment);
+
+        var archivePath = ReleaseArchivePath(workspace.Root, "win-x64");
+        var archiveManifest = ReadZipEntryText(archivePath, "release-manifest.json")
+            .Replace("editor/Electron2D.Editor.dll", "editor/ArchiveOnly.dll", StringComparison.Ordinal);
+        DeleteZipEntry(archivePath, "editor/Electron2D.Editor.dll");
+        AddZipEntryText(archivePath, "editor/ArchiveOnly.dll", "archive-only editor output\n");
+        AddZipEntryText(archivePath, "release-manifest.json", archiveManifest);
+        WriteReleaseChecksum(archivePath);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-MANIFEST-INVENTORY", "release verify archive inventory mismatch");
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyRejectsMissingRequiredStagingPath()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-missing-staging-path");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-missing-staging-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+        await PackageAllReleaseTargetsAsync(workspace.Root, environment);
+
+        File.Delete(Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "win-x64"), "package", "tools", "e2d", "e2d.dll"));
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-REQUIRED-PATH-MISSING", "release verify missing staging path");
+    }
+
+    [Fact]
+    public async Task PackageReleaseVerifyRejectsMissingRequiredArchiveEntry()
+    {
+        using var workspace = CreateReleasePackagingFixture("release-verify-missing-archive-entry");
+        using var shim = CreateReleaseTemporaryDirectory("release-verify-missing-archive-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath);
+        await PackageAllReleaseTargetsAsync(workspace.Root, environment);
+
+        var archivePath = ReleaseArchivePath(workspace.Root, "win-x64");
+        DeleteZipEntry(archivePath, "tools/e2d/e2d.dll");
+        WriteReleaseChecksum(archivePath);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-RELEASE-REQUIRED-PATH-MISSING", "release verify missing archive entry");
+    }
+
+    [Fact]
+    public async Task PackageFailsClosedWhenDotnetPackFails()
+    {
+        using var workspace = CreateReleasePackagingFixture("package-pack-failure");
+        using var shim = CreateReleaseTemporaryDirectory("package-pack-failure-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_PACK_EXIT_CODE"] = "23"
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, TimeSpan.FromSeconds(120), ["package", "--rid", "win-x64"], environment);
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-PACKAGE-PACK-FAILED", "package pack failure");
+        Assert.False(File.Exists(ReleaseArchivePath(workspace.Root, "win-x64")));
+    }
+
+    [Fact]
+    public async Task PackageFailsClosedWhenDotnetPublishFails()
+    {
+        using var workspace = CreateReleasePackagingFixture("package-publish-failure");
+        using var shim = CreateReleaseTemporaryDirectory("package-publish-failure-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetPackageCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetPackageShimEnvironment(shim.Root, shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_PUBLISH_EXIT_CODE"] = "24"
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, TimeSpan.FromSeconds(120), ["package", "--rid", "win-x64"], environment);
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-PACKAGE-PUBLISH-FAILED", "package publish failure");
+        Assert.False(File.Exists(ReleaseArchivePath(workspace.Root, "win-x64")));
     }
 
     [Theory]
@@ -5292,12 +5567,44 @@ public sealed class RepositoryBuildToolTests
         IReadOnlyDictionary<string, string>? environment)
     {
         var root = FindRepositoryRoot();
+        var dotnetArguments = new List<string>
+        {
+            "run",
+            "--project",
+            BuildToolProjectPath(root)
+        };
+        if (ShouldRunBuildToolWithoutBuild(environment))
+        {
+            dotnetArguments.Add("--no-build");
+        }
+
+        dotnetArguments.Add("--");
+        dotnetArguments.AddRange(arguments);
+
         return await RunProcessAsync(
             ResolveExecutableFromEnvironmentPath(DotnetExecutable, environment),
-            ["run", "--project", BuildToolProjectPath(root), "--", .. arguments],
+            [.. dotnetArguments],
             workingDirectory,
             timeout,
             environment);
+    }
+
+    private static bool ShouldRunBuildToolWithoutBuild(IReadOnlyDictionary<string, string>? environment)
+    {
+        if (environment is not null &&
+            environment.TryGetValue(BuildToolNoBuildEnvironmentVariable, out var explicitValue))
+        {
+            return IsTruthyEnvironmentValue(explicitValue);
+        }
+
+        return IsTruthyEnvironmentValue(Environment.GetEnvironmentVariable(BuildToolNoBuildEnvironmentVariable));
+    }
+
+    private static bool IsTruthyEnvironmentValue(string? value)
+    {
+        return string.Equals(value, "1", StringComparison.Ordinal) ||
+            string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
     }
 
     private static async Task<CommandResult> RunProcessAsync(
@@ -5733,6 +6040,181 @@ public sealed class RepositoryBuildToolTests
         WriteText(root, "AGENTS.md", "# Test repository instructions\n");
         WriteText(root, "README.md", "# Temporary repository\n");
         Directory.CreateDirectory(Path.Combine(root, "src"));
+    }
+
+    private static TemporaryDirectory CreateReleaseTemporaryDirectory(string name)
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var driveRoot = Path.GetPathRoot(repositoryRoot) ?? Path.GetTempPath();
+        var root = Path.Combine(driveRoot, "Electron2D-RepositoryBuildToolTests", name, Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        return new TemporaryDirectory(root);
+    }
+
+    private static TemporaryDirectory CreateReleasePackagingFixture(string name)
+    {
+        var workspace = CreateReleaseTemporaryDirectory(name);
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(workspace.Root, "LICENSE", "MIT License\n\nFixture license text.\n");
+        WriteText(workspace.Root, "src/Electron2D/Electron2D.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\"></Project>\n");
+        WriteText(workspace.Root, "src/Electron2D.Editor/Electron2D.Editor.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\"></Project>\n");
+        WriteText(workspace.Root, "src/Electron2D.Cli/Electron2D.Cli.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\"></Project>\n");
+        return workspace;
+    }
+
+    private static string ReleaseArtifactRidRoot(string root, string rid)
+    {
+        return Path.Combine(root, "artifacts", "release", "0.1.0-preview", rid);
+    }
+
+    private static string ReleaseArchivePath(string root, string rid)
+    {
+        var extension = string.Equals(rid, "win-x64", StringComparison.Ordinal) ? ".zip" : ".tar.gz";
+        return Path.Combine(ReleaseArtifactRidRoot(root, rid), $"electron2d-0.1.0-preview-{rid}{extension}");
+    }
+
+    private static async Task PackageAllReleaseTargetsAsync(string root, IReadOnlyDictionary<string, string> environment)
+    {
+        foreach (var rid in new[] { "win-x64", "linux-x64", "osx-arm64" })
+        {
+            var package = await RunBuildToolFromDirectoryAsync(root, TimeSpan.FromSeconds(120), ["package", "--rid", rid], environment);
+            AssertCommandSucceeded(package, $"package {rid}");
+        }
+    }
+
+    private static void WriteReleaseChecksum(string archivePath)
+    {
+        File.WriteAllText(
+            archivePath + ".sha256",
+            $"{Sha256File(archivePath)}  {Path.GetFileName(archivePath)}{Environment.NewLine}",
+            Encoding.UTF8);
+    }
+
+    private static void AddZipEntryText(string zipPath, string entryName, string text)
+    {
+        using var archive = ZipFile.Open(zipPath, ZipArchiveMode.Update);
+        var existing = archive.GetEntry(entryName);
+        existing?.Delete();
+        var entry = archive.CreateEntry(entryName);
+        using var stream = entry.Open();
+        using var writer = new StreamWriter(stream, Encoding.UTF8);
+        writer.Write(text);
+    }
+
+    private static void DeleteZipEntry(string zipPath, string entryName)
+    {
+        using var archive = ZipFile.Open(zipPath, ZipArchiveMode.Update);
+        var entry = archive.GetEntry(entryName);
+        Assert.NotNull(entry);
+        entry.Delete();
+    }
+
+    private static void WriteDirectoryOnlyReleaseManifest(string path, string rid, string archiveName, string archiveType)
+    {
+        File.WriteAllText(
+            path,
+            $$"""
+            {
+              "format": "Electron2D.ReleaseManifest",
+              "version": "0.1.0-preview",
+              "runtimeIdentifier": "{{rid}}",
+              "configuration": "Release",
+              "archive": {
+                "name": "{{archiveName}}",
+                "type": "{{archiveType}}"
+              },
+              "outputs": [
+                {
+                  "kind": "runtimeLibraryPackage",
+                  "path": "library/"
+                },
+                {
+                  "kind": "editorPublishOutput",
+                  "path": "editor/"
+                },
+                {
+                  "kind": "cliPublishOutput",
+                  "path": "tools/e2d/"
+                }
+              ],
+              "forbiddenPathsChecked": [
+                "TASKS.md",
+                "dev-diary/",
+                "eng/Electron2D.Build/",
+                "*.ps1"
+              ],
+              "dryRun": true
+            }
+            """,
+            Encoding.UTF8);
+    }
+
+    private static void AssertReleasePackageStagingLayout(string packageRoot)
+    {
+        Assert.True(File.Exists(Path.Combine(packageRoot, "README.md")), "README.md must be staged.");
+        Assert.True(File.Exists(Path.Combine(packageRoot, "LICENSE")), "LICENSE must be staged.");
+        Assert.True(File.Exists(Path.Combine(packageRoot, "release-manifest.json")), "release-manifest.json must be staged.");
+        Assert.True(File.Exists(Path.Combine(packageRoot, "library", "Electron2D.0.1.0-preview.nupkg")), "Runtime library package must be staged.");
+        Assert.True(File.Exists(Path.Combine(packageRoot, "editor", "Electron2D.Editor.dll")), "Editor publish output must be staged.");
+        Assert.True(File.Exists(Path.Combine(packageRoot, "tools", "e2d", "e2d.dll")), "e2d publish output must be staged.");
+    }
+
+    private static void AssertReleaseManifestShape(JsonElement manifest, string rid, string archiveName, string archiveType)
+    {
+        Assert.Equal("Electron2D.ReleaseManifest", manifest.GetProperty("format").GetString());
+        Assert.Equal("0.1.0-preview", manifest.GetProperty("version").GetString());
+        Assert.Equal(rid, manifest.GetProperty("runtimeIdentifier").GetString());
+        Assert.Equal("Release", manifest.GetProperty("configuration").GetString());
+        Assert.True(manifest.GetProperty("dryRun").GetBoolean());
+
+        var archive = manifest.GetProperty("archive");
+        Assert.Equal(archiveName, archive.GetProperty("name").GetString());
+        Assert.Equal(archiveType, archive.GetProperty("type").GetString());
+
+        var outputs = manifest.GetProperty("outputs").EnumerateArray().ToArray();
+        AssertManifestOutputFiles(outputs, "runtimeLibraryPackage", "library/", "library/Electron2D.0.1.0-preview.nupkg");
+        AssertManifestOutputFiles(outputs, "editorPublishOutput", "editor/", "editor/Electron2D.Editor.dll");
+        AssertManifestOutputFiles(outputs, "cliPublishOutput", "tools/e2d/", "tools/e2d/e2d.dll");
+
+        var forbidden = manifest.GetProperty("forbiddenPathsChecked")
+            .EnumerateArray()
+            .Select(item => item.GetString())
+            .ToArray();
+        Assert.Contains("TASKS.md", forbidden);
+        Assert.Contains("dev-diary/", forbidden);
+        Assert.Contains("eng/Electron2D.Build/", forbidden);
+        Assert.Contains("*.ps1", forbidden);
+    }
+
+    private static void AssertManifestOutputFiles(JsonElement[] outputs, string kind, string path, params string[] expectedFiles)
+    {
+        var output = Assert.Single(outputs, item => item.GetProperty("kind").GetString() == kind && item.GetProperty("path").GetString() == path);
+        var files = output.GetProperty("files")
+            .EnumerateArray()
+            .Select(item => item.GetString())
+            .ToArray();
+        Assert.Equal(files.Order(StringComparer.Ordinal), files);
+        Assert.All(expectedFiles, expected => Assert.Contains(expected, files));
+        Assert.All(files, file => Assert.StartsWith(path, file, StringComparison.Ordinal));
+    }
+
+    private static bool ReleasePackagePathIsForbiddenForTest(string path)
+    {
+        var normalized = path.Replace('\\', '/');
+        return normalized.StartsWith(".git/", StringComparison.Ordinal) ||
+            normalized.StartsWith(".github/", StringComparison.Ordinal) ||
+            normalized.StartsWith(".temp/", StringComparison.Ordinal) ||
+            normalized.StartsWith(".codex/", StringComparison.Ordinal) ||
+            normalized.StartsWith("dev-diary/", StringComparison.Ordinal) ||
+            normalized.StartsWith("completed-tasks/", StringComparison.Ordinal) ||
+            normalized.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase) ||
+            normalized.StartsWith("eng/Electron2D.Build/", StringComparison.Ordinal) ||
+            normalized.StartsWith("docs/verdicts/", StringComparison.Ordinal) ||
+            normalized.StartsWith("audit-evidence/", StringComparison.Ordinal) ||
+            normalized.StartsWith("artifacts/", StringComparison.Ordinal) ||
+            string.Equals(normalized, "TASKS.md", StringComparison.Ordinal) ||
+            Path.GetFileName(normalized).StartsWith("CHANGELOG", StringComparison.OrdinalIgnoreCase) ||
+            Path.GetFileName(normalized).StartsWith("RELEASE-NOTES", StringComparison.OrdinalIgnoreCase);
     }
 
     private static async Task<TemporaryDirectory> CreateLineEndingFixtureAsync(string name)
@@ -6487,6 +6969,25 @@ public sealed class RepositoryBuildToolTests
         return reader.ReadToEnd();
     }
 
+    private static IReadOnlyList<string> ReadTarGzEntryNames(string archivePath)
+    {
+        using var file = File.OpenRead(archivePath);
+        using var gzip = new GZipStream(file, CompressionMode.Decompress);
+        using var reader = new TarReader(gzip, leaveOpen: false);
+        var entries = new List<string>();
+        TarEntry? entry;
+        while ((entry = reader.GetNextEntry()) is not null)
+        {
+            if (entry.EntryType != TarEntryType.Directory)
+            {
+                entries.Add(entry.Name.Replace('\\', '/'));
+            }
+        }
+
+        entries.Sort(StringComparer.Ordinal);
+        return entries;
+    }
+
     private static byte[] ReadZipEntryBytes(string zipPath, string entryName)
     {
         using var archive = ZipFile.OpenRead(zipPath);
@@ -6869,6 +7370,132 @@ public sealed class RepositoryBuildToolTests
         return executable;
     }
 
+    private static async Task<string> BuildDotnetPackageCommandShimAsync(string shimRoot, string dotnetExecutable)
+    {
+        var sourceRoot = Path.Combine(shimRoot, "src");
+        var outputRoot = Path.Combine(shimRoot, "bin");
+        Directory.CreateDirectory(sourceRoot);
+        File.WriteAllText(
+            Path.Combine(sourceRoot, "DotnetShim.csproj"),
+            """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+                <AssemblyName>dotnet</AssemblyName>
+              </PropertyGroup>
+            </Project>
+            """,
+            Encoding.UTF8);
+        File.WriteAllText(
+            Path.Combine(sourceRoot, "Program.cs"),
+            """
+            using System.Diagnostics;
+            using System.Text;
+
+            internal static class Program
+            {
+                public static async Task<int> Main(string[] args)
+                {
+                    var log = Environment.GetEnvironmentVariable("DOTNET_SHIM_LOG") ?? throw new InvalidOperationException("DOTNET_SHIM_LOG is not set.");
+                    var realDotnet = Environment.GetEnvironmentVariable("REAL_DOTNET_EXE") ?? throw new InvalidOperationException("REAL_DOTNET_EXE is not set.");
+                    File.AppendAllText(log, string.Join(" ", args.Select(Quote)) + Environment.NewLine, Encoding.UTF8);
+
+                    if (args is [ "pack", .. ])
+                    {
+                        var output = FindOptionValue(args, "-o", "--output") ?? throw new InvalidOperationException("dotnet pack did not provide an output directory.");
+                        Directory.CreateDirectory(output);
+                        File.WriteAllText(Path.Combine(output, "Electron2D.0.1.0-preview.nupkg"), "fixture runtime package\n", Encoding.UTF8);
+                        return ReadExitCode("DOTNET_SHIM_PACK_EXIT_CODE");
+                    }
+
+                    if (args is [ "publish", var project, .. ])
+                    {
+                        var output = FindOptionValue(args, "-o", "--output") ?? throw new InvalidOperationException("dotnet publish did not provide an output directory.");
+                        Directory.CreateDirectory(output);
+                        if (project.Contains("Electron2D.Editor", StringComparison.Ordinal))
+                        {
+                            File.WriteAllText(Path.Combine(output, "Electron2D.Editor.dll"), "fixture editor output\n", Encoding.UTF8);
+                        }
+                        else if (project.Contains("Electron2D.Cli", StringComparison.Ordinal))
+                        {
+                            File.WriteAllText(Path.Combine(output, "e2d.dll"), "fixture cli output\n", Encoding.UTF8);
+                        }
+                        else
+                        {
+                            File.WriteAllText(Path.Combine(output, "unknown-publish-output.txt"), project + "\n", Encoding.UTF8);
+                        }
+
+                        return ReadExitCode("DOTNET_SHIM_PUBLISH_EXIT_CODE");
+                    }
+
+                    var startInfo = new ProcessStartInfo(realDotnet)
+                    {
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        StandardOutputEncoding = Encoding.UTF8,
+                        StandardErrorEncoding = Encoding.UTF8
+                    };
+                    foreach (var argument in args)
+                    {
+                        startInfo.ArgumentList.Add(argument);
+                    }
+
+                    using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start real dotnet.");
+                    var stdout = process.StandardOutput.BaseStream.CopyToAsync(Console.OpenStandardOutput());
+                    var stderr = process.StandardError.BaseStream.CopyToAsync(Console.OpenStandardError());
+                    await process.WaitForExitAsync();
+                    await Task.WhenAll(stdout, stderr);
+                    return process.ExitCode;
+                }
+
+                private static string? FindOptionValue(string[] args, params string[] names)
+                {
+                    for (var i = 0; i < args.Length - 1; i++)
+                    {
+                        if (names.Contains(args[i], StringComparer.Ordinal))
+                        {
+                            return args[i + 1];
+                        }
+                    }
+
+                    return null;
+                }
+
+                private static int ReadExitCode(string name)
+                {
+                    return int.TryParse(Environment.GetEnvironmentVariable(name), out var exitCode)
+                        ? exitCode
+                        : 0;
+                }
+
+                private static string Quote(string value)
+                {
+                    return value.Any(char.IsWhiteSpace)
+                        ? "\"" + value.Replace("\"", "\\\"", StringComparison.Ordinal) + "\""
+                        : value;
+                }
+            }
+            """,
+            Encoding.UTF8);
+
+        var buildEnvironment = new Dictionary<string, string>(StringComparer.Ordinal);
+        AddDotnetStableTempEnvironment(buildEnvironment, shimRoot);
+        var build = await RunProcessAsync(
+            dotnetExecutable,
+            ["build", Path.Combine(sourceRoot, "DotnetShim.csproj"), "-c", "Release", "-o", outputRoot, "/nologo"],
+            sourceRoot,
+            TimeSpan.FromSeconds(120),
+            buildEnvironment);
+        Assert.True(
+            build.ExitCode == 0,
+            $"dotnet package command shim build failed with exit code {build.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{build.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{build.Stderr}");
+        return outputRoot;
+    }
+
     private static async Task<string> BuildDotnetShimAsync(string shimRoot, string dotnetExecutable)
     {
         var sourceRoot = Path.Combine(shimRoot, "src");
@@ -7042,6 +7669,25 @@ public sealed class RepositoryBuildToolTests
         };
     }
 
+    private static IReadOnlyDictionary<string, string> CreateDotnetPackageShimEnvironment(string shimRoot, string shimBin, string dotnetExecutable, string logPath)
+    {
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnetExecutable, logPath), StringComparer.Ordinal);
+        AddDotnetStableTempEnvironment(environment, shimRoot);
+        return environment;
+    }
+
+    private static void AddDotnetStableTempEnvironment(Dictionary<string, string> environment, string root)
+    {
+        var tempRoot = Path.Combine(root, "dotnet-temp");
+        Directory.CreateDirectory(tempRoot);
+        environment["TEMP"] = tempRoot;
+        environment["TMP"] = tempRoot;
+        environment["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1";
+        environment["DOTNET_SKIP_FIRST_TIME_EXPERIENCE"] = "1";
+        environment["DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE"] = "1";
+        environment["DOTNET_CLI_WORKLOAD_UPDATE_ADVERTISING_MANIFEST_UPDATE"] = "false";
+    }
+
     private static void AssertPosixArchivePath(string path)
     {
         Assert.DoesNotContain("\\", path, StringComparison.Ordinal);
@@ -7065,6 +7711,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     private const string DotnetExecutable = "dotnet";
+    private const string BuildToolNoBuildEnvironmentVariable = "ELECTRON2D_BUILD_TOOL_NO_BUILD";
     private static readonly DateTimeOffset DeterministicZipTimestamp = new(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
     private static readonly Regex TaskIdPattern = new(@"\bT-\d{4}\b", RegexOptions.CultureInvariant);
     private const string SecretValueCaseTokenAssignment = "negative-case-01";

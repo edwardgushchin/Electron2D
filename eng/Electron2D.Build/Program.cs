@@ -76,8 +76,8 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             "test" => RunTestAsync(args, cancellationToken),
             "verify" => RouteVerifyAsync(args, cancellationToken),
             "update" => RouteUpdateAsync(args, cancellationToken),
-            "package" => RoutePackageAsync(args),
-            "release" => RouteReleaseAsync(args),
+            "package" => RoutePackageAsync(args, cancellationToken),
+            "release" => RouteReleaseAsync(args, cancellationToken),
             "audit" => RouteAuditAsync(args, cancellationToken),
             _ => UnknownCommandAsync(args[0])
         };
@@ -187,35 +187,27 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         return InvalidArgumentsAsync("update", "update", "Expected: update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, or update docs.");
     }
 
-    private Task<int> RoutePackageAsync(string[] args)
+    private Task<int> RoutePackageAsync(string[] args, CancellationToken cancellationToken)
     {
         if (args.Length != 3 || args[1] != "--rid" || string.IsNullOrWhiteSpace(args[2]))
         {
             return InvalidArgumentsAsync("package", "package", "Expected: package --rid <rid>.");
         }
 
-        var rid = args[2];
-        diagnostics.Write(new BuildDiagnostic(
-            "package",
-            "package",
-            "error",
-            "E2D-BUILD-PACKAGE-BLOCKED",
-            $"Package creation for '{rid}' is not implemented yet; no archives were created.",
-            RuntimeIdentifier: rid));
-        return Task.FromResult(RepositoryBuildExitCodes.Blocked);
+        var repositoryRoot = FindRepositoryRoot("package", "package");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new ReleasePackageCommand(repositoryRoot, diagnostics, new ProcessRunner()).PackageAsync(args[2], cancellationToken);
     }
 
-    private Task<int> RouteReleaseAsync(string[] args)
+    private Task<int> RouteReleaseAsync(string[] args, CancellationToken cancellationToken)
     {
         if (args is ["release", "verify"])
         {
-            diagnostics.Write(new BuildDiagnostic(
-                "release",
-                "release verify",
-                "error",
-                "E2D-BUILD-RELEASE-VERIFY-BLOCKED",
-                "Release verification internals are not implemented yet; no tags, archives, or GitHub Release entries were created."));
-            return Task.FromResult(RepositoryBuildExitCodes.Blocked);
+            var repositoryRoot = FindRepositoryRoot("release", "release verify");
+            return repositoryRoot is null
+                ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+                : new ReleasePackageCommand(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(cancellationToken);
         }
 
         return InvalidArgumentsAsync("release", "release", "Expected: release verify.");

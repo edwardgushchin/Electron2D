@@ -1,43 +1,43 @@
-# Cross-platform release packaging и draft GitHub Release workflow
+# Кросс-платформенная сборка релизных архивов и черновик GitHub Release
 
-Обновлено: 2026-06-26.
+Обновлено: 2026-06-30.
 
-Этот файл является доменным документом для будущего release packaging pipeline. Документ фиксирует целевой контракт после отказа от PowerShell-автоматизации; задача `T-0111` остаётся заблокированной до реализации фактической сборки архивов и проверки релизного кандидата внутри C# repository tool.
+Этот файл является доменным документом для сборки релизных архивов. Документ фиксирует контракт после отказа от PowerShell-автоматизации; задача `T-0111` остаётся заблокированной до полной проверки релиз-кандидата, но локальная сборка архивов настольных платформ реализуется в `T-0209`.
 
 ## Ведение документа
 
-- Перед изменением release packaging обновите этот документ.
-- Реализация должна идти через внутренний C# repository tool `eng/Electron2D.Build`, а не через PowerShell scripts.
-- GitHub Release publication запрещена без отдельной явной команды maintainer-а и без прохождения полного release candidate gate.
+- Перед изменением сборки релизных архивов обновите этот документ.
+- Реализация должна идти через внутренний C#-инструмент репозитория `eng\Electron2D.Build`, а не через скрипты PowerShell.
+- Публикация GitHub Release запрещена без отдельной явной команды сопровождающего и без прохождения полной проверки релиз-кандидата.
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `T-0111`, зависит от `T-0209` и `T-0210`; каркас внутреннего инструмента задан задачей `T-0207`.
-Обновлено: 2026-06-26.
+Статус: целевая спецификация и реализуемый контракт `T-0209`; финальное переключение CI и удаление PowerShell остаются в `T-0210`.
+Обновлено: 2026-06-30.
 
 ## Цель
 
-Repository должен уметь собирать release artifacts для desktop targets и готовить GitHub Release draft, но не публиковать release автоматически. До закрытия `T-0104` этот pipeline является подготовкой инфраструктуры, а не доказательством готовности релиза.
+Репозиторий должен уметь собирать релизные файлы для настольных целевых платформ и готовить черновик GitHub Release, но не публиковать релиз автоматически. До закрытия `T-0104` этот механизм является подготовкой инфраструктуры, а не доказательством готовности релиза.
 
-## Artifact matrix
+## Матрица релизных файлов
 
-Минимальный desktop artifact set:
+Минимальный набор релизных файлов для настольных платформ:
 
-| Artifact | Runtime identifier | Runner | Archive |
+| Артефакт | Runtime identifier | Runner | Archive |
 | --- | --- | --- | --- |
-| Windows desktop package | `win-x64` | `windows-latest` | `.zip` |
-| Linux desktop package | `linux-x64` | `ubuntu-latest` | `.tar.gz` |
-| macOS Apple Silicon package | `osx-arm64` | `macos-latest` | `.tar.gz` |
+| Пакет Windows desktop | `win-x64` | `windows-latest` | `.zip` |
+| Пакет Linux desktop | `linux-x64` | `ubuntu-latest` | `.tar.gz` |
+| Пакет macOS Apple Silicon | `osx-arm64` | `macos-latest` | `.tar.gz` |
 
-Каждый artifact должен содержать:
+Каждый архив должен содержать:
 
-- runtime library package `Electron2D`;
+- пакет библиотеки среды выполнения `Electron2D`;
 - `Electron2D.Editor`;
-- developer tools, включая `e2d`;
-- `README.md`, `LICENSE` и release manifest;
-- checksum file с SHA-256 для archive.
+- инструменты разработчика, включая `e2d`;
+- `README.md`, `LICENSE` и манифест релиза;
+- файл контрольной суммы SHA-256 для архива.
 
-## C# repository tool
+## C#-инструмент репозитория
 
 Целевой инструмент:
 
@@ -48,68 +48,94 @@ dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64
 dotnet run --project eng/Electron2D.Build -- release verify
 ```
 
-Инструмент должен быть внутренним build/repository tool, не частью публичного `e2d` CLI и не частью release package.
+Инструмент должен быть внутренним инструментом сборки и репозитория, не частью публичного `e2d` CLI и не частью пользовательского релизного архива.
 
-В рамках `T-0207` инструмент должен уметь принимать эти команды и возвращать структурированные диагностические сообщения. Команда `package` должна принимать только точную форму `package --rid <rid>` с непустым `rid`; лишние, переставленные, повторные или пустые аргументы должны возвращать `E2D-BUILD-CLI-INVALID-ARGUMENTS`. До появления фактической сборки архивов `package --rid <rid>` и `release verify` обязаны завершаться закрытым отказом: не создавать артефакты, не изменять GitHub Release и явно сообщать выбранный `rid` или ошибку формы аргументов.
+После `T-0209` инструмент принимает только точную форму `package --rid <rid>` с непустым `rid`; лишние, переставленные, повторные или пустые аргументы возвращают `E2D-BUILD-CLI-INVALID-ARGUMENTS`. Поддерживаемые значения `rid`: `win-x64`, `linux-x64`, `osx-arm64`. Неподдерживаемый `rid` возвращает `E2D-BUILD-PACKAGE-RID-UNSUPPORTED` и не создаёт архив.
+
+`package --rid <rid>` создаёт локальный черновой набор релизных файлов в `artifacts/release/0.1.0-preview/<rid>/`:
+
+- каталог подготовки `package/` с корневыми `README.md`, `LICENSE` и `release-manifest.json`;
+- `library/` с NuGet-пакетом `Electron2D`;
+- `editor/` с выходными файлами `dotnet publish` проекта `Electron2D.Editor`;
+- `tools/e2d/` с выходными файлами `dotnet publish` проекта `Electron2D.Cli`;
+- основной архив `electron2d-0.1.0-preview-<rid>.zip` для `win-x64` или `electron2d-0.1.0-preview-<rid>.tar.gz` для Linux/macOS;
+- соседний файл `<archive>.sha256` с SHA-256 основного архива.
+
+Команда запускает `dotnet pack src/Electron2D/Electron2D.csproj -c Release` и два `dotnet publish` для `src\Electron2D.Editor\Electron2D.Editor.csproj` и `src\Electron2D.Cli\Electron2D.Cli.csproj` с `-c Release`, `-r <rid>` и `--self-contained true`. Внутренний `eng\Electron2D.Build` не копируется в релизный архив, потому что это инструмент репозитория, а не пользовательская среда выполнения или инструмент разработчика.
+
+`release-manifest.json` внутри архива обязан фиксировать:
+
+- `format`: `Electron2D.ReleaseManifest`;
+- `version`: `0.1.0-preview`;
+- `runtimeIdentifier`;
+- `configuration`: `Release`;
+- имя архива и тип архива;
+- `outputs`: список групп выходных файлов с `kind`, корневым `path` и детерминированным `files`, где `files` перечисляет конкретные относительные пути всех включённых файлов пакета библиотеки среды выполнения, `Electron2D.Editor` и `e2d`;
+- список запрещённых путей, проверенный перед архивированием;
+- признак `dryRun`: `true`, потому что команда не публикует GitHub Release.
+
+Политика запрещённых файлов запрещает попадание в архив и каталог подготовки следующих путей: `.git/`, `.github/`, `.temp/`, `.codex/`, `TASKS.md`, `dev-diary/`, `completed-tasks/`, `CHANGELOG*`, `RELEASE-NOTES*`, любые `*.ps1`, `eng\Electron2D.Build\`, `docs/verdicts/`, `audit-evidence/`, `artifacts/` внутри самого пакета и любые `*.zip`, `*.tar.gz`, `*.sha256`, не являющиеся текущим выходным архивом и его контрольной суммой.
+
+`release verify` не создаёт тег, GitHub Release, черновик релиза или публикацию. Команда проверяет локальный набор черновых релизных файлов в `artifacts/release/0.1.0-preview/`: все три runtime identifiers присутствуют, имена архивов соответствуют матрице, соседние `.sha256` совпадают с фактическим SHA-256, каждый архив содержит `README.md`, `LICENSE`, `release-manifest.json`, `library/`, `editor/` и `tools/e2d/`, манифест перечисляет конкретные файлы в `library/`, `editor/` и `tools/e2d/`, этот список совпадает с каталогом подготовки и содержимым архива, а политика запрещённых файлов проходит для содержимого архива и распакованного каталога подготовки. При успехе команда возвращает `E2D-BUILD-RELEASE-VERIFY-PASSED`; при неполном наборе или нарушении политики возвращает структурированную ошибку и не меняет внешнее состояние GitHub.
 
 Обязательные свойства:
 
-- cross-platform process runner;
-- timeouts и exit codes;
-- structured diagnostics;
-- archive creation;
-- checksum generation;
-- release manifest generation;
-- fail-closed validation;
-- tests for package naming, manifest shape, forbidden files and draft-release policy.
+- переносимый запуск дочерних процессов;
+- ограничения времени и коды завершения;
+- структурированные диагностики;
+- создание архивов;
+- создание контрольных сумм;
+- создание манифеста релиза;
+- закрытый отказ при нарушении контракта;
+- тесты для имён пакетов, формы манифеста, запрещённых файлов и политики чернового релиза.
 
-## Controlled GitHub Release
+## Контролируемый GitHub Release
 
-GitHub Actions workflow должен быть manual `workflow_dispatch`.
+Рабочий процесс GitHub Actions должен запускаться вручную через `workflow_dispatch`.
 
-Обязательные inputs:
+Обязательные входные параметры:
 
 - `version`, по умолчанию `0.1.0-preview`;
 - `dry_run`, по умолчанию `true`;
 - `create_draft_release`, по умолчанию `false`;
 - `configuration`, по умолчанию `Release`.
 
-Publication policy:
+Правила публикации:
 
-- default run не создаёт GitHub Release;
-- draft release разрешён только когда maintainer явно задаёт `dry_run=false` и `create_draft_release=true`;
-- workflow обязан использовать draft/prerelease режим и не должен переводить release в публичное состояние;
-- release notes должны явно говорить, что публикация требует отдельного решения после полного release candidate gate.
+- запуск по умолчанию не создаёт GitHub Release;
+- черновик релиза разрешён только когда сопровождающий явно задаёт `dry_run=false` и `create_draft_release=true`;
+- рабочий процесс обязан использовать режимы `draft` и `prerelease` и не должен переводить релиз в публичное состояние;
+- release notes должны явно говорить, что публикация требует отдельного решения после полной проверки релиз-кандидата.
 
-## Release process
+## Релизный процесс
 
-Prerequisites:
+Предварительные условия:
 
-- clean working tree и известный source commit SHA перед не-dry-run packaging;
+- чистая рабочая копия и известный SHA исходного commit перед запуском сборки не в режиме `dry_run`;
 - .NET SDK `10.0.x` на runner-е;
-- зелёные repository gates;
-- release notes draft, синхронизированный с README, Wiki API compatibility и текущими release gaps;
-- явное решение maintainer-а, что workflow можно запустить с `dry_run=false`.
+- зелёные проверки репозитория;
+- черновик release notes, синхронизированный с README, Wiki API compatibility и текущими разрывами готовности релиза;
+- явное решение сопровождающего, что рабочий процесс можно запустить с `dry_run=false`.
 
-Tag policy:
+Правила тегов:
 
-- tag format: `v<version>`, например `v0.1.0-preview`;
-- tag должен указывать на commit, прошедший `T-0104`;
-- workflow может создать draft release для tag/version, но не переводит его в published state.
+- формат тега: `v<version>`, например `v0.1.0-preview`;
+- тег должен указывать на commit, прошедший `T-0104`;
+- рабочий процесс может создать черновик релиза для тега и версии, но не переводит его в опубликованное состояние.
 
-Rollback policy:
+Правила отката:
 
-- ошибочный draft release удаляется вручную до публикации;
-- ошибочные workflow artifacts не считаются release evidence;
-- если tag указывает на неверный commit, maintainer удаляет draft release и tag до повторного запуска;
-- опубликованный release нельзя заменять молча: требуется новый release note или patch version.
+- ошибочный черновик релиза удаляется вручную до публикации;
+- ошибочные файлы рабочего процесса не считаются доказательством релиза;
+- если тег указывает на неверный commit, сопровождающий удаляет черновик релиза и тег до повторного запуска;
+- опубликованный релиз нельзя заменять молча: требуется новая заметка релиза или patch version.
 
-Manual checks:
+Ручные проверки:
 
-- сверить artifact names, manifest `version`, `runtimeIdentifier`, `configuration` и checksum;
-- скачать archive из workflow artifacts и проверить наличие `README.md`, `LICENSE`, `library`, `editor`, `tools/e2d` и `release-manifest.json`;
-- убедиться, что `.electron2d/tasks/**`, `TASKS.md`, `dev-diary/`, `completed-tasks/`, `CHANGELOG.md` и `RELEASE-NOTES.md` не попали в release archive;
-- приложить результаты к `T-0104`, если это не-dry-run release candidate run.
+- сверить имена артефактов, поля манифеста `version`, `runtimeIdentifier`, `configuration` и контрольную сумму;
+- скачать архив из файлов рабочего процесса и проверить наличие `README.md`, `LICENSE`, `library`, `editor`, `tools/e2d` и `release-manifest.json`;
+- убедиться, что `.electron2d/tasks/**`, `TASKS.md`, `dev-diary/`, `completed-tasks/`, `CHANGELOG.md` и `RELEASE-NOTES.md` не попали в релизный архив;
+- приложить результаты к `T-0104`, если это не запуск релиз-кандидата в режиме `dry_run`.
 
 ## Проверка
 
@@ -119,16 +145,16 @@ Manual checks:
 dotnet run --project eng/Electron2D.Build -- release verify
 ```
 
-Финальный критерий удаления PowerShell после `T-0210` не должен быть raw grep по всему репозиторию, потому что migration docs и rejection notes законно содержат эти слова. Проверка выполняется scoped C# verifier-ом с allowlist:
+Финальный критерий удаления PowerShell после `T-0210` не должен быть простым текстовым поиском по всему репозиторию, потому что миграционные документы и заметки об отказах законно содержат эти слова. Проверка выполняется C#-проверкой с областью и разрешающим списком:
 
 ```bash
 dotnet run --project eng/Electron2D.Build -- verify repository-automation
 ```
 
-Проверка должна подтверждать отсутствие tracked `.ps1` scripts, `pwsh` workflow steps и PowerShell-команд в активных production paths, CI, release/package inputs и task/doc workflow references. Historical notes, migration docs и rejection notes допустимы только как явно перечисленные allowlist entries.
+Проверка должна подтверждать отсутствие отслеживаемых `.ps1`-скриптов, шагов рабочего процесса с `pwsh` и PowerShell-команд в активных production paths, CI, входных данных релизной сборки и ссылках на рабочие процессы в задачах и документах. Исторические заметки, миграционные документы и заметки об отказах допустимы только как явно перечисленные записи разрешающего списка.
 
 ## Фактическое состояние
 
-Статус: частично разблокировано каркасом C# repository tool, но фактическая подготовка пакетов и релиза остаётся заблокированной.
+Статус: `T-0209` реализует локальную сборку релизных файлов настольных платформ и проверку политики чернового релиза во внутреннем C#-инструменте репозитория.
 
-В репозитории всё ещё есть автоматизация на PowerShell, поэтому `T-0111` не может считаться готовой. Предыдущий пробный слой на PowerShell был отклонён и не является целевым решением. `T-0207` вводит только внутренний C#-каркас команд и переносимый запуск дочерних процессов; сборка архивов, создание файлов SHA-256, создание release manifest и draft GitHub Release остаются отдельными работами.
+Ожидаемая реализация больше не использует PowerShell как активный путь сборки и экспорта: `package --rid <rid>` строит пакет библиотеки среды выполнения, выходные файлы редактора, выходные файлы `e2d`, архив, контрольную сумму и `release-manifest.json`; `release verify` проверяет локальный набор `win-x64`, `linux-x64` и `osx-arm64` без публикации релиза. Полное переключение CI, удаление оставшихся скриптов PowerShell и финальная зачистка документации остаются в `T-0210`. До закрытия `T-0104` эти локальные файлы не являются доказательством готовности публичного релиза.
