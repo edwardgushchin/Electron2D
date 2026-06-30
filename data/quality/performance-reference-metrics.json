@@ -84,7 +84,6 @@
       "averageFrameTimeMs": 16.66,
       "steadyManagedAllocatedBytesPerFrame": 0,
       "evidence": [
-        "tools/Verify-Platformer.ps1",
         "examples/platformer/scenes/main.scene.json",
         "examples/platformer/scripts/PlatformerGame.cs"
       ]

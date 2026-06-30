@@ -1,6 +1,6 @@
-# Performance verification для `0.1.0 Preview`
+# Проверка производительности для `0.1.0 Preview`
 
-Обновлено: 2026-06-24.
+Обновлено: 2026-06-30.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,41 +13,47 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация.
-Задача: `T-0102`.
-Обновлено: 2026-06-24.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Performance budgets и soak-критерии 0.1.0 Preview](../release-management/performance-budgets.md); [Platformer](../examples/platformer.md).
+Задача: `T-0102`, дополнение `T-0215`.
+Обновлено: 2026-06-30.
+Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Бюджеты производительности и длительные критерии 0.1.0 Preview](../release-management/performance-budgets.md); [Platformer](../examples/platformer.md).
 
 ## Цель
 
-`0.1.0 Preview` должен иметь локальную автоматическую проверку производительности для коротких, воспроизводимых сценариев. Проверка не заменяет 30-минутные soak checks из платформенного release gate, но закрывает базовый контракт `T-0102`: 60 FPS для активного reference project, отсутствие постоянных managed allocations каждый кадр после прогрева и доказательство, что batching уменьшает количество draw calls.
+`0.1.0 Preview` должен иметь локальную автоматическую проверку производительности для коротких, воспроизводимых сценариев. Проверка не заменяет 30-минутные длительные проверки из платформенного релизного контроля, но закрывает базовый контракт `T-0102`: 60 FPS для активного эталонного проекта, отсутствие постоянных управляемых выделений памяти .NET каждый кадр после прогрева и доказательство, что группировка команд (`batching`) уменьшает количество вызовов отрисовки.
 
-`managed allocations` здесь означает выделения управляемой памяти .NET, которые повторяются на каждом кадре после прогрева. `draw call` означает одну отправку сгруппированной команды отрисовки во внутренний план кадра; batching должен превращать несколько совместимых команд в меньшее число таких отправок без изменения порядка отрисовки.
+`managed allocations` здесь означает выделения управляемой памяти .NET, которые повторяются на каждом кадре после прогрева. `draw call` означает одну отправку сгруппированной команды отрисовки во внутренний план кадра; `batching` должен превращать несколько совместимых команд в меньшее число таких отправок без изменения порядка отрисовки.
 
 ## Команда проверки
 
-В репозитории должен существовать verifier:
+В репозитории должны существовать две C#-команды:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-ReferencePerformance.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify performance
+dotnet run --project eng/Electron2D.Build -- verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...]
 ```
 
-Verifier обязан:
+Команда `verify performance` обязана:
 
-1. проверить, что `platformer` остаётся валидным проектом `Electron2D.Editor`, запустив `tools\Verify-Platformer.ps1`;
-2. проверить или обновить локальный scratch-output только внутри `.temp/reference-performance/`;
-3. прочитать tracked artifact `data/quality/performance-reference-metrics.json`;
-4. проверить, что artifact содержит все обязательные сценарии, устройства, бюджеты и фактические метрики;
-5. завершиться ошибкой, если хотя бы один обязательный сценарий превышает бюджет, не имеет метрик или не содержит evidence-файлы.
+1. прочитать отслеживаемый Git файл `data/quality/performance-reference-metrics.json`;
+2. проверить, что файл содержит все обязательные сценарии, устройства, бюджеты и фактические метрики;
+3. проверить, что все локальные для репозитория пути в `projectPath`, `scenePath` и `evidence` существуют и используют `/`;
+4. проверить бюджеты p95/p99, `0 B/frame`, ссылки на устройства и доказательства группировки команд (`batching`);
+5. записать машиночитаемый план проверки в `.temp/reference-performance/verification-plan.json` или в путь из `--out <path>`;
+6. завершиться ошибкой со структурированной диагностикой, если хотя бы один обязательный сценарий превышает бюджет, не имеет метрик или не содержит evidence-файлы.
+
+Команда `verify performance run` является переносимым запускателем одного сценария. Она запускает дочернюю команду через C#-механизм без привязки к командной оболочке, применяет `--timeout-seconds`, пишет JSON-артефакт формата `Electron2D.PerformanceScenarioRun` в `.temp/reference-performance/runs/<id>.json` или путь из `--out <path>` и возвращает структурированные диагностики успеха, ошибки дочернего процесса или истечения времени. Эта команда даёт `T-0221` общий механизм запуска будущего измерения Platformer без новой проверки, привязанной только к PowerShell (`PowerShell-only gate`).
+
+Текущая C#-проверка `verify performance` не запускает новый длительный измерительный прогон и не валидирует Platformer как игровой сценарий времени выполнения. Свежий измерительный запуск, сценарий Platformer, пороги, правила прогрева и измерения, привязка к идентификаторам коммита/сборки и новые доказательства принадлежат `T-0221`.
 
 ## Обязательные сценарии
 
-Artifact `data/quality/performance-reference-metrics.json` должен содержать три активных сценария:
+Отслеживаемый Git файл `data/quality/performance-reference-metrics.json` должен содержать три активных сценария:
 
-| Scenario id | Назначение |
+| `scenarioId` | Назначение |
 | --- | --- |
-| `empty-scene` | Минимальная сцена без игровых объектов; проверяет baseline frame loop и отсутствие steady allocations после warm-up. |
-| `sprite-scene` | Типовая сцена со спрайтами; проверяет frame budget, отсутствие steady allocations после warm-up и batching. |
-| `platformer` | Законченный platformer-проект из `examples/platformer`; проверяется только после project validation. |
+| `empty-scene` | Минимальная сцена без игровых объектов; проверяет базовый цикл кадра и отсутствие постоянных выделений после прогрева. |
+| `sprite-scene` | Типовая сцена со спрайтами; проверяет бюджет кадра, отсутствие постоянных выделений после прогрева и группировку команд (`batching`). |
+| `platformer` | Законченный проект Platformer из `examples/platformer`; проверяется только после проверки проекта. |
 
 Для каждого сценария обязательны поля:
 
@@ -64,23 +70,23 @@ Artifact `data/quality/performance-reference-metrics.json` должен соде
 - `steadyManagedAllocatedBytesPerFrame`;
 - `evidence`.
 
-`evidence` должен ссылаться на воспроизводимые локальные файлы или команды проверки. Для активного reference project evidence обязательно включает соответствующий verifier.
+`evidence` должен ссылаться на воспроизводимые локальные файлы или каталоги репозитория. Для активного эталонного проекта (`reference project`) поле `evidence` обязательно включает соответствующие файлы сцены, кода или автоматического теста как локальные для репозитория пути.
 
 ## Бюджеты
 
-Verifier обязан применять такие бюджеты:
+Проверка обязана применять такие бюджеты:
 
-| Scenario id | p95 | p99 | steady allocations |
+| `scenarioId` | p95 | p99 | Постоянные выделения |
 | --- | ---: | ---: | ---: |
 | `empty-scene` | `<= 16.67 ms` | `<= 25 ms` | `0 B/frame` |
 | `sprite-scene` | `<= 16.67 ms` | `<= 33 ms` | `0 B/frame` |
 | `platformer` | `<= 16.67 ms` | `<= 33 ms` | `0 B/frame` |
 
-Проверка использует короткий deterministic frame run: фиксированный шаг `1/60`, прогрев не меньше `120` кадров и измерение не меньше `600` кадров. Длительные 30-минутные проверки, background/foreground cycles и platform soak остаются отдельной задачей release gate.
+Проверка использует короткий детерминированный прогон кадров: фиксированный шаг `1/60`, прогрев не меньше `120` кадров и измерение не меньше `600` кадров. Длительные 30-минутные проверки, циклы сворачивания/возврата и платформенные длительные прогоны остаются отдельной задачей релизного контроля.
 
-## Batching evidence
+## Доказательства группировки команд
 
-Artifact должен содержать объект `drawCallBatching` с полями:
+Отслеживаемый Git файл должен содержать объект `drawCallBatching` с полями:
 
 - `scenarioId`: `sprite-scene`;
 - `commandCount`;
@@ -88,15 +94,15 @@ Artifact должен содержать объект `drawCallBatching` с по
 - `reductionRatio`;
 - `evidence`.
 
-Verifier обязан проверить:
+Проверка обязана проверить:
 
 - `commandCount > drawCallCount`;
 - `reductionRatio >= 1.5`;
-- evidence ссылается на automated test или verifier, который строит план отрисовки и считает batches.
+- `evidence` ссылается на автоматический тест или проверку, которая строит план отрисовки и считает группы команд.
 
 ## Устройства
 
-Artifact должен содержать список `devices`. Для локального verifier обязательна запись `local-windows-x64` или другая запись текущего хоста с:
+Отслеживаемый Git файл должен содержать список `devices`. Для локальной проверки обязательна запись `local-windows-x64` с:
 
 - `deviceId`;
 - `platform`;
@@ -105,48 +111,54 @@ Artifact должен содержать список `devices`. Для лока
 - `graphicsClass`;
 - `notes`.
 
-Платформенные устройства из release matrix могут добавляться отдельными задачами. `T-0102` не считается 30-минутным платформенным soak и не подменяет `T-0093`.
+Платформенные устройства из release matrix могут добавляться отдельными задачами. Текущая C#-проверка всё равно требует `local-windows-x64`, чтобы локальный baseline был однозначным. `T-0102` не считается 30-минутным платформенным длительным прогоном и не подменяет `T-0093`.
 
 ## Критерии приёмки
 
-- Спецификация, implementation documentation и tracked artifact описывают один и тот же набор сценариев, бюджетов и команд.
-- Focused automated test падает до появления verifier/artifact и проходит после реализации.
-- `tools\Verify-ReferencePerformance.ps1` запускает validator активного `platformer` до проверки performance metrics.
-- `tools\Verify-ReferencePerformance.ps1` проверяет `data/quality/performance-reference-metrics.json` и падает при превышении p95/p99, наличии steady allocations или отсутствии batching reduction.
-- Документация в `docs/quality/` описывает, как запускать verifier, где читать metrics artifact и какие проверки не входят в `T-0102`.
+- Спецификация, документация реализации и отслеживаемый Git файл описывают один и тот же набор сценариев, бюджетов и команд.
+- Точечный автоматический тест падает до появления проверки или файла метрик и проходит после реализации.
+- `dotnet run --project eng/Electron2D.Build -- verify performance` проверяет `data/quality/performance-reference-metrics.json` и падает при превышении p95/p99, наличии постоянных выделений памяти .NET или отсутствии сокращения вызовов отрисовки через `batching`.
+- C#-проверка пишет машиночитаемый план проверки, объявляет `runnerCommand` и не требует скрипта, зависящего от командной оболочки.
+- `dotnet run --project eng/Electron2D.Build -- verify performance run --scenario <id> ...` запускает дочернюю команду, применяет ограничение времени и пишет машиночитаемый артефакт запуска.
+- Документация в `docs/quality/` описывает, как запускать проверку, где читать файл метрик и какие проверки не входят в `T-0102`.
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: текущая проверка качества.
-Задача: `T-0102`.
-Обновлено: 2026-06-24.
-Спецификация: [Performance verification для 0.1.0 Preview](performance-verification.md).
+Статус: текущая проверка качества с C#-проверкой из `T-0215`.
+Задача: `T-0102`, дополнение `T-0215`.
+Обновлено: 2026-06-30.
+Спецификация: [Проверка производительности для 0.1.0 Preview](performance-verification.md).
 
 ## Что проверяет команда
 
-Текущий локальный verifier:
+Текущая локальная проверка:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-ReferencePerformance.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify performance
+dotnet run --project eng/Electron2D.Build -- verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...]
 ```
 
 Команда выполняет три группы проверок:
 
-1. запускает `tools\Verify-Platformer.ps1`, чтобы подтвердить, что performance metrics для активного reference project собираются только после проверки валидного проекта `Electron2D.Editor`;
-2. читает tracked artifact `data/quality/performance-reference-metrics.json`;
-3. проверяет бюджеты 60 FPS, отсутствие steady managed allocations после прогрева, наличие documented device и batching evidence.
+1. читает отслеживаемый Git файл `data/quality/performance-reference-metrics.json`;
+2. проверяет бюджеты 60 FPS, отсутствие постоянных управляемых выделений памяти .NET после прогрева, наличие описанного устройства и доказательства группировки команд (`batching`);
+3. проверяет локальные для репозитория пути `evidence` и создаёт `.temp/reference-performance/verification-plan.json`.
 
-`steady managed allocations` означает повторяющиеся выделения управляемой памяти .NET на каждом кадре после прогрева. Значение `0 B/frame` в artifact является обязательным для всех трёх активных сценариев `T-0102`.
+Машиночитаемый план имеет формат `Electron2D.ReferencePerformanceVerificationPlan` и содержит поле `runnerCommand` со значением `dotnet run --project eng/Electron2D.Build -- verify performance run`.
+
+Команда `verify performance run` выполняет дочернюю команду из корня репозитория, записывает стандартный вывод, поток ошибок, код завершения и признак истечения времени в JSON-артефакт формата `Electron2D.PerformanceScenarioRun`. При успехе она пишет диагностический код `E2D-BUILD-PERFORMANCE-RUN-PASSED`, при ненулевом коде дочерней команды - `E2D-BUILD-PERFORMANCE-RUN-FAILED`, при истечении времени - `E2D-BUILD-PERFORMANCE-RUN-TIMEOUT`.
+
+`steady managed allocations` означает повторяющиеся выделения управляемой памяти .NET на каждом кадре после прогрева. Значение `0 B/frame` в отслеживаемом Git файле является обязательным для всех трёх активных сценариев `T-0102`.
 
 ## Сценарии
 
-Tracked artifact содержит три активных сценария:
+Отслеживаемый Git файл содержит три активных сценария:
 
 - `empty-scene` - минимальная сцена из `data/quality/reference-performance/empty-scene.scene.json`;
 - `sprite-scene` - типовая sprite-сцена из `data/quality/reference-performance/sprite-scene.scene.json`;
 - `platformer` - проект `examples/platformer`.
 
-Для каждого сценария artifact фиксирует:
+Для каждого сценария отслеживаемый Git файл фиксирует:
 
 - `warmupFrames >= 120`;
 - `measuredFrames >= 600`;
@@ -154,9 +166,9 @@ Tracked artifact содержит три активных сценария:
 - `p95FrameTimeMs <= 16.67`;
 - `p99FrameTimeMs <= 25` для `empty-scene` и `<= 33` для остальных сценариев;
 - `steadyManagedAllocatedBytesPerFrame = 0`;
-- evidence paths, которые должны существовать в репозитории.
+- пути из `evidence`, которые должны существовать в репозитории.
 
-## Batching
+## Группировка команд
 
 `drawCallBatching` в `data/quality/performance-reference-metrics.json` проверяет `sprite-scene`.
 
@@ -167,18 +179,20 @@ Tracked artifact содержит три активных сценария:
 - `reductionRatio = 2.0`;
 - минимально допустимый `reductionRatio = 1.5`.
 
-Verifier падает, если количество draw calls не меньше количества команд или если ratio ниже порога. Evidence ссылается на `CanvasItemRenderQueueTests`, где проверяется построение batched render plan.
+Проверка падает, если количество вызовов отрисовки не меньше количества команд или если `reductionRatio` ниже порога. `evidence` ссылается на `CanvasItemRenderQueueTests`, где проверяется построение сгруппированного плана отрисовки.
 
 ## Артефакты
 
-Durable tracked artifacts:
+Устойчивые отслеживаемые Git файлы:
 
 - `data/quality/performance-reference-metrics.json`;
 - `data/quality/reference-performance/empty-scene.scene.json`;
 - `data/quality/reference-performance/sprite-scene.scene.json`.
 
-Scratch-output создаётся только в `.temp/reference-performance/` и не входит в commit.
+По умолчанию `verify performance` создаёт `.temp/reference-performance/verification-plan.json`, а `verify performance run` создаёт `.temp/reference-performance/runs/<id>.json`. Если `--out <path>` передан, обе команды могут записывать результат в другой локальный для репозитория путь с `/` и без выхода за корень репозитория.
+
+Аудиторские и CI-доказательства могут использовать `audit-evidence/T-0215/...` как `--out` путь. Эти JSON-файлы остаются временными доказательствами запуска, не входят в commit и не заменяют отслеживаемый Git файл `data/quality/performance-reference-metrics.json`.
 
 ## Что не входит
 
-Эта проверка не является 30-минутным soak test и не подтверждает полный platform release gate. Длительные прогоны, background/foreground cycles, реальные device/simulator smoke checks и memory-growth checks остаются задачами `T-0093`, `T-0096`, `T-0103` и `T-0104`.
+Эта проверка не является 30-минутным длительным тестом и не подтверждает полный платформенный релизный контроль. Длительные прогоны, циклы сворачивания/возврата, реальные короткие проверки устройств или симуляторов, проверки роста памяти и свежий измерительный запуск настоящего Platformer остаются задачами `T-0093`, `T-0096`, `T-0103`, `T-0104` и `T-0221`.

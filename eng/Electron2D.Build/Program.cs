@@ -67,13 +67,13 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test, verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
+                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
         return args[0] switch
         {
-            "test" => RouteExactAsync(args, "test", "test"),
+            "test" => RunTestAsync(args, cancellationToken),
             "verify" => RouteVerifyAsync(args, cancellationToken),
             "update" => RouteUpdateAsync(args, cancellationToken),
             "package" => RoutePackageAsync(args),
@@ -103,6 +103,16 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         if (args is ["verify", "docs"])
         {
             return VerifyDocsAsync(cancellationToken);
+        }
+
+        if (args is ["verify", "performance-budgets"])
+        {
+            return VerifyPerformanceBudgetsAsync();
+        }
+
+        if (args.Length >= 2 && args[1] == "performance")
+        {
+            return VerifyReferencePerformanceAsync(args, cancellationToken);
         }
 
         if (args is ["verify", "line-endings"])
@@ -135,7 +145,15 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return VerifyManifestsAsync(cancellationToken);
         }
 
-        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
+        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
+    }
+
+    private Task<int> RunTestAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("test", "test");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new TestCommand(repositoryRoot, diagnostics, new ProcessRunner()).RunAsync(args, cancellationToken);
     }
 
     private Task<int> RouteUpdateAsync(string[] args, CancellationToken cancellationToken)
@@ -256,6 +274,22 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         return verifier is null
             ? Task.FromResult(RepositoryBuildExitCodes.Failed)
             : verifier.VerifyAsync(cancellationToken);
+    }
+
+    private Task<int> VerifyPerformanceBudgetsAsync()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify performance-budgets");
+        return Task.FromResult(repositoryRoot is null
+            ? RepositoryBuildExitCodes.Failed
+            : new PerformanceBudgetDocsVerifier(repositoryRoot, diagnostics).Verify());
+    }
+
+    private Task<int> VerifyReferencePerformanceAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify performance");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new ReferencePerformanceVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(args, cancellationToken);
     }
 
     private Task<int> VerifyLineEndingsAsync(CancellationToken cancellationToken)
@@ -648,7 +682,11 @@ internal sealed record BuildDiagnostic(
     string? RuntimeIdentifier = null,
     string? ZipPath = null,
     bool? Force = null,
-    string? Path = null);
+    string? Path = null,
+    string? OutputPath = null,
+    string? ProjectPath = null,
+    string? ScenarioId = null,
+    int? TimeoutSeconds = null);
 
 internal static class RepositoryBuildExitCodes
 {

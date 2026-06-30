@@ -41,7 +41,7 @@ $requiredFragments = @(
     '10.0.x',
     'src/Electron2D.sln',
     'tools/Verify-SourceDomainLayout.ps1',
-    'tools/Run-Tests.ps1',
+    'dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600',
     'tools/Verify-Box2DPhysicsCandidate.ps1',
     'tools/Verify-ProjectTemplate.ps1',
     'tools/Verify-UserDocumentation.ps1',
@@ -56,7 +56,8 @@ $requiredFragments = @(
     'tools/Verify-WindowsExport.ps1',
     'tools/Verify-LinuxExport.ps1',
     'tools/Verify-MacOSExport.ps1',
-    'tools/Verify-PerformanceBudgets.ps1',
+    'dotnet run --project eng/Electron2D.Build -- verify performance-budgets',
+    'dotnet run --project eng/Electron2D.Build -- verify performance',
     'mobile-export-status',
     'Android/iOS/mobile export'
 )
@@ -69,6 +70,14 @@ foreach ($fragment in $requiredFragments) {
 
 if ($workflow.IndexOf('-IncludeBaseline', [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
     throw 'CI green path must not run -IncludeBaseline by default.'
+}
+
+if ($workflow.IndexOf('tools/Run-Tests.ps1', [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+    throw 'CI workflow must use the C# test runner instead of tools/Run-Tests.ps1.'
+}
+
+if ($workflow.IndexOf('tools/Verify-PerformanceBudgets.ps1', [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+    throw 'CI workflow must use C# performance verification instead of tools/Verify-PerformanceBudgets.ps1.'
 }
 
 if ($workflow.IndexOf('Verify-Box2DPhysicsCandidate.ps1 -NativeAot', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {

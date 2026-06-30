@@ -57,21 +57,264 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("__unknown__", diagnostic.RootElement.GetProperty("message").GetString(), StringComparison.Ordinal);
     }
 
-    [Theory]
-    [InlineData("test", "test")]
-    [InlineData("verify", "verify")]
-    public async Task SkeletonCommandsRouteToStableDiagnosticShape(string expectedStep, params string[] arguments)
+    [Fact]
+    public async Task VerifySkeletonCommandRoutesToStableDiagnosticShape()
     {
+        var arguments = new[] { "verify" };
         var result = await RunBuildToolAsync(arguments);
 
         Assert.Equal(0, result.ExitCode);
         using var diagnostic = ReadFirstDiagnostic(result);
         Assert.Equal(arguments[0], diagnostic.RootElement.GetProperty("command").GetString());
-        Assert.Equal(expectedStep, diagnostic.RootElement.GetProperty("step").GetString());
+        Assert.Equal("verify", diagnostic.RootElement.GetProperty("step").GetString());
         Assert.Equal("info", diagnostic.RootElement.GetProperty("severity").GetString());
         Assert.Equal("E2D-BUILD-ROUTED", diagnostic.RootElement.GetProperty("code").GetString());
         Assert.False(diagnostic.RootElement.TryGetProperty("processExitCode", out _));
         Assert.False(diagnostic.RootElement.TryGetProperty("timedOut", out _));
+    }
+
+    [Fact]
+    public async Task TestCommandRunsConfiguredProjectsWithBaselineFilterByDefault()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var result = await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), TimeSpan.FromSeconds(120), ["test"], environment);
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-TEST-PASSED", "test command success");
+        using var diagnostics = ReadDiagnostics(result);
+        var codes = diagnostics.RootElement.EnumerateArray().Select(diagnostic => diagnostic.GetProperty("code").GetString()).ToArray();
+        Assert.DoesNotContain("E2D-BUILD-ROUTED", codes);
+
+        var invocations = File.ReadAllLines(logPath).Where(line => line.StartsWith("test ", StringComparison.Ordinal)).ToArray();
+        Assert.Equal(4, invocations.Length);
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "test", "tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj"));
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "test", "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj"));
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "test", "tests/Electron2D.Tests.RuntimeSmoke/Electron2D.Tests.RuntimeSmoke.csproj"));
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "test", "tests/Electron2D.Tests.GoldenData/Electron2D.Tests.GoldenData.csproj"));
+        Assert.All(invocations, line => Assert.Contains("--filter Category!=Baseline", line, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task TestCommandIncludeBaselineOmitsBaselineFilter()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-baseline-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var result = await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), TimeSpan.FromSeconds(120), ["test", "--include-baseline"], environment);
+
+        Assert.Equal(0, result.ExitCode);
+        var invocations = File.ReadAllLines(logPath).Where(line => line.StartsWith("test ", StringComparison.Ordinal)).ToArray();
+        Assert.Equal(4, invocations.Length);
+        Assert.All(invocations, line => Assert.DoesNotContain("Category!=Baseline", line, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task TestCommandPropagatesDotnetTestExitCode()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-failing-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_EXIT_CODE"] = "37"
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), TimeSpan.FromSeconds(120), ["test"], environment);
+
+        Assert.Equal(37, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-TEST-PROJECT-FAILED", "failing dotnet test");
+        using var diagnostics = ReadDiagnostics(result);
+        Assert.Contains(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-TEST-PROJECT-FAILED" &&
+                diagnostic.GetProperty("processExitCode").GetInt32() == 37);
+    }
+
+    [Fact]
+    public async Task TestCommandTimeoutUsesStructuredDiagnostic()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-timeout-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_DELAY_MS"] = "5000"
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), TimeSpan.FromSeconds(120), ["test", "--timeout-seconds", "1"], environment);
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-TEST-PROJECT-TIMEOUT", "timed out dotnet test");
+        using var diagnostics = ReadDiagnostics(result);
+        Assert.Contains(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-TEST-PROJECT-TIMEOUT" &&
+                diagnostic.GetProperty("timedOut").GetBoolean());
+    }
+
+    [Fact]
+    public async Task VerifyPerformanceRunExecutesChildCommandAndWritesArtifact()
+    {
+        using var shim = TemporaryDirectory.Create("performance-run-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+        var outputPath = $".temp/reference-performance/test-runs/{Guid.NewGuid():N}.json";
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            [
+                "verify",
+                "performance",
+                "run",
+                "--scenario",
+                "platformer",
+                "--timeout-seconds",
+                "30",
+                "--out",
+                outputPath,
+                "--",
+                "dotnet",
+                "test",
+                "scenario.csproj"
+            ],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-PERFORMANCE-RUN-PASSED", "performance runner success");
+        using var diagnostics = ReadDiagnostics(result);
+        Assert.Contains(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-PERFORMANCE-RUN-PASSED" &&
+                diagnostic.GetProperty("scenarioId").GetString() == "platformer" &&
+                diagnostic.GetProperty("timeoutSeconds").GetInt32() == 30);
+
+        var artifactPath = Path.Combine(FindRepositoryRoot(), outputPath.Replace('/', Path.DirectorySeparatorChar));
+        Assert.True(File.Exists(artifactPath), $"Expected performance runner artifact: {artifactPath}");
+        using var artifact = JsonDocument.Parse(File.ReadAllText(artifactPath));
+        Assert.Equal("Electron2D.PerformanceScenarioRun", artifact.RootElement.GetProperty("format").GetString());
+        Assert.Equal("platformer", artifact.RootElement.GetProperty("scenarioId").GetString());
+        Assert.False(artifact.RootElement.GetProperty("timedOut").GetBoolean());
+        Assert.Equal(0, artifact.RootElement.GetProperty("exitCode").GetInt32());
+        Assert.Equal("dotnet", artifact.RootElement.GetProperty("fileName").GetString());
+
+        var invocations = File.ReadAllLines(logPath);
+        Assert.Contains(invocations, line => ContainsCommandTokens(line, "test", "scenario.csproj"));
+    }
+
+    [Fact]
+    public async Task VerifyPerformanceRunTimeoutUsesStructuredDiagnostic()
+    {
+        using var shim = TemporaryDirectory.Create("performance-run-timeout-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_DELAY_MS"] = "5000"
+        };
+        var outputPath = $".temp/reference-performance/test-runs/{Guid.NewGuid():N}.json";
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            [
+                "verify",
+                "performance",
+                "run",
+                "--scenario",
+                "platformer-timeout",
+                "--timeout-seconds",
+                "1",
+                "--out",
+                outputPath,
+                "--",
+                "dotnet",
+                "test",
+                "slow-scenario.csproj"
+            ],
+            environment);
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-PERFORMANCE-RUN-TIMEOUT", "performance runner timeout");
+        using var diagnostics = ReadDiagnostics(result);
+        Assert.Contains(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-PERFORMANCE-RUN-TIMEOUT" &&
+                diagnostic.GetProperty("scenarioId").GetString() == "platformer-timeout" &&
+                diagnostic.GetProperty("timedOut").GetBoolean() &&
+                diagnostic.GetProperty("timeoutSeconds").GetInt32() == 1);
+
+        var artifactPath = Path.Combine(FindRepositoryRoot(), outputPath.Replace('/', Path.DirectorySeparatorChar));
+        Assert.True(File.Exists(artifactPath), $"Expected performance runner timeout artifact: {artifactPath}");
+        using var artifact = JsonDocument.Parse(File.ReadAllText(artifactPath));
+        Assert.Equal("Electron2D.PerformanceScenarioRun", artifact.RootElement.GetProperty("format").GetString());
+        Assert.True(artifact.RootElement.GetProperty("timedOut").GetBoolean());
+        Assert.Equal(1, artifact.RootElement.GetProperty("timeoutSeconds").GetInt32());
+    }
+
+    [Fact]
+    public async Task VerifyPerformanceRunPropagatesChildFailureAndWritesArtifact()
+    {
+        using var shim = TemporaryDirectory.Create("performance-run-failing-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_EXIT_CODE"] = "37"
+        };
+        var outputPath = $".temp/reference-performance/test-runs/{Guid.NewGuid():N}.json";
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            [
+                "verify",
+                "performance",
+                "run",
+                "--scenario",
+                "platformer-failure",
+                "--timeout-seconds",
+                "30",
+                "--out",
+                outputPath,
+                "--",
+                "dotnet",
+                "test",
+                "failing-scenario.csproj"
+            ],
+            environment);
+
+        Assert.Equal(37, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-PERFORMANCE-RUN-FAILED", "performance runner child failure");
+        using var diagnostics = ReadDiagnostics(result);
+        Assert.Contains(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-PERFORMANCE-RUN-FAILED" &&
+                diagnostic.GetProperty("scenarioId").GetString() == "platformer-failure" &&
+                diagnostic.GetProperty("processExitCode").GetInt32() == 37 &&
+                !diagnostic.GetProperty("timedOut").GetBoolean());
+
+        var artifactPath = Path.Combine(FindRepositoryRoot(), outputPath.Replace('/', Path.DirectorySeparatorChar));
+        Assert.True(File.Exists(artifactPath), $"Expected performance runner failure artifact: {artifactPath}");
+        using var artifact = JsonDocument.Parse(File.ReadAllText(artifactPath));
+        Assert.Equal("Electron2D.PerformanceScenarioRun", artifact.RootElement.GetProperty("format").GetString());
+        Assert.Equal("platformer-failure", artifact.RootElement.GetProperty("scenarioId").GetString());
+        Assert.False(artifact.RootElement.GetProperty("timedOut").GetBoolean());
+        Assert.Equal(37, artifact.RootElement.GetProperty("exitCode").GetInt32());
     }
 
     [Fact]
@@ -709,13 +952,15 @@ public sealed class RepositoryBuildToolTests
         var repositoryRoot = FindRepositoryRoot();
         var supportedVerifyCommands = new HashSet<string>(StringComparer.Ordinal)
         {
+            "api-compatibility",
             "readme",
             "docs",
             "licenses",
             "manifests",
+            "performance-budgets",
+            "performance",
             "release-metadata",
-            "project-template",
-            "api-compatibility"
+            "project-template"
         };
         var documentedCommands = new List<string>();
         var commandPattern = new Regex(
@@ -740,6 +985,20 @@ public sealed class RepositoryBuildToolTests
         }
 
         Assert.Empty(documentedCommands);
+    }
+
+    [Fact]
+    public void T0215CiMatrixUsesCSharpTestAndPerformanceCommands()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var workflowPath = Path.Combine(repositoryRoot, ".github", "workflows", "ci.yml");
+        var workflow = File.ReadAllText(workflowPath, Encoding.UTF8);
+
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify performance-budgets", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify performance", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("run: ./tools/Run-Tests.ps1", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("run: ./tools/Verify-PerformanceBudgets.ps1", workflow, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -6358,6 +6617,93 @@ public sealed class RepositoryBuildToolTests
         Assert.True(
             build.ExitCode == 0,
             $"dotnet shim build failed with exit code {build.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{build.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{build.Stderr}");
+        return outputRoot;
+    }
+
+    private static async Task<string> BuildDotnetTestCommandShimAsync(string shimRoot, string dotnetExecutable)
+    {
+        var sourceRoot = Path.Combine(shimRoot, "src");
+        var outputRoot = Path.Combine(shimRoot, "bin");
+        Directory.CreateDirectory(sourceRoot);
+        File.WriteAllText(
+            Path.Combine(sourceRoot, "DotnetShim.csproj"),
+            """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+                <AssemblyName>dotnet</AssemblyName>
+              </PropertyGroup>
+            </Project>
+            """,
+            Encoding.UTF8);
+        File.WriteAllText(
+            Path.Combine(sourceRoot, "Program.cs"),
+            """
+            using System.Diagnostics;
+            using System.Text;
+
+            internal static class Program
+            {
+                public static async Task<int> Main(string[] args)
+                {
+                    var log = Environment.GetEnvironmentVariable("DOTNET_SHIM_LOG") ?? throw new InvalidOperationException("DOTNET_SHIM_LOG is not set.");
+                    var realDotnet = Environment.GetEnvironmentVariable("REAL_DOTNET_EXE") ?? throw new InvalidOperationException("REAL_DOTNET_EXE is not set.");
+                    File.AppendAllText(log, string.Join(" ", args.Select(Quote)) + Environment.NewLine, Encoding.UTF8);
+
+                    if (args is [ "test", .. ])
+                    {
+                        if (int.TryParse(Environment.GetEnvironmentVariable("DOTNET_SHIM_TEST_DELAY_MS"), out var delayMs) && delayMs > 0)
+                        {
+                            await Task.Delay(delayMs);
+                        }
+
+                        return int.TryParse(Environment.GetEnvironmentVariable("DOTNET_SHIM_TEST_EXIT_CODE"), out var exitCode)
+                            ? exitCode
+                            : 0;
+                    }
+
+                    var startInfo = new ProcessStartInfo(realDotnet)
+                    {
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        StandardOutputEncoding = Encoding.UTF8,
+                        StandardErrorEncoding = Encoding.UTF8
+                    };
+                    foreach (var argument in args)
+                    {
+                        startInfo.ArgumentList.Add(argument);
+                    }
+
+                    using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start real dotnet.");
+                    var stdout = process.StandardOutput.BaseStream.CopyToAsync(Console.OpenStandardOutput());
+                    var stderr = process.StandardError.BaseStream.CopyToAsync(Console.OpenStandardError());
+                    await process.WaitForExitAsync();
+                    await Task.WhenAll(stdout, stderr);
+                    return process.ExitCode;
+                }
+
+                private static string Quote(string value)
+                {
+                    return value.Any(char.IsWhiteSpace)
+                        ? "\"" + value.Replace("\"", "\\\"", StringComparison.Ordinal) + "\""
+                        : value;
+                }
+            }
+            """,
+            Encoding.UTF8);
+
+        var build = await RunProcessAsync(
+            dotnetExecutable,
+            ["build", Path.Combine(sourceRoot, "DotnetShim.csproj"), "-c", "Release", "-o", outputRoot, "/nologo"],
+            sourceRoot,
+            TimeSpan.FromSeconds(120));
+        Assert.True(
+            build.ExitCode == 0,
+            $"dotnet test command shim build failed with exit code {build.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{build.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{build.Stderr}");
         return outputRoot;
     }
 

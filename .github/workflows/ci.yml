@@ -39,8 +39,7 @@ jobs:
         run: ./tools/Verify-SourceDomainLayout.ps1
 
       - name: Run tests
-        shell: pwsh
-        run: ./tools/Run-Tests.ps1
+        run: dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600
 
       - name: Verify Box2D.NET physics candidate
         shell: pwsh
@@ -112,8 +111,10 @@ jobs:
         run: ./tools/Verify-MacOSExport.ps1
 
       - name: Verify performance budgets
-        shell: pwsh
-        run: ./tools/Verify-PerformanceBudgets.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify performance-budgets
+
+      - name: Verify reference performance metrics
+        run: dotnet run --project eng/Electron2D.Build -- verify performance
 
   mobile-export-status:
     name: Mobile/export status gap

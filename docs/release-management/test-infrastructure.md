@@ -1,6 +1,6 @@
 # Тестовая инфраструктура `0.1.0 Preview`
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-29.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,68 +13,68 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация.
-Задача: `T-0002`.
-Обновлено: 2026-06-20.
+Задача: `T-0002`, дополнение `T-0215`.
+Обновлено: 2026-06-29.
 
 ## Цель
 
-После reset к чистому baseline Electron2D должен иметь проверяемую тестовую инфраструктуру до появления новой реализации runtime. Инфраструктура нужна для разработки с нуля и не должна подтягивать старый Unity-like/component код.
+После сброса к чистому baseline Electron2D должен иметь проверяемую тестовую инфраструктуру до появления новой реализации среды выполнения. Инфраструктура нужна для разработки с нуля и не должна подтягивать старый компонентный код.
 
 ## Состав
 
-- `src/Electron2D/Electron2D.csproj` - новый пустой runtime-проект `Electron2D` без публичных типов.
+- `src/Electron2D/Electron2D.csproj` - новый пустой проект среды выполнения `Electron2D` без публичных типов.
 - `tests/Electron2D.Tests.Unit/` - unit-тесты чистых контрактов и value-логики.
 - `tests/Electron2D.Tests.Integration/` - интеграционные проверки структуры решения и подсистем.
-- `tests/Electron2D.Tests.RuntimeSmoke/` - smoke-проверки загрузки runtime assembly и запуска будущего runtime.
+- `tests/Electron2D.Tests.RuntimeSmoke/` - короткие проверки загрузки сборки среды выполнения и запуска будущей среды выполнения.
 - `tests/Electron2D.Tests.GoldenData/` - golden-data проверки сериализации, импортов и стабильных артефактов.
-- `tools/Run-Tests.ps1` - единая команда проверки тестовых проектов.
+- `dotnet run --project eng/Electron2D.Build -- test` - единая C#-команда проверки тестовых проектов; CI запускает её как `dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600`.
 
 ## Baseline-режим
 
-`Run-Tests.ps1` должен сохранять параметр `-IncludeBaseline`, чтобы будущие задачи могли явно запускать baseline-категорию, если она понадобится для документированного red-state.
+Команда `test` должна сохранять параметр `--include-baseline`, чтобы будущие задачи могли явно запускать категорию `Category=Baseline`, если она понадобится для документированного красного состояния.
 
-Обычная команда проверки исключает `Category=Baseline`, чтобы инфраструктура оставалась green-check. После реализации `Node` и `SceneTree` baseline в текущей категории нет обязательного намеренно падающего теста.
+Обычная команда проверки исключает `Category=Baseline`, чтобы штатная проверка оставалась успешной. После реализации `Node` и `SceneTree` baseline в текущей категории нет обязательного намеренно падающего теста.
 
 ## Инварианты
 
 - Тестовые проекты должны быть добавлены в `src/Electron2D.sln`.
 - Основной solution на этом этапе не должен собирать старые examples; их миграция выполняется отдельной задачей.
-- Runtime assembly на старте не экспортирует публичных legacy-типов: `IComponent`, `SpriteRenderer`, `SpriteAnimator`, legacy physics components.
-- Все новые тесты должны ссылаться на новый `src/Electron2D/Electron2D.csproj`, а не на восстановленные файлы старого runtime.
+- Сборка среды выполнения на старте не экспортирует публичных legacy-типов: `IComponent`, `SpriteRenderer`, `SpriteAnimator`, legacy physics components.
+- Все новые тесты должны ссылаться на новый `src/Electron2D/Electron2D.csproj`, а не на восстановленные файлы старой среды выполнения.
 
 ## Команды проверки
 
-Green-check без baseline:
+Штатная проверка без `Category=Baseline`:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- test
 ```
 
 Baseline-режим, если будущая задача добавит tests с `Category=Baseline`:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
+```bash
+dotnet run --project eng/Electron2D.Build -- test --include-baseline
 ```
 
-Текущий runtime уже содержит `Electron2D.Node`; намеренно падающий baseline больше не требуется для объектной модели.
+Текущая среда выполнения уже содержит `Electron2D.Node`; намеренно падающий baseline больше не требуется для объектной модели.
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: реализованная инфраструктура после clean reset.
-Задача: `T-0002`.
-Обновлено: 2026-06-20.
+Статус: реализованная инфраструктура после сброса к чистому baseline с C#-запускателем тестов из `T-0215`.
+Задача: `T-0002`, дополнение `T-0215`.
+Обновлено: 2026-06-29.
 
 ## Что создано
 
-- Новый пустой runtime-проект: `src/Electron2D/Electron2D.csproj`.
+- Новый пустой проект среды выполнения: `src/Electron2D/Electron2D.csproj`.
 - Четыре тестовых проекта:
   - `tests/Electron2D.Tests.Unit/`
   - `tests/Electron2D.Tests.Integration/`
   - `tests/Electron2D.Tests.RuntimeSmoke/`
   - `tests/Electron2D.Tests.GoldenData/`
-- Единая команда запуска: `tools/Run-Tests.ps1`.
+- Единая команда запуска: `dotnet run --project eng/Electron2D.Build -- test`.
 - `src/Electron2D.sln` обновлён: тестовые проекты добавлены, старые examples исключены до отдельной миграции.
-- Agent acceptance benchmark release gate:
+- Agent acceptance benchmark, то есть релизный контроль для проверки рабочего процесса агента:
   - `data/quality/agent-acceptance-benchmarks.json`;
   - `tools/Run-AgentAcceptanceBenchmarks.ps1`;
   - документация `docs/testing/agent-acceptance-benchmarks.md`.
@@ -83,19 +83,21 @@ powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
 
 Обычная проверка инфраструктуры:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- test
 ```
 
 Проверка вместе с baseline-категорией, если в будущих задачах она будет добавлена:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
+```bash
+dotnet run --project eng/Electron2D.Build -- test --include-baseline
 ```
 
 В текущем состоянии baseline-категория не содержит намеренно падающих тестов: новая Electron2D объектная модель уже включает `Node` и `SceneTree` baseline.
 
-Agent-native release gate можно проверить без запуска тяжёлых smoke-команд:
+Команда поддерживает `--timeout-seconds <n>`: это ограничение времени применяется к каждому дочернему `dotnet test`, а истечение времени возвращается отдельной структурированной диагностикой. Значение по умолчанию и явный лимит CI равны `3600` секундам на тестовый проект.
+
+Agent-native релизный контроль можно проверить без запуска тяжёлых коротких проверок запуска:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Run-AgentAcceptanceBenchmarks.ps1 -DryRun -OutputDirectory .temp/agent-acceptance-benchmarks
@@ -103,6 +105,6 @@ powershell -ExecutionPolicy Bypass -File tools/Run-AgentAcceptanceBenchmarks.ps1
 
 Полный запуск benchmark выполняет evidence steps из manifest последовательно и создаёт `benchmark-result.json`.
 
-## Текущее состояние runtime
+## Текущее состояние среды выполнения
 
-Runtime assembly `Electron2D` существует, загружается и экспортирует текущий Electron2D baseline public API. Unit-тесты дополнительно проверяют, что в новый baseline не вернулись legacy-типы `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `Rigidbody` и `Collider`.
+Сборка среды выполнения `Electron2D` существует, загружается и экспортирует текущий Electron2D baseline public API. Unit-тесты дополнительно проверяют, что в новый baseline не вернулись legacy-типы `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `Rigidbody` и `Collider`.

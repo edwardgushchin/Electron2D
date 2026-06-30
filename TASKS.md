@@ -1805,39 +1805,6 @@ Tracking-задача для переноса тестовых, документ
 - [ ] Удалить PowerShell scripts.
 - [ ] Выполнить финальный scoped C# verifier.
 
-## T-0215 [ ] P0: Перенести test runner и performance checks на C#
-
-- Создана: 2026-06-24T14:52:00+03:00
-- Состояние: blocked
-- Приоритет: P0
-- Зависимости: T-0207
-- Ссылки:
-  - Доменные документы: `docs/release-management/ci-matrix.md`; `docs/quality/performance-verification.md`; `docs/release-management/performance-budgets.md`
-  - Будущий исходный код: `eng/Electron2D.Build/`
-  - Тесты: `tests/Electron2D.Tests.Integration/`
-
-### Самодостаточное описание
-
-Перенести общий test runner и performance checks в C# repository tool. Команды должны давать одинаковые exit codes, timeouts и structured diagnostics на Windows, Linux и macOS. Эта задача владеет generic performance runner, metrics schema, timeout и structured diagnostics; Platformer-specific scenario, thresholds, warm-up/measurement policy и evidence остаются в `T-0221`.
-
-### Критерии приёмки
-
-- [ ] До кода обновлены доменные документы test/performance workflow.
-- [ ] Failing tests фиксируют test command routing, timeout, exit codes и performance threshold diagnostics.
-- [ ] `dotnet run --project eng/Electron2D.Build -- test` заменяет текущий test runner.
-- [ ] Performance checks запускаются из C# tool и не требуют shell-specific scripts.
-- [ ] C# tool предоставляет generic performance runner, metrics schema, timeout, structured diagnostics и machine-readable artifact contract для сценариев вроде `T-0221`.
-- [ ] `T-0221` может подключить Platformer scenario без создания отдельного PowerShell-only performance gate.
-- [ ] CI matrix использует C# test/performance commands.
-- [ ] После implementation focused tests и C# commands проходят.
-
-### Подзадачи
-
-- [ ] Специфицировать test/performance command behavior.
-- [ ] Добавить failing tests.
-- [ ] Реализовать C# commands.
-- [ ] Обновить CI/docs/tasks и выполнить focused checks.
-
 ## T-0221 [ ] P0: Восстановить performance gate для настоящего Platformer и RuntimeHost
 
 - Создана: 2026-06-24T19:20:00+03:00
@@ -2140,13 +2107,13 @@ Tracking-задача для переноса тестовых, документ
 
 ## ROADMAP
 
-Обновлено: 2026-06-29T20:58:58+03:00.
+Обновлено: 2026-06-30T05:11:28+03:00.
 
 Этот раздел задаёт рекомендуемый порядок выполнения активных задач из `TASKS.md`. Он не заменяет поля `Зависимости`, не закрывает задачи и не создаёт новый backlog. Если пользователь меняет приоритет, dependency graph или scope, этот раздел нужно обновить вместе с соответствующими задачами.
 
 ### 0. Пользовательская приёмка уже реализованных задач
 
-На 2026-06-26T14:25:48+03:00 `T-0207` принята внешним аудитом r04 и перенесена в `completed-tasks/2026/06 Июнь.md`. Ранее `T-0220`, `T-0219`, `T-0212`, `T-0224`, `T-0167`, `T-0168`, `T-0169`, `T-0170`, `T-0173`, `T-0216` и `T-0217` также были приняты пользователем или внешним аудитом и перенесены в архив.
+На 2026-06-30T05:11:28+03:00 `T-0215` принята внешним аудитом r07 и перенесена в `completed-tasks/2026/06 Июнь.md`. Ранее `T-0207`, `T-0220`, `T-0219`, `T-0212`, `T-0224`, `T-0167`, `T-0168`, `T-0169`, `T-0170`, `T-0173`, `T-0216` и `T-0217` также были приняты пользователем или внешним аудитом и перенесены в архив.
 
 ### 1. Решения перед новой игрой
 
@@ -2160,7 +2127,7 @@ Tracking-задача для переноса тестовых, документ
 
 Runtime:
 
-1. `T-0220` закрыта; следующий runtime performance gate идёт через `T-0221` после готового Platformer и C# performance runner.
+1. `T-0220` закрыта; следующий runtime performance gate идёт через `T-0221` после готового Platformer и завершённых acceptance/visual gates.
 
 Texture public API:
 
@@ -2169,12 +2136,11 @@ Texture public API:
 
 Repository tooling:
 
-Закрыто: `T-0207` создала внутренний C#-инструмент репозитория `eng/Electron2D.Build`; `T-0228` добавила детерминированную сборку и проверку внешнего audit package; `T-0213` перенесла README/docs verifier-ы и generated documentation index на C#-поверхность этого инструмента; `T-0229` закрепила статический tracked `AUDIT-REQUEST.md`; `T-0214` перенесла API/Wiki/license/manifest verifier-ы на C#-поверхность и принята внешним аудитом r05; `T-0230` добавила штатный текст сообщения внешнему аудитору из `AUDIT-REQUEST.md` и обязательное «Глубокое исследование»; `T-0231` разделила локальный индекс документации на manifest/NDJSON-шарды и SQLite-кэш; `T-0232` закрепила общую LF-политику и стабильное восстановление audit package; `T-0233` разграничила `AGENTS.md`, `AUDIT-REQUEST.md` и локальный `goal-task-loop.md`, чтобы внешний аудит не дублировался ручными браузерными правилами.
+Закрыто: `T-0207` создала внутренний C#-инструмент репозитория `eng/Electron2D.Build`; `T-0228` добавила детерминированную сборку и проверку внешнего audit package; `T-0213` перенесла README/docs verifier-ы и generated documentation index на C#-поверхность этого инструмента; `T-0229` закрепила статический tracked `AUDIT-REQUEST.md`; `T-0214` перенесла API/Wiki/license/manifest verifier-ы на C#-поверхность и принята внешним аудитом r05; `T-0230` добавила штатный текст сообщения внешнему аудитору из `AUDIT-REQUEST.md` и обязательное «Глубокое исследование»; `T-0231` разделила локальный индекс документации на manifest/NDJSON-шарды и SQLite-кэш; `T-0232` закрепила общую LF-политику и стабильное восстановление audit package; `T-0233` разграничила `AGENTS.md`, `AUDIT-REQUEST.md` и локальный `goal-task-loop.md`, чтобы внешний аудит не дублировался ручными браузерными правилами; `T-0215` перенесла test runner, проверку бюджетов производительности и проверку эталонных метрик на C#-команды.
 
-1. `T-0215` — перенести test runner и performance checks на C#.
-2. `T-0208` — закрыть tracking после `T-0215`.
-3. `T-0210` — переключить CI, AGENTS и документацию на C# tool после `T-0208` и `T-0209`.
-4. `T-0206` — закрыть tracking полной миграции repository automation после `T-0210`.
+1. `T-0208` — закрыть tracking после `T-0215`.
+2. `T-0210` — переключить CI, AGENTS и документацию на C# tool после `T-0208` и `T-0209`.
+3. `T-0206` — закрыть tracking полной миграции repository automation после `T-0210`.
 
 Editor foundation:
 
@@ -2189,7 +2155,7 @@ Editor foundation:
 1. `T-0222` — open: пересобрать Platformer как законченную приёмочную игру.
 2. `T-0223` — black-box acceptance через runtime launch, InputMap events, death/respawn, process relaunch, save restore и goal.
 3. `T-0225` — visual gate по кадрам start/checkpoint/death/pause/goal и runtime probes.
-4. После `T-0215`, `T-0223` и `T-0225`: `T-0221` — live performance gate Platformer через C# performance runner.
+4. После `T-0223` и `T-0225`: `T-0221` — live performance gate Platformer через C# performance runner.
 5. `T-0166` — закрыть как tracking epic только после принятия дочерних задач.
 
 ### 4. Editor UI

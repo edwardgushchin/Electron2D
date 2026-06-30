@@ -1,6 +1,6 @@
-# Performance budgets и soak-критерии `0.1.0 Preview`
+# Бюджеты производительности и длительные критерии `0.1.0 Preview`
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-29.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,22 +13,22 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация.
-Задача: `T-0007`.
-Обновлено: 2026-06-20.
+Задача: `T-0007`, дополнение `T-0215`.
+Обновлено: 2026-06-29.
 
 ## Цель
 
-`0.1.0 Preview` должен иметь проверяемые performance expectations до появления полноценного runtime. Эта матрица задаёт release gate для будущих задач рендеринга, физики, ввода, аудио, редактора и экспорта.
+`0.1.0 Preview` должен иметь проверяемые ожидания производительности до появления полноценной среды выполнения. Эта матрица задаёт релизный контроль для будущих задач рендеринга, физики, ввода, аудио, редактора и экспорта.
 
 ## Эталонные устройства
 
-| Tier | Платформа | Минимальный ориентир | Назначение |
+| Уровень | Платформа | Минимальный ориентир | Назначение |
 | --- | --- | --- | --- |
-| Desktop Tier 1 | Windows 11 x64 | 4-core CPU, 8 GB RAM, integrated GPU уровня Intel Iris Xe | Основной developer/runtime gate |
-| Desktop Tier 1 | Linux Ubuntu 24.04 x64 | 4-core CPU, 8 GB RAM, Vulkan-capable integrated GPU | Linux runtime/export gate |
-| Desktop Tier 1 | macOS 14+ | Apple Silicon M1, 8 GB RAM | macOS runtime/export gate |
-| Mobile Tier 1 | Android 12+ | Snapdragon 720G / Adreno 618, 4 GB RAM | Android export smoke gate |
-| Mobile Tier 1 | iOS 16+ | iPhone 11 / A13, 4 GB RAM | iOS export smoke gate |
+| Desktop Tier 1 | Windows 11 x64 | 4-core CPU, 8 GB RAM, integrated GPU уровня Intel Iris Xe | Основной контроль разработки и среды выполнения |
+| Desktop Tier 1 | Linux Ubuntu 24.04 x64 | 4-core CPU, 8 GB RAM, integrated GPU с поддержкой Vulkan | Контроль среды выполнения и экспорта Linux |
+| Desktop Tier 1 | macOS 14+ | Apple Silicon M1, 8 GB RAM | Контроль среды выполнения и экспорта macOS |
+| Mobile Tier 1 | Android 12+ | Snapdragon 720G / Adreno 618, 4 GB RAM | Короткая проверка Android export |
+| Mobile Tier 1 | iOS 16+ | iPhone 11 / A13, 4 GB RAM | Короткая проверка iOS export |
 
 ## Frame-time budget
 
@@ -40,47 +40,57 @@
 | Small 2D game scene | p95 frame time <= `16.67 ms`, p99 <= `33 ms` |
 | Editor play mode | p95 frame time <= `16.67 ms` без долгих stalls при старте сцены |
 
-## memory budget
+## Бюджет памяти
 
-| Сценарий | Desktop budget | Mobile budget |
+| Сценарий | Бюджет настольных платформ | Бюджет мобильных платформ |
 | --- | --- | --- |
-| Empty project runtime | <= 128 MB RSS | <= 160 MB RSS |
-| Small 2D game scene | <= 512 MB RSS | <= 350 MB RSS |
-| 30-minute soak growth | <= 5% RSS growth after warm-up | <= 5% RSS growth after warm-up |
+| Среда выполнения пустого проекта | <= 128 MB RSS | <= 160 MB RSS |
+| Небольшая 2D-игровая сцена | <= 512 MB RSS | <= 350 MB RSS |
+| Рост RSS за 30-минутный длительный прогон | <= 5% RSS после прогрева | <= 5% RSS после прогрева |
 
-## 30-minute soak checks
+## 30-минутные длительные проверки
 
-Каждая стабильная runtime milestone должна иметь 30-minute soak сценарий:
+Каждый стабильный этап среды выполнения должен иметь 30-минутный длительный сценарий:
 
-- scene load;
-- input loop;
-- render loop;
-- fixed physics loop, когда физика появится;
-- resource load/unload cycle, когда появится importer/runtime resource system.
+- загрузка сцены;
+- цикл ввода;
+- цикл отрисовки;
+- фиксированный цикл физики, когда физика появится;
+- цикл загрузки и выгрузки ресурсов, когда появится система импорта и ресурсов среды выполнения.
 
 Критерии soak:
 
-- нет crash/hang;
+- нет аварийного завершения или зависания;
 - p95 frame time остаётся в пределах 60 FPS budget;
-- memory growth после warm-up не выше 5%;
+- рост памяти после прогрева не выше 5%;
 - logs не содержат unhandled exception.
 
-## mobile background/foreground cycles
+## Мобильные циклы сворачивания/возврата
 
-Для Android и iOS export gate нужен отдельный mobile smoke:
+Для релизного контроля экспорта Android и iOS нужен отдельный короткий мобильный запуск:
 
-- 20 циклов background/foreground;
-- audio/render/input pause-resume без crash;
-- сохранение main scene state, когда появится scene runtime;
+- 20 циклов сворачивания/возврата;
+- пауза и возобновление звука, отрисовки и ввода без аварийного завершения;
+- сохранение состояния главной сцены, когда появится среда выполнения сцен;
 - отсутствие роста памяти выше 5% после цикла.
 
 До появления export pipeline эти проверки остаются documented release gap, но не считаются выполненными.
 
+## Локальная проверка документа
+
+Документальный контракт проверяется C#-командой:
+
+```bash
+dotnet run --project eng/Electron2D.Build -- verify performance-budgets
+```
+
+Команда проверяет наличие настольных и мобильных платформ, цели `60 FPS`, бюджета `16.67 ms`, бюджета памяти, 30-минутного длительного прогона, циклов сворачивания/возврата и разрыва готовности мобильного экспорта. Она не запускает длительный прогон и не заменяет `verify performance`, который проверяет отслеживаемый Git файл метрик.
+
 ## Фактическое состояние, ограничения и проверки
 
-Статус: текущая release-gate документация.
-Задача: `T-0007`.
-Обновлено: 2026-06-20.
+Статус: текущая документация релизного контроля с C#-проверкой документа из `T-0215`.
+Задача: `T-0007`, дополнение `T-0215`.
+Обновлено: 2026-06-29.
 
 ## Эталонная матрица
 
@@ -96,29 +106,37 @@
 
 Базовая цель: `60 FPS`.
 
-- Empty project: p95 <= `16.67 ms`, p99 <= `25 ms`.
-- Small 2D game scene: p95 <= `16.67 ms`, p99 <= `33 ms`.
-- Editor play mode: p95 <= `16.67 ms`.
+- Пустой проект: p95 <= `16.67 ms`, p99 <= `25 ms`.
+- Небольшая 2D-игровая сцена: p95 <= `16.67 ms`, p99 <= `33 ms`.
+- Режим запуска из редактора: p95 <= `16.67 ms`.
 
-## memory budget
+## Бюджет памяти
 
-- Empty project runtime: desktop <= 128 MB RSS, mobile <= 160 MB RSS.
-- Small 2D game scene: desktop <= 512 MB RSS, mobile <= 350 MB RSS.
-- 30-minute soak: memory growth <= 5% после warm-up.
+- Среда выполнения пустого проекта: настольные платформы <= 128 MB RSS, мобильные платформы <= 160 MB RSS.
+- Небольшая 2D-игровая сцена: настольные платформы <= 512 MB RSS, мобильные платформы <= 350 MB RSS.
+- 30-минутный длительный прогон: рост памяти <= 5% после прогрева.
 
-## 30-minute soak
+## 30-минутный длительный прогон
 
-30-minute soak проверяет scene load, input loop, render loop, fixed physics loop и resource load/unload cycles по мере появления подсистем.
+30-минутный длительный прогон проверяет загрузку сцены, цикл ввода, цикл отрисовки, фиксированный цикл физики и циклы загрузки/выгрузки ресурсов по мере появления подсистем.
 
 Критерии:
 
-- нет crash/hang;
+- нет аварийного завершения или зависания;
 - p95 frame time остаётся в пределах `60 FPS`;
-- memory growth <= 5%;
+- рост памяти <= 5%;
 - нет unhandled exception в логах.
 
-## mobile background/foreground
+## Мобильные циклы сворачивания/возврата
 
-Android и iOS smoke должен включать 20 background/foreground cycles. Проверяются pause/resume, render/input recovery, сохранение main scene state и memory growth <= 5%.
+Короткая проверка Android и iOS должна включать 20 циклов сворачивания/возврата. Проверяются пауза/возобновление, восстановление отрисовки и ввода, сохранение состояния главной сцены и рост памяти <= 5%.
 
-Сейчас mobile export smoke остаётся documented release gap до задач экспортного пайплайна.
+Сейчас короткая проверка мобильного экспорта остаётся документированным разрывом готовности до задач экспортного пайплайна.
+
+## Проверка
+
+```bash
+dotnet run --project eng/Electron2D.Build -- verify performance-budgets
+```
+
+Успешная проверка возвращает структурированную диагностику `E2D-BUILD-PERFORMANCE-BUDGETS-PASSED`.

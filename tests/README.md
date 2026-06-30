@@ -17,14 +17,21 @@
 
 Обычная проверка:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- test
 ```
 
 Baseline-проверка с намеренно падающим тестом:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1 -IncludeBaseline
+```bash
+dotnet run --project eng/Electron2D.Build -- test --include-baseline
+```
+
+Проверка эталонных метрик производительности и переносимый запуск одного сценария:
+
+```bash
+dotnet run --project eng/Electron2D.Build -- verify performance
+dotnet run --project eng/Electron2D.Build -- verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...]
 ```
 
 AOT metadata smoke:
