@@ -309,13 +309,16 @@ internal sealed class ReleaseMetadataVerifier(string repositoryRoot, JsonDiagnos
                 new ProcessRunRequest(
                     "verify release-metadata git ls-files",
                     "git",
-                    ["ls-files", "CHANGELOG*", "RELEASE-NOTES*", "TASKS.md"],
+                    ["ls-files", "CHANGELOG*", "RELEASE-NOTES*"],
                     repositoryRoot,
                     TimeSpan.FromSeconds(30)),
                 cancellationToken).ConfigureAwait(false);
             if (trackedDrafts.ExitCode == 0 && !string.IsNullOrWhiteSpace(trackedDrafts.StandardOutput))
             {
-                errors.Add(Error("E2D-BUILD-RELEASE-METADATA-LOCAL-DRAFT-TRACKED", "Local-only release draft or task files are tracked by Git.", "TASKS.md"));
+                var draftPath = trackedDrafts.StandardOutput
+                    .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .FirstOrDefault() ?? "CHANGELOG*";
+                errors.Add(Error("E2D-BUILD-RELEASE-METADATA-LOCAL-DRAFT-TRACKED", "Local-only release draft files are tracked by Git.", draftPath.Replace('\\', '/')));
             }
         }
 

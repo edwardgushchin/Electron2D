@@ -97,7 +97,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 - `verify docs` строит ожидаемый manifest локальной документации и NDJSON-shard-файлы C#-логикой, сверяет их с отслеживаемыми файлами, валидирует схему, источники, команды, аудитории, ссылки на API manifest, метаданные генератора Wiki и временный SQLite-кэш поиска.
 - `verify licenses` проверяет текст `LICENSE` и MIT-заголовки отслеживаемых C# и PowerShell файлов через C#-код.
 - `verify manifests` объединяет лёгкие C#-проверки release metadata и проектного шаблона, где manifest означает JSON-описания проекта, шаблона, стартовой доски задач и релизных метаданных.
-- `verify release-metadata` проверяет package metadata, README, брендовые файлы и отсутствие отслеживаемых локальных release/task drafts через C#-код.
+- `verify release-metadata` проверяет package metadata, README, брендовые файлы и отсутствие отслеживаемых локальных релизных черновиков `CHANGELOG*` и `RELEASE-NOTES*` через C#-код; tracked `TASKS.md` остаётся рабочим журналом задач репозитория.
 - `verify project-template` проверяет состав шаблона `data/templates/electron2d-empty`, JSON-манифесты шаблона и стартовых задач, `.gitignore` и отсутствие репозиторных workflow-файлов в пользовательском шаблоне. Это проверка формы и состава; она не заменяет полную проверку упаковки, восстановления, сборки и запуска.
 - `verify api-compatibility --wiki-path .github/wiki` сверяет API manifest с GitHub Wiki `API-Compatibility.md` и запрещает legacy/component public types.
 - `verify performance-budgets` проверяет доменный документ `docs/release-management/performance-budgets.md` и возвращает структурированную диагностику без PowerShell-скрипта.
