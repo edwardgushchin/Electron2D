@@ -185,7 +185,7 @@
       },
       {
         "path": "docs/examples/platformer.md",
-        "sha256": "9f3b069da0631a3502e96b739d33ae7f3395e1c6e84e4e701db4e19fcc15f467"
+        "sha256": "d0cba06df6b7524a4759f22071266762901424b5869342991966dafb42da8a3b"
       },
       {
         "path": "docs/examples/reference-game-assets.md",
@@ -668,6 +668,14 @@
         "sha256": "5383ad83ff5f9a77a329b907666306e677cbe170ef0da5a747e183442cfce9ce"
       },
       {
+        "path": "docs/verdicts/project-system/t-0234-audit-r03.md",
+        "sha256": "1b2e9dd41c6d23c8410f4b62ba731cfbd2a9614ca28d23c89caea0a0dddd2c1d"
+      },
+      {
+        "path": "docs/verdicts/project-system/t-0234-audit-r04.md",
+        "sha256": "89d133a0fde85c79f8c192d81aeacc8f6d2251d094ab42c8acfe074e68612bad"
+      },
+      {
         "path": "docs/verdicts/release-management/t-0001-audit-r02.md",
         "sha256": "72842a6b858157f663ad4af2219ac16185204e0ece1ebd5da1a35ddb4f6694bf"
       },
@@ -1072,6 +1080,8 @@
         "docs/verdicts/documentation/t-0213-audit-r05.md",
         "docs/verdicts/documentation/t-0231-audit-r01.md",
         "docs/verdicts/documentation/t-0231-audit-r02.md",
+        "docs/verdicts/project-system/t-0234-audit-r03.md",
+        "docs/verdicts/project-system/t-0234-audit-r04.md",
         "docs/verdicts/release-management/t-0001-audit-r02.md",
         "docs/verdicts/release-management/t-0001-audit-r03.md",
         "docs/verdicts/release-management/t-0001-audit-r08.md",
@@ -1146,8 +1156,8 @@
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
-      "count": 211,
-      "sha256": "d3fc47a2cd843cb25e6651422457e5eafd243a86bd03354ce0868102cf0251df"
+      "count": 213,
+      "sha256": "6fb923483739a265bb69ce98adfdbee0cd6138656ae0aac3cbb2b2de2f219ba0"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -1159,7 +1169,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "cd2de4393c5b970a3567e34914f4ba78eb5e9dbc1fbc1401717f253e161319ce",
+    "sourceDigest": "eb25e86430535734e9b648f172e73f64111e744bb5e13ba263ce95f6e61c157c",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

@@ -126,7 +126,12 @@ foreach ($relativePath in @(
     'scenes/main.scene.json',
     'resources/platformer.manifest.json',
     '.electron2d/tasks/board.e2tasks',
-    '.electron2d/tasks/platformer-acceptance.e2task'
+    '.electron2d/tasks/platformer-acceptance.e2task',
+    '.electron2d/tasks/T-0166.e2task',
+    '.electron2d/tasks/T-0221.e2task',
+    '.electron2d/tasks/T-0222.e2task',
+    '.electron2d/tasks/T-0223.e2task',
+    '.electron2d/tasks/T-0225.e2task'
 )) {
     Assert-File $relativePath
 }
@@ -137,7 +142,11 @@ foreach ($forbiddenPath in @('TASKS.md', 'dev-diary', 'completed-tasks')) {
     }
 }
 
-$settings = Get-Content -LiteralPath (Join-Path $projectRoot 'Platformer.e2d') -Raw | ConvertFrom-Json
+function Read-Utf8Json([string]$path) {
+    return [System.IO.File]::ReadAllText($path, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+}
+
+$settings = Read-Utf8Json (Join-Path $projectRoot 'Platformer.e2d')
 if ($settings.format -ne 'Electron2D.ProjectSettings' -or $settings.name -ne 'Platformer') {
     throw 'Platformer project settings are invalid.'
 }
@@ -159,17 +168,132 @@ if (($targets -join ',') -ne ($expectedTargets -join ',')) {
     throw "Platformer export target mismatch. Expected $($expectedTargets -join ','), got $($targets -join ',')."
 }
 
-$board = Get-Content -LiteralPath (Join-Path $projectRoot '.electron2d/tasks/board.e2tasks') -Raw | ConvertFrom-Json
-$task = Get-Content -LiteralPath (Join-Path $projectRoot '.electron2d/tasks/platformer-acceptance.e2task') -Raw | ConvertFrom-Json
-if ($board.format -ne 'Electron2D.TaskBoard' -or $task.format -ne 'Electron2D.TaskFile') {
+$taskRoot = Join-Path $projectRoot '.electron2d/tasks'
+$board = Read-Utf8Json (Join-Path $taskRoot 'board.e2tasks')
+if ($board.format -ne 'Electron2D.TaskBoard' -or $board.version -ne 1) {
     throw 'Platformer task metadata is invalid.'
 }
 
-if ($task.status -ne 'AwaitingAcceptance' -or $task.acceptanceState -ne 'AwaitingHumanAcceptance') {
-    throw 'Platformer acceptance task must wait for human acceptance.'
+function Decode-Utf8Base64([string]$value) {
+    return [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($value))
 }
 
-$resourceManifest = Get-Content -LiteralPath (Join-Path $projectRoot 'resources/platformer.manifest.json') -Raw | ConvertFrom-Json
+$expectedTaskMetadata = [ordered]@{
+    'T-0222' = @{
+        Status = 'Ready'
+        Title = (Decode-Utf8Base64 '0J/QtdGA0LXRgdC+0LHRgNCw0YLRjCBQbGF0Zm9ybWVyINC60LDQuiDQt9Cw0LrQvtC90YfQtdC90L3Rg9GOINC/0YDQuNGR0LzQvtGH0L3Rg9GOINC40LPRgNGD')
+        Priority = 'P0'
+        Dependencies = @()
+        Subtask = (Decode-Utf8Base64 '0J7RgtC60YDRi9GC0L46INCf0LXRgNC10YHQvtCx0YDQsNGC0Ywgc2NlbmUgZGF0YSDQuCBnYW1lcGxheSBzY3JpcHQg0LHQtdC3INGA0YPRh9C90YvRhSB2ZXJpZmllciBzaG9ydGN1dHMu')
+        Activity = (Decode-Utf8Base64 'MjAyNi0wNi0yNFQxOToyMDowMCswMzowMCAtINCh0L7Qt9C00LDQvdC+INC/0L4g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GM0YHQutC+0LzRgyBhdWRpdCByZWplY3Rpb24u')
+    }
+    'T-0223' = @{
+        Status = 'Blocked'
+        Title = (Decode-Utf8Base64 '0J/QtdGA0LXQv9C40YHQsNGC0YwgUGxhdGZvcm1lciBhY2NlcHRhbmNlINCx0LXQtyDRgdCw0LzQvtC/0YDQvtCy0LXRgNC60Lg=')
+        Priority = 'P0'
+        Dependencies = @('T-0222')
+        Subtask = (Decode-Utf8Base64 '0J7RgtC60YDRi9GC0L46INCf0LXRgNC10L/QuNGB0LDRgtGMIHBsYXktc2NyaXB0L3ZlcmlmaWVyIHBhdGgg0L3QsCDQvdCw0LHQu9GO0LTQtdC90LjQtSBnYW1lcGxheSBldmVudHMu')
+        Activity = (Decode-Utf8Base64 'MjAyNi0wNi0yNFQxOToyMDowMCswMzowMCAtINCh0L7Qt9C00LDQvdC+INC/0L4g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GM0YHQutC+0LzRgyBhdWRpdCByZWplY3Rpb24u')
+    }
+    'T-0225' = @{
+        Status = 'Blocked'
+        Title = (Decode-Utf8Base64 '0JLRi9C90LXRgdGC0LggUGxhdGZvcm1lciB2aXN1YWwgZ2F0ZSDQsiDQvtGC0LTQtdC70YzQvdGL0LUgc2NyZWVuc2hvdHMg0LggcnVudGltZSBwcm9iZXM=')
+        Priority = 'P0'
+        Dependencies = @('T-0222', 'T-0223')
+        Subtask = (Decode-Utf8Base64 '0J7RgtC60YDRi9GC0L46INCg0LXQsNC70LjQt9C+0LLQsNGC0Ywg0YHQsdC+0YAgcHJvYmVzINC4IHBpeGVsIGFuYWx5c2lzINC/0L7QstC10YDRhSBwcm9iZXMu')
+        Activity = (Decode-Utf8Base64 'MjAyNi0wNi0yNFQxOTo0NTowMCswMzowMCAtINCh0L7Qt9C00LDQvdC+INC/0L4g0LfQsNC80LXRh9Cw0L3QuNGOINC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjzogc2NyZWVuc2hvdCBnYXRlINC90YPQttC90L4g0L7RgtC00LXQu9C40YLRjCDQvtGCIGBULTAyMjNg')
+    }
+    'T-0221' = @{
+        Status = 'Blocked'
+        Title = (Decode-Utf8Base64 '0JLQvtGB0YHRgtCw0L3QvtCy0LjRgtGMIHBlcmZvcm1hbmNlIGdhdGUg0LTQu9GPINC90LDRgdGC0L7Rj9GJ0LXQs9C+IFBsYXRmb3JtZXIg0LggUnVudGltZUhvc3Q=')
+        Priority = 'P0'
+        Dependencies = @('T-0215', 'T-0223', 'T-0225')
+        Subtask = (Decode-Utf8Base64 '0J7RgtC60YDRi9GC0L46INCf0L7QtNC60LvRjtGH0LjRgtGMIGBQbGF0Zm9ybWVyYCBzY2VuYXJpbyDQuiBnZW5lcmljIHJ1bm5lci9zY2hlbWEg0LjQtyBgVC0wMjE1YC4=')
+        Activity = (Decode-Utf8Base64 'MjAyNi0wNi0yNFQxOTo0NTowMCswMzowMCAtIE93bmVyc2hpcCDRg9GC0L7Rh9C90ZHQvSDQv9C+INCw0YPQtNC40YLRgyDQv9C+0LvRjNC30L7QstCw0YLQtdC70Y8=')
+    }
+    'T-0166' = @{
+        Status = 'Blocked'
+        Title = (Decode-Utf8Base64 '0KPQttC10YHRgtC+0YfQuNGC0YwgUGxhdGZvcm1lciDQv9C+0YHQu9C1INCw0YPQtNC40YLQsCBHb2RvdC3Qv9C10YDQtdC90L7RgdC40LzQvtGB0YLQuA==')
+        Priority = 'P0'
+        Dependencies = @('T-0221', 'T-0222', 'T-0223', 'T-0225')
+        Subtask = (Decode-Utf8Base64 '0J7RgtC60YDRi9GC0L46INCS0YvQv9C+0LvQvdC40YLRjCBnYW1lcGxheSwgYWNjZXB0YW5jZSwgdmlzdWFsINC4IHBlcmZvcm1hbmNlINC00L7Rh9C10YDQvdC40LUg0LfQsNC00LDRh9C4Lg==')
+        Activity = (Decode-Utf8Base64 'MjAyNi0wNi0yM1QyMTowMjowMCswMzowMCAtINCX0LDQtNCw0YfQsCDRgdC+0LfQtNCw0L3QsCDQv9C+INGC0LXQutGD0YnQtdC80YMg0LDRg9C00LjRgtGDINC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjy4=')
+    }
+    'platformer-acceptance' = @{
+        Status = 'Blocked'
+        Title = 'Verify the 0.1.0 Preview Platformer'
+        Priority = 'P0'
+        Dependencies = @('T-0166')
+        Subtask = $null
+        Activity = 'Initial acceptance task created with the Platformer project files.'
+    }
+}
+
+$taskDocuments = @{}
+foreach ($taskId in $expectedTaskMetadata.Keys) {
+    $expectedTask = $expectedTaskMetadata[$taskId]
+    $taskPath = Join-Path $taskRoot "$taskId.e2task"
+    $taskDocument = Read-Utf8Json $taskPath
+    if ($taskDocument.format -ne 'Electron2D.TaskFile' -or $taskDocument.version -ne 1 -or $taskDocument.taskId -ne $taskId) {
+        throw "Platformer task document is invalid: $taskId"
+    }
+
+    if ($taskDocument.status -ne $expectedTask.Status -or
+        $taskDocument.title -ne $expectedTask.Title -or
+        $taskDocument.priority -ne $expectedTask.Priority) {
+        throw "Platformer task '$taskId' metadata mismatch."
+    }
+
+    $actualDependencies = @($taskDocument.dependencies)
+    if (($actualDependencies -join ',') -ne ($expectedTask.Dependencies -join ',')) {
+        throw "Platformer task '$taskId' dependency mismatch. Expected $($expectedTask.Dependencies -join ','), got $($actualDependencies -join ',')."
+    }
+
+    if ($expectedTask.Subtask) {
+        $subtasks = @($taskDocument.subtasks)
+        if (-not ($subtasks -contains $expectedTask.Subtask)) {
+            throw "Platformer task '$taskId' lost expected subtask: $($expectedTask.Subtask)"
+        }
+    }
+
+    $activityPayloads = @($taskDocument.activity | ForEach-Object { [string]$_.payload })
+    if (-not ($activityPayloads | Where-Object { $_.IndexOf($expectedTask.Activity, [System.StringComparison]::Ordinal) -ge 0 })) {
+        throw "Platformer task '$taskId' lost expected historical activity: $($expectedTask.Activity)"
+    }
+
+    $migrationActivityText = Decode-Utf8Base64 '0JfQsNC00LDRh9CwINC/0LXRgNC10L3QtdGB0LXQvdCwINC40Lcg0LrQvtGA0L3QtdCy0L7Qs9C+IFRBU0tTLm1k'
+    if ($taskId -ne 'platformer-acceptance' -and
+        -not ($activityPayloads | Where-Object { $_.IndexOf($migrationActivityText, [System.StringComparison]::Ordinal) -ge 0 })) {
+        throw "Platformer task '$taskId' is missing migration activity."
+    }
+
+    $taskDocuments[$taskId] = $taskDocument
+}
+
+$readyTaskIds = @($board.columns | Where-Object { $_.status -eq 'Ready' } | Select-Object -ExpandProperty taskIds)
+if (($readyTaskIds -join ',') -ne 'T-0222') {
+    throw "Platformer task board Ready column mismatch: $($readyTaskIds -join ',')"
+}
+
+$blockedTaskIds = @($board.columns | Where-Object { $_.status -eq 'Blocked' } | Select-Object -ExpandProperty taskIds)
+$expectedBlockedTaskIds = @('T-0223', 'T-0225', 'T-0221', 'T-0166', 'platformer-acceptance')
+if (($blockedTaskIds -join ',') -ne ($expectedBlockedTaskIds -join ',')) {
+    throw "Platformer task board Blocked column mismatch. Expected $($expectedBlockedTaskIds -join ','), got $($blockedTaskIds -join ',')."
+}
+
+$awaitingAcceptanceTaskIds = @($board.columns | Where-Object { $_.status -eq 'AwaitingAcceptance' } | Select-Object -ExpandProperty taskIds)
+if ($awaitingAcceptanceTaskIds.Count -ne 0) {
+    throw "Platformer task board must not keep stale AwaitingAcceptance tasks: $($awaitingAcceptanceTaskIds -join ',')"
+}
+
+$acceptanceTask = $taskDocuments['platformer-acceptance']
+if ($acceptanceTask.readiness -ne 'BlockedByDependencies' -or
+    $acceptanceTask.acceptanceState -ne 'ChangesRequested' -or
+    ((@($acceptanceTask.dependencies) -join ',') -ne 'T-0166')) {
+    throw 'Platformer acceptance task must be blocked by the migrated Platformer tracking task.'
+}
+
+$resourceManifest = Read-Utf8Json (Join-Path $projectRoot 'resources/platformer.manifest.json')
 if ($resourceManifest.format -ne 'Platformer.Resources' -or $resourceManifest.networkRequiredDuringBuild -ne $false) {
     throw 'Platformer resource manifest is invalid.'
 }

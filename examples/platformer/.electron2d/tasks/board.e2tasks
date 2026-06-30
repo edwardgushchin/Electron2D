@@ -9,7 +9,9 @@
     },
     {
       "status": "Ready",
-      "taskIds": []
+      "taskIds": [
+        "T-0222"
+      ]
     },
     {
       "status": "InProgress",
@@ -17,7 +19,13 @@
     },
     {
       "status": "Blocked",
-      "taskIds": []
+      "taskIds": [
+        "T-0223",
+        "T-0225",
+        "T-0221",
+        "T-0166",
+        "platformer-acceptance"
+      ]
     },
     {
       "status": "Review",
@@ -25,9 +33,7 @@
     },
     {
       "status": "AwaitingAcceptance",
-      "taskIds": [
-        "platformer-acceptance"
-      ]
+      "taskIds": []
     },
     {
       "status": "Done",

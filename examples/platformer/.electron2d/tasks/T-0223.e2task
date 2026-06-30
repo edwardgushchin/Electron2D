@@ -1,0 +1,135 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 1,
+  "taskId": "T-0223",
+  "title": "Переписать Platformer acceptance без самопроверки",
+  "description": "Ссылки:\n  - Доменный документ: `docs/examples/platformer.md`\n  - Доменный документ: `docs/runtime/headless-runtime-automation.md`\n  - Verifier: `tools/Verify-Platformer.ps1`\n  - Исходный код: `examples/platformer/scripts/PlatformerGame.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs`\n\nТекущий verifier слишком часто проверяет сам себя: он может вручную задавать скорость, вызывать checkpoint/save, засчитывать coin/checkpoint по координате и считать `CharacterMoved` истинным даже по стартовой ненулевой позиции. `Playable=True` не доказывает прохождение игрового цикла. Visual/screenshot analysis вынесен в отдельную `T-0225`, чтобы acceptance оставался black-box gameplay проверкой.\n\nНужное поведение: acceptance должен наблюдать реальный gameplay path через runtime launch, `InputMap` events и игровые объекты. Verifier может подавать ввод и читать состояние, но не имеет права напрямую выставлять checkpoint, coins, save payload или победу.",
+  "status": "Blocked",
+  "readiness": "BlockedByDependencies",
+  "blockingReasons": [
+    "Dependency"
+  ],
+  "priority": "P0",
+  "rank": "3000",
+  "labels": [
+    "acceptance",
+    "platformer",
+    "reference-game",
+    "version:0.1.0-preview"
+  ],
+  "assignee": null,
+  "createdBy": "repository-task-migration",
+  "parentTaskId": null,
+  "dependencies": [
+    "T-0222"
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "t-0223-criterion-01",
+      "description": "До изменения verifier-а `docs/examples/platformer.md` описывает acceptance sequence и запрещённые прямые мутации игрового состояния.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-02",
+      "description": "Добавлены сначала падающие tests, которые ловят текущие ложноположительные `Playable=True`, `CharacterMoved` и прямую выдачу coins/checkpoint/save.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-03",
+      "description": "`Playable=True` требует наблюдаемую последовательность `runtime launch -> InputMap events -> movement -> jump -> landing on one-way platform -> coin pickup -> checkpoint activation -> death -> respawn -> process shutdown -> process relaunch -> save restore -> goal`.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-04",
+      "description": "Verifier не вызывает игровые методы так, чтобы обходить collision/trigger path, и не присваивает checkpoint, coins, save payload или win state напрямую.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-05",
+      "description": "`CharacterMoved` считается истинным только после реального смещения от input/runtime step, а не из-за ненулевой стартовой позиции.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-06",
+      "description": "Save verification читает файл, созданный после игрового checkpoint/collectible path, и сравнивает payload с состоянием игры.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-07",
+      "description": "Acceptance выполняет и смерть/respawn, и отдельный relaunch процесса с восстановлением сохранения; `death or reload` не допускается как ослабленный вариант.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-08",
+      "description": "Acceptance artifact включает machine-readable event trace по ключевым gameplay events, frame index, timestamp и итоговую причину pass/fail.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0223-criterion-09",
+      "description": "После зелёных проверок доменный документ фиксирует фактический acceptance contract и команды проверки.",
+      "state": "Open",
+      "evidenceLinks": []
+    }
+  ],
+  "subtasks": [
+    "Открыто: Уточнить acceptance sequence в доменном документе.",
+    "Открыто: Добавить red tests на ложноположительный verifier.",
+    "Открыто: Переписать play-script/verifier path на наблюдение gameplay events.",
+    "Открыто: Запустить focused Platformer verifier и записать результат в дневник."
+  ],
+  "activity": [
+    {
+      "activityEntryId": "activity-t-0223-001",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": "2026-06-24T19:20:00+03:00 - Создано по пользовательскому audit rejection. Без этой задачи `T-0222` может снова стать зелёным boolean-маркером вместо доказательства, что пример действительно играется."
+    },
+    {
+      "activityEntryId": "activity-t-0223-002",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+      "kind": "Decision",
+      "payload": "2026-06-24T19:45:00+03:00 - Приоритет повышен до P0, acceptance сделан полностью black-box, а screenshot/visual gate вынесен в отдельную `T-0225`."
+    },
+    {
+      "activityEntryId": "activity-t-0223-migrated-to-project-board",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Decision",
+      "payload": "2026-06-30T12:21:00+03:00 - Задача перенесена из корневого TASKS.md в ProjectTaskManager проекта Platformer по T-0234. Исторический текст, критерии и зависимости сохранены в этом .e2task документе."
+    }
+  ],
+  "linkedTransactions": [],
+  "linkedJobs": [],
+  "linkedDiagnostics": [],
+  "linkedArtifacts": [],
+  "linkedScenesResourcesAndNodes": [
+    "docs/examples/platformer.md",
+    "docs/runtime/headless-runtime-automation.md",
+    "examples/platformer/scripts/PlatformerGame.cs",
+    "tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs",
+    "tools/Verify-Platformer.ps1"
+  ],
+  "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+  "updatedAt": "2026-06-30T09:21:00.0000000+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "acceptanceState": "Open",
+  "archivedAt": null,
+  "archivedBy": null,
+  "cancellationReason": null
+}

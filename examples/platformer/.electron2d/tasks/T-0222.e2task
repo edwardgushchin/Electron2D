@@ -1,0 +1,214 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 1,
+  "taskId": "T-0222",
+  "title": "Пересобрать Platformer как законченную приёмочную игру",
+  "description": "Ссылки:\n  - Доменный документ: `docs/examples/platformer.md`\n  - Доменный документ: `docs/examples/reference-game-assets.md`\n  - Исходный код: `examples/platformer/scenes/main.scene.json`\n  - Исходный код: `examples/platformer/scripts/PlatformerGame.cs`\n  - Assets: `data/assets/reference-games/platformer/`\n  - Тесты: `tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs`\n\nПовторный аудит пользователя признал текущий Platformer не игрой, а smoke-fixture подсистем. В `TileMapLayer` фактически две клетки, видимая земля собрана отдельными декоративными объектами и не совпадает с collision geometry, часть сегментов скрыта, checkpoint/star/flag не имеют игрового поведения, coins и checkpoint выставляются по координате или напрямую, `walk` использует одинаковые idle-кадры, scripted `jump` двигает персонажа вправо, а world, camera, HUD и декоративный уровень живут в рассогласованных пространствах.\n\nНужное поведение: после переименования `T-0212` Platformer должен стать небольшим, но законченным вертикальным срезом игры на 45-90 секунд прохождения. Это рабочая замена преждевременно закрытого scope `T-0094`, без переписывания архивной истории: новый активный task фиксирует, что пользовательская приёмка текущего результата не состоялась. Игра использует публичный 2D coordinate contract, совместимый с Godot 4.7: `+Y` вниз, `Vector2.Up = (0, -1)`, положительная platformer gravity по `Y`, отрицательная jump velocity по `Y`.",
+  "status": "Ready",
+  "readiness": "Ready",
+  "blockingReasons": [],
+  "priority": "P0",
+  "rank": "2000",
+  "labels": [
+    "gameplay",
+    "platformer",
+    "reference-game",
+    "version:0.1.0-preview"
+  ],
+  "assignee": null,
+  "createdBy": "repository-task-migration",
+  "parentTaskId": null,
+  "dependencies": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "t-0222-criterion-01",
+      "description": "До изменения сцен/кода `docs/examples/platformer.md` переписан как целевая спецификация настоящей игры, а не verifier showcase.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-02",
+      "description": "Добавлены сначала падающие tests, которые ловят текущие две клетки `TileMapLayer`, декоративную землю вне collision, ручные coins/checkpoint и отсутствие реальной walk animation.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-03",
+      "description": "Уровень рассчитан на 45-90 секунд прохождения и содержит старт, обычные платформы, one-way platforms, разрывы, опасность, checkpoint, collectibles и цель.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-04",
+      "description": "Deterministic replay проходит objective path в диапазоне 45-90 секунд и сохраняется как acceptance evidence.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-05",
+      "description": "Видимый уровень и collision geometry задаются единым игровым `TileMapLayer` или явно синхронизированной парой данных; декоративные `TextureRect` не расходятся с физикой.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-06",
+      "description": "Все world-объекты находятся внутри одного `World`; camera, player, hazards, collectibles, checkpoint и goal используют одно координатное пространство.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-07",
+      "description": "Coins являются настоящими collectible objects с collision/trigger behavior; код не присваивает `coins = 1` по координате или из verifier-а.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-08",
+      "description": "Checkpoint является настоящим trigger object; сохранение прогресса происходит после игрового взаимодействия, а не через прямой вызов verifier-а.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-09",
+      "description": "Есть явные состояния `Playing`, `Paused`, `Dead`, `Won` с документированными переходами.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-10",
+      "description": "Есть title/start scene и result/restart flow либо другой реальный scene switch, проверяемый runtime path.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-11",
+      "description": "Есть смерть, respawn, restart и детерминированное восстановление checkpoint/coins после reload.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-12",
+      "description": "Semantics checkpoint и собранных coins детерминированы: повторный pickup не дублирует coin, checkpoint restore не теряет уже сохранённое состояние.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-13",
+      "description": "Есть goal и наблюдаемое win state.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-14",
+      "description": "Player имеет разные idle/run/jump/fall frames, корректное переключение animation state и разворот спрайта по направлению.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-15",
+      "description": "Animation state transition вызывается только при смене состояния, а не повторно каждый движущийся кадр.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-16",
+      "description": "`jump` не двигает персонажа вправо, а остановка движения возвращает animation в `idle`.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-17",
+      "description": "Camera имеет limits, dead zone или документированное поведение следования, pixel snapping и не оставляет пустую чёрную половину кадра.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-18",
+      "description": "HUD находится только в `CanvasLayer`; pause menu, звук и save/load остаются частью игрового loop.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-19",
+      "description": "HUD обновляется только при изменении отображаемого состояния и не создаёт новую строку каждый кадр.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-20",
+      "description": "Production gameplay class не содержит `RunHeadlessVerification`, `RunPlayableScript` или аналогичные acceptance-only entrypoints; acceptance hooks вынесены в тестовый/runner слой.",
+      "state": "Open",
+      "evidenceLinks": []
+    },
+    {
+      "criterionId": "t-0222-criterion-21",
+      "description": "После зелёных проверок доменный документ описывает фактическую игру, ограничения, screenshots и команды проверки.",
+      "state": "Open",
+      "evidenceLinks": []
+    }
+  ],
+  "subtasks": [
+    "Открыто: Переписать доменный документ под вертикальный срез игры.",
+    "Открыто: Добавить red tests на scene geometry, gameplay objects и animation frames.",
+    "Открыто: Выполнить `T-0212` до изменения уровня и gameplay code.",
+    "Открыто: Пересобрать scene data и gameplay script без ручных verifier shortcuts.",
+    "Открыто: Проверить визуальный кадр Platformer и исправить camera/world/UI alignment.",
+    "Открыто: Запустить focused Platformer checks и обновить дневник."
+  ],
+  "activity": [
+    {
+      "activityEntryId": "activity-t-0222-001",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": "2026-06-24T19:20:00+03:00 - Создано по пользовательскому audit rejection. Текущий `T-0166` больше не готов к приёмке; этот task должен сделать Platformer игрой, а не набором subsystem markers."
+    },
+    {
+      "activityEntryId": "activity-t-0222-002",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+      "kind": "Decision",
+      "payload": "2026-06-24T19:45:00+03:00 - Приоритет повышен до P0 и добавлена зависимость от `T-0212`: полную переделку игры нужно делать уже в каталоге/проекте `Platformer`, иначе новый уровень, tests, scripts и docs придётся переименовывать повторно."
+    },
+    {
+      "activityEntryId": "activity-t-0222-003",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-25T22:38:51.0000000+00:00",
+      "kind": "Comment",
+      "payload": "2026-06-26T01:38:51+03:00 - После принятия `T-0220` внешним аудитом r04 все зависимости этой задачи закрыты; `T-0222` переведена из `blocked` в `open`."
+    },
+    {
+      "activityEntryId": "activity-t-0222-migrated-to-project-board",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Decision",
+      "payload": "2026-06-30T12:21:00+03:00 - Задача перенесена из корневого TASKS.md в ProjectTaskManager проекта Platformer по T-0234. Исторический текст, критерии и зависимости сохранены в этом .e2task документе."
+    }
+  ],
+  "linkedTransactions": [],
+  "linkedJobs": [],
+  "linkedDiagnostics": [],
+  "linkedArtifacts": [],
+  "linkedScenesResourcesAndNodes": [
+    "data/assets/reference-games/platformer/",
+    "docs/examples/platformer.md",
+    "docs/examples/reference-game-assets.md",
+    "examples/platformer/scenes/main.scene.json",
+    "examples/platformer/scripts/PlatformerGame.cs",
+    "tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs"
+  ],
+  "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+  "updatedAt": "2026-06-30T09:21:00.0000000+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "acceptanceState": "Open",
+  "archivedAt": null,
+  "archivedBy": null,
+  "cancellationReason": null
+}
