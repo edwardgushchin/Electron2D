@@ -67,7 +67,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
+                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
@@ -113,6 +113,11 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         if (args is ["verify", "no-powershell-workflows"])
         {
             return VerifyNoPowerShellWorkflowsAsync(cancellationToken);
+        }
+
+        if (args is ["verify", "no-powershell-workflows", "allowed-mentions"])
+        {
+            return ReportNoPowerShellWorkflowsAllowedMentionsAsync(cancellationToken);
         }
 
         if (args is ["verify", "source-domain-layout"])
@@ -220,7 +225,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return VerifyManifestsAsync(cancellationToken);
         }
 
-        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
+        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
     }
 
     private Task<int> RunTestAsync(string[] args, CancellationToken cancellationToken)
@@ -373,6 +378,14 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         return repositoryRoot is null
             ? Task.FromResult(RepositoryBuildExitCodes.Failed)
             : new NoPowerShellWorkflowVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(cancellationToken);
+    }
+
+    private Task<int> ReportNoPowerShellWorkflowsAllowedMentionsAsync(CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify no-powershell-workflows allowed-mentions");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new NoPowerShellWorkflowVerifier(repositoryRoot, diagnostics, new ProcessRunner()).ReportAllowedMentionsAsync(cancellationToken);
     }
 
     private Task<int> VerifyCiMatrixAsync()
@@ -885,7 +898,8 @@ internal sealed record BuildDiagnostic(
     string? OutputPath = null,
     string? ProjectPath = null,
     string? ScenarioId = null,
-    int? TimeoutSeconds = null);
+    int? TimeoutSeconds = null,
+    int? LineNumber = null);
 
 internal static class RepositoryBuildExitCodes
 {

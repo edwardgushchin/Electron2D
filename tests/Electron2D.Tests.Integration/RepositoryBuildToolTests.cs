@@ -1038,6 +1038,34 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task VerifyNoPowerShellWorkflowsReportsAllowlistedMentionsInDiagnosticMode()
+    {
+        var result = await RunBuildToolAsync("verify", "no-powershell-workflows", "allowed-mentions");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-ALLOWED-MENTION", "allowed mention diagnostic");
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-ALLOWED-MENTIONS-REPORTED", "allowed mentions summary");
+        using var diagnostics = ReadDiagnostics(result);
+        var allowedMentions = diagnostics.RootElement
+            .EnumerateArray()
+            .Where(diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-NO-POWERSHELL-ALLOWED-MENTION")
+            .ToArray();
+
+        Assert.NotEmpty(allowedMentions);
+        Assert.All(
+            allowedMentions,
+            diagnostic =>
+            {
+                Assert.False(string.IsNullOrWhiteSpace(diagnostic.GetProperty("path").GetString()));
+                Assert.True(diagnostic.GetProperty("lineNumber").GetInt32() > 0);
+                Assert.Contains("Allowed", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+            });
+        Assert.Contains(
+            allowedMentions,
+            diagnostic => diagnostic.GetProperty("path").GetString() == "docs/release-management/ci-matrix.md");
+    }
+
+    [Fact]
     public async Task T0210BuildToolVerifiesCiMatrixInCurrentRepository()
     {
         var result = await RunBuildToolAsync("verify", "ci-matrix");
@@ -1194,6 +1222,50 @@ public sealed class RepositoryBuildToolTests
         Assert.NotEqual(0, result.ExitCode);
         AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-ACTIVE-WORKFLOW", "active PowerShell workflow fixture");
         AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-TOOLS-PS1", "tracked tools PowerShell fixture");
+    }
+
+    [Theory]
+    [InlineData("TASKS.md", "Историческая заметка: удалить pwsh ./tools/legacy.ps1")]
+    [InlineData("docs/release-management/ci-matrix.md", "Диагностическая заметка: PowerShell -ExecutionPolicy Bypass -File tools/legacy.ps1")]
+    [InlineData("docs/export/windows-x64-export.md", "Запретительная заметка: без PowerShell выполнить pwsh ./tools/export.ps1")]
+    [InlineData("docs/repository/license-policy.md", "Наследие не является активным путём: powershell -ExecutionPolicy Bypass -File tools/legacy.ps1")]
+    public async Task VerifyNoPowerShellWorkflowsRejectsActiveCommandInAllowlistBoundaryFixture(string relativePath, string activeLine)
+    {
+        using var workspace = TemporaryDirectory.Create("no-powershell-workflows-allowlist-boundary-fixture");
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(
+            workspace.Root,
+            relativePath,
+            $"""
+            # Fixture
+
+            {activeLine}
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "no-powershell-workflows");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-ACTIVE-WORKFLOW", "active command in allowlist boundary fixture");
+    }
+
+    [Fact]
+    public async Task VerifyNoPowerShellWorkflowsDiagnosticModeRejectsActiveWorkflowFixture()
+    {
+        using var workspace = TemporaryDirectory.Create("no-powershell-workflows-diagnostic-rejects-fixture");
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(
+            workspace.Root,
+            "TASKS.md",
+            """
+            ## Historical task
+
+            Историческая заметка: удалить pwsh ./tools/legacy.ps1
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "no-powershell-workflows", "allowed-mentions");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-ACTIVE-WORKFLOW", "diagnostic mode rejects active workflow");
     }
 
     [Fact]

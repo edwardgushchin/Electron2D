@@ -156,10 +156,214 @@ internal sealed class CiMatrixVerifier(string repositoryRoot, JsonDiagnosticSink
 
 internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDiagnosticSink diagnostics, ProcessRunner processRunner)
 {
+    private const string VerifyStep = "verify no-powershell-workflows";
+    private const string AllowedMentionsStep = "verify no-powershell-workflows allowed-mentions";
+    private static readonly NoPowerShellWorkflowPathRule[] ProductionPathAllowlist =
+    [
+        new("GitHub workflow definitions", relativePath =>
+            relativePath.StartsWith(".github/workflows/", StringComparison.Ordinal) &&
+            (relativePath.EndsWith(".yml", StringComparison.OrdinalIgnoreCase) || relativePath.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase))),
+        new("root agent and task instructions", relativePath => relativePath is "AGENTS.md" or "TASKS.md"),
+        new("local Codex skill documentation", relativePath =>
+            relativePath.StartsWith(".codex/skills/", StringComparison.Ordinal) &&
+            relativePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase)),
+        new("generated documentation metadata", relativePath => relativePath.StartsWith("data/documentation/", StringComparison.Ordinal)),
+        new("quality data", relativePath => relativePath.StartsWith("data/quality/", StringComparison.Ordinal)),
+        new("reference game asset documentation", relativePath => relativePath.Equals("data/assets/reference-games/README.md", StringComparison.Ordinal)),
+        new("legacy root tools path", relativePath => relativePath.StartsWith("tools/", StringComparison.Ordinal)),
+        new("active domain documentation", relativePath =>
+            relativePath.StartsWith("docs/", StringComparison.Ordinal) &&
+            relativePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase) &&
+            IsActiveDocumentationPath(relativePath))
+    ];
+
+    private static readonly NoPowerShellAllowedMentionRule[] AllowedMentionRules =
+    [
+        new(
+            "Spec-Kit installation exact note",
+            ".codex/skills/spec-driven-development/references/sdd_install.md",
+            [
+                "7fd6ba565287008cc1ce7ef651c2ee1620669bb4b699b713b818664b250aad91",
+                "edc678d7a18155801ea355c083f424592c5b28aa093b3cca2520f18b76b33dac"
+            ]),
+        new(
+            "CI command exact route",
+            ".github/workflows/ci.yml",
+            [
+                "402ad514e068f4c18feebf6681bfbe38efc3d1340c23dfb7bb1a71c7246d6e0e"
+            ]),
+        new(
+            "README migration exact line",
+            "docs/documentation/repository-readme.md",
+            [
+                "6f9b0668eacb6f11c73f86ef1ff679b147fb974599b80189b12ea0f55615ebab",
+                "9c7b2092fcbb18d3f709faf107d014b947bed3e701dad27b4041b5c618995a45",
+                "b1c6d4456902e9eb56e9ffec33972b3f6b8d6b928044fc93902a2318f4b499bd",
+                "2fedd1f950171abcc1c4d0c67ed846891ec96852b55e67fceb42ddddcec50a0e",
+                "204566306b705e6ee361061080e60e458f90a77937743164bf9ad4df87f4b037",
+                "7ee4cbff2199589f37f47d536ff697d8c620a360c1e6ccf9adbc8f6412704857",
+                "e3c694c0bb0609ecdbe09bb2e8f9acdd5f360b5fc9518d660beee51c460937bb"
+            ]),
+        new(
+            "export package policy exact line",
+            "docs/export/export-guide.md",
+            [
+                "223185a731ab3ba0d6eef62d7e53d7e11399f907216acf734dec214a3d3f90c2"
+            ]),
+        new(
+            "export package policy exact line",
+            "docs/export/linux-x64-export.md",
+            [
+                "acf4b447e6c3f0dffdbb74d5e25a0f40fd6e8ed961915f10ac122209feed3464",
+                "d3373566960caa317001bfa3f2da86d217ce6f7fd9e50fb1e6f78693563af830"
+            ]),
+        new(
+            "export package policy exact line",
+            "docs/export/macos-arm64-export.md",
+            [
+                "44b21a877d0e2a8e5f63b684fd88f98590910bb36105c06daed2b2be26a4f0d4",
+                "d3373566960caa317001bfa3f2da86d217ce6f7fd9e50fb1e6f78693563af830"
+            ]),
+        new(
+            "export package policy exact line",
+            "docs/export/windows-x64-export.md",
+            [
+                "6339abc7eb890321cc9337f32e005a93f3edc2ecefc62d5500a9eca379602e55",
+                "3362bbd5dc47651451dd5aec7ad8344e070e0741d63c56d84dfa6e7bb955643f"
+            ]),
+        new(
+            "release-management exact line",
+            "docs/release-management/audit-package.md",
+            [
+                "635a7a84eed7c51aebddeb41e5dbf2e888971a212ffb4a80a508a926a3541fce"
+            ]),
+        new(
+            "release-management exact line",
+            "docs/release-management/ci-matrix.md",
+            [
+                "654f642f5abe50f826c77d89a209300d0403336102b60c430006fbab453f39d5",
+                "8523fb343e151aaa4f235b6908975af51edb30a45e1629d4ef5a77013c439621",
+                "793c646debfddebd8a7f820eadd1ae59086f1a0474ccde04c8321055786fe8a2",
+                "6a6df5d844c94cba4fed4830baed051e34a19e58f306f703ca6fa27301854fdc",
+                "caca31f86a73645dcad500da9d753edd3980bedf4023203bf82b1de95529868e",
+                "ace61f82fc467b65334b1bcddb68a68510b0766275a4c4c8e117727b90a64174",
+                "a5a9a034a81356535351b67765625f9632033d73f10506a682d73ccbf020a412",
+                "723b5a4609acb26050b8c4810acc5c081e6fc6944bcdddca9108c41392b5de0f",
+                "aeecb6127dce7edc189e189232f9ae0cd4595500be46e5143eeccfe7c9251324",
+                "6a6df5d844c94cba4fed4830baed051e34a19e58f306f703ca6fa27301854fdc",
+                "ba0e1e4091bf718086cfdee3c84ef73af9538d41d9f9bd14cc5932a30679d2d1",
+                "edc532052907c4de9e7000e3e977656b6772702a8ac2cd4c7b6c73003659656e",
+                "ac717611b5c2de31499df4efc25c9036717a3b58329f710456d26ec9f9344fbf",
+                "b6ad253421701556b3185b4b7a83149123f0ce2c343e24da22ce6070e380edfe"
+            ]),
+        new(
+            "release-management exact line",
+            "docs/release-management/release-packaging.md",
+            [
+                "b1f6c183538f497c3aa4936c24f90dd5342cda43e390c69f79a05e14870d053e",
+                "5f877cf0eb096f37d58efd303a4b6e6f8e64ba796656e5146394ae0928a2d24a",
+                "411fa4a68d4adace4cb1f253d1e8e9530341fc49c879b9ddf0238dface88a7dc",
+                "75a2c024f0e42fcdbffff0eaa2279d3f5f8c37dc4bc5ea1bb2415e020bf7fcac",
+                "cd506d236d8bdfce68fd3baa67bc4b3f53eafd625ebdd3967ccb0446a84ea77f",
+                "6a6df5d844c94cba4fed4830baed051e34a19e58f306f703ca6fa27301854fdc",
+                "7b76d2fc6fbc866b6d75357d5304b272a6d7a402eb8207b2a982453c1c2a07b4",
+                "6d274cc035849f431d0c25791f0f6c26e6931114b7176f7950635efa2d0660b9",
+                "f978100964396068d9a53fcc1e1d5f3d74f384c38f34c71912a695cc7b545eea",
+                "c526c7397e048af8744f80bb72c90056fd65b055e59642619aebb3b2c14fea8d"
+            ]),
+        new(
+            "repository license policy exact line",
+            "docs/repository/license-policy.md",
+            [
+                "709b7765c44c3ba9188fd326d887e9ce00d50f9ec5dbb23818a2e0ebb2cb5d24"
+            ]),
+        new(
+            "task history exact line",
+            "TASKS.md",
+            [
+                "0dafb838db411a69149e66b27a9de4f553fc032b48bad07cd9e19edacd26245d",
+                "8bf15528db996db31ac8a5b0eae7fe3329406569075c5ddcd1a526eaf5276605",
+                "39c657e88edefd9a3bb015980006c91adbf7e639d65ade88c36c856c83e82af2",
+                "11c16e746226d89ad569f200049538cbef8e16bd520ed5e33c514120c56a8edf",
+                "ea01ffeed61aa7265db1dbf15ed2496a09842de8be7438793e8b422d9075d284",
+                "21d94633803262124c13ba8b309938d3ef01a717b50bc67c655e01e6834a2b82",
+                "733f44bf76ae825b196d24daab35effa8e06be796b42c30a05953b5e916d8ecc",
+                "3845473b4de85b4f2a79562ffd165694c1680a5e21174ce8125b73b50b4f1f8f",
+                "f25ab06ca87d6e7c76048e5d0901ec960faf3026d1057c1442840ca9b8ab7f17",
+                "2f57f477a1b8acd13f5f310f86792b12156391f4f268ea939c0951ed60c74766",
+                "4fd7d35931680c3b58e02bbf088083e18891449c8856a1253a58d9b254f137d7"
+            ])
+    ];
+
     public async Task<int> VerifyAsync(CancellationToken cancellationToken)
     {
-        var errors = new List<BuildDiagnostic>();
-        var paths = await EnumerateCandidatePathsAsync(cancellationToken).ConfigureAwait(false);
+        var scan = await ScanAsync(VerifyStep, cancellationToken).ConfigureAwait(false);
+        if (scan.EnumerationFailed)
+        {
+            return RepositoryBuildExitCodes.Failed;
+        }
+
+        foreach (var error in scan.ActiveFindings)
+        {
+            diagnostics.Write(error);
+        }
+
+        if (scan.ActiveFindings.Count > 0)
+        {
+            return RepositoryBuildExitCodes.Failed;
+        }
+
+        diagnostics.Write(new BuildDiagnostic(
+            "verify",
+            VerifyStep,
+            "info",
+            "E2D-BUILD-NO-POWERSHELL-WORKFLOWS-PASSED",
+            $"No active PowerShell workflow was found in {scan.Paths.Count} tracked production paths."));
+        return RepositoryBuildExitCodes.Success;
+    }
+
+    public async Task<int> ReportAllowedMentionsAsync(CancellationToken cancellationToken)
+    {
+        var scan = await ScanAsync(AllowedMentionsStep, cancellationToken).ConfigureAwait(false);
+        if (scan.EnumerationFailed)
+        {
+            return RepositoryBuildExitCodes.Failed;
+        }
+
+        foreach (var mention in scan.AllowedMentions)
+        {
+            diagnostics.Write(mention);
+        }
+
+        foreach (var error in scan.ActiveFindings)
+        {
+            diagnostics.Write(error);
+        }
+
+        if (scan.ActiveFindings.Count > 0)
+        {
+            return RepositoryBuildExitCodes.Failed;
+        }
+
+        diagnostics.Write(new BuildDiagnostic(
+            "verify",
+            AllowedMentionsStep,
+            "info",
+            "E2D-BUILD-NO-POWERSHELL-ALLOWED-MENTIONS-REPORTED",
+            $"Reported {scan.AllowedMentions.Count} allowlisted PowerShell, pwsh or .ps1 mentions in {scan.Paths.Count} tracked production paths."));
+        return RepositoryBuildExitCodes.Success;
+    }
+
+    private async Task<NoPowerShellWorkflowScanResult> ScanAsync(string step, CancellationToken cancellationToken)
+    {
+        var activeFindings = new List<BuildDiagnostic>();
+        var allowedMentions = new List<BuildDiagnostic>();
+        var paths = await EnumerateCandidatePathsAsync(step, cancellationToken).ConfigureAwait(false);
+        if (paths is null)
+        {
+            return new NoPowerShellWorkflowScanResult([], [], [], EnumerationFailed: true);
+        }
+
         foreach (var relativePath in paths.Order(StringComparer.Ordinal))
         {
             var fullPath = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
@@ -170,7 +374,8 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
 
             if (IsToolsPowerShellScript(relativePath))
             {
-                errors.Add(Error(
+                activeFindings.Add(Error(
+                    step,
                     "E2D-BUILD-NO-POWERSHELL-TOOLS-PS1",
                     $"Tracked active PowerShell script must be deleted or replaced by an eng/Electron2D.Build route: {relativePath}.",
                     relativePath));
@@ -186,59 +391,66 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
             for (var i = 0; i < lines.Length; i++)
             {
                 var line = lines[i];
-                if (!ContainsPowerShellWorkflowToken(line) || IsAllowlistedMention(relativePath, line))
+                if (!ContainsPowerShellWorkflowToken(line))
                 {
                     continue;
                 }
 
-                errors.Add(Error(
+                var lineNumber = i + 1;
+                var allowed = FindAllowlistedMentionRule(relativePath, line);
+                if (allowed is not null)
+                {
+                    allowedMentions.Add(new BuildDiagnostic(
+                        "verify",
+                        step,
+                        "info",
+                        "E2D-BUILD-NO-POWERSHELL-ALLOWED-MENTION",
+                        $"Allowed {allowed.Description} mention in {relativePath}:{lineNumber}: {line.Trim()}",
+                        Path: relativePath,
+                        LineNumber: lineNumber));
+                    continue;
+                }
+
+                activeFindings.Add(Error(
+                    step,
                     "E2D-BUILD-NO-POWERSHELL-ACTIVE-WORKFLOW",
-                    $"Active PowerShell workflow token found in {relativePath}:{i + 1}: {line.Trim()}",
-                    relativePath));
+                    $"Active PowerShell workflow token found in {relativePath}:{lineNumber}: {line.Trim()}",
+                    relativePath,
+                    lineNumber));
             }
         }
 
-        foreach (var error in errors)
-        {
-            diagnostics.Write(error);
-        }
-
-        if (errors.Count > 0)
-        {
-            return RepositoryBuildExitCodes.Failed;
-        }
-
-        diagnostics.Write(new BuildDiagnostic(
-            "verify",
-            "verify no-powershell-workflows",
-            "info",
-            "E2D-BUILD-NO-POWERSHELL-WORKFLOWS-PASSED",
-            $"No active PowerShell workflow was found in {paths.Count} tracked production paths."));
-        return RepositoryBuildExitCodes.Success;
+        return new NoPowerShellWorkflowScanResult(paths, activeFindings, allowedMentions, EnumerationFailed: false);
     }
 
-    private async Task<IReadOnlyList<string>> EnumerateCandidatePathsAsync(CancellationToken cancellationToken)
+    private async Task<IReadOnlyList<string>?> EnumerateCandidatePathsAsync(string step, CancellationToken cancellationToken)
     {
         var paths = new HashSet<string>(StringComparer.Ordinal);
         if (Directory.Exists(Path.Combine(repositoryRoot, ".git")))
         {
             var result = await processRunner.RunAsync(
                 new ProcessRunRequest(
-                    "verify no-powershell-workflows git ls-files",
+                    step + " git ls-files",
                     "git",
                     ["ls-files", "-z"],
                     repositoryRoot,
                     TimeSpan.FromSeconds(30)),
                 cancellationToken).ConfigureAwait(false);
-            if (result.ExitCode == 0)
+            if (result.ExitCode != 0)
             {
-                foreach (var path in result.StandardOutput.Split('\0', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                diagnostics.Write(Error(
+                    step,
+                    "E2D-BUILD-NO-POWERSHELL-GIT-LS-FILES",
+                    $"Failed to enumerate tracked files with git ls-files. Exit code: {result.ExitCode?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "unknown"}."));
+                return null;
+            }
+
+            foreach (var path in result.StandardOutput.Split('\0', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                var normalized = path.Replace('\\', '/');
+                if (IsCandidatePath(normalized))
                 {
-                    var normalized = path.Replace('\\', '/');
-                    if (IsCandidatePath(normalized))
-                    {
-                        paths.Add(normalized);
-                    }
+                    paths.Add(normalized);
                 }
             }
 
@@ -264,37 +476,7 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
             return false;
         }
 
-        if (relativePath.StartsWith(".github/workflows/", StringComparison.Ordinal) &&
-            (relativePath.EndsWith(".yml", StringComparison.OrdinalIgnoreCase) || relativePath.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase)))
-        {
-            return true;
-        }
-
-        if (relativePath is "AGENTS.md" or "TASKS.md")
-        {
-            return true;
-        }
-
-        if (relativePath.StartsWith(".codex/skills/", StringComparison.Ordinal) && relativePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        if (relativePath.StartsWith("data/documentation/", StringComparison.Ordinal) ||
-            relativePath.StartsWith("data/quality/", StringComparison.Ordinal) ||
-            relativePath.Equals("data/assets/reference-games/README.md", StringComparison.Ordinal))
-        {
-            return true;
-        }
-
-        if (relativePath.StartsWith("tools/", StringComparison.Ordinal))
-        {
-            return true;
-        }
-
-        return relativePath.StartsWith("docs/", StringComparison.Ordinal) &&
-            relativePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase) &&
-            IsActiveDocumentationPath(relativePath);
+        return ProductionPathAllowlist.Any(rule => rule.Matches(relativePath));
     }
 
     private static bool IsActiveDocumentationPath(string relativePath)
@@ -339,59 +521,38 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
             Regex.IsMatch(line, @"tools[/\\][^\s`""]+\.ps1", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
     }
 
-    private static bool IsAllowlistedMention(string relativePath, string line)
+    private static NoPowerShellAllowedMentionRule? FindAllowlistedMentionRule(string relativePath, string line)
     {
-        var normalized = line.ToLowerInvariant();
-        if (relativePath.Equals(".codex/skills/spec-driven-development/references/sdd_install.md", StringComparison.Ordinal))
-        {
-            return true;
-        }
-
-        if (normalized.Contains("no-powershell-workflows", StringComparison.Ordinal) ||
-            normalized.Contains("без powershell", StringComparison.Ordinal) ||
-            normalized.Contains("не содержит", StringComparison.Ordinal) ||
-            normalized.Contains("не содержат", StringComparison.Ordinal) ||
-            normalized.Contains("не раскрывать", StringComparison.Ordinal) ||
-            normalized.Contains("не должен", StringComparison.Ordinal) ||
-            normalized.Contains("не должны", StringComparison.Ordinal) ||
-            normalized.Contains("не является", StringComparison.Ordinal) ||
-            normalized.Contains("не являются", StringComparison.Ordinal) ||
-            normalized.Contains("не запускает", StringComparison.Ordinal) ||
-            normalized.Contains("не использует", StringComparison.Ordinal) ||
-            normalized.Contains("не копирует", StringComparison.Ordinal) ||
-            normalized.Contains("не требуют", StringComparison.Ordinal) ||
-            normalized.Contains("нет новых", StringComparison.Ordinal) ||
-            normalized.Contains("отсутствуют", StringComparison.Ordinal) ||
-            normalized.Contains("должны отсутствовать", StringComparison.Ordinal) ||
-            normalized.Contains("отсутствие", StringComparison.Ordinal) ||
-            normalized.Contains("отсутствия", StringComparison.Ordinal) ||
-            normalized.Contains("запрещ", StringComparison.Ordinal) ||
-            normalized.Contains("перевести", StringComparison.Ordinal) ||
-            normalized.Contains("полной замены", StringComparison.Ordinal) ||
-            normalized.Contains("удалить", StringComparison.Ordinal) ||
-            normalized.Contains("удаляются", StringComparison.Ordinal) ||
-            normalized.Contains("удален", StringComparison.Ordinal) ||
-            normalized.Contains("удалены", StringComparison.Ordinal) ||
-            normalized.Contains("удалением", StringComparison.Ordinal) ||
-            normalized.Contains("отказ", StringComparison.Ordinal) ||
-            normalized.Contains("миграцион", StringComparison.Ordinal) ||
-            normalized.Contains("не принимаются", StringComparison.Ordinal) ||
-            normalized.Contains("не через", StringComparison.Ordinal) ||
-            normalized.Contains("rejection", StringComparison.Ordinal))
-        {
-            return true;
-        }
-
-        return relativePath.Equals("docs/documentation/repository-readme.md", StringComparison.Ordinal) &&
-            (normalized.StartsWith("- `powershell`", StringComparison.Ordinal) ||
-                normalized.StartsWith("- `.ps1`", StringComparison.Ordinal) ||
-                normalized.StartsWith("- `pwsh`", StringComparison.Ordinal));
+        var lineHash = ComputeNormalizedLineSha256(line);
+        return AllowedMentionRules.FirstOrDefault(rule => rule.Matches(relativePath, lineHash));
     }
 
-    private static BuildDiagnostic Error(string code, string message, string path)
+    private static string ComputeNormalizedLineSha256(string line)
     {
-        return new BuildDiagnostic("verify", "verify no-powershell-workflows", "error", code, message, Path: path);
+        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(line.Trim()))).ToLowerInvariant();
     }
+
+    private static BuildDiagnostic Error(string step, string code, string message, string? path = null, int? lineNumber = null)
+    {
+        return new BuildDiagnostic("verify", step, "error", code, message, Path: path, LineNumber: lineNumber);
+    }
+
+    private sealed record NoPowerShellWorkflowPathRule(string Description, Func<string, bool> Matches);
+
+    private sealed record NoPowerShellAllowedMentionRule(string Description, string RelativePath, string[] NormalizedLineSha256)
+    {
+        public bool Matches(string relativePath, string normalizedLineSha256)
+        {
+            return relativePath.Equals(RelativePath, StringComparison.Ordinal) &&
+                NormalizedLineSha256.Contains(normalizedLineSha256, StringComparer.Ordinal);
+        }
+    }
+
+    private sealed record NoPowerShellWorkflowScanResult(
+        IReadOnlyList<string> Paths,
+        IReadOnlyList<BuildDiagnostic> ActiveFindings,
+        IReadOnlyList<BuildDiagnostic> AllowedMentions,
+        bool EnumerationFailed);
 }
 
 internal sealed class SourceDomainLayoutVerifier(string repositoryRoot, JsonDiagnosticSink diagnostics)
