@@ -174,21 +174,17 @@ public sealed class EditorProjectManagerTests
     }
 
     [Fact]
-    public void WindowsFileAssociationScriptRegistersPerUserE2DOpenCommand()
+    public void FileArgumentStartupDoesNotDependOnLegacyAssociationScript()
     {
         var root = FindRepositoryRoot();
         var scriptPath = Path.Combine(root, "tools", "Register-Electron2DFileAssociation.ps1");
+        var projectManagerDoc = File.ReadAllText(Path.Combine(root, "docs", "editor", "project-manager.md"));
 
-        Assert.True(File.Exists(scriptPath), "Per-user .e2d file association script must exist.");
-
-        var script = File.ReadAllText(scriptPath);
-        Assert.Contains("Software\\Classes\\.e2d", script, StringComparison.Ordinal);
-        Assert.Contains("Software\\Classes\\Electron2D.Project\\shell\\open\\command", script, StringComparison.Ordinal);
-        Assert.Contains("Software\\Classes\\Applications\\Electron2D.Editor.exe\\SupportedTypes", script, StringComparison.Ordinal);
-        Assert.Contains("Software\\Classes\\Applications\\Electron2D.Editor.exe\\shell\\open\\command", script, StringComparison.Ordinal);
-        Assert.Contains("\"%1\"", script, StringComparison.Ordinal);
-        Assert.DoesNotContain("HKEY_LOCAL_MACHINE", script, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("HKLM:", script, StringComparison.OrdinalIgnoreCase);
+        Assert.False(File.Exists(scriptPath), "Legacy .e2d association helper must stay removed from the repository workflow.");
+        Assert.Contains("запуск с файлом проекта", projectManagerDoc, StringComparison.Ordinal);
+        Assert.Contains("Electron2D.Editor.exe \"<ProjectName>.e2d\"", projectManagerDoc, StringComparison.Ordinal);
+        Assert.DoesNotContain("Register-Electron2DFileAssociation", projectManagerDoc, StringComparison.Ordinal);
+        Assert.DoesNotContain("Software\\Classes\\.e2d", projectManagerDoc, StringComparison.Ordinal);
     }
 
     private static void AssertAgentReadyProject(string projectRoot, string rendererProfile)

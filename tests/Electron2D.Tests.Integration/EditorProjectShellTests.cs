@@ -303,8 +303,10 @@ public sealed class EditorProjectShellTests
         Assert.DoesNotContain("PresentCanvasForSmoke", windowSource, StringComparison.Ordinal);
         Assert.DoesNotContain("WindowSmoke.RunInteractive", programSource, StringComparison.Ordinal);
         Assert.DoesNotContain("FindRepositoryRoot", openProjectForWindowSource, StringComparison.Ordinal);
-        Assert.Contains("SDL.PixelFormat.ABGR8888", runtimeHostSource, StringComparison.Ordinal);
-        Assert.DoesNotContain("SDL.PixelFormat.RGBA8888", runtimeHostSource, StringComparison.Ordinal);
+        Assert.Contains("RuntimePngEncoder.Encode", runtimeHostSource, StringComparison.Ordinal);
+        Assert.Contains("RGBA pixel buffer", runtimeHostSource, StringComparison.Ordinal);
+        Assert.Contains("ImageTexture.LoadFromFile", hostSource, StringComparison.Ordinal);
+        Assert.Contains("TextureRect", hostSource, StringComparison.Ordinal);
         Assert.DoesNotContain("int.MaxValue", hostSource, StringComparison.Ordinal);
     }
 

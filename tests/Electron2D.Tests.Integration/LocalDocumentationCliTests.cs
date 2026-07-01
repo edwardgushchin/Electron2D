@@ -33,6 +33,9 @@ namespace Electron2D.Tests.Integration;
 
 public sealed class LocalDocumentationCliTests
 {
+    private static readonly TimeSpan CliCommandTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan CliStreamReadTimeout = TimeSpan.FromSeconds(10);
+
     [Fact]
     public void CliProjectIsPartOfSolutionAndNamedE2D()
     {
@@ -144,9 +147,11 @@ public sealed class LocalDocumentationCliTests
             startInfo.Environment["ELECTRON2D_DOCS_ROOT"] = docsRoot;
         }
 
+        startInfo.Environment["MSBUILDDISABLENODEREUSE"] = "1";
         startInfo.ArgumentList.Add("run");
         startInfo.ArgumentList.Add("--project");
         startInfo.ArgumentList.Add(projectPath);
+        startInfo.ArgumentList.Add("--no-build");
         startInfo.ArgumentList.Add("--");
         foreach (var argument in arguments)
         {
@@ -157,15 +162,81 @@ public sealed class LocalDocumentationCliTests
         var outputTask = process.StandardOutput.ReadToEndAsync();
         var errorTask = process.StandardError.ReadToEndAsync();
 
-        await process.WaitForExitAsync();
-        var output = await outputTask;
-        var error = await errorTask;
+        var (output, error) = await WaitForCliProcessAsync(process, outputTask, errorTask);
 
         Assert.True(
             process.ExitCode == 0,
             $"e2d command failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
 
         return JsonDocument.Parse(output);
+    }
+
+    private static async Task<(string Output, string Error)> WaitForCliProcessAsync(
+        Process process,
+        Task<string> outputTask,
+        Task<string> errorTask)
+    {
+        using var timeout = new CancellationTokenSource(CliCommandTimeout);
+        try
+        {
+            await process.WaitForExitAsync(timeout.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            TryKillProcessTree(process);
+            var timedOutOutput = await ReadProcessStreamSafelyAsync(outputTask);
+            var timedOutError = await ReadProcessStreamSafelyAsync(errorTask);
+            throw new TimeoutException(
+                $"e2d command timed out after {CliCommandTimeout}.{Environment.NewLine}stdout:{Environment.NewLine}{timedOutOutput}{Environment.NewLine}stderr:{Environment.NewLine}{timedOutError}");
+        }
+
+        return (
+            await ReadProcessStreamAsync(outputTask, "stdout"),
+            await ReadProcessStreamAsync(errorTask, "stderr"));
+    }
+
+    private static async Task<string> ReadProcessStreamAsync(Task<string> streamTask, string streamName)
+    {
+        var completed = await Task.WhenAny(streamTask, Task.Delay(CliStreamReadTimeout));
+        if (!ReferenceEquals(completed, streamTask))
+        {
+            throw new TimeoutException($"e2d command exited, but {streamName} stream did not close within {CliStreamReadTimeout}.");
+        }
+
+        return await streamTask;
+    }
+
+    private static async Task<string> ReadProcessStreamSafelyAsync(Task<string> streamTask)
+    {
+        try
+        {
+            var completed = await Task.WhenAny(streamTask, Task.Delay(CliStreamReadTimeout));
+            return ReferenceEquals(completed, streamTask)
+                ? await streamTask
+                : "<stream did not close>";
+        }
+        catch (IOException)
+        {
+            return string.Empty;
+        }
+        catch (ObjectDisposedException)
+        {
+            return string.Empty;
+        }
+    }
+
+    private static void TryKillProcessTree(Process process)
+    {
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+        }
     }
 
     private static TemporaryDirectory CreateShardDocumentationFixture(string name)

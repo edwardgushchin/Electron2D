@@ -27,14 +27,89 @@ namespace Electron2D.Build;
 internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diagnostics, ProcessRunner processRunner)
 {
     private const int DefaultTimeoutSeconds = 3600;
+    private const int HangTimeoutSeconds = 300;
+    private const int DiagnosticTailLength = 12_000;
     private const string BaselineFilter = "Category!=Baseline";
+    private const string IntegrationProject = "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj";
+    private const string IntegrationSliceAll = "all";
+    private const string IntegrationSliceFast = "fast";
+    private const string IntegrationSliceRepositoryTooling = "repository-tooling";
+    private const string IntegrationSliceAuditPackage = "audit-package";
+    private const string IntegrationSliceExternalProcess = "external-process";
+    private const string IntegrationSliceSlow = "slow";
 
     private static readonly string[] TestProjects =
     [
         "tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj",
-        "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+        IntegrationProject,
         "tests/Electron2D.Tests.RuntimeSmoke/Electron2D.Tests.RuntimeSmoke.csproj",
         "tests/Electron2D.Tests.GoldenData/Electron2D.Tests.GoldenData.csproj"
+    ];
+
+    private static readonly string[] FastIntegrationExclusions =
+    [
+        "RepositoryBuildToolTests",
+        "LocalDocumentationCliTests",
+        "Electron2DCliWorkflowTests",
+        "AgentAcceptanceBenchmarkTests",
+        "DataStabilityStressTests",
+        "LeakVerificationTests",
+        "ReferencePerformanceVerificationTests",
+        "EditorAgentWorkspacePanelTests",
+        "EditorFileSystemDockTests",
+        "EditorInspectorTests",
+        "EditorManagedDebuggerTests",
+        "EditorProjectManagerTests",
+        "EditorProjectSettingsUiTests",
+        "EditorProjectShellTests",
+        "EditorProjectTasksBoardTests",
+        "EditorRunWorkflowTests",
+        "EditorSceneTreeDockTests",
+        "EditorScriptLanguageServicesTests",
+        "EditorScriptWorkflowTests",
+        "EditorScriptWorkspaceTests",
+        "EditorShellLayoutTests",
+        "EditorSpecializedEditorsTests",
+        "EditorViewport2DTests"
+    ];
+
+    private static readonly string[] AuditPackageIncludes =
+    [
+        "RepositoryBuildToolTests.AuditPackage",
+        "RepositoryBuildToolTests.AuditSubmit",
+        "RepositoryBuildToolTests.AuditRequest",
+        "RepositoryBuildToolTests.AuditMessage",
+        "RepositoryBuildToolTests.AuditWorkflow"
+    ];
+
+    private static readonly string[] ExternalProcessIncludes =
+    [
+        "LocalDocumentationCliTests",
+        "Electron2DCliWorkflowTests",
+        "EditorAgentWorkspacePanelTests",
+        "EditorFileSystemDockTests",
+        "EditorInspectorTests",
+        "EditorManagedDebuggerTests",
+        "EditorProjectManagerTests",
+        "EditorProjectSettingsUiTests",
+        "EditorProjectShellTests",
+        "EditorProjectTasksBoardTests",
+        "EditorRunWorkflowTests",
+        "EditorSceneTreeDockTests",
+        "EditorScriptLanguageServicesTests",
+        "EditorScriptWorkflowTests",
+        "EditorScriptWorkspaceTests",
+        "EditorShellLayoutTests",
+        "EditorSpecializedEditorsTests",
+        "EditorViewport2DTests"
+    ];
+
+    private static readonly string[] SlowIncludes =
+    [
+        "AgentAcceptanceBenchmarkTests",
+        "DataStabilityStressTests",
+        "LeakVerificationTests",
+        "ReferencePerformanceVerificationTests"
     ];
 
     public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
@@ -53,10 +128,11 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             $"Running {TestProjects.Length} test projects.",
             TimeoutSeconds: options.TimeoutSeconds));
 
-        foreach (var project in TestProjects)
+        var testProjects = GetTestProjects(options);
+        foreach (var project in testProjects)
         {
             var step = $"test {project}";
-            var arguments = CreateDotnetTestArguments(project, options.IncludeBaseline);
+            var arguments = CreateDotnetTestArguments(project, options);
             diagnostics.Write(new BuildDiagnostic(
                 "test",
                 step,
@@ -90,7 +166,9 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                     $"dotnet test timed out for '{project}' after {options.TimeoutSeconds} seconds.",
                     TimedOut: true,
                     ProjectPath: project,
-                    TimeoutSeconds: options.TimeoutSeconds));
+                    TimeoutSeconds: options.TimeoutSeconds,
+                    StandardOutputTail: Tail(result.StandardOutput),
+                    StandardErrorTail: Tail(result.StandardError)));
                 return RepositoryBuildExitCodes.Failed;
             }
 
@@ -105,7 +183,9 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                     ProcessExitCode: result.ExitCode,
                     TimedOut: false,
                     ProjectPath: project,
-                    TimeoutSeconds: options.TimeoutSeconds));
+                    TimeoutSeconds: options.TimeoutSeconds,
+                    StandardOutputTail: Tail(result.StandardOutput),
+                    StandardErrorTail: Tail(result.StandardError)));
                 return result.ExitCode ?? RepositoryBuildExitCodes.Failed;
             }
 
@@ -134,6 +214,9 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private TestCommandOptions? ParseOptions(string[] args)
     {
         var includeBaseline = false;
+        var integrationSlice = IntegrationSliceAll;
+        var noBuild = false;
+        var noRestore = false;
         var timeoutSeconds = DefaultTimeoutSeconds;
 
         for (var index = 1; index < args.Length; index++)
@@ -142,6 +225,30 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             if (argument == "--include-baseline")
             {
                 includeBaseline = true;
+                continue;
+            }
+
+            if (argument == "--no-build")
+            {
+                noBuild = true;
+                continue;
+            }
+
+            if (argument == "--no-restore")
+            {
+                noRestore = true;
+                continue;
+            }
+
+            if (argument == "--integration-slice")
+            {
+                if (index + 1 >= args.Length || !TryParseIntegrationSlice(args[index + 1], out integrationSlice))
+                {
+                    WriteInvalidArguments();
+                    return null;
+                }
+
+                index++;
                 continue;
             }
 
@@ -163,7 +270,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             return null;
         }
 
-        return new TestCommandOptions(includeBaseline, timeoutSeconds);
+        return new TestCommandOptions(includeBaseline, integrationSlice, noBuild, noRestore, timeoutSeconds);
     }
 
     private void WriteInvalidArguments()
@@ -173,15 +280,137 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             "test",
             "error",
             "E2D-BUILD-CLI-INVALID-ARGUMENTS",
-            "Expected: test [--include-baseline] [--timeout-seconds <n>]."));
+            "Expected: test [--include-baseline] [--integration-slice <all|fast|repository-tooling|audit-package|external-process|slow>] [--no-build] [--no-restore] [--timeout-seconds <n>]."));
     }
 
-    private static string[] CreateDotnetTestArguments(string project, bool includeBaseline)
+    private static string[] GetTestProjects(TestCommandOptions options)
     {
-        return includeBaseline
-            ? ["test", project]
-            : ["test", project, "--filter", BaselineFilter];
+        return options.IntegrationSlice is IntegrationSliceAll or IntegrationSliceFast
+            ? TestProjects
+            : [IntegrationProject];
     }
 
-    private sealed record TestCommandOptions(bool IncludeBaseline, int TimeoutSeconds);
+    private static string[] CreateDotnetTestArguments(string project, TestCommandOptions options)
+    {
+        var arguments = new List<string>
+        {
+            "test",
+            project
+        };
+
+        var filter = CreateFilter(project, options);
+        if (filter is not null)
+        {
+            arguments.Add("--filter");
+            arguments.Add(filter);
+        }
+
+        if (options.NoBuild)
+        {
+            arguments.Add("--no-build");
+        }
+
+        if (options.NoRestore)
+        {
+            arguments.Add("--no-restore");
+        }
+
+        arguments.AddRange([
+            "--blame-hang",
+            "--blame-hang-timeout",
+            $"{HangTimeoutSeconds}s",
+            "--blame-hang-dump-type",
+            "none",
+            "--logger",
+            "console;verbosity=normal"
+        ]);
+
+        return arguments.ToArray();
+    }
+
+    private static string? CreateFilter(string project, TestCommandOptions options)
+    {
+        var filters = new List<string>();
+        if (!options.IncludeBaseline)
+        {
+            filters.Add(BaselineFilter);
+        }
+
+        if (project == IntegrationProject)
+        {
+            var sliceFilter = CreateIntegrationSliceFilter(options.IntegrationSlice);
+            if (sliceFilter is not null)
+            {
+                filters.Add(sliceFilter);
+            }
+        }
+
+        return filters.Count switch
+        {
+            0 => null,
+            1 => filters[0],
+            _ => string.Join("&", filters.Select(filter => $"({filter})"))
+        };
+    }
+
+    private static string? CreateIntegrationSliceFilter(string integrationSlice)
+    {
+        return integrationSlice switch
+        {
+            IntegrationSliceAll => null,
+            IntegrationSliceFast => And([.. FastIntegrationExclusions.Select(NotFullyQualifiedNameContains)]),
+            IntegrationSliceRepositoryTooling => And(
+                [FullyQualifiedNameContains("RepositoryBuildToolTests"),
+                    .. AuditPackageIncludes.Select(NotFullyQualifiedNameContains)]),
+            IntegrationSliceAuditPackage => Or([.. AuditPackageIncludes.Select(FullyQualifiedNameContains)]),
+            IntegrationSliceExternalProcess => Or([.. ExternalProcessIncludes.Select(FullyQualifiedNameContains)]),
+            IntegrationSliceSlow => Or([.. SlowIncludes.Select(FullyQualifiedNameContains)]),
+            _ => throw new InvalidOperationException($"Unsupported integration slice: {integrationSlice}")
+        };
+    }
+
+    private static bool TryParseIntegrationSlice(string value, out string integrationSlice)
+    {
+        integrationSlice = value;
+        return value is IntegrationSliceAll or
+            IntegrationSliceFast or
+            IntegrationSliceRepositoryTooling or
+            IntegrationSliceAuditPackage or
+            IntegrationSliceExternalProcess or
+            IntegrationSliceSlow;
+    }
+
+    private static string FullyQualifiedNameContains(string value)
+    {
+        return $"FullyQualifiedName~{value}";
+    }
+
+    private static string NotFullyQualifiedNameContains(string value)
+    {
+        return $"FullyQualifiedName!~{value}";
+    }
+
+    private static string And(IReadOnlyList<string> filters)
+    {
+        return string.Join("&", filters.Select(filter => $"({filter})"));
+    }
+
+    private static string Or(IReadOnlyList<string> filters)
+    {
+        return string.Join("|", filters.Select(filter => $"({filter})"));
+    }
+
+    private static string? Tail(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return value.Length <= DiagnosticTailLength
+            ? value
+            : value[^DiagnosticTailLength..];
+    }
+
+    private sealed record TestCommandOptions(bool IncludeBaseline, string IntegrationSlice, bool NoBuild, bool NoRestore, int TimeoutSeconds);
 }

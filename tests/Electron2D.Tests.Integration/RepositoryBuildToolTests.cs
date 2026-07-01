@@ -98,6 +98,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains(invocations, line => ContainsCommandTokens(line, "test", "tests/Electron2D.Tests.RuntimeSmoke/Electron2D.Tests.RuntimeSmoke.csproj"));
         Assert.Contains(invocations, line => ContainsCommandTokens(line, "test", "tests/Electron2D.Tests.GoldenData/Electron2D.Tests.GoldenData.csproj"));
         Assert.All(invocations, line => Assert.Contains("--filter Category!=Baseline", line, StringComparison.Ordinal));
+        Assert.All(invocations, line => Assert.Contains("--blame-hang --blame-hang-timeout 300s --blame-hang-dump-type none", line, StringComparison.Ordinal));
+        Assert.All(invocations, line => Assert.Contains("--logger console;verbosity=normal", line, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -118,6 +120,107 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task TestCommandNoBuildNoRestorePassesThroughDotnetTestFlags()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-no-build-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--no-build", "--no-restore"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        var invocations = File.ReadAllLines(logPath).Where(line => line.StartsWith("test ", StringComparison.Ordinal)).ToArray();
+        Assert.Equal(4, invocations.Length);
+        Assert.All(invocations, line => Assert.Contains("--no-build", line, StringComparison.Ordinal));
+        Assert.All(invocations, line => Assert.Contains("--no-restore", line, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task TestCommandFastIntegrationSliceExcludesHeavyIntegrationWork()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-fast-slice-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", "fast", "--no-build", "--no-restore"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        var invocations = File.ReadAllLines(logPath).Where(line => line.StartsWith("test ", StringComparison.Ordinal)).ToArray();
+        Assert.Equal(4, invocations.Length);
+        var integrationInvocation = Assert.Single(invocations, line => line.Contains("tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj", StringComparison.Ordinal));
+        Assert.Contains("Category!=Baseline", integrationInvocation, StringComparison.Ordinal);
+        Assert.Contains("FullyQualifiedName!~RepositoryBuildToolTests", integrationInvocation, StringComparison.Ordinal);
+        Assert.Contains("FullyQualifiedName!~LocalDocumentationCliTests", integrationInvocation, StringComparison.Ordinal);
+        Assert.Contains("FullyQualifiedName!~DataStabilityStressTests", integrationInvocation, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task TestCommandAuditPackageIntegrationSliceRunsOnlyAuditPackageTests()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-audit-slice-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", "audit-package", "--no-build", "--no-restore"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        var invocation = Assert.Single(File.ReadAllLines(logPath), line => line.StartsWith("test ", StringComparison.Ordinal));
+        Assert.Contains("tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj", invocation, StringComparison.Ordinal);
+        Assert.Contains("RepositoryBuildToolTests.AuditPackage", invocation, StringComparison.Ordinal);
+        Assert.Contains("RepositoryBuildToolTests.AuditSubmit", invocation, StringComparison.Ordinal);
+        Assert.DoesNotContain("tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj", invocation, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("repository-tooling", "RepositoryBuildToolTests", "RepositoryBuildToolTests.AuditPackage")]
+    [InlineData("external-process", "LocalDocumentationCliTests", null)]
+    [InlineData("slow", "DataStabilityStressTests", null)]
+    public async Task TestCommandHeavyIntegrationSliceRunsOnlySelectedIntegrationTests(
+        string integrationSlice,
+        string expectedFilter,
+        string? excludedFilter)
+    {
+        using var shim = TemporaryDirectory.Create($"test-command-{integrationSlice}-slice-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", integrationSlice, "--no-build", "--no-restore"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        var invocation = Assert.Single(File.ReadAllLines(logPath), line => line.StartsWith("test ", StringComparison.Ordinal));
+        Assert.Contains("tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj", invocation, StringComparison.Ordinal);
+        Assert.Contains(expectedFilter, invocation, StringComparison.Ordinal);
+        if (excludedFilter is not null)
+        {
+            Assert.Contains($"FullyQualifiedName!~{excludedFilter}", invocation, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
     public async Task TestCommandPropagatesDotnetTestExitCode()
     {
         using var shim = TemporaryDirectory.Create("test-command-failing-dotnet-shim");
@@ -126,7 +229,9 @@ public sealed class RepositoryBuildToolTests
         var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
         var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
         {
-            ["DOTNET_SHIM_TEST_EXIT_CODE"] = "37"
+            ["DOTNET_SHIM_TEST_EXIT_CODE"] = "37",
+            ["DOTNET_SHIM_TEST_STDOUT"] = "failing test stdout marker",
+            ["DOTNET_SHIM_TEST_STDERR"] = "failing test stderr marker"
         };
 
         var result = await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), TimeSpan.FromSeconds(120), ["test"], environment);
@@ -137,7 +242,9 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains(
             diagnostics.RootElement.EnumerateArray(),
             diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-TEST-PROJECT-FAILED" &&
-                diagnostic.GetProperty("processExitCode").GetInt32() == 37);
+                diagnostic.GetProperty("processExitCode").GetInt32() == 37 &&
+                diagnostic.GetProperty("standardOutputTail").GetString()!.Contains("failing test stdout marker", StringComparison.Ordinal) &&
+                diagnostic.GetProperty("standardErrorTail").GetString()!.Contains("failing test stderr marker", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -1021,7 +1128,14 @@ public sealed class RepositoryBuildToolTests
         var workflowPath = Path.Combine(repositoryRoot, ".github", "workflows", "ci.yml");
         var workflow = File.ReadAllText(workflowPath, Encoding.UTF8);
 
-        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet build src/Electron2D.sln --no-restore", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice fast --no-build --no-restore", workflow, StringComparison.Ordinal);
+        Assert.Contains("integration-slice:", workflow, StringComparison.Ordinal);
+        Assert.Contains("repository-tooling", workflow, StringComparison.Ordinal);
+        Assert.Contains("audit-package", workflow, StringComparison.Ordinal);
+        Assert.Contains("external-process", workflow, StringComparison.Ordinal);
+        Assert.Contains("slow", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice ${{ matrix.integration-slice }} --no-build --no-restore", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify performance-budgets", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify performance", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("run: ./tools/Run-Tests.ps1", workflow, StringComparison.Ordinal);
@@ -1104,7 +1218,9 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify ci-matrix", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify licenses", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify source-domain-layout", workflow, StringComparison.Ordinal);
-        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet build src/Electron2D.sln --no-restore", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice fast --no-build --no-restore", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice ${{ matrix.integration-slice }} --no-build --no-restore", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify box2d-physics-candidate --native-aot", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify user-documentation", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify export-documentation", workflow, StringComparison.Ordinal);
@@ -8063,6 +8179,9 @@ public sealed class RepositoryBuildToolTests
 
                     if (args is [ "test", .. ])
                     {
+                        Console.Write(Environment.GetEnvironmentVariable("DOTNET_SHIM_TEST_STDOUT"));
+                        Console.Error.Write(Environment.GetEnvironmentVariable("DOTNET_SHIM_TEST_STDERR"));
+
                         if (int.TryParse(Environment.GetEnvironmentVariable("DOTNET_SHIM_TEST_DELAY_MS"), out var delayMs) && delayMs > 0)
                         {
                             await Task.Delay(delayMs);

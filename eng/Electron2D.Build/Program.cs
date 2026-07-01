@@ -899,7 +899,9 @@ internal sealed record BuildDiagnostic(
     string? ProjectPath = null,
     string? ScenarioId = null,
     int? TimeoutSeconds = null,
-    int? LineNumber = null);
+    int? LineNumber = null,
+    string? StandardOutputTail = null,
+    string? StandardErrorTail = null);
 
 internal static class RepositoryBuildExitCodes
 {

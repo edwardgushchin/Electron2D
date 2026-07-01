@@ -1,6 +1,6 @@
 # Project Manager редактора
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-07-01.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -12,8 +12,8 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `T-0079`.
-Дата: 2026-06-23.
+Статус: целевая спецификация для `T-0079`, синхронизирована с C#-инструментом репозитория после `T-0210`.
+Дата: 2026-07-01.
 
 ## Цель
 
@@ -39,7 +39,7 @@
 - Project Manager принимает путь к папке проекта или путь к `<ProjectName>.e2d`.
 - Если пользователь запускает `Electron2D.Editor` с единственным аргументом `<ProjectName>.e2d`, редактор открывает этот проект, валидирует `mainScene` и передаёт результат открытия в стартовый shell. Стартовый shell не должен возвращаться к пустой раскладке: он показывает имя проекта, путь проекта, путь `<ProjectName>.e2d`, путь main scene, вкладку main scene и выбранный workspace с этой сценой.
 - File-argument startup для существующего проекта не ищет repository root и не требует template directory рядом с executable. Template root нужен для создания новых проектов, но double-click/open existing project должен работать из установленного или опубликованного editor executable, где рядом нет `src/Electron2D.sln`.
-- На Windows поддерживается per-user file association для расширения `.e2d`: после регистрации двойной клик по `<ProjectName>.e2d` запускает `Electron2D.Editor.exe` и передаёт путь к файлу как первый аргумент. Регистрация должна записывать HKCU keys для `.e2d`, `Electron2D.Project`, open command с `"%1"` и `Applications\Electron2D.Editor.exe\SupportedTypes\.e2d`, чтобы Windows `UserChoice` для выбранного приложения тоже открывал `.e2d`.
+- Если операционная система или установщик уже связывает расширение `.e2d` с `Electron2D.Editor.exe`, двойной клик должен работать через тот же запуск с файлом проекта: редактор получает путь `<ProjectName>.e2d` первым аргументом и открывает проект без дополнительных вспомогательных файлов в репозитории.
 - Открытие валидирует project settings через тот же внутренний JSON-контракт runtime, который используется шаблоном и проверками настроек.
 - Открытие проверяет, что `mainScene` непустой и существует относительно корня проекта.
 - Успешно открытый проект добавляется в список последних проектов и становится `lastProjectPath`.
@@ -106,16 +106,16 @@ Smoke-режим стартового окна должен:
 - Integration test подтверждает, что template/reference projects используют `<ProjectName>.e2d`, не создают `project.e2d.json`, `electron2d.lock.json` и `export_presets.e2export.json` в корне, а `--open-project-smoke <ProjectName>.e2d` загружает main scene.
 - Integration test подтверждает, что `--open-project-window-smoke <ProjectName>.e2d ...` создаёт bounded стартовое окно с загруженным project-bound shell state: имя проекта, пути проекта и main scene, вкладка main scene и документ `res://scenes/main.scene.json`.
 - Integration test подтверждает, что reference project не содержит `bin/`, `obj/` и папок исходников с разным регистром вроде `Scripts/`.
-- Для Windows есть проверяемый script per-user регистрации `.e2d` file association с `Electron2D.Editor.exe`; script не требует admin-rights и не меняет machine-wide registry keys.
+- Integration test подтверждает, что запуск с файлом проекта не зависит от удалённого корневого `tools/`-помощника; установочная регистрация расширения остаётся внешним шагом установщика, а не частью рабочего пути репозитория.
 - Документация clean-machine workflow описывает команду smoke-проверки и ожидаемый результат.
-- `powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1` проходит.
-- `powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1` проходит.
+- `dotnet run --project eng\Electron2D.Build -- verify licenses` проходит.
+- `dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600` проходит.
 - `dotnet build src\Electron2D.sln -c Release` проходит.
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: документация реализации для `T-0079` и `T-0148`.
-Дата: 2026-06-23.
+Статус: документация реализации для `T-0079`, `T-0148` и рабочего пути репозитория после `T-0210`.
+Дата: 2026-07-01.
 
 ## Назначение
 
@@ -159,14 +159,7 @@ Windows double-click по `.e2d` работает через обычный file
 
 Обычный Windows запуск редактора собирается как GUI application, поэтому double-click не должен показывать отдельное console window. Если запуск завершается ошибкой, диагностический текст должен идти в stderr для smoke/CI и в будущий editor error surface, но не через кратко вспыхивающую консоль для пользователя.
 
-Локальная per-user регистрация расширения выполняется без прав администратора:
-
-```powershell
-dotnet build src\Electron2D.Editor\Electron2D.Editor.csproj -c Release
-powershell -ExecutionPolicy Bypass -File tools\Register-Electron2DFileAssociation.ps1 -EditorExePath src\Electron2D.Editor\bin\Release\net10.0\Electron2D.Editor.exe
-```
-
-Script записывает только HKCU-ключи: `.e2d`, `Electron2D.Project`, open command с `"%1"` и `Applications\Electron2D.Editor.exe\SupportedTypes\.e2d`. Последний ключ нужен, когда Windows `UserChoice` хранит выбранное приложение как `Applications\Electron2D.Editor.exe`, а не как custom `Electron2D.Project` ProgId.
+Локальная регистрация расширения сейчас не поставляется отдельным вспомогательным файлом репозитория. После миграции автоматизации на C#-инструмент проверяемый контракт в репозитории ограничен тем, что `Electron2D.Editor.exe "<ProjectName>.e2d"` открывает проект через обычный путь Project Manager. Регистрация расширения в установленной системе относится к будущему слою установщика и не должна требовать корневой каталог `tools/` в исходном репозитории.
 
 Bounded-проверка без ручного закрытия окна:
 
@@ -221,7 +214,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 Полные проверки:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1
-powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1
+dotnet run --project eng\Electron2D.Build -- verify licenses
+dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600
 dotnet build src\Electron2D.sln -c Release
 ```

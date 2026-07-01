@@ -12,7 +12,7 @@ defaults:
 
 jobs:
   tests:
-    name: Tests (${{ matrix.os }})
+    name: Tests (${{ matrix.os }} / fast)
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -34,6 +34,9 @@ jobs:
       - name: Restore
         run: dotnet restore src/Electron2D.sln
 
+      - name: Build solution
+        run: dotnet build src/Electron2D.sln --no-restore
+
       - name: Verify C# workflow routes
         run: dotnet run --project eng/Electron2D.Build -- verify no-powershell-workflows
 
@@ -47,7 +50,7 @@ jobs:
         run: dotnet run --project eng/Electron2D.Build -- verify source-domain-layout
 
       - name: Run tests
-        run: dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600
+        run: dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice fast --no-build --no-restore
 
       - name: Verify Box2D.NET physics candidate
         run: dotnet run --project eng/Electron2D.Build -- verify box2d-physics-candidate --native-aot
@@ -110,6 +113,40 @@ jobs:
 
       - name: Verify reference performance metrics
         run: dotnet run --project eng/Electron2D.Build -- verify performance
+
+  integration-slices:
+    name: Integration slice (${{ matrix.os }} / ${{ matrix.integration-slice }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+        integration-slice:
+          - repository-tooling
+          - audit-package
+          - external-process
+          - slow
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore src/Electron2D.sln
+
+      - name: Build solution
+        run: dotnet build src/Electron2D.sln --no-restore
+
+      - name: Run integration slice
+        run: dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice ${{ matrix.integration-slice }} --no-build --no-restore
 
   mobile-export-status:
     name: Mobile/export status gap

@@ -1,6 +1,6 @@
 # Electron2D.Editor project shell
 
-Обновлено: 2026-06-24.
+Обновлено: 2026-07-01.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -12,8 +12,8 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `T-0078`, расширена real-window gate `T-0165` и runtime UI dogfooding gate `T-0171`.
-Дата: 2026-06-24.
+Статус: целевая спецификация для `T-0078`, расширена проверкой реального окна `T-0165`, проверкой использования общего runtime UI stack `T-0171` и рабочим путём репозитория после `T-0210`.
+Дата: 2026-07-01.
 
 ## Цель
 
@@ -110,13 +110,13 @@ Real-window smoke должен:
 - `ShellVisualHarness` не используется в runtime/window path редактора; shell layout smoke может проверять только модель layout и JSON analysis без fake screenshot.
 - Release metadata verifier подтверждает, что `Electron2D.Editor` подключает брендовую `.ico`-иконку.
 - `dotnet build src/Electron2D.sln -c Release` проходит.
-- `powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1` проходит.
-- `powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1` проходит.
+- `dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600` проходит.
+- `dotnet run --project eng\Electron2D.Build -- verify licenses` проходит.
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: документация реализации для `T-0078`, обновлено для `T-0171`.
-Дата: 2026-06-24.
+Статус: документация реализации для `T-0078`, обновлено для `T-0171` и текущего C#-инструмента репозитория.
+Дата: 2026-07-01.
 
 ## Назначение
 
@@ -246,8 +246,8 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-
 Полные проверки:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1
-powershell -ExecutionPolicy Bypass -File tools\Verify-ReleaseMetadata.ps1
-powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1
+dotnet run --project eng\Electron2D.Build -- verify licenses
+dotnet run --project eng\Electron2D.Build -- verify release-metadata
+dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600
 dotnet build src\Electron2D.sln -c Release
 ```
