@@ -3355,6 +3355,24 @@ public sealed class RepositoryBuildToolTests
         CLOSURE_DECISION:
         Текущее изменение можно закрывать.
         """;
+        const string acceptedReportWithRussianPackageClosure = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Пакет можно закрывать.
+        """;
         const string needsFixesReport = """
         VERDICT: NEEDS_FIXES
 
@@ -3450,6 +3468,11 @@ public sealed class RepositoryBuildToolTests
 
         Assert.True(GetProperty<bool>(acceptedWithRussianChangeClosure, "Ready"));
         Assert.Equal(acceptedReportWithRussianChangeClosure, GetProperty<string>(acceptedWithRussianChangeClosure, "Report"));
+
+        var acceptedWithRussianPackageClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianPackageClosure, "OpenedReportCard"));
+
+        Assert.True(GetProperty<bool>(acceptedWithRussianPackageClosure, "Ready"));
+        Assert.Equal(acceptedReportWithRussianPackageClosure, GetProperty<string>(acceptedWithRussianPackageClosure, "Report"));
 
         var ready = await InvokeAuditSubmitReportExtractorAsync((needsFixesReport, "OpenedReportCard"));
 

@@ -393,7 +393,7 @@
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "cd2e44ded759fdc6bbcc98eefe94274ef417570b21c24b9a0546a0ac7d74fdac"
+        "sha256": "df28eddc9c936a221d64166f137c06054534ded0873d091d1e2db27eeb66ee4c"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -876,6 +876,14 @@
         "sha256": "9b7467b4b4546cfeb5a5ee87a61a51324ada48e85fe56605b632e93bb05f12f6"
       },
       {
+        "path": "docs/verdicts/release-management/t-0236-audit-r01.md",
+        "sha256": "a22e8e650efee5b03ffc7d71391708a648ea71507e2a50c26368dce816fcfc4c"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0236-audit-r02.md",
+        "sha256": "5080fd8e9148d91a54c3d6106444cb74b53258504fc1d70ed04270214e9feec5"
+      },
+      {
         "path": "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
         "sha256": "64f5edf9155455623cf21f7e0bf7a18807b08023eda6c06a5da2ac93e341c5d9"
       },
@@ -1192,6 +1200,8 @@
         "docs/verdicts/release-management/t-0235-audit-r03.md",
         "docs/verdicts/release-management/t-0235-audit-r04.md",
         "docs/verdicts/release-management/t-0235-audit-r05.md",
+        "docs/verdicts/release-management/t-0236-audit-r01.md",
+        "docs/verdicts/release-management/t-0236-audit-r02.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
         "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
@@ -1231,8 +1241,8 @@
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
-      "count": 228,
-      "sha256": "5072883a88d4485e54fedf57ca27c71ad81b9e91aeb4babe1c402006597bccfc"
+      "count": 230,
+      "sha256": "bb3161cef78c08dfd30d93098e0a6bf686c089395d8af6443cedcb73556c555f"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -1244,7 +1254,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "5b93bfbfab4673c0aeb45fb69cab8721c1d3bb588bad14459c9dcc30a557b035",
+    "sourceDigest": "4aa2780d6a857d052f8facdc03ba57eb30f716ddfc6022219f62a49712059e89",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

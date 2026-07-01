@@ -1,0 +1,123 @@
+VERDICT: ACCEPT
+
+TASK_ASSESSMENT:
+- Проверен весь доступный состав пакета по требованиям внешнего аудита: `AUDIT-MANIFEST.md`, `metadata/audit-package.input.json`, `repo-file-hashes.json`, `SHA256SUMS.txt`, `T-0236.patch`, raw evidence из `evidence/T-0236-r02/checks/*`, а также доступные previous verdict files из `metadata.previousVerdictChain`.
+- Выполнены обязательные проверки: implementation content review, test coverage review, documentation review, task compliance review, secret scanning, scope scanning, а также проверка `metadata.scopeTaskIds`, `metadata.scopeSummary`, combined scope, `metadata.previousVerdictChain`, `metadata.blockerClosureList`, previous verdict files, verbatim preservation и previous blockers closure.
+- Пакет согласован как combined scope для `T-0206` и `T-0236`: `AUDIT-MANIFEST.md`, metadata, `repo-file-hashes.json` и фактический diff не противоречат друг другу. Наблюдаемый change set действительно покрывает завершение миграции repository automation на `eng/Electron2D.Build`, стабилизацию CI после этой миграции и узкое r02-уточнение `audit submit` extractor.
+- По содержимому проверяемого изменения доказуемых blocker-ов не найдено. Реализация, тесты, документация и evidence согласованы с заявленной задачей; предыдущие blocker-ы из цепочки verdict-ов не переоткрыты; узкое r02-изменение в `AuditSubmitCommand` подтверждено кодом, тестом и документацией.
+
+BLOCKERS:
+- No blockers found.
+
+EVIDENCE_REVIEW:
+- Проверены машинные входы и границы пакета:
+  - `AUDIT-MANIFEST.md`
+  - `AUDIT-REQUEST.md`
+  - `metadata/audit-package.input.json`
+  - `repo-file-hashes.json`
+  - `SHA256SUMS.txt`
+  - `T-0236.patch`
+- Проверена согласованность области пакета:
+  - `metadata.scopeTaskIds = ["T-0206", "T-0236"]`
+  - `metadata.scopeSummary`
+  - раздел `## Scope` в `AUDIT-MANIFEST.md`
+  - соответствие списков файлов между patch, manifest и `repo-file-hashes.json`
+  - проверка показала, что все пути из diff покрыты allowlist/hash inventory, а расхождений между `repoFiles` / `deletedRepoFiles` и фактическим diff нет.
+- Проверена цепочка previous verdict files:
+  - `docs/verdicts/release-management/t-0206-audit-r02.md`
+  - `docs/verdicts/release-management/t-0206-audit-r03.md`
+  - `docs/verdicts/release-management/t-0210-audit-r02.md`
+  - `docs/verdicts/release-management/t-0210-audit-r03.md`
+  - `docs/verdicts/release-management/t-0210-audit-r04.md`
+  - `docs/verdicts/release-management/t-0210-audit-r16.md`
+  - `docs/verdicts/release-management/t-0210-audit-r20.md`
+  - `docs/verdicts/release-management/t-0236-audit-r01.md`
+- Проверка verbatim preservation по доступным данным:
+  - текущий diff добавляет previous verdict files как отдельные repo-owned файлы;
+  - последующих hunks, переписывающих их внутри текущего пакета, нет;
+  - признаков сокращения, переоформления или частичного перезаписывания вердиктов внутри текущего change set не обнаружено.
+- Проверка previous blockers closure:
+  - для `T-0206` закрыты blocker-ы r02: scope drift устранён, allowlist переведён в fail-closed exact `path + SHA-256(line.Trim())`, добавлены boundary regression tests и diagnostic red-path; это подтверждается `eng/Electron2D.Build/RepositoryWorkflowVerifiers.cs`, `eng/Electron2D.Build/Program.cs`, `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs` и сохранённым ACCEPT `t-0206-audit-r03.md`;
+  - для `T-0210` закрыты blocker-ы r02/r03/r04/r16: восстановлены содержательные C#-маршруты verifier-ов, добавлен tracked-only `verify no-powershell-workflows`, отдельный `verify ci-matrix`, охват `eng/**/*.cs` в `verify licenses`, поддержка `.temp/audit-evidence/**`, rename-aware audit package behavior, синхронизация `AGENTS.md` и активной документации с portable `eng/Electron2D.Build`; это подтверждается кодом, тестами, документацией, evidence и сохранённым ACCEPT `t-0210-audit-r20.md`;
+  - для `T-0236` `metadata.blockerClosureList` указывает узкий r02-purpose: привести локальный `audit submit` extractor к accepted closure wording для проверяемого пакета. Это подтверждается изменением в `eng/Electron2D.Build/AuditSubmitCommand.cs`, обновлением `docs/release-management/audit-package.md`, записью в `TASKS.md` и green evidence `test-audit-submit-extractor`.
+- Проверены ключевые implementation files по patch:
+  - `.github/workflows/ci.yml`
+  - `AGENTS.md`
+  - `TASKS.md`
+  - `eng/Electron2D.Build/AuditPackageCommand.cs`
+  - `eng/Electron2D.Build/AuditSubmitCommand.cs`
+  - `eng/Electron2D.Build/Program.cs`
+  - `eng/Electron2D.Build/ReleasePackageCommand.cs`
+  - `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`
+  - `eng/Electron2D.Build/RepositoryWorkflowVerifiers.cs`
+  - `eng/Electron2D.Build/TestCommand.cs`
+  - `eng/Electron2D.ApiManifestGenerator/*`
+  - `src/Electron2D.Cli/Program.cs`
+  - `src/Electron2D.ProjectSystem/Documents/ProjectTextFormats.cs`
+- Проверены ключевые tests по patch:
+  - `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`
+  - `tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs`
+  - `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`
+  - `tests/Electron2D.Tests.Integration/LocalDocumentationCliTests.cs`
+  - `tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs`
+  - `tests/Electron2D.Tests.Integration/LeakVerificationTests.cs`
+  - `tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs`
+  - `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`
+  - `tests/Electron2D.Tests.Integration/DiagnosticsAdapterTests.cs`
+  - `tests/Electron2D.Tests.Integration/Electron2DHeadlessRuntimeAutomationTests.cs`
+  - `tests/Electron2D.Tests.Integration/Electron2DSceneVisualTestingTests.cs`
+  - `tests/Electron2D.Tests.Integration/ReproducibilityLockDoctorTests.cs`
+  - `tests/Electron2D.Tests.Unit/Box2DPhysicsValidationInfrastructureTests.cs`
+  - `tests/Electron2D.Tests.Unit/PublicApiDocumentationAuditInfrastructureTests.cs`
+- Проверены ключевые документационные поверхности:
+  - `docs/release-management/ci-matrix.md`
+  - `docs/release-management/test-infrastructure.md`
+  - `docs/release-management/audit-package.md`
+  - `docs/repository/license-policy.md`
+  - `docs/repository/repository-layout.md`
+  - `docs/documentation/local-documentation-pipeline.md`
+  - `docs/documentation/repository-readme.md`
+  - `docs/editor/project-manager.md`
+  - `docs/editor/editor-project-shell.md`
+  - `data/assets/reference-games/README.md`
+  - `data/completed-tasks/2026/07 Июль.md`
+  - затронутые документы под `docs/architecture/`, `docs/documentation/`, `docs/examples/`, `docs/export/`, `docs/project-system/`, `docs/quality/`, `docs/runtime/`, `docs/testing/`, `docs/ui/`.
+- Что подтверждено implementation content review:
+  - CI действительно переведён на C# routes и bash-friendly syntax;
+  - `TestCommand` поддерживает `--no-build`, `--no-restore`, `--integration-slice all|fast|repository-tooling|audit-package|external-process|slow`, прокидывает `--blame-hang` и пишет хвосты `stdout/stderr` в structured diagnostics;
+  - `NoPowerShellWorkflowVerifier` использует tracked-only enumeration через `git ls-files -z` и fail-closed exact allowlist по `path + SHA-256(line.Trim())`;
+  - `LicensePolicyVerifier` распространил active scope на `eng/**/*.cs`;
+  - `AuditSubmitReportExtractor` теперь принимает явное разрешение закрыть задачу, изменение или пакет в `CLOSURE_DECISION`, включая добавленное r02-распознавание package-closure wording.
+- Что подтверждено test coverage review:
+  - есть регрессии на tracked-only semantics, CI matrix verifier, license scope для `eng/`, exact allowlist boundary-cases, slice selection, `--no-build/--no-restore`, release temp root, локальные doc CLI timeouts и narrow r02 extractor wording;
+  - `test-audit-submit-extractor` в evidence зелёный и выполняет именно метод `RepositoryBuildToolTests.AuditSubmitReportExtractorRequiresSingleOpenedReportCardCandidate`, в который добавлен сценарий `Пакет можно закрывать.`.
+- Что подтверждено raw evidence из r02:
+  - `build-eng` — success;
+  - `build-integration` — success;
+  - `test-audit-submit-extractor` — success, 1/1;
+  - `update-docs-check` — success;
+  - `verify-docs` — success;
+  - `verify-licenses` — success;
+  - `git diff --check` — success;
+  - `external-ci-run-28520858054` — success со `status = completed`, `conclusion = success`, `headSha = 6d0ce197a7de95cbed84ba2ace293b518c528a1f`.
+- Выполнен secret scanning по patch, metadata и raw evidence:
+  - реальные секреты, приватные ключи, токены, пароли и конфиденциальные пользовательские данные не обнаружены;
+  - `env.json` в приложенных checks не содержит чувствительных значений;
+  - локальные пути в evidence в основном редактированы до `<repo-root>`;
+  - встречающиеся path-like упоминания относятся к историческим сценариям, тестовым фикстурам или описанию нормализации машино-локальных путей и не выглядят живыми секретами.
+- Выполнен scope scanning:
+  - лишних правок вне заявленной combined scope не найдено;
+  - изменения, связанные с `T-0210`, присутствуют как завершаемая часть tracking closure `T-0206` и как previous verdict history, что прямо отражено в `metadata.scopeSummary`;
+  - явных несогласованных edits вне описанной области в текущем пакете не обнаружено.
+
+RISKS_AND_NOTES:
+- Архив не содержит полный post-change checkout дерева репозитория отдельными файлами; review выполнен по patch, metadata, hashes и raw evidence. Для текущего контракта пакета это допустимо и само по себе не является blocker-ом.
+- Verbatim preservation previous verdict files можно было проверить только в пределах копий, внесённых текущим diff; исходные независимые внешние копии до baseline в архив отдельно не приложены. Внутри текущего пакета признаков усечения или переоформления нет.
+- Для r02 evidence набор intentionally narrow: после ACCEPT r01 повторно проверялось узкое изменение extractor/docs/tests, а более широкий combined scope уже покрыт сохранённым previous verdict `t-0236-audit-r01.md`. По содержимому текущего пакета это выглядит согласованно и неблокирующе.
+- В `TestCommand` operator-facing стартовая диагностика по-прежнему сообщает об общем числе тестовых проектов даже для тяжёлых integration slices; это уже отмечено в сохранённом r01 как неблокирующее замечание и на сам маршрут выполнения не влияет.
+- Дополнительных доказуемых residual risks, которые перевели бы изменение в состояние NEEDS_FIXES, в пределах области задачи не выявлено.
+
+CLOSURE_DECISION:
+- Задача может быть закрыта, потому что пакет последовательно и доказуемо закрывает заявленную combined scope: финализирует перенос repository automation на `eng/Electron2D.Build`, сохраняет previous verdict history как repo-owned артефакты, синхронизирует активную документацию и agent guidance, стабилизирует CI через fast/heavy integration slices и завершает узкое r02-уточнение `audit submit` extractor под accepted package-closure wording.
+- Ключевые предыдущие blocker-ы не только перечислены в history, но и закрыты проверяемыми фактами: exact allowlist для `verify no-powershell-workflows`, tracked-only enumeration, отдельный `verify ci-matrix`, license scope для `eng/**/*.cs`, portable slash-form command examples, `.temp/audit-evidence`/rename-aware audit package behavior, targeted regression tests и сохранённые ACCEPT verdict files.
+- Текущее r02-изменение проверяемо замыкается на конкретный локальный контракт: `AuditSubmitReportExtractor` теперь принимает явное разрешение закрыть проверяемый пакет в `CLOSURE_DECISION`, соответствующий тест зелёный, документация синхронизирована, а новые blocker-ы в пределах области задачи не обнаружены.

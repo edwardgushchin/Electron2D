@@ -515,12 +515,16 @@ internal static class AuditSubmitReportExtractor
             @"\bready\s+to\s+close\b",
             @"\bclosure\s+approved\b",
             @"\bclose\s+the\s+task\b",
+            @"\b(?:the\s+)?package\s+can\s+be\s+closed\b",
             @"задач[ау]\s+можно\s+закрыт[ьи]\b",
             @"изменение\s+можно\s+закрыт[ьи]\b",
             @"изменение\s+можно\s+закрывать\b",
             @"задача\s+может\s+быть\s+закрыта\b",
             @"закрытие\s+задачи\s+разрешено\b",
-            @"разрешено\s+закрыть\s+задачу\b"
+            @"разрешено\s+закрыть\s+задачу\b",
+            @"пакет\s+можно\s+закрыт[ьи]\b",
+            @"пакет\s+можно\s+закрывать\b",
+            @"пакет\s+может\s+быть\s+закрыт\b"
         };
 
         return allowed.Any(pattern => Regex.IsMatch(normalized, pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
