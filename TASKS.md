@@ -1726,15 +1726,103 @@ FileSystem должен позволять перетащить resource или 
 
 2026-06-25T14:32:09+03:00 - Создано как зависимая задача после `T-0226`. `T-0219` не может быть окончательно принят, пока механизм разрешения texture resource содержит специальную ветку только для `AtlasTexture -> ImageTexture`.
 
+## T-0238 [ ] P1: Требовать полный current-scope audit и обязательное закрытие `RISKS_AND_NOTES`
+
+- Создана: 2026-07-01T21:08:53+03:00
+- Состояние: open
+- Приоритет: P1
+- Зависимости: T-0237
+- Ссылки:
+  - Запрос аудитору: `docs/release-management/AUDIT-REQUEST.md`
+  - Доменный документ: `docs/release-management/audit-package.md`
+  - Prompt цикла задачи: `.codex/prompts/goal-task-loop.md`
+  - Исходный код: `eng/Electron2D.Build/AuditSubmitCommand.cs`
+  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`
+
+### Самодостаточное описание
+
+Каждый внешний audit run - primary r01, повторный primary r02+ и независимый control audit - должен выполнять полный review текущего audit package в пределах `metadata.scopeTaskIds`, `metadata.scopeSummary` и файлов declared scope. Аудитор должен проверять implementation/test/documentation/task compliance review, новые дефекты в текущей области, новые секреты, локальные пути, недостоверные evidence, regressions в тестах и документации, scope leaks и риски, созданные текущим изменением или исправлениями.
+
+Primary r02+ дополнительно проверяет `metadata.previousVerdictChain`, previous verdict files, `metadata.blockerClosureList` и закрытие каждого previous blocker-а, но этот слой не заменяет полный review текущего package scope. Control audit после primary `ACCEPT` является независимым full current-scope review того же verified ZIP без истории исправительных итераций, а не проверкой того, что primary audit уже вернул `ACCEPT`.
+
+При этом acceptance-аудит конкретной задачи не должен блокироваться любой старой проблемой всего репозитория. Нужна явная классификация findings: текущие blocker-ы задачи блокируют verdict, а предсуществующие или out-of-scope проблемы записываются как follow-up findings с предложением существующей или новой задачи. Исключение составляют global safety issues: реальные секреты, потеря данных, license/build/release corruption и похожие критические проблемы могут блокировать текущий audit независимо от scope.
+
+`RISKS_AND_NOTES` не является свободным текстом, который можно прочитать и забыть. Каждая actionable-запись из `RISKS_AND_NOTES` должна получить closure до закрытия текущей задачи: ссылка на существующую задачу, новая задача, `accepted-risk`, `duplicate`, `not-actionable` или promotion в blocker текущей задачи. Реализация follow-up задачи не требуется для закрытия текущей задачи, если finding не является blocker-ом текущего scope.
+
+### Критерии приёмки
+
+- [ ] `docs/release-management/AUDIT-REQUEST.md` прямо говорит, что каждый external audit run - primary r01, primary r02+ и control audit - выполняет full current-scope review, а не только delivery-layer review или previous blockers closure.
+- [ ] `AUDIT-REQUEST.md` говорит, что r02+ дополнительно проверяет `metadata.previousVerdictChain`, previous verdict files, `metadata.blockerClosureList` и closure previous blocker-ов, но эта проверка не заменяет full content review.
+- [ ] `AUDIT-REQUEST.md` говорит, что control audit после primary `ACCEPT` является независимым full current-scope review того же verified ZIP без истории, а не rubber-stamp проверкой primary verdict-а.
+- [ ] `AUDIT-REQUEST.md` классифицирует findings как `current-task blocker`, `follow-up finding`, `out-of-scope note` и `global safety blocker`.
+- [ ] `AUDIT-REQUEST.md` требует структурировать `RISKS_AND_NOTES` как `FOLLOW_UP_FINDING F1`, `OUT_OF_SCOPE_NOTE N1`, `ACCEPTED_RISK R1`, `INFO_NOTE I1` или другой явно документированный non-blocking тип.
+- [ ] `AUDIT-REQUEST.md` явно говорит, что finding является `current-task blocker`, если он внесён текущим изменением, находится в changed/affected files и нарушает acceptance criteria, делает тесты/документацию/evidence недостоверными, ломает previous blocker closure или создаёт secret/security/data-loss/license/build/release risk.
+- [ ] `AUDIT-REQUEST.md` явно говорит, что finding является `follow-up finding` только если он предсуществовал, не ухудшен текущим изменением, не мешает acceptance criteria текущей задачи и не относится к global safety class.
+- [ ] `AUDIT-REQUEST.md` требует записывать follow-up findings в `RISKS_AND_NOTES` с `Finding id`, `File/symbol`, `Problem`, `Why not blocker for current task`, `Suggested existing task` или `Suggested new task`, `Suggested priority` и `Verification idea`.
+- [ ] `AUDIT-REQUEST.md` требует, чтобы `Suggested new task` был zero-context: title, priority, affected domain, short acceptance sketch и verification idea.
+- [ ] `.codex/prompts/goal-task-loop.md` говорит агенту после final accepted state - primary `VERDICT: ACCEPT` плюс control `VERDICT: ACCEPT` - triage-ить follow-up findings: обновить подходящую активную задачу или создать новую, но не смешивать их с закрытием текущей задачи.
+- [ ] `.codex/prompts/goal-task-loop.md` различает post-accept bookkeeping и изменение принятого scope: создание/обновление follow-up task по `RISKS_AND_NOTES` после final `ACCEPT` не требует нового audit текущей задачи, если не меняет code/docs/tests/evidence/criteria принятого изменения.
+- [ ] `.codex/prompts/goal-task-loop.md` говорит, что после final accepted state агент обязан закрыть все actionable entries из `RISKS_AND_NOTES` через tracked task update, new task, `accepted-risk`, `duplicate`, `not-actionable` или promotion-to-blocker decision.
+- [ ] Текущая задача не может быть перенесена в `data/completed-tasks/**`, пока actionable `FOLLOW_UP_FINDING` из saved primary/control reports не имеет closure note в `TASKS.md` или в отдельном tracked follow-up index.
+- [ ] `audit submit` validator допускает structured follow-up findings в `RISKS_AND_NOTES` и не путает их с numbered blockers `B1`..`Bn`.
+- [ ] `audit submit` validator допускает `VERDICT: ACCEPT` с `FOLLOW_UP_FINDING F1` в `RISKS_AND_NOTES`, но не считает такой report достаточным для task closure без последующего agent-side follow-up closure step.
+- [ ] Focused tests покрывают: `VERDICT: ACCEPT` с `FOLLOW_UP_FINDING F1` в `RISKS_AND_NOTES` допустим; `VERDICT: ACCEPT` с `B1` в `BLOCKERS` остаётся запрещённым; parser/extractor находит follow-up findings в `RISKS_AND_NOTES`; closure helper отличает closed и unclosed follow-up findings; `B1`-like текст в `RISKS_AND_NOTES` допустим только как явно not-blocking follow-up context.
+- [ ] После реализации проходят focused integration tests, documentation checks, license verifier и `git diff --check`.
+
+### Подзадачи
+
+- [ ] Уточнить `AUDIT-REQUEST.md` и `audit-package.md`: каждый audit run делает full current-scope review, r02+ добавляет previous-blocker layer, control audit остаётся независимым full review, findings классифицируются как blocker/follow-up/out-of-scope/global safety, а `RISKS_AND_NOTES` требует closure state.
+- [ ] Обновить `goal-task-loop.md`: triage follow-up findings после final primary/control `ACCEPT`, с отдельным правилом для post-accept bookkeeping и запретом архивировать задачу до closure всех actionable notes.
+- [ ] Добавить focused tests на валидатор отчёта и документационный контракт.
+
+### Заметки агента
+
+2026-07-01T21:08:53+03:00 - Создано по замечанию пользователя: повторный аудит должен искать новые проблемы в текущем package scope, но старые или out-of-scope проблемы должны попадать в follow-up tracking, а не бесконечно блокировать acceptance текущей задачи.
+
+2026-07-01T21:47:00+03:00 - Уточнено по замечанию пользователя: full current-scope review и follow-up classification должны применяться к каждому external audit run, включая primary r01 и control audit; r02+ отличается только дополнительной проверкой previous verdict chain и blocker closure.
+
+2026-07-01T21:57:00+03:00 - Уточнено по замечанию пользователя: actionable entries из `RISKS_AND_NOTES` должны закрываться triage-решением до архивирования текущей задачи; реализация follow-up задач не требуется, но каждая запись должна получить linked task, new task, accepted-risk, duplicate, not-actionable или promotion-to-blocker state.
+
+## T-0239 [ ] P2: Удалить неактивный screenshot recorder из внутренней реализации `audit submit`
+
+- Создана: 2026-07-01T21:57:00+03:00
+- Состояние: open
+- Приоритет: P2
+- Зависимости: T-0237
+- Ссылки:
+  - Доменный документ: `docs/release-management/audit-package.md`
+  - Исходный код: `eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`
+  - Исходный код: `eng/Electron2D.Build/AuditSubmitCommand.cs`
+  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`
+  - Источник: `RISKS_AND_NOTES` из `docs/verdicts/release-management/t-0237-audit-r04.md` и `docs/verdicts/release-management/t-0237-audit-control-r04.md`
+
+### Самодостаточное описание
+
+T-0237 убрала screenshot-доказательства из поддержанного audit workflow: `audit submit` больше не принимает параметр для каталога screenshot-ов, `AuditSubmitCommand.ParseOptions` передаёт `ScreenshotsDirectory: null`, документация говорит, что tool screenshots не являются доказательством состояния страницы, а внешние primary/control audit r04 приняли этот контракт. При этом во внутренней реализации `AuditSubmitCodexChromeCommand.cs` остался `AuditSubmitCodexChromeScreenshotRecorder` и вызовы `CaptureAsync`, которые сейчас фактически неактивны через CLI.
+
+Нужное поведение: удалить или заменить no-op путём внутренний screenshot recorder и PNG capture helper так, чтобы audit submit code больше не содержал мёртвую screenshot-инфраструктуру, а диагностика оставалась на DOM dump, Markdown export validation, structured diagnostics и `--keep-tab-open-on-error`.
+
+### Критерии приёмки
+
+- [ ] `AuditSubmitCodexChromeCommand.cs` больше не содержит `AuditSubmitCodexChromeScreenshotRecorder`, PNG capture helper и вызовы `CaptureAsync` для audit submit workflow.
+- [ ] `AuditSubmitCommand.cs` по-прежнему отклоняет старый screenshot directory option как invalid argument.
+- [ ] `docs/release-management/audit-package.md` остаётся синхронизированным: `audit submit` не создаёт tool screenshots и не принимает их как evidence.
+- [ ] Focused tests покрывают отсутствие публичного screenshot option и отсутствие screenshot recorder/capture plumbing в audit submit source.
+- [ ] После реализации проходят focused integration tests, documentation checks, license verifier и `git diff --check`.
+
+### Заметки агента
+
+2026-07-01T21:57:00+03:00 - Создано как closure для actionable technical note из `RISKS_AND_NOTES` T-0237 r04: внутренний recorder не блокирует T-0237, потому публичный CLI больше не создаёт screenshots, но остаточную неактивную инфраструктуру нужно удалить отдельной задачей.
+
 ## ROADMAP
 
-Обновлено: 2026-07-01T18:40:53+03:00.
+Обновлено: 2026-07-01T22:11:20+03:00.
 
 Этот раздел задаёт рекомендуемый порядок выполнения активных задач из `TASKS.md`. Он не заменяет поля `Зависимости`, не закрывает задачи и не создаёт новый backlog. Если пользователь меняет приоритет, dependency graph или scope, этот раздел нужно обновить вместе с соответствующими задачами.
 
 ### 0. Пользовательская приёмка уже реализованных задач
 
-На 2026-07-01T18:38:35+03:00 `T-0236` принята внешним аудитом r02 и перенесена в `data/completed-tasks/2026/07 Июль.md`. Ранее `T-0206` принята внешним аудитом r03 и перенесена в тот же июльский архив. Ранее `T-0210` принята внешним аудитом r20 и перенесена в тот же июльский архив. Ранее `T-0209` принята внешним аудитом r13 и перенесена в `data/completed-tasks/2026/06 Июнь.md`. Ранее в этот же архив перенесены `T-0235` после внешнего аудита r05, `T-0234` после внешнего аудита r04, `T-0208` после внешнего аудита r03 и `T-0215` после внешнего аудита r07. Ранее `T-0207`, `T-0220`, `T-0219`, `T-0212`, `T-0224`, `T-0167`, `T-0168`, `T-0169`, `T-0170`, `T-0173`, `T-0216` и `T-0217` также были приняты пользователем или внешним аудитом и перенесены в архив.
+На 2026-07-01T22:11:20+03:00 `T-0237` принята пользователем после primary/control external audit r04 и перенесена в `data/completed-tasks/2026/07 Июль.md`. Ранее `T-0236` принята внешним аудитом r02 и перенесена в тот же июльский архив. Ранее `T-0206` принята внешним аудитом r03 и перенесена в тот же июльский архив. Ранее `T-0210` принята внешним аудитом r20 и перенесена в тот же июльский архив. Ранее `T-0209` принята внешним аудитом r13 и перенесена в `data/completed-tasks/2026/06 Июнь.md`. Ранее в этот же архив перенесены `T-0235` после внешнего аудита r05, `T-0234` после внешнего аудита r04, `T-0208` после внешнего аудита r03 и `T-0215` после внешнего аудита r07. Ранее `T-0207`, `T-0220`, `T-0219`, `T-0212`, `T-0224`, `T-0167`, `T-0168`, `T-0169`, `T-0170`, `T-0173`, `T-0216` и `T-0217` также были приняты пользователем или внешним аудитом и перенесены в архив.
 
 ### 1. Решения перед новой игрой
 
@@ -1757,9 +1845,11 @@ Texture public API:
 
 Repository tooling:
 
-Закрыто: `T-0207` создала внутренний C#-инструмент репозитория `eng/Electron2D.Build`; `T-0228` добавила детерминированную сборку и проверку внешнего audit package; `T-0213` перенесла README/docs verifier-ы и generated documentation index на C#-поверхность этого инструмента; `T-0229` закрепила статический tracked `AUDIT-REQUEST.md`; `T-0214` перенесла API/Wiki/license/manifest verifier-ы на C#-поверхность и принята внешним аудитом r05; `T-0230` добавила штатный текст сообщения внешнему аудитору из `AUDIT-REQUEST.md` и обязательное «Глубокое исследование»; `T-0231` разделила локальный индекс документации на manifest/NDJSON-шарды и SQLite-кэш; `T-0232` закрепила общую LF-политику и стабильное восстановление audit package; `T-0233` разграничила `AGENTS.md`, `AUDIT-REQUEST.md` и локальный `goal-task-loop.md`, чтобы внешний аудит не дублировался ручными браузерными правилами; `T-0215` перенесла test runner, проверку бюджетов производительности и проверку эталонных метрик на C#-команды; `T-0208` закрыла tracking переноса тестовых, документационных и API-проверок на C# после accepted дочерних задач; `T-0209` перенесла локальную сборку релизных архивов и `release verify` на C#-команды; `T-0210` переключила CI, `AGENTS.md`, активные документы и оставшуюся автоматизацию репозитория на `eng/Electron2D.Build`; `T-0206` закрыла tracking полной миграции репозиторной автоматизации после внешнего аудита r03; `T-0236` стабилизировала CI после миграции автоматизации и разделила интеграционные тесты на быстрый и профильные тяжёлые срезы.
+Закрыто: `T-0207` создала внутренний C#-инструмент репозитория `eng/Electron2D.Build`; `T-0228` добавила детерминированную сборку и проверку внешнего audit package; `T-0213` перенесла README/docs verifier-ы и generated documentation index на C#-поверхность этого инструмента; `T-0229` закрепила статический tracked `AUDIT-REQUEST.md`; `T-0214` перенесла API/Wiki/license/manifest verifier-ы на C#-поверхность и принята внешним аудитом r05; `T-0230` добавила штатный текст сообщения внешнему аудитору из `AUDIT-REQUEST.md` и обязательное «Глубокое исследование»; `T-0231` разделила локальный индекс документации на manifest/NDJSON-шарды и SQLite-кэш; `T-0232` закрепила общую LF-политику и стабильное восстановление audit package; `T-0233` разграничила `AGENTS.md`, `AUDIT-REQUEST.md` и локальный `goal-task-loop.md`, чтобы внешний аудит не дублировался ручными браузерными правилами; `T-0215` перенесла test runner, проверку бюджетов производительности и проверку эталонных метрик на C#-команды; `T-0208` закрыла tracking переноса тестовых, документационных и API-проверок на C# после accepted дочерних задач; `T-0209` перенесла локальную сборку релизных архивов и `release verify` на C#-команды; `T-0210` переключила CI, `AGENTS.md`, активные документы и оставшуюся автоматизацию репозитория на `eng/Electron2D.Build`; `T-0206` закрыла tracking полной миграции репозиторной автоматизации после внешнего аудита r03; `T-0236` стабилизировала CI после миграции автоматизации и разделила интеграционные тесты на быстрый и профильные тяжёлые срезы; `T-0237` добавила полные снимки изменённых файлов в audit ZIP, строгую проверку снимков и primary/control state machine для внешнего аудита.
 
 Дополнительно закрыто: `T-0235` стабилизировала восстановление и извлечение внешнего отчёта `audit submit`.
+
+Дальше выполнить `T-0238`: закрепить full current-scope review для каждого primary и control audit, обязательное closure actionable `RISKS_AND_NOTES`, отделить blocker-ы текущего acceptance-аудита от follow-up findings и не превращать каждую задачу в бесконечный repo-wide audit. Затем выполнить `T-0239`: удалить оставшуюся неактивную screenshot recorder plumbing из внутренней реализации `audit submit`.
 
 Editor foundation:
 

@@ -62,6 +62,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     private static readonly Regex WindowsDrivePathPattern = new(
         @"(?i)\b[A-Z]:(?:\\|/)",
         RegexOptions.CultureInvariant);
+    private const string RepositoryFileSnapshotsArchivePath = "metadata/repo-file-snapshots.json";
     private const string StaticAuditRequestSourcePath = "docs/release-management/AUDIT-REQUEST.md";
     private const string StaticAuditRequestArchivePath = "AUDIT-REQUEST.md";
     private const int OperatorWorkflowEvidenceTimeoutSeconds = 180;
@@ -82,12 +83,17 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         "previous verdict files",
         "verbatim preservation",
         "previous blockers closure",
+        "metadata/repo-file-snapshots.json",
+        "repo-after/",
+        "repo-before/",
         "implementation content review",
         "test coverage review",
         "documentation review",
         "task compliance review",
         "secret scanning",
         "scope scanning",
+        "evidence gap",
+        "patch-only inspection",
         "single final report",
         "no intermediate VERDICT"
     ];
@@ -220,14 +226,20 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         ValidatePatchText(patch.PatchText, $"{options.TaskId}.patch", repoRoot, previousVerdictPaths);
 
         var restoreManifest = await CreateRestoreManifestAsync(repoRoot, config, repoFiles, cancellationToken).ConfigureAwait(false);
+        var snapshotArchive = await CreateRepositoryFileSnapshotArchiveAsync(repoRoot, config, repoFiles, cancellationToken).ConfigureAwait(false);
         var normalizedConfigJson = JsonSerializer.Serialize(config, JsonWriteOptions) + "\n";
         var archiveFiles = new Dictionary<string, byte[]>(StringComparer.Ordinal)
         {
             [$"{options.TaskId}.patch"] = Encoding.UTF8.GetBytes(patch.PatchText),
             ["repo-file-hashes.json"] = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(restoreManifest, JsonWriteOptions) + "\n"),
+            [RepositoryFileSnapshotsArchivePath] = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(snapshotArchive.Manifest, JsonWriteOptions) + "\n"),
             [StaticAuditRequestArchivePath] = auditRequest.Bytes,
             ["metadata/audit-package.input.json"] = Encoding.UTF8.GetBytes(normalizedConfigJson)
         };
+        foreach (var snapshotFile in snapshotArchive.ArchiveFiles)
+        {
+            archiveFiles[snapshotFile.Key] = snapshotFile.Value;
+        }
 
         foreach (var evidence in configuredEvidenceFiles)
         {
@@ -354,8 +366,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-PATCH-MISSING", $"Archive does not contain {patchName}.");
         }
 
+        var restoreManifest = ReadRestoreManifest(entries, "audit package verify");
+        VerifyRestoreManifestMetadata(config, restoreManifest);
+        var snapshotManifest = VerifyRepositoryFileSnapshotManifest(entries, config, restoreManifest);
         VerifyPatchControlPaths(Encoding.UTF8.GetString(entries[patchName]));
         await PrepareCleanRepositoryAsync(options.RepositoryPath, options.Baseline, cancellationToken).ConfigureAwait(false);
+        await VerifyRepositoryFileSnapshotBaselineAsync(options.RepositoryPath, config, snapshotManifest, cancellationToken).ConfigureAwait(false);
 
         var patchPath = Path.Combine(extractRoot.Root, patchName);
         var applyCheck = await GitRunner.RunAsync(
@@ -382,13 +398,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 $"git apply failed: {apply.StandardError}");
         }
 
-        var restoreManifest = JsonSerializer.Deserialize<RestoreManifest>(
-            entries["repo-file-hashes.json"],
-            JsonReadOptions) ?? throw new AuditPackageFailure(
-                "audit package verify",
-                "E2D-BUILD-AUDIT-RESTORE-MANIFEST-INVALID",
-                "repo-file-hashes.json is empty or invalid.");
-        VerifyRestoreManifestMetadata(config, restoreManifest);
+        await VerifyRepositoryFileSnapshotAfterApplyAsync(options.RepositoryPath, snapshotManifest, cancellationToken).ConfigureAwait(false);
         await CleanIgnoredArtifactsAfterPatchApplyAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyRestoredFileSetAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyRestoredHashesAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
@@ -1951,6 +1961,110 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return new RestoreManifest(config.TaskId, config.Iteration, config.Baseline, existing, deleted);
     }
 
+    private static async Task<RepositoryFileSnapshotArchive> CreateRepositoryFileSnapshotArchiveAsync(
+        string repoRoot,
+        AuditPackageConfiguration config,
+        SelectedRepositoryFile[] repoFiles,
+        CancellationToken cancellationToken)
+    {
+        var files = new List<RepositoryFileSnapshot>();
+        var archiveFiles = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+        foreach (var file in repoFiles.OrderBy(file => file.Path, StringComparer.Ordinal))
+        {
+            byte[]? afterBytes = file.Exists ? ReadRestorableFileBytes(file.AbsolutePath) : null;
+            byte[]? beforeBytes = file.ExistsInBaseline
+                ? NormalizeRestorableBytes(await ReadBaselineFileBytesAsync(repoRoot, config.Baseline, file.Path, cancellationToken).ConfigureAwait(false))
+                : null;
+            if (afterBytes is not null && afterBytes.LongLength > config.MaxFileSize)
+            {
+                throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-FILE-TOO-LARGE", $"After snapshot exceeds maxFileSize: {file.Path}");
+            }
+
+            if (beforeBytes is not null && beforeBytes.LongLength > config.MaxFileSize)
+            {
+                throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-FILE-TOO-LARGE", $"Before snapshot exceeds maxFileSize: {file.Path}");
+            }
+
+            var afterSnapshot = afterBytes is not null ? $"repo-after/{file.Path}" : null;
+            var beforeSnapshot = beforeBytes is not null ? $"repo-before/{file.Path}" : null;
+            var afterSha256 = afterBytes is not null ? Sha256Bytes(afterBytes) : null;
+            var beforeSha256 = beforeBytes is not null ? Sha256Bytes(beforeBytes) : null;
+            var contentBytes = afterBytes ?? beforeBytes ?? [];
+            var snapshot = new RepositoryFileSnapshot(
+                file.Path,
+                ResolveSnapshotStatus(afterSha256, beforeSha256),
+                afterSnapshot,
+                beforeSnapshot,
+                afterSha256,
+                beforeSha256,
+                IsTextBytes(contentBytes) ? "text" : "binary",
+                FullContentIncluded: true);
+            files.Add(snapshot);
+
+            if (afterSnapshot is not null && afterBytes is not null)
+            {
+                archiveFiles[afterSnapshot] = afterBytes;
+            }
+
+            if (beforeSnapshot is not null && beforeBytes is not null)
+            {
+                archiveFiles[beforeSnapshot] = beforeBytes;
+            }
+        }
+
+        return new RepositoryFileSnapshotArchive(
+            new RepositoryFileSnapshotManifest(config.TaskId, config.Iteration, config.Baseline, files),
+            archiveFiles);
+    }
+
+    private static string ResolveSnapshotStatus(string? afterSha256, string? beforeSha256)
+    {
+        if (afterSha256 is not null && beforeSha256 is not null)
+        {
+            return string.Equals(afterSha256, beforeSha256, StringComparison.Ordinal)
+                ? "unchanged"
+                : "modified";
+        }
+
+        return afterSha256 is not null ? "added" : "deleted";
+    }
+
+    private static async Task<byte[]> ReadBaselineFileBytesAsync(
+        string repoRoot,
+        string baseline,
+        string relativePath,
+        CancellationToken cancellationToken)
+    {
+        var startInfo = new ProcessStartInfo("git")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            WorkingDirectory = repoRoot,
+            StandardOutputEncoding = Encoding.UTF8,
+            StandardErrorEncoding = Encoding.UTF8
+        };
+        foreach (var argument in new[] { "-c", "core.quotepath=false", "-c", "core.autocrlf=false", "-c", "core.safecrlf=false", "show", $"{baseline}:{relativePath}" })
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        using var process = Process.Start(startInfo)
+            ?? throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-GIT-FAILED", "Failed to start git.");
+        await using var memory = new MemoryStream();
+        var copyTask = process.StandardOutput.BaseStream.CopyToAsync(memory, cancellationToken);
+        var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
+        await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+        await copyTask.ConfigureAwait(false);
+        var stderr = await stderrTask.ConfigureAwait(false);
+        if (process.ExitCode != 0)
+        {
+            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-GIT-FAILED", $"git show failed for {relativePath}: {stderr}");
+        }
+
+        return memory.ToArray();
+    }
+
     private static async Task<StaticAuditRequest> ReadStaticAuditRequestAsync(string repoRoot, CancellationToken cancellationToken)
     {
         var absolutePath = Path.Combine(repoRoot, StaticAuditRequestSourcePath.Replace('/', Path.DirectorySeparatorChar));
@@ -2417,7 +2531,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static void VerifyArchiveRequiredFiles(Dictionary<string, byte[]> entries)
     {
-        foreach (var required in new[] { "AUDIT-MANIFEST.md", "SHA256SUMS.txt", "repo-file-hashes.json", "AUDIT-REQUEST.md", "metadata/audit-package.input.json" })
+        foreach (var required in new[] { "AUDIT-MANIFEST.md", "SHA256SUMS.txt", "repo-file-hashes.json", RepositoryFileSnapshotsArchivePath, "AUDIT-REQUEST.md", "metadata/audit-package.input.json" })
         {
             if (!entries.ContainsKey(required))
             {
@@ -2656,6 +2770,249 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             if (!manifest.Contains($"`{path}`", StringComparison.Ordinal))
             {
                 throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-MANIFEST-INCOMPLETE", $"Manifest does not list deleted repository file: {path}");
+            }
+        }
+    }
+
+    private static RestoreManifest ReadRestoreManifest(Dictionary<string, byte[]> entries, string step)
+    {
+        return JsonSerializer.Deserialize<RestoreManifest>(
+            entries["repo-file-hashes.json"],
+            JsonReadOptions) ?? throw new AuditPackageFailure(
+                step,
+                "E2D-BUILD-AUDIT-RESTORE-MANIFEST-INVALID",
+                "repo-file-hashes.json is empty or invalid.");
+    }
+
+    private static RepositoryFileSnapshotManifest VerifyRepositoryFileSnapshotManifest(
+        Dictionary<string, byte[]> entries,
+        AuditPackageConfiguration config,
+        RestoreManifest restoreManifest)
+    {
+        var manifest = JsonSerializer.Deserialize<RepositoryFileSnapshotManifest>(
+            entries[RepositoryFileSnapshotsArchivePath],
+            JsonReadOptions) ?? throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-SNAPSHOT-INVALID",
+                $"{RepositoryFileSnapshotsArchivePath} is empty or invalid.");
+        if (!string.Equals(manifest.TaskId, config.TaskId, StringComparison.Ordinal) ||
+            !string.Equals(manifest.Iteration, config.Iteration, StringComparison.Ordinal) ||
+            !string.Equals(manifest.Baseline, config.Baseline, StringComparison.Ordinal))
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"{RepositoryFileSnapshotsArchivePath} metadata does not match archive config.");
+        }
+
+        var expectedPaths = restoreManifest.RepoFiles
+            .Select(file => file.Path)
+            .Concat(restoreManifest.DeletedRepoFiles)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        var snapshots = new Dictionary<string, RepositoryFileSnapshot>(StringComparer.Ordinal);
+        foreach (var snapshot in manifest.Files)
+        {
+            var normalized = AuditPath.NormalizeRelativePath(snapshot.Path, RepositoryFileSnapshotsArchivePath, allowCurrentDirectory: false);
+            if (!snapshots.TryAdd(normalized, snapshot))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Duplicate repository file snapshot: {normalized}");
+            }
+
+            if (!snapshot.FullContentIncluded)
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISSING", $"Repository file snapshot is not full content: {normalized}");
+            }
+
+            if (snapshot.ContentKind is not ("text" or "binary"))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Repository file snapshot has invalid contentKind: {normalized}");
+            }
+
+            var expectedStatus = ResolveSnapshotStatus(
+                string.IsNullOrWhiteSpace(snapshot.AfterSha256) ? null : snapshot.AfterSha256,
+                string.IsNullOrWhiteSpace(snapshot.BeforeSha256) ? null : snapshot.BeforeSha256);
+            if (!string.Equals(snapshot.Status, expectedStatus, StringComparison.Ordinal))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Repository file snapshot has invalid status for {normalized}: expected {expectedStatus}.");
+            }
+        }
+
+        var actualPaths = snapshots.Keys.Order(StringComparer.Ordinal).ToArray();
+        if (!expectedPaths.SequenceEqual(actualPaths, StringComparer.Ordinal))
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH",
+                $"Repository file snapshots do not match repo-file-hashes.json. Expected: {FormatPathList(expectedPaths)}. Actual: {FormatPathList(actualPaths)}.");
+        }
+
+        foreach (var file in restoreManifest.RepoFiles.OrderBy(file => file.Path, StringComparer.Ordinal))
+        {
+            var snapshot = snapshots[file.Path];
+            VerifyExpectedSnapshotPath(snapshot.AfterSnapshot, $"repo-after/{file.Path}", required: true, "after", file.Path);
+            VerifySnapshotArchiveEntry(entries, snapshot.AfterSnapshot, snapshot.AfterSha256, file.Sha256, true, "after", file.Path);
+            if (!string.Equals(snapshot.AfterSha256, file.Sha256, StringComparison.Ordinal))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"After snapshot SHA-256 does not match repo-file-hashes.json for {file.Path}.");
+            }
+        }
+
+        foreach (var path in restoreManifest.DeletedRepoFiles.OrderBy(path => path, StringComparer.Ordinal))
+        {
+            var snapshot = snapshots[path];
+            if (!string.IsNullOrWhiteSpace(snapshot.AfterSnapshot) || !string.IsNullOrWhiteSpace(snapshot.AfterSha256))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Deleted file snapshot must not contain an after snapshot: {path}");
+            }
+        }
+
+        foreach (var snapshot in manifest.Files.OrderBy(file => file.Path, StringComparer.Ordinal))
+        {
+            VerifyExpectedSnapshotPath(snapshot.BeforeSnapshot, $"repo-before/{snapshot.Path}", required: false, "before", snapshot.Path);
+            VerifySnapshotArchiveEntry(entries, snapshot.BeforeSnapshot, snapshot.BeforeSha256, snapshot.BeforeSha256, false, "before", snapshot.Path);
+        }
+
+        VerifyNoOrphanSnapshotArchiveEntries(entries, manifest);
+
+        return manifest;
+    }
+
+    private static void VerifyExpectedSnapshotPath(string? actualPath, string expectedPath, bool required, string role, string repositoryPath)
+    {
+        if (string.IsNullOrWhiteSpace(actualPath))
+        {
+            if (required)
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISSING", $"Repository file is missing required {role} snapshot: {repositoryPath}");
+            }
+
+            return;
+        }
+
+        var normalized = AuditPath.NormalizeArchivePath(actualPath);
+        if (!string.Equals(normalized, expectedPath, StringComparison.Ordinal))
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH",
+                $"Repository file {role} snapshot path for {repositoryPath} must be {expectedPath}, but was {normalized}.");
+        }
+    }
+
+    private static void VerifyNoOrphanSnapshotArchiveEntries(Dictionary<string, byte[]> entries, RepositoryFileSnapshotManifest manifest)
+    {
+        var referencedSnapshotPaths = manifest.Files
+            .SelectMany(file => new[] { file.AfterSnapshot, file.BeforeSnapshot })
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(path => AuditPath.NormalizeArchivePath(path!))
+            .ToHashSet(StringComparer.Ordinal);
+        var orphanSnapshotPaths = entries.Keys
+            .Where(path =>
+                (path.StartsWith("repo-after/", StringComparison.Ordinal) ||
+                    path.StartsWith("repo-before/", StringComparison.Ordinal)) &&
+                !referencedSnapshotPaths.Contains(path))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        if (orphanSnapshotPaths.Length > 0)
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH",
+                $"Archive contains repository snapshots that are not listed in {RepositoryFileSnapshotsArchivePath}: {FormatPathList(orphanSnapshotPaths)}.");
+        }
+    }
+
+    private static void VerifySnapshotArchiveEntry(
+        Dictionary<string, byte[]> entries,
+        string? path,
+        string? actualSha256,
+        string? expectedSha256,
+        bool required,
+        string role,
+        string repositoryPath)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            if (required)
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISSING", $"Repository file is missing required {role} snapshot: {repositoryPath}");
+            }
+
+            return;
+        }
+
+        var normalized = AuditPath.NormalizeArchivePath(path);
+        if (!entries.TryGetValue(normalized, out var bytes))
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISSING", $"Repository file snapshot is missing from archive: {normalized}");
+        }
+
+        var computedSha256 = Sha256Bytes(bytes);
+        if (!string.Equals(actualSha256, computedSha256, StringComparison.Ordinal) ||
+            !string.Equals(expectedSha256, computedSha256, StringComparison.Ordinal))
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Repository file {role} snapshot SHA-256 mismatch for {repositoryPath}.");
+        }
+    }
+
+    private static async Task VerifyRepositoryFileSnapshotBaselineAsync(
+        string repoRoot,
+        AuditPackageConfiguration config,
+        RepositoryFileSnapshotManifest manifest,
+        CancellationToken cancellationToken)
+    {
+        foreach (var snapshot in manifest.Files.OrderBy(file => file.Path, StringComparer.Ordinal))
+        {
+            var baselineProbe = await GitRunner.RunAsync(
+                repoRoot,
+                ["cat-file", "-e", $"{config.Baseline}:{snapshot.Path}"],
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+            var existsInBaseline = baselineProbe.ExitCode == 0;
+            if (existsInBaseline)
+            {
+                if (string.IsNullOrWhiteSpace(snapshot.BeforeSnapshot) || string.IsNullOrWhiteSpace(snapshot.BeforeSha256))
+                {
+                    throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISSING", $"Repository file is missing required before snapshot: {snapshot.Path}");
+                }
+
+                var expectedBeforeSha256 = Sha256Bytes(NormalizeRestorableBytes(await ReadBaselineFileBytesAsync(repoRoot, config.Baseline, snapshot.Path, cancellationToken).ConfigureAwait(false)));
+                if (!string.Equals(snapshot.BeforeSha256, expectedBeforeSha256, StringComparison.Ordinal))
+                {
+                    throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Before snapshot SHA-256 does not match baseline for {snapshot.Path}.");
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(snapshot.BeforeSnapshot) || !string.IsNullOrWhiteSpace(snapshot.BeforeSha256))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Added file must not contain a before snapshot: {snapshot.Path}");
+            }
+        }
+    }
+
+    private static async Task VerifyRepositoryFileSnapshotAfterApplyAsync(
+        string repoRoot,
+        RepositoryFileSnapshotManifest manifest,
+        CancellationToken cancellationToken)
+    {
+        foreach (var snapshot in manifest.Files.OrderBy(file => file.Path, StringComparer.Ordinal))
+        {
+            var path = Path.Combine(repoRoot, snapshot.Path.Replace('/', Path.DirectorySeparatorChar));
+            if (string.IsNullOrWhiteSpace(snapshot.AfterSnapshot))
+            {
+                if (File.Exists(path))
+                {
+                    throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"Deleted file still exists after patch apply: {snapshot.Path}");
+                }
+
+                continue;
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISSING", $"Repository file after snapshot has no matching file after patch apply: {snapshot.Path}");
+            }
+
+            var actualSha256 = Sha256Bytes(ReadRestorableFileBytes(path));
+            if (!string.Equals(snapshot.AfterSha256, actualSha256, StringComparison.Ordinal))
+            {
+                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH", $"After snapshot SHA-256 does not match patch-applied tree for {snapshot.Path}.");
             }
         }
     }
@@ -3573,7 +3930,11 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static byte[] ReadRestorableFileBytes(string path)
     {
-        var bytes = File.ReadAllBytes(path);
+        return NormalizeRestorableBytes(File.ReadAllBytes(path));
+    }
+
+    private static byte[] NormalizeRestorableBytes(byte[] bytes)
+    {
         if (!IsTextBytes(bytes))
         {
             return bytes;
@@ -3702,6 +4063,26 @@ internal sealed record SelectedRepositoryFile(string Path, string AbsolutePath, 
 internal sealed record StaticAuditRequest(string AbsolutePath, byte[] Bytes);
 
 internal sealed record EvidenceSourceFile(string SourcePath, string ArchivePath);
+
+internal sealed record RepositoryFileSnapshotArchive(
+    RepositoryFileSnapshotManifest Manifest,
+    IReadOnlyDictionary<string, byte[]> ArchiveFiles);
+
+internal sealed record RepositoryFileSnapshotManifest(
+    string TaskId,
+    string Iteration,
+    string Baseline,
+    IReadOnlyList<RepositoryFileSnapshot> Files);
+
+internal sealed record RepositoryFileSnapshot(
+    string Path,
+    string Status,
+    string? AfterSnapshot,
+    string? BeforeSnapshot,
+    string? AfterSha256,
+    string? BeforeSha256,
+    string ContentKind,
+    bool FullContentIncluded);
 
 internal sealed record PatchResult(string PatchText, string NameStatus);
 

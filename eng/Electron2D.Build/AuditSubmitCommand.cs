@@ -35,6 +35,12 @@ internal sealed class AuditSubmitCommand
     private const int MinimumOperationalPollSeconds = 60;
     private const int DefaultTimeoutMinutes = 180;
     private const int DefaultLoginTimeoutMinutes = 10;
+    private static readonly Regex AuditZipFileNameExpression = new(
+        @"^(?<task>T-\d+)-audit-(?<iteration>r\d+)\.zip$",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    private static readonly Regex AuditVerdictFileNameExpression = new(
+        @"^(?<task>T-\d+)-audit-(?:(?<control>control)-)?(?<iteration>r\d+)\.md$",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
     public async Task RunAsync(string[] args, CancellationToken cancellationToken)
     {
@@ -43,6 +49,7 @@ internal sealed class AuditSubmitCommand
 
         var repoRoot = Directory.GetCurrentDirectory();
         string report;
+        AuditSubmitZipIdentity? zipIdentity = null;
         if (options.DumpDomOnly)
         {
             report = await new AuditSubmitCodexChromeAutomation()
@@ -68,10 +75,20 @@ internal sealed class AuditSubmitCommand
                     ZipPath: zipPath);
             }
 
+            zipIdentity = ResolveAuditZipIdentity(zipPath);
+            ValidateAuditSubmitState(options, repoRoot, zipPath, zipIdentity);
             var message = await ResolveSubmitMessageAsync(options, repoRoot, zipPath, cancellationToken).ConfigureAwait(false);
+            var submitOptions = options.ReuseConversation && string.IsNullOrWhiteSpace(options.ProjectUrl)
+                ? options with { ProjectUrl = await ResolveStoredConversationUrlAsync(repoRoot, zipPath, zipIdentity, cancellationToken).ConfigureAwait(false) }
+                : options;
             report = await new AuditSubmitCodexChromeAutomation()
-                .SubmitAndWaitForReportAsync(options, repoRoot, zipPath, message, cancellationToken)
+                .SubmitAndWaitForReportAsync(submitOptions, repoRoot, zipPath, message, cancellationToken)
                 .ConfigureAwait(false);
+        }
+
+        if (zipIdentity is not null)
+        {
+            ValidateReportMatchesSubmitIteration(report, zipIdentity, options.ZipPath);
         }
 
         var outputPath = ResolvePath(repoRoot, options.OutputPath);
@@ -88,6 +105,49 @@ internal sealed class AuditSubmitCommand
         }
     }
 
+    private static void ValidateReportMatchesSubmitIteration(string report, AuditSubmitZipIdentity zipIdentity, string? zipPath)
+    {
+        var taskIdPattern = Regex.Escape(zipIdentity.TaskId);
+        var evidenceIterationMatches = Regex.Matches(
+                report,
+                $@"\bevidence/{taskIdPattern}-(?<iteration>r\d{{2}})/checks/",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
+            .Select(match => match.Groups["iteration"].Value.ToLowerInvariant())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+        if (evidenceIterationMatches.Length > 0 &&
+            !evidenceIterationMatches.Contains(zipIdentity.Iteration, StringComparer.Ordinal))
+        {
+            throw new AuditPackageFailure(
+                "audit submit",
+                "E2D-BUILD-AUDIT-SUBMIT-REPORT-STALE",
+                $"Downloaded report references evidence for {zipIdentity.TaskId} {FormatIterationList(evidenceIterationMatches)} but not current {zipIdentity.Iteration}.",
+                ZipPath: zipPath);
+        }
+
+        var zipIterationMatches = Regex.Matches(
+                report,
+                $@"\b{taskIdPattern}-audit-(?<iteration>r\d{{2}})\.zip\b",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
+            .Select(match => match.Groups["iteration"].Value.ToLowerInvariant())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+        if (zipIterationMatches.Length > 0 &&
+            !zipIterationMatches.Contains(zipIdentity.Iteration, StringComparer.Ordinal))
+        {
+            throw new AuditPackageFailure(
+                "audit submit",
+                "E2D-BUILD-AUDIT-SUBMIT-REPORT-STALE",
+                $"Downloaded report references audit ZIP for {zipIdentity.TaskId} {FormatIterationList(zipIterationMatches)} but not current {zipIdentity.Iteration}.",
+                ZipPath: zipPath);
+        }
+    }
+
+    private static string FormatIterationList(IReadOnlyCollection<string> iterations)
+    {
+        return string.Join(", ", iterations.Order(StringComparer.Ordinal));
+    }
+
     private static AuditSubmitOptions ParseOptions(string[] args)
     {
         var values = ParseNamedArguments(
@@ -99,7 +159,6 @@ internal sealed class AuditSubmitCommand
                 "--out",
                 "--message",
                 "--project-url",
-                "--screenshots-dir",
                 "--dom-dump-dir",
                 "--poll-seconds",
                 "--timeout-minutes",
@@ -109,14 +168,26 @@ internal sealed class AuditSubmitCommand
                 "--codex-session-id",
                 "--codex-turn-id"
             ],
-            allowedFlags: ["--allow-fast-poll", "--download-report-only", "--dump-dom-only", "--keep-tab-open-on-error"]);
+            allowedFlags: ["--allow-fast-poll", "--download-report-only", "--dump-dom-only", "--keep-tab-open-on-error", "--reuse-conversation", "--control-audit"]);
 
         ValidateBrowserBackend(values);
         var downloadReportOnly = values.ContainsKey("--download-report-only");
         var dumpDomOnly = values.ContainsKey("--dump-dom-only");
+        var reuseConversation = values.ContainsKey("--reuse-conversation");
+        var controlAudit = values.ContainsKey("--control-audit");
         if (downloadReportOnly && dumpDomOnly)
         {
             throw InvalidArguments("--download-report-only is not accepted together with --dump-dom-only.");
+        }
+
+        if (reuseConversation && controlAudit)
+        {
+            throw InvalidArguments("--reuse-conversation is not accepted together with --control-audit.");
+        }
+
+        if ((downloadReportOnly || dumpDomOnly) && (reuseConversation || controlAudit))
+        {
+            throw InvalidArguments("--reuse-conversation and --control-audit are accepted only for a submit that sends a ZIP.");
         }
 
         if ((downloadReportOnly || dumpDomOnly) && values.ContainsKey("--zip"))
@@ -144,17 +215,33 @@ internal sealed class AuditSubmitCommand
         var messagePath = values.TryGetValue("--message", out var configuredMessagePath) && !string.IsNullOrWhiteSpace(configuredMessagePath)
             ? configuredMessagePath
             : null;
-        var projectUrl = values.TryGetValue("--project-url", out var configuredProjectUrl) && !string.IsNullOrWhiteSpace(configuredProjectUrl)
-            ? configuredProjectUrl
+        var hasProjectUrl = values.TryGetValue("--project-url", out var configuredProjectUrl) && !string.IsNullOrWhiteSpace(configuredProjectUrl);
+        var projectUrl = hasProjectUrl
+            ? configuredProjectUrl!
             : DefaultProjectUrl;
         if (downloadReportOnly && !AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(projectUrl))
         {
             throw InvalidArguments("--download-report-only requires --project-url to be a concrete ChatGPT conversation URL containing /c/<conversation-id>.");
         }
 
-        var screenshotsDirectory = values.TryGetValue("--screenshots-dir", out var configuredScreenshotsDirectory) && !string.IsNullOrWhiteSpace(configuredScreenshotsDirectory)
-            ? configuredScreenshotsDirectory
-            : null;
+        if (reuseConversation)
+        {
+            if (hasProjectUrl && !AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(projectUrl))
+            {
+                throw InvalidArguments("--reuse-conversation requires --project-url to be a concrete ChatGPT conversation URL containing /c/<conversation-id>, or no --project-url so the stored task conversation URL can be used.");
+            }
+
+            if (!hasProjectUrl)
+            {
+                projectUrl = string.Empty;
+            }
+        }
+
+        if (controlAudit && AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(projectUrl))
+        {
+            throw InvalidArguments("--control-audit must start from the ChatGPT project URL, not an existing conversation URL.");
+        }
+
         var domDumpDirectory = values.TryGetValue("--dom-dump-dir", out var configuredDomDumpDirectory) && !string.IsNullOrWhiteSpace(configuredDomDumpDirectory)
             ? configuredDomDumpDirectory
             : null;
@@ -178,7 +265,7 @@ internal sealed class AuditSubmitCommand
             outputPath,
             messagePath,
             projectUrl,
-            screenshotsDirectory,
+            ScreenshotsDirectory: null,
             pollSeconds,
             timeoutMinutes,
             loginTimeoutMinutes,
@@ -189,7 +276,9 @@ internal sealed class AuditSubmitCommand
             codexChromePipe,
             codexBrowserIdentity.SessionId,
             codexBrowserIdentity.TurnId,
-            keepTabOpenOnError);
+            keepTabOpenOnError,
+            reuseConversation,
+            controlAudit);
     }
 
     private static void ValidatePolling(AuditSubmitOptions options)
@@ -248,6 +337,153 @@ internal sealed class AuditSubmitCommand
         }
 
         return message;
+    }
+
+    private static async Task<string> ResolveStoredConversationUrlAsync(
+        string repoRoot,
+        string zipPath,
+        AuditSubmitZipIdentity zipIdentity,
+        CancellationToken cancellationToken)
+    {
+        var path = Path.Combine(repoRoot, ".temp", "audit", zipIdentity.TaskId, "conversation-url.txt");
+        if (!File.Exists(path))
+        {
+            throw new AuditPackageFailure(
+                "audit submit",
+                "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING",
+                $"Stored audit conversation URL was not found: .temp/audit/{zipIdentity.TaskId}/conversation-url.txt",
+                ZipPath: zipPath);
+        }
+
+        var url = (await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken).ConfigureAwait(false)).Trim();
+        if (!AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(url))
+        {
+            throw new AuditPackageFailure(
+                "audit submit",
+                "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-URL-MISSING",
+                $"Stored audit conversation URL is not a concrete ChatGPT conversation URL: .temp/audit/{zipIdentity.TaskId}/conversation-url.txt",
+                ZipPath: zipPath);
+        }
+
+        return url;
+    }
+
+    private static AuditSubmitZipIdentity ResolveAuditZipIdentity(string zipPath)
+    {
+        var fileName = Path.GetFileName(zipPath);
+        var match = AuditZipFileNameExpression.Match(fileName);
+        if (!match.Success)
+        {
+            throw new AuditPackageFailure(
+                "audit submit",
+                "E2D-BUILD-AUDIT-SUBMIT-ZIP-NAME-INVALID",
+                $"Audit ZIP name must use <task-id>-audit-rNN.zip: {fileName}",
+                ZipPath: zipPath);
+        }
+
+        var iteration = match.Groups["iteration"].Value.ToLowerInvariant();
+        return new AuditSubmitZipIdentity(
+            match.Groups["task"].Value.ToUpperInvariant(),
+            iteration,
+            ParseIterationNumber(iteration));
+    }
+
+    private static void ValidateAuditSubmitState(
+        AuditSubmitOptions options,
+        string repoRoot,
+        string zipPath,
+        AuditSubmitZipIdentity zipIdentity)
+    {
+        var verdicts = ReadSavedAuditVerdicts(repoRoot, zipIdentity.TaskId);
+        if (options.ControlAudit)
+        {
+            var primaryAccept = verdicts.Any(verdict =>
+                !verdict.Control &&
+                verdict.IterationNumber == zipIdentity.IterationNumber &&
+                string.Equals(verdict.FirstLine, "VERDICT: ACCEPT", StringComparison.Ordinal));
+            if (!primaryAccept)
+            {
+                throw new AuditPackageFailure(
+                    "audit submit",
+                    "E2D-BUILD-AUDIT-SUBMIT-VERDICT-STATE",
+                    $"--control-audit requires a saved primary VERDICT: ACCEPT report for {zipIdentity.TaskId} {zipIdentity.Iteration}.",
+                    ZipPath: zipPath);
+            }
+
+            return;
+        }
+
+        var latestPreviousNeedsFixes = verdicts
+            .Where(verdict => verdict.IterationNumber < zipIdentity.IterationNumber)
+            .OrderByDescending(verdict => verdict.IterationNumber)
+            .ThenByDescending(verdict => verdict.Control)
+            .FirstOrDefault()
+            ?.FirstLine == "VERDICT: NEEDS_FIXES";
+        if (latestPreviousNeedsFixes &&
+            !options.ReuseConversation &&
+            !AuditSubmitUrlRules.IsConcreteChatGptConversationUrl(options.ProjectUrl))
+        {
+            throw new AuditPackageFailure(
+                "audit submit",
+                "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-REQUIRED",
+                $"Primary audit iteration {zipIdentity.Iteration} must reuse the saved task conversation after a saved VERDICT: NEEDS_FIXES report.",
+                ZipPath: zipPath);
+        }
+    }
+
+    private static IReadOnlyList<SavedAuditVerdict> ReadSavedAuditVerdicts(string repoRoot, string taskId)
+    {
+        var verdictsRoot = Path.Combine(repoRoot, "docs", "verdicts");
+        if (!Directory.Exists(verdictsRoot))
+        {
+            return [];
+        }
+
+        var reports = new List<SavedAuditVerdict>();
+        foreach (var path in Directory.EnumerateFiles(verdictsRoot, "*.md", SearchOption.AllDirectories))
+        {
+            var match = AuditVerdictFileNameExpression.Match(Path.GetFileName(path));
+            if (!match.Success ||
+                !string.Equals(match.Groups["task"].Value, taskId, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var firstLine = ReadFirstNonEmptyLine(path);
+            if (firstLine is not ("VERDICT: ACCEPT" or "VERDICT: NEEDS_FIXES"))
+            {
+                continue;
+            }
+
+            var iteration = match.Groups["iteration"].Value.ToLowerInvariant();
+            reports.Add(new SavedAuditVerdict(
+                taskId,
+                iteration,
+                ParseIterationNumber(iteration),
+                match.Groups["control"].Success,
+                firstLine,
+                path));
+        }
+
+        return reports;
+    }
+
+    private static string? ReadFirstNonEmptyLine(string path)
+    {
+        foreach (var line in File.ReadLines(path, Encoding.UTF8))
+        {
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                return line.Trim();
+            }
+        }
+
+        return null;
+    }
+
+    private static int ParseIterationNumber(string iteration)
+    {
+        return int.Parse(iteration[1..], NumberStyles.None, CultureInfo.InvariantCulture);
     }
 
     private static (string SessionId, string TurnId) ResolveCodexBrowserIdentity(IReadOnlyDictionary<string, string?> values)
@@ -372,6 +608,16 @@ internal static class AuditSubmitUrlRules
         return false;
     }
 }
+
+internal sealed record AuditSubmitZipIdentity(string TaskId, string Iteration, int IterationNumber);
+
+internal sealed record SavedAuditVerdict(
+    string TaskId,
+    string Iteration,
+    int IterationNumber,
+    bool Control,
+    string FirstLine,
+    string Path);
 
 internal static class AuditSubmitReportExtractor
 {
@@ -692,4 +938,6 @@ internal sealed record AuditSubmitOptions(
     string? CodexChromePipe,
     string CodexSessionId,
     string CodexTurnId,
-    bool KeepTabOpenOnError) : IAuditSubmitBrowserOptions;
+    bool KeepTabOpenOnError,
+    bool ReuseConversation,
+    bool ControlAudit) : IAuditSubmitBrowserOptions;

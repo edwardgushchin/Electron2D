@@ -78,7 +78,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 await screenshots.CaptureAsync(browser, tabId, "sent", linked.Token).ConfigureAwait(false);
                 await WaitForConversationMessagesAsync(browser, tabId, messageCountBeforeSend + 1, TimeSpan.FromMinutes(2), linked.Token).ConfigureAwait(false);
                 var conversationUrl = await WaitForConcreteConversationUrlAsync(browser, tabId, TimeSpan.FromSeconds(30), linked.Token).ConfigureAwait(false);
-                await WriteConversationUrlSidecarAsync(repoRoot, zipPath, conversationUrl, linked.Token).ConfigureAwait(false);
+                await WriteConversationUrlSidecarAsync(repoRoot, zipPath, conversationUrl, options.ControlAudit, linked.Token).ConfigureAwait(false);
 
                 var report = await WaitForReportAsync(browser, tabId, options, screenshots, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false);
                 completed = true;
@@ -1100,7 +1100,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             {
                 throw new AuditSubmitCodexChromeException(
                     "E2D-BUILD-AUDIT-SUBMIT-REPORT-EXPORT-MISSING",
-                    "The ready report page did not expose a unique Deep Research export button or Markdown blob. See the saved screenshots for the page state.");
+                    "The ready report page did not expose a unique Deep Research export button or Markdown blob. Inspect DOM diagnostics or the live user-visible Chrome state.");
             }
 
             await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
@@ -1306,6 +1306,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
         string repoRoot,
         string zipPath,
         string conversationUrl,
+        bool controlAudit,
         CancellationToken cancellationToken)
     {
         RequireConcreteConversationUrlForSidecar(conversationUrl);
@@ -1323,9 +1324,15 @@ internal sealed class AuditSubmitCodexChromeAutomation
         var iteration = match.Groups["iteration"].Value.ToLowerInvariant();
         var directory = Path.Combine(repoRoot, ".temp", "audit", taskId);
         Directory.CreateDirectory(directory);
-        var path = Path.Combine(directory, $"conversation-url-{iteration}.txt");
+        var prefix = controlAudit ? "control-conversation-url" : "conversation-url";
+        var path = Path.Combine(directory, $"{prefix}-{iteration}.txt");
         await File.WriteAllTextAsync(
             path,
+            conversationUrl.Trim() + Environment.NewLine,
+            new UTF8Encoding(encoderShouldEmitUTF8Identifier: false),
+            cancellationToken).ConfigureAwait(false);
+        await File.WriteAllTextAsync(
+            Path.Combine(directory, $"{prefix}.txt"),
             conversationUrl.Trim() + Environment.NewLine,
             new UTF8Encoding(encoderShouldEmitUTF8Identifier: false),
             cancellationToken).ConfigureAwait(false);
@@ -1731,19 +1738,14 @@ internal sealed class AuditSubmitCodexChromeAutomation
             }
         }
 
-        if (readyTargetIds.Count == 0)
-        {
-            return null;
-        }
+        return SelectSingleReadyDeepResearchTargetId(readyTargetIds);
+    }
 
-        if (readyTargetIds.Count > 1)
-        {
-            throw new AuditSubmitCodexChromeException(
-                "E2D-BUILD-AUDIT-SUBMIT-REPORT-EXPORT-AMBIGUOUS",
-                "The page exposed multiple ready Deep Research targets after the current-submit baseline.");
-        }
-
-        return readyTargetIds[0];
+    private static string? SelectSingleReadyDeepResearchTargetId(IReadOnlyList<string> readyTargetIds)
+    {
+        return readyTargetIds.Count == 1
+            ? readyTargetIds[0]
+            : null;
     }
 
     private static async Task<HashSet<string>> SnapshotDeepResearchTargetIdsAsync(
@@ -2562,10 +2564,13 @@ internal sealed class AuditSubmitCodexChromeAutomation
           const inComposerMenu = (element) => {
             if (!plusRect) return true;
             const rect = element.getBoundingClientRect();
-            return rect.y >= plusRect.bottom - 12 &&
-              rect.y <= plusRect.bottom + 520 &&
-              rect.x >= plusRect.x - 80 &&
+            const horizontallyNearPlus = rect.x >= plusRect.x - 80 &&
               rect.x <= plusRect.x + 900;
+            const belowComposer = rect.y >= plusRect.bottom - 12 &&
+              rect.y <= plusRect.bottom + 520;
+            const aboveComposer = rect.bottom >= plusRect.top - 520 &&
+              rect.bottom <= plusRect.top + 12;
+            return horizontallyNearPlus && (belowComposer || aboveComposer);
           };
           const isHistoryOrMessage = (element) =>
             element.closest('[data-message-author-role]') !== null ||

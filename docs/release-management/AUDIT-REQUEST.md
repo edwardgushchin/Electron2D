@@ -7,26 +7,30 @@
 - `AUDIT-MANIFEST.md` - инвентарь задачи, итерации, исходной ревизии, области, изменённых файлов и доказательств.
 - `metadata/audit-package.input.json` - нормализованная входная конфигурация, включая `metadata.scopeTaskIds`, `metadata.scopeSummary`, `metadata.previousVerdictChain` и `metadata.blockerClosureList`.
 - `repo-file-hashes.json` - список файлов репозитория, которые относятся к проверяемому изменению.
-- `<task-id>.patch` - материал для чтения изменения; не нужно проверять применимость patch.
+- `metadata/repo-file-snapshots.json` - индекс полных снимков файлов репозитория, включая `repo-after/` и `repo-before/`.
+- `repo-after/` - полные итоговые снимки изменённых файлов репозитория; это основная поверхность чтения кода, тестов и документации.
+- `repo-before/` - полные снимки файлов объявленной области из исходной ревизии, если файл существовал в `baseline`.
+- `<task-id>.patch` - навигационный diff по изменённым местам; не нужно проверять применимость patch, и patch не является достаточной поверхностью для content review.
 - `evidence/` - сырые доказательства настроенных проверок, если они есть.
 - Изменённые файлы репозитория, тесты, документация и previous verdict files, которые доступны в архиве.
 
-Подготовка архива выполняется принимающей стороной до отправки. Внешний аудит проверяет содержимое изменения, а не слой доставки: не оценивайте второй служебный архив, доказательства подготовки, транспорт отправки или применимость patch. Если таких материалов нет во входе, это не blocker. Оценивайте только то, подтверждает ли содержимое изменения заявленную задачу и не создаёт новых рисков.
+Подготовка архива выполняется принимающей стороной до отправки. Внешний аудит проверяет содержимое изменения, а не слой доставки: не оценивайте второй служебный архив, доказательства подготовки, транспорт отправки или применимость patch. Если таких материалов нет во входе, это не blocker. Целостность основного ZIP, наличие `metadata/repo-file-snapshots.json` и доступность `repo-after/` являются предварительным условием чтения; если основной ZIP читается и содержит эти материалы, основная часть аудита - review содержимого по полным файлам. Оценивайте только то, подтверждает ли содержимое изменения заявленную задачу и не создаёт новых рисков.
 
 Обязательная проверка содержимого изменения:
 
-1. Выполните implementation content review: прочитайте изменённый код и оцените, реализует ли он заявленный контракт задачи без скрытых ручных действий.
-2. Выполните test coverage review: проверьте, что тесты покрывают важные ветки поведения, ограничения и уже найденные blocker-ы.
-3. Выполните documentation review: проверьте, что документация и агентские правила, если они есть в архиве, соответствуют фактическому поведению инструмента.
+1. Выполните implementation content review: прочитайте изменённый код в `repo-after/` по полным итоговым снимкам файлов и оцените, реализует ли он заявленный контракт задачи без скрытых ручных действий. Patch используйте только как карту изменённых мест.
+2. Выполните test coverage review: проверьте по `repo-after/`, что тесты покрывают важные ветки поведения, ограничения и уже найденные blocker-ы.
+3. Выполните documentation review: проверьте по `repo-after/`, что документация и агентские правила, если они есть в архиве, соответствуют фактическому поведению инструмента.
 4. Выполните task compliance review: сопоставьте изменение с текущим запросом пользователя и областью задачи.
 5. Выполните secret scanning: проверьте проверяемые файлы, patch и доказательства на реальные секреты, приватные ключи, токены, пароли, локальные абсолютные пути и конфиденциальные данные.
 6. Выполните scope scanning: проверьте, что изменение не включает лишние правки вне заявленной области.
+7. Если `metadata/repo-file-snapshots.json` показывает отсутствующий или неполный implementation/test/documentation snapshot, считайте это evidence gap и blocker-ом, когда файл критичен для проверки задачи и нет другой полной поверхности чтения. Не выдавайте patch-only inspection за full file review.
 
 Обязательная проверка области пакета:
 
 1. Прочитайте `metadata.scopeTaskIds` и `metadata.scopeSummary` из `metadata/audit-package.input.json`.
 2. Если `metadata.scopeTaskIds` пуст или отсутствует, область пакета равна одиночному `taskId` из metadata.
-3. Если `metadata.scopeTaskIds` содержит несколько задач, проверяйте пакет как `combined scope`, то есть явно комбинированную область: `AUDIT-MANIFEST.md`, metadata, patch, `repo-file-hashes.json` и evidence должны согласованно объяснять, какие задачи входят в текущее содержимое пакета и почему их можно принимать одним verdict-ом.
+3. Если `metadata.scopeTaskIds` содержит несколько задач, проверяйте пакет как `combined scope`, то есть явно комбинированную область: `AUDIT-MANIFEST.md`, metadata, patch, `repo-file-hashes.json`, `metadata/repo-file-snapshots.json`, `repo-after/`, `repo-before/` и evidence должны согласованно объяснять, какие задачи входят в текущее содержимое пакета и почему их можно принимать одним verdict-ом.
 4. Проверьте, что `AUDIT-MANIFEST.md` перечисляет ту же область, а `metadata.scopeSummary` не противоречит фактическому diff.
 5. Если в diff есть изменения вне `metadata.scopeTaskIds` или summary, это blocker области задачи, даже когда отдельные проверки прошли.
 
@@ -47,7 +51,7 @@
 - Первая непустая строка финального отчёта должна быть строго `VERDICT: ACCEPT` или `VERDICT: NEEDS_FIXES`.
 - Если ответ нарушает этот контракт, сторона приёмки обязана считать аудит неполным, даже если в тексте встречается `VERDICT: ACCEPT`.
 
-Машинные маркеры этого контракта: `metadata.scopeTaskIds`, `metadata.scopeSummary`, `combined scope`, `metadata.previousVerdictChain`, `metadata.blockerClosureList`, `previous verdict files`, `verbatim preservation`, `previous blockers closure`, `implementation content review`, `test coverage review`, `documentation review`, `task compliance review`, `secret scanning`, `scope scanning`, `single final report`, `no intermediate VERDICT`.
+Машинные маркеры этого контракта: `metadata.scopeTaskIds`, `metadata.scopeSummary`, `combined scope`, `metadata.previousVerdictChain`, `metadata.blockerClosureList`, `previous verdict files`, `verbatim preservation`, `previous blockers closure`, `metadata/repo-file-snapshots.json`, `repo-after/`, `repo-before/`, `implementation content review`, `test coverage review`, `documentation review`, `task compliance review`, `secret scanning`, `scope scanning`, `evidence gap`, `patch-only inspection`, `single final report`, `no intermediate VERDICT`.
 
 Ответ должен быть строгим и пригодным для сохранения в `docs/verdicts/`. Первая строка ответа должна быть строго одной из двух:
 

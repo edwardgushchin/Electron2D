@@ -31,6 +31,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Xunit;
@@ -2000,6 +2001,122 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task AuditPackageIncludesFullRepositorySnapshotsForExternalReview()
+    {
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-full-repository-snapshots",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["docs/release-management/audit-fixture.md"] = """
+                # Audit fixture
+
+                Baseline content that should remain visible in repo-before.
+                """,
+                ["docs/release-management/deleted-fixture.md"] = """
+                # Deleted fixture
+
+                Deleted baseline content should be available to the reviewer.
+                """,
+                ["docs/release-management/renamed-old.md"] = """
+                # Renamed fixture
+
+                Baseline path should be available through repo-before after rename.
+                """
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        Updated content that should be visible as a full repo-after file.
+
+        Unchanged neighboring context must not depend on a diff hunk.
+        """);
+        fixture.WriteTextFile("docs/release-management/new-fixture.md", """
+        # New fixture
+
+        New file content should be visible as a full repo-after file.
+        """);
+        fixture.WriteTextFile("docs/release-management/renamed-new.md", """
+        # Renamed fixture
+
+        New path should be available through repo-after after rename.
+        """);
+        fixture.DeleteFile("docs/release-management/deleted-fixture.md");
+        fixture.DeleteFile("docs/release-management/renamed-old.md");
+        var configPath = fixture.WriteConfig(
+            taskId,
+            repoFileAllowlist:
+            [
+                "docs/release-management/audit-fixture.md",
+                "docs/release-management/new-fixture.md",
+                "docs/release-management/deleted-fixture.md",
+                "docs/release-management/renamed-old.md",
+                "docs/release-management/renamed-new.md"
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var zipPath = fixture.ZipPath(taskId);
+        var entries = ReadZipEntryNames(zipPath);
+        Assert.Contains("metadata/repo-file-snapshots.json", entries);
+        Assert.Contains("repo-after/docs/release-management/audit-fixture.md", entries);
+        Assert.Contains("repo-after/docs/release-management/new-fixture.md", entries);
+        Assert.Contains("repo-after/docs/release-management/renamed-new.md", entries);
+        Assert.Contains("repo-before/docs/release-management/audit-fixture.md", entries);
+        Assert.Contains("repo-before/docs/release-management/deleted-fixture.md", entries);
+        Assert.Contains("repo-before/docs/release-management/renamed-old.md", entries);
+        Assert.DoesNotContain("repo-after/docs/release-management/deleted-fixture.md", entries);
+        Assert.DoesNotContain("repo-before/docs/release-management/new-fixture.md", entries);
+        Assert.DoesNotContain("repo-after/docs/release-management/renamed-old.md", entries);
+        Assert.DoesNotContain("repo-before/docs/release-management/renamed-new.md", entries);
+        Assert.Contains(
+            "Unchanged neighboring context must not depend on a diff hunk.",
+            ReadZipEntryText(zipPath, "repo-after/docs/release-management/audit-fixture.md"),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "Deleted baseline content should be available to the reviewer.",
+            ReadZipEntryText(zipPath, "repo-before/docs/release-management/deleted-fixture.md"),
+            StringComparison.Ordinal);
+
+        using var snapshotManifest = JsonDocument.Parse(ReadZipEntryText(zipPath, "metadata/repo-file-snapshots.json"));
+        var files = snapshotManifest.RootElement.GetProperty("files").EnumerateArray().ToArray();
+        var modified = files.Single(file => file.GetProperty("path").GetString() == "docs/release-management/audit-fixture.md");
+        var added = files.Single(file => file.GetProperty("path").GetString() == "docs/release-management/new-fixture.md");
+        var deleted = files.Single(file => file.GetProperty("path").GetString() == "docs/release-management/deleted-fixture.md");
+        var renamedOld = files.Single(file => file.GetProperty("path").GetString() == "docs/release-management/renamed-old.md");
+        var renamedNew = files.Single(file => file.GetProperty("path").GetString() == "docs/release-management/renamed-new.md");
+        Assert.Equal("modified", modified.GetProperty("status").GetString());
+        Assert.Equal("added", added.GetProperty("status").GetString());
+        Assert.Equal("deleted", deleted.GetProperty("status").GetString());
+        Assert.Equal("deleted", renamedOld.GetProperty("status").GetString());
+        Assert.Equal("added", renamedNew.GetProperty("status").GetString());
+        Assert.Equal("repo-after/docs/release-management/audit-fixture.md", modified.GetProperty("afterSnapshot").GetString());
+        Assert.Equal("repo-before/docs/release-management/audit-fixture.md", modified.GetProperty("beforeSnapshot").GetString());
+        Assert.Equal(Sha256ZipEntry(zipPath, "repo-after/docs/release-management/audit-fixture.md"), modified.GetProperty("afterSha256").GetString());
+        Assert.Equal(Sha256ZipEntry(zipPath, "repo-before/docs/release-management/audit-fixture.md"), modified.GetProperty("beforeSha256").GetString());
+        Assert.Equal("repo-after/docs/release-management/new-fixture.md", added.GetProperty("afterSnapshot").GetString());
+        Assert.False(added.TryGetProperty("beforeSnapshot", out _));
+        Assert.Equal("repo-before/docs/release-management/deleted-fixture.md", deleted.GetProperty("beforeSnapshot").GetString());
+        Assert.False(deleted.TryGetProperty("afterSnapshot", out _));
+        Assert.Equal("repo-before/docs/release-management/renamed-old.md", renamedOld.GetProperty("beforeSnapshot").GetString());
+        Assert.False(renamedOld.TryGetProperty("afterSnapshot", out _));
+        Assert.Equal("repo-after/docs/release-management/renamed-new.md", renamedNew.GetProperty("afterSnapshot").GetString());
+        Assert.False(renamedNew.TryGetProperty("beforeSnapshot", out _));
+        Assert.All(files, file =>
+        {
+            Assert.Equal("text", file.GetProperty("contentKind").GetString());
+            Assert.True(file.GetProperty("fullContentIncluded").GetBoolean());
+        });
+
+        var manifest = ReadZipEntryText(zipPath, "AUDIT-MANIFEST.md");
+        Assert.Contains("metadata/repo-file-snapshots.json", manifest, StringComparison.Ordinal);
+        Assert.Contains("repo-after/docs/release-management/audit-fixture.md", manifest, StringComparison.Ordinal);
+        Assert.Contains("repo-before/docs/release-management/deleted-fixture.md", manifest, StringComparison.Ordinal);
+        Assert.Contains("repo-before/docs/release-management/renamed-old.md", manifest, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-operator-workflow-sidecar");
@@ -2149,6 +2266,191 @@ public sealed class RepositoryBuildToolTests
 
         Assert.NotEqual(0, verify.ExitCode);
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-SIDECAR-MISMATCH");
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyRejectsMissingRepositoryFileSnapshot()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-missing-repository-snapshot", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        RemoveZipEntry(zipPath, "repo-after/docs/release-management/audit-fixture.md", updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-missing-repository-snapshot");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-SNAPSHOT-MISSING");
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyRejectsLegacyPatchOnlyPackageWithoutRepositorySnapshots()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-legacy-patch-only", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        var snapshotEntries = ReadZipEntryNames(zipPath)
+            .Where(path =>
+                string.Equals(path, "metadata/repo-file-snapshots.json", StringComparison.Ordinal) ||
+                path.StartsWith("repo-after/", StringComparison.Ordinal) ||
+                path.StartsWith("repo-before/", StringComparison.Ordinal))
+            .ToArray();
+        RemoveZipEntries(zipPath, snapshotEntries, updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-legacy-patch-only");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-ARCHIVE-INCOMPLETE");
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyRejectsOrphanRepositoryFileSnapshot()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-orphan-repository-snapshot", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        AddZipEntry(
+            zipPath,
+            "repo-after/docs/release-management/orphan-fixture.md",
+            "# Orphan fixture\n\nThis snapshot is not referenced by metadata.\n",
+            updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-orphan-repository-snapshot");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-MANIFEST-INCOMPLETE");
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyRejectsTamperedRepositoryFileSnapshotContent()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-tampered-repository-snapshot", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        ReplaceZipEntryText(
+            zipPath,
+            "repo-after/docs/release-management/audit-fixture.md",
+            text => text + "\nTampered content that is not reflected in metadata.\n",
+            updateChecksums: true);
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-tampered-repository-snapshot");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH");
+    }
+
+    [Theory]
+    [InlineData("duplicate", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH")]
+    [InlineData("path", "E2D-BUILD-AUDIT-PATH-INVALID")]
+    [InlineData("scope", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH")]
+    [InlineData("after-snapshot-path", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH")]
+    [InlineData("before-snapshot-path", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH")]
+    [InlineData("status", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH")]
+    public async Task AuditPackageVerifyRejectsInvalidRepositorySnapshotIndex(string caseName, string expectedCode)
+    {
+        using var fixture = await CreatePackagedFixtureAsync($"audit-snap-index-{caseName}", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        ReplaceRepositorySnapshotManifest(
+            zipPath,
+            manifest =>
+            {
+                var files = manifest["files"]!.AsArray();
+                switch (caseName)
+                {
+                    case "duplicate":
+                        files.Add(files[0]!.DeepClone());
+                        break;
+                    case "path":
+                        files[0]!.AsObject()["path"] = "../outside.md";
+                        break;
+                    case "scope":
+                        files.Add(new JsonObject
+                        {
+                            ["path"] = "docs/release-management/out-of-scope.md",
+                            ["status"] = "added",
+                            ["afterSnapshot"] = "repo-after/docs/release-management/out-of-scope.md",
+                            ["afterSha256"] = Sha256Text("# Out of scope\n"),
+                            ["contentKind"] = "text",
+                            ["fullContentIncluded"] = true
+                        });
+                        break;
+                    case "after-snapshot-path":
+                        files.OfType<JsonObject>()
+                            .Single(file => file["path"]?.GetValue<string>() == "docs/release-management/audit-fixture.md")
+                            ["afterSnapshot"] = "evidence/repo-after-hidden.md";
+                        break;
+                    case "before-snapshot-path":
+                        files.OfType<JsonObject>()
+                            .Single(file => file["path"]?.GetValue<string>() == "docs/release-management/audit-fixture.md")
+                            ["beforeSnapshot"] = "evidence/repo-before-hidden.md";
+                        break;
+                    case "status":
+                        files.OfType<JsonObject>()
+                            .Single(file => file["path"]?.GetValue<string>() == "docs/release-management/audit-fixture.md")
+                            ["status"] = "renamed";
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unexpected snapshot index case: {caseName}");
+                }
+            });
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync($"verify-snap-index-{caseName}");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, expectedCode);
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyRejectsMissingOldSideRepositorySnapshotForRename()
+    {
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-snap-index-rename-old-side",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["docs/release-management/renamed-old.md"] = """
+                # Renamed fixture
+
+                Baseline path that must remain visible through repo-before.
+                """
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/renamed-new.md", """
+        # Renamed fixture
+
+        New path that must be paired with the old-side deleted entry.
+        """);
+        fixture.DeleteFile("docs/release-management/renamed-old.md");
+        var configPath = fixture.WriteConfig(
+            taskId,
+            repoFileAllowlist:
+            [
+                "docs/release-management/renamed-old.md",
+                "docs/release-management/renamed-new.md"
+            ]);
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+        Assert.Equal(0, package.ExitCode);
+        var zipPath = fixture.ZipPath(taskId);
+        ReplaceRepositorySnapshotManifest(
+            zipPath,
+            manifest =>
+            {
+                var files = manifest["files"]!.AsArray();
+                var renameOldSide = files.OfType<JsonObject>()
+                    .Single(file => file["path"]?.GetValue<string>() == "docs/release-management/renamed-old.md");
+                files.Remove(renameOldSide);
+            });
+        RefreshOperatorWorkflowSidecarPayload(zipPath);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-snap-index-rename-old-side");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH");
     }
 
     [Fact]
@@ -2604,6 +2906,201 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task AuditSubmitReuseConversationReadsStoredTaskConversationBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-reuse-stored-conversation");
+        var zipPath = Path.Combine(workspace.Root, "T-0001-audit-r02.zip");
+        var messagePath = Path.Combine(workspace.Root, "message.md");
+        var conversationDirectory = Path.Combine(workspace.Root, ".temp", "audit", "T-0001");
+        Directory.CreateDirectory(conversationDirectory);
+        File.WriteAllText(zipPath, "placeholder", Encoding.UTF8);
+        File.WriteAllText(messagePath, "Audit text", Encoding.UTF8);
+        File.WriteAllText(
+            Path.Combine(conversationDirectory, "conversation-url.txt"),
+            "https://chatgpt.com/g/g-p-example/c/6a43b03e-9598-83ed-9c3d-24046e34fff3\n",
+            Encoding.UTF8);
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--reuse-conversation",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Fact]
+    public async Task AuditSubmitPrimaryIterationAfterNeedsFixesRequiresConversationBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-reuse-required");
+        File.WriteAllText(Path.Combine(workspace.Root, "T-0001-audit-r02.zip"), "placeholder", Encoding.UTF8);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r01", control: false, verdict: "VERDICT: NEEDS_FIXES");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-REQUIRED");
+    }
+
+    [Fact]
+    public async Task AuditSubmitPrimaryIterationAfterControlNeedsFixesRequiresConversationBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-needs-fixes-reuse-required");
+        File.WriteAllText(Path.Combine(workspace.Root, "T-0001-audit-r02.zip"), "placeholder", Encoding.UTF8);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r01", control: false, verdict: "VERDICT: ACCEPT");
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r01", control: true, verdict: "VERDICT: NEEDS_FIXES");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-REQUIRED");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("VERDICT: NEEDS_FIXES")]
+    public async Task AuditSubmitControlAuditRequiresPrimaryAcceptBeforeBrowserLaunch(string? primaryVerdict)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-state");
+        File.WriteAllText(Path.Combine(workspace.Root, "T-0001-audit-r02.zip"), "placeholder", Encoding.UTF8);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        if (primaryVerdict is not null)
+        {
+            WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: primaryVerdict);
+        }
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-VERDICT-STATE");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditAcceptsSameIterationPrimaryAcceptBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-accept");
+        File.WriteAllText(Path.Combine(workspace.Root, "T-0001-audit-r02.zip"), "placeholder", Encoding.UTF8);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Theory]
+    [InlineData("https://chatgpt.com/g/g-p-example/project")]
+    [InlineData("https://chatgpt.com/")]
+    public async Task AuditSubmitReuseConversationRejectsNonConversationUrlBeforeBrowserLaunch(string projectUrl)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-reuse-conversation-url");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "missing.zip",
+            "--out",
+            "report.md",
+            "--reuse-conversation",
+            "--project-url",
+            projectUrl);
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsConversationUrlBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-audit-url");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "missing.zip",
+            "--out",
+            "report.md",
+            "--control-audit",
+            "--project-url",
+            "https://chatgpt.com/g/g-p-example/c/6a43b03e-9598-83ed-9c3d-24046e34fff3");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
+    }
+
+    [Fact]
     public async Task AuditSubmitDoesNotRequireOperatorWorkflowSidecarBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-without-sidecar");
@@ -2652,7 +3149,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task AuditSubmitAcceptsScreenshotsDirectoryArgumentDuringEarlyValidation()
+    public async Task AuditSubmitRejectsScreenshotsDirectoryArgumentDuringEarlyValidation()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-screenshots-argument");
 
@@ -2668,7 +3165,7 @@ public sealed class RepositoryBuildToolTests
             "screenshots");
 
         Assert.NotEqual(0, submit.ExitCode);
-        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-ZIP-MISSING");
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
     }
 
     [Fact]
@@ -2969,6 +3466,96 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task AuditSubmitRejectsDownloadedReportThatOnlyReferencesPreviousIteration()
+    {
+        const string staleEvidenceReport = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - Checked stale report.
+
+        BLOCKERS:
+        B1: stale report.
+
+        EVIDENCE_REVIEW:
+        - Проверены evidence/T-0237-r01/checks/focused-t0237-tests.
+
+        RISKS_AND_NOTES:
+        - None.
+
+        CLOSURE_DECISION:
+        - Keep open.
+        """;
+        const string staleZipReport = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - Checked stale report.
+
+        BLOCKERS:
+        B1: stale report.
+
+        EVIDENCE_REVIEW:
+        - Проверен T-0237-audit-r01.zip.
+
+        RISKS_AND_NOTES:
+        - None.
+
+        CLOSURE_DECISION:
+        - Keep open.
+        """;
+        const string currentReport = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - Checked current report.
+
+        BLOCKERS:
+        B1: current report.
+
+        EVIDENCE_REVIEW:
+        - Previous blocker context: evidence/T-0237-r01/checks/focused-t0237-tests.
+        - Current package evidence: evidence/T-0237-r02/checks/focused-t0237-tests.
+
+        RISKS_AND_NOTES:
+        - None.
+
+        CLOSURE_DECISION:
+        - Keep open.
+        """;
+        const string markerlessReport = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - Checked current report.
+
+        BLOCKERS:
+        B1: current report.
+
+        EVIDENCE_REVIEW:
+        - Evidence checked without path markers.
+
+        RISKS_AND_NOTES:
+        - None.
+
+        CLOSURE_DECISION:
+        - Keep open.
+        """;
+
+        var staleEvidence = await InvokeAuditSubmitIterationReportValidationAsync(staleEvidenceReport, "T-0237-audit-r02.zip");
+        var staleZip = await InvokeAuditSubmitIterationReportValidationAsync(staleZipReport, "T-0237-audit-r02.zip");
+        var current = await InvokeAuditSubmitIterationReportValidationAsync(currentReport, "T-0237-audit-r02.zip");
+        var markerless = await InvokeAuditSubmitIterationReportValidationAsync(markerlessReport, "T-0237-audit-r02.zip");
+
+        Assert.False(staleEvidence.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-STALE", staleEvidence.Code);
+        Assert.False(staleZip.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-STALE", staleZip.Code);
+        Assert.True(current.Succeeded);
+        Assert.True(markerless.Succeeded);
+    }
+
+    [Fact]
     public async Task AuditSubmitRejectsMultipleReadyDeepResearchFrameContexts()
     {
         var none = await InvokeAuditSubmitReadyFrameContextSelectionAsync();
@@ -3012,6 +3599,21 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal("frame-1", single.FrameId);
         Assert.False(ambiguous.Succeeded);
         Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-EXPORT-AMBIGUOUS", ambiguous.Code);
+    }
+
+    [Fact]
+    public async Task AuditSubmitSkipsGlobalTargetFallbackWhenMultipleReadyTargetsExist()
+    {
+        var none = await InvokeAuditSubmitReadyTargetSelectionAsync();
+        var single = await InvokeAuditSubmitReadyTargetSelectionAsync("target-1");
+        var multiple = await InvokeAuditSubmitReadyTargetSelectionAsync("target-1", "target-2");
+
+        Assert.True(none.Succeeded);
+        Assert.Null(none.TargetId);
+        Assert.True(single.Succeeded);
+        Assert.Equal("target-1", single.TargetId);
+        Assert.True(multiple.Succeeded);
+        Assert.Null(multiple.TargetId);
     }
 
     [Fact]
@@ -3207,6 +3809,17 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(Path.Combine(workspace.Root, ".temp", "audit", "T-0123", "conversation-url-r09.txt"), written.Path);
         Assert.True(File.Exists(written.Path));
         Assert.Equal(concreteUrl, File.ReadAllText(written.Path!, Encoding.UTF8).Trim());
+        Assert.Equal(
+            concreteUrl,
+            File.ReadAllText(Path.Combine(workspace.Root, ".temp", "audit", "T-0123", "conversation-url.txt"), Encoding.UTF8).Trim());
+
+        var control = await InvokeAuditSubmitConversationUrlSidecarWriteAsync(workspace.Root, zipPath, concreteUrl, controlAudit: true);
+
+        Assert.True(control.Succeeded);
+        Assert.Equal(Path.Combine(workspace.Root, ".temp", "audit", "T-0123", "control-conversation-url-r09.txt"), control.Path);
+        Assert.Equal(
+            concreteUrl,
+            File.ReadAllText(Path.Combine(workspace.Root, ".temp", "audit", "T-0123", "control-conversation-url.txt"), Encoding.UTF8).Trim());
 
         var nonConversationUrl = await InvokeAuditSubmitConversationUrlSidecarWriteAsync(
             workspace.Root,
@@ -3718,12 +4331,19 @@ public sealed class RepositoryBuildToolTests
             Assert.Contains("metadata.scopeTaskIds", text, StringComparison.Ordinal);
             Assert.Contains("metadata.scopeSummary", text, StringComparison.Ordinal);
             Assert.Contains("combined scope", text, StringComparison.Ordinal);
+            Assert.Contains("metadata/repo-file-snapshots.json", text, StringComparison.Ordinal);
+            Assert.Contains("repo-after/", text, StringComparison.Ordinal);
+            Assert.Contains("repo-before/", text, StringComparison.Ordinal);
         }
 
         Assert.Contains("implementation content review", request, StringComparison.Ordinal);
         Assert.Contains("test coverage review", request, StringComparison.Ordinal);
         Assert.Contains("documentation review", request, StringComparison.Ordinal);
         Assert.Contains("task compliance review", request, StringComparison.Ordinal);
+        Assert.Contains("evidence gap", request, StringComparison.Ordinal);
+        Assert.Contains("patch-only inspection", request, StringComparison.Ordinal);
+        Assert.Contains("declared scope", domainDocument, StringComparison.Ordinal);
+        Assert.Contains("orphan snapshot", domainDocument, StringComparison.Ordinal);
         Assert.DoesNotContain("operator workflow evidence", request, StringComparison.Ordinal);
         Assert.DoesNotContain("audit package verify evidence", request, StringComparison.Ordinal);
         Assert.DoesNotContain("audit package message evidence", request, StringComparison.Ordinal);
@@ -3751,8 +4371,17 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("`.codex/prompts/goal-task-loop.md` является локальным prompt-ом оркестратора", domainDocument, StringComparison.Ordinal);
 
         Assert.Contains("docs/release-management/audit-package.md", agents, StringComparison.Ordinal);
+        Assert.Contains("guardrails", agents, StringComparison.Ordinal);
+        Assert.Contains("audit package", agents, StringComparison.Ordinal);
+        Assert.Contains("audit package verify", agents, StringComparison.Ordinal);
         Assert.Contains("VERDICT: ACCEPT", agents, StringComparison.Ordinal);
         Assert.Contains("audit submit", agents, StringComparison.Ordinal);
+        Assert.Contains("--browser-backend codex-chrome", agents, StringComparison.Ordinal);
+        Assert.Contains("same verified ZIP", agents, StringComparison.Ordinal);
+        Assert.Contains("local conversation state", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("previousVerdictChain", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("blockerClosureList", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("<same-accepted-path>", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("iframe[title=\"internal://deep-research\"]", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("Копировать ответ", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("переиспользуй вкладку", agents, StringComparison.OrdinalIgnoreCase);
@@ -3779,9 +4408,19 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("audit submit", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("VERDICT: ACCEPT", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("Conventional Commit", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("verify licenses", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("--browser-backend codex-chrome", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("--reuse-conversation", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("--control-audit", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("тот же verified ZIP", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("в `TASKS.md` можно указать этот путь, но не сам URL", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("previousVerdictChain", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("blockerClosureList", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("Готовый результат принимает только сохранённый файл `--out`", goalPrompt, StringComparison.Ordinal);
         var goalPromptWithoutBackendFlag = goalPrompt.Replace("--browser-backend codex-chrome", string.Empty, StringComparison.Ordinal);
+        Assert.DoesNotContain("Verify-SourceLicenseHeaders", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("powershell", goalPrompt, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("перенеси URL", goalPrompt, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("eng\\Electron2D.Build", goalPrompt, StringComparison.Ordinal);
         Assert.DoesNotContain("docs\\verdicts", goalPrompt, StringComparison.Ordinal);
         Assert.DoesNotContain("browser", goalPromptWithoutBackendFlag, StringComparison.OrdinalIgnoreCase);
@@ -3819,9 +4458,17 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("audit submit --zip <path> --out <report-path>", text, StringComparison.Ordinal);
         Assert.Contains("--message <path>", text, StringComparison.Ordinal);
         Assert.Contains("--browser-backend codex-chrome", text, StringComparison.Ordinal);
+        Assert.Contains("--reuse-conversation", text, StringComparison.Ordinal);
+        Assert.Contains("--control-audit", text, StringComparison.Ordinal);
+        Assert.Contains("тот же уже проверенный ZIP", text, StringComparison.Ordinal);
+        Assert.Contains("metadata.previousVerdictChain", text, StringComparison.Ordinal);
+        Assert.Contains("metadata.blockerClosureList", text, StringComparison.Ordinal);
+        Assert.Contains("локальным состоянием отправки", text, StringComparison.Ordinal);
+        Assert.Contains(".temp/audit/<task-id>/conversation-url.txt", text, StringComparison.Ordinal);
+        Assert.Contains("control-conversation-url", text, StringComparison.Ordinal);
         Assert.Contains("Codex Chrome Extension", text, StringComparison.Ordinal);
         Assert.Contains("не копирует cookies", text, StringComparison.Ordinal);
-        Assert.Contains("--screenshots-dir <path>", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("--screenshots-dir", text, StringComparison.Ordinal);
         Assert.Contains("--keep-tab-open-on-error", text, StringComparison.Ordinal);
         Assert.Contains("оставляет открытой собственную вкладку текущего запуска", text, StringComparison.Ordinal);
         Assert.Contains("пользовательской Chrome-сессии", text, StringComparison.Ordinal);
@@ -3833,10 +4480,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("обновляет страницу раз в минуту", text, StringComparison.Ordinal);
         Assert.Contains("всё равно обновляет страницу раз в минуту", text, StringComparison.Ordinal);
         Assert.Contains("сохраняет результат", text, StringComparison.Ordinal);
-        Assert.Contains("PNG-снимки протокола браузера после каждого ключевого шага", text, StringComparison.Ordinal);
-        Assert.Contains("технической диагностикой браузерного протокола", text, StringComparison.Ordinal);
-        Assert.Contains("не самостоятельным доказательством того, что видит пользователь в окне Chrome", text, StringComparison.Ordinal);
-        Assert.Contains("блокируется до отдельного пользовательского скриншота", text, StringComparison.Ordinal);
+        Assert.Contains("не создаёт PNG-скриншоты", text, StringComparison.Ordinal);
+        Assert.Contains("не принимает tool screenshots как доказательство", text, StringComparison.Ordinal);
         Assert.Contains("кнопка `aria-label=\"Экспорт\"` используется только если меню закрыто", text, StringComparison.Ordinal);
         Assert.Contains("DOM-кликом выбирает `Экспортировать в Markdown`", text, StringComparison.Ordinal);
         Assert.Contains("не кликает по вычисленным координатам отчётной карточки", text, StringComparison.Ordinal);
@@ -3889,6 +4534,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("Input.dispatchMouseEvent", source, StringComparison.Ordinal);
         Assert.Contains("ClickAtAsync", source, StringComparison.Ordinal);
         Assert.Contains("deep-research-menu", source, StringComparison.Ordinal);
+        Assert.Contains("aboveComposer", source, StringComparison.Ordinal);
+        Assert.Contains("belowComposer || aboveComposer", source, StringComparison.Ordinal);
         Assert.Contains("FinalizeTabsAsync(CancellationToken.None)", source, StringComparison.Ordinal);
         Assert.Contains("\"finalizeTabs\"", source, StringComparison.Ordinal);
         Assert.DoesNotContain("GetUserTabsAsync", source, StringComparison.Ordinal);
@@ -5746,6 +6393,27 @@ public sealed class RepositoryBuildToolTests
         }
     }
 
+    private static async Task<(bool Succeeded, string? Code)> InvokeAuditSubmitIterationReportValidationAsync(string report, string zipFileName)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var commandType = assembly.GetType("Electron2D.Build.AuditSubmitCommand", throwOnError: true)!;
+        var resolveZipIdentity = commandType.GetMethod("ResolveAuditZipIdentity", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(commandType.FullName, "ResolveAuditZipIdentity");
+        var validateReport = commandType.GetMethod("ValidateReportMatchesSubmitIteration", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(commandType.FullName, "ValidateReportMatchesSubmitIteration");
+        var zipIdentity = resolveZipIdentity.Invoke(null, [zipFileName])!;
+
+        try
+        {
+            validateReport.Invoke(null, [report, zipIdentity, zipFileName]);
+            return (true, null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, GetProperty<string>(ex.InnerException, "Code"));
+        }
+    }
+
     private static async Task<(bool Succeeded, int? ContextId, string? Code)> InvokeAuditSubmitReadyFrameContextSelectionAsync(params (string TargetId, string FrameId, int ContextId, bool IsRoot)[] contexts)
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
@@ -5817,6 +6485,22 @@ public sealed class RepositoryBuildToolTests
         }
     }
 
+    private static async Task<(bool Succeeded, string? TargetId, string? Code)> InvokeAuditSubmitReadyTargetSelectionAsync(params string[] readyTargetIds)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("SelectSingleReadyDeepResearchTargetId", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "SelectSingleReadyDeepResearchTargetId");
+        try
+        {
+            return (true, (string?)method.Invoke(null, [readyTargetIds.ToList()]), null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, null, GetProperty<string>(ex.InnerException, "Code"));
+        }
+    }
+
     private static async Task<bool> InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(bool hasVisibleIframe, bool hasFrameContext)
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
@@ -5829,7 +6513,8 @@ public sealed class RepositoryBuildToolTests
     private static async Task<(bool Succeeded, string? Path, string? Code)> InvokeAuditSubmitConversationUrlSidecarWriteAsync(
         string repoRoot,
         string zipPath,
-        string conversationUrl)
+        string conversationUrl,
+        bool controlAudit = false)
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
         var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
@@ -5837,11 +6522,12 @@ public sealed class RepositoryBuildToolTests
             ?? throw new MissingMethodException(automationType.FullName, "WriteConversationUrlSidecarAsync");
         try
         {
-            var task = (Task)method.Invoke(null, [repoRoot, zipPath, conversationUrl, CancellationToken.None])!;
+            var task = (Task)method.Invoke(null, [repoRoot, zipPath, conversationUrl, controlAudit, CancellationToken.None])!;
             await task.ConfigureAwait(false);
             var match = Regex.Match(Path.GetFileName(zipPath), @"^(?<task>T-\d+)-audit-(?<iteration>r\d+)\.zip$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            var prefix = controlAudit ? "control-conversation-url" : "conversation-url";
             var path = match.Success
-                ? Path.Combine(repoRoot, ".temp", "audit", match.Groups["task"].Value.ToUpperInvariant(), $"conversation-url-{match.Groups["iteration"].Value.ToLowerInvariant()}.txt")
+                ? Path.Combine(repoRoot, ".temp", "audit", match.Groups["task"].Value.ToUpperInvariant(), $"{prefix}-{match.Groups["iteration"].Value.ToLowerInvariant()}.txt")
                 : null;
             return (true, path, null);
         }
@@ -7330,6 +8016,32 @@ public sealed class RepositoryBuildToolTests
         File.WriteAllText(path, content.Replace("\r\n", "\n").Replace('\r', '\n'), Encoding.UTF8);
     }
 
+    private static void WriteSavedAuditVerdict(string root, string taskId, string iteration, bool control, string verdict)
+    {
+        var suffix = control ? $"control-{iteration}" : iteration;
+        WriteText(
+            root,
+            $"docs/verdicts/release-management/{taskId.ToLowerInvariant()}-audit-{suffix}.md",
+            $$"""
+            {{verdict}}
+
+            TASK_ASSESSMENT:
+            - Fixture report.
+
+            BLOCKERS:
+            - Fixture blockers.
+
+            EVIDENCE_REVIEW:
+            - Fixture evidence.
+
+            RISKS_AND_NOTES:
+            - Fixture risks.
+
+            CLOSURE_DECISION:
+            - Fixture decision.
+            """);
+    }
+
     private static void WriteRawText(string root, string relativePath, string content)
     {
         var path = Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar));
@@ -7743,6 +8455,39 @@ public sealed class RepositoryBuildToolTests
                     entries["SHA256SUMS.txt"] = CreateChecksumFile(entries);
                 }
             });
+    }
+
+    private static void RemoveZipEntries(string zipPath, IReadOnlyCollection<string> entryNames, bool updateChecksums)
+    {
+        RewriteZip(
+            zipPath,
+            entries =>
+            {
+                foreach (var entryName in entryNames)
+                {
+                    Assert.True(entries.Remove(entryName), $"ZIP entry was not found: {entryName}");
+                }
+
+                if (updateChecksums)
+                {
+                    entries["SHA256SUMS.txt"] = CreateChecksumFile(entries);
+                }
+            });
+    }
+
+    private static void ReplaceRepositorySnapshotManifest(string zipPath, Action<JsonObject> mutate)
+    {
+        ReplaceZipEntryText(
+            zipPath,
+            "metadata/repo-file-snapshots.json",
+            text =>
+            {
+                var manifest = JsonNode.Parse(text)?.AsObject()
+                    ?? throw new InvalidOperationException("Repository file snapshot manifest was empty.");
+                mutate(manifest);
+                return manifest.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n";
+            },
+            updateChecksums: true);
     }
 
     private static void RefreshOperatorWorkflowSidecarPayload(string zipPath)
@@ -8381,12 +9126,17 @@ public sealed class RepositoryBuildToolTests
         "previous verdict files",
         "verbatim preservation",
         "previous blockers closure",
+        "metadata/repo-file-snapshots.json",
+        "repo-after/",
+        "repo-before/",
         "implementation content review",
         "test coverage review",
         "documentation review",
         "task compliance review",
         "secret scanning",
         "scope scanning",
+        "evidence gap",
+        "patch-only inspection",
         "single final report",
         "no intermediate VERDICT"
     ];
@@ -8410,12 +9160,17 @@ public sealed class RepositoryBuildToolTests
     previous verdict files
     verbatim preservation
     previous blockers closure
+    metadata/repo-file-snapshots.json
+    repo-after/
+    repo-before/
     implementation content review
     test coverage review
     documentation review
     task compliance review
     secret scanning
     scope scanning
+    evidence gap
+    patch-only inspection
     single final report
     no intermediate VERDICT
     """;
