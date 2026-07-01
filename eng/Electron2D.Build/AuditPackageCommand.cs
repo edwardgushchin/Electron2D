@@ -3184,14 +3184,54 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     private static void ValidateMachineLocalPathText(string text, string archivePath, string repoRoot)
     {
         var normalizedText = text.Replace('\\', '/');
-        var normalizedRepoRoot = Path.GetFullPath(repoRoot).Replace('\\', '/').TrimEnd('/');
-        var normalizedTempRoot = Path.GetFullPath(Path.GetTempPath()).Replace('\\', '/').TrimEnd('/');
-        if (normalizedText.Contains(normalizedRepoRoot, StringComparison.OrdinalIgnoreCase) ||
-            normalizedText.Contains(normalizedTempRoot, StringComparison.OrdinalIgnoreCase) ||
+        if (GetNormalizedMachineLocalPathCandidates(repoRoot, Path.GetTempPath())
+                .Any(candidate => normalizedText.Contains(candidate, StringComparison.OrdinalIgnoreCase)) ||
             WindowsDrivePathPattern.IsMatch(text) ||
             WindowsDrivePathPattern.IsMatch(normalizedText))
         {
             throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-ABSOLUTE-PATH", $"Archive content contains a machine-local path: {archivePath}");
+        }
+    }
+
+    private static string[] GetNormalizedMachineLocalPathCandidates(params string[] paths)
+    {
+        var candidates = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var path in paths)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                continue;
+            }
+
+            AddNormalizedMachineLocalPathCandidate(candidates, path);
+            AddNormalizedMachineLocalPathCandidate(candidates, Path.GetFullPath(path));
+        }
+
+        return candidates.OrderByDescending(candidate => candidate.Length).ToArray();
+    }
+
+    private static void AddNormalizedMachineLocalPathCandidate(HashSet<string> candidates, string path)
+    {
+        var normalized = path.Replace('\\', '/').TrimEnd('/');
+        if (normalized.Length <= 1)
+        {
+            return;
+        }
+
+        candidates.Add(normalized);
+
+        if (!OperatingSystem.IsMacOS())
+        {
+            return;
+        }
+
+        if (normalized.StartsWith("/private/var/", StringComparison.Ordinal))
+        {
+            candidates.Add(normalized["/private".Length..]);
+        }
+        else if (normalized.StartsWith("/var/", StringComparison.Ordinal))
+        {
+            candidates.Add("/private" + normalized);
         }
     }
 
@@ -3466,11 +3506,13 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     private static string RedactTrxMachinePath(string value, string repoRoot)
     {
         var normalized = value.Replace('\\', '/');
-        var normalizedRepoRoot = Path.GetFullPath(repoRoot).Replace('\\', '/').TrimEnd('/');
-        if (normalized.StartsWith(normalizedRepoRoot + "/", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(normalized, normalizedRepoRoot, StringComparison.OrdinalIgnoreCase))
+        foreach (var normalizedRepoRoot in GetNormalizedMachineLocalPathCandidates(repoRoot))
         {
-            return "<repo-root>" + normalized[normalizedRepoRoot.Length..];
+            if (normalized.StartsWith(normalizedRepoRoot + "/", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(normalized, normalizedRepoRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                return "<repo-root>" + normalized[normalizedRepoRoot.Length..];
+            }
         }
 
         return Regex.IsMatch(normalized, @"\A[A-Z]:/", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)

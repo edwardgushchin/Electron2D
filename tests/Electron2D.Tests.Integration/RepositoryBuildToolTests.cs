@@ -4388,7 +4388,7 @@ public sealed class RepositoryBuildToolTests
             "Debug",
             "net10.0",
             "Electron2D.Tests.Integration.dll");
-        var storagePath = codeBasePath.ToLowerInvariant();
+        var storagePath = CreateTrxMachinePathAlias(codeBasePath);
         var syntheticTokenCaseName = SecretFixtureCaseName(SecretValueCaseTokenAssignment);
         var syntheticPasswordCaseName = SecretFixtureCaseName(SecretValueCasePasswordAssignment);
         var syntheticPrivateKeyCaseName = SecretFixtureCaseName(SecretValueCasePrivateKeyMarker);
@@ -4428,7 +4428,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         var zipPath = fixture.ZipPath(taskId);
         var trxPath = $"evidence/{taskId}-r01/checks/git-status/trx/test-result-001.trx";
         var trxText = ReadZipEntryText(zipPath, trxPath);
@@ -4894,6 +4894,27 @@ public sealed class RepositoryBuildToolTests
     private static string SecretFixtureCaseName(string secretCase)
     {
         return $"Electron2D.Tests.Integration.RepositoryBuildToolTests.AuditPackageRejectsSecretValuesInSelectedTextFiles(secretCase: &quot;{secretCase}&quot;)";
+    }
+
+    private static string CreateTrxMachinePathAlias(string path)
+    {
+        var normalized = path.Replace('\\', '/');
+        if (OperatingSystem.IsMacOS())
+        {
+            if (normalized.StartsWith("/private/var/", StringComparison.Ordinal))
+            {
+                return normalized["/private".Length..];
+            }
+
+            if (normalized.StartsWith("/var/", StringComparison.Ordinal))
+            {
+                return "/private" + normalized;
+            }
+        }
+
+        return OperatingSystem.IsWindows()
+            ? path.ToLowerInvariant()
+            : path;
     }
 
     [Theory]
