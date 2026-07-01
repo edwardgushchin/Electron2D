@@ -45,14 +45,14 @@ Checklist не должен требовать публикации GitHub Relea
 
 ## Проверяемость
 
-`tools\Verify-UserDocumentation.ps1` должен проверять:
+`dotnet run --project eng/Electron2D.Build -- verify user-documentation` должен проверять:
 
 - наличие страницы `docs/troubleshooting-release-checklist.md`;
 - наличие ссылки на неё из `docs/user-guide.md`;
 - наличие marker `user-doc:release-checklist` в user guide;
 - наличие обязательных областей `import`, `build`, `shader`, `export`, `mobile lifecycle`, `runtime diagnostics`;
 - наличие release checklist;
-- наличие проверяемых команд: `tools\Verify-ProjectTemplate.ps1`, `tools\Run-Tests.ps1`, `tools\Verify-UserDocumentation.ps1`, `tools\Verify-WindowsExport.ps1`, `tools\Verify-LinuxExport.ps1`, `tools\Verify-MacOSExport.ps1`.
+- наличие проверяемых команд: `dotnet run --project eng/Electron2D.Build -- verify project-template`, `dotnet run --project eng/Electron2D.Build -- test`, `dotnet run --project eng/Electron2D.Build -- verify user-documentation`, `dotnet run --project eng/Electron2D.Build -- package --rid win-x64`, `dotnet run --project eng/Electron2D.Build -- package --rid linux-x64`, `dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64`.
 
 ## Критерии приёмки
 
@@ -60,7 +60,7 @@ Checklist не должен требовать публикации GitHub Relea
 - User guide ссылается на troubleshooting guide и содержит release checklist section.
 - Документация покрывает import, build, shader, export, mobile lifecycle and runtime diagnostics issues.
 - Документация не публикует secrets, реальные credentials, private keys или signing payloads.
-- `tools\Verify-UserDocumentation.ps1` проверяет новую страницу и проходит локально.
+- `dotnet run --project eng/Electron2D.Build -- verify user-documentation` проверяет новую страницу и проходит локально.
 
 ## Фактическое состояние, ограничения и проверки
 
@@ -70,10 +70,10 @@ Checklist не должен требовать публикации GitHub Relea
 
 Начинайте с проверок, которые не меняют проект:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-ProjectTemplate.ps1
-powershell -ExecutionPolicy Bypass -File tools\Verify-UserDocumentation.ps1
-powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify project-template
+dotnet run --project eng/Electron2D.Build -- verify user-documentation
+dotnet run --project eng/Electron2D.Build -- test
 ```
 
 Если ошибка появляется только в конкретной подсистеме, переходите к соответствующему разделу ниже.
@@ -107,10 +107,10 @@ powershell -ExecutionPolicy Bypass -File tools\Run-Tests.ps1
 
 Проверки:
 
-```powershell
+```bash
 dotnet --version
 dotnet restore src\Electron2D.sln
-powershell -ExecutionPolicy Bypass -File tools\Verify-ProjectTemplate.ps1
+dotnet run --project eng/Electron2D.Build -- verify project-template
 ```
 
 Ожидайте .NET SDK `10.0.x`. Если template verifier падает, сначала проверьте `project.e2d.json`, `scenes/main.scene.json` и копирование content files в output.
@@ -146,10 +146,10 @@ powershell -ExecutionPolicy Bypass -File tools\Verify-ProjectTemplate.ps1
 
 Проверки:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-WindowsExport.ps1
-powershell -ExecutionPolicy Bypass -File tools\Verify-LinuxExport.ps1
-powershell -ExecutionPolicy Bypass -File tools\Verify-MacOSExport.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- package --rid win-x64
+dotnet run --project eng/Electron2D.Build -- package --rid linux-x64
+dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-web --project <project-root> --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --skip-publish true --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json
@@ -198,9 +198,9 @@ Runtime diagnostics в текущем baseline означает внутренн
 
 Перед тем как считать preview-кандидат готовым к ручной проверке, выполните:
 
-- project template check: `tools\Verify-ProjectTemplate.ps1`;
-- полный test runner: `tools\Run-Tests.ps1`;
-- user documentation check: `tools\Verify-UserDocumentation.ps1`;
+- project template check: `dotnet run --project eng/Electron2D.Build -- verify project-template`;
+- полный test runner: `dotnet run --project eng/Electron2D.Build -- test`;
+- user documentation check: `dotnet run --project eng/Electron2D.Build -- verify user-documentation`;
 - public API XML documentation check;
 - GitHub Wiki API reference check;
 - API compatibility check;

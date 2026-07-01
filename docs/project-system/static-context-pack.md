@@ -84,7 +84,7 @@ Context pack не должен включать:
 - `.git/`;
 - `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/session/`, `.electron2d/user/`, `.electron2d/export-smoke/`;
 - `bin/`, `obj/`, `node_modules/`, generated paths и текущий `.electron2d/context/`;
-- local workflow files `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG*`, `RELEASE-NOTES*`;
+- local workflow files `TASKS.md`, `data/completed-tasks/`, `data/dev-diary/`, `CHANGELOG*`, `RELEASE-NOTES*`;
 - imported binary data, images, audio, archives, executables, symbols, certificates, keystores и private key files;
 - huge logs и любые text files больше лимита чтения context builder;
 - значения secret-like keys: `secret`, `password`, `token`, `apiKey`, `api_key`, `privateKey`, `private_key`, `keystorePassword`, `certificatePassword`.

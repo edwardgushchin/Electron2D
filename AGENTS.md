@@ -41,10 +41,9 @@ These instructions are global defaults for Codex agents across projects. They ap
 
 ## License Policy
 - Electron2D is distributed under the MIT License. Do not replace it with SDL's zlib license text: "SDL-like" for this repository means a full per-file license block at the top of source files, using Electron2D's MIT terms.
-- Every tracked hand-written C# source file (`*.cs`) in `src/`, `tests/`, and `data/templates/` must start with the project MIT header in `/* ... */` form.
-- Every tracked PowerShell source file (`*.ps1`) in `tools/` must start with the project MIT header in `<# ... #>` form.
+- Every tracked hand-written C# source file (`*.cs`) in `src/`, `tests/`, `eng/`, and `data/templates/` must start with the project MIT header in `/* ... */` form.
 - Preserve existing license headers when editing source files. When creating a new source file, add the header before code or declarations.
-- Run `powershell -ExecutionPolicy Bypass -File tools\Verify-SourceLicenseHeaders.ps1` before staging or committing source changes.
+- Run `dotnet run --project eng/Electron2D.Build -- verify licenses` before staging or committing source changes.
 
 ## Worktree And Git Hygiene
 - In a Git repository, check worktree status before editing and again before finalizing when files changed.
@@ -82,7 +81,7 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Each task should be zero-context for another agent: include priority, dependencies, linked specs/docs/source files, a detailed brief, acceptance criteria, subtasks when useful, and agent notes.
 - Acceptance criteria for code changes must explicitly require the domain document, automated tests, and final document update described in the Feature Gate.
 - Do not close or archive a task just because implementation is finished. Close/archive only after the user explicitly accepts it.
-- Completed tasks belong in tracked `completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. Do not create one-file-per-task archives such as `completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
+- Completed tasks belong in tracked `data/completed-tasks/YYYY/MM Месяц.md` monthly archives, not in the active task list and not as a future-work backlog. Do not create one-file-per-task archives such as `data/completed-tasks/T-0001.md`; append the completed task entry to the file for its completion month instead.
 - `TASKS.md` must end with a `## ROADMAP` section after all active task sections. The roadmap is a local recommended execution order for existing `T-*` tasks; it must not create new task IDs, replace dependency lines, or be treated as an acceptance state. Update it whenever task dependencies, priorities, blockers, or user-directed sequencing changes.
 - Keep the roadmap concise and zero-context: group tasks into ordered phases, mention important blockers, and keep every listed task ID traceable to an active task section above it.
 
@@ -101,8 +100,8 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Audit packages, generated audit manifests, and raw evidence are local working artifacts. Do not stage or commit them unless a task explicitly changes test fixtures or repository-owned documentation for the audit package command.
 
 ## Development Diary
-- Every agent session that works in this repository must keep a tracked development diary entry under `dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product domain documents, and must not be used as a future-work backlog.
-- Use the local date for the file path: `dev-diary/YYYY/MM Месяц/DD-MM-YYYY.md`, for example `dev-diary/2026/06 Июнь/21-06-2026.md`. `YYYY` is the local four-digit year. Month directory names use Russian month names.
+- Every agent session that works in this repository must keep a tracked development diary entry under `data/dev-diary/`. Diary notes are working logs for continuity between agents: they do not replace `TASKS.md`, are not product domain documents, and must not be used as a future-work backlog.
+- Use the local date for the file path: `data/dev-diary/YYYY/MM Месяц/DD-MM-YYYY.md`, for example `data/dev-diary/2026/06 Июнь/21-06-2026.md`. `YYYY` is the local four-digit year. Month directory names use Russian month names.
 - New daily diary files must start with `# Дневник разработки: DD-MM-YYYY`. If a historical daily file already exists without this heading or in an older format, keep it append-only and add new entries strictly at the tail; do not rewrite old entries only to migrate formatting.
 - Add or update a diary entry when starting work in the repository, after important decisions, discoveries, file changes, checks, commits, pushes, blockers, cleanup, scope changes, and before sending the final response.
 - Every diary entry for repository work must include a `- Действия:` section. Keep it as a chronological action log with nested bullets in the form `  - HH:MM - ...`. Record each meaningful action phase there as it happens; do not rely only on the final `Изменения` or `Проверки` summaries to reconstruct the work after the fact.
@@ -133,9 +132,9 @@ These instructions are global defaults for Codex agents across projects. They ap
 - Run the narrowest useful checks first, then broader checks when risk or blast radius justifies them.
 - Use the repository's documented commands for linting, formatting, tests, builds, contract checks, and generated artifact verification.
 - For repeated runs of `tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj`, build once first and then run focused tests with `--filter`, `--no-build`, and `--no-restore`. Prefer class or test-name filters such as `--filter "FullyQualifiedName~LocalDocumentationCliTests"` over running the entire integration project. Run the full integration project only when the current change genuinely needs the whole suite, and state that reason before running it.
-- Before `audit package`, do not let packaging be the first expensive test runner. Run one explicit `dotnet build` for the affected project or solution, then run the required focused `dotnet test` checks with `--no-build` and `--no-restore`; configure the audit package `checks` to use the same prebuilt focused test form, and only start `dotnet run --project eng\Electron2D.Build -- audit package ...` after those focused checks have completed.
+- Before `audit package`, do not let packaging be the first expensive test runner. Run one explicit `dotnet build` for the affected project or solution, then run the required focused `dotnet test` checks with `--no-build` and `--no-restore`; configure the audit package `checks` to use the same prebuilt focused test form, and only start `dotnet run --project eng/Electron2D.Build -- audit package ...` after those focused checks have completed.
 - After that explicit build, prefer `dotnet run --project <project> --no-build -- ...` for repository tool and CLI checks, including `audit package` itself and its configured `checks`. Do not use `--no-build` or `--no-restore` when the purpose of the check is to verify restore, build, packing, or dependency graph behavior.
-- Do not run the full `RepositoryBuildToolTests` suite until the local documentation index has been rebuilt for the current working tree with `dotnet run --project eng\Electron2D.Build -- update docs` or an equivalent repository-owned index rebuild. Before that rebuild, run only focused `RepositoryBuildToolTests` filters that do not require a current generated index.
+- Do not run the full `RepositoryBuildToolTests` suite until the local documentation index has been rebuilt for the current working tree with `dotnet run --project eng/Electron2D.Build -- update docs` or an equivalent repository-owned index rebuild. Before that rebuild, run only focused `RepositoryBuildToolTests` filters that do not require a current generated index.
 - Do not claim a check passed unless it was run in the current work session. If a check cannot run, state the blocker and residual risk.
 - For frontend changes, run the relevant lint/build/test command and visually verify the affected local experience when a local server or static file makes that practical.
 - For generated artifacts, run the project's generation or consistency check and include resulting files only when they are part of the expected change.

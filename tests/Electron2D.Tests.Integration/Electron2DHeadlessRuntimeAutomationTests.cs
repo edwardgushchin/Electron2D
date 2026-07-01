@@ -143,7 +143,7 @@ public sealed class Electron2DHeadlessRuntimeAutomationTests
     [InlineData("headless-run-performance.schema.json")]
     public void RuntimeJsonSchemasArePublished(string fileName)
     {
-        var schemaPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "schemas", "runtime", fileName));
+        var schemaPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "data", "schemas", "runtime", fileName));
 
         Assert.True(File.Exists(schemaPath), $"Missing runtime schema {schemaPath}");
         using var schema = JsonDocument.Parse(File.ReadAllText(schemaPath));

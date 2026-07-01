@@ -1,19 +1,19 @@
 # Кросс-платформенная сборка релизных архивов и черновик GitHub Release
 
-Обновлено: 2026-06-30.
+Обновлено: 2026-07-01.
 
 Этот файл является доменным документом для сборки релизных архивов. Документ фиксирует контракт после отказа от PowerShell-автоматизации; задача `T-0111` остаётся заблокированной до полной проверки релиз-кандидата, но локальная сборка архивов настольных платформ реализуется в `T-0209`.
 
 ## Ведение документа
 
 - Перед изменением сборки релизных архивов обновите этот документ.
-- Реализация должна идти через внутренний C#-инструмент репозитория `eng\Electron2D.Build`, а не через скрипты PowerShell.
+- Реализация должна идти через внутренний C#-инструмент репозитория `eng/Electron2D.Build`, а не через скрипты PowerShell.
 - Публикация GitHub Release запрещена без отдельной явной команды сопровождающего и без прохождения полной проверки релиз-кандидата.
 
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация и реализуемый контракт `T-0209`; финальное переключение CI и удаление PowerShell остаются в `T-0210`.
-Обновлено: 2026-06-30.
+Обновлено: 2026-07-01.
 
 ## Цель
 
@@ -61,7 +61,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 - основной архив `electron2d-0.1.0-preview-<rid>.zip` для `win-x64` или `electron2d-0.1.0-preview-<rid>.tar.gz` для Linux/macOS;
 - соседний файл `<archive>.sha256` с SHA-256 основного архива.
 
-Команда запускает `dotnet pack src/Electron2D/Electron2D.csproj -c Release` и два `dotnet publish` для `src\Electron2D.Editor\Electron2D.Editor.csproj` и `src\Electron2D.Cli\Electron2D.Cli.csproj` с `-c Release`, `-r <rid>` и `--self-contained true`. Внутренний `eng\Electron2D.Build` не копируется в релизный архив, потому что это инструмент репозитория, а не пользовательская среда выполнения или инструмент разработчика.
+Команда запускает `dotnet pack src/Electron2D/Electron2D.csproj -c Release` и два `dotnet publish` для `src\Electron2D.Editor\Electron2D.Editor.csproj` и `src\Electron2D.Cli\Electron2D.Cli.csproj` с `-c Release`, `-r <rid>` и `--self-contained true`. Внутренний `eng/Electron2D.Build` не копируется в релизный архив, потому что это инструмент репозитория, а не пользовательская среда выполнения или инструмент разработчика.
 
 `release-manifest.json` внутри архива обязан фиксировать:
 
@@ -74,7 +74,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 - список запрещённых путей, проверенный перед архивированием;
 - признак `dryRun`: `true`, потому что команда не публикует GitHub Release.
 
-Политика запрещённых файлов запрещает попадание в архив и каталог подготовки следующих путей: `.git/`, `.github/`, `.temp/`, `.codex/`, `TASKS.md`, `dev-diary/`, `completed-tasks/`, `CHANGELOG*`, `RELEASE-NOTES*`, любые `*.ps1`, `eng\Electron2D.Build\`, `docs/verdicts/`, `audit-evidence/`, `artifacts/` внутри самого пакета и любые `*.zip`, `*.tar.gz`, `*.sha256`, не являющиеся текущим выходным архивом и его контрольной суммой.
+Политика запрещённых файлов запрещает попадание в архив и каталог подготовки следующих путей: `.git/`, `.github/`, `.temp/`, `.codex/`, `TASKS.md`, старые корневые `dev-diary/` и `completed-tasks/`, текущие `data/dev-diary/` и `data/completed-tasks/`, `CHANGELOG*`, `RELEASE-NOTES*`, любые `*.ps1`, `eng/Electron2D.Build\`, `docs/verdicts/`, `audit-evidence/`, `artifacts/` внутри самого пакета и любые `*.zip`, `*.tar.gz`, `*.sha256`, не являющиеся текущим выходным архивом и его контрольной суммой.
 
 `release verify` не создаёт тег, GitHub Release, черновик релиза или публикацию. Команда проверяет локальный набор черновых релизных файлов в `artifacts/release/0.1.0-preview/`: все три runtime identifiers присутствуют, имена архивов соответствуют матрице, соседние `.sha256` совпадают с фактическим SHA-256, каждый архив содержит `README.md`, `LICENSE`, `release-manifest.json`, `library/`, `editor/` и `tools/e2d/`, манифест перечисляет конкретные файлы в `library/`, `editor/` и `tools/e2d/`, этот список совпадает с каталогом подготовки и содержимым архива, а политика запрещённых файлов проходит для содержимого архива и распакованного каталога подготовки. При успехе команда возвращает `E2D-BUILD-RELEASE-VERIFY-PASSED`; при неполном наборе или нарушении политики возвращает структурированную ошибку и не меняет внешнее состояние GitHub.
 
@@ -134,7 +134,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 - сверить имена артефактов, поля манифеста `version`, `runtimeIdentifier`, `configuration` и контрольную сумму;
 - скачать архив из файлов рабочего процесса и проверить наличие `README.md`, `LICENSE`, `library`, `editor`, `tools/e2d` и `release-manifest.json`;
-- убедиться, что `.electron2d/tasks/**`, `TASKS.md`, `dev-diary/`, `completed-tasks/`, `CHANGELOG.md` и `RELEASE-NOTES.md` не попали в релизный архив;
+- убедиться, что `.electron2d/tasks/**`, `TASKS.md`, старые корневые `dev-diary/` и `completed-tasks/`, текущие `data/dev-diary/` и `data/completed-tasks/`, `CHANGELOG.md` и `RELEASE-NOTES.md` не попали в релизный архив;
 - приложить результаты к `T-0104`, если это не запуск релиз-кандидата в режиме `dry_run`.
 
 ## Проверка
@@ -148,7 +148,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 Финальный критерий удаления PowerShell после `T-0210` не должен быть простым текстовым поиском по всему репозиторию, потому что миграционные документы и заметки об отказах законно содержат эти слова. Проверка выполняется C#-проверкой с областью и разрешающим списком:
 
 ```bash
-dotnet run --project eng/Electron2D.Build -- verify repository-automation
+dotnet run --project eng/Electron2D.Build -- verify no-powershell-workflows
 ```
 
 Проверка должна подтверждать отсутствие отслеживаемых `.ps1`-скриптов, шагов рабочего процесса с `pwsh` и PowerShell-команд в активных production paths, CI, входных данных релизной сборки и ссылках на рабочие процессы в задачах и документах. Исторические заметки, миграционные документы и заметки об отказах допустимы только как явно перечисленные записи разрешающего списка.

@@ -50,7 +50,7 @@ public sealed class LeakVerificationTests
         Assert.True(File.Exists(specPath), $"Missing leak verification specification: {specPath}");
 
         var spec = File.ReadAllText(specPath);
-        Assert.Contains("tools\\Verify-LeakChecks.ps1", spec, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify leak-checks", spec, StringComparison.Ordinal);
         Assert.Contains("data/quality/leak-verification-report.json", spec, StringComparison.Ordinal);
         Assert.Contains("LeakVerificationTests", spec, StringComparison.Ordinal);
         Assert.Contains("nativeHandleDelta", spec, StringComparison.Ordinal);
@@ -67,11 +67,12 @@ public sealed class LeakVerificationTests
     public void LeakVerifierDeclaresFocusedCycleTestAndReportChecks()
     {
         var root = FindRepositoryRoot();
-        var verifierPath = Path.Combine(root, "tools", "Verify-LeakChecks.ps1");
+        var verifierPath = Path.Combine(root, "eng", "Electron2D.Build", "RepositoryWorkflowVerifiers.cs");
 
         Assert.True(File.Exists(verifierPath), $"Missing leak verification verifier: {verifierPath}");
 
         var verifier = File.ReadAllText(verifierPath);
+        Assert.Contains("LeakChecksVerifier", verifier, StringComparison.Ordinal);
         Assert.Contains("LeakVerificationTests.LeakVerificationCyclesReleaseSubsystemResourcesAndDoNotGrowMonotonically", verifier, StringComparison.Ordinal);
         Assert.Contains("leak-verification-report.json", verifier, StringComparison.Ordinal);
         Assert.Contains("nativeHandleDelta", verifier, StringComparison.Ordinal);
@@ -149,11 +150,19 @@ public sealed class LeakVerificationTests
     public async Task LeakVerifierPasses()
     {
         var root = FindRepositoryRoot();
-        var verifierPath = Path.Combine(root, "tools", "Verify-LeakChecks.ps1");
-
-        Assert.True(File.Exists(verifierPath), $"Missing leak verification verifier: {verifierPath}");
-
-        var startInfo = PowerShellProcess.CreateScriptStartInfo(root, verifierPath);
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            WorkingDirectory = root,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+        startInfo.ArgumentList.Add("run");
+        startInfo.ArgumentList.Add("--project");
+        startInfo.ArgumentList.Add(Path.Combine("eng", "Electron2D.Build"));
+        startInfo.ArgumentList.Add("--no-build");
+        startInfo.ArgumentList.Add("--");
+        startInfo.ArgumentList.Add("verify");
+        startInfo.ArgumentList.Add("leak-checks");
 
         using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start leak verifier.");
         var outputTask = process.StandardOutput.ReadToEndAsync();
@@ -166,7 +175,7 @@ public sealed class LeakVerificationTests
         Assert.True(
             process.ExitCode == 0,
             $"Leak verifier failed with exit code {process.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{output}{Environment.NewLine}stderr:{Environment.NewLine}{error}");
-        Assert.Contains("Leak verification passed", output, StringComparison.Ordinal);
+        Assert.Contains("E2D-BUILD-LEAK-CHECKS-PASSED", output, StringComparison.Ordinal);
     }
 
     private static long MeasureManagedGrowth(Action action)

@@ -92,7 +92,7 @@
 - `dotnet build src/Electron2D.sln -c Release` проходит.
 - `tools/Update-ApiWiki.ps1` обновляет GitHub Wiki без локального сайта.
 - В `.github/wiki/API-Compatibility.md` строки для API из этой задачи имеют статус `Supported`.
-- Активная задача перенесена в `completed-tasks/2026/06 Июнь.md` только после успешных проверок.
+- Активная задача перенесена в `data/completed-tasks/2026/06 Июнь.md` только после успешных проверок.
 
 ## Фактическое состояние, ограничения и проверки
 

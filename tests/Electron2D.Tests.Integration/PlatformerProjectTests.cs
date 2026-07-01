@@ -287,19 +287,21 @@ public sealed class PlatformerProjectTests
     public void PlatformerVerifierExists()
     {
         var root = FindRepositoryRoot();
-        var verifierPath = Path.Combine(root, "tools", "Verify-Platformer.ps1");
+        var buildToolPath = Path.Combine(root, "eng", "Electron2D.Build", "RepositoryWorkflowVerifiers.cs");
 
-        Assert.True(File.Exists(verifierPath), $"Platformer verifier is missing: {verifierPath}");
+        Assert.True(File.Exists(buildToolPath), $"Repository build tool is missing: {buildToolPath}");
 
-        var verifier = File.ReadAllText(verifierPath);
+        var verifier = File.ReadAllText(buildToolPath);
+        Assert.Contains("verify platformer", verifier, StringComparison.Ordinal);
+        Assert.DoesNotContain("Verify-Platformer.ps1", verifier, StringComparison.Ordinal);
+        var projectDocument = File.ReadAllText(Path.Combine(root, "docs", "examples", "platformer.md"));
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify platformer", projectDocument, StringComparison.Ordinal);
         Assert.Contains("Platformer.csproj", verifier, StringComparison.Ordinal);
         Assert.DoesNotContain("Electron2D.Platformer.csproj", verifier, StringComparison.Ordinal);
-        Assert.Contains("dotnet build", verifier, StringComparison.Ordinal);
-        Assert.Contains("-- run --project", verifier, StringComparison.Ordinal);
-        Assert.Contains("e2d validate", verifier, StringComparison.Ordinal);
-        Assert.Contains(".electron2d/tasks", verifier, StringComparison.Ordinal);
-        Assert.Contains("T-0222.e2task", verifier, StringComparison.Ordinal);
-        Assert.Contains("ChangesRequested", verifier, StringComparison.Ordinal);
+        Assert.Contains("verify platformer", projectDocument, StringComparison.Ordinal);
+        Assert.Contains(".electron2d/tasks", projectDocument, StringComparison.Ordinal);
+        Assert.Contains("T-0222.e2task", projectDocument, StringComparison.Ordinal);
+        Assert.Contains("ChangesRequested", File.ReadAllText(Path.Combine(root, "examples", "platformer", ".electron2d", "tasks", "platformer-acceptance.e2task")), StringComparison.Ordinal);
     }
 
     [Fact]

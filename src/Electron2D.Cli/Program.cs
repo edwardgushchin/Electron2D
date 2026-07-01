@@ -86,13 +86,13 @@ internal static partial class Electron2DCommandLine
         {
             error.WriteLine("Local documentation data could not be read as JSON.");
             error.WriteLine(exception.Message);
-            error.WriteLine("Run `dotnet run --project eng\\Electron2D.Build -- verify docs`.");
+            error.WriteLine("Run `dotnet run --project eng/Electron2D.Build -- verify docs`.");
             return 1;
         }
         catch (IOException exception)
         {
             error.WriteLine(exception.Message);
-            error.WriteLine("Run `dotnet run --project eng\\Electron2D.Build -- verify docs`.");
+            error.WriteLine("Run `dotnet run --project eng/Electron2D.Build -- verify docs`.");
             return 1;
         }
     }

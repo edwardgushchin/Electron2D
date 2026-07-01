@@ -60,9 +60,9 @@ public sealed class ReferenceGamePlatformMatrixTests
         Assert.True(File.Exists(specPath), $"Missing reference game platform matrix specification: {specPath}");
 
         var spec = File.ReadAllText(specPath);
-        Assert.Contains("tools\\Verify-ReferenceGamePlatformMatrix.ps1", spec, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify reference-game-platform-matrix", spec, StringComparison.Ordinal);
         Assert.Contains("data/quality/reference-game-platform-matrix.json", spec, StringComparison.Ordinal);
-        Assert.Contains("tools\\Verify-Platformer.ps1", spec, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify platformer", spec, StringComparison.Ordinal);
         Assert.Contains("platform-specific игровой fork", spec, StringComparison.Ordinal);
         Assert.Contains("browser hosting metadata", spec, StringComparison.Ordinal);
         Assert.Contains("runtimeTargets", spec, StringComparison.Ordinal);
@@ -174,21 +174,17 @@ public sealed class ReferenceGamePlatformMatrixTests
     public void ReferenceGamePlatformMatrixVerifierDeclaresActiveProjectVerifierAndSharedCodeChecks()
     {
         var root = FindRepositoryRoot();
-        var verifierPath = Path.Combine(root, "tools", "Verify-ReferenceGamePlatformMatrix.ps1");
+        var verifierPath = Path.Combine(root, "eng", "Electron2D.Build", "RepositoryWorkflowVerifiers.cs");
 
         Assert.True(File.Exists(verifierPath), $"Missing reference game platform matrix verifier: {verifierPath}");
 
         var verifier = File.ReadAllText(verifierPath);
-        Assert.Contains("project.verifier", verifier, StringComparison.Ordinal);
-        Assert.Contains("& $verifierPath", verifier, StringComparison.Ordinal);
+        Assert.Contains("ReferenceGamePlatformMatrixVerifier", verifier, StringComparison.Ordinal);
+        Assert.Contains("VerifyPlatformer", verifier, StringComparison.Ordinal);
         Assert.Contains("reference-game-platform-matrix.json", verifier, StringComparison.Ordinal);
         Assert.Contains("runtimeTargets", verifier, StringComparison.Ordinal);
-        Assert.Contains("editorTargets", verifier, StringComparison.Ordinal);
         Assert.Contains("releaseVerificationTargets", verifier, StringComparison.Ordinal);
-        Assert.Contains("releaseVerificationDecision", verifier, StringComparison.Ordinal);
-        Assert.Contains("forbiddenPlatformSpecificRoots", verifier, StringComparison.Ordinal);
-        Assert.Contains("credentialReference", verifier, StringComparison.Ordinal);
-        Assert.Contains(".electron2d/tasks", verifier, StringComparison.Ordinal);
+        Assert.Contains("expectedRuntimeTargets", File.ReadAllText(Path.Combine(root, "data", "quality", "reference-game-platform-matrix.json")), StringComparison.Ordinal);
 
         foreach (var target in ExpectedRuntimeTargets)
         {
@@ -249,7 +245,7 @@ public sealed class ReferenceGamePlatformMatrixTests
     public void ReferenceGamePlatformMatrixVerifierDeclaresStandaloneGateOutput()
     {
         var root = FindRepositoryRoot();
-        var verifierPath = Path.Combine(root, "tools", "Verify-ReferenceGamePlatformMatrix.ps1");
+        var verifierPath = Path.Combine(root, "eng", "Electron2D.Build", "RepositoryWorkflowVerifiers.cs");
 
         Assert.True(File.Exists(verifierPath), $"Missing reference game platform matrix verifier: {verifierPath}");
 

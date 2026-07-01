@@ -58,6 +58,8 @@ internal sealed class ReleasePackageCommand(string repositoryRoot, JsonDiagnosti
         "TASKS.md",
         "dev-diary/",
         "completed-tasks/",
+        "data/dev-diary/",
+        "data/completed-tasks/",
         "CHANGELOG*",
         "RELEASE-NOTES*",
         "*.ps1",
@@ -761,6 +763,8 @@ internal sealed class ReleasePackageCommand(string repositoryRoot, JsonDiagnosti
             path.StartsWith(".codex/", StringComparison.Ordinal) ||
             path.StartsWith("dev-diary/", StringComparison.Ordinal) ||
             path.StartsWith("completed-tasks/", StringComparison.Ordinal) ||
+            path.StartsWith("data/dev-diary/", StringComparison.Ordinal) ||
+            path.StartsWith("data/completed-tasks/", StringComparison.Ordinal) ||
             path.StartsWith("eng/Electron2D.Build/", StringComparison.Ordinal) ||
             path.StartsWith("docs/verdicts/", StringComparison.Ordinal) ||
             path.StartsWith("audit-evidence/", StringComparison.Ordinal) ||

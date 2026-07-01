@@ -1,6 +1,6 @@
 # Source domain layout
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-30.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -92,7 +92,7 @@ src/Electron2D.Tooling/Export/Desktop/
 
 ## Проверка
 
-`tools/Verify-SourceDomainLayout.ps1` должен проверять:
+`dotnet run --project eng/Electron2D.Build -- verify source-domain-layout` должен проверять:
 
 - `Core` содержит только разрешённые core domains;
 - root domains существуют только в крупной форме `Assets`, `Core`, `Export`, `Graphics`, `Physics`, `Runtime`;
@@ -105,7 +105,7 @@ src/Electron2D.Tooling/Export/Desktop/
 
 - Каталоги исходников разнесены согласно этой спецификации.
 - Public API namespace не изменён из-за физического переноса файлов.
-- `tools/Verify-SourceDomainLayout.ps1` проходит локально и в CI.
+- `dotnet run --project eng/Electron2D.Build -- verify source-domain-layout` проходит локально и в CI.
 - Сборка и тесты проходят после переноса.
 
 ## Фактическое состояние, ограничения и проверки
@@ -164,8 +164,8 @@ src/Electron2D.Tooling/Export/Desktop/
 
 ## Проверка
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-SourceDomainLayout.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify source-domain-layout
 ```
 
 Проверка падает, если non-core домен возвращается в `Core`, если мелкий домен оказывается на верхнем уровне `src/Electron2D`, если обязательный root/nested domain отсутствует, если audio runtime code лежит не в `Runtime/Audio`, если export presets лежат не в `Export/Presets`, или если source file добавляет неподдержанный namespace.

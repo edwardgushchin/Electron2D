@@ -64,14 +64,14 @@ WebAssembly status page должна описывать `browser-wasm`, static p
 
 ## Проверяемость
 
-`eng\Electron2D.Build` проверяет релизные файлы настольных платформ без PowerShell как активного пути сборки. Проверка export-документации выполняется отдельными командами локальной документации, а релизные архивы настольных платформ создаются C#-командой:
+`eng/Electron2D.Build` проверяет релизные файлы настольных платформ без PowerShell как активного пути сборки. Проверка export-документации выполняется отдельными командами локальной документации, а релизные архивы настольных платформ создаются C#-командой:
 
-- `dotnet run --project eng\Electron2D.Build -- package --rid win-x64`;
-- `dotnet run --project eng\Electron2D.Build -- package --rid linux-x64`;
-- `dotnet run --project eng\Electron2D.Build -- package --rid osx-arm64`;
-- `dotnet run --project eng\Electron2D.Build -- release verify`;
-- `dotnet run --project eng\Electron2D.Build -- update docs --check`;
-- `dotnet run --project eng\Electron2D.Build -- verify docs`.
+- `dotnet run --project eng/Electron2D.Build -- package --rid win-x64`;
+- `dotnet run --project eng/Electron2D.Build -- package --rid linux-x64`;
+- `dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64`;
+- `dotnet run --project eng/Electron2D.Build -- release verify`;
+- `dotnet run --project eng/Electron2D.Build -- update docs --check`;
+- `dotnet run --project eng/Electron2D.Build -- verify docs`.
 
 ## Критерии приёмки
 
@@ -80,7 +80,7 @@ WebAssembly status page должна описывать `browser-wasm`, static p
 - Android/iOS pages описывают SDK/signing/status requirements и явно фиксируют, что mobile export не является готовым release path.
 - WebAssembly page описывает `WebAssemblyBrowser`, `browser-wasm`, package layout, CLI plan/build/run commands, browser policies, smoke artifact и ограничения.
 - User guide ссылается на export guide.
-- `dotnet run --project eng\Electron2D.Build -- release verify` проходит после сборки релизных файлов настольных платформ.
+- `dotnet run --project eng/Electron2D.Build -- release verify` проходит после сборки релизных файлов настольных платформ.
 
 ## Фактическое состояние, ограничения и проверки
 
@@ -98,9 +98,9 @@ Export layer намеренно работает по правилу fail closed
 
 | Target | Runtime identifier | Статус | Проверка |
 | --- | --- | --- | --- |
-| `WindowsX64` | `win-x64` | Локально проверен механизм настольного экспорта и релизный архив | `dotnet run --project eng\Electron2D.Build -- package --rid win-x64` |
-| `LinuxX64` | `linux-x64` | Локально проверен механизм настольного экспорта и релизный архив | `dotnet run --project eng\Electron2D.Build -- package --rid linux-x64` |
-| `MacOSArm64` | `osx-arm64` | Локально проверен механизм настольного экспорта и релизный архив | `dotnet run --project eng\Electron2D.Build -- package --rid osx-arm64` |
+| `WindowsX64` | `win-x64` | Локально проверен механизм настольного экспорта и релизный архив | `dotnet run --project eng/Electron2D.Build -- package --rid win-x64` |
+| `LinuxX64` | `linux-x64` | Локально проверен механизм настольного экспорта и релизный архив | `dotnet run --project eng/Electron2D.Build -- package --rid linux-x64` |
+| `MacOSArm64` | `osx-arm64` | Локально проверен механизм настольного экспорта и релизный архив | `dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64` |
 | `AndroidArm64` | `android-arm64` | Проверены debug APK и запуск на эмуляторе; финальная релизная проверка не закрыта | [Android arm64 export](android-arm64-export.md) |
 | `IosArm64` | `ios-arm64` | Planner и staging есть; проверка на симуляторе или устройстве заблокирована окружением | [iOS arm64 export](ios-arm64-export.md) |
 | `WebAssemblyBrowser` | `browser-wasm` | Проверены структура пакета и локальный smoke artifact; финальная браузерная проверка не закрыта | [WebAssembly browser export](webassembly-browser-export.md) |
@@ -133,7 +133,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 `AndroidArm64` имеет planner, staging, debug APK build и device/emulator smoke commands:
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-android --project <project-root> --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-android --project <project-root> --output exports/android/debug --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-android --project <project-root> --output exports/android/debug --smoke-output .electron2d/export-smoke/android-smoke.json --adb-path <path-to-adb> --adb-serial <serial> --format json
@@ -141,7 +141,7 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-andr
 
 `run-android` намеренно fail closed до появления подключённого авторизованного device или emulator. Используйте `--adb-serial`, когда подключено больше одного Android target. Для `x86_64` emulators команда собирает временный `android-x64` smoke package; это не заменяет production preset `android-arm64`.
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-ios --project <project-root> --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-ios --project <project-root> --output exports/ios/debug --skip-publish true --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
@@ -154,7 +154,7 @@ dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-ios 
 
 `WebAssemblyBrowser` с runtime identifier `browser-wasm` имеет planner, package и smoke commands:
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-web --project <project-root> --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --skip-publish true --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json

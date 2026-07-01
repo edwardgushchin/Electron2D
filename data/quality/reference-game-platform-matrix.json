@@ -88,7 +88,7 @@
       "editorMetadataRoots": [
         ".electron2d/tasks"
       ],
-      "verifier": "tools/Verify-Platformer.ps1",
+      "verifier": "dotnet run --project eng/Electron2D.Build -- verify platformer",
       "expectedRuntimeTargets": [
         "AndroidArm64",
         "IosArm64",
@@ -124,7 +124,7 @@
         "assets/windows"
       ],
       "evidence": [
-        "tools/Verify-Platformer.ps1",
+        "dotnet run --project eng/Electron2D.Build -- verify platformer",
         "examples/platformer/Platformer.e2d"
       ]
     }

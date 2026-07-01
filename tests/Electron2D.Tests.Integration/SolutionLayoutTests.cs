@@ -22,6 +22,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using System.Text;
 using Xunit;
 
 namespace Electron2D.Tests.Integration;
@@ -37,41 +38,50 @@ public sealed class SolutionLayoutTests
         Assert.True(File.Exists(Path.Combine(root, "docs", "releases", "0.1.0-preview.md")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "templates", "electron2d-empty")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "assets", "reference-games")));
+        Assert.True(Directory.Exists(Path.Combine(root, "data", "schemas")));
+        Assert.True(Directory.Exists(Path.Combine(root, "data", "completed-tasks")));
+        Assert.True(Directory.Exists(Path.Combine(root, "data", "dev-diary")));
         Assert.False(Directory.Exists(Path.Combine(root, "templates")));
         Assert.False(Directory.Exists(Path.Combine(root, "assets")));
+        Assert.False(Directory.Exists(Path.Combine(root, "schemas")));
+        Assert.False(Directory.Exists(Path.Combine(root, "completed-tasks")));
+        Assert.False(Directory.Exists(Path.Combine(root, "dev-diary")));
+        Assert.False(Directory.Exists(Path.Combine(root, "tools")));
     }
 
     [Fact]
-    public void RepositoryDoesNotTrackLocalWorkMaterials()
+    public void RepositoryTracksWorkMaterialsUnderDataOnly()
     {
         var root = FindRepositoryRoot();
-        var trackedFiles = GetTrackedFiles();
+        var repositoryFiles = GetRepositoryFilesVisibleToGit();
+        Assert.Contains("TASKS.md", repositoryFiles);
+        Assert.Contains(repositoryFiles, file => file.StartsWith("data/completed-tasks/", StringComparison.Ordinal));
+        Assert.Contains(repositoryFiles, file => file.StartsWith("data/dev-diary/", StringComparison.Ordinal));
+        Assert.Contains(repositoryFiles, file => file.StartsWith("data/schemas/", StringComparison.Ordinal));
+
         var forbidden = new[]
         {
-            "TASKS.md",
             "CHANGELOG.md",
             "RELEASE-NOTES.md"
         };
 
         foreach (var file in forbidden)
         {
-            Assert.DoesNotContain(file, trackedFiles);
+            Assert.DoesNotContain(file, repositoryFiles);
         }
 
-        Assert.DoesNotContain(trackedFiles, file => file.StartsWith("completed-tasks/", StringComparison.Ordinal));
-        Assert.DoesNotContain(trackedFiles, file => file.StartsWith("dev-diary/", StringComparison.Ordinal));
+        Assert.DoesNotContain(repositoryFiles, file => file.StartsWith("completed-tasks/", StringComparison.Ordinal));
+        Assert.DoesNotContain(repositoryFiles, file => file.StartsWith("dev-diary/", StringComparison.Ordinal));
+        Assert.DoesNotContain(repositoryFiles, file => file.StartsWith("schemas/", StringComparison.Ordinal));
 
         var gitignore = File.ReadAllText(Path.Combine(root, ".gitignore"));
-        foreach (var pattern in new[] { "/TASKS.md", "/CHANGELOG*", "/RELEASE-NOTES*", "/completed-tasks/", "/dev-diary/", ".electron2d/user/" })
+        foreach (var pattern in new[] { "/CHANGELOG*", "/RELEASE-NOTES*", ".electron2d/user/" })
         {
             Assert.Contains(pattern, gitignore, StringComparison.Ordinal);
         }
-
-        var gitattributes = File.ReadAllText(Path.Combine(root, ".gitattributes"));
-        Assert.Contains("data/assets/reference-games/** binary", gitattributes, StringComparison.Ordinal);
     }
 
-    private static string[] GetTrackedFiles()
+    private static string[] GetRepositoryFilesVisibleToGit()
     {
         var root = FindRepositoryRoot();
         var startInfo = new System.Diagnostics.ProcessStartInfo
@@ -79,9 +89,16 @@ public sealed class SolutionLayoutTests
             FileName = "git",
             WorkingDirectory = root,
             RedirectStandardOutput = true,
-            RedirectStandardError = true
+            RedirectStandardError = true,
+            StandardOutputEncoding = Encoding.UTF8,
+            StandardErrorEncoding = Encoding.UTF8
         };
+        startInfo.ArgumentList.Add("-c");
+        startInfo.ArgumentList.Add("core.quotePath=false");
         startInfo.ArgumentList.Add("ls-files");
+        startInfo.ArgumentList.Add("--cached");
+        startInfo.ArgumentList.Add("--others");
+        startInfo.ArgumentList.Add("--exclude-standard");
 
         using var process = System.Diagnostics.Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start git.");
         var output = process.StandardOutput.ReadToEnd();
@@ -89,7 +106,9 @@ public sealed class SolutionLayoutTests
         process.WaitForExit();
 
         Assert.True(process.ExitCode == 0, $"git ls-files failed: {error}");
-        return output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        return output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            .Where(file => File.Exists(Path.Combine(root, file.Replace('/', Path.DirectorySeparatorChar))))
+            .ToArray();
     }
 
     private static string FindRepositoryRoot()

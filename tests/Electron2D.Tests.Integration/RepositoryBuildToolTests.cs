@@ -609,6 +609,18 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task VerifyLicensesRejectsEngSourceWithoutRequiredHeader()
+    {
+        using var workspace = CreateLicenseFixture("license-missing-eng-header");
+        WriteText(workspace.Root, "eng/Bad.cs", "namespace Fixture;\npublic static class Bad { }\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "licenses");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-LICENSES-SOURCE-HEADER", "missing eng C# license header");
+    }
+
+    [Fact]
     public async Task VerifyProjectTemplateRunsShapeCheckWithoutGenericRouting()
     {
         var result = await RunBuildToolAsync("verify", "project-template");
@@ -954,14 +966,28 @@ public sealed class RepositoryBuildToolTests
         var supportedVerifyCommands = new HashSet<string>(StringComparer.Ordinal)
         {
             "api-compatibility",
+            "agent-acceptance-benchmarks",
+            "box2d-physics-candidate",
+            "canonical-goal-alignment",
+            "ci-matrix",
+            "export-documentation",
             "readme",
             "docs",
             "licenses",
             "manifests",
+            "no-powershell-workflows",
             "performance-budgets",
             "performance",
+            "platformer",
+            "public-api-documentation",
+            "public-api-xml-docs",
+            "reference-game-assets",
+            "reference-game-platform-matrix",
             "release-metadata",
-            "project-template"
+            "project-template",
+            "source-domain-layout",
+            "ui-public-api-gate",
+            "user-documentation"
         };
         var documentedCommands = new List<string>();
         var commandPattern = new Regex(
@@ -1000,6 +1026,196 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify performance", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("run: ./tools/Run-Tests.ps1", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("run: ./tools/Verify-PerformanceBudgets.ps1", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task T0210BuildToolVerifiesNoPowerShellWorkflowsInCurrentRepository()
+    {
+        var result = await RunBuildToolAsync("verify", "no-powershell-workflows");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-WORKFLOWS-PASSED", "no PowerShell workflow verifier");
+    }
+
+    [Fact]
+    public async Task T0210BuildToolVerifiesCiMatrixInCurrentRepository()
+    {
+        var result = await RunBuildToolAsync("verify", "ci-matrix");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-CI-MATRIX-PASSED", "CI matrix verifier");
+    }
+
+    [Fact]
+    public async Task VerifyCiMatrixRejectsMissingRequiredWorkflowFragment()
+    {
+        using var workspace = TemporaryDirectory.Create("ci-matrix-missing-fragment");
+        CreateRepositoryRootMarkers(workspace.Root);
+        var workflow = File.ReadAllText(Path.Combine(FindRepositoryRoot(), ".github", "workflows", "ci.yml"), Encoding.UTF8)
+            .Replace("dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64", "dotnet run --project eng/Electron2D.Build -- verify");
+        WriteText(workspace.Root, ".github/workflows/ci.yml", workflow);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "ci-matrix");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-CI-MATRIX-FRAGMENT-MISSING", "missing macOS package check");
+    }
+
+    [Fact]
+    public void T0210CiWorkflowUsesOnlyCSharpRepositoryTooling()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var workflowPath = Path.Combine(repositoryRoot, ".github", "workflows", "ci.yml");
+        var workflow = File.ReadAllText(workflowPath, Encoding.UTF8);
+
+        Assert.DoesNotContain("shell: pwsh", workflow, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("pwsh", workflow, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(".ps1", workflow, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("PowerShell", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify no-powershell-workflows", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify ci-matrix", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify licenses", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify source-domain-layout", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify box2d-physics-candidate --native-aot", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify user-documentation", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify export-documentation", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- package --rid win-x64", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- package --rid linux-x64", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void T0210AgentLicensePolicyMatchesVerifierSourceScope()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var agents = File.ReadAllText(Path.Combine(repositoryRoot, "AGENTS.md"), Encoding.UTF8);
+
+        Assert.Contains("`src/`, `tests/`, `eng/`, and `data/templates/`", agents, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify licenses", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("dotnet run --project eng\\Electron2D.Build -- verify licenses", agents, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void T0210ActiveDocumentationUsesPortableBuildToolProjectPath()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var matches = new List<string>();
+        foreach (var relativePath in T0210ActiveDocumentationCommandScanPaths(repositoryRoot))
+        {
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            var lines = File.ReadAllLines(path, Encoding.UTF8);
+            for (var i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains("dotnet run --project eng\\Electron2D.Build", StringComparison.Ordinal))
+                {
+                    matches.Add($"{relativePath}:{i + 1}: {lines[i].Trim()}");
+                }
+            }
+        }
+
+        Assert.Empty(matches);
+    }
+
+    [Fact]
+    public async Task T0210TrackedToolsDoNotContainPowerShellScripts()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var result = await RunProcessAsync("git", ["ls-files", "tools/*.ps1"], repositoryRoot, TimeSpan.FromSeconds(30));
+        Assert.Equal(0, result.ExitCode);
+
+        var trackedScripts = result.Stdout
+            .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(relativePath => File.Exists(Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar))))
+            .ToArray();
+        Assert.Empty(trackedScripts);
+    }
+
+    [Fact]
+    public void T0210RootToolsDirectoryDoesNotExist()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+
+        Assert.False(Directory.Exists(Path.Combine(repositoryRoot, "tools")));
+        Assert.True(Directory.Exists(Path.Combine(repositoryRoot, "eng", "Electron2D.ApiManifestGenerator")));
+    }
+
+    [Fact]
+    public void T0210ActiveDomainDocumentsDoNotUsePowerShellWorkflowCommands()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var matches = new List<string>();
+        foreach (var relativePath in T0210ActivePowerShellWorkflowScanPaths())
+        {
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            var lines = File.ReadAllLines(path, Encoding.UTF8);
+            for (var i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                if (!ContainsPowerShellWorkflowToken(line) || IsAllowedT0210PowerShellWorkflowMention(relativePath, i + 1, line))
+                {
+                    continue;
+                }
+
+                matches.Add($"{relativePath}:{i + 1}: {line.Trim()}");
+            }
+        }
+
+        Assert.Empty(matches);
+    }
+
+    [Fact]
+    public async Task VerifyNoPowerShellWorkflowsRejectsActiveWorkflowFixture()
+    {
+        using var workspace = TemporaryDirectory.Create("no-powershell-workflows-rejects-fixture");
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(
+            workspace.Root,
+            ".github/workflows/ci.yml",
+            """
+            name: CI
+            jobs:
+              tests:
+                runs-on: ubuntu-latest
+                steps:
+                  - name: Legacy script
+                    shell: pwsh
+                    run: ./tools/Verify-SourceLicenseHeaders.ps1
+            """);
+        WriteText(workspace.Root, "tools/Verify-SourceLicenseHeaders.ps1", "Write-Host 'legacy'\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "no-powershell-workflows");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-ACTIVE-WORKFLOW", "active PowerShell workflow fixture");
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-TOOLS-PS1", "tracked tools PowerShell fixture");
+    }
+
+    [Fact]
+    public async Task VerifyNoPowerShellWorkflowsIgnoresUntrackedDrafts()
+    {
+        using var workspace = TemporaryDirectory.Create("no-powershell-workflows-untracked-fixture");
+        var gitResult = await RunProcessAsync("git", ["init"], workspace.Root, TimeSpan.FromSeconds(30));
+        Assert.Equal(0, gitResult.ExitCode);
+
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(workspace.Root, "AGENTS.md", "# Clean guidance\n");
+        WriteText(workspace.Root, "docs/release-management/ci-matrix.md", "# CI\n\nTracked command uses `eng/Electron2D.Build`.\n");
+        var addResult = await RunProcessAsync("git", ["add", "AGENTS.md", "docs/release-management/ci-matrix.md"], workspace.Root, TimeSpan.FromSeconds(30));
+        Assert.Equal(0, addResult.ExitCode);
+
+        WriteText(workspace.Root, "docs/release-management/local-draft.md", "Untracked draft: pwsh ./tools/legacy.ps1\n");
+        WriteText(workspace.Root, "tools/legacy.ps1", "Write-Host 'draft'\n");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "no-powershell-workflows");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-NO-POWERSHELL-WORKFLOWS-PASSED", "untracked drafts are outside tracked-only contract");
     }
 
     [Fact]
@@ -1536,7 +1752,7 @@ public sealed class RepositoryBuildToolTests
 
         This file proves that the audit package patch restores repository-owned files.
         """);
-        fixture.WriteTextFile("audit-evidence/checks/result.txt", """
+        fixture.WriteTextFile(".temp/audit-evidence/checks/result.txt", """
         fixture evidence
         second line
         """);
@@ -3748,7 +3964,7 @@ public sealed class RepositoryBuildToolTests
 
         This file proves that check metadata mirrors raw evidence files.
         """);
-        fixture.WriteTextFile("audit-evidence/checks/result.txt", """
+        fixture.WriteTextFile(".temp/audit-evidence/checks/result.txt", """
         fixture evidence
         second line
         """);
@@ -3775,11 +3991,65 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task AuditPackageAllowsArchiveOnlyEvidenceUnderTempAuditEvidence()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-temp-audit-evidence");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that archive-only evidence may live under .temp/audit-evidence.
+        """);
+        fixture.WriteTextFile(".temp/audit-evidence/checks/result.txt", "fixture evidence\n");
+        var configPath = fixture.WriteConfig(taskId, archiveOnlyEvidenceGlobs: [".temp/audit-evidence/**"]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        Assert.Contains(
+            $"evidence/{taskId}-r01/archive-only/audit-evidence/checks/result.txt",
+            ReadZipEntryNames(fixture.ZipPath(taskId)));
+    }
+
+    [Fact]
+    public async Task AuditPackageUsesRenameAwarePatchForMovedRepositoryFiles()
+    {
+        const string oldDiaryPath = "dev-diary/2026/06-June/historical.md";
+        const string newDiaryPath = "data/dev-diary/2026/06-June/historical.md";
+        const string historicalContent = """
+        # Historical diary
+
+        This already accepted historical note mentions `HISTORICAL_PATH_TOKEN`.
+        """;
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-rename-aware-patch",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                [oldDiaryPath] = historicalContent
+            });
+        const string taskId = "T-0001";
+        fixture.DeleteFile(oldDiaryPath);
+        fixture.WriteTextFile(newDiaryPath, historicalContent);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            repoFileGlobs: [],
+            repoFileAllowlist: [oldDiaryPath, newDiaryPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var patch = ReadZipEntryText(fixture.ZipPath(taskId), $"{taskId}.patch");
+        Assert.Contains($"rename from {oldDiaryPath}", patch, StringComparison.Ordinal);
+        Assert.Contains($"rename to {newDiaryPath}", patch, StringComparison.Ordinal);
+        Assert.DoesNotContain("HISTORICAL_PATH_TOKEN", patch, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AuditPackageCopiesTrxEvidenceAndLinksItFromManifest()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-trx-evidence");
         const string taskId = "T-0001";
-        const string sourceTrxName = "synthetic-runner_SYNTHETIC-WORKSTATION_2026-06-27_06_08_30.trx";
+        const string sourceTrxName = "results.trx";
         var runUserAttributeName = string.Concat("run", "User");
         var computerNameAttributeName = string.Concat("computer", "Name");
         var deploymentRootAttributeName = string.Concat("run", "Deployment", "Root");
@@ -3806,8 +4076,8 @@ public sealed class RepositoryBuildToolTests
                 new XElement(
                     "Deployment",
                     new XAttribute(deploymentRootAttributeName, "synthetic-runner_SYNTHETIC-WORKSTATION_2026-06-27_06_08_30"))));
-        fixture.WriteTextFile($"test-results/audit-package/{sourceTrxName}", trxDocument.ToString(SaveOptions.DisableFormatting));
-        fixture.WriteTextFile("audit-evidence/checks/result.txt", """
+        fixture.WriteTextFile($".temp/audit-evidence/test-results/audit-package/{sourceTrxName}", trxDocument.ToString(SaveOptions.DisableFormatting));
+        fixture.WriteTextFile(".temp/audit-evidence/checks/result.txt", """
         fixture evidence
         second line
         """);
@@ -3823,7 +4093,7 @@ public sealed class RepositoryBuildToolTests
                     [],
                     10,
                     0,
-                    ["test-results/**/*.trx"])
+                    [".temp/audit-evidence/test-results/**/*.trx"])
             ]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
@@ -3847,7 +4117,6 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains(trxPath, ReadZipEntryNames(zipPath));
         Assert.Contains($"`{trxPath}`", manifest, StringComparison.Ordinal);
         Assert.Contains("name=\"&lt;test-run&gt;\"", trxText, StringComparison.Ordinal);
-        Assert.DoesNotContain(sourceTrxName, archiveText, StringComparison.Ordinal);
         Assert.DoesNotContain("SYNTHETIC-WORKSTATION", archiveText, StringComparison.Ordinal);
         Assert.DoesNotContain("synthetic-runner", archiveText, StringComparison.Ordinal);
         Assert.DoesNotContain(runUserAttributeName + "=", archiveText, StringComparison.Ordinal);
@@ -4031,7 +4300,7 @@ public sealed class RepositoryBuildToolTests
 
         This file proves that the default config path is part of the command contract.
         """);
-        fixture.WriteTextFile("audit-evidence/checks/result.txt", """
+        fixture.WriteTextFile(".temp/audit-evidence/checks/result.txt", """
         fixture evidence
         second line
         """);
@@ -4054,7 +4323,7 @@ public sealed class RepositoryBuildToolTests
 
         This file proves that package bytes stay stable across repeated creation.
         """);
-        fixture.WriteTextFile("audit-evidence/checks/result.txt", """
+        fixture.WriteTextFile(".temp/audit-evidence/checks/result.txt", """
         fixture evidence
         second line
         """);
@@ -4080,7 +4349,7 @@ public sealed class RepositoryBuildToolTests
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-unicode-archive-entry");
         const string taskId = "T-0001";
-        const string unicodeEvidencePath = "audit-evidence/логи/проверка.txt";
+        const string unicodeEvidencePath = ".temp/audit-evidence/логи/проверка.txt";
         fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
         # Audit fixture
 
@@ -4096,7 +4365,7 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Equal(0, package.ExitCode);
         var zipPath = fixture.ZipPath(taskId);
-        var expectedArchivePath = $"evidence/{taskId}-r01/archive-only/{unicodeEvidencePath}";
+        var expectedArchivePath = $"evidence/{taskId}-r01/archive-only/{unicodeEvidencePath[".temp/".Length..]}";
         using var archive = ZipFile.OpenRead(zipPath);
         var entries = archive.Entries.Where(entry => !string.IsNullOrEmpty(entry.Name)).ToArray();
         var entryNames = entries.Select(entry => entry.FullName).ToArray();
@@ -6035,6 +6304,114 @@ public sealed class RepositoryBuildToolTests
         ];
     }
 
+    private static IReadOnlyList<string> T0210ActivePowerShellWorkflowScanPaths()
+    {
+        return
+        [
+            "AGENTS.md",
+            "docs/release-management/ci-matrix.md",
+            "docs/release-management/audit-package.md",
+            "docs/release-management/release-packaging.md",
+            "docs/release-management/test-infrastructure.md",
+            "docs/repository/repository-layout.md",
+            "docs/repository/license-policy.md",
+            "docs/architecture/engine-platform-stack.md",
+            "docs/architecture/source-domain-layout.md",
+            "docs/documentation/canonical-goal-alignment.md",
+            "docs/documentation/local-documentation-pipeline.md",
+            "docs/documentation/repository-readme.md",
+            "docs/documentation/renderer-profiles.md",
+            "docs/documentation/troubleshooting-release-checklist.md",
+            "docs/documentation/user-guide.md",
+            "docs/examples/platformer.md",
+            "docs/examples/reference-game-assets.md",
+            "docs/examples/reference-game-platform-matrix.md",
+            "docs/export/export-guide.md",
+            "docs/export/linux-x64-export.md",
+            "docs/export/macos-arm64-export.md",
+            "docs/export/windows-x64-export.md",
+            "docs/testing/agent-acceptance-benchmarks.md",
+            "data/quality/reference-game-platform-matrix.json"
+        ];
+    }
+
+    private static string[] T0210ActiveDocumentationCommandScanPaths(string repositoryRoot)
+    {
+        var paths = new List<string>
+        {
+            "AGENTS.md"
+        };
+
+        paths.AddRange(Directory.EnumerateFiles(Path.Combine(repositoryRoot, "docs"), "*.md", SearchOption.AllDirectories)
+            .Select(path => Path.GetRelativePath(repositoryRoot, path).Replace('\\', '/'))
+            .Where(path => !path.StartsWith("docs/verdicts/", StringComparison.Ordinal)));
+
+        var dataAssetsRoot = Path.Combine(repositoryRoot, "data", "assets");
+        if (Directory.Exists(dataAssetsRoot))
+        {
+            paths.AddRange(Directory.EnumerateFiles(dataAssetsRoot, "*.md", SearchOption.AllDirectories)
+                .Select(path => Path.GetRelativePath(repositoryRoot, path).Replace('\\', '/')));
+        }
+
+        return paths
+            .Distinct(StringComparer.Ordinal)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    private static bool ContainsPowerShellWorkflowToken(string line)
+    {
+        return line.Contains("pwsh", StringComparison.OrdinalIgnoreCase) ||
+            line.Contains("PowerShell", StringComparison.OrdinalIgnoreCase) ||
+            line.Contains(".ps1", StringComparison.OrdinalIgnoreCase) ||
+            Regex.IsMatch(line, @"tools[/\\][^\s`""]+\.ps1", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    }
+
+    private static bool IsAllowedT0210PowerShellWorkflowMention(string relativePath, int lineNumber, string line)
+    {
+        _ = lineNumber;
+        var normalized = line.ToLowerInvariant();
+        if (normalized.Contains("no-powershell-workflows", StringComparison.Ordinal) ||
+            normalized.Contains("без powershell", StringComparison.Ordinal) ||
+            normalized.Contains("не содержит", StringComparison.Ordinal) ||
+            normalized.Contains("не содержат", StringComparison.Ordinal) ||
+            normalized.Contains("не раскрывать", StringComparison.Ordinal) ||
+            normalized.Contains("не должен", StringComparison.Ordinal) ||
+            normalized.Contains("не должны", StringComparison.Ordinal) ||
+            normalized.Contains("не является", StringComparison.Ordinal) ||
+            normalized.Contains("не являются", StringComparison.Ordinal) ||
+            normalized.Contains("не запускает", StringComparison.Ordinal) ||
+            normalized.Contains("не использует", StringComparison.Ordinal) ||
+            normalized.Contains("не копирует", StringComparison.Ordinal) ||
+            normalized.Contains("не требуют", StringComparison.Ordinal) ||
+            normalized.Contains("нет новых", StringComparison.Ordinal) ||
+            normalized.Contains("отсутствуют", StringComparison.Ordinal) ||
+            normalized.Contains("должны отсутствовать", StringComparison.Ordinal) ||
+            normalized.Contains("отсутствие", StringComparison.Ordinal) ||
+            normalized.Contains("отсутствия", StringComparison.Ordinal) ||
+            normalized.Contains("запрещ", StringComparison.Ordinal) ||
+            normalized.Contains("перевести", StringComparison.Ordinal) ||
+            normalized.Contains("полной замены", StringComparison.Ordinal) ||
+            normalized.Contains("удалить", StringComparison.Ordinal) ||
+            normalized.Contains("удаляются", StringComparison.Ordinal) ||
+            normalized.Contains("удален", StringComparison.Ordinal) ||
+            normalized.Contains("удалены", StringComparison.Ordinal) ||
+            normalized.Contains("удалением", StringComparison.Ordinal) ||
+            normalized.Contains("отказ", StringComparison.Ordinal) ||
+            normalized.Contains("миграцион", StringComparison.Ordinal) ||
+            normalized.Contains("не принимаются", StringComparison.Ordinal) ||
+            normalized.Contains("не через", StringComparison.Ordinal) ||
+            normalized.Contains("rejection", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        return string.Equals(relativePath, "docs/documentation/repository-readme.md", StringComparison.Ordinal) &&
+            (normalized.StartsWith("- `powershell`", StringComparison.Ordinal) ||
+                normalized.StartsWith("- `.ps1`", StringComparison.Ordinal) ||
+                normalized.StartsWith("- `pwsh`", StringComparison.Ordinal));
+    }
+
     private static void CreateRepositoryRootMarkers(string root)
     {
         WriteText(root, "AGENTS.md", "# Test repository instructions\n");
@@ -6140,6 +6517,9 @@ public sealed class RepositoryBuildToolTests
               "forbiddenPathsChecked": [
                 "TASKS.md",
                 "dev-diary/",
+                "completed-tasks/",
+                "data/dev-diary/",
+                "data/completed-tasks/",
                 "eng/Electron2D.Build/",
                 "*.ps1"
               ],
@@ -6182,6 +6562,9 @@ public sealed class RepositoryBuildToolTests
             .ToArray();
         Assert.Contains("TASKS.md", forbidden);
         Assert.Contains("dev-diary/", forbidden);
+        Assert.Contains("completed-tasks/", forbidden);
+        Assert.Contains("data/dev-diary/", forbidden);
+        Assert.Contains("data/completed-tasks/", forbidden);
         Assert.Contains("eng/Electron2D.Build/", forbidden);
         Assert.Contains("*.ps1", forbidden);
     }
@@ -6207,6 +6590,8 @@ public sealed class RepositoryBuildToolTests
             normalized.StartsWith(".codex/", StringComparison.Ordinal) ||
             normalized.StartsWith("dev-diary/", StringComparison.Ordinal) ||
             normalized.StartsWith("completed-tasks/", StringComparison.Ordinal) ||
+            normalized.StartsWith("data/dev-diary/", StringComparison.Ordinal) ||
+            normalized.StartsWith("data/completed-tasks/", StringComparison.Ordinal) ||
             normalized.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase) ||
             normalized.StartsWith("eng/Electron2D.Build/", StringComparison.Ordinal) ||
             normalized.StartsWith("docs/verdicts/", StringComparison.Ordinal) ||
@@ -6938,7 +7323,7 @@ public sealed class RepositoryBuildToolTests
 
         This file proves that package verification can restore changed files.
         """);
-        fixture.WriteTextFile("audit-evidence/checks/result.txt", """
+        fixture.WriteTextFile(".temp/audit-evidence/checks/result.txt", """
         fixture evidence
         second line
         """);
@@ -7967,7 +8352,7 @@ public sealed class RepositoryBuildToolTests
                     .Prepend("docs/release-management/AUDIT-REQUEST.md")
                     .Distinct(StringComparer.Ordinal)
                     .ToArray(),
-                archiveOnlyEvidenceGlobs = archiveOnlyEvidenceGlobs ?? ["audit-evidence/**"],
+                archiveOnlyEvidenceGlobs = archiveOnlyEvidenceGlobs ?? [".temp/audit-evidence/**"],
                 checks = checks ??
                 [
                     new AuditFixtureCheck(

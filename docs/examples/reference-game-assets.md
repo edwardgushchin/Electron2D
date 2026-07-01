@@ -1,6 +1,6 @@
 # Ассеты reference games 0.1.0 Preview
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-30.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -48,7 +48,7 @@ Platformer должен получать локально поставляемы
 
 ## Проверяемость
 
-Verifier `tools\Verify-ReferenceGameAssets.ps1` должен:
+Verifier `dotnet run --project eng/Electron2D.Build -- verify reference-game-assets` должен:
 
 - читать `data/assets/reference-games/manifest.json`;
 - проверять `networkRequiredDuringBuild = false`;
@@ -93,8 +93,8 @@ Verifier `tools\Verify-ReferenceGameAssets.ps1` должен:
 
 Локальная команда:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-ReferenceGameAssets.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify reference-game-assets
 ```
 
 Эта же проверка выполняется в GitHub Actions после user documentation checks. Она не скачивает файлы из сети и валидирует только содержимое репозитория.

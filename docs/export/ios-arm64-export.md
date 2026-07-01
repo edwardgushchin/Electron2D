@@ -267,7 +267,7 @@ Staging builder копирует `project.e2d.json`, main scene и `assets/**`. 
 
 Текущий CLI открывает planner и staging builder, но не утверждает, что iOS release-ready:
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-ios --project <project-root> --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-ios --project <project-root> --output exports/ios/debug --skip-publish true --format json
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-ios --project <project-root> --output exports/ios/debug --smoke-output .electron2d/export-smoke/ios-smoke.json --format json
@@ -305,7 +305,7 @@ Release iOS export потребует signing. Файлы репозитория
 
 Focused local tests для текущего planner/staging/smoke artifact:
 
-```powershell
+```bash
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~IosExportTests"
 ```
 

@@ -508,7 +508,7 @@ internal static class ProjectTextSchemaRegistry
         };
 
         var root = FindRepositoryRoot();
-        var schemaPath = Path.Combine(root, "schemas", "project-system", fileName);
+        var schemaPath = Path.Combine(root, "data", "schemas", "project-system", fileName);
         return File.ReadAllText(schemaPath);
     }
 

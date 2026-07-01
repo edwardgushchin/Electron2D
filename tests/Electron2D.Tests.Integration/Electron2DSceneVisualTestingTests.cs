@@ -116,7 +116,7 @@ public sealed class Electron2DSceneVisualTestingTests
     [InlineData("scene-test-events.schema.json")]
     public void TestingJsonSchemasArePublished(string fileName)
     {
-        var schemaPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "schemas", "testing", fileName));
+        var schemaPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "data", "schemas", "testing", fileName));
 
         Assert.True(File.Exists(schemaPath), $"Missing testing schema {schemaPath}");
         using var schema = JsonDocument.Parse(File.ReadAllText(schemaPath));

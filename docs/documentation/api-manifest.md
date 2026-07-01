@@ -158,22 +158,22 @@ Manifest создаётся из compiled assembly, XML documentation и GitHub 
 Обновить manifest из текущей сборки и локального Wiki clone:
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- update api-manifest --wiki-path .github/wiki
+dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki
 ```
 
 Проверить, что tracked manifest синхронизирован:
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
+dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
 ```
 
 Записать manifest во временный файл вместо canonical artifact:
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- update api-manifest --wiki-path .github/wiki --output .temp/api-manifest/probe.json
+dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --output .temp/api-manifest/probe.json
 ```
 
-`dotnet run --project eng\Electron2D.Build -- update wiki --check --output .github/wiki` также вызывает manifest check. Поэтому GitHub Wiki API reference gate теперь проверяет не только Markdown pages, но и JSON API manifest.
+`dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki` также вызывает manifest check. Поэтому GitHub Wiki API reference gate теперь проверяет не только Markdown pages, но и JSON API manifest.
 
 ## Что содержит manifest
 
@@ -216,7 +216,7 @@ Status берётся из GitHub Wiki `API-Compatibility.md`:
 CI запускает manifest check после checkout GitHub Wiki clone:
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
+dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
 ```
 
 Затем CI запускает GitHub Wiki API reference check. Wiki generator читает manifest и добавляет на каждую generated type page блок:
@@ -234,7 +234,7 @@ Out of profile: no
 
 `e2d api compare-godot <type> --format json` читает tracked manifest и возвращает машинный результат проверки одного типа:
 
-```powershell
+```bash
 e2d api compare-godot Control --format json
 ```
 

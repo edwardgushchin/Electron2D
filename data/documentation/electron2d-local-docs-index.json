@@ -25,15 +25,15 @@
       },
       {
         "path": "docs/architecture/agent-native-workflow.md",
-        "sha256": "1e50d04ba7523d306f2cdc6fc2cfeb00180280faacbca9c231c6d2166978d4ed"
+        "sha256": "f9b91a5248aadc746e1bb89fb003d888c441272fea770417253943007b2bd13c"
       },
       {
         "path": "docs/architecture/engine-platform-stack.md",
-        "sha256": "e3b0b89c6c4401619d1f49d7780d206e6c7e85af5fc8563ae9df3d8847c48fd3"
+        "sha256": "f4f78604b3712245ea384afda941ba19069ef99151165a3e146781ac53d6fd1a"
       },
       {
         "path": "docs/architecture/source-domain-layout.md",
-        "sha256": "4bbff6b4327005d1aea4317430343d30b51e3e63b2d7dd5f98f286123d1821f8"
+        "sha256": "2fb2aa0ad2b833554c939202ff546223296e1727b82b220ad308928489f43e04"
       },
       {
         "path": "docs/audio/audio-bus-routing.md",
@@ -49,7 +49,7 @@
       },
       {
         "path": "docs/cli/e2d-cli.md",
-        "sha256": "8f156b7ce203967b9c46d2db8fb28347b055dd08144e433e48c81cfe1364cb60"
+        "sha256": "a7c84194b686197e0de54235bef037af47aab110b6a2ff68c8ac333b0317052a"
       },
       {
         "path": "docs/core-types/2d-math-baseline.md",
@@ -73,7 +73,7 @@
       },
       {
         "path": "docs/diagnostics/diagnostics-adapters.md",
-        "sha256": "846e9cda73f29d280147980ab9744bc4af1eb9c55daa5141a6c542a98c823869"
+        "sha256": "3805757d9395abb86f971685113e1b777ce8c7a0bfad6d9796e1d4e33376bd5a"
       },
       {
         "path": "docs/diagnostics/diagnostics-core.md",
@@ -81,11 +81,11 @@
       },
       {
         "path": "docs/documentation/api-manifest.md",
-        "sha256": "396f389aed729bf2868f6dc87ce7145cda73a444a3879857923dd8da5a1416e1"
+        "sha256": "a35b6638a2470f9dbd34fbd96a5a62538582e68bb8a1dd0767b11820cb4cd2ab"
       },
       {
         "path": "docs/documentation/canonical-goal-alignment.md",
-        "sha256": "f21384bfcf75c141209728164e5581e4d325a59660493c1046869fa4cd88b625"
+        "sha256": "610f2448dec8a0b3c5bdf48d675f09d57b40494e2764865f799dfb38c6b8ffb2"
       },
       {
         "path": "docs/documentation/github-community-profile.md",
@@ -93,31 +93,31 @@
       },
       {
         "path": "docs/documentation/github-wiki-api-reference.md",
-        "sha256": "14192a53cd66bcd2874cb12d773d5b88e099d8fd6b8b0baebd9023d2fccf5858"
+        "sha256": "c1b4f987fa606bc4bccf81e010050295ba4142e0b70895f9722eb0110590d1d1"
       },
       {
         "path": "docs/documentation/local-documentation-pipeline.md",
-        "sha256": "7645df9725edbf5cc4a96dc265c569de3f16543c1b0cc64564e858b31802db51"
+        "sha256": "b61a542282b92d3158e660436feea46c9f302afb39e6fe6d3772a757ab240242"
       },
       {
         "path": "docs/documentation/public-api-xml-documentation.md",
-        "sha256": "58e54b4856bdbd3993807d30eac417ea58f75236da15cc799151b8f9ea5bf52d"
+        "sha256": "a28ddccd3d10b9532948e4279ad7233ffee939d287cacb7510d970c371c8b12f"
       },
       {
         "path": "docs/documentation/renderer-profiles.md",
-        "sha256": "cd104726c6908e66528f3ca2eaf0aed87e517b2bf06f5a7923dbfb26ffb61d86"
+        "sha256": "9c0a2f5cc7c30fb057fedff75fc9a20be0825c6584da489b69abd41a46e4d968"
       },
       {
         "path": "docs/documentation/repository-readme.md",
-        "sha256": "2ac23c1bb2feac878d24216325c44663387ed6ed969efd51a2b1e73772445fae"
+        "sha256": "4ccc3c969a596b1298c35f564974b02530bdc18a6b5c63c40a530ba1d8b8a65f"
       },
       {
         "path": "docs/documentation/troubleshooting-release-checklist.md",
-        "sha256": "0b4bae67951d5cf48f2c6270285872284f9d48cddc43c4a3b90d5b2295e968cd"
+        "sha256": "c713ce5ec0de89710decacf7a166b9ca0190bf79cdec4259d0f52c21dd4eda8f"
       },
       {
         "path": "docs/documentation/user-guide.md",
-        "sha256": "8668b4047590ea86124d2a0e8bed3d3c3876190d46611e1de1bf30f1823f6654"
+        "sha256": "5480a7c28cecb3cd5c01c878236c1e64abf5111cbcdd7a724e9e9dab692c1ffa"
       },
       {
         "path": "docs/editor/agent-process-bootstrap.md",
@@ -185,47 +185,47 @@
       },
       {
         "path": "docs/examples/platformer.md",
-        "sha256": "d0cba06df6b7524a4759f22071266762901424b5869342991966dafb42da8a3b"
+        "sha256": "2b43a373e1c6c66cabd34cae48b71f5dfee223a024a4e8baeaaab389421282b8"
       },
       {
         "path": "docs/examples/reference-game-assets.md",
-        "sha256": "b8d0e78b4df3ad154751d7d2a3f78cdd86793a95001bb493a3399f1938bbecc8"
+        "sha256": "0914fcb9cfbeb611a7b3659a4289cfe7a146b3210d2622e84bde2cbb312808ef"
       },
       {
         "path": "docs/examples/reference-game-platform-matrix.md",
-        "sha256": "58aba82ff169d1ca104213a0034d2572257530153314d9984e3984b268590866"
+        "sha256": "94b445f0a71f873ceedc22a8fadf37ded6318d1ee7b6f27c9ec3a824c39db982"
       },
       {
         "path": "docs/export/android-arm64-export.md",
-        "sha256": "f1c68e8693012cd9afb6c3e64cd7a0b31bd9fd0d7257ac0bbf6c46922cb974a3"
+        "sha256": "40884249bfd4638b3d4b9766b6ef1e1bbc4a29f42c9182cb936fe9ddae79af7f"
       },
       {
         "path": "docs/export/export-guide.md",
-        "sha256": "4b8139fed236b5cdc89160314490a1e862d6db2d14062228ae33cef244b7eebd"
+        "sha256": "b351826102fd69ffc841ee20ab1342fbc919ede1f0e7b23b8d59bf05a1924ce9"
       },
       {
         "path": "docs/export/export-preset-model.md",
-        "sha256": "e0e88c44170650a3896ccc71c1e4a4511a89dca58b9c2719fd257b634e70640a"
+        "sha256": "7b03d651489d9f76e72d83273c28a1949a0d90f3a4b12cf6158a1a02c396ad91"
       },
       {
         "path": "docs/export/ios-arm64-export.md",
-        "sha256": "6eb3ada387e55fd5e3fae120c88bb14157c78be8592dcedca7cfe7393c2010e1"
+        "sha256": "a3cd588ab9d75306dac2bbb5aa828b573c75a3a7e055e4ed930c1b72f56fc823"
       },
       {
         "path": "docs/export/linux-x64-export.md",
-        "sha256": "c4f5a3247cf4350e8b7257a5194c4975aa138a412df9dd53a12d8c7bd5138d4b"
+        "sha256": "228799107d9670bbb29f9ffa971db8112d55e5092690975d09fc42648ce8c135"
       },
       {
         "path": "docs/export/macos-arm64-export.md",
-        "sha256": "f31408637c53e8a9cd416c58510423ffc099aa93bcd843a0f45a9c801da852b6"
+        "sha256": "27fd1b9891e921d8f675264a6d79eb174e405ea6456169bb7075ba305ad5c85c"
       },
       {
         "path": "docs/export/webassembly-browser-export.md",
-        "sha256": "929e5bbd04f6fca32dfe83c66dbb1950c476d45a438f28307cf66af872c73348"
+        "sha256": "fa9932ed85c976f8f19a6fe225e7c081a24ba25c971ba874cb2b9cd1cf744588"
       },
       {
         "path": "docs/export/windows-x64-export.md",
-        "sha256": "2c372c282bff66110a4930bfa3a437bf16aa43e9cfd9656ea600a55d8aa83109"
+        "sha256": "b5021a95eaf4b2c5339652dd960747352fad5a6fa309b71c998da90bba7665cf"
       },
       {
         "path": "docs/input/gamepad-input.md",
@@ -345,7 +345,7 @@
       },
       {
         "path": "docs/project-system/project-task-manager.md",
-        "sha256": "3d222a85679ed16df305b7eb70054fd7c9c11076dce43e612b823027ec8cef98"
+        "sha256": "cdbd8c401e434aa26f63c7c32e1746261234a8d6681632d94011884d34767009"
       },
       {
         "path": "docs/project-system/project-tasks-markdown-report-export.md",
@@ -353,15 +353,15 @@
       },
       {
         "path": "docs/project-system/project-text-formats.md",
-        "sha256": "27f86c81941ea7b717252b3fa78c86490b573bade355125ff0ce52898bd7e0b7"
+        "sha256": "dafcb5964c83dc6969ea9d63d9475350041a14807d0e138a462cab6219709df6"
       },
       {
         "path": "docs/project-system/reproducibility-lock-and-doctor.md",
-        "sha256": "36b41ba2e3d36309ffe262d73bbbb8daf947fa4c4f523719c8b83e458820a422"
+        "sha256": "593e7957fc9f832178cba185e65cb66b8ab2bc4792278090016289853c976b08"
       },
       {
         "path": "docs/project-system/static-context-pack.md",
-        "sha256": "b821cc10daba17edbcb7e1a4252a191a12a14f63c4c897162f3064934a54ed24"
+        "sha256": "1eba5bc9764e7f77b18bc06155fa26da129d2ac11144fed180c2fe0706cfc229"
       },
       {
         "path": "docs/project-system/workspace-jobs.md",
@@ -377,11 +377,11 @@
       },
       {
         "path": "docs/quality/leak-verification.md",
-        "sha256": "339290f7f2f6d6f04dcfbc123fe80d366f8dbc6867a669649272a13ab4ba4ec6"
+        "sha256": "c366ce95b754b29ab9963a9eac6947fde9809bae4eeaf834da08bba9dbf3609c"
       },
       {
         "path": "docs/quality/performance-verification.md",
-        "sha256": "5d2d83c61f428b5ead43f470da960467feaf80df604254c4286e26250215ddd6"
+        "sha256": "a7a5be0c57c4e4118fdef4983548922ccd211630e1e6e2163a923521fb6a7f2c"
       },
       {
         "path": "docs/release-management/AUDIT-REQUEST.md",
@@ -389,15 +389,15 @@
       },
       {
         "path": "docs/release-management/api-compatibility.md",
-        "sha256": "195ca975af6febb6aaa5492e1ec891f8279f4e696681ad76749f8d728a4a774c"
+        "sha256": "5418884495095d7e07d30041333635a4d6668ceb10c3b0a80bcea8cd9cf7b442"
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "c6534f05ebc4121dde4f89c25c82bfa68dc2689c89418fb69fad50f78da7d75f"
+        "sha256": "1d19c92c345382d82592c8c16076c908329e6e6a84793a1559153c754a4922ea"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
-        "sha256": "59c17946f64d2c38012d6ecf3af3c949d4e48b7d2124c1a4f989f2dc39a9cd93"
+        "sha256": "2b5a07f992856676ccaeb04ddd4184759cb8bbc0a6fc92eaa604087636bb5291"
       },
       {
         "path": "docs/release-management/performance-budgets.md",
@@ -405,23 +405,23 @@
       },
       {
         "path": "docs/release-management/project-template.md",
-        "sha256": "e588d9a430636b092da639d77a261a133c20dad2d668fb1d73bee9b614c120f6"
+        "sha256": "c01299ef6329f73718501290799438715cd7ead930ebcf64eebd061ce1d0199d"
       },
       {
         "path": "docs/release-management/release-metadata.md",
-        "sha256": "c37601aef67baa7f922610fb38255c93b6807294ad4b3ee951fa1af0886e3ae8"
+        "sha256": "27f73433725b0d009d898889143642391513380b0a0cd540ae4c596167e90699"
       },
       {
         "path": "docs/release-management/release-packaging.md",
-        "sha256": "a462e3cddbdc37eb0a270053f53ccfff7adccf812f3be95e9c55ba3408620f36"
+        "sha256": "ad4cb65fdbc93c3cead63cf6e3d0769232b087f5c5b8ad29de4b17c7f8ea18f8"
       },
       {
         "path": "docs/release-management/test-infrastructure.md",
-        "sha256": "77547aaf5db008c889163b260f496ea997212055148d2887131b48be12d6081d"
+        "sha256": "f6d6912143a003ba6355038efaa5d49245658006e686a391f8e2d13734eb5219"
       },
       {
         "path": "docs/releases/0.1.0-preview.md",
-        "sha256": "401ff339fa9f8ff373a1bfd27a24fbb23b8a3a603d60f94d815ae3b6f3410685"
+        "sha256": "6f87e25086a920414d8eb106825205a74e0bf1d44128ce67fa7fc85ef8d2e2b6"
       },
       {
         "path": "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -485,11 +485,11 @@
       },
       {
         "path": "docs/repository/license-policy.md",
-        "sha256": "34a285385ebab857cb2b7c48fd0015f5103eb4d87c962fc7d1626f1c0feeb706"
+        "sha256": "0e7b0179049da8d1a67c755ff4629819befc8433a0970104cd1732f2dc978247"
       },
       {
         "path": "docs/repository/repository-layout.md",
-        "sha256": "a0dac4aede04feb004ca640df9f2a7ba5689eca744247aea6a68c732cdb0c98d"
+        "sha256": "23f844d6813e05ea3f40d6bb80be7c193375d8f140c5275fd939011b48d78ea3"
       },
       {
         "path": "docs/resources/aot-safe-metadata.md",
@@ -537,7 +537,7 @@
       },
       {
         "path": "docs/runtime/headless-runtime-automation.md",
-        "sha256": "b26c22f7e67d3a937353adf481455473f9549bb8028f45d9fe8de9e82b27ff21"
+        "sha256": "685cb6d05c9c7bc1b0242db1baeeda9bdb1972000a2c3131441031b31dca9c25"
       },
       {
         "path": "docs/runtime/project-runtime-runner.md",
@@ -593,11 +593,11 @@
       },
       {
         "path": "docs/testing/agent-acceptance-benchmarks.md",
-        "sha256": "3472ebd4aa2b152541e9a4db5756752644a4044d4f04eaf7f59cff430c159614"
+        "sha256": "c27f99b88b6a8b7eebf865e0a05447107da112c4f9b4e92b6be5b6cdc0a1efa8"
       },
       {
         "path": "docs/testing/scene-visual-testing.md",
-        "sha256": "cf148cdbe397c2cfd04df3d04ff26bdc299737f2565c4ad0c084d35111ae57f5"
+        "sha256": "6aa2c6ed3d2ad439f26814860ea3710230763bc3fb5f7685461a59058276d945"
       },
       {
         "path": "docs/tooling/editor-capability-manifest.md",
@@ -617,7 +617,7 @@
       },
       {
         "path": "docs/ui/basic-controls.md",
-        "sha256": "03b8b374db2f0c7f8493538d9fc577c8e712761b4e4eec4991b2edd5d3973489"
+        "sha256": "45fd77c016e7b32d09a84798ca1e15fc21559b4962530b885746cfa6e13b52e1"
       },
       {
         "path": "docs/ui/containers.md",
@@ -637,7 +637,7 @@
       },
       {
         "path": "docs/ui/theme-tooltips.md",
-        "sha256": "9ec3dbb2511d8199ce4b3383d1f11d5c8bb32914e17a02797f236fca0dcb6830"
+        "sha256": "683adee81b8508acc4b76e1b5008786c722620594bf61784c70318e35ee84b72"
       },
       {
         "path": "docs/verdicts/documentation/t-0213-audit-r01.md",
@@ -754,6 +754,22 @@
       {
         "path": "docs/verdicts/release-management/t-0209-audit-r13.md",
         "sha256": "37b6b014d5514486808ae05620f59c4716eeef4e25d5355cbde18b2dae69d9db"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0210-audit-r02.md",
+        "sha256": "0f46e476c9ae1ad47c9762467987fa8e6169990768c4e5ea719674038e32a1ee"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0210-audit-r03.md",
+        "sha256": "61c6c3297330689ac12da32bcf7485cab230f3b6a245ae374e88c3f33d810971"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0210-audit-r04.md",
+        "sha256": "e39110562c57ad5f884c497c31611a92e4d2e15d6c2e7cda50676adef3589f30"
+      },
+      {
+        "path": "docs/verdicts/release-management/t-0210-audit-r16.md",
+        "sha256": "1b9fae51485856e6a70cb1c69e8cac204da53ab4604cc4639bfc298daf931722"
       },
       {
         "path": "docs/verdicts/release-management/t-0214-audit-r01.md",
@@ -1134,6 +1150,10 @@
         "docs/verdicts/release-management/t-0209-audit-r07.md",
         "docs/verdicts/release-management/t-0209-audit-r12.md",
         "docs/verdicts/release-management/t-0209-audit-r13.md",
+        "docs/verdicts/release-management/t-0210-audit-r02.md",
+        "docs/verdicts/release-management/t-0210-audit-r03.md",
+        "docs/verdicts/release-management/t-0210-audit-r04.md",
+        "docs/verdicts/release-management/t-0210-audit-r16.md",
         "docs/verdicts/release-management/t-0214-audit-r01.md",
         "docs/verdicts/release-management/t-0214-audit-r02.md",
         "docs/verdicts/release-management/t-0214-audit-r03.md",
@@ -1196,8 +1216,8 @@
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
-      "count": 221,
-      "sha256": "c808fc0a128c15ad2838b5f7f55c00db579da0d2b86e272484f1844831f77516"
+      "count": 225,
+      "sha256": "1aa4bba618b4db9974306f2ca0f2c84ad9e079750f3e538b11c551323a0e3a08"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -1209,7 +1229,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "ed1beb35045fff284a35a1bcf4da7fcb9aa73b934579a98ce3d1e99301d10a3d",
+    "sourceDigest": "c6d7120f07cc1d0bdbc643cb51346525747f54569163b7acc127d762bb856f55",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

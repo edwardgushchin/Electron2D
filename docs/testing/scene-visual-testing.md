@@ -75,7 +75,7 @@ tests/electron2d.scene-tests.json
 
 Пример:
 
-```powershell
+```bash
 e2d test --project . --format json --output artifacts/tests
 ```
 
@@ -153,10 +153,10 @@ pixel-diff/<test-name>-diff.png
 
 Published schemas:
 
-- `schemas/testing/scene-test-suite.schema.json`;
-- `schemas/testing/scene-test-result.schema.json`;
-- `schemas/testing/scene-test-diagnostics.schema.json`;
-- `schemas/testing/scene-test-events.schema.json`.
+- `data/schemas/testing/scene-test-suite.schema.json`;
+- `data/schemas/testing/scene-test-result.schema.json`;
+- `data/schemas/testing/scene-test-diagnostics.schema.json`;
+- `data/schemas/testing/scene-test-events.schema.json`.
 
 ## Критерии приёмки
 
@@ -229,7 +229,7 @@ tests/electron2d.scene-tests.json
 
 Scene tests запускаются командой:
 
-```powershell
+```bash
 e2d test --project . --format json
 ```
 
@@ -295,7 +295,7 @@ pixel-diff/<test-name>-diff.png
 - deterministic frame advance без ожидания wall-clock;
 - deterministic PNG capture для visual tests;
 - byte-level comparison с reference PNG как первая замена будущего pixel diff;
-- structured artifacts и published JSON schemas в `schemas/testing/`.
+- structured artifacts и published JSON schemas в `data/schemas/testing/`.
 
 Ограничения текущего слоя:
 
@@ -308,7 +308,7 @@ pixel-diff/<test-name>-diff.png
 
 Focused проверка:
 
-```powershell
+```bash
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DSceneVisualTestingTests
 ```
 

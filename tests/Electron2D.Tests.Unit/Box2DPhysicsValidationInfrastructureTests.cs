@@ -39,7 +39,7 @@ public sealed class Box2DPhysicsValidationInfrastructureTests
             "Electron2D.Tests.PhysicsBox2DSmoke",
             "Electron2D.Tests.PhysicsBox2DSmoke.csproj");
         var programPath = Path.Combine(root, "tests", "Electron2D.Tests.PhysicsBox2DSmoke", "Program.cs");
-        var verifierPath = Path.Combine(root, "tools", "Verify-Box2DPhysicsCandidate.ps1");
+        var verifierPath = Path.Combine(root, "eng", "Electron2D.Build", "RepositoryWorkflowVerifiers.cs");
         var documentPath = Path.Combine(root, "docs", "physics", "box2d-net-validation.md");
         var workflowPath = Path.Combine(root, ".github", "workflows", "ci.yml");
 
@@ -63,7 +63,8 @@ public sealed class Box2DPhysicsValidationInfrastructureTests
 
         var verifier = File.ReadAllText(verifierPath);
         Assert.Contains("Box2D.NET", verifier, StringComparison.Ordinal);
-        Assert.Contains("$NativeAot", verifier, StringComparison.Ordinal);
+        Assert.Contains("Box2DPhysicsCandidateVerifier", verifier, StringComparison.Ordinal);
+        Assert.Contains("native-aot", verifier, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("PublishAot=true", verifier, StringComparison.Ordinal);
         Assert.Contains("AllocatedBytesPerTick", verifier, StringComparison.Ordinal);
 
@@ -87,8 +88,8 @@ public sealed class Box2DPhysicsValidationInfrastructureTests
         }
 
         var workflow = File.ReadAllText(workflowPath);
-        Assert.Contains("Verify-Box2DPhysicsCandidate.ps1", workflow, StringComparison.Ordinal);
-        Assert.Contains("-NativeAot", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify box2d-physics-candidate --native-aot", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("Verify-Box2DPhysicsCandidate.ps1", workflow, StringComparison.Ordinal);
     }
 
     private static string FindRepositoryRoot()

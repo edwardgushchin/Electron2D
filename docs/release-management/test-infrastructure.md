@@ -1,6 +1,6 @@
 # Тестовая инфраструктура `0.1.0 Preview`
 
-Обновлено: 2026-06-29.
+Обновлено: 2026-06-30.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация.
 Задача: `T-0002`, дополнение `T-0215`.
-Обновлено: 2026-06-29.
+Обновлено: 2026-06-30.
 
 ## Цель
 
@@ -76,7 +76,7 @@ dotnet run --project eng/Electron2D.Build -- test --include-baseline
 - `src/Electron2D.sln` обновлён: тестовые проекты добавлены, старые examples исключены до отдельной миграции.
 - Agent acceptance benchmark, то есть релизный контроль для проверки рабочего процесса агента:
   - `data/quality/agent-acceptance-benchmarks.json`;
-  - `tools/Run-AgentAcceptanceBenchmarks.ps1`;
+  - `dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks`;
   - документация `docs/testing/agent-acceptance-benchmarks.md`.
 
 ## Как запускать
@@ -99,8 +99,8 @@ dotnet run --project eng/Electron2D.Build -- test --include-baseline
 
 Agent-native релизный контроль можно проверить без запуска тяжёлых коротких проверок запуска:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Run-AgentAcceptanceBenchmarks.ps1 -DryRun -OutputDirectory .temp/agent-acceptance-benchmarks
+```bash
+dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks --dry-run --output .temp/agent-acceptance-benchmarks
 ```
 
 Полный запуск benchmark выполняет evidence steps из manifest последовательно и создаёт `benchmark-result.json`.

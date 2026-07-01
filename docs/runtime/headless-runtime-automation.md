@@ -84,7 +84,7 @@ frame-0300.png
 
 `frame-XXXX.png` создаётся только когда указан `--capture-frame`; имя использует номер кадра с минимум четырьмя цифрами. Например, `--capture-frame 7` создаёт `frame-0007.png`.
 
-Все JSON-файлы используют `schemaVersion = 1`, стабильный порядок полей и перенос строки `\n` в конце файла. `result.json`, `diagnostics.json`, `scene-tree-final.json`, `performance.json` и input trace должны иметь опубликованные JSON Schema Draft 2020-12 files в `schemas/runtime/`.
+Все JSON-файлы используют `schemaVersion = 1`, стабильный порядок полей и перенос строки `\n` в конце файла. `result.json`, `diagnostics.json`, `scene-tree-final.json`, `performance.json` и input trace должны иметь опубликованные JSON Schema Draft 2020-12 files в `data/schemas/runtime/`.
 
 ## Snapshot identity
 
@@ -143,7 +143,7 @@ Headless run создаёт `WorkspaceSnapshot` через общий job contra
 - Generic `e2d run --format jsonl` без runtime-флагов сохраняет существующий job event contract.
 - Input trace применяет `pressed` и `released` action events по кадрам.
 - Выходной каталог содержит стабильные `result.json`, `diagnostics.json`, `runtime.log.jsonl`, `scene-tree-final.json`, `performance.json` и PNG frame capture при `--capture-frame`.
-- JSON artifacts ссылаются на published schemas в `schemas/runtime/`.
+- JSON artifacts ссылаются на published schemas в `data/schemas/runtime/`.
 - Все artifacts содержат snapshot identity fields.
 - Повторный same-platform run с одинаковыми inputs создаёт одинаковые JSON artifacts и PNG bytes, кроме абсолютного `outputDirectory`, если путь запуска изменился.
 - Headless run не требует открытого Editor и не выполняет GUI automation.
@@ -230,7 +230,7 @@ Output directory получает:
 Все JSON artifacts содержат:
 
 - `schemaVersion = 1`;
-- `$schema` со ссылкой на файл из `schemas/runtime/`;
+- `$schema` со ссылкой на файл из `data/schemas/runtime/`;
 - `inputSnapshotId`;
 - `inputWorkspaceRevision`;
 - `inputContentRevision`;
@@ -239,11 +239,11 @@ Output directory получает:
 
 Published schemas:
 
-- `schemas/runtime/headless-input-trace.schema.json`;
-- `schemas/runtime/headless-run-result.schema.json`;
-- `schemas/runtime/headless-run-diagnostics.schema.json`;
-- `schemas/runtime/headless-run-scene-tree.schema.json`;
-- `schemas/runtime/headless-run-performance.schema.json`.
+- `data/schemas/runtime/headless-input-trace.schema.json`;
+- `data/schemas/runtime/headless-run-result.schema.json`;
+- `data/schemas/runtime/headless-run-diagnostics.schema.json`;
+- `data/schemas/runtime/headless-run-scene-tree.schema.json`;
+- `data/schemas/runtime/headless-run-performance.schema.json`.
 
 `runtime.log.jsonl` пишет события `runtime.started`, `input.action`, `frame.captured` и `runtime.completed`.
 

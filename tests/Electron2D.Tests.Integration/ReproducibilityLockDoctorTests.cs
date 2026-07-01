@@ -76,9 +76,9 @@ public sealed class ReproducibilityLockDoctorTests
     [Fact]
     public void ReproducibilityLockSchemaListsRequiredTopLevelFields()
     {
-        var schemaPath = Path.Combine(FindRepositoryRoot(), "schemas", "project-system", "electron2d-lock.schema.json");
+        var schemaPath = Path.Combine(FindRepositoryRoot(), "data", "schemas", "project-system", "electron2d-lock.schema.json");
 
-        Assert.True(File.Exists(schemaPath), "Lock schema must be published under schemas/project-system.");
+        Assert.True(File.Exists(schemaPath), "Lock schema must be published under data/schemas/project-system.");
 
         using var schema = JsonDocument.Parse(File.ReadAllText(schemaPath));
         var root = schema.RootElement;

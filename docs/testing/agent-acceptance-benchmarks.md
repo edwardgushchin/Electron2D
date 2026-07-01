@@ -1,6 +1,6 @@
 # Agent acceptance benchmarks для Electron2D 0.1
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-30.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,7 +13,7 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация для `T-0128`.
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-30.
 Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Референс интерфейса редактора Godot 4](../editor/godot4-editor-reference.md), [Локальный MCP-сервер поверх active Editor session и Tooling](../mcp/mcp-server.md), [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md), [ProjectTaskManager, TaskActivity и task storage](../project-system/project-task-manager.md), [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md), [Human-AI concurrent editing, conflicts и grouped Undo](../project-system/concurrent-editing-and-undo.md), [Headless runtime automation](../runtime/headless-runtime-automation.md), [Script workspace и встроенная C# IDE](../scripting/editor-script-workflow.md).
 
 ## Назначение
@@ -59,19 +59,19 @@ data/quality/agent-acceptance-benchmarks.json
 
 ## Runner
 
-Release gate runner хранится в:
+Release gate runner доступен через:
 
 ```text
-tools/Run-AgentAcceptanceBenchmarks.ps1
+dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks
 ```
 
 Runner обязан поддерживать:
 
-- `-List` - вывести suite/scenario/evidence plan без запуска тяжёлых проверок;
-- `-DryRun` - проверить manifest, существование referenced specs/docs/tests/scripts и сгенерировать plan artifact;
+- `--list` - вывести suite/scenario/evidence plan без запуска тяжёлых проверок;
+- `--dry-run` - проверить manifest, существование referenced specs/docs/tests/scripts и сгенерировать plan artifact;
 - обычный запуск - выполнить все автоматизированные evidence steps, сохранить результат и вернуть non-zero exit code при failure;
-- `-Suite editor-co-development` и `-Suite headless-ai` для focused запуска;
-- `-OutputDirectory <path>` для release artifact output.
+- `--suite editor-co-development` и `--suite headless-ai` для focused запуска;
+- `--output <path>` для release artifact output.
 
 Output directory содержит:
 
@@ -150,7 +150,7 @@ Suite содержит ровно пять эталонных заданий:
 
 - Specification фиксирует два suite, target success ratio, manifest location, runner contract, visual evidence policy и пять headless заданий.
 - Добавлен tracked manifest `data/quality/agent-acceptance-benchmarks.json`, где каждый scenario связан с evidence step.
-- Добавлен runner `tools/Run-AgentAcceptanceBenchmarks.ps1` с `-List`, `-DryRun`, focused suite запуском, output artifacts и non-zero failure behavior.
+- Добавлен C# runner `dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks` с `--list`, `--dry-run`, focused suite запуском, output artifacts и non-zero failure behavior.
 - Automated test проверяет manifest schema, обязательные scenarios, headless tasks, referenced files, visual evidence requirements, stale policy coverage и runner contract.
 - Focused red test падает до добавления manifest/runner и проходит после реализации.
 - Runner dry run создаёт `benchmark-plan.json` и не запускает тяжёлые проверки.
@@ -161,7 +161,7 @@ Suite содержит ровно пять эталонных заданий:
 ## Фактическое состояние, ограничения и проверки
 
 Статус: текущая реализация для `T-0128`.
-Обновлено: 2026-06-23.
+Обновлено: 2026-06-30.
 Связанные спецификации: [Agent acceptance benchmarks для Electron2D 0.1](agent-acceptance-benchmarks.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
 
 ## Что реализовано
@@ -169,7 +169,7 @@ Suite содержит ровно пять эталонных заданий:
 Release gate для Agent-native workflow хранится в двух tracked файлах:
 
 - `data/quality/agent-acceptance-benchmarks.json` - machine-readable manifest benchmark suites, scenarios и evidence.
-- `tools/Run-AgentAcceptanceBenchmarks.ps1` - локальный runner, который читает manifest, проверяет referenced files и запускает evidence steps.
+- `dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks` - локальный C# runner, который читает manifest, проверяет referenced files и запускает evidence steps.
 
 Runner не создаёт отдельную тестовую модель поверх продукта. Он связывает уже существующие проверки Editor, Tooling, MCP, Project Tasks, WorkspaceJob, WorkspaceTransaction, script/debug tooling и headless runtime automation в один release artifact.
 
@@ -177,32 +177,32 @@ Runner не создаёт отдельную тестовую модель по
 
 Показать список suite и сценариев:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Run-AgentAcceptanceBenchmarks.ps1 -List
+```bash
+dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks --list
 ```
 
 Проверить manifest и создать plan без запуска тяжёлых smoke-команд:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Run-AgentAcceptanceBenchmarks.ps1 -DryRun -OutputDirectory .temp\agent-acceptance-benchmarks
+```bash
+dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks --dry-run --output .temp/agent-acceptance-benchmarks
 ```
 
 Запустить полный benchmark:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Run-AgentAcceptanceBenchmarks.ps1 -OutputDirectory .temp\agent-acceptance-benchmarks
+```bash
+dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks --output .temp/agent-acceptance-benchmarks
 ```
 
 Запустить один suite:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Run-AgentAcceptanceBenchmarks.ps1 -Suite editor-co-development -OutputDirectory .temp\agent-acceptance-editor
-powershell -ExecutionPolicy Bypass -File tools\Run-AgentAcceptanceBenchmarks.ps1 -Suite headless-ai -OutputDirectory .temp\agent-acceptance-headless
+```bash
+dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks --suite editor-co-development --output .temp/agent-acceptance-editor
+dotnet run --project eng/Electron2D.Build -- verify agent-acceptance-benchmarks --suite headless-ai --output .temp/agent-acceptance-headless
 ```
 
 ## Artifacts
 
-`-DryRun` создаёт:
+`--dry-run` создаёт:
 
 ```text
 benchmark-plan.json

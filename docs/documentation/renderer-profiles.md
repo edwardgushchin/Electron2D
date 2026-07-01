@@ -37,7 +37,7 @@
 
 ## Проверяемость
 
-`tools\Verify-UserDocumentation.ps1` должен проверять:
+`dotnet run --project eng/Electron2D.Build -- verify user-documentation` должен проверять:
 
 - наличие страницы `docs/renderer-profiles.md`;
 - наличие раздела `user-doc:renderer-profiles` в `user-guide.md`;
@@ -49,7 +49,7 @@
 - User guide ссылается на отдельную renderer-памятку.
 - Renderer-памятка описывает feature flags, fallback policy, `fail_if_unavailable` и ограничения.
 - Внутренние backend details не выдаются за публичный API.
-- `tools\Verify-UserDocumentation.ps1` проходит локально и в CI.
+- `dotnet run --project eng/Electron2D.Build -- verify user-documentation` проходит локально и в CI.
 
 ## Фактическое состояние, ограничения и проверки
 
@@ -134,6 +134,6 @@ if (RenderingServer.HasFeature(RenderingServer.RenderingFeature.CustomShaders))
 
 Проверить актуальность этой страницы:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-UserDocumentation.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify user-documentation
 ```

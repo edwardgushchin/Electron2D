@@ -6,6 +6,10 @@ on:
       - main
   pull_request:
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   tests:
     name: Tests (${{ matrix.os }})
@@ -30,85 +34,76 @@ jobs:
       - name: Restore
         run: dotnet restore src/Electron2D.sln
 
+      - name: Verify C# workflow routes
+        run: dotnet run --project eng/Electron2D.Build -- verify no-powershell-workflows
+
+      - name: Verify CI matrix
+        run: dotnet run --project eng/Electron2D.Build -- verify ci-matrix
+
       - name: Verify source license headers
-        shell: pwsh
-        run: ./tools/Verify-SourceLicenseHeaders.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify licenses
 
       - name: Verify source domain layout
-        shell: pwsh
-        run: ./tools/Verify-SourceDomainLayout.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify source-domain-layout
 
       - name: Run tests
         run: dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600
 
       - name: Verify Box2D.NET physics candidate
-        shell: pwsh
-        run: ./tools/Verify-Box2DPhysicsCandidate.ps1 -NativeAot
+        run: dotnet run --project eng/Electron2D.Build -- verify box2d-physics-candidate --native-aot
 
       - name: Verify project template
-        shell: pwsh
-        run: ./tools/Verify-ProjectTemplate.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify project-template
 
       - name: Verify user documentation
-        shell: pwsh
-        run: ./tools/Verify-UserDocumentation.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify user-documentation
 
       - name: Verify local documentation
-        shell: pwsh
-        run: ./tools/Verify-LocalDocumentation.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify docs
 
       - name: Verify canonical goal alignment
-        shell: pwsh
-        run: ./tools/Verify-CanonicalGoalAlignment.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify canonical-goal-alignment
 
       - name: Verify export documentation
-        shell: pwsh
-        run: ./tools/Verify-ExportDocumentation.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify export-documentation
 
       - name: Verify reference game assets
-        shell: pwsh
-        run: ./tools/Verify-ReferenceGameAssets.ps1
+        run: dotnet run --project eng/Electron2D.Build -- verify reference-game-assets
 
       - name: Verify public API XML documentation
-        shell: pwsh
-        run: ./tools/Verify-PublicApiXmlDocs.ps1 -FailOnIssues
+        run: dotnet run --project eng/Electron2D.Build -- verify public-api-xml-docs --fail-on-issues
 
       - name: Checkout GitHub Wiki
-        shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path .github | Out-Null
+          mkdir -p .github
           git clone --depth 1 https://github.com/edwardgushchin/Electron2D.wiki.git .github/wiki
 
       - name: Verify API manifest
-        shell: pwsh
-        run: ./tools/Update-ApiManifest.ps1 -WikiPath .github/wiki -Check
+        run: dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
 
       - name: Verify GitHub Wiki API reference
-        shell: pwsh
-        run: ./tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check
+        run: dotnet run --project eng/Electron2D.Build -- update wiki --output .github/wiki --check
+
+      - name: Verify API compatibility table
+        run: dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 
       - name: Verify UI public API gate
-        shell: pwsh
-        run: ./tools/Verify-UiPublicApiGate.ps1 -WikiPath .github/wiki
+        run: dotnet run --project eng/Electron2D.Build -- verify ui-public-api-gate --wiki-path .github/wiki
 
       - name: Verify public API documentation audit
-        shell: pwsh
-        run: ./tools/Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki
+        run: dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki
 
       - name: Verify Windows export
         if: matrix.os == 'windows-latest'
-        shell: pwsh
-        run: ./tools/Verify-WindowsExport.ps1
+        run: dotnet run --project eng/Electron2D.Build -- package --rid win-x64
 
       - name: Verify Linux export
         if: matrix.os == 'ubuntu-latest'
-        shell: pwsh
-        run: ./tools/Verify-LinuxExport.ps1
+        run: dotnet run --project eng/Electron2D.Build -- package --rid linux-x64
 
       - name: Verify macOS export
         if: matrix.os == 'macos-latest'
-        shell: pwsh
-        run: ./tools/Verify-MacOSExport.ps1
+        run: dotnet run --project eng/Electron2D.Build -- package --rid osx-arm64
 
       - name: Verify performance budgets
         run: dotnet run --project eng/Electron2D.Build -- verify performance-budgets

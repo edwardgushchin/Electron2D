@@ -76,7 +76,7 @@ CLI JSON, CLI JSONL job events, scene/visual test artifacts and future MCP resou
 Published schema:
 
 ```text
-schemas/diagnostics/electron2d-diagnostic.schema.json
+data/schemas/diagnostics/electron2d-diagnostic.schema.json
 ```
 
 ## Stream event contract
@@ -104,7 +104,7 @@ Rules:
 Published schema:
 
 ```text
-schemas/diagnostics/diagnostic-stream-event.schema.json
+data/schemas/diagnostics/diagnostic-stream-event.schema.json
 ```
 
 ## SARIF 2.1.0
@@ -174,7 +174,7 @@ CLI adapter `Electron2DCommandLine.WriteDiagnostics(...)` использует �
 Published schema:
 
 ```text
-schemas/diagnostics/electron2d-diagnostic.schema.json
+data/schemas/diagnostics/electron2d-diagnostic.schema.json
 ```
 
 ## JSONL diagnostics stream
@@ -192,7 +192,7 @@ schemas/diagnostics/electron2d-diagnostic.schema.json
 Published schema:
 
 ```text
-schemas/diagnostics/diagnostic-stream-event.schema.json
+data/schemas/diagnostics/diagnostic-stream-event.schema.json
 ```
 
 ## SARIF output

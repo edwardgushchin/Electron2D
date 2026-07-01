@@ -134,16 +134,25 @@ public sealed class AgentAcceptanceBenchmarkTests
     public async Task AgentAcceptanceBenchmarkRunnerDryRunWritesPlanArtifact()
     {
         var root = FindRepositoryRoot();
-        var runnerPath = Path.Combine(root, "tools", "Run-AgentAcceptanceBenchmarks.ps1");
         var outputRoot = CreateTemporaryDirectory("electron2d-agent-acceptance-benchmarks-");
 
         try
         {
-            Assert.True(File.Exists(runnerPath), $"Missing agent acceptance benchmark runner: {runnerPath}");
-
-            var startInfo = PowerShellProcess.CreateScriptStartInfo(root, runnerPath);
-            startInfo.ArgumentList.Add("-DryRun");
-            startInfo.ArgumentList.Add("-OutputDirectory");
+            var startInfo = new ProcessStartInfo("dotnet")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                WorkingDirectory = root
+            };
+            startInfo.ArgumentList.Add("run");
+            startInfo.ArgumentList.Add("--project");
+            startInfo.ArgumentList.Add("eng/Electron2D.Build");
+            startInfo.ArgumentList.Add("--");
+            startInfo.ArgumentList.Add("verify");
+            startInfo.ArgumentList.Add("agent-acceptance-benchmarks");
+            startInfo.ArgumentList.Add("--dry-run");
+            startInfo.ArgumentList.Add("--output");
             startInfo.ArgumentList.Add(outputRoot);
 
             using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start benchmark runner.");

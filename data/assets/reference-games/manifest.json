@@ -101,8 +101,8 @@
       "games": [ "platformer" ],
       "roles": [ "level.source" ],
       "source": "kenney-pixel-platformer",
-      "bytes": 4576,
-      "sha256": "f282da8d55c665707e922e5e79fdc1d91cce06001df5177f6ce7a0ff329973dd"
+      "bytes": 4495,
+      "sha256": "f8cf5dd88f422d187f67debe5fad1c9f841d8414ff90bff1efd7f8c12121cb59"
     },
     {
       "id": "platformer.tileset-characters",
@@ -110,8 +110,8 @@
       "games": [ "platformer" ],
       "roles": [ "level.source" ],
       "source": "kenney-pixel-platformer",
-      "bytes": 298,
-      "sha256": "b31ce20bc6d9ba798c6cd4062a4f4699b17053ad3030dbcebc01760874638c35"
+      "bytes": 293,
+      "sha256": "1a8fc1f2d657824efdbe4975cf05406151c7172034f6193bfe8a89bd7210d821"
     },
     {
       "id": "platformer.tileset-tiles",
@@ -119,8 +119,8 @@
       "games": [ "platformer" ],
       "roles": [ "level.source" ],
       "source": "kenney-pixel-platformer",
-      "bytes": 254,
-      "sha256": "78624f84646a46221566f03364295dc5aee4990c3ecaac110cc38248730de5ef"
+      "bytes": 250,
+      "sha256": "be56d47ccc48239521ed503a2ddbf5ef5c3ddf4973d6e62c35192d5a5021bc37"
     },
     {
       "id": "platformer.footstep",

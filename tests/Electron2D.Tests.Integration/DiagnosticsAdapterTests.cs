@@ -117,7 +117,7 @@ public sealed class DiagnosticsAdapterTests
     [InlineData("diagnostic-stream-event.schema.json")]
     public void DiagnosticAdapterJsonSchemasArePublished(string fileName)
     {
-        var schemaPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "schemas", "diagnostics", fileName));
+        var schemaPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "data", "schemas", "diagnostics", fileName));
 
         Assert.True(File.Exists(schemaPath), $"Missing diagnostics schema {schemaPath}");
         using var schema = JsonDocument.Parse(File.ReadAllText(schemaPath));

@@ -72,7 +72,7 @@ API-Compatibility.md
 ## Верификация
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
+dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 ```
 
 Verifier должен сверить tracked API manifest, который пересоздаётся из compiled runtime, XML documentation и compatibility table, с GitHub Wiki clone и убедиться, что каждый публичный тип отражён в `API-Compatibility.md` с допустимым статусом. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki. Для `T-0214` целевая поверхность проверки - C#-команда `verify api-compatibility --wiki-path .github/wiki`.
@@ -227,7 +227,7 @@ UI public API gate закрывается отдельной проверкой 
 ## Локальная проверка
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
+dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 ```
 
 Verifier читает `data/api/electron2d-api-manifest.json`, проверяет его форму, сверяет public type entries с `API-Compatibility.md` в клоне `Electron2D.wiki.git` и запрещает возврат legacy/component типов без публикации отдельного legacy-блока в Wiki. Сам manifest пересоздаётся отдельной командой `update api-manifest --wiki-path .github/wiki --check`, которая строит проверяемый снимок из compiled runtime и XML documentation.

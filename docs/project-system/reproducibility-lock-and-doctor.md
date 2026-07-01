@@ -134,7 +134,7 @@ Output может сообщать количество signing presets, require
 ## Acceptance criteria
 
 - Template `electron2d-empty` содержит `global.json` и `electron2d.lock.json`.
-- Опубликована schema `schemas/project-system/electron2d-lock.schema.json`, и focused tests проверяют её обязательные поля.
+- Опубликована schema `data/schemas/project-system/electron2d-lock.schema.json`, и focused tests проверяют её обязательные поля.
 - `ProjectReproducibilityLockVerifier` проходит на template lock file и возвращает diagnostic на missing/malformed lock.
 - `e2d doctor --format json` возвращает checks для .NET SDK, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates, graphics capabilities и signing.
 - `e2d doctor` не меняет project files, не открывает active Editor route и возвращает пустые `changedFiles`/`dirtyDocuments`.
@@ -203,7 +203,7 @@ signing
 Опубликованная JSON Schema находится здесь:
 
 ```text
-schemas/project-system/electron2d-lock.schema.json
+data/schemas/project-system/electron2d-lock.schema.json
 ```
 
 ## Verifier

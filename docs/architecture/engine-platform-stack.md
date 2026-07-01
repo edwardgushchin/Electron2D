@@ -98,7 +98,7 @@ Project source files должны оставаться deterministic и diff-fri
 - resource references используют stable UID;
 - generated/import cache files отделены от source documents;
 - `.electron2d/tasks/**` является EditorMetadata и не попадает в game runtime asset packs или production packages;
-- local-only agent workflow files, такие как repository `TASKS.md`, `dev-diary/`, `completed-tasks/`, `CHANGELOG*` и `RELEASE-NOTES*`, не являются canonical project storage.
+- agent workflow files репозитория, такие как `TASKS.md`, `data/dev-diary/`, `data/completed-tasks/`, `CHANGELOG*` и `RELEASE-NOTES*`, не являются canonical project storage пользовательского проекта.
 
 ## Mobile и export status
 
@@ -110,8 +110,8 @@ Remote Android/iOS/WebAssembly debugger, publishing automation, app store upload
 
 Canonical goal alignment проверяется локально:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\Verify-CanonicalGoalAlignment.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify canonical-goal-alignment
 ```
 
 Verifier проверяет, что этот документ и release/Agent-native cross-platform 2D game engine specifications закрепляют актуальный native-plus-browser platform contract, specialized node/resource, `Node2D` transform и `scene_attach_script` contract, а старое backend-specific или component-first позиционирование не возвращается как действующая цель.

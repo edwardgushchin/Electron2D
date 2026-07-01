@@ -67,7 +67,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
+                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
@@ -103,6 +103,81 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         if (args is ["verify", "docs"])
         {
             return VerifyDocsAsync(cancellationToken);
+        }
+
+        if (args is ["verify", "ci-matrix"])
+        {
+            return VerifyCiMatrixAsync();
+        }
+
+        if (args is ["verify", "no-powershell-workflows"])
+        {
+            return VerifyNoPowerShellWorkflowsAsync(cancellationToken);
+        }
+
+        if (args is ["verify", "source-domain-layout"])
+        {
+            return VerifySourceDomainLayoutAsync();
+        }
+
+        if (args.Length >= 2 && args[1] == "box2d-physics-candidate")
+        {
+            return VerifyBox2DPhysicsCandidateAsync(args, cancellationToken);
+        }
+
+        if (args is ["verify", "user-documentation"])
+        {
+            return VerifyUserDocumentationAsync();
+        }
+
+        if (args is ["verify", "canonical-goal-alignment"])
+        {
+            return VerifyCanonicalGoalAlignmentAsync();
+        }
+
+        if (args is ["verify", "export-documentation"])
+        {
+            return VerifyExportDocumentationAsync();
+        }
+
+        if (args is ["verify", "reference-game-assets"])
+        {
+            return VerifyReferenceGameAssetsAsync();
+        }
+
+        if (args is ["verify", "reference-game-platform-matrix"])
+        {
+            return VerifyReferenceGamePlatformMatrixAsync();
+        }
+
+        if (args is ["verify", "platformer"])
+        {
+            return VerifyPlatformerAsync();
+        }
+
+        if (args is ["verify", "leak-checks"])
+        {
+            return VerifyLeakChecksAsync(cancellationToken);
+        }
+
+        if (args.Length >= 2 && args[1] == "agent-acceptance-benchmarks")
+        {
+            return VerifyAgentAcceptanceBenchmarksAsync(args);
+        }
+
+        if (args.Length >= 2 && args[1] == "public-api-xml-docs")
+        {
+            return VerifyPublicApiXmlDocsAsync(args, cancellationToken);
+        }
+
+        if (args.Length >= 2 && args[1] == "ui-public-api-gate")
+        {
+            return VerifyUiPublicApiGateAsync(args);
+        }
+
+        if (args.Length >= 2 && args[1] == "public-api-documentation")
+        {
+            return VerifyPublicApiDocumentationAsync(args, cancellationToken);
         }
 
         if (args is ["verify", "performance-budgets"])
@@ -145,7 +220,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return VerifyManifestsAsync(cancellationToken);
         }
 
-        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify docs, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
+        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
     }
 
     private Task<int> RunTestAsync(string[] args, CancellationToken cancellationToken)
@@ -292,6 +367,114 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             : new LineEndingVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(cancellationToken);
     }
 
+    private Task<int> VerifyNoPowerShellWorkflowsAsync(CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify no-powershell-workflows");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new NoPowerShellWorkflowVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(cancellationToken);
+    }
+
+    private Task<int> VerifyCiMatrixAsync()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify ci-matrix");
+        return Task.FromResult(repositoryRoot is null
+            ? RepositoryBuildExitCodes.Failed
+            : new CiMatrixVerifier(repositoryRoot, diagnostics).Verify());
+    }
+
+    private Task<int> VerifySourceDomainLayoutAsync()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify source-domain-layout");
+        return Task.FromResult(repositoryRoot is null
+            ? RepositoryBuildExitCodes.Failed
+            : new SourceDomainLayoutVerifier(repositoryRoot, diagnostics).Verify());
+    }
+
+    private Task<int> VerifyBox2DPhysicsCandidateAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify box2d-physics-candidate");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new Box2DPhysicsCandidateVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(args, cancellationToken);
+    }
+
+    private Task<int> VerifyUserDocumentationAsync()
+    {
+        var verifier = CreateStaticRepositoryVerifier("verify user-documentation");
+        return Task.FromResult(verifier is null ? RepositoryBuildExitCodes.Failed : verifier.VerifyUserDocumentation());
+    }
+
+    private Task<int> VerifyCanonicalGoalAlignmentAsync()
+    {
+        var verifier = CreateStaticRepositoryVerifier("verify canonical-goal-alignment");
+        return Task.FromResult(verifier is null ? RepositoryBuildExitCodes.Failed : verifier.VerifyCanonicalGoalAlignment());
+    }
+
+    private Task<int> VerifyExportDocumentationAsync()
+    {
+        var verifier = CreateStaticRepositoryVerifier("verify export-documentation");
+        return Task.FromResult(verifier is null ? RepositoryBuildExitCodes.Failed : verifier.VerifyExportDocumentation());
+    }
+
+    private Task<int> VerifyReferenceGameAssetsAsync()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify reference-game-assets");
+        return Task.FromResult(repositoryRoot is null
+            ? RepositoryBuildExitCodes.Failed
+            : new ReferenceGameAssetsVerifier(repositoryRoot, diagnostics).Verify());
+    }
+
+    private Task<int> VerifyReferenceGamePlatformMatrixAsync()
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify reference-game-platform-matrix");
+        return Task.FromResult(repositoryRoot is null
+            ? RepositoryBuildExitCodes.Failed
+            : new ReferenceGamePlatformMatrixVerifier(repositoryRoot, diagnostics, new StaticRepositoryVerifier(repositoryRoot, diagnostics)).Verify());
+    }
+
+    private Task<int> VerifyPlatformerAsync()
+    {
+        var verifier = CreateStaticRepositoryVerifier("verify platformer");
+        return Task.FromResult(verifier is null ? RepositoryBuildExitCodes.Failed : verifier.VerifyPlatformer());
+    }
+
+    private Task<int> VerifyLeakChecksAsync(CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify leak-checks");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new LeakChecksVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(cancellationToken);
+    }
+
+    private Task<int> VerifyAgentAcceptanceBenchmarksAsync(string[] args)
+    {
+        var verifier = CreateStaticRepositoryVerifier("verify agent-acceptance-benchmarks");
+        return Task.FromResult(verifier is null ? RepositoryBuildExitCodes.Failed : verifier.VerifyAgentAcceptanceBenchmarks(args));
+    }
+
+    private Task<int> VerifyPublicApiXmlDocsAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var verifier = CreatePublicApiXmlDocsVerifier("verify public-api-xml-docs");
+        return verifier is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : verifier.VerifyAsync(args, cancellationToken);
+    }
+
+    private Task<int> VerifyUiPublicApiGateAsync(string[] args)
+    {
+        var verifier = CreatePublicApiWikiVerifier("verify ui-public-api-gate");
+        return Task.FromResult(verifier is null ? RepositoryBuildExitCodes.Failed : verifier.VerifyUiPublicApiGate(args));
+    }
+
+    private Task<int> VerifyPublicApiDocumentationAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var verifier = CreatePublicApiWikiVerifier("verify public-api-documentation");
+        return verifier is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : verifier.VerifyPublicApiDocumentationAsync(args, cancellationToken);
+    }
+
     private Task<int> RunDocumentationIndexUpdateAsync(bool check, CancellationToken cancellationToken)
     {
         var step = check ? "update docs --check" : "update docs";
@@ -385,6 +568,30 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         return repositoryRoot is null
             ? null
             : new ApiCompatibilityVerifier(repositoryRoot, diagnostics, CreateApiManifestCommandForRoot(repositoryRoot));
+    }
+
+    private StaticRepositoryVerifier? CreateStaticRepositoryVerifier(string step)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", step);
+        return repositoryRoot is null
+            ? null
+            : new StaticRepositoryVerifier(repositoryRoot, diagnostics);
+    }
+
+    private PublicApiXmlDocsVerifier? CreatePublicApiXmlDocsVerifier(string step)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", step);
+        return repositoryRoot is null
+            ? null
+            : new PublicApiXmlDocsVerifier(repositoryRoot, diagnostics, new ProcessRunner());
+    }
+
+    private PublicApiWikiVerifier? CreatePublicApiWikiVerifier(string step)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", step);
+        return repositoryRoot is null
+            ? null
+            : new PublicApiWikiVerifier(repositoryRoot, diagnostics, new PublicApiXmlDocsVerifier(repositoryRoot, diagnostics, new ProcessRunner()));
     }
 
     private ApiManifestCommand? CreateApiManifestCommand()

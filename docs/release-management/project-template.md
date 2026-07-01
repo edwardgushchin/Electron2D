@@ -144,7 +144,7 @@ JSON-результат должен содержать:
 ## Верификация
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- verify project-template
+dotnet run --project eng/Electron2D.Build -- verify project-template
 ```
 
 Verifier должен:
@@ -207,7 +207,7 @@ Project Manager и `e2d project create` используют общий `Project
 
 CLI форма:
 
-```powershell
+```bash
 e2d project create MyGame --output .\projects --renderer-profile Compatibility --format json
 ```
 
@@ -216,7 +216,7 @@ JSON-результат содержит `projectName`, `projectPath`, `projectS
 ## Как проверять
 
 ```bash
-dotnet run --project eng\Electron2D.Build -- verify project-template
+dotnet run --project eng/Electron2D.Build -- verify project-template
 ```
 
 Команда выполняет C# manifest/shape check для `data/templates/electron2d-empty`: проверяет обязательные файлы, JSON-форму project settings и стартовых задач, `AGENTS.md`, `.gitignore`, пять starter skills, `.electron2d/tasks/board.e2tasks`, `.electron2d/tasks/welcome.e2task`, отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`, а также то, что `.gitignore` не скрывает `.electron2d/tasks/`.

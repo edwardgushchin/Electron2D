@@ -1,6 +1,6 @@
 # Политика лицензирования исходного кода
 
-Обновлено: 2026-06-23.
+Обновлено: 2026-07-01.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -20,8 +20,8 @@ Electron2D `0.1.0 Preview` должен распространяться по MI
 
 - Корневой файл `LICENSE` содержит стандартный текст MIT License для `Copyright (c) 2025-2026 Eduard Gushchin <eduardgushchin@yandex.ru>`.
 - `src/Electron2D/Electron2D.csproj` сохраняет `PackageLicenseExpression` со значением `MIT`.
-- Все отслеживаемые Git вручную написанные C# source-файлы `*.cs` в `src/`, `tests/` и `templates/` начинаются с полного MIT license header.
-- Все отслеживаемые Git PowerShell source-файлы `*.ps1` в `tools/` начинаются с полного MIT license header в block-comment форме.
+- Все отслеживаемые Git вручную написанные C# source-файлы `*.cs` в `src/`, `tests/`, `eng/` и `data/templates/` начинаются с полного MIT license header.
+- Отслеживаемые Git PowerShell-скрипты в `tools/` не являются активным рабочим путём репозитория и должны отсутствовать после `T-0210`.
 - Сгенерированные файлы в `bin/`, `obj/`, package output, coverage output и временные файлы не входят в область проверки.
 - Новые source-файлы без header должны ломать локальную проверку и CI.
 
@@ -30,8 +30,6 @@ Electron2D `0.1.0 Preview` должен распространяться по MI
 ## Форма header
 
 C# файлы используют обычный block comment `/* ... */`.
-
-PowerShell файлы используют block comment `<# ... #>`, чтобы `param(...)` оставался первой исполняемой конструкцией скрипта.
 
 Header содержит:
 
@@ -45,11 +43,11 @@ Header содержит:
 
 Обязательная команда:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-SourceLicenseHeaders.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify licenses
 ```
 
-GitHub Actions должен запускать эту проверку до тестов.
+GitHub Actions должен запускать эту проверку через C#-инструмент репозитория до тестов.
 
 ## Критерии приёмки
 
@@ -62,23 +60,21 @@ GitHub Actions должен запускать эту проверку до те
 
 Electron2D распространяется по MIT License. Корневой файл `LICENSE` содержит полный текст лицензии, а `src/Electron2D/Electron2D.csproj` публикует NuGet metadata `PackageLicenseExpression=MIT`.
 
-Текст лицензии сверяется с [SPDX MIT License](https://spdx.org/licenses/MIT). Так как у MIT License нет единого обязательного standard header, проект использует собственный полный header для C# и PowerShell source-файлов.
+Текст лицензии сверяется с [SPDX MIT License](https://spdx.org/licenses/MIT). Так как у MIT License нет единого обязательного standard header, проект использует собственный полный header для C# source-файлов.
 
 ## Что проверяется
 
-Проверка `tools/Verify-SourceLicenseHeaders.ps1` читает отслеживаемые Git файлы:
+Проверка `dotnet run --project eng/Electron2D.Build -- verify licenses` читает отслеживаемые Git файлы:
 
-- `*.cs`;
-- `*.ps1`.
+- `*.cs` в `src/`, `tests/`, `eng/` и `data/templates/`.
 
-Сгенерированные файлы и build output не входят в проверку, потому что они не являются вручную написанным исходным кодом проекта и находятся вне Git.
+Сгенерированные файлы, build output и удалённые из активного рабочего пути скрипты не входят в проверку, потому что они не являются вручную написанным C# исходным кодом продукта или тестов.
 
 ## Требование к файлам
 
 Каждый проверяемый файл должен начинаться с MIT license header:
 
-- для C# используется `/* ... */`;
-- для PowerShell используется `<# ... #>`.
+- для C# используется `/* ... */`.
 
 Header содержит название проекта, `MIT License`, copyright, `SPDX-License-Identifier: MIT` и полный текст MIT License. Такой формат выбран по аналогии с SDL: при копировании отдельного source-файла условия лицензии остаются внутри файла.
 
@@ -86,8 +82,8 @@ Header содержит название проекта, `MIT License`, copyrigh
 
 Локальная проверка:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/Verify-SourceLicenseHeaders.ps1
+```bash
+dotnet run --project eng/Electron2D.Build -- verify licenses
 ```
 
-CI запускает эту проверку отдельным шагом перед тестами.
+CI запускает эту проверку отдельным шагом перед тестами через `eng/Electron2D.Build`.

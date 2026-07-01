@@ -32,8 +32,8 @@ public sealed class PublicApiDocumentationAuditInfrastructureTests
     public void RepositoryContainsPublicApiDocumentationAuditGate()
     {
         var root = FindRepositoryRoot();
-        var xmlVerifierPath = Path.Combine(root, "tools", "Verify-PublicApiXmlDocs.ps1");
-        var auditVerifierPath = Path.Combine(root, "tools", "Verify-PublicApiDocumentationAudit.ps1");
+        var xmlVerifierPath = Path.Combine(root, "eng", "Electron2D.Build", "RepositoryWorkflowVerifiers.cs");
+        var auditVerifierPath = xmlVerifierPath;
         var workflowPath = Path.Combine(root, ".github", "workflows", "ci.yml");
         var docPath = Path.Combine(root, "docs", "documentation", "public-api-xml-documentation.md");
 
@@ -44,6 +44,8 @@ public sealed class PublicApiDocumentationAuditInfrastructureTests
         var xmlVerifier = File.ReadAllText(xmlVerifierPath);
         foreach (var requiredIssueCode in new[]
         {
+            "PublicApiXmlDocsVerifier",
+            "verify public-api-xml-docs",
             "missing-doc",
             "missing-summary",
             "summary-missing-para",
@@ -66,22 +68,25 @@ public sealed class PublicApiDocumentationAuditInfrastructureTests
         var auditVerifier = File.ReadAllText(auditVerifierPath);
         foreach (var requiredFragment in new[]
         {
-            "Verify-PublicApiXmlDocs.ps1",
-            "-FailOnIssues",
-            "Update-ApiWiki.ps1",
-            ".github/wiki",
+            "verify public-api-xml-docs",
+            "fail-on-issues",
+            "verify public-api-documentation",
+            "wiki-path",
             "docs/documentation",
             "SDL_shadercross",
-            "Godot-like"
+            "Godot-like",
+            "PublicApiWikiVerifier"
         })
         {
             Assert.Contains(requiredFragment, auditVerifier, StringComparison.Ordinal);
         }
 
         var workflow = File.ReadAllText(workflowPath);
-        Assert.Contains("Verify-PublicApiXmlDocs.ps1 -FailOnIssues", workflow, StringComparison.Ordinal);
-        Assert.Contains("Update-ApiWiki.ps1 -OutputPath .github/wiki -Check", workflow, StringComparison.Ordinal);
-        Assert.Contains("Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify public-api-xml-docs --fail-on-issues", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- update wiki --output .github/wiki --check", workflow, StringComparison.Ordinal);
+        Assert.Contains("dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("Verify-PublicApiXmlDocs.ps1", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("Verify-PublicApiDocumentationAudit.ps1", workflow, StringComparison.Ordinal);
     }
 
     private static string FindRepositoryRoot()

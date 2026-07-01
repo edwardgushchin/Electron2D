@@ -211,7 +211,7 @@ dotnet publish <project.csproj> --configuration <Debug|Release> --runtime browse
 
 Из корня проекта, который содержит один `.e2d` файл настроек проекта и один `.csproj`:
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export plan-web --project <project-root> --format json
 ```
 
@@ -230,13 +230,13 @@ JSON-оболочка использует:
 
 Создать статическую структуру пакета и запустить публикацию, когда доступны подходящие WebAssembly build tools:
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --format json
 ```
 
 Для детерминированных CI-проверок, которые не должны вызывать внешний publish, передайте:
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export build-web --project <project-root> --output exports/web --skip-publish true --format json
 ```
 
@@ -246,13 +246,13 @@ JSON-оболочка использует `command = "export build-web"`, `rout
 
 После того как `build-web` создал `wwwroot`, создайте локальный smoke artifact и инструкции запуска:
 
-```powershell
+```bash
 dotnet run --project src\Electron2D.Cli\Electron2D.Cli.csproj -- export run-web --project <project-root> --output exports/web --url http://127.0.0.1:8080/index.html --smoke-output .electron2d/export-smoke/web-smoke.json --format json
 ```
 
 Формат артефакта: `Electron2D.WebAssemblySmokeArtifact`. Артефакт записывает launch URL, web root, runtime policies, diagnostics и criteria results для `startup`, `sceneLoad`, `renderingReadiness`, `inputEventPath`, `audioPolicyState`, `resourceLoading` и `saveDataPolicy`. Для ручного запуска в браузере раздайте сгенерированную папку, например:
 
-```powershell
+```bash
 python -m http.server 8080 --directory <project-root>\exports\web\wwwroot
 ```
 
@@ -285,7 +285,7 @@ python -m http.server 8080 --directory <project-root>\exports\web\wwwroot
 
 ## Локальная проверка
 
-```powershell
+```bash
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~WebAssemblyExportTests"
 dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.csproj --filter "FullyQualifiedName~Electron2DCliWorkflowTests.ExportPlanWebReturnsWebAssemblyBrowserPlanWithoutQueueingJob|FullyQualifiedName~Electron2DCliWorkflowTests.ExportBuildWebCreatesBrowserPackageWithoutQueueingJob|FullyQualifiedName~Electron2DCliWorkflowTests.ExportRunWebWritesBrowserSmokeArtifactWithoutQueueingJob"
 ```

@@ -512,7 +512,7 @@ e2d run `
   --format json
 ```
 
-В этом режиме команда создаёт output directory с `result.json`, `diagnostics.json`, `runtime.log.jsonl`, `scene-tree-final.json`, `performance.json` и `frame-XXXX.png`, если указан `--capture-frame`. JSON artifacts используют schemas из `schemas/runtime/` и сохраняют snapshot identity fields. Фактический формат описан в [Headless runtime automation](../runtime/headless-runtime-automation.md).
+В этом режиме команда создаёт output directory с `result.json`, `diagnostics.json`, `runtime.log.jsonl`, `scene-tree-final.json`, `performance.json` и `frame-XXXX.png`, если указан `--capture-frame`. JSON artifacts используют schemas из `data/schemas/runtime/` и сохраняют snapshot identity fields. Фактический формат описан в [Headless runtime automation](../runtime/headless-runtime-automation.md).
 
 ### `test` scene/visual mode
 

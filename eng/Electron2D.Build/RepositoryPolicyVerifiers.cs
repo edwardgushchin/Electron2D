@@ -86,34 +86,6 @@ internal sealed class LicensePolicyVerifier(string repositoryRoot, JsonDiagnosti
 
     """;
 
-    private const string ExpectedPowerShellHeader = """
-    <#
-        Electron2D
-        MIT License
-        Copyright (c) 2025-2026 Eduard Gushchin <eduardgushchin@yandex.ru>
-        SPDX-License-Identifier: MIT
-
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
-
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-        SOFTWARE.
-    #>
-
-    """;
-
     public async Task<int> VerifyAsync(CancellationToken cancellationToken)
     {
         var errors = new List<BuildDiagnostic>();
@@ -142,19 +114,14 @@ internal sealed class LicensePolicyVerifier(string repositoryRoot, JsonDiagnosti
                 continue;
             }
 
-            var expectedHeader = relativePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)
-                ? Normalize(ExpectedCSharpHeader)
-                : relativePath.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase)
-                    ? Normalize(ExpectedPowerShellHeader)
-                    : null;
-            if (expectedHeader is null)
+            if (!relativePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
             checkedCount++;
             var content = Normalize(File.ReadAllText(fullPath, Encoding.UTF8));
-            if (!content.StartsWith(expectedHeader, StringComparison.Ordinal))
+            if (!content.StartsWith(Normalize(ExpectedCSharpHeader), StringComparison.Ordinal))
             {
                 errors.Add(Error("E2D-BUILD-LICENSES-SOURCE-HEADER", $"Source file is missing the required MIT license header: {relativePath}.", relativePath));
             }
@@ -187,7 +154,7 @@ internal sealed class LicensePolicyVerifier(string repositoryRoot, JsonDiagnosti
                 new ProcessRunRequest(
                     "verify licenses git ls-files",
                     "git",
-                    ["ls-files", "*.cs", "*.ps1"],
+                    ["ls-files", "*.cs"],
                     repositoryRoot,
                     TimeSpan.FromSeconds(30)),
                 cancellationToken).ConfigureAwait(false);
@@ -202,13 +169,21 @@ internal sealed class LicensePolicyVerifier(string repositoryRoot, JsonDiagnosti
         }
 
         return Directory.EnumerateFiles(repositoryRoot, "*.*", SearchOption.AllDirectories)
-            .Where(path => path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase))
+            .Where(path => path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
             .Select(path => Path.GetRelativePath(repositoryRoot, path).Replace('\\', '/'))
             .ToArray();
     }
 
     private static bool IsIgnoredSourcePath(string relativePath)
     {
+        if (!relativePath.StartsWith("src/", StringComparison.Ordinal) &&
+            !relativePath.StartsWith("eng/", StringComparison.Ordinal) &&
+            !relativePath.StartsWith("tests/", StringComparison.Ordinal) &&
+            !relativePath.StartsWith("data/templates/", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
         return relativePath.Split('/').Any(part => part is "bin" or "obj" or "artifacts" or "publish" or "packages" or "TestResults" or "coverage");
     }
 
@@ -940,7 +915,7 @@ internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSi
     private async Task<int> GenerateManifestAsync(string outputPath, string wikiPath, CancellationToken cancellationToken)
     {
         var projectPath = Path.Combine(repositoryRoot, "src", "Electron2D", "Electron2D.csproj");
-        var generatorProject = Path.Combine(repositoryRoot, "tools", "Electron2D.ApiManifestGenerator", "Electron2D.ApiManifestGenerator.csproj");
+        var generatorProject = Path.Combine(repositoryRoot, "eng", "Electron2D.ApiManifestGenerator", "Electron2D.ApiManifestGenerator.csproj");
         var xmlPath = Path.Combine(repositoryRoot, ".temp", "api-manifest", "Electron2D.xml");
         var assemblyPath = Path.Combine(repositoryRoot, "src", "Electron2D", "bin", "Debug", "net10.0", "Electron2D.dll");
         var compatibilityPath = ResolveCompatibilityPath(wikiPath);

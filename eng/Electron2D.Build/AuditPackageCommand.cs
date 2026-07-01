@@ -794,17 +794,46 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             .Order(StringComparer.Ordinal)
             .Select(path =>
             {
-                ValidateInputPath(path, config);
+                ValidateEvidenceInputPath(path, config);
+                var archiveOnlyPath = ToArchiveOnlyEvidenceArchivePath(path);
                 var absolutePath = Path.Combine(repoRoot, path.Replace('/', Path.DirectorySeparatorChar));
                 ValidateInputFileSize(absolutePath, path, config.MaxFileSize);
                 ValidateSecretPolicy(absolutePath, path, config.SecretScanPolicy);
                 return new EvidenceSourceFile(
                     absolutePath,
-                    $"evidence/{config.TaskId}-{config.Iteration}/archive-only/{path}");
+                    $"evidence/{config.TaskId}-{config.Iteration}/archive-only/{archiveOnlyPath}");
             })
             .ToArray();
 
         return selected;
+    }
+
+    private static string ToArchiveOnlyEvidenceArchivePath(string path)
+    {
+        var normalized = AuditPath.NormalizeRelativePath(path, "archive-only evidence path", allowCurrentDirectory: false);
+        if (normalized.StartsWith(".temp/audit-evidence/", StringComparison.Ordinal))
+        {
+            return normalized[".temp/".Length..];
+        }
+
+        return normalized;
+    }
+
+    private static void ValidateEvidenceInputPath(string path, AuditPackageConfiguration config)
+    {
+        var normalized = AuditPath.NormalizeRelativePath(path, "archive-only evidence path", allowCurrentDirectory: false);
+        if (normalized.StartsWith(".temp/audit-evidence/", StringComparison.Ordinal))
+        {
+            var evidenceRelativePath = normalized[".temp/audit-evidence/".Length..];
+            if (ForbiddenPathPolicy.IsForbidden(evidenceRelativePath) || MatchesAny(config.ForbiddenPatterns, normalized))
+            {
+                throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-FORBIDDEN-PATH", $"Forbidden evidence input path: {normalized}");
+            }
+
+            return;
+        }
+
+        ValidateInputPath(normalized, config);
     }
 
     private static async Task<EvidenceSourceFile[]> RunConfiguredChecksAsync(
@@ -1544,7 +1573,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             .Where(path => MatchesAny(trxGlobs, path))
             .Order(StringComparer.Ordinal))
         {
-            ValidateInputPath(trxPath, config);
+            ValidateEvidenceInputPath(trxPath, config);
             var source = Path.Combine(repoRoot, trxPath.Replace('/', Path.DirectorySeparatorChar));
             ValidateInputFileSize(source, trxPath, config.MaxFileSize);
             var trxBytes = ReadTrxEvidenceBytes(source, trxPath, config.SecretScanPolicy, repoRoot);
@@ -1663,7 +1692,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         var nameStatus = await GitRunner.RunAsync(
             repoRoot,
-            ["diff", "--cached", "--name-status", baseline, "--"],
+            ["diff", "--cached", "--find-renames", "--name-status", baseline, "--"],
             env,
             cancellationToken).ConfigureAwait(false);
         if (nameStatus.ExitCode != 0)
@@ -1691,7 +1720,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             arguments.Add($"core.attributesFile={attributesPath.Replace('\\', '/')}");
         }
 
-        arguments.AddRange(["diff", "--cached", "--binary", "--full-index", "--no-ext-diff", baseline, "--"]);
+        arguments.AddRange(["diff", "--cached", "--find-renames", "--binary", "--full-index", "--no-ext-diff", baseline, "--"]);
 
         var patch = await GitRunner.RunAsync(
             repoRoot,
