@@ -55,6 +55,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         "DataStabilityStressTests",
         "LeakVerificationTests",
         "ReferencePerformanceVerificationTests",
+        "RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnsupportedTextureResource",
+        "RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnknownRenderCommandKind",
         "EditorAgentWorkspacePanelTests",
         "EditorFileSystemDockTests",
         "EditorInspectorTests",

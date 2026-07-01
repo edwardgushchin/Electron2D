@@ -164,6 +164,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("FullyQualifiedName!~RepositoryBuildToolTests", integrationInvocation, StringComparison.Ordinal);
         Assert.Contains("FullyQualifiedName!~LocalDocumentationCliTests", integrationInvocation, StringComparison.Ordinal);
         Assert.Contains("FullyQualifiedName!~DataStabilityStressTests", integrationInvocation, StringComparison.Ordinal);
+        Assert.Contains("FullyQualifiedName!~RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnsupportedTextureResource", integrationInvocation, StringComparison.Ordinal);
+        Assert.Contains("FullyQualifiedName!~RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnknownRenderCommandKind", integrationInvocation, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -187,6 +189,20 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("RepositoryBuildToolTests.AuditPackage", invocation, StringComparison.Ordinal);
         Assert.Contains("RepositoryBuildToolTests.AuditSubmit", invocation, StringComparison.Ordinal);
         Assert.DoesNotContain("tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj", invocation, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ReleasePackagingTemporaryDirectoryUsesSystemTemporaryRoot()
+    {
+        using var workspace = CreateReleaseTemporaryDirectory("release-temp-root");
+
+        var expectedRoot = Path.GetFullPath(Path.GetTempPath());
+        var actualRoot = Path.GetFullPath(workspace.Root);
+
+        Assert.StartsWith(
+            EnsureTrailingDirectorySeparator(expectedRoot),
+            actualRoot,
+            GetPathComparison());
     }
 
     [Theory]
@@ -6607,11 +6623,21 @@ public sealed class RepositoryBuildToolTests
         Directory.CreateDirectory(Path.Combine(root, "src"));
     }
 
+    private static string EnsureTrailingDirectorySeparator(string path)
+    {
+        return Path.EndsInDirectorySeparator(path) ? path : path + Path.DirectorySeparatorChar;
+    }
+
+    private static StringComparison GetPathComparison()
+    {
+        return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+    }
+
     private static TemporaryDirectory CreateReleaseTemporaryDirectory(string name)
     {
-        var repositoryRoot = FindRepositoryRoot();
-        var driveRoot = Path.GetPathRoot(repositoryRoot) ?? Path.GetTempPath();
-        var root = Path.Combine(driveRoot, "Electron2D-RepositoryBuildToolTests", name, Guid.NewGuid().ToString("N"));
+        var root = Path.Combine(Path.GetTempPath(), "Electron2D-RepositoryBuildToolTests", name, Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         return new TemporaryDirectory(root);
     }

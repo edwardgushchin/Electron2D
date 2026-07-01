@@ -110,8 +110,8 @@ Real-window smoke должен:
 - `ShellVisualHarness` не используется в runtime/window path редактора; shell layout smoke может проверять только модель layout и JSON analysis без fake screenshot.
 - Release metadata verifier подтверждает, что `Electron2D.Editor` подключает брендовую `.ico`-иконку.
 - `dotnet build src/Electron2D.sln -c Release` проходит.
-- `dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600` проходит.
-- `dotnet run --project eng\Electron2D.Build -- verify licenses` проходит.
+- `dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600` проходит.
+- `dotnet run --project eng/Electron2D.Build -- verify licenses` проходит.
 
 ## Фактическое состояние, ограничения и проверки
 
@@ -246,8 +246,8 @@ dotnet run --project src\Electron2D.Editor\Electron2D.Editor.csproj -- --window-
 Полные проверки:
 
 ```powershell
-dotnet run --project eng\Electron2D.Build -- verify licenses
-dotnet run --project eng\Electron2D.Build -- verify release-metadata
-dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600
+dotnet run --project eng/Electron2D.Build -- verify licenses
+dotnet run --project eng/Electron2D.Build -- verify release-metadata
+dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600
 dotnet build src\Electron2D.sln -c Release
 ```

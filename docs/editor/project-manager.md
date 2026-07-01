@@ -108,8 +108,8 @@ Smoke-режим стартового окна должен:
 - Integration test подтверждает, что reference project не содержит `bin/`, `obj/` и папок исходников с разным регистром вроде `Scripts/`.
 - Integration test подтверждает, что запуск с файлом проекта не зависит от удалённого корневого `tools/`-помощника; установочная регистрация расширения остаётся внешним шагом установщика, а не частью рабочего пути репозитория.
 - Документация clean-machine workflow описывает команду smoke-проверки и ожидаемый результат.
-- `dotnet run --project eng\Electron2D.Build -- verify licenses` проходит.
-- `dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600` проходит.
+- `dotnet run --project eng/Electron2D.Build -- verify licenses` проходит.
+- `dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600` проходит.
 - `dotnet build src\Electron2D.sln -c Release` проходит.
 
 ## Фактическое состояние, ограничения и проверки
@@ -214,7 +214,7 @@ dotnet test tests\Electron2D.Tests.Integration\Electron2D.Tests.Integration.cspr
 Полные проверки:
 
 ```powershell
-dotnet run --project eng\Electron2D.Build -- verify licenses
-dotnet run --project eng\Electron2D.Build -- test --timeout-seconds 3600
+dotnet run --project eng/Electron2D.Build -- verify licenses
+dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600
 dotnet build src\Electron2D.sln -c Release
 ```

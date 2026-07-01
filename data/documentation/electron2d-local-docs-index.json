@@ -129,7 +129,7 @@
       },
       {
         "path": "docs/editor/editor-project-shell.md",
-        "sha256": "693954d870e08e92cd8ad111b50200c7d0ee56994336ed310a5c3ef943b25aa9"
+        "sha256": "473b75317c22e93315a64547be39c20b0c3424d1f4d67702467e10610efa5a5c"
       },
       {
         "path": "docs/editor/editor-shell-layout.md",
@@ -149,7 +149,7 @@
       },
       {
         "path": "docs/editor/project-manager.md",
-        "sha256": "15d4f148d6516ee2b253170f8babb04afc3dd7ff1fd9648791eca3f35f6d5be7"
+        "sha256": "7d7d6c833d1a9b93b4d19d69caac0d6dc17d4ed63d6583ddbce17eb6db8dd9ae"
       },
       {
         "path": "docs/editor/project-settings-ui.md",
@@ -417,7 +417,7 @@
       },
       {
         "path": "docs/release-management/test-infrastructure.md",
-        "sha256": "13b92b484b402c6740ca35465f2236fe83a8e57c6c907b4ff3a1fb1a815ea705"
+        "sha256": "c68fb4b7cabbe36a0739340cbddca1a82867fdfdc3eda0f937747922633c7bdb"
       },
       {
         "path": "docs/releases/0.1.0-preview.md",
@@ -1244,7 +1244,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "e11319ecfc3928e2faede471ea595e4cd2f1c84da7ff87749e71511d67a960f3",
+    "sourceDigest": "378f7a8e45d20421520487a3613954ad2eae6cd0dbd67a0ac9af4b4fd9925592",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

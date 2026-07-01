@@ -28,8 +28,8 @@
 - `tests/Electron2D.Tests.RuntimeSmoke/` - короткие проверки загрузки сборки среды выполнения и запуска будущей среды выполнения.
 - `tests/Electron2D.Tests.GoldenData/` - golden-data проверки сериализации, импортов и стабильных артефактов.
 - `dotnet run --project eng/Electron2D.Build -- test` - единая C#-команда проверки тестовых проектов.
-- CI после `dotnet restore src/Electron2D.sln` должен выполнить одну сборку решения `dotnet build src/Electron2D.sln --no-restore`, затем запускать тесты как `dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --no-build --no-restore`, чтобы `Electron2D.Tests.Integration` не пересобирал проект и все ссылки на каждом тестовом проекте.
-- Для обычного ежедневного цикла разработки и основного задания CI команда поддерживает `--integration-slice fast`: unit-тесты, короткие проверки запуска среды выполнения, golden-data проверки и быстрый срез `Electron2D.Tests.Integration` без проверок внутреннего инструмента репозитория, аудиторского пакета, внешних процессов и медленных тестов.
+- CI после `dotnet restore src/Electron2D.sln` должен выполнить одну сборку решения `dotnet build src/Electron2D.sln --no-restore`, затем запускать тесты как `dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice fast --no-build --no-restore`, чтобы `Electron2D.Tests.Integration` не пересобирал проект и все ссылки на каждом тестовом проекте.
+- Для обычного ежедневного цикла разработки и основного задания CI команда поддерживает `--integration-slice fast`: unit-тесты, короткие проверки запуска среды выполнения, golden-data проверки и быстрый срез `Electron2D.Tests.Integration` без проверок внутреннего инструмента репозитория, аудиторского пакета, внешних процессов, медленных тестов и двух проверок резервного представителя кадра, которым на GitHub runners нужен доступный видеодрайвер: `RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnsupportedTextureResource` и `RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnknownRenderCommandKind`.
 - Тяжёлые срезы интеграционных тестов запускаются отдельными параллельными заданиями CI: `repository-tooling`, `audit-package`, `external-process`, `slow`. Они запускают только `tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj` с профильным фильтром.
 
 ## Baseline-режим
@@ -59,7 +59,7 @@ dotnet run --project eng/Electron2D.Build -- test
 dotnet run --project eng/Electron2D.Build -- test --no-build --no-restore
 ```
 
-Быстрый срез для обычной работы над задачей:
+Быстрый срез для обычной работы над задачей и основного задания CI:
 
 ```bash
 dotnet run --project eng/Electron2D.Build -- test --integration-slice fast --no-build --no-restore
