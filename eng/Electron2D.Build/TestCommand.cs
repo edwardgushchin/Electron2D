@@ -46,6 +46,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private const string AuditTierFast = "Fast";
     private const string AuditTierMedium = "Medium";
     private const string AuditTierHeavy = "Heavy";
+    private const string BuildToolNoBuildEnvironmentVariable = "ELECTRON2D_BUILD_TOOL_NO_BUILD";
     private static readonly Regex DotnetTestSummaryPattern = new(
         @"Failed:\s*(?<failed>\d+),\s*Passed:\s*(?<passed>\d+),\s*Skipped:\s*(?<skipped>\d+),\s*Total:\s*(?<total>\d+)",
         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
@@ -136,6 +137,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         var stopwatch = Stopwatch.StartNew();
         var summary = new TestCommandRunSummary();
         var testProjects = GetTestProjects(options);
+        var testEnvironment = CreateDotnetTestEnvironment(options);
         foreach (var project in testProjects)
         {
             var step = $"test {project}";
@@ -155,7 +157,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                     "dotnet",
                     arguments,
                     repositoryRoot,
-                    TimeSpan.FromSeconds(options.TimeoutSeconds)),
+                    TimeSpan.FromSeconds(options.TimeoutSeconds),
+                    testEnvironment),
                 cancellationToken).ConfigureAwait(false);
             summary.ChildProcesses++;
 
@@ -369,6 +372,19 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         ]);
 
         return arguments.ToArray();
+    }
+
+    private static IReadOnlyDictionary<string, string>? CreateDotnetTestEnvironment(TestCommandOptions options)
+    {
+        if (!options.NoBuild)
+        {
+            return null;
+        }
+
+        return new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            [BuildToolNoBuildEnvironmentVariable] = "1"
+        };
     }
 
     private static string? CreateFilter(string project, TestCommandOptions options)

@@ -2347,7 +2347,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         var bytes = await File.ReadAllBytesAsync(absolutePath, cancellationToken).ConfigureAwait(false);
         ValidateStaticAuditRequestBytes(bytes, repoRoot, "audit package");
-        return new StaticAuditRequest(absolutePath, bytes);
+        return new StaticAuditRequest(absolutePath, NormalizeRestorableBytes(bytes));
     }
 
     private static void ValidateStaticAuditRequestBytes(byte[] bytes, string repoRoot, string step)

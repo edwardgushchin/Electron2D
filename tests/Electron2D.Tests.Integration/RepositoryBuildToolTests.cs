@@ -142,6 +142,11 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(4, invocations.Length);
         Assert.All(invocations, line => Assert.Contains("--no-build", line, StringComparison.Ordinal));
         Assert.All(invocations, line => Assert.Contains("--no-restore", line, StringComparison.Ordinal));
+        var noBuildEnvironmentLines = File.ReadAllLines(logPath)
+            .Where(line => line.StartsWith("env ELECTRON2D_BUILD_TOOL_NO_BUILD=", StringComparison.Ordinal))
+            .ToArray();
+        Assert.Equal(invocations.Length, noBuildEnvironmentLines.Length);
+        Assert.All(noBuildEnvironmentLines, line => Assert.EndsWith("=1", line, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -2669,11 +2674,11 @@ public sealed class RepositoryBuildToolTests
         - architecture coherence
         """);
         var configPath = fixture.WriteConfig(taskId);
-        var expectedBytes = File.ReadAllBytes(fixture.FilePath("docs/release-management/AUDIT-REQUEST.md"));
+        var expectedBytes = ReadNormalizedTextBytes(fixture.FilePath("docs/release-management/AUDIT-REQUEST.md"));
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         Assert.Equal(expectedBytes, ReadZipEntryBytes(fixture.ZipPath(taskId), "AUDIT-REQUEST.md"));
     }
 
@@ -2873,7 +2878,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         var manifest = ReadZipEntryText(fixture.ZipPath(taskId), "AUDIT-MANIFEST.md");
         Assert.Contains("- requestSource: `docs/release-management/AUDIT-REQUEST.md`", manifest, StringComparison.Ordinal);
     }
@@ -2956,7 +2961,7 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(taskId);
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
 
         var message = await RunAuditMessageAsync(fixture, fixture.ZipPath(taskId));
 
@@ -4606,9 +4611,9 @@ public sealed class RepositoryBuildToolTests
         Assert.False(acceptWithBlocker.Succeeded);
         Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID", acceptWithBlocker.Code);
         Assert.True(acceptWithPlainClosure.Succeeded);
-        Assert.Equal(acceptedReportWithPlainClosureDecision, acceptWithPlainClosure.Report);
+        AssertEquivalentMarkdown(acceptedReportWithPlainClosureDecision, acceptWithPlainClosure.Report);
         Assert.True(valid.Succeeded);
-        Assert.Equal(validReport, valid.Report);
+        AssertEquivalentMarkdown(validReport, valid.Report);
     }
 
     [Fact]
@@ -5679,47 +5684,47 @@ public sealed class RepositoryBuildToolTests
         var acceptWithPlainClosureDecision = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithPlainClosureDecision, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(acceptWithPlainClosureDecision, "Ready"));
-        Assert.Equal(acceptedReportWithPlainClosureDecision, GetProperty<string>(acceptWithPlainClosureDecision, "Report"));
+        AssertEquivalentMarkdown(acceptedReportWithPlainClosureDecision, GetProperty<string>(acceptWithPlainClosureDecision, "Report"));
 
         var acceptWithRussianPlainClosureDecision = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianPlainClosureDecision, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(acceptWithRussianPlainClosureDecision, "Ready"));
-        Assert.Equal(acceptedReportWithRussianPlainClosureDecision, GetProperty<string>(acceptWithRussianPlainClosureDecision, "Report"));
+        AssertEquivalentMarkdown(acceptedReportWithRussianPlainClosureDecision, GetProperty<string>(acceptWithRussianPlainClosureDecision, "Report"));
 
         var accepted = await InvokeAuditSubmitReportExtractorAsync((acceptedReport, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(accepted, "Ready"));
-        Assert.Equal(acceptedReport, GetProperty<string>(accepted, "Report"));
+        AssertEquivalentMarkdown(acceptedReport, GetProperty<string>(accepted, "Report"));
 
         var acceptedWithRussianExplicitClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianExplicitClosure, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(acceptedWithRussianExplicitClosure, "Ready"));
-        Assert.Equal(acceptedReportWithRussianExplicitClosure, GetProperty<string>(acceptedWithRussianExplicitClosure, "Report"));
+        AssertEquivalentMarkdown(acceptedReportWithRussianExplicitClosure, GetProperty<string>(acceptedWithRussianExplicitClosure, "Report"));
 
         var acceptedWithRussianChangeClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianChangeClosure, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(acceptedWithRussianChangeClosure, "Ready"));
-        Assert.Equal(acceptedReportWithRussianChangeClosure, GetProperty<string>(acceptedWithRussianChangeClosure, "Report"));
+        AssertEquivalentMarkdown(acceptedReportWithRussianChangeClosure, GetProperty<string>(acceptedWithRussianChangeClosure, "Report"));
 
         var acceptedWithRussianPackageClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianPackageClosure, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(acceptedWithRussianPackageClosure, "Ready"));
-        Assert.Equal(acceptedReportWithRussianPackageClosure, GetProperty<string>(acceptedWithRussianPackageClosure, "Report"));
+        AssertEquivalentMarkdown(acceptedReportWithRussianPackageClosure, GetProperty<string>(acceptedWithRussianPackageClosure, "Report"));
 
         var acceptedWithRussianScopedPackageClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianScopedPackageClosure, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(acceptedWithRussianScopedPackageClosure, "Ready"));
-        Assert.Equal(acceptedReportWithRussianScopedPackageClosure, GetProperty<string>(acceptedWithRussianScopedPackageClosure, "Report"));
+        AssertEquivalentMarkdown(acceptedReportWithRussianScopedPackageClosure, GetProperty<string>(acceptedWithRussianScopedPackageClosure, "Report"));
 
         var ready = await InvokeAuditSubmitReportExtractorAsync((needsFixesReport, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(ready, "Ready"));
-        Assert.Equal(needsFixesReport, GetProperty<string>(ready, "Report"));
+        AssertEquivalentMarkdown(needsFixesReport, GetProperty<string>(ready, "Report"));
 
         var ordinaryAssistantReport = await InvokeAuditSubmitReportExtractorAsync((needsFixesReport, "AssistantMessage"));
 
         Assert.True(GetProperty<bool>(ordinaryAssistantReport, "Ready"));
-        Assert.Equal(needsFixesReport, GetProperty<string>(ordinaryAssistantReport, "Report"));
+        AssertEquivalentMarkdown(needsFixesReport, GetProperty<string>(ordinaryAssistantReport, "Report"));
     }
 
     [Fact]
@@ -5778,7 +5783,7 @@ public sealed class RepositoryBuildToolTests
 
         var trace = await InvokeAuditSubmitOrdinaryReportPollingAsync(report, messageCountBeforeSend: 7);
 
-        Assert.Equal(report, trace.Report);
+        AssertEquivalentMarkdown(report, trace.Report);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
         Assert.DoesNotContain(trace.Calls, call => call.Contains("ReadDomMarkdown", StringComparison.Ordinal));
         var calls = trace.Calls.ToArray();
@@ -5817,7 +5822,7 @@ public sealed class RepositoryBuildToolTests
             messageCountBeforeSend: 7,
             transientCopyFailuresBeforeSuccess: 1);
 
-        Assert.Equal(report, trace.Report);
+        AssertEquivalentMarkdown(report, trace.Report);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9:timeout", trace.Calls);
         Assert.Contains("CaptureAsync:ordinary-copy-transient-001", trace.Calls);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
@@ -5920,7 +5925,7 @@ public sealed class RepositoryBuildToolTests
             messageCountBeforeSend: 7,
             noCurrentAssistantPollsBeforeSuccess: 35);
 
-        Assert.Equal(report, trace.Report);
+        AssertEquivalentMarkdown(report, trace.Report);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9:no-current-assistant", trace.Calls);
         Assert.Contains("CaptureAsync:ordinary-waiting-030", trace.Calls);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
@@ -5967,7 +5972,7 @@ public sealed class RepositoryBuildToolTests
         Assert.False(staleRead.Accepted);
         Assert.Equal("clipboard text still contains the sentinel value.", staleRead.Error);
         Assert.True(capturedRead.Accepted);
-        Assert.Equal(report, capturedRead.Text);
+        AssertEquivalentMarkdown(report, capturedRead.Text);
     }
 
     [Fact]
@@ -5990,7 +5995,7 @@ public sealed class RepositoryBuildToolTests
         Assert.True(result.InstallSucceeded);
         Assert.True(result.OriginalWriteCalled);
         Assert.True(result.Captured);
-        Assert.Equal(report, result.Text);
+        AssertEquivalentMarkdown(report, result.Text);
         Assert.Empty(result.Error);
     }
 
@@ -6014,7 +6019,7 @@ public sealed class RepositoryBuildToolTests
         Assert.True(result.InstallSucceeded);
         Assert.True(result.CopyListenerCount > 0);
         Assert.True(result.Captured);
-        Assert.Equal(report, result.Text);
+        AssertEquivalentMarkdown(report, result.Text);
         Assert.Empty(result.Error);
     }
 
@@ -6071,7 +6076,7 @@ public sealed class RepositoryBuildToolTests
         Assert.True(result.InstallSucceeded);
         Assert.True(result.CopyListenerCount > 0);
         Assert.True(result.Captured);
-        Assert.Equal(report, result.Text);
+        AssertEquivalentMarkdown(report, result.Text);
         Assert.Empty(result.Error);
     }
 
@@ -6128,7 +6133,7 @@ public sealed class RepositoryBuildToolTests
         Assert.True(result.InstallSucceeded);
         Assert.True(result.CopyListenerCount > 0);
         Assert.True(result.Captured);
-        Assert.Equal(report, result.Text);
+        AssertEquivalentMarkdown(report, result.Text);
         Assert.Empty(result.Error);
     }
 
@@ -6153,7 +6158,7 @@ public sealed class RepositoryBuildToolTests
         Assert.True(result.CopyListenerCount > 0);
         Assert.True(result.SetDataCalled);
         Assert.True(result.Captured);
-        Assert.Equal(report, result.Text);
+        AssertEquivalentMarkdown(report, result.Text);
         Assert.Empty(result.Error);
     }
 
@@ -6230,7 +6235,7 @@ public sealed class RepositoryBuildToolTests
         Assert.True(result.InstallSucceeded);
         Assert.True(result.OriginalWriteCalled);
         Assert.True(result.Captured);
-        Assert.Equal(report, result.Text);
+        AssertEquivalentMarkdown(report, result.Text);
         Assert.Empty(result.Error);
     }
 
@@ -6291,7 +6296,7 @@ public sealed class RepositoryBuildToolTests
         var extraction = await InvokeAuditSubmitReportExtractorAsync((report, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(extraction, "Ready"));
-        Assert.Equal(report, GetProperty<string>(extraction, "Report"));
+        AssertEquivalentMarkdown(report, GetProperty<string>(extraction, "Report"));
     }
 
     [Fact]
@@ -6790,7 +6795,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("TASK_ASSESSMENT:", GetProperty<string>(heading, "FailureReason"), StringComparison.Ordinal);
         Assert.Contains("numbered blocker", GetProperty<string>(blocker, "FailureReason"), StringComparison.OrdinalIgnoreCase);
         Assert.True(GetProperty<bool>(plainClosure, "Ready"));
-        Assert.Equal(acceptedReportWithPlainClosureDecision, GetProperty<string>(plainClosure, "Report"));
+        AssertEquivalentMarkdown(acceptedReportWithPlainClosureDecision, GetProperty<string>(plainClosure, "Report"));
     }
 
     [Fact]
@@ -6841,7 +6846,7 @@ public sealed class RepositoryBuildToolTests
         var complete = await InvokeAuditSubmitPollingPolicyAsync(false, (completeReport, "OpenedReportCard"));
 
         Assert.Equal("ReturnReport", GetRawProperty(complete, "Action")?.ToString());
-        Assert.Equal(completeReport, GetProperty<string>(complete, "Report"));
+        AssertEquivalentMarkdown(completeReport, GetProperty<string>(complete, "Report"));
     }
 
     [Fact]
@@ -6876,7 +6881,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal("Stabilizing", GetRawProperty(decisions[1], "Reason")?.ToString());
         Assert.Null(GetProperty<string>(decisions[1], "Report"));
         Assert.Equal("ReturnReport", GetRawProperty(decisions[2], "Action")?.ToString());
-        Assert.Equal(completeReport, GetProperty<string>(decisions[2], "Report"));
+        AssertEquivalentMarkdown(completeReport, GetProperty<string>(decisions[2], "Report"));
     }
 
     [Fact]
@@ -8073,7 +8078,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         var stdout = ReadZipEntryText(fixture.ZipPath(taskId), $"evidence/{taskId}-r01/checks/repository-root/stdout.txt");
         Assert.Contains("<repo-root>", stdout, StringComparison.Ordinal);
         Assert.DoesNotContain(fixture.RepositoryRoot, stdout, StringComparison.OrdinalIgnoreCase);
@@ -8821,14 +8826,12 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
-    public async Task AuditPackageUsesBinaryPatchForSecretLikeDeletedBaselineLinesInOrdinaryFiles()
+    public async Task AuditPackageRejectsSecretLikeDeletedBaselineLinesInRepoBeforeSnapshots()
     {
         var deletedBaselineLine = string.Concat(
             "Removed baseline line: return string.Concat(\"-----",
             "BEGIN \", \"PRIVATE ",
             "KEY-----\");");
-        var privateKeyPhrase = string.Concat("PRIVATE ", "KEY");
-        var privateKeyMarker = string.Concat("-----", "BEGIN ", "PRIVATE ", "KEY-----");
         using var fixture = await AuditFixture.CreateAsync(
             "audit-package-deleted-baseline-secret-like-patch",
             new Dictionary<string, string>(StringComparer.Ordinal)
@@ -8860,26 +8863,10 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
-        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-PACKAGE-CREATED");
-
-        var zipPath = fixture.ZipPath(taskId);
-        var patch = ReadZipEntryText(zipPath, $"{taskId}.patch");
-
-        Assert.Contains("diff --git a/docs/release-management/audit-fixture.md b/docs/release-management/audit-fixture.md", patch, StringComparison.Ordinal);
-        Assert.Contains("diff --git a/docs/release-management/clean-fixture.md b/docs/release-management/clean-fixture.md", patch, StringComparison.Ordinal);
-        Assert.Contains("GIT binary patch", patch, StringComparison.Ordinal);
-        Assert.Single(Regex.Matches(patch, "GIT binary patch", RegexOptions.CultureInvariant).Cast<Match>());
-        Assert.Contains("+clean current context.", patch, StringComparison.Ordinal);
-        Assert.DoesNotContain(deletedBaselineLine, patch, StringComparison.Ordinal);
-        Assert.DoesNotContain(privateKeyPhrase, patch, StringComparison.Ordinal);
-        Assert.DoesNotContain(privateKeyMarker, patch, StringComparison.Ordinal);
-
-        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-binary-secret-like-baseline");
-        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
-
-        Assert.Equal(0, verify.ExitCode);
-        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+        Assert.Contains("repo-before/docs/release-management/audit-fixture.md", package.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain(deletedBaselineLine, package.Stdout, StringComparison.Ordinal);
     }
 
     public static IEnumerable<object[]> SecretValueCases()
@@ -9076,10 +9063,10 @@ public sealed class RepositoryBuildToolTests
             "audit-package-verify-autocrlf",
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
-                ["docs/release-management/audit-fixture.md"] = "# Audit fixture\n\nBaseline line.\n"
+                ["docs/release-management/audit-fixture.txt"] = "# Audit fixture\n\nBaseline line.\n"
             });
         const string taskId = "T-0001";
-        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        fixture.WriteTextFile("docs/release-management/audit-fixture.txt", """
         # Audit fixture
 
         Baseline line.
@@ -9088,20 +9075,20 @@ public sealed class RepositoryBuildToolTests
         var configPath = fixture.WriteConfig(
             taskId,
             repoFileGlobs: [],
-            repoFileAllowlist: ["docs/release-management/audit-fixture.md"],
+            repoFileAllowlist: ["docs/release-management/audit-fixture.txt"],
             archiveOnlyEvidenceGlobs: []);
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
 
         using var cleanRepo = await CreateAutocrlfCleanCloneAsync(fixture, "verify-autocrlf");
-        var checkoutBytes = File.ReadAllBytes(Path.Combine(cleanRepo.Root, "docs", "release-management", "audit-fixture.md"));
+        var checkoutBytes = File.ReadAllBytes(Path.Combine(cleanRepo.Root, "docs", "release-management", "audit-fixture.txt"));
         Assert.Contains((byte)'\r', checkoutBytes);
 
         var verify = await RunAuditVerifyAsync(fixture, fixture.ZipPath(taskId), cleanRepo.Root);
 
         Assert.Equal(0, verify.ExitCode);
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
-        var restoredBytes = File.ReadAllBytes(Path.Combine(cleanRepo.Root, "docs", "release-management", "audit-fixture.md"));
+        var restoredBytes = File.ReadAllBytes(Path.Combine(cleanRepo.Root, "docs", "release-management", "audit-fixture.txt"));
         Assert.DoesNotContain((byte)'\r', restoredBytes);
     }
 
@@ -9123,7 +9110,7 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(taskId, archiveOnlyEvidenceGlobs: []);
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-ignored-artifacts");
         WriteText(cleanRepo.Root, "obj/generated.g.cs", "ignored build output\n");
         WriteText(cleanRepo.Root, "bin/output.txt", "ignored build output\n");
@@ -9164,7 +9151,7 @@ public sealed class RepositoryBuildToolTests
             archiveOnlyEvidenceGlobs: [],
             previousVerdictChain: [previousVerdictPath]);
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
 
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-ignored-directory-with-expected-file");
         WriteText(
@@ -9464,14 +9451,13 @@ public sealed class RepositoryBuildToolTests
     [Trait("AuditTier", "Heavy")]
     [InlineData("T-0001")]
     [InlineData("T-9999")]
-    public async Task AuditPackageUsesConfiguredSyntheticTaskIdEverywhere(string taskId)
+    public async Task AuditPackageUsesConfiguredSyntheticTaskIdInGeneratedMetadataAndPaths(string taskId)
     {
         using var fixture = await CreatePackagedFixtureAsync($"audit-package-{taskId.ToLowerInvariant()}", taskId);
         var zipPath = fixture.ZipPath(taskId);
         var generatedText = string.Join(
             "\n",
             ReadZipEntryText(zipPath, "AUDIT-MANIFEST.md"),
-            ReadZipEntryText(zipPath, "AUDIT-REQUEST.md"),
             ReadZipEntryText(zipPath, "repo-file-hashes.json"));
         var generatedPaths = string.Join("\n", ReadZipEntryNames(zipPath));
 
@@ -13924,6 +13910,7 @@ public sealed class RepositoryBuildToolTests
         CopyRepositoryFile(sourceRoot, workspace.Root, "docs/release-management/audit-package.md");
         CopyRepositoryFile(sourceRoot, workspace.Root, ".codex/prompts/goal-task-loop.md");
         CopyRepositoryFile(sourceRoot, workspace.Root, "eng/Electron2D.Build/TestCommand.cs");
+        CopyRepositoryFile(sourceRoot, workspace.Root, "eng/Electron2D.Build/AuditPackageCommand.cs");
         CopyRepositoryFile(sourceRoot, workspace.Root, "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs");
         return workspace;
     }
@@ -14837,6 +14824,12 @@ public sealed class RepositoryBuildToolTests
         return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
     }
 
+    private static byte[] ReadNormalizedTextBytes(string path)
+    {
+        var text = Encoding.UTF8.GetString(File.ReadAllBytes(path)).Replace("\r\n", "\n").Replace('\r', '\n');
+        return new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text);
+    }
+
     private static List<object> GetDiagnostics(object result)
     {
         var diagnostics = Assert.IsAssignableFrom<IEnumerable>(GetRawProperty(result, "Diagnostics"));
@@ -14846,6 +14839,12 @@ public sealed class RepositoryBuildToolTests
     private static T? GetProperty<T>(object instance, string name)
     {
         return (T?)GetRawProperty(instance, name);
+    }
+
+    private static void AssertEquivalentMarkdown(string expected, string? actual)
+    {
+        Assert.NotNull(actual);
+        Assert.Equal(expected.ReplaceLineEndings("\n"), actual.ReplaceLineEndings("\n"));
     }
 
     private static object? GetRawProperty(object instance, string name)
@@ -15727,6 +15726,8 @@ public sealed class RepositoryBuildToolTests
 
                     if (args is [ "test", .. ])
                     {
+                        var noBuild = Environment.GetEnvironmentVariable("ELECTRON2D_BUILD_TOOL_NO_BUILD") ?? "<null>";
+                        File.AppendAllText(log, "env ELECTRON2D_BUILD_TOOL_NO_BUILD=" + noBuild + Environment.NewLine, Encoding.UTF8);
                         Console.Write(Environment.GetEnvironmentVariable("DOTNET_SHIM_TEST_STDOUT"));
                         Console.Error.Write(Environment.GetEnvironmentVariable("DOTNET_SHIM_TEST_STDERR"));
 

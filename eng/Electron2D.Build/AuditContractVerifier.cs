@@ -175,6 +175,12 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             ["E2D-BUILD-TEST-SLICE-SUMMARY", "TryParseDotnetTestCounts", "childProcesses", "failure={failure}"]);
         CheckContainsAll(
             checks,
+            "test-command-no-build-environment",
+            documents.TestCommandPath,
+            documents.TestCommandText,
+            ["ELECTRON2D_BUILD_TOOL_NO_BUILD", "CreateDotnetTestEnvironment", "BuildToolNoBuildEnvironmentVariable"]);
+        CheckContainsAll(
+            checks,
             "operator-workflow-summary",
             documents.AuditPackageCommandPath,
             documents.AuditPackageCommandText,
@@ -189,6 +195,7 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
                 "AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers",
                 "AuditWorkflowMediumAuditTierDoesNotUseHeavyPackagingHelpers",
                 "TestCommandAuditTierIntegrationSlicesPrintSummary",
+                "env ELECTRON2D_BUILD_TOOL_NO_BUILD=",
                 "Trait(\"AuditTier\", \"Fast\")",
                 "Trait(\"AuditTier\", \"Medium\")",
                 "Trait(\"AuditTier\", \"Heavy\")"

@@ -739,6 +739,14 @@ internal sealed class ProcessRunner
             startInfo.ArgumentList.Add(argument);
         }
 
+        if (request.EnvironmentVariables is not null)
+        {
+            foreach (var variable in request.EnvironmentVariables)
+            {
+                startInfo.Environment[variable.Key] = variable.Value;
+            }
+        }
+
         using var process = new Process { StartInfo = startInfo };
 
         try
@@ -899,7 +907,8 @@ internal sealed record ProcessRunRequest(
     string FileName,
     string[] Arguments,
     string WorkingDirectory,
-    TimeSpan Timeout);
+    TimeSpan Timeout,
+    IReadOnlyDictionary<string, string>? EnvironmentVariables = null);
 
 internal sealed record ProcessRunResult(
     string StepName,
