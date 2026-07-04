@@ -638,6 +638,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         {
             ValidateCheck(check);
         }
+
+        ValidateAuditLoopClosureConfiguration(config);
     }
 
     private static void ValidateScopeMetadata(AuditPackageConfiguration config)
@@ -688,6 +690,42 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         ValidateDotnetTestFilter(check);
+    }
+
+    private static void ValidateAuditLoopClosureConfiguration(AuditPackageConfiguration config)
+    {
+        if (config.PreviousVerdictChain.Count == 0)
+        {
+            return;
+        }
+
+        if (config.BlockerClosureList.Count == 0)
+        {
+            throw new AuditPackageFailure(
+                "audit package",
+                "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                "previousVerdictChain is not empty, so blockerClosureList must describe the local checks that close previous blockers.");
+        }
+
+        if (config.PreviousVerdictChain.Count > 2 &&
+            !config.Checks.Any(check => string.Equals(check.Name, "audit-loop-stabilization", StringComparison.Ordinal)))
+        {
+            throw new AuditPackageFailure(
+                "audit package",
+                "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                "External audit loop exceeded the ordinary budget; add a configured check named audit-loop-stabilization before creating another package.");
+        }
+
+        foreach (var closure in config.BlockerClosureList)
+        {
+            if (!config.Checks.Any(check => closure.Contains(check.Name, StringComparison.Ordinal)))
+            {
+                throw new AuditPackageFailure(
+                    "audit package",
+                    "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                    "Each blockerClosureList entry must name at least one configured check from the current package.");
+            }
+        }
     }
 
     private static void ValidateDotnetTestFilter(AuditCheckConfiguration check)

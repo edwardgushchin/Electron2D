@@ -20,7 +20,8 @@ riderModule.iml
 .codex/*
 !.codex/prompts/
 .codex/prompts/*
-!.codex/prompts/goal-task-loop.md
+!.codex/prompts/goal-prompt.md
+!.codex/prompts/goal-task-workflow.md
 
 # Test and coverage output
 TestResults/

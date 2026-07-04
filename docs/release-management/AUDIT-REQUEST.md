@@ -77,6 +77,21 @@
 - `out-of-scope/info note` — заметка вне текущей области или нейтральная информация. В отчёте оформляйте как `OUT_OF_SCOPE_NOTE N1` или `INFO_NOTE I1`.
 - `accepted risk` — явно принятый риск текущего изменения. В отчёте оформляйте как `ACCEPTED_RISK R1` с причиной принятия и моментом следующего пересмотра.
 - `global safety blocker` — проблема безопасности, секреты, разрушительные действия, подмена verdict-а или обход аудиторского процесса. Это не заметка и не принятый риск, а блокирующая проблема текущего аудита.
+- `unsupported concern` — подозрение, которое не имеет достаточного доказательства в текущем пакете. Оно не запрещает `VERDICT: ACCEPT`. Оформляйте его как `INFO_NOTE` с объяснением, каких доказательств не хватает.
+
+## Правило доказанного blocker-а
+
+Правильный итог аудита может быть `VERDICT: ACCEPT`. Не создавайте блокирующую проблему только потому, что можно представить улучшение, альтернативный дизайн или гипотетический риск.
+
+Запись в `BLOCKERS` допустима только если одновременно выполнены все условия:
+
+1. проблема нарушает явный критерий текущей области аудита;
+2. доказательство находится в текущем пакете, а не в догадке о возможном поведении;
+3. можно указать точный файл, секцию, символ, команду, артефакт или проверенный фрагмент evidence;
+4. влияние делает приёмку текущей задачи небезопасной или некорректной;
+5. проблема не закрыта существующим тестом, документированным ограничением, принятым риском или `out-of-scope` решением.
+
+Перед финальным `VERDICT: NEEDS_FIXES` попытайтесь опровергнуть каждый найденный blocker по материалам пакета: проверьте тесты, документацию, metadata, evidence и ограничения текущей области. Если blocker выжил после такой проверки, добавьте в его описание короткую строку `Проверка опровержения`: что именно было проверено и почему это не сняло blocker. Если хотя бы одно из пяти условий выше не доказано, это `unsupported concern`, `FOLLOW_UP_FINDING`, `OUT_OF_SCOPE_NOTE`, `INFO_NOTE` или `ACCEPTED_RISK`, но не blocker.
 
 ## Читаемость отчёта
 
@@ -132,7 +147,7 @@
 - Первая непустая строка финального отчёта должна быть строго `VERDICT: ACCEPT` или `VERDICT: NEEDS_FIXES`.
 - Если ответ нарушает этот контракт, сторона приёмки обязана считать аудит неполным, даже если в тексте встречается `VERDICT: ACCEPT`.
 
-Машинные маркеры этого контракта: `metadata.taskId`, `metadata.iteration`, `metadata.scopeTaskIds`, `metadata.scopeSummary`, `combined scope`, `metadata.previousVerdictChain`, `metadata.blockerClosureList`, `previous verdict files`, `verbatim preservation`, `previous blockers closure`, `metadata/repo-file-snapshots.json`, `repo-after/`, `repo-before/`, `implementation content review`, `test coverage review`, `documentation review`, `task compliance review`, `secret scanning`, `scope scanning`, `evidence gap`, `patch-only inspection`, `single final report`, `no intermediate VERDICT`, `full current-scope engineering review`, `FOLLOW_UP_FINDING`, `OUT_OF_SCOPE_NOTE`, `ACCEPTED_RISK`, `INFO_NOTE`, `global safety blocker`, `architecture coherence`.
+Машинные маркеры этого контракта: `metadata.taskId`, `metadata.iteration`, `metadata.scopeTaskIds`, `metadata.scopeSummary`, `combined scope`, `metadata.previousVerdictChain`, `metadata.blockerClosureList`, `previous verdict files`, `verbatim preservation`, `previous blockers closure`, `metadata/repo-file-snapshots.json`, `repo-after/`, `repo-before/`, `implementation content review`, `test coverage review`, `documentation review`, `task compliance review`, `secret scanning`, `scope scanning`, `evidence gap`, `patch-only inspection`, `single final report`, `no intermediate VERDICT`, `full current-scope engineering review`, `evidence-backed blocker`, `blocker disproof`, `unsupported concern`, `FOLLOW_UP_FINDING`, `OUT_OF_SCOPE_NOTE`, `ACCEPTED_RISK`, `INFO_NOTE`, `global safety blocker`, `architecture coherence`.
 
 Ответ должен быть строгим и пригодным для сохранения в `docs/verdicts/`. Первая строка ответа должна быть строго одной из двух:
 

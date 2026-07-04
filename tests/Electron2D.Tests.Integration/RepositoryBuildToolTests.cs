@@ -2678,6 +2678,9 @@ public sealed class RepositoryBuildToolTests
         - single final report
         - no intermediate VERDICT
         - full current-scope engineering review
+        - evidence-backed blocker
+        - blocker disproof
+        - unsupported concern
         - FOLLOW_UP_FINDING
         - OUT_OF_SCOPE_NOTE
         - ACCEPTED_RISK
@@ -2724,6 +2727,9 @@ public sealed class RepositoryBuildToolTests
     [InlineData("RISKS_AND_NOTES")]
     [InlineData("CLOSURE_DECISION")]
     [InlineData("full current-scope engineering review")]
+    [InlineData("evidence-backed blocker")]
+    [InlineData("blocker disproof")]
+    [InlineData("unsupported concern")]
     [InlineData("FOLLOW_UP_FINDING")]
     [InlineData("OUT_OF_SCOPE_NOTE")]
     [InlineData("ACCEPTED_RISK")]
@@ -2964,6 +2970,9 @@ public sealed class RepositoryBuildToolTests
         single final report
         no intermediate VERDICT
         full current-scope engineering review
+        evidence-backed blocker
+        blocker disproof
+        unsupported concern
         FOLLOW_UP_FINDING
         OUT_OF_SCOPE_NOTE
         ACCEPTED_RISK
@@ -7068,37 +7077,75 @@ public sealed class RepositoryBuildToolTests
         var agents = File.ReadAllText(
             Path.Combine(repositoryRoot, "AGENTS.md"),
             Encoding.UTF8);
+        var agentWorkflow = File.ReadAllText(
+            Path.Combine(repositoryRoot, "docs", "repository", "agent-workflow.md"),
+            Encoding.UTF8);
         var request = File.ReadAllText(
             Path.Combine(repositoryRoot, "docs", "release-management", "AUDIT-REQUEST.md"),
             Encoding.UTF8);
         var domainDocument = File.ReadAllText(
             Path.Combine(repositoryRoot, "docs", "release-management", "audit-package.md"),
             Encoding.UTF8);
+        var gitIgnore = File.ReadAllText(
+            Path.Combine(repositoryRoot, ".gitignore"),
+            Encoding.UTF8);
         var goalPrompt = File.ReadAllText(
-            Path.Combine(repositoryRoot, ".codex", "prompts", "goal-task-loop.md"),
+            Path.Combine(repositoryRoot, ".codex", "prompts", "goal-prompt.md"),
+            Encoding.UTF8);
+        var goalWorkflow = File.ReadAllText(
+            Path.Combine(repositoryRoot, ".codex", "prompts", "goal-task-workflow.md"),
             Encoding.UTF8);
 
         Assert.Contains("`AGENTS.md` задаёт правила работы агента", domainDocument, StringComparison.Ordinal);
         Assert.Contains("`docs/release-management/AUDIT-REQUEST.md` является только текстом для внешнего аудитора", domainDocument, StringComparison.Ordinal);
-        Assert.Contains("`.codex/prompts/goal-task-loop.md` является локальным prompt-ом оркестратора", domainDocument, StringComparison.Ordinal);
+        Assert.Contains("`.codex/prompts/goal-prompt.md` является коротким active goal prompt-ом", domainDocument, StringComparison.Ordinal);
+        Assert.Contains("`.codex/prompts/goal-task-workflow.md` является локальной workflow-моделью goal-задачи", domainDocument, StringComparison.Ordinal);
+        Assert.Contains("!.codex/prompts/goal-prompt.md", gitIgnore, StringComparison.Ordinal);
+        Assert.Contains("!.codex/prompts/goal-task-workflow.md", gitIgnore, StringComparison.Ordinal);
 
         Assert.Contains("docs/release-management/audit-package.md", agents, StringComparison.Ordinal);
         Assert.Contains("guardrails", agents, StringComparison.Ordinal);
         Assert.Contains("audit package", agents, StringComparison.Ordinal);
         Assert.Contains("audit package verify", agents, StringComparison.Ordinal);
-        Assert.Contains("VERDICT: ACCEPT", agents, StringComparison.Ordinal);
         Assert.Contains("audit submit", agents, StringComparison.Ordinal);
         Assert.Contains("--browser-backend codex-chrome", agents, StringComparison.Ordinal);
-        Assert.Contains("clean-control ZIP", agents, StringComparison.Ordinal);
-        Assert.Contains("new ChatGPT project chat", agents, StringComparison.Ordinal);
-        Assert.Contains("local conversation state", agents, StringComparison.Ordinal);
-        Assert.DoesNotContain("previousVerdictChain", agents, StringComparison.Ordinal);
-        Assert.DoesNotContain("blockerClosureList", agents, StringComparison.Ordinal);
+        Assert.Contains("docs/repository/agent-workflow.md", agents, StringComparison.Ordinal);
+        Assert.Contains("goal-task-workflow.md", agents, StringComparison.Ordinal);
+        Assert.Contains("## Repository Map", agents, StringComparison.Ordinal);
+        Assert.Contains("## Core Commands", agents, StringComparison.Ordinal);
+        Assert.Contains("## Guardrails", agents, StringComparison.Ordinal);
+        Assert.Contains("## Done Means", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("unsupported concern", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("failed disproof", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("metadata.previousVerdictChain", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("metadata.blockerClosureList", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("## External Audit Workflow", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("Subagent prompt must include", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("## Карта Репозитория", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("Перед содержательной", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("Соблюдай", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("Проверки", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("<same-accepted-path>", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("iframe[title=\"internal://deep-research\"]", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("Копировать ответ", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("переиспользуй вкладку", agents, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("закрой", agents, StringComparison.OrdinalIgnoreCase);
+
+        Assert.Contains("# Electron2D Agent Workflow", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("## Instruction Priority", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("## Language And Terms", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("## Development Diary", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("## Worktree And Commit Hygiene", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("unsupported concern", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("failed disproof", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("metadata.previousVerdictChain", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("audit-loop-stabilization", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("Subagent prompt must include", agentWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("# Рабочий протокол", agentWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("## Приоритет", agentWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("## Язык", agentWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("## Дневник", agentWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("## Проверки", agentWorkflow, StringComparison.Ordinal);
 
         Assert.DoesNotContain("Chrome", request, StringComparison.Ordinal);
         Assert.DoesNotContain("cookies", request, StringComparison.OrdinalIgnoreCase);
@@ -7109,27 +7156,38 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("ручное скачивание", request, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("вклад", request, StringComparison.OrdinalIgnoreCase);
 
-        Assert.True(goalPrompt.Length <= 4000, $"goal-task-loop.md must be no longer than 4000 characters, but was {goalPrompt.Length}.");
-        foreach (var marker in new[] { "PREFLIGHT", "WORKER", "CHECKS", "PACKAGE", "VERIFY", "SUBMIT", "VERDICT", "ACCEPT/DONE" })
+        Assert.True(goalPrompt.Length <= 3500, $"goal-prompt.md must be no longer than 3500 characters, but was {goalPrompt.Length}.");
+        Assert.StartsWith("Выполнить <task-id> по регламенту \\Electron2D\\.codex\\prompts\\goal-task-workflow.md:", goalPrompt, StringComparison.Ordinal);
+        foreach (var marker in new[] { "PREFLIGHT:", "WORKER:", "CHECKS:", "LOCAL LOOP:", "PACKAGE:", "VERIFY:", "SUBMIT:", "ACCEPT/DONE:" })
         {
-            Assert.Contains(marker, goalPrompt, StringComparison.Ordinal);
+            Assert.DoesNotContain(marker, goalPrompt, StringComparison.Ordinal);
         }
 
-        Assert.Contains("docs/release-management/audit-package.md", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("goal-task-workflow.md", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("TASKS.md", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("дневник", goalPrompt, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("audit submit", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("VERDICT: ACCEPT", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("Conventional Commit", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("verify licenses", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("--browser-backend codex-chrome", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("--reuse-conversation", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("--control-audit", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("чистый control ZIP", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("в `TASKS.md` можно указать этот путь, но не сам URL", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("previousVerdictChain", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("blockerClosureList", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("Готовый результат принимает только сохранённый файл `--out`", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("verify audit-followups", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("git status", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("# Goal Task Workflow", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("`.codex/prompts/goal-prompt.md`", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("лимит 3500 символов", goalWorkflow, StringComparison.Ordinal);
+        foreach (var marker in new[] { "PREFLIGHT", "WORK", "CHECKS", "LOCAL LOOP", "PACKAGE", "VERIFY", "SUBMIT", "VERDICT", "ACCEPT/DONE" })
+        {
+            Assert.Contains(marker, goalWorkflow, StringComparison.Ordinal);
+        }
+
+        Assert.Contains("Fast: 3 теста / 1m13s", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("Medium: 4 теста / 3m18s", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("Heavy: не запускался", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("audit-loop-stabilization", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("previousVerdictChain", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("blockerClosureList", goalWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("unsupported concern", goalWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("failed disproof", goalWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("Manual ZIP assembly", goalWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("Subagent prompt must include", goalWorkflow, StringComparison.Ordinal);
         var goalPromptWithoutBackendFlag = goalPrompt.Replace("--browser-backend codex-chrome", string.Empty, StringComparison.Ordinal);
         Assert.DoesNotContain("Verify-SourceLicenseHeaders", goalPrompt, StringComparison.Ordinal);
         Assert.DoesNotContain("powershell", goalPrompt, StringComparison.OrdinalIgnoreCase);
@@ -9189,7 +9247,8 @@ public sealed class RepositoryBuildToolTests
         var configPath = fixture.WriteConfig(
             taskId,
             archiveOnlyEvidenceGlobs: [],
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status covers previous verdict restore."]);
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
         AssertCommandSucceeded(package, "audit package");
 
@@ -9521,7 +9580,7 @@ public sealed class RepositoryBuildToolTests
         var configPath = fixture.WriteConfig(
             taskId,
             previousVerdictChain: ["docs/verdicts/release-management/t-0207-audit-r04.md"],
-            blockerClosureList: ["Закрыт blocker из T-0207: restore verification now checks exact file sets."]);
+            blockerClosureList: ["Закрыт blocker из T-0207: check git-status подтверждает exact file sets."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9536,6 +9595,119 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Equal(0, verify.ExitCode);
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
+    public async Task AuditPackageRequiresStabilizationCheckBeyondExternalLoopBudget()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-external-loop-budget");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the package a repository-owned change.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain:
+            [
+                "docs/verdicts/release-management/t-0001-audit-r01.md",
+                "docs/verdicts/release-management/t-0001-audit-r02.md",
+                "docs/verdicts/release-management/t-0001-audit-r03.md"
+            ],
+            blockerClosureList: ["B1 r03 закрыт: check git-status подтверждает локальное состояние."]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("audit-loop-stabilization", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageAllowsLongPreviousVerdictChainAfterStabilizationCheck()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-external-loop-stabilized");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the package a repository-owned change.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain:
+            [
+                "docs/verdicts/release-management/t-0001-audit-r01.md",
+                "docs/verdicts/release-management/t-0001-audit-r02.md",
+                "docs/verdicts/release-management/t-0001-audit-r03.md"
+            ],
+            blockerClosureList: ["B1 r03 закрыт: check audit-loop-stabilization проверяет класс причины."],
+            checks:
+            [
+                new AuditFixtureCheck(
+                    "audit-loop-stabilization",
+                    "git",
+                    ["status", "--short"],
+                    ".",
+                    [],
+                    10,
+                    0,
+                    [])
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-PACKAGE-CREATED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRequiresBlockerClosureListForPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-requires-closure");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the package a repository-owned change.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: ["docs/verdicts/release-management/t-0001-audit-r01.md"]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("blockerClosureList", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRequiresBlockerClosureEntriesToNameConfiguredChecks()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-closure-requires-check-name");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the package a repository-owned change.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: ["docs/verdicts/release-management/t-0001-audit-r01.md"],
+            blockerClosureList: ["B1 r01 закрыт общей фразой без имени проверки."]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("configured check", package.Stdout, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -9556,8 +9728,8 @@ public sealed class RepositoryBuildToolTests
             previousVerdictChain: ["docs/verdicts/release-management/t-0001-audit-r00.md"],
             blockerClosureList:
             [
-                "B1 r00 closed: scopeTaskIds declares the required dependency.",
-                "B2 r00 closed: blockerClosureList records the previous blocker closure."
+                "B1 r00 closed: check git-status confirms scopeTaskIds declares the required dependency.",
+                "B2 r00 closed: check git-status records the previous blocker closure."
             ]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
@@ -9569,12 +9741,12 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("\"scopeTaskIds\": [", metadata, StringComparison.Ordinal);
         Assert.Contains("\"T-0002\"", metadata, StringComparison.Ordinal);
         Assert.Contains("\"scopeSummary\": \"Combined audit scope for the primary task and its required dependency.\"", metadata, StringComparison.Ordinal);
-        Assert.Contains("B1 r00 closed: scopeTaskIds declares the required dependency.", metadata, StringComparison.Ordinal);
+        Assert.Contains("B1 r00 closed: check git-status confirms scopeTaskIds declares the required dependency.", metadata, StringComparison.Ordinal);
         Assert.Contains("- scopeTaskIds: `T-0001`, `T-0002`", manifest, StringComparison.Ordinal);
         Assert.Contains("## Previous Verdict Chain", manifest, StringComparison.Ordinal);
         Assert.Contains("docs/verdicts/release-management/t-0001-audit-r00.md", manifest, StringComparison.Ordinal);
         Assert.Contains("## Blocker Closure List", manifest, StringComparison.Ordinal);
-        Assert.Contains("B2 r00 closed: blockerClosureList records the previous blocker closure.", manifest, StringComparison.Ordinal);
+        Assert.Contains("B2 r00 closed: check git-status records the previous blocker closure.", manifest, StringComparison.Ordinal);
 
         using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-combined-scope");
         var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
@@ -9596,7 +9768,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: ["docs/release-management/audit-fixture.md"]);
+            previousVerdictChain: ["docs/release-management/audit-fixture.md"],
+            blockerClosureList: ["Fixture closure: check git-status reaches previous verdict path validation."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9679,7 +9852,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status covers previous verdict restore."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9724,7 +9898,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status covers previous verdict placeholder path."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9764,7 +9939,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status covers previous verdict placeholder secret."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9811,7 +9987,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status covers reviewer placeholder phrases."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9844,7 +10021,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status reaches reviewer suffix scan."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9894,7 +10072,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status reaches placeholder suffix scan."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9946,7 +10125,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status reaches previous verdict secret scan."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -9985,7 +10165,8 @@ public sealed class RepositoryBuildToolTests
         """);
         var configPath = fixture.WriteConfig(
             taskId,
-            previousVerdictChain: [previousVerdictPath]);
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList: ["Fixture closure: check git-status reaches previous verdict exception scan."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -13960,10 +14141,13 @@ public sealed class RepositoryBuildToolTests
         var workspace = TemporaryDirectory.Create("audit-contracts");
         Directory.CreateDirectory(Path.Combine(workspace.Root, "src"));
         WriteText(workspace.Root, "README.md", "# Temporary repository\n");
+        CopyRepositoryFile(sourceRoot, workspace.Root, ".gitignore");
         CopyRepositoryFile(sourceRoot, workspace.Root, "AGENTS.md");
         CopyRepositoryFile(sourceRoot, workspace.Root, "docs/release-management/AUDIT-REQUEST.md");
         CopyRepositoryFile(sourceRoot, workspace.Root, "docs/release-management/audit-package.md");
-        CopyRepositoryFile(sourceRoot, workspace.Root, ".codex/prompts/goal-task-loop.md");
+        CopyRepositoryFile(sourceRoot, workspace.Root, "docs/repository/agent-workflow.md");
+        CopyRepositoryFile(sourceRoot, workspace.Root, ".codex/prompts/goal-prompt.md");
+        CopyRepositoryFile(sourceRoot, workspace.Root, ".codex/prompts/goal-task-workflow.md");
         CopyRepositoryFile(sourceRoot, workspace.Root, "eng/Electron2D.Build/TestCommand.cs");
         CopyRepositoryFile(sourceRoot, workspace.Root, "eng/Electron2D.Build/AuditPackageCommand.cs");
         CopyRepositoryFile(sourceRoot, workspace.Root, "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs");
@@ -15931,6 +16115,9 @@ public sealed class RepositoryBuildToolTests
         "single final report",
         "no intermediate VERDICT",
         "full current-scope engineering review",
+        "evidence-backed blocker",
+        "blocker disproof",
+        "unsupported concern",
         "FOLLOW_UP_FINDING",
         "OUT_OF_SCOPE_NOTE",
         "ACCEPTED_RISK",
@@ -15974,6 +16161,9 @@ public sealed class RepositoryBuildToolTests
     single final report
     no intermediate VERDICT
     full current-scope engineering review
+    evidence-backed blocker
+    blocker disproof
+    unsupported concern
     FOLLOW_UP_FINDING
     OUT_OF_SCOPE_NOTE
     ACCEPTED_RISK

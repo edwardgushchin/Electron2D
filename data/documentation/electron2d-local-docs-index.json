@@ -385,7 +385,7 @@
       },
       {
         "path": "docs/release-management/AUDIT-REQUEST.md",
-        "sha256": "86b1a43f43cc59bdda3d6fee1f5a931fba9a8a5827106a17a3a99b3a2bbb0c6b"
+        "sha256": "33b5e69f249b90f0fb9be8b58f96e7287e0e72b099cd459bd17646b21203990b"
       },
       {
         "path": "docs/release-management/api-compatibility.md",
@@ -393,7 +393,7 @@
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "ce876ccc20fa5b47385854596a5a5e49fca878795ba9a572c5d5985fc56aefde"
+        "sha256": "8c45682347fae539f1e6d64f107fcd9e656ce79da46d7a306bc93362dcc7b3db"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -482,6 +482,10 @@
       {
         "path": "docs/repository-policy/line-endings.md",
         "sha256": "1a7520797e685b85a185dc66046cd9538df42d59136da28395d6d03b5ec963e4"
+      },
+      {
+        "path": "docs/repository/agent-workflow.md",
+        "sha256": "662078862a17ebc5d9ca928b0f8919039b07ab85f3b32234d8b9f29723a90a74"
       },
       {
         "path": "docs/repository/license-policy.md",
@@ -814,6 +818,7 @@
         "docs/rendering/texture-resource-baseline.md",
         "docs/rendering/tilemap-layer-runtime-api.md",
         "docs/repository-policy/line-endings.md",
+        "docs/repository/agent-workflow.md",
         "docs/repository/license-policy.md",
         "docs/repository/repository-layout.md",
         "docs/resources/aot-safe-metadata.md",
@@ -881,8 +886,8 @@
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
-      "count": 158,
-      "sha256": "e95537c730632b079125f1f1455296989975e5e70ef1364bec77bfc9faa83d16"
+      "count": 159,
+      "sha256": "edc7b1f88301c39f3c56942ff2dcf86374620e94e2c10df3a0e981422eb500dc"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -894,7 +899,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "f3cf1189d3a19bf65b3bbcd0908be524c42f295982d8ffc673900b0816b3fe75",
+    "sourceDigest": "05480027a8a777c7ed7cc1716807c9e82a95b9af723c361b3c8594379a8d9384",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."
