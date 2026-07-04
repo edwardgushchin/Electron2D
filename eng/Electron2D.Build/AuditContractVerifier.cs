@@ -157,6 +157,12 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             ["preflightChecks", "audit package` и `audit package verify` не должны повторно запускать тестовые наборы", "любые команды тестового раннера внутри `checks[]` запрещены"]);
         CheckContainsAll(
             checks,
+            "domain-reuse-conversation-zip-only-submit",
+            documents.DomainDocumentPath,
+            documents.DomainDocumentText,
+            ["`--reuse-conversation`", "прикрепляет только основной ZIP", "не вставляет в composer текст `AUDIT-REQUEST.md`", "Явный `--message` вместе с `--reuse-conversation` отклоняется"]);
+        CheckContainsAll(
+            checks,
             "request-previous-blocker-closure-coverage",
             documents.AuditRequestPath,
             documents.AuditRequestText,
@@ -384,6 +390,9 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
                 "AuditWorkflowMediumAuditTierDoesNotUseHeavyPackagingHelpers",
                 "TestCommandAuditTierIntegrationSlicesPrintSummary",
                 "AuditPackageWritesPreviousBlockerClosureMatrixIntoManifest",
+                "AuditSubmitReuseConversationRejectsExplicitMessageBeforeBrowserLaunch",
+                "AuditSubmitPromptSubmissionSkipsPromptFillForEmptyReuseMessage",
+                "AuditSubmitPromptPayloadReadyAllowsEmptyPromptOnlyForZipOnlyReuse",
                 "env ELECTRON2D_BUILD_TOOL_NO_BUILD=",
                 "Trait(\"AuditTier\", \"Fast\")",
                 "Trait(\"AuditTier\", \"Medium\")",

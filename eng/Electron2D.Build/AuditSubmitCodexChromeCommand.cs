@@ -1347,8 +1347,12 @@ internal sealed class AuditSubmitCodexChromeAutomation
             await driver.CaptureAsync("deep-research", cancellationToken).ConfigureAwait(false);
         }
 
-        await driver.FillPromptAsync(message, cancellationToken).ConfigureAwait(false);
-        await driver.CaptureAsync("prompt-filled", cancellationToken).ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(message))
+        {
+            await driver.FillPromptAsync(message, cancellationToken).ConfigureAwait(false);
+            await driver.CaptureAsync("prompt-filled", cancellationToken).ConfigureAwait(false);
+        }
+
         if (deepResearch)
         {
             await driver.RequireDeepResearchSelectedAsync(cancellationToken).ConfigureAwait(false);
@@ -1494,6 +1498,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 $"reason={ReadProperty(status, "reason")}",
                 $"promptFound={ReadProperty(status, "promptFound")}",
                 $"promptHasExpectedMessage={ReadProperty(status, "promptHasExpectedMessage")}",
+                $"promptIsEmpty={ReadProperty(status, "promptIsEmpty")}",
                 $"expectedFileCount={ReadProperty(status, "expectedFileCount")}",
                 $"filenameMatchCount={ReadProperty(status, "filenameMatchCount")}",
                 $"attachmentRootCount={ReadProperty(status, "attachmentRootCount")}"
@@ -4416,6 +4421,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
               reason: 'prompt-missing',
               promptFound: false,
               promptHasExpectedMessage: false,
+              promptIsEmpty: false,
               expectedFileCount: Array.isArray(fileNames) ? fileNames.length : -1,
               filenameMatchCount: 0,
               attachmentRootCount: 0
@@ -4431,13 +4437,29 @@ internal sealed class AuditSubmitCodexChromeAutomation
             ? prompt.value
             : `${prompt.innerText || ''}\n${prompt.textContent || ''}`;
           const normalizedPromptText = normalize(promptText);
+          const expectsMessage = expectedMessageVariants.length > 0;
           const promptHasExpectedMessage = expectedMessageVariants.some((variant) => normalizedPromptText.includes(variant));
-          if (expectedMessageVariants.length === 0 || !promptHasExpectedMessage) {
+          const promptIsEmpty = normalizedPromptText.length === 0;
+          if (!expectsMessage && !promptIsEmpty) {
+            return {
+              ready: false,
+              reason: 'prompt-not-empty',
+              promptFound: true,
+              promptHasExpectedMessage: false,
+              promptIsEmpty,
+              expectedFileCount: Array.isArray(fileNames) ? fileNames.length : -1,
+              filenameMatchCount: 0,
+              attachmentRootCount: 0
+            };
+          }
+
+          if (expectsMessage && !promptHasExpectedMessage) {
             return {
               ready: false,
               reason: 'prompt-message-missing',
               promptFound: true,
               promptHasExpectedMessage: false,
+              promptIsEmpty,
               expectedFileCount: Array.isArray(fileNames) ? fileNames.length : -1,
               filenameMatchCount: 0,
               attachmentRootCount: 0
@@ -4452,7 +4474,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
               ready: false,
               reason: 'unexpected-file-count',
               promptFound: true,
-              promptHasExpectedMessage: true,
+              promptHasExpectedMessage: !expectsMessage || promptHasExpectedMessage,
+              promptIsEmpty,
               expectedFileCount: expectedFiles.length,
               filenameMatchCount: 0,
               attachmentRootCount: 0
@@ -4558,7 +4581,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
             ready: roots.length === 1,
             reason: roots.length === 1 ? 'ready' : (roots.length === 0 ? 'attachment-root-missing' : 'attachment-root-ambiguous'),
             promptFound: true,
-            promptHasExpectedMessage: true,
+            promptHasExpectedMessage: !expectsMessage || promptHasExpectedMessage,
+            promptIsEmpty,
             expectedFileCount: expectedFiles.length,
             filenameMatchCount: filenameMatches.length,
             attachmentRootCount: roots.length

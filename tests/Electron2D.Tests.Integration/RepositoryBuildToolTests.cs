@@ -3143,12 +3143,41 @@ public sealed class RepositoryBuildToolTests
     public async Task AuditSubmitReuseConversationReadsStoredTaskConversationBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-reuse-stored-conversation");
-        var zipPath = Path.Combine(workspace.Root, "T-0001-audit-r02.zip");
-        var messagePath = Path.Combine(workspace.Root, "message.md");
         var conversationDirectory = Path.Combine(workspace.Root, ".temp", "audit", "T-0001");
         Directory.CreateDirectory(conversationDirectory);
-        File.WriteAllText(zipPath, "placeholder", Encoding.UTF8);
-        File.WriteAllText(messagePath, "Audit text", Encoding.UTF8);
+        WriteAuditSubmitZip(workspace.Root, "T-0001-audit-r02.zip");
+        File.WriteAllText(
+            Path.Combine(conversationDirectory, "conversation-url.txt"),
+            "https://chatgpt.com/g/g-p-example/c/6a43b03e-9598-83ed-9c3d-24046e34fff3\n",
+            Encoding.UTF8);
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-r02.md",
+            "--reuse-conversation",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public async Task AuditSubmitReuseConversationRejectsExplicitMessageBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-reuse-explicit-message");
+        var conversationDirectory = Path.Combine(workspace.Root, ".temp", "audit", "T-0001");
+        Directory.CreateDirectory(conversationDirectory);
+        WriteAuditSubmitZip(workspace.Root, "T-0001-audit-r02.zip");
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
         File.WriteAllText(
             Path.Combine(conversationDirectory, "conversation-url.txt"),
             "https://chatgpt.com/g/g-p-example/c/6a43b03e-9598-83ed-9c3d-24046e34fff3\n",
@@ -3171,7 +3200,7 @@ public sealed class RepositoryBuildToolTests
             @"\\.\pipe\electron2d-audit-submit-missing-pipe");
 
         Assert.NotEqual(0, submit.ExitCode);
-        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
     }
 
     [Fact]
@@ -7382,7 +7411,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("messageCountBeforeSend + 1", source, StringComparison.Ordinal);
         Assert.Contains("RequireDeepResearchSelectedAsync", source, StringComparison.Ordinal);
         Assert.Matches(
-            new Regex("SubmitPromptAsync\\(.*?AttachFilesAsync\\(zipPaths, cancellationToken\\).*?if \\(deepResearch\\).*?EnableDeepResearchAsync\\(cancellationToken\\).*?FillPromptAsync\\(message, cancellationToken\\).*?if \\(deepResearch\\).*?RequireDeepResearchSelectedAsync\\(cancellationToken\\).*?RequirePromptPayloadReadyAsync\\(message, zipPaths, cancellationToken\\).*?ClickSendAsync\\(cancellationToken\\)", RegexOptions.Singleline),
+            new Regex("SubmitPromptAsync\\(.*?AttachFilesAsync\\(zipPaths, cancellationToken\\).*?if \\(deepResearch\\).*?EnableDeepResearchAsync\\(cancellationToken\\).*?if \\(!string\\.IsNullOrWhiteSpace\\(message\\)\\).*?FillPromptAsync\\(message, cancellationToken\\).*?CaptureAsync\\(\"prompt-filled\", cancellationToken\\).*?if \\(deepResearch\\).*?RequireDeepResearchSelectedAsync\\(cancellationToken\\).*?RequirePromptPayloadReadyAsync\\(message, zipPaths, cancellationToken\\).*?ClickSendAsync\\(cancellationToken\\)", RegexOptions.Singleline),
             source);
         Assert.Contains("DownloadReportCandidatesAsync", source, StringComparison.Ordinal);
         Assert.Contains("ReportExportButtonClickExpression", source, StringComparison.Ordinal);
@@ -7899,6 +7928,24 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Medium")]
+    public async Task AuditSubmitPromptSubmissionSkipsPromptFillForEmptyReuseMessage()
+    {
+        var trace = await InvokeAuditSubmitPromptSubmissionAsync(deepResearch: false, message: string.Empty);
+
+        Assert.Equal(
+            [
+                "AttachFilesAsync:T-0238-audit-r40.zip",
+                "CaptureAsync:files-attached",
+                "RequirePromptPayloadReadyAsync",
+                "ReadConversationMessageCountAsync",
+                "ClickSendAsync"
+            ],
+            trace.Calls);
+        Assert.Equal(7, trace.MessageCountBeforeSend);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPromptPayloadReadyRequiresPromptTextAndAuditZipChip()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationPromptPayloadReadyExpressionAsync(
@@ -7917,6 +7964,20 @@ public sealed class RepositoryBuildToolTests
             "@Глубокое исследование\n\nAudit body",
             ["T-0238-audit-r40.zip"]);
         Assert.True(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, deepResearchMessageExpression));
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public async Task AuditSubmitPromptPayloadReadyAllowsEmptyPromptOnlyForZipOnlyReuse()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationPromptPayloadReadyExpressionAsync(
+            string.Empty,
+            ["T-0238-audit-r40.zip"]);
+        using var workspace = TemporaryDirectory.Create("audit-submit-empty-payload-ready");
+
+        Assert.True(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, promptText: string.Empty));
+        Assert.False(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, promptText: "Audit body"));
+        Assert.False(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, promptText: string.Empty, includeAttachment: false));
     }
 
     [Fact]
@@ -11188,7 +11249,7 @@ public sealed class RepositoryBuildToolTests
             Assert.IsType<string>(args[5]));
     }
 
-    private static async Task<AuditSubmitPromptSubmissionTrace> InvokeAuditSubmitPromptSubmissionAsync(bool deepResearch)
+    private static async Task<AuditSubmitPromptSubmissionTrace> InvokeAuditSubmitPromptSubmissionAsync(bool deepResearch, string message = "audit request")
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
         var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
@@ -11205,7 +11266,7 @@ public sealed class RepositoryBuildToolTests
         var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitPromptSubmissionDriverProxy)])
             ?? throw new InvalidOperationException("Audit submit prompt submission proxy was not created.");
         var trace = Assert.IsAssignableFrom<AuditSubmitPromptSubmissionDriverProxy>(proxy);
-        var task = (Task<int>)method.Invoke(null, [proxy, new[] { "T-0238-audit-r40.zip" }, "audit request", deepResearch, CancellationToken.None])!;
+        var task = (Task<int>)method.Invoke(null, [proxy, new[] { "T-0238-audit-r40.zip" }, message, deepResearch, CancellationToken.None])!;
         var messageCount = await task.ConfigureAwait(false);
         return trace.ToTrace(messageCount);
     }
@@ -17120,9 +17181,12 @@ public sealed class RepositoryBuildToolTests
                     return Task.CompletedTask;
                 case "RequirePromptPayloadReadyAsync":
                     calls.Add(methodName);
-                    if (!filesAttached || !promptFilled)
+                    var message = args is { Length: > 0 } && args[0] is string actualMessage
+                        ? actualMessage
+                        : string.Empty;
+                    if (!filesAttached || (!string.IsNullOrWhiteSpace(message) && !promptFilled))
                     {
-                        throw new InvalidOperationException("Prompt payload must be checked after attachment and prompt fill.");
+                        throw new InvalidOperationException("Prompt payload must be checked after attachment and required prompt fill.");
                     }
 
                     payloadRequired = true;

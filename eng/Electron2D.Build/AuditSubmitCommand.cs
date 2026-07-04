@@ -295,6 +295,11 @@ internal sealed class AuditSubmitCommand
         var messagePath = values.TryGetValue("--message", out var configuredMessagePath) && !string.IsNullOrWhiteSpace(configuredMessagePath)
             ? configuredMessagePath
             : null;
+        if (reuseConversation && messagePath is not null)
+        {
+            throw InvalidArguments("--message is not accepted together with --reuse-conversation; repeated audit submit sends only the audit ZIP into the existing conversation.");
+        }
+
         var hasProjectUrl = values.TryGetValue("--project-url", out var configuredProjectUrl) && !string.IsNullOrWhiteSpace(configuredProjectUrl);
         var projectUrl = hasProjectUrl
             ? configuredProjectUrl!
@@ -398,6 +403,11 @@ internal sealed class AuditSubmitCommand
         string zipPath,
         CancellationToken cancellationToken)
     {
+        if (options.ReuseConversation)
+        {
+            return string.Empty;
+        }
+
         if (string.IsNullOrWhiteSpace(options.MessagePath))
         {
             return AuditPackageCommand.CreatePackageMessage(new AuditMessageOptions(zipPath), repoRoot);
