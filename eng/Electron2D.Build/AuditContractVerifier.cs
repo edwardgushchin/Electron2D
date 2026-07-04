@@ -175,6 +175,12 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             ["E2D-BUILD-TEST-SLICE-SUMMARY", "TryParseDotnetTestCounts", "childProcesses", "failure={failure}"]);
         CheckContainsAll(
             checks,
+            "operator-workflow-summary",
+            documents.AuditPackageCommandPath,
+            documents.AuditPackageCommandText,
+            ["E2D-BUILD-AUDIT-OPERATOR-WORKFLOW-SUMMARY", "Operator workflow sidecar summary", "audit-package-message", "audit-package-verify"]);
+        CheckContainsAll(
+            checks,
             "integration-audit-tier-guards",
             documents.IntegrationTestsPath,
             documents.IntegrationTestsText,
@@ -226,6 +232,7 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
         var goalLoopPath = ".codex/prompts/goal-task-loop.md";
         var agentsPath = "AGENTS.md";
         var testCommandPath = "eng/Electron2D.Build/TestCommand.cs";
+        var auditPackageCommandPath = "eng/Electron2D.Build/AuditPackageCommand.cs";
         var integrationTestsPath = "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs";
         return new AuditContractDocuments(
             auditRequestPath,
@@ -238,6 +245,8 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             ReadRequiredText(checks, agentsPath),
             testCommandPath,
             ReadRequiredText(checks, testCommandPath),
+            auditPackageCommandPath,
+            ReadRequiredText(checks, auditPackageCommandPath),
             integrationTestsPath,
             ReadRequiredText(checks, integrationTestsPath));
     }
@@ -418,6 +427,8 @@ internal sealed record AuditContractDocuments(
     string? AgentsText,
     string TestCommandPath,
     string? TestCommandText,
+    string AuditPackageCommandPath,
+    string? AuditPackageCommandText,
     string IntegrationTestsPath,
     string? IntegrationTestsText);
 

@@ -309,6 +309,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         await CreateOperatorWorkflowSidecarAsync(
             repoRoot,
+            diagnostics,
             config,
             zipPath,
             operatorWorkflowZipPath,
@@ -1163,6 +1164,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private async Task CreateOperatorWorkflowSidecarAsync(
         string repoRoot,
+        JsonDiagnosticSink diagnostics,
         AuditPackageConfiguration config,
         string zipPath,
         string operatorWorkflowZipPath,
@@ -1253,6 +1255,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             provisionalEvidence,
             cancellationToken).ConfigureAwait(false);
 
+        CommandEvidenceResult verify;
         using (var cleanRepo = await CreateCleanCloneAsync(repoRoot, config.Baseline, cancellationToken).ConfigureAwait(false))
         {
             string[] verifyRunArguments =
@@ -1273,7 +1276,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "--repo",
                 cleanRepo.Root
             ];
-            var verify = await RunOperatorWorkflowCommandAsync(repoRoot, verifyRunArguments, cancellationToken).ConfigureAwait(false);
+            verify = await RunOperatorWorkflowCommandAsync(repoRoot, verifyRunArguments, cancellationToken).ConfigureAwait(false);
             evidence.AddRange(WriteCommandEvidenceFiles(
                 staging.Root,
                 config,
@@ -1293,6 +1296,25 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             relativeZipPath,
             evidence,
             cancellationToken).ConfigureAwait(false);
+        WriteOperatorWorkflowSummary(diagnostics, operatorWorkflowZipPath, message, verify);
+    }
+
+    private static void WriteOperatorWorkflowSummary(
+        JsonDiagnosticSink diagnostics,
+        string operatorWorkflowZipPath,
+        CommandEvidenceResult message,
+        CommandEvidenceResult verify)
+    {
+        var messageDurationMs = NormalizeDurationMs(message.Duration);
+        var verifyDurationMs = NormalizeDurationMs(verify.Duration);
+        var totalDurationMs = NormalizeDurationMs(message.Duration + verify.Duration);
+        diagnostics.Write(new BuildDiagnostic(
+            "audit",
+            "audit package",
+            "info",
+            "E2D-BUILD-AUDIT-OPERATOR-WORKFLOW-SUMMARY",
+            $"Operator workflow sidecar summary: commands=2; audit-package-message exitCode={message.ExitCode} durationMs={FormatDurationMs(messageDurationMs)}; audit-package-verify exitCode={verify.ExitCode} durationMs={FormatDurationMs(verifyDurationMs)}; totalDurationMs={FormatDurationMs(totalDurationMs)}; timeoutSeconds={OperatorWorkflowEvidenceTimeoutSeconds}.",
+            ZipPath: operatorWorkflowZipPath));
     }
 
     private static async Task<CommandEvidenceResult> RunOperatorWorkflowCommandAsync(

@@ -2235,6 +2235,16 @@ public sealed class RepositoryBuildToolTests
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
         AssertCommandSucceeded(package, "audit package");
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-OPERATOR-WORKFLOW-SUMMARY");
+        using var diagnostics = ReadDiagnostics(package);
+        var sidecarSummary = Assert.Single(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-AUDIT-OPERATOR-WORKFLOW-SUMMARY");
+        var summaryMessage = sidecarSummary.GetProperty("message").GetString()!;
+        Assert.Contains("commands=2", summaryMessage, StringComparison.Ordinal);
+        Assert.Contains("audit-package-message", summaryMessage, StringComparison.Ordinal);
+        Assert.Contains("audit-package-verify", summaryMessage, StringComparison.Ordinal);
+        Assert.Contains("timeoutSeconds=180", summaryMessage, StringComparison.Ordinal);
         var zipPath = fixture.ZipPath(taskId);
         var sidecarPath = fixture.OperatorWorkflowZipPath(taskId);
         var verifyRoot = $"evidence/{taskId}-r01/checks/audit-package-verify";
