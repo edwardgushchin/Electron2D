@@ -37,6 +37,9 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private const string IntegrationSliceAuditPackage = "audit-package";
     private const string IntegrationSliceExternalProcess = "external-process";
     private const string IntegrationSliceSlow = "slow";
+    private const string AuditTierFast = "Fast";
+    private const string AuditTierMedium = "Medium";
+    private const string AuditTierHeavy = "Heavy";
 
     private static readonly string[] TestProjects =
     [
@@ -73,15 +76,6 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         "EditorShellLayoutTests",
         "EditorSpecializedEditorsTests",
         "EditorViewport2DTests"
-    ];
-
-    private static readonly string[] AuditPackageIncludes =
-    [
-        "RepositoryBuildToolTests.AuditPackage",
-        "RepositoryBuildToolTests.AuditSubmit",
-        "RepositoryBuildToolTests.AuditRequest",
-        "RepositoryBuildToolTests.AuditMessage",
-        "RepositoryBuildToolTests.AuditWorkflow"
     ];
 
     private static readonly string[] ExternalProcessIncludes =
@@ -363,8 +357,10 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             IntegrationSliceFast => And([.. FastIntegrationExclusions.Select(NotFullyQualifiedNameContains)]),
             IntegrationSliceRepositoryTooling => And(
                 [FullyQualifiedNameContains("RepositoryBuildToolTests"),
-                    .. AuditPackageIncludes.Select(NotFullyQualifiedNameContains)]),
-            IntegrationSliceAuditPackage => Or([.. AuditPackageIncludes.Select(FullyQualifiedNameContains)]),
+                    NotAuditTier(AuditTierFast),
+                    NotAuditTier(AuditTierMedium),
+                    NotAuditTier(AuditTierHeavy)]),
+            IntegrationSliceAuditPackage => Or([AuditTier(AuditTierMedium), AuditTier(AuditTierHeavy)]),
             IntegrationSliceExternalProcess => Or([.. ExternalProcessIncludes.Select(FullyQualifiedNameContains)]),
             IntegrationSliceSlow => Or([.. SlowIncludes.Select(FullyQualifiedNameContains)]),
             _ => throw new InvalidOperationException($"Unsupported integration slice: {integrationSlice}")
@@ -390,6 +386,16 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private static string NotFullyQualifiedNameContains(string value)
     {
         return $"FullyQualifiedName!~{value}";
+    }
+
+    private static string AuditTier(string value)
+    {
+        return $"AuditTier={value}";
+    }
+
+    private static string NotAuditTier(string value)
+    {
+        return $"AuditTier!={value}";
     }
 
     private static string And(IReadOnlyList<string> filters)

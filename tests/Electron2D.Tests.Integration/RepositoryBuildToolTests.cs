@@ -172,6 +172,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task TestCommandAuditPackageIntegrationSliceRunsOnlyAuditPackageTests()
     {
         using var shim = TemporaryDirectory.Create("test-command-audit-slice-dotnet-shim");
@@ -189,8 +190,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(0, result.ExitCode);
         var invocation = Assert.Single(File.ReadAllLines(logPath), line => line.StartsWith("test ", StringComparison.Ordinal));
         Assert.Contains("tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj", invocation, StringComparison.Ordinal);
-        Assert.Contains("RepositoryBuildToolTests.AuditPackage", invocation, StringComparison.Ordinal);
-        Assert.Contains("RepositoryBuildToolTests.AuditSubmit", invocation, StringComparison.Ordinal);
+        Assert.Contains("AuditTier=Medium", invocation, StringComparison.Ordinal);
+        Assert.Contains("AuditTier=Heavy", invocation, StringComparison.Ordinal);
+        Assert.DoesNotContain("RepositoryBuildToolTests.AuditPackage", invocation, StringComparison.Ordinal);
+        Assert.DoesNotContain("RepositoryBuildToolTests.AuditSubmit", invocation, StringComparison.Ordinal);
         Assert.DoesNotContain("tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj", invocation, StringComparison.Ordinal);
     }
 
@@ -209,13 +212,13 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
-    [InlineData("repository-tooling", "RepositoryBuildToolTests", "RepositoryBuildToolTests.AuditPackage")]
+    [InlineData("repository-tooling", "RepositoryBuildToolTests", "AuditTier!=Medium")]
     [InlineData("external-process", "LocalDocumentationCliTests", null)]
     [InlineData("slow", "DataStabilityStressTests", null)]
     public async Task TestCommandHeavyIntegrationSliceRunsOnlySelectedIntegrationTests(
         string integrationSlice,
         string expectedFilter,
-        string? excludedFilter)
+        string? expectedAdditionalFilter)
     {
         using var shim = TemporaryDirectory.Create($"test-command-{integrationSlice}-slice-dotnet-shim");
         var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
@@ -233,9 +236,9 @@ public sealed class RepositoryBuildToolTests
         var invocation = Assert.Single(File.ReadAllLines(logPath), line => line.StartsWith("test ", StringComparison.Ordinal));
         Assert.Contains("tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj", invocation, StringComparison.Ordinal);
         Assert.Contains(expectedFilter, invocation, StringComparison.Ordinal);
-        if (excludedFilter is not null)
+        if (expectedAdditionalFilter is not null)
         {
-            Assert.Contains($"FullyQualifiedName!~{excludedFilter}", invocation, StringComparison.Ordinal);
+            Assert.Contains(expectedAdditionalFilter, invocation, StringComparison.Ordinal);
         }
     }
 
@@ -914,6 +917,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task UpdateDocsExcludesSavedAuditVerdictsFromGeneratedDocumentationIndex()
     {
         using var workspace = CreateDocumentationGenerationFixture("update-docs-excludes-verdicts", initialIndex: "stale\n");
@@ -1973,6 +1977,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageGeneratesAndVerifiesMinimalFixtureRepository()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-minimal");
@@ -1990,7 +1995,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-PACKAGE-CREATED");
         var zipPath = fixture.ZipPath(taskId);
         Assert.True(File.Exists(zipPath), $"Audit ZIP was not created: {zipPath}");
@@ -2026,6 +2031,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageIncludesFullRepositorySnapshotsForExternalReview()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -2081,7 +2087,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         var zipPath = fixture.ZipPath(taskId);
         var entries = ReadZipEntryNames(zipPath);
         Assert.Contains("metadata/repo-file-snapshots.json", entries);
@@ -2142,6 +2148,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-operator-workflow-sidecar");
@@ -2155,7 +2162,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         var zipPath = fixture.ZipPath(taskId);
         var sidecarPath = fixture.OperatorWorkflowZipPath(taskId);
         var verifyRoot = $"evidence/{taskId}-r01/checks/audit-package-verify";
@@ -2219,7 +2226,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("- .temp/audit/T-0001-audit-r01.zip", messageCommand, StringComparison.Ordinal);
 
         var messageStdout = ReadZipEntryText(sidecarPath, $"{messageRoot}/stdout.txt");
-        Assert.StartsWith("This request fixture is intentionally stable", messageStdout, StringComparison.Ordinal);
+        Assert.StartsWith("Вы проводите внешний аудит", messageStdout, StringComparison.Ordinal);
+        Assert.False(messageStdout.StartsWith("#", StringComparison.Ordinal));
         Assert.DoesNotContain("# Static audit request", messageStdout, StringComparison.Ordinal);
         foreach (var marker in RequiredAuditRequestMarkers)
         {
@@ -2246,6 +2254,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyFailsWhenOperatorWorkflowSidecarIsMissing()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-operator-workflow-missing-sidecar", "T-0001");
@@ -2260,6 +2269,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyFailsWhenOperatorWorkflowPayloadHashIsTampered()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-operator-workflow-payload-hash", "T-0001");
@@ -2279,6 +2289,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyFailsWhenOperatorWorkflowTimeoutEvidenceIsTampered()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-operator-workflow-timeout-mismatch", "T-0001");
@@ -2298,6 +2309,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsMissingRepositoryFileSnapshot()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-missing-repository-snapshot", "T-0001");
@@ -2313,6 +2325,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsLegacyPatchOnlyPackageWithoutRepositorySnapshots()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-legacy-patch-only", "T-0001");
@@ -2334,6 +2347,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsOrphanRepositoryFileSnapshot()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-orphan-repository-snapshot", "T-0001");
@@ -2353,6 +2367,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsTamperedRepositoryFileSnapshotContent()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-tampered-repository-snapshot", "T-0001");
@@ -2372,6 +2387,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData("duplicate", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH")]
     [InlineData("path", "E2D-BUILD-AUDIT-PATH-INVALID")]
     [InlineData("scope", "E2D-BUILD-AUDIT-SNAPSHOT-MISMATCH")]
@@ -2435,6 +2451,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsMissingOldSideRepositorySnapshotForRename()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -2462,7 +2479,7 @@ public sealed class RepositoryBuildToolTests
                 "docs/release-management/renamed-new.md"
             ]);
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         var zipPath = fixture.ZipPath(taskId);
         ReplaceRepositorySnapshotManifest(
             zipPath,
@@ -2483,6 +2500,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageOperatorWorkflowEvidenceUsesCliSubprocesses()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-operator-workflow-subprocess");
@@ -2501,7 +2519,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath, environment: environment);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         var invocations = File.ReadAllLines(logPath);
         Assert.Contains(invocations, line => ContainsCommandTokens(line, "audit", "package", "verify") && line.Contains("--repo", StringComparison.Ordinal));
         Assert.Contains(invocations, line => ContainsCommandTokens(line, "audit", "package", "message"));
@@ -2515,6 +2533,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageCopiesStaticRequestVerbatimIntoRootAuditRequest()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-verbatim");
@@ -2577,6 +2596,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageFailsWhenStaticRequestIsMissing()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-missing");
@@ -2596,6 +2616,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData("VERDICT: ACCEPT")]
     [InlineData("VERDICT: NEEDS_FIXES")]
     [InlineData("TASK_ASSESSMENT")]
@@ -2631,6 +2652,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageFailsWhenStaticRequestLacksPreviousVerdictAndBlockerClosureMarkers()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-previous-verdict-contract");
@@ -2657,6 +2679,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageFailsWhenStaticRequestLacksImplementationReviewContract()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-implementation-review-contract");
@@ -2682,6 +2705,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageFailsWhenStaticRequestLacksContentBoundaryMarkers()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-content-boundary");
@@ -2705,6 +2729,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageFailsWhenStaticRequestLacksFinalReportVerdictMarkers()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-final-report-contract");
@@ -2728,6 +2753,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData("empty", "E2D-BUILD-AUDIT-REQUEST-INVALID")]
     [InlineData("one-line", "E2D-BUILD-AUDIT-REQUEST-INVALID")]
     [InlineData("machine-path", "E2D-BUILD-AUDIT-ABSOLUTE-PATH")]
@@ -2751,6 +2777,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageManifestListsStaticRequestSource()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-source");
@@ -2770,6 +2797,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsRootAuditRequestThatDiffersFromRestoredSource()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-static-request-verify-mismatch", "T-0001");
@@ -2789,6 +2817,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageWritesRequestBodyWithoutGeneratedWrapper()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-message-body");
@@ -2865,6 +2894,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageFailsWhenZipIsMissing()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-message-missing-zip");
@@ -2877,6 +2907,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageFailsWithoutMetadata()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-message-missing-metadata", "T-0001");
@@ -2890,6 +2921,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageFailsWithoutRootAuditRequest()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-message-missing-request", "T-0001");
@@ -2903,6 +2935,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageFailsWhenRootAuditRequestLacksRequiredMarkers()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-message-invalid-request", "T-0001");
@@ -2920,6 +2953,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData("\"taskId\": \"T-0001\"", "\"taskId\": \"BAD\"", "E2D-BUILD-AUDIT-TASK-ID-INVALID")]
     [InlineData("\"iteration\": \"r01\"", "\"iteration\": \"iteration-1\"", "E2D-BUILD-AUDIT-CONFIG-INVALID")]
     public async Task AuditPackageMessageFailsWhenMetadataTaskOrIterationIsInvalid(string oldValue, string newValue, string expectedCode)
@@ -2939,6 +2973,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageMessageFailsWhenFilenameDoesNotMatchMetadata()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-message-filename-mismatch", "T-0001");
@@ -2953,6 +2988,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsMissingZipBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-missing-zip");
@@ -2971,6 +3007,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReuseConversationReadsStoredTaskConversationBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-reuse-stored-conversation");
@@ -3006,6 +3043,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPrimaryIterationAfterNeedsFixesRequiresConversationBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-reuse-required");
@@ -3033,6 +3071,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPrimaryIterationAfterNeedsFixesAllowsExplicitNewConversationBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-new-conversation");
@@ -3061,6 +3100,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitNewConversationUsesConfiguredProjectRoot()
     {
         var options = await InvokeAuditSubmitParseOptionsAsync(
@@ -3084,6 +3124,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditUsesConfiguredProjectRoot()
     {
         var options = await InvokeAuditSubmitParseOptionsAsync(
@@ -3107,6 +3148,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchIsExplicitOptIn()
     {
         var ordinary = await InvokeAuditSubmitParseOptionsAsync(
@@ -3134,6 +3176,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPrimaryIterationAfterControlNeedsFixesRequiresConversationBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-needs-fixes-reuse-required");
@@ -3162,6 +3205,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData(null)]
     [InlineData("VERDICT: NEEDS_FIXES")]
     public async Task AuditSubmitControlAuditRequiresPrimaryAcceptBeforeBrowserLaunch(string? primaryVerdict)
@@ -3195,6 +3239,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditAcceptsSameIterationPrimaryAcceptBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-accept");
@@ -3223,6 +3268,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsPreviousVerdictChainBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-previous-chain");
@@ -3254,6 +3300,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsBlockerClosureListBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-blocker-closures");
@@ -3285,6 +3332,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("previousVerdictChain", "[\"   \"]")]
     [InlineData("previousVerdictChain", "[null]")]
     [InlineData("previousVerdictChain", "[123]")]
@@ -3319,6 +3367,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("previousVerdictChain")]
     [InlineData("blockerClosureList")]
     public async Task AuditSubmitControlAuditRejectsMissingMetadataArrayBeforeBrowserLaunch(string missingPropertyName)
@@ -3368,6 +3417,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsSavedVerdictSnapshotsBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-verdict-snapshots");
@@ -3403,6 +3453,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsSavedVerdictDeletedRepoFilesBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-deleted-verdicts");
@@ -3444,6 +3495,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsSavedVerdictSnapshotIndexBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-verdict-snapshot-index");
@@ -3488,6 +3540,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsSavedVerdictReferencesInGeneratedDocumentationBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-generated-docs-verdict-context");
@@ -3543,6 +3596,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditAllowsHistoricGeneratedDocumentationBeforeSnapshotWhenAfterIsClean()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-generated-docs-before-context");
@@ -3599,6 +3653,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("AUDIT-MANIFEST.md")]
     [InlineData("AUDIT-REQUEST.md")]
     [InlineData("evidence/T-0001-r02/checks/verify-docs/stdout.txt")]
@@ -3640,6 +3695,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsNonstandardSavedVerdictPathReferencesBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-nonstandard-verdict-context");
@@ -3688,6 +3744,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditAllowsSyntheticVerdictPathsInRepoOwnedTestFixturesBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-test-fixture-verdict-context");
@@ -3746,6 +3803,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditAllowsPatchRemovedSavedVerdictReferencesBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-patch-removed-verdict-context");
@@ -3792,6 +3850,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsPatchAddedSavedVerdictReferencesBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-patch-added-verdict-context");
@@ -3838,6 +3897,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsTaskLedgerBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-task-ledger-context");
@@ -3884,6 +3944,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("https://chatgpt.com/g/g-p-example/project")]
     [InlineData("https://chatgpt.com/")]
     public async Task AuditSubmitReuseConversationRejectsNonConversationUrlBeforeBrowserLaunch(string projectUrl)
@@ -3907,6 +3968,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitControlAuditRejectsConversationUrlBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-audit-url");
@@ -3928,6 +3990,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project")]
     [InlineData("https://chatgpt.com/")]
     [InlineData("https://chatgpt.com/g/g-p-other/project")]
@@ -3954,6 +4017,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDoesNotRequireOperatorWorkflowSidecarBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-without-sidecar");
@@ -3982,6 +4046,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsFastPollingUnlessExplicitlyAllowed()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-fast-poll");
@@ -4002,6 +4067,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDumpDomOnlyRejectsVerdictOutputBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-dump-dom-verdict-out");
@@ -4037,6 +4103,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsScreenshotsDirectoryArgumentDuringEarlyValidation()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-screenshots-argument");
@@ -4057,6 +4124,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitAcceptsCodexChromeArgumentsDuringEarlyValidation()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-codex-chrome-arguments");
@@ -4081,6 +4149,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("--codex-session-id", "session-1")]
     [InlineData("--codex-turn-id", "turn-1")]
     public async Task AuditSubmitRejectsUnpairedCodexChromeIdentityBeforeBrowserLaunch(string option, string value)
@@ -4105,6 +4174,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsMissingMessageFileBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-missing-message");
@@ -4127,6 +4197,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitCodexChromeRejectsMissingExplicitPipeBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-codex-chrome-missing-pipe");
@@ -4155,6 +4226,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsAuthSubcommandBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-auth-removed");
@@ -4170,6 +4242,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsUnsupportedBrowserBackendBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-unsupported-browser-removed");
@@ -4190,6 +4263,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDownloadReportOnlyRequiresProjectUrlBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-download-report-url");
@@ -4207,6 +4281,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDownloadReportOnlyDoesNotRequireZipBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-download-report-no-zip");
@@ -4230,6 +4305,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDownloadReportOnlyRejectsZipBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-download-report-with-zip");
@@ -4251,6 +4327,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project")]
     [InlineData("https://chatgpt.com/")]
     [InlineData("https://chatgpt.com/g/example/c/")]
@@ -4280,6 +4357,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("report.md")]
     [InlineData("scratch/docs/verdicts/release-management/t-0238-audit-r65.md")]
     [InlineData("docs/verdicts/t-0238-audit-r65.md")]
@@ -4313,6 +4391,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("report.md")]
     [InlineData("scratch/docs/verdicts/release-management/t-0238-audit-r66.md")]
     [InlineData("docs/verdicts/t-0238-audit-r66.md")]
@@ -4349,6 +4428,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitAcceptsCanonicalOutputPathBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-output-identity-positive");
@@ -4375,6 +4455,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDownloadReportOnlyValidatesDownloadedMarkdown()
     {
         const string validReport = """
@@ -4449,6 +4530,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsDownloadedReportThatOnlyReferencesPreviousIteration()
     {
         const string staleEvidenceReport = """
@@ -4572,6 +4654,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsMultipleReadyDeepResearchFrameContexts()
     {
         var none = await InvokeAuditSubmitReadyFrameContextSelectionAsync();
@@ -4590,6 +4673,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitConversationGateRequiresCurrentTurnMessageCount()
     {
         Assert.False(await InvokeAuditSubmitConversationGateAsync(currentMessageCount: 7, minimumMessageCount: 8));
@@ -4598,6 +4682,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsMultipleDeepResearchPageFrameIds()
     {
         var none = await InvokeAuditSubmitDeepResearchFrameIdSelectionAsync(("root", "https://chatgpt.com/", "root", true));
@@ -4618,6 +4703,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitSkipsGlobalTargetFallbackWhenMultipleReadyTargetsExist()
     {
         var none = await InvokeAuditSubmitReadyTargetSelectionAsync();
@@ -4633,6 +4719,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDownloadReportOnlyCanSelectLatestReadyTargetFromExistingConversation()
     {
         var selected = await InvokeAuditSubmitReadyTargetSelectionAsync(
@@ -4646,6 +4733,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReadyTargetSelectionIgnoresBaselineTargetsBeforeAmbiguityCheck()
     {
         var selected = await InvokeAuditSubmitReadyTargetSelectionAsync(
@@ -4681,6 +4769,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReadyTargetSelectionWaitsForNewestNonBaselineTarget()
     {
         var waitingForCurrent = await InvokeAuditSubmitReadyTargetSelectionAsync(
@@ -4708,6 +4797,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReportCandidateFlowBlocksPageFallbackWhileNewestTargetGenerates()
     {
         var waiting = await InvokeAuditSubmitReportCandidateDownloadFlowAsync(waitForNewerTarget: true);
@@ -4729,6 +4819,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitDownloadReportOnlyDoesNotBaselineIgnoreExistingConversationTargets()
     {
         var source = File.ReadAllText(
@@ -4741,6 +4832,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDumpDomOnlyWritesBaseDomBeforeDeepResearchFrameDiagnostics()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-dump-dom-driver");
@@ -4760,6 +4852,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitOrdinarySubmitSkipsDeepResearchTargetBaseline()
     {
         var source = File.ReadAllText(
@@ -4781,6 +4874,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDoesNotScrollProjectPageBeforePromptSubmission()
     {
         var trace = await InvokeAuditSubmitProjectPreparationAsync();
@@ -4801,6 +4895,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitOrdinaryPollingAllowsLatestReadyTargetAfterBaseline()
     {
         var source = File.ReadAllText(
@@ -4813,6 +4908,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitRejectsMultipleNewMarkdownDownloads()
     {
         var none = await InvokeAuditSubmitMarkdownDownloadSelectionAsync(["downloads"], []);
@@ -4841,6 +4937,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitIgnoresSingleForeignMarkdownDownloadOutsideManagedDirectory()
     {
         var foreignOnly = await InvokeAuditSubmitMarkdownDownloadSelectionAsync(["managed-downloads"], ["user-downloads/deep-research-report.md"]);
@@ -4858,6 +4955,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitAcceptsSingleUserDownloadWhenFallbackDirectoryIsAccepted()
     {
         var selected = await InvokeAuditSubmitMarkdownDownloadSelectionAsync(
@@ -4869,6 +4967,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitStopsWhenExportWritesMarkdownOutsideManagedDirectory()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-foreign-download");
@@ -4891,6 +4990,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDirectTopButtonMarkdownDownloadReturnsOpenedReportCandidate()
     {
         const string validReport = """
@@ -4928,6 +5028,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitAllowsPageMarkdownMenuFallbackForSelectedDeepResearchSurface()
     {
         Assert.True(await InvokeAuditSubmitMarkdownClickResolutionAsync("Page", scopedMenuItemClicked: false, pageMenuItemClicked: true));
@@ -4939,6 +5040,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitMarkdownMenuClickBlocksPageFallbackBeforeSelectedExportButtonClick()
     {
         var beforeExport = await InvokeAuditSubmitMarkdownMenuClickAsync(
@@ -4963,6 +5065,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("DeepResearchFrame")]
     [InlineData("DeepResearchTarget")]
     [InlineData("DeepResearchTargetFrame")]
@@ -4978,6 +5081,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitReattachCdpUsesFiveAttemptsAndEnableTimeouts()
     {
         var source = File.ReadAllText(
@@ -5002,6 +5106,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitDownloadCandidatesPrefersCurrentPageFrameBeforeGlobalTargets()
     {
         var source = File.ReadAllText(
@@ -5029,6 +5134,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitAllowsPageFallbackWhenVisibleIframeHasNoFrameContext()
     {
         var source = File.ReadAllText(
@@ -5046,6 +5152,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitFrameSurfaceDecisionAllowsFallbackWhenContextIsMissing()
     {
         Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: false, hasFrameContext: false, hasReadyReport: false));
@@ -5056,6 +5163,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitReportExportButtonCanScrollOffscreenReportCard()
     {
         var source = File.ReadAllText(
@@ -5080,6 +5188,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDownloadReportOnlyPageFallbackExecutesProductionDomExportWhenFrameIsNotReady()
     {
         var readyExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchReportTargetReadyExpression");
@@ -5103,6 +5212,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReportExportButtonAcceptsMenuPopupLabelWithoutLegacySvgPath()
     {
         var readyExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchReportTargetReadyExpression");
@@ -5124,6 +5234,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitMarkdownMenuSelectorAcceptsDownloadMarkdownLabel()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ExportReportMarkdownMenuItemClickExpression");
@@ -5137,6 +5248,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitMarkdownMenuSelectorAcceptsAriaMenuItemLabel()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ExportReportMarkdownMenuItemClickExpression");
@@ -5150,6 +5262,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitMarkdownMenuSelectorAcceptsPlainChatGptMenuRow()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ExportReportMarkdownMenuItemClickExpression");
@@ -5169,6 +5282,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitWritesConversationUrlSidecarAfterSend()
     {
         var source = File.ReadAllText(
@@ -5199,6 +5313,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitConversationUrlSidecarWritesConcreteUrlAndRejectsMissingConcreteUrl()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-conversation-sidecar");
@@ -5239,6 +5354,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitTargetRecoveryKeepsExportClicksNonRetried()
     {
         var source = File.ReadAllText(
@@ -5260,6 +5376,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReportExtractorRequiresSingleAllowedReportCandidate()
     {
         const string acceptedReport = """
@@ -5524,6 +5641,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryAssistantCopyButtonSelectorTargetsCurrentResponse()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-ordinary-copy");
@@ -5538,6 +5656,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryAssistantCopyButtonDomClickTargetsCurrentResponse()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-ordinary-copy-dom-click");
@@ -5552,6 +5671,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryPollingUsesCopyActionClipboardMarkdown()
     {
         const string report = """
@@ -5587,6 +5707,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryPollingTreatsSingleCopyTimeoutAsTransient()
     {
         const string report = """
@@ -5621,6 +5742,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryPollingFailsPersistentCopyTimeoutWithLocalDiagnostic()
     {
         const string report = """
@@ -5654,6 +5776,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryPollingFailsPersistentMissingCopyButtonWithLocalDiagnostic()
     {
         const string report = """
@@ -5687,6 +5810,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryPollingWaitsWhenCurrentAssistantResponseHasNotAppeared()
     {
         const string report = """
@@ -5721,6 +5845,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitSystemClipboardRequiresInstalledSentinelBeforeAcceptingText()
     {
         const string report = """
@@ -5738,6 +5863,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardReadRejectsSentinelBeforeCapturedFallback()
     {
         const string sentinel = "E2D-AUDIT-SUBMIT-CLIPBOARD-SENTINEL-test";
@@ -5763,6 +5889,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardCaptureInterceptsClipboardWriteMarkdown()
     {
         const string report = """
@@ -5786,6 +5913,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardCaptureInterceptsCopyEventSelectedMarkdown()
     {
         const string report = """
@@ -5809,6 +5937,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardCaptureRejectsStaleGlobalSelectionMarkdown()
     {
         const string report = """
@@ -5836,6 +5965,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardCaptureAcceptsCurrentAssistantSelectionMarkdown()
     {
         const string report = """
@@ -5864,6 +5994,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardCaptureRejectsFullActiveElementValueMarkdown()
     {
         const string report = """
@@ -5891,6 +6022,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardCaptureAcceptsTemporaryActiveSelectionMarkdown()
     {
         const string report = """
@@ -5919,6 +6051,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardCaptureInterceptsCopyEventSetDataMarkdown()
     {
         const string report = """
@@ -5943,6 +6076,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitBrowserClipboardReadRequiresSentinelProof()
     {
         Assert.False(await InvokeAuditSubmitCanTrustBrowserClipboardReadTextAsync(null));
@@ -5951,6 +6085,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitBrowserClipboardReadRejectsStaleTextWhenSentinelMissing()
     {
         const string staleReport = """
@@ -5988,6 +6123,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitClipboardPreloadCaptureInterceptsEarlyBoundWriteTextMarkdown()
     {
         const string report = """
@@ -6017,6 +6153,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public async Task AuditSubmitOrdinaryCopyResetsPreloadCaptureBeforeClick()
     {
         var source = await File.ReadAllTextAsync(
@@ -6040,6 +6177,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReportExtractorAllowsAcceptWithStructuredFollowUpFinding()
     {
         const string report = """
@@ -6075,6 +6213,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReportExtractorRejectsAcceptWithNumberedBlockerInBlockers()
     {
         const string report = """
@@ -6103,6 +6242,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowFollowupParserFindsStructuredRisksAndIgnoresB1Context()
     {
         var report = CreateAcceptedFollowupReport(
@@ -6125,6 +6265,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowFollowupParserFindsMarkdownFormattedStructuredRiskMarkers()
     {
         const string report = """
@@ -6160,6 +6301,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsDistinguishesClosedAndUnclosedFindings()
     {
         using var workspace = CreateAuditFollowupFixture(
@@ -6187,6 +6329,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsUsesReportPathInFindingKey()
     {
         using var workspace = CreateAuditFollowupFixture(
@@ -6213,6 +6356,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsRequiresClosureForNeedsFixesFindings()
     {
         const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
@@ -6238,6 +6382,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsRequiresClosureForActionableOutOfScopeNote()
     {
         const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
@@ -6271,6 +6416,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsRequiresClosureForBracketActionableInfoNote()
     {
         const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
@@ -6303,6 +6449,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsScansUntrackedSavedReportsInGitWorkspace()
     {
         using var workspace = CreateAuditFollowupFixture(
@@ -6319,6 +6466,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsAcceptedRiskRequiresRiskRegisterFields()
     {
         using var workspace = CreateAuditFollowupFixture(
@@ -6355,6 +6503,46 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Fast")]
+    public void AuditWorkflowAuditTestsDeclareAuditTierTraits()
+    {
+        var auditTests = ReadRepositoryBuildToolAuditTests();
+
+        Assert.True(auditTests.Count >= 200, $"Expected the audit test inventory to include the existing audit suite, but found only {auditTests.Count} tests.");
+        Assert.Contains(auditTests, test => string.Equals(test.AuditTier, "Fast", StringComparison.Ordinal));
+        Assert.Contains(auditTests, test => string.Equals(test.AuditTier, "Medium", StringComparison.Ordinal));
+        Assert.Contains(auditTests, test => string.Equals(test.AuditTier, "Heavy", StringComparison.Ordinal));
+
+        var missingTier = auditTests
+            .Where(test => test.AuditTierCount == 0)
+            .Select(test => $"{test.LineNumber}: {test.Name}")
+            .ToArray();
+        var invalidTier = auditTests
+            .Where(test => test.AuditTierCount != 1 ||
+                test.AuditTier is not "Fast" and not "Medium" and not "Heavy")
+            .Select(test => $"{test.LineNumber}: {test.Name} => {test.AuditTier ?? "<missing>"}")
+            .ToArray();
+
+        Assert.Empty(missingTier);
+        Assert.Empty(invalidTier);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Fast")]
+    public void AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers()
+    {
+        var forbiddenTokens = FastAuditTierForbiddenTokens();
+        var violations = ReadRepositoryBuildToolAuditTests()
+            .Where(test => string.Equals(test.AuditTier, "Fast", StringComparison.Ordinal))
+            .SelectMany(test => forbiddenTokens
+                .Where(token => test.Body.Contains(token, StringComparison.Ordinal))
+                .Select(token => $"{test.LineNumber}: {test.Name} uses {token}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditContractsRunsFastWithoutPackagingArtifacts()
     {
         using var workspace = CreateAuditContractFixture();
@@ -6365,7 +6553,7 @@ public sealed class RepositoryBuildToolTests
             "verify",
             "audit-contracts");
 
-        Assert.Equal(0, result.ExitCode);
+        AssertCommandSucceeded(result, "verify audit-contracts");
         AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-CONTRACTS-PASSED");
         Assert.Contains("AuditTier=Fast", result.Stdout, StringComparison.Ordinal);
         Assert.Contains("passed=", result.Stdout, StringComparison.Ordinal);
@@ -6391,6 +6579,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReportInvalidDiagnosticsExplainStrictFailure()
     {
         const string promptTemplate = """
@@ -6508,6 +6697,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPollingPolicyWaitsWhileGenerationIsActive()
     {
         const string streamingReport = "VERDICT: NEEDS_FIXES\n\nBLOCKERS:\nB1: still streaming.";
@@ -6558,6 +6748,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitReportStabilityTrackerRequiresRepeatedCompleteReport()
     {
         const string completeReport = """
@@ -6592,6 +6783,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditPackageDocumentationDefinesStrictVerdictExtractionRule()
     {
         var text = File.ReadAllText(
@@ -6640,6 +6832,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditPackageDocumentationDefinesNoPrePromptScrollInOrdinarySubmit()
     {
         var text = File.ReadAllText(
@@ -6652,6 +6845,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditPackageDocumentationDefinesExternalBaselineAndPreviousVerdictContractBoundaries()
     {
         var repositoryRoot = FindRepositoryRoot();
@@ -6691,6 +6885,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditRequestRequiresReadableRussianReportExplanations()
     {
         var request = File.ReadAllText(
@@ -6725,6 +6920,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditWorkflowDocumentsSeparateAgentRequestAndGoalPromptResponsibilities()
     {
         var repositoryRoot = FindRepositoryRoot();
@@ -6824,6 +7020,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditPackageDocumentationRequiresMessageDeepResearchAndAttachedPackage()
     {
         var text = File.ReadAllText(
@@ -6882,6 +7079,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitCodexChromeClicksDeepResearchTool()
     {
         var source = File.ReadAllText(
@@ -7227,6 +7425,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchItemSelectorUsesConnectorMetadataWhenVisibleTextIsMissing()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
@@ -7241,6 +7440,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchItemSelectorClicksMenuItemInsideWidePopover()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
@@ -7258,6 +7458,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchItemSelectorClicksPlainChatGptMenuRow()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
@@ -7276,6 +7477,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchItemSelectorUsesVisibleEnabledPlusForMenuBounds()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
@@ -7293,6 +7495,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectionClicksAlreadyOpenMenuItemBeforeTogglingPlus()
     {
         var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync();
@@ -7312,6 +7515,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectionWaitsWhenComposerMenuIsAlreadyOpen()
     {
         var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync(
@@ -7342,6 +7546,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectionWaitsWhenComposerPlusIsExpandedBeforeRowsRender()
     {
         var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync(
@@ -7375,6 +7580,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectionWaitsAfterOpeningMenuBeforeRetogglingPlus()
     {
         var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync(
@@ -7417,6 +7623,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPromptSubmissionUsesOrdinaryChatByDefault()
     {
         var trace = await InvokeAuditSubmitPromptSubmissionAsync(deepResearch: false);
@@ -7436,6 +7643,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPromptSubmissionSelectsDeepResearchBeforePromptFillWhenRequested()
     {
         var trace = await InvokeAuditSubmitPromptSubmissionAsync(deepResearch: true);
@@ -7458,6 +7666,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitPromptPayloadReadyRequiresPromptTextAndAuditZipChip()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationPromptPayloadReadyExpressionAsync(
@@ -7479,6 +7688,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchComposerMenuOpenRequiresVisibleMenuRowsNearPlus()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchComposerMenuOpenExpression");
@@ -7502,6 +7712,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorFindsConnectorMetadataSiblingNearPrompt()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7513,6 +7724,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorAcceptsConnectorMetadataWithoutInlineMarker()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7528,6 +7740,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorRejectsHiddenConnectorDescendantInsidePrompt()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7545,6 +7758,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorRejectsMenuItemDescendantInsidePrompt()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7562,6 +7776,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorRejectsDistantNestedConnectorInPageAncestor()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7578,6 +7793,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("button-tag")]
     [InlineData("role-button")]
     [InlineData("role-menuitem")]
@@ -7600,6 +7816,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Medium")]
     [InlineData("plain-menu-row")]
     [InlineData("plain-data-fill-tabindex")]
     public async Task AuditSubmitDeepResearchSelectedSelectorRejectsPlainMenuRowWithDirectConnectorMetadata(string plainSelectedRowKind)
@@ -7618,6 +7835,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorRejectsInteractiveInlineSelectionPill()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7634,6 +7852,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorRejectsMenuItemNearPrompt()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7649,6 +7868,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitDeepResearchSelectedSelectorRejectsPlainTextMentionNearPrompt()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
@@ -7666,6 +7886,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitFillPromptPreservesEnglishDeepResearchSelectionPill()
     {
         var fillExpression = await GetAuditSubmitCodexChromeAutomationFillPromptExpressionAsync("Audit body");
@@ -7683,6 +7904,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitFillPromptPreservesConnectorMetadataPillWithoutInlineMarker()
     {
         var fillExpression = await GetAuditSubmitCodexChromeAutomationFillPromptExpressionAsync("Audit body");
@@ -7701,6 +7923,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitCommandKeepsOnlyCodexChromeBackend()
     {
         var source = File.ReadAllText(
@@ -7726,6 +7949,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageSanitizesRepositoryRootInCheckOutput()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-sanitize-check-output");
@@ -7760,6 +7984,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageWritesCheckMetadataThatMatchesRawEvidenceFiles()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-check-metadata");
@@ -7796,6 +8021,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackagePrintsConfiguredChecksPlanAndResultSummary()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-checks-plan");
@@ -7809,7 +8035,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         using var diagnostics = ReadDiagnostics(package);
         var entries = diagnostics.RootElement.EnumerateArray().ToArray();
         var plan = entries.Single(diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-AUDIT-CHECKS-PLAN");
@@ -7828,6 +8054,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsArchiveOnlyEvidenceUnderTempAuditEvidence()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-temp-audit-evidence");
@@ -7842,7 +8069,7 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
+        AssertCommandSucceeded(package, "audit package");
         Assert.Contains(
             $"evidence/{taskId}-r01/archive-only/audit-evidence/checks/result.txt",
             ReadZipEntryNames(fixture.ZipPath(taskId)));
@@ -7868,6 +8095,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageUsesRenameAwarePatchForMovedRepositoryFiles()
     {
         const string oldDiaryPath = "dev-diary/2026/06-June/historical.md";
@@ -7901,6 +8129,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageCopiesTrxEvidenceAndLinksItFromManifest()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-trx-evidence");
@@ -7984,6 +8213,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageCopiesDirectChildTrxMatchedByRecursiveGlob()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-direct-trx-evidence");
@@ -8028,6 +8258,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageCopiesFocusedTestTrxWithSafeSyntheticCaseNames()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-focused-trx-secret-fixtures");
@@ -8103,6 +8334,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsSecretValuesInTrxResultText()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-trx-secret-result-text");
@@ -8147,6 +8379,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageUsesDefaultConfigPathWhenConfigArgumentIsOmitted()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-default-config");
@@ -8170,6 +8403,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageWritesDeterministicZipMetadataWhenForced()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-deterministic");
@@ -8201,6 +8435,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageWritesDeterministicUtf8ZipMetadataForUnicodeArchiveEvidence()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-unicode-archive-entry");
@@ -8244,6 +8479,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackagePreservesUnicodeRepositoryPathsInPatchAndVerify()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-unicode");
@@ -8281,6 +8517,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsDocumentedSecretPolicyWordsWithoutSecretValues()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-policy-words");
@@ -8300,6 +8537,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsAuditPackageDomainDocumentSecretScanDescription()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-domain-document-secret-policy");
@@ -8322,6 +8560,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsConcreteSecretAssignmentsInDomainDocumentation()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-domain-document-real-secret");
@@ -8343,6 +8582,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsSyntheticSecretPlaceholdersFollowedByProseInTaskOwnedFiles()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-prose-secret-placeholders");
@@ -8368,6 +8608,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsLegacyPlaceholderProseInRepoBeforeSnapshots()
     {
         var legacyTokenPlaceholder = SecretAssignment("token", "...");
@@ -8408,6 +8649,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsConcreteSecretAssignmentsInRepoBeforeSnapshots()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -8435,6 +8677,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsConcreteSecretAssignmentsFollowedByProse()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-prose-real-secret");
@@ -8458,6 +8701,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [MemberData(nameof(SecretValueCases))]
     public async Task AuditPackageRejectsSecretValuesInSelectedTextFiles(string secretCase)
     {
@@ -8479,6 +8723,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageUsesBinaryPatchForSecretLikeDeletedBaselineLinesInOrdinaryFiles()
     {
         var deletedBaselineLine = string.Concat(
@@ -8637,6 +8882,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData(".env")]
     [InlineData("docs/release-management/token.txt")]
     [InlineData("docs/release-management/secret-export.md")]
@@ -8662,6 +8908,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRestoresIgnoredTasksAllowlistFileInPatchAndVerify()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -8697,6 +8944,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageNormalizesTextLineEndingsInPatchWithoutFullFileRewrite()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -8724,6 +8972,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyPreparesAutocrlfCheckoutBeforeRestore()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -8760,6 +9009,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyCleansIgnoredBuildArtifactsBeforeRestoreFileSetComparison()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -8790,6 +9040,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyCleansExtraIgnoredDirectoriesWhenExpectedIgnoredFilesRemain()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -8835,6 +9086,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyCleansIgnoredBuildArtifactsCreatedByAppliedPatchBeforeRestoreFileSetComparison()
     {
         using var fixture = await AuditFixture.CreateAsync(
@@ -8877,6 +9129,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyDirtyRepoDiagnosticIncludesPorcelainStatus()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-verify-dirty-details", "T-0001");
@@ -8898,6 +9151,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData(true)]
     [InlineData(false)]
     public async Task AuditPackageRejectsWindowsDrivePathsInArchiveContent(bool useBackslash)
@@ -8920,6 +9174,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData("docs\\bad.md")]
     [InlineData("docs/bad\u0001.md")]
     public async Task AuditPackageRejectsBackslashAndControlCharactersInConfiguredPaths(string badPath)
@@ -8939,6 +9194,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsBrokenPatch()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-broken-patch", "T-0001");
@@ -8958,6 +9214,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsOneLineNewTextFileStubDuringRestoreRehearsal()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-one-line-stub");
@@ -8972,6 +9229,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsIncompletePatchAgainstRestoreManifest()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-incomplete-patch", "T-0001");
@@ -8987,6 +9245,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsPatchThatChangesPathOutsideRestoreManifest()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-extra-restore-path");
@@ -9024,6 +9283,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsMissingEvidenceLinkInManifest()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-missing-evidence-link", "T-0001");
@@ -9042,6 +9302,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsStaleChecksum()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-stale-checksum", "T-0001");
@@ -9060,6 +9321,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsForbiddenArchiveEntry()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-forbidden-entry", "T-0001");
@@ -9074,6 +9336,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsZipEntryWithPlatformExternalAttributes()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-external-attributes", "T-0001");
@@ -9088,6 +9351,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsExistingTargetZipWithoutForce()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-existing-zip", "T-0001");
@@ -9100,6 +9364,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData("T-0001")]
     [InlineData("T-9999")]
     public async Task AuditPackageUsesConfiguredSyntheticTaskIdEverywhere(string taskId)
@@ -9120,6 +9385,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsHistoricalTaskIdsInConfiguredVerdictAndBlockerLists()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-historical-task-ids");
@@ -9150,6 +9416,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageWritesCombinedScopeMetadataAndClosureIntoManifest()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-combined-scope");
@@ -9194,6 +9461,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsPreviousVerdictChainPathOutsideVerdictDocs()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-path-scope");
@@ -9214,7 +9482,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    [Trait("AuditTier", "Fast")]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsBroadAuditTestFiltersInEvidenceChecks()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-broad-audit-test-filter");
@@ -9253,6 +9521,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageIncludesExistingPreviousVerdictsInRestoreModel()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-restore");
@@ -9311,6 +9580,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsPlaceholderWindowsUserPathsInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-placeholder-path");
@@ -9345,6 +9615,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsPlaceholderSecretValuesInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-placeholder-secret");
@@ -9383,6 +9654,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-reviewer-placeholder");
@@ -9427,6 +9699,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsReviewerPlaceholderPhraseSuffixInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-reviewer-placeholder-suffix");
@@ -9455,6 +9728,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsReviewerPlaceholderPhraseInTaskOwnedFiles()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-task-owned-reviewer-placeholder");
@@ -9475,6 +9749,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsPlaceholderSecretValuesWithConcreteSuffixInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-placeholder-secret-suffix");
@@ -9503,6 +9778,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsPlaceholderSecretValuesWithConcreteSuffixInTaskOwnedFiles()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-task-owned-placeholder-secret-suffix");
@@ -9523,6 +9799,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsSecretValuesInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-secret-evidence");
@@ -9559,6 +9836,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsSecretValuesInTaskOwnedFilesEvenWithPreviousVerdictException()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-secret-scope");
@@ -9597,6 +9875,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsMismatchedTaskIdInGeneratedMetadata()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-task-mismatch", "T-0001");
@@ -9615,6 +9894,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsMismatchedTaskIdInArchivePath()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-task-path-mismatch", "T-0001");
@@ -9629,6 +9909,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsWindowsDrivePathsInArchiveContent()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-verify-drive-path", "T-0001");
@@ -9647,6 +9928,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyRejectsNondeterministicZipTimestamp()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-nondeterministic-timestamp", "T-0001");
@@ -9658,6 +9940,86 @@ public sealed class RepositoryBuildToolTests
 
         Assert.NotEqual(0, verify.ExitCode);
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-ZIP-NONDETERMINISTIC");
+    }
+
+    private static IReadOnlyList<AuditTestDeclaration> ReadRepositoryBuildToolAuditTests()
+    {
+        var sourcePath = Path.Combine(FindRepositoryRoot(), "tests", "Electron2D.Tests.Integration", "RepositoryBuildToolTests.cs");
+        var lines = File.ReadAllLines(sourcePath);
+        var tests = new List<AuditTestDeclaration>();
+        for (var index = 0; index < lines.Length; index++)
+        {
+            if (!Regex.IsMatch(lines[index], @"^\s*\[(Fact|Theory)\]"))
+            {
+                continue;
+            }
+
+            var attributes = new List<string>();
+            var scan = index;
+            while (scan < lines.Length && Regex.IsMatch(lines[scan], @"^\s*\["))
+            {
+                attributes.Add(lines[scan].Trim());
+                scan++;
+            }
+
+            while (scan < lines.Length && !Regex.IsMatch(lines[scan], @"^\s*public\s+(async\s+)?(Task|void)\s+\w+"))
+            {
+                scan++;
+            }
+
+            if (scan >= lines.Length)
+            {
+                continue;
+            }
+
+            var methodMatch = Regex.Match(lines[scan], @"^\s*public\s+(?:async\s+)?(?:Task|void)\s+(?<name>\w+)");
+            if (!methodMatch.Success)
+            {
+                continue;
+            }
+
+            var name = methodMatch.Groups["name"].Value;
+            if (!name.Contains("Audit", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var nextTest = scan + 1;
+            while (nextTest < lines.Length && !Regex.IsMatch(lines[nextTest], @"^\s*\[(Fact|Theory)\]"))
+            {
+                nextTest++;
+            }
+
+            var auditTierMatches = attributes
+                .SelectMany(attribute => Regex.Matches(attribute, @"Trait\(""AuditTier"",\s*""(?<tier>[^""]+)""\)").Cast<Match>())
+                .ToArray();
+            var auditTier = auditTierMatches.Length == 1
+                ? auditTierMatches[0].Groups["tier"].Value
+                : null;
+            var body = string.Join('\n', lines[scan..nextTest]);
+            tests.Add(new AuditTestDeclaration(scan + 1, name, auditTier, auditTierMatches.Length, body));
+        }
+
+        return tests;
+    }
+
+    private static string[] FastAuditTierForbiddenTokens()
+    {
+        return
+        [
+            string.Concat("Run", "BuildToolFromDirectoryAsync("),
+            string.Concat("Run", "BuildToolAsync("),
+            string.Concat("Run", "ProcessAsync("),
+            string.Concat("Run", "AuditPackageAsync("),
+            string.Concat("Run", "AuditVerifyAsync("),
+            string.Concat("Create", "PackagedFixtureAsync("),
+            string.Concat("Create", "CleanCloneAsync("),
+            string.Concat("AuditFixture", ".CreateAsync("),
+            string.Concat("Temporary", "Directory.Create("),
+            string.Concat("BuildAndLoad", "BuildToolAssemblyAsync("),
+            string.Concat("Invoke", "Audit"),
+            string.Concat("Run", "AuditSubmit")
+        ];
     }
 
     private static async Task<object> RunProcessRunnerAsync(
@@ -13451,6 +13813,8 @@ public sealed class RepositoryBuildToolTests
         CopyRepositoryFile(sourceRoot, workspace.Root, "docs/release-management/AUDIT-REQUEST.md");
         CopyRepositoryFile(sourceRoot, workspace.Root, "docs/release-management/audit-package.md");
         CopyRepositoryFile(sourceRoot, workspace.Root, ".codex/prompts/goal-task-loop.md");
+        CopyRepositoryFile(sourceRoot, workspace.Root, "eng/Electron2D.Build/TestCommand.cs");
+        CopyRepositoryFile(sourceRoot, workspace.Root, "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs");
         return workspace;
     }
 
@@ -15499,6 +15863,8 @@ public sealed class RepositoryBuildToolTests
 
     private sealed record CommandResult(int ExitCode, string Stdout, string Stderr);
 
+    private sealed record AuditTestDeclaration(int LineNumber, string Name, string? AuditTier, int AuditTierCount, string Body);
+
     private sealed record AuditSubmitDeepResearchItemFixtureResult(
         bool ReturnedPoint,
         double X,
@@ -16266,6 +16632,10 @@ public sealed class RepositoryBuildToolTests
 
             Baseline content.
             """);
+            WriteFile(repositoryRoot, ".gitattributes", """
+            * text=auto
+            *.md text eol=lf
+            """);
             foreach (var file in baselineFiles ?? new Dictionary<string, string>(StringComparer.Ordinal))
             {
                 WriteFile(repositoryRoot, file.Key, file.Value);
@@ -16274,7 +16644,7 @@ public sealed class RepositoryBuildToolTests
             await RunGitAsync(repositoryRoot, "add", ".");
             await RunGitAsync(repositoryRoot, "commit", "-m", "initial fixture baseline");
             var baseline = await RunGitCaptureAsync(repositoryRoot, "rev-parse", "HEAD");
-            WriteFile(repositoryRoot, "docs/release-management/AUDIT-REQUEST.md", DefaultAuditRequestText);
+            CopyRepositoryFile(FindRepositoryRoot(), repositoryRoot, "docs/release-management/AUDIT-REQUEST.md");
 
             return new AuditFixture(root, repositoryRoot, baseline.Trim());
         }

@@ -393,7 +393,7 @@
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "a495629c490e03cdacf8bb72e5cf5b107acdcb4fd94b8d60313b4ee52ddd0051"
+        "sha256": "d5834af9926e77a411c411382372bcb872246675cb9d2fad0357ae9ee698349d"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -894,7 +894,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "87146f6be71035f7732d79c36fbb126611ca77566e5d7f90e4e6f7b5146a7002",
+    "sourceDigest": "d9d4c92fd872512928eb4bed2d0a546bf50315e8448712e564fb878f4a4a1ea1",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

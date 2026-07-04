@@ -161,6 +161,25 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             documents.AgentsText,
             ["Before `audit package`", "focused", "--no-build", "--no-restore"]);
 
+        CheckContainsAll(
+            checks,
+            "test-command-audit-tier-slice",
+            documents.TestCommandPath,
+            documents.TestCommandText,
+            ["AuditTier(AuditTierMedium)", "AuditTier(AuditTierHeavy)", "NotAuditTier(AuditTierFast)", "IntegrationSliceAuditPackage"]);
+        CheckContainsAll(
+            checks,
+            "integration-audit-tier-guards",
+            documents.IntegrationTestsPath,
+            documents.IntegrationTestsText,
+            [
+                "AuditWorkflowAuditTestsDeclareAuditTierTraits",
+                "AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers",
+                "Trait(\"AuditTier\", \"Fast\")",
+                "Trait(\"AuditTier\", \"Medium\")",
+                "Trait(\"AuditTier\", \"Heavy\")"
+            ]);
+
         VerifyFollowupParser(checks);
         VerifyFinalReportExtractor(checks);
 
@@ -198,6 +217,8 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
         var domainDocumentPath = "docs/release-management/audit-package.md";
         var goalLoopPath = ".codex/prompts/goal-task-loop.md";
         var agentsPath = "AGENTS.md";
+        var testCommandPath = "eng/Electron2D.Build/TestCommand.cs";
+        var integrationTestsPath = "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs";
         return new AuditContractDocuments(
             auditRequestPath,
             ReadRequiredText(checks, auditRequestPath),
@@ -206,7 +227,11 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             goalLoopPath,
             ReadRequiredText(checks, goalLoopPath),
             agentsPath,
-            ReadRequiredText(checks, agentsPath));
+            ReadRequiredText(checks, agentsPath),
+            testCommandPath,
+            ReadRequiredText(checks, testCommandPath),
+            integrationTestsPath,
+            ReadRequiredText(checks, integrationTestsPath));
     }
 
     private string? ReadRequiredText(List<AuditContractCheckResult> checks, string relativePath)
@@ -382,7 +407,11 @@ internal sealed record AuditContractDocuments(
     string GoalLoopPath,
     string? GoalLoopText,
     string AgentsPath,
-    string? AgentsText);
+    string? AgentsText,
+    string TestCommandPath,
+    string? TestCommandText,
+    string IntegrationTestsPath,
+    string? IntegrationTestsText);
 
 internal sealed record AuditContractCheckResult(
     string Name,
