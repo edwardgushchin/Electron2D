@@ -9771,6 +9771,52 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreviousNeedsFixesWithoutParseableBlockers()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-rejects-unparseable-previous-blockers");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r01.md";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the package a repository-owned change.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - Fixture report.
+
+        BLOCKERS:
+        - The previous report says there is a blocking issue but does not give it a B-id.
+
+        EVIDENCE_REVIEW:
+        - Fixture evidence.
+
+        RISKS_AND_NOTES:
+        - Fixture risks.
+
+        CLOSURE_DECISION:
+        - Fixture decision.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList:
+            [
+                $"{previousVerdictPath} closed: check git-status covers the previous blocker class."
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains(previousVerdictPath, package.Stdout, StringComparison.Ordinal);
+        Assert.Contains("parseable B*", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
     [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageWritesPreviousBlockerClosureMatrixIntoManifest()
     {
@@ -10041,17 +10087,27 @@ public sealed class RepositoryBuildToolTests
         fixture.WriteTextFile(previousVerdictPath, $"""
         VERDICT: NEEDS_FIXES
 
-        B1
+        TASK_ASSESSMENT:
+        - Fixture report.
 
-        Внешний отчёт цитирует пример без реального значения секрета:
-        {placeholderEvidence}
+        BLOCKERS:
+        - B1
+          - Внешний отчёт цитирует пример без реального значения секрета:
+            {placeholderEvidence}
 
-        Это не реальное значение секрета.
+        EVIDENCE_REVIEW:
+        - Fixture evidence.
+
+        RISKS_AND_NOTES:
+        - Fixture risks.
+
+        CLOSURE_DECISION:
+        - Это не реальное значение секрета.
         """);
         var configPath = fixture.WriteConfig(
             taskId,
             previousVerdictChain: [previousVerdictPath],
-            blockerClosureList: ["Fixture closure: check git-status covers previous verdict placeholder secret."]);
+            blockerClosureList: [$"{previousVerdictPath} B1 closed: check git-status covers previous verdict placeholder secret."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 

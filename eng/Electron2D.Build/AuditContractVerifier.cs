@@ -142,7 +142,7 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             "domain-previous-blocker-closure-coverage",
             documents.DomainDocumentPath,
             documents.DomainDocumentText,
-            ["путь прошлого отчёта", "идентификатор blocker-а", "configured check", "каждый найденный blocker"]);
+            ["путь прошлого отчёта", "идентификатор blocker-а", "configured check", "каждый найденный blocker", "распознаваемые `B*` blocker ids"]);
         CheckContainsAll(
             checks,
             "domain-previous-blocker-closure-matrix",

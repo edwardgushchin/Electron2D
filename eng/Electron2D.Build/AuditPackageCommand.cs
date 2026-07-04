@@ -752,7 +752,16 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 continue;
             }
 
-            foreach (var blockerId in ExtractPreviousBlockerIds(report))
+            var blockerIds = ExtractPreviousBlockerIds(report);
+            if (blockerIds.Count == 0)
+            {
+                throw new AuditPackageFailure(
+                    "audit package",
+                    "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                    $"previous verdict report {previousVerdictPath} is VERDICT: NEEDS_FIXES but does not contain parseable B* blocker ids in its BLOCKERS section.");
+            }
+
+            foreach (var blockerId in blockerIds)
             {
                 if (!config.BlockerClosureList.Any(closure =>
                     closure.Contains(previousVerdictPath, StringComparison.Ordinal) &&
