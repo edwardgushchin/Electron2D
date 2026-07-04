@@ -181,6 +181,7 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             [
                 "AuditWorkflowAuditTestsDeclareAuditTierTraits",
                 "AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers",
+                "AuditWorkflowMediumAuditTierDoesNotUseHeavyPackagingHelpers",
                 "TestCommandAuditTierIntegrationSlicesPrintSummary",
                 "Trait(\"AuditTier\", \"Fast\")",
                 "Trait(\"AuditTier\", \"Medium\")",

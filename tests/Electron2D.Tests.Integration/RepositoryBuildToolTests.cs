@@ -6614,6 +6614,21 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
+    public void AuditWorkflowMediumAuditTierDoesNotUseHeavyPackagingHelpers()
+    {
+        var forbiddenTokens = MediumAuditTierForbiddenTokens();
+        var violations = ReadRepositoryBuildToolAuditTests()
+            .Where(test => string.Equals(test.AuditTier, "Medium", StringComparison.Ordinal))
+            .SelectMany(test => forbiddenTokens
+                .Where(token => test.Body.Contains(token, StringComparison.Ordinal))
+                .Select(token => $"{test.LineNumber}: {test.Name} uses {token}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditContractsRunsFastWithoutPackagingArtifacts()
     {
@@ -10091,6 +10106,19 @@ public sealed class RepositoryBuildToolTests
             string.Concat("BuildAndLoad", "BuildToolAssemblyAsync("),
             string.Concat("Invoke", "Audit"),
             string.Concat("Run", "AuditSubmit")
+        ];
+    }
+
+    private static string[] MediumAuditTierForbiddenTokens()
+    {
+        return
+        [
+            string.Concat("Run", "AuditPackageAsync("),
+            string.Concat("Run", "AuditVerifyAsync("),
+            string.Concat("Run", "AuditMessageAsync("),
+            string.Concat("Create", "PackagedFixtureAsync("),
+            string.Concat("Create", "CleanCloneAsync("),
+            string.Concat("AuditFixture", ".CreateAsync(")
         ];
     }
 
