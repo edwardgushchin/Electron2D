@@ -62,6 +62,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     private static readonly Regex WindowsDrivePathPattern = new(
         @"(?i)\b[A-Z]:(?:\\|/)",
         RegexOptions.CultureInvariant);
+    private static readonly Regex MarkdownSectionHeadingPattern = new(
+        @"^\s*[A-Z][A-Z0-9_]*:\s*$",
+        RegexOptions.CultureInvariant);
+    private static readonly Regex PreviousBlockerIdPattern = new(
+        @"^\s*(?:[-*]\s*)?(?<id>B\d+)\b",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
     private const string RepositoryFileSnapshotsArchivePath = "metadata/repo-file-snapshots.json";
     private const string StaticAuditRequestSourcePath = "docs/release-management/AUDIT-REQUEST.md";
     private const string StaticAuditRequestArchivePath = "AUDIT-REQUEST.md";
@@ -208,7 +214,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         var repoRoot = Directory.GetCurrentDirectory();
         var config = await ReadConfigurationAsync(options.ConfigPath, cancellationToken).ConfigureAwait(false);
         NormalizeConfiguration(config);
-        ValidateConfigurationAgainstOptions(config, options);
+        ValidateConfigurationAgainstOptions(repoRoot, config, options);
 
         var outputDirectory = ResolvePath(repoRoot, options.OutputDirectory);
         Directory.CreateDirectory(outputDirectory);
@@ -594,7 +600,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
     }
 
-    private static void ValidateConfigurationAgainstOptions(AuditPackageConfiguration config, AuditPackageOptions options)
+    private static void ValidateConfigurationAgainstOptions(string repoRoot, AuditPackageConfiguration config, AuditPackageOptions options)
     {
         ValidateTaskId(config.TaskId, "audit package");
         ValidateIteration(config.Iteration, "audit package");
@@ -639,7 +645,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             ValidateCheck(check);
         }
 
-        ValidateAuditLoopClosureConfiguration(config);
+        ValidateAuditLoopClosureConfiguration(repoRoot, config);
     }
 
     private static void ValidateScopeMetadata(AuditPackageConfiguration config)
@@ -692,7 +698,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         ValidateDotnetTestFilter(check);
     }
 
-    private static void ValidateAuditLoopClosureConfiguration(AuditPackageConfiguration config)
+    private static void ValidateAuditLoopClosureConfiguration(string repoRoot, AuditPackageConfiguration config)
     {
         if (config.PreviousVerdictChain.Count == 0)
         {
@@ -726,6 +732,87 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                     "Each blockerClosureList entry must name at least one configured check from the current package.");
             }
         }
+
+        ValidatePreviousBlockerClosureCoverage(repoRoot, config);
+    }
+
+    private static void ValidatePreviousBlockerClosureCoverage(string repoRoot, AuditPackageConfiguration config)
+    {
+        foreach (var previousVerdictPath in SelectPreviousVerdictPaths(config).Order(StringComparer.Ordinal))
+        {
+            var absolutePath = Path.Combine(repoRoot, previousVerdictPath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(absolutePath))
+            {
+                continue;
+            }
+
+            var report = File.ReadAllText(absolutePath, Encoding.UTF8);
+            if (!string.Equals(FirstNonEmptyLine(report), "VERDICT: NEEDS_FIXES", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            foreach (var blockerId in ExtractPreviousBlockerIds(report))
+            {
+                if (!config.BlockerClosureList.Any(closure =>
+                    closure.Contains(previousVerdictPath, StringComparison.Ordinal) &&
+                    ContainsBlockerId(closure, blockerId)))
+                {
+                    throw new AuditPackageFailure(
+                        "audit package",
+                        "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                        $"blockerClosureList must close previous blocker {previousVerdictPath} {blockerId} with a closure entry that names the report path, blocker id and a configured check.");
+                }
+            }
+        }
+    }
+
+    private static IReadOnlyList<string> ExtractPreviousBlockerIds(string report)
+    {
+        var lines = NormalizeNewlines(report).Split('\n');
+        var start = Array.FindIndex(lines, line => string.Equals(line.Trim(), "BLOCKERS:", StringComparison.Ordinal));
+        if (start < 0)
+        {
+            return [];
+        }
+
+        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (var index = start + 1; index < lines.Length; index++)
+        {
+            var trimmed = lines[index].Trim();
+            if (MarkdownSectionHeadingPattern.IsMatch(trimmed))
+            {
+                break;
+            }
+
+            var match = PreviousBlockerIdPattern.Match(trimmed);
+            if (match.Success)
+            {
+                ids.Add(match.Groups["id"].Value.ToUpperInvariant());
+            }
+        }
+
+        return ids.Order(StringComparer.Ordinal).ToArray();
+    }
+
+    private static bool ContainsBlockerId(string value, string blockerId)
+    {
+        return Regex.IsMatch(
+            value,
+            $@"(?<![A-Za-z0-9]){Regex.Escape(blockerId)}(?![A-Za-z0-9])",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    }
+
+    private static string FirstNonEmptyLine(string text)
+    {
+        return NormalizeNewlines(text)
+            .Split('\n', StringSplitOptions.TrimEntries)
+            .FirstOrDefault(line => !string.IsNullOrWhiteSpace(line)) ?? string.Empty;
+    }
+
+    private static string NormalizeNewlines(string text)
+    {
+        return text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
     }
 
     private static void ValidateDotnetTestFilter(AuditCheckConfiguration check)

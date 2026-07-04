@@ -9712,6 +9712,56 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
+    public async Task AuditPackageRequiresClosureCoverageForEachPreviousBlocker()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-closure-covers-each-blocker");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r01.md";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the package a repository-owned change.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - Fixture report.
+
+        BLOCKERS:
+        - B1
+          - What is wrong: first previous blocker.
+        - B2
+          - What is wrong: second previous blocker.
+
+        EVIDENCE_REVIEW:
+        - Fixture evidence.
+
+        RISKS_AND_NOTES:
+        - Fixture risks.
+
+        CLOSURE_DECISION:
+        - Fixture decision.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath],
+            blockerClosureList:
+            [
+                $"{previousVerdictPath} B1 closed: check git-status covers the first previous blocker."
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains(previousVerdictPath, package.Stdout, StringComparison.Ordinal);
+        Assert.Contains("B2", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageWritesCombinedScopeMetadataAndClosureIntoManifest()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-combined-scope");
