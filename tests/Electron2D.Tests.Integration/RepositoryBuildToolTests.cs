@@ -226,6 +226,47 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj", invocation, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [Trait("AuditTier", "Medium")]
+    [InlineData("audit-medium", "AuditTier=Medium")]
+    [InlineData("audit-heavy", "AuditTier=Heavy")]
+    public async Task TestCommandAuditTierIntegrationSlicesPrintSummary(string integrationSlice, string expectedTier)
+    {
+        using var shim = TemporaryDirectory.Create($"test-command-{integrationSlice}-summary-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = "Passed! - Failed: 0, Passed: 3, Skipped: 1, Total: 4, Duration: 123 ms"
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", integrationSlice, "--no-build", "--no-restore", "--timeout-seconds", "30"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        using var diagnostics = ReadDiagnostics(result);
+        var summary = Assert.Single(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-TEST-SLICE-SUMMARY");
+        var message = summary.GetProperty("message").GetString()!;
+        Assert.Contains("command=test", message, StringComparison.Ordinal);
+        Assert.Contains($"integrationSlice={integrationSlice}", message, StringComparison.Ordinal);
+        Assert.Contains(expectedTier, message, StringComparison.Ordinal);
+        Assert.Contains("projects=1", message, StringComparison.Ordinal);
+        Assert.Contains("childProcesses=1", message, StringComparison.Ordinal);
+        Assert.Contains("tests=4", message, StringComparison.Ordinal);
+        Assert.Contains("passed=3", message, StringComparison.Ordinal);
+        Assert.Contains("failed=0", message, StringComparison.Ordinal);
+        Assert.Contains("skipped=1", message, StringComparison.Ordinal);
+        Assert.Contains("timeoutSeconds=30", message, StringComparison.Ordinal);
+        Assert.Contains("timedOut=false", message, StringComparison.Ordinal);
+        Assert.Contains("failure=none", message, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void ReleasePackagingTemporaryDirectoryUsesSystemTemporaryRoot()
     {

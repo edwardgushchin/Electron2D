@@ -169,12 +169,19 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             ["AuditTier(AuditTierMedium)", "AuditTier(AuditTierHeavy)", "NotAuditTier(AuditTierFast)", "IntegrationSliceAuditPackage", "IntegrationSliceAuditMedium", "IntegrationSliceAuditHeavy"]);
         CheckContainsAll(
             checks,
+            "test-command-slice-summary",
+            documents.TestCommandPath,
+            documents.TestCommandText,
+            ["E2D-BUILD-TEST-SLICE-SUMMARY", "TryParseDotnetTestCounts", "childProcesses", "failure={failure}"]);
+        CheckContainsAll(
+            checks,
             "integration-audit-tier-guards",
             documents.IntegrationTestsPath,
             documents.IntegrationTestsText,
             [
                 "AuditWorkflowAuditTestsDeclareAuditTierTraits",
                 "AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers",
+                "TestCommandAuditTierIntegrationSlicesPrintSummary",
                 "Trait(\"AuditTier\", \"Fast\")",
                 "Trait(\"AuditTier\", \"Medium\")",
                 "Trait(\"AuditTier\", \"Heavy\")"

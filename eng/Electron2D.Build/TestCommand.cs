@@ -22,6 +22,10 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
 namespace Electron2D.Build;
 
 internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diagnostics, ProcessRunner processRunner)
@@ -42,6 +46,9 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private const string AuditTierFast = "Fast";
     private const string AuditTierMedium = "Medium";
     private const string AuditTierHeavy = "Heavy";
+    private static readonly Regex DotnetTestSummaryPattern = new(
+        @"Failed:\s*(?<failed>\d+),\s*Passed:\s*(?<passed>\d+),\s*Skipped:\s*(?<skipped>\d+),\s*Total:\s*(?<total>\d+)",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
     private static readonly string[] TestProjects =
     [
@@ -126,6 +133,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             $"Running {TestProjects.Length} test projects.",
             TimeoutSeconds: options.TimeoutSeconds));
 
+        var stopwatch = Stopwatch.StartNew();
+        var summary = new TestCommandRunSummary();
         var testProjects = GetTestProjects(options);
         foreach (var project in testProjects)
         {
@@ -148,14 +157,21 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                     repositoryRoot,
                     TimeSpan.FromSeconds(options.TimeoutSeconds)),
                 cancellationToken).ConfigureAwait(false);
+            summary.ChildProcesses++;
 
             foreach (var diagnostic in result.Diagnostics)
             {
                 diagnostics.Write(diagnostic);
             }
 
+            if (TryParseDotnetTestCounts(result.StandardOutput, out var counts))
+            {
+                summary.Add(counts);
+            }
+
             if (result.TimedOut)
             {
+                WriteIntegrationSliceSummary(options, summary, stopwatch.Elapsed, timedOut: true, failure: "timeout");
                 diagnostics.Write(new BuildDiagnostic(
                     "test",
                     step,
@@ -172,6 +188,12 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
 
             if (result.ExitCode != 0)
             {
+                WriteIntegrationSliceSummary(
+                    options,
+                    summary,
+                    stopwatch.Elapsed,
+                    timedOut: false,
+                    failure: $"exit-code:{result.ExitCode}");
                 diagnostics.Write(new BuildDiagnostic(
                     "test",
                     step,
@@ -199,6 +221,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                 TimeoutSeconds: options.TimeoutSeconds));
         }
 
+        WriteIntegrationSliceSummary(options, summary, stopwatch.Elapsed, timedOut: false, failure: "none");
         diagnostics.Write(new BuildDiagnostic(
             "test",
             "test",
@@ -207,6 +230,28 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             "All configured test projects passed.",
             TimeoutSeconds: options.TimeoutSeconds));
         return RepositoryBuildExitCodes.Success;
+    }
+
+    private void WriteIntegrationSliceSummary(
+        TestCommandOptions options,
+        TestCommandRunSummary summary,
+        TimeSpan elapsed,
+        bool timedOut,
+        string failure)
+    {
+        if (!IsAuditIntegrationSlice(options.IntegrationSlice))
+        {
+            return;
+        }
+
+        diagnostics.Write(new BuildDiagnostic(
+            "test",
+            "test",
+            timedOut || failure != "none" ? "error" : "info",
+            "E2D-BUILD-TEST-SLICE-SUMMARY",
+            $"Test integration slice summary: command=test; integrationSlice={options.IntegrationSlice}; {DescribeIntegrationSliceTier(options.IntegrationSlice)}; projects={summary.ChildProcesses}; childProcesses={summary.ChildProcesses}; tests={summary.FormatTotal()}; passed={summary.FormatPassed()}; failed={summary.FormatFailed()}; skipped={summary.FormatSkipped()}; elapsed={FormatDuration(elapsed)}; timeoutSeconds={options.TimeoutSeconds}; timedOut={timedOut.ToString().ToLowerInvariant()}; failure={failure}.",
+            TimedOut: timedOut,
+            TimeoutSeconds: options.TimeoutSeconds));
     }
 
     private TestCommandOptions? ParseOptions(string[] args)
@@ -371,6 +416,22 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         };
     }
 
+    private static string DescribeIntegrationSliceTier(string integrationSlice)
+    {
+        return integrationSlice switch
+        {
+            IntegrationSliceAuditPackage => "AuditTier=Medium|AuditTier=Heavy",
+            IntegrationSliceAuditMedium => "AuditTier=Medium",
+            IntegrationSliceAuditHeavy => "AuditTier=Heavy",
+            _ => "AuditTier=unknown"
+        };
+    }
+
+    private static bool IsAuditIntegrationSlice(string integrationSlice)
+    {
+        return integrationSlice is IntegrationSliceAuditPackage or IntegrationSliceAuditMedium or IntegrationSliceAuditHeavy;
+    }
+
     private static bool TryParseIntegrationSlice(string value, out string integrationSlice)
     {
         integrationSlice = value;
@@ -414,6 +475,35 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         return string.Join("|", filters.Select(filter => $"({filter})"));
     }
 
+    private static bool TryParseDotnetTestCounts(string standardOutput, out DotnetTestCounts counts)
+    {
+        var match = DotnetTestSummaryPattern.Match(standardOutput);
+        if (!match.Success)
+        {
+            counts = default;
+            return false;
+        }
+
+        counts = new DotnetTestCounts(
+            ParseGroup(match, "failed"),
+            ParseGroup(match, "passed"),
+            ParseGroup(match, "skipped"),
+            ParseGroup(match, "total"));
+        return true;
+    }
+
+    private static int ParseGroup(Match match, string groupName)
+    {
+        return int.Parse(match.Groups[groupName].Value, CultureInfo.InvariantCulture);
+    }
+
+    private static string FormatDuration(TimeSpan elapsed)
+    {
+        return elapsed.TotalSeconds < 1
+            ? $"{elapsed.TotalMilliseconds.ToString("0", CultureInfo.InvariantCulture)}ms"
+            : $"{elapsed.TotalSeconds.ToString("0.###", CultureInfo.InvariantCulture)}s";
+    }
+
     private static string? Tail(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -427,4 +517,50 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     }
 
     private sealed record TestCommandOptions(bool IncludeBaseline, string IntegrationSlice, bool NoBuild, bool NoRestore, int TimeoutSeconds);
+
+    private sealed class TestCommandRunSummary
+    {
+        public int ChildProcesses { get; set; }
+        private bool hasCounts;
+        private int failed;
+        private int passed;
+        private int skipped;
+        private int total;
+
+        public void Add(DotnetTestCounts counts)
+        {
+            hasCounts = true;
+            failed += counts.Failed;
+            passed += counts.Passed;
+            skipped += counts.Skipped;
+            total += counts.Total;
+        }
+
+        public string FormatFailed()
+        {
+            return Format(failed);
+        }
+
+        public string FormatPassed()
+        {
+            return Format(passed);
+        }
+
+        public string FormatSkipped()
+        {
+            return Format(skipped);
+        }
+
+        public string FormatTotal()
+        {
+            return Format(total);
+        }
+
+        private string Format(int value)
+        {
+            return hasCounts ? value.ToString(CultureInfo.InvariantCulture) : "unknown";
+        }
+    }
+
+    private readonly record struct DotnetTestCounts(int Failed, int Passed, int Skipped, int Total);
 }
