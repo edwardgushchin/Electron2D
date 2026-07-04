@@ -7796,6 +7796,38 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task AuditPackagePrintsConfiguredChecksPlanAndResultSummary()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-checks-plan");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that configured checks publish an operator-visible plan.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        using var diagnostics = ReadDiagnostics(package);
+        var entries = diagnostics.RootElement.EnumerateArray().ToArray();
+        var plan = entries.Single(diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-AUDIT-CHECKS-PLAN");
+        var result = entries.Single(diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-AUDIT-CHECK-RESULT");
+        var planMessage = plan.GetProperty("message").GetString();
+        var resultMessage = result.GetProperty("message").GetString();
+
+        Assert.Contains("checks=1", planMessage, StringComparison.Ordinal);
+        Assert.Contains("git-status", planMessage, StringComparison.Ordinal);
+        Assert.Contains("timeoutSeconds=10", planMessage, StringComparison.Ordinal);
+        Assert.Contains("expectedExitCode=0", planMessage, StringComparison.Ordinal);
+        Assert.Contains("git-status", resultMessage, StringComparison.Ordinal);
+        Assert.Contains("actualExitCode=0", resultMessage, StringComparison.Ordinal);
+        Assert.Contains($"evidence/{taskId}-r01/checks/git-status/stdout.txt", resultMessage, StringComparison.Ordinal);
+        Assert.Contains($"evidence/{taskId}-r01/checks/git-status/stderr.txt", resultMessage, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AuditPackageAllowsArchiveOnlyEvidenceUnderTempAuditEvidence()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-temp-audit-evidence");

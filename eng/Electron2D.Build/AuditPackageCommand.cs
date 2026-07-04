@@ -249,7 +249,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         var auditRequest = await ReadStaticAuditRequestAsync(repoRoot, cancellationToken).ConfigureAwait(false);
         var repoFiles = await SelectRepositoryFilesAsync(repoRoot, config, cancellationToken).ConfigureAwait(false);
         var importedEvidence = SelectArchiveOnlyEvidenceFiles(repoRoot, config);
-        var checkEvidence = await RunConfiguredChecksAsync(repoRoot, staging.Root, config, cancellationToken).ConfigureAwait(false);
+        var checkEvidence = await RunConfiguredChecksAsync(repoRoot, staging.Root, config, diagnostics, cancellationToken).ConfigureAwait(false);
         var configuredEvidenceFiles = importedEvidence.Concat(checkEvidence).OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
 
         var previousVerdictPaths = SelectPreviousVerdictPaths(config);
@@ -1053,9 +1053,16 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         string repoRoot,
         string stagingRoot,
         AuditPackageConfiguration config,
+        JsonDiagnosticSink diagnostics,
         CancellationToken cancellationToken)
     {
         var evidence = new List<EvidenceSourceFile>();
+        diagnostics.Write(new BuildDiagnostic(
+            "audit",
+            "audit package",
+            "info",
+            "E2D-BUILD-AUDIT-CHECKS-PLAN",
+            $"Package evidence checks plan: checks={config.Checks.Count}; {FormatChecksPlan(config.Checks)}"));
         foreach (var check in config.Checks)
         {
             var relativeCwd = AuditPath.NormalizeRelativePath(check.Cwd, "checks.cwd", allowCurrentDirectory: true);
@@ -1107,6 +1114,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 Sha256File(Path.Combine(localRoot, "stderr.txt")),
                 trxFiles);
             WriteText(localRoot, "metadata.json", JsonSerializer.Serialize(metadata, JsonWriteOptions) + "\n");
+            diagnostics.Write(new BuildDiagnostic(
+                "audit",
+                "audit package",
+                "info",
+                "E2D-BUILD-AUDIT-CHECK-RESULT",
+                $"Package evidence check result: name={check.Name}; expectedExitCode={check.ExpectedExitCode}; actualExitCode={result.ExitCode}; durationMs={FormatDurationMs(durationMs)}; stdout={archiveRoot}/stdout.txt; stderr={archiveRoot}/stderr.txt; timeoutSeconds={check.TimeoutSeconds}."));
 
             if (result.ExitCode != check.ExpectedExitCode)
             {
@@ -1123,6 +1136,29 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         return evidence.OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
+    }
+
+    private static string FormatChecksPlan(IReadOnlyList<AuditCheckConfiguration> checks)
+    {
+        if (checks.Count == 0)
+        {
+            return "no configured checks.";
+        }
+
+        return string.Join(
+            " | ",
+            checks.Select(check =>
+                $"name={check.Name}; command={FormatInlineCommand(check.FileName, check.Arguments)}; cwd={check.Cwd}; timeoutSeconds={check.TimeoutSeconds}; expectedExitCode={check.ExpectedExitCode}"));
+    }
+
+    private static string FormatInlineCommand(string fileName, IReadOnlyList<string> arguments)
+    {
+        return string.Join(" ", new[] { fileName }.Concat(arguments.Select(FormatInlineCommandArgument)));
+    }
+
+    private static string FormatInlineCommandArgument(string argument)
+    {
+        return argument.Any(char.IsWhiteSpace) ? $"\"{argument.Replace("\"", "\\\"", StringComparison.Ordinal)}\"" : argument;
     }
 
     private async Task CreateOperatorWorkflowSidecarAsync(
