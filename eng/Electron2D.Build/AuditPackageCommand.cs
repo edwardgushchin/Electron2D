@@ -288,7 +288,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             archiveFiles[evidence.ArchivePath] = await File.ReadAllBytesAsync(evidence.SourcePath, cancellationToken).ConfigureAwait(false);
         }
 
-        RefreshManifestAndChecksums(archiveFiles, config, patch.NameStatus, restoreManifest, configuredEvidenceFiles.Select(file => file.ArchivePath).ToArray());
+        RefreshManifestAndChecksums(archiveFiles, repoRoot, config, patch.NameStatus, restoreManifest, configuredEvidenceFiles.Select(file => file.ArchivePath).ToArray());
         ValidateArchiveFiles(archiveFiles, repoRoot, previousVerdictPaths);
 
         var relativeZipPath = GetRepositoryRelativePath(repoRoot, zipPath, "audit package");
@@ -2511,6 +2511,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     }
 
     private static string CreateManifest(
+        string repoRoot,
         AuditPackageConfiguration config,
         string nameStatus,
         RestoreManifest restoreManifest,
@@ -2603,6 +2604,21 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         builder.AppendLine();
+        builder.AppendLine("## Previous Blocker Closure Matrix");
+        var closureMatrix = CreatePreviousBlockerClosureMatrix(repoRoot, config);
+        if (closureMatrix.Count == 0)
+        {
+            builder.AppendLine("- <none>");
+        }
+        else
+        {
+            foreach (var row in closureMatrix)
+            {
+                builder.AppendLine($"- `{row.ReportPath}` `{row.BlockerId}` `{row.CheckName}` - {row.Closure}");
+            }
+        }
+
+        builder.AppendLine();
         builder.AppendLine("## Restore Model");
         builder.AppendLine("- `SHA256SUMS.txt` covers all archive files except itself.");
         builder.AppendLine($"- `{config.TaskId}.patch` restores repository-owned files from baseline.");
@@ -2651,6 +2667,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static void RefreshManifestAndChecksums(
         Dictionary<string, byte[]> archiveFiles,
+        string repoRoot,
         AuditPackageConfiguration config,
         string nameStatus,
         RestoreManifest restoreManifest,
@@ -2662,9 +2679,48 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             .Concat(["AUDIT-MANIFEST.md", "SHA256SUMS.txt"])
             .Order(StringComparer.Ordinal)
             .ToArray();
-        var manifest = CreateManifest(config, nameStatus, restoreManifest, plannedPaths, evidencePaths);
+        var manifest = CreateManifest(repoRoot, config, nameStatus, restoreManifest, plannedPaths, evidencePaths);
         archiveFiles["AUDIT-MANIFEST.md"] = Encoding.UTF8.GetBytes(manifest);
         archiveFiles["SHA256SUMS.txt"] = CreateChecksumFile(archiveFiles);
+    }
+
+    private static IReadOnlyList<PreviousBlockerClosureMatrixRow> CreatePreviousBlockerClosureMatrix(
+        string repoRoot,
+        AuditPackageConfiguration config)
+    {
+        var rows = new List<PreviousBlockerClosureMatrixRow>();
+        foreach (var reportPath in SelectPreviousVerdictPaths(config).Order(StringComparer.Ordinal))
+        {
+            var absolutePath = Path.Combine(repoRoot, reportPath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(absolutePath))
+            {
+                continue;
+            }
+
+            var report = File.ReadAllText(absolutePath, Encoding.UTF8);
+            if (!string.Equals(FirstNonEmptyLine(report), "VERDICT: NEEDS_FIXES", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            foreach (var blockerId in ExtractPreviousBlockerIds(report))
+            {
+                var closure = config.BlockerClosureList.FirstOrDefault(value =>
+                    value.Contains(reportPath, StringComparison.Ordinal) &&
+                    ContainsBlockerId(value, blockerId));
+                if (closure is null)
+                {
+                    continue;
+                }
+
+                var checkName = config.Checks
+                    .Select(check => check.Name)
+                    .FirstOrDefault(name => closure.Contains(name, StringComparison.Ordinal)) ?? string.Empty;
+                rows.Add(new PreviousBlockerClosureMatrixRow(reportPath, blockerId, checkName, closure));
+            }
+        }
+
+        return rows;
     }
 
     private static IEnumerable<string> ExtractEvidenceCheckNames(IEnumerable<string> evidencePaths)
@@ -4607,6 +4663,12 @@ internal sealed record SelectedRepositoryFile(string Path, string AbsolutePath, 
 internal sealed record StaticAuditRequest(string AbsolutePath, byte[] Bytes);
 
 internal sealed record EvidenceSourceFile(string SourcePath, string ArchivePath);
+
+internal sealed record PreviousBlockerClosureMatrixRow(
+    string ReportPath,
+    string BlockerId,
+    string CheckName,
+    string Closure);
 
 internal sealed record RepositoryFileSnapshotArchive(
     RepositoryFileSnapshotManifest Manifest,

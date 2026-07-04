@@ -145,6 +145,12 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             ["путь прошлого отчёта", "идентификатор blocker-а", "configured check", "каждый найденный blocker"]);
         CheckContainsAll(
             checks,
+            "domain-previous-blocker-closure-matrix",
+            documents.DomainDocumentPath,
+            documents.DomainDocumentText,
+            ["матрицу закрытия прошлых blocker-ов", "путь отчёта", "blocker id", "configured check"]);
+        CheckContainsAll(
+            checks,
             "request-previous-blocker-closure-coverage",
             documents.AuditRequestPath,
             documents.AuditRequestText,
@@ -337,6 +343,12 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             ["E2D-BUILD-AUDIT-OPERATOR-WORKFLOW-SUMMARY", "Operator workflow sidecar summary", "audit-package-message", "audit-package-verify"]);
         CheckContainsAll(
             checks,
+            "audit-package-previous-blocker-closure-matrix",
+            documents.AuditPackageCommandPath,
+            documents.AuditPackageCommandText,
+            ["Previous Blocker Closure Matrix", "CreatePreviousBlockerClosureMatrix", "PreviousBlockerClosureMatrixRow"]);
+        CheckContainsAll(
+            checks,
             "integration-audit-tier-guards",
             documents.IntegrationTestsPath,
             documents.IntegrationTestsText,
@@ -345,6 +357,7 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
                 "AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers",
                 "AuditWorkflowMediumAuditTierDoesNotUseHeavyPackagingHelpers",
                 "TestCommandAuditTierIntegrationSlicesPrintSummary",
+                "AuditPackageWritesPreviousBlockerClosureMatrixIntoManifest",
                 "env ELECTRON2D_BUILD_TOOL_NO_BUILD=",
                 "Trait(\"AuditTier\", \"Fast\")",
                 "Trait(\"AuditTier\", \"Medium\")",
