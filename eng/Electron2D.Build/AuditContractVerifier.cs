@@ -166,7 +166,7 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             "test-command-audit-tier-slice",
             documents.TestCommandPath,
             documents.TestCommandText,
-            ["AuditTier(AuditTierMedium)", "AuditTier(AuditTierHeavy)", "NotAuditTier(AuditTierFast)", "IntegrationSliceAuditPackage"]);
+            ["AuditTier(AuditTierMedium)", "AuditTier(AuditTierHeavy)", "NotAuditTier(AuditTierFast)", "IntegrationSliceAuditPackage", "IntegrationSliceAuditMedium", "IntegrationSliceAuditHeavy"]);
         CheckContainsAll(
             checks,
             "integration-audit-tier-guards",

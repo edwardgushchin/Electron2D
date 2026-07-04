@@ -35,6 +35,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private const string IntegrationSliceFast = "fast";
     private const string IntegrationSliceRepositoryTooling = "repository-tooling";
     private const string IntegrationSliceAuditPackage = "audit-package";
+    private const string IntegrationSliceAuditMedium = "audit-medium";
+    private const string IntegrationSliceAuditHeavy = "audit-heavy";
     private const string IntegrationSliceExternalProcess = "external-process";
     private const string IntegrationSliceSlow = "slow";
     private const string AuditTierFast = "Fast";
@@ -276,7 +278,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             "test",
             "error",
             "E2D-BUILD-CLI-INVALID-ARGUMENTS",
-            "Expected: test [--include-baseline] [--integration-slice <all|fast|repository-tooling|audit-package|external-process|slow>] [--no-build] [--no-restore] [--timeout-seconds <n>]."));
+            "Expected: test [--include-baseline] [--integration-slice <all|fast|repository-tooling|audit-package|audit-medium|audit-heavy|external-process|slow>] [--no-build] [--no-restore] [--timeout-seconds <n>]."));
     }
 
     private static string[] GetTestProjects(TestCommandOptions options)
@@ -361,6 +363,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                     NotAuditTier(AuditTierMedium),
                     NotAuditTier(AuditTierHeavy)]),
             IntegrationSliceAuditPackage => Or([AuditTier(AuditTierMedium), AuditTier(AuditTierHeavy)]),
+            IntegrationSliceAuditMedium => AuditTier(AuditTierMedium),
+            IntegrationSliceAuditHeavy => AuditTier(AuditTierHeavy),
             IntegrationSliceExternalProcess => Or([.. ExternalProcessIncludes.Select(FullyQualifiedNameContains)]),
             IntegrationSliceSlow => Or([.. SlowIncludes.Select(FullyQualifiedNameContains)]),
             _ => throw new InvalidOperationException($"Unsupported integration slice: {integrationSlice}")
@@ -374,6 +378,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             IntegrationSliceFast or
             IntegrationSliceRepositoryTooling or
             IntegrationSliceAuditPackage or
+            IntegrationSliceAuditMedium or
+            IntegrationSliceAuditHeavy or
             IntegrationSliceExternalProcess or
             IntegrationSliceSlow;
     }

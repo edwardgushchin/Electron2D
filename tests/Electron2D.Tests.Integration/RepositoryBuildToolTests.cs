@@ -197,6 +197,35 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj", invocation, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [Trait("AuditTier", "Medium")]
+    [InlineData("audit-medium", "AuditTier=Medium", "AuditTier=Heavy")]
+    [InlineData("audit-heavy", "AuditTier=Heavy", "AuditTier=Medium")]
+    public async Task TestCommandAuditTierIntegrationSlicesRunOnlySelectedAuditTier(
+        string integrationSlice,
+        string expectedFilter,
+        string excludedFilter)
+    {
+        using var shim = TemporaryDirectory.Create($"test-command-{integrationSlice}-slice-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", integrationSlice, "--no-build", "--no-restore"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        var invocation = Assert.Single(File.ReadAllLines(logPath), line => line.StartsWith("test ", StringComparison.Ordinal));
+        Assert.Contains("tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj", invocation, StringComparison.Ordinal);
+        Assert.Contains(expectedFilter, invocation, StringComparison.Ordinal);
+        Assert.DoesNotContain(excludedFilter, invocation, StringComparison.Ordinal);
+        Assert.DoesNotContain("tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj", invocation, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void ReleasePackagingTemporaryDirectoryUsesSystemTemporaryRoot()
     {
@@ -1178,7 +1207,9 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice fast --no-build --no-restore", workflow, StringComparison.Ordinal);
         Assert.Contains("integration-slice:", workflow, StringComparison.Ordinal);
         Assert.Contains("repository-tooling", workflow, StringComparison.Ordinal);
-        Assert.Contains("audit-package", workflow, StringComparison.Ordinal);
+        Assert.Contains("audit-medium", workflow, StringComparison.Ordinal);
+        Assert.Contains("audit-heavy", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("  - audit-package", workflow, StringComparison.Ordinal);
         Assert.Contains("external-process", workflow, StringComparison.Ordinal);
         Assert.Contains("slow", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice ${{ matrix.integration-slice }} --no-build --no-restore", workflow, StringComparison.Ordinal);
