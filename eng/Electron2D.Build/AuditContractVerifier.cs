@@ -136,19 +136,25 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             "domain-audit-loop-stabilization",
             documents.DomainDocumentPath,
             documents.DomainDocumentText,
-            ["audit-loop-stabilization", "metadata.previousVerdictChain", "metadata.blockerClosureList", "checks[].name"]);
+            ["audit-loop-stabilization", "metadata.previousVerdictChain", "metadata.blockerClosureList", "checks[].name", "preflightChecks[].name"]);
         CheckContainsAll(
             checks,
             "domain-previous-blocker-closure-coverage",
             documents.DomainDocumentPath,
             documents.DomainDocumentText,
-            ["путь прошлого отчёта", "идентификатор blocker-а", "configured check", "каждый найденный blocker", "распознаваемые `B*` blocker ids"]);
+            ["путь прошлого отчёта", "идентификатор blocker-а", "configured/preflight check", "каждый найденный blocker", "распознаваемые `B*` blocker ids"]);
         CheckContainsAll(
             checks,
             "domain-previous-blocker-closure-matrix",
             documents.DomainDocumentPath,
             documents.DomainDocumentText,
             ["матрицу закрытия прошлых blocker-ов", "путь отчёта", "blocker id", "configured check"]);
+        CheckContainsAll(
+            checks,
+            "domain-preflight-checks-no-test-rerun",
+            documents.DomainDocumentPath,
+            documents.DomainDocumentText,
+            ["preflightChecks", "audit package` и `audit package verify` не должны повторно запускать тестовые наборы", "любые команды тестового раннера внутри `checks[]` запрещены"]);
         CheckContainsAll(
             checks,
             "request-previous-blocker-closure-coverage",

@@ -255,8 +255,9 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         var auditRequest = await ReadStaticAuditRequestAsync(repoRoot, cancellationToken).ConfigureAwait(false);
         var repoFiles = await SelectRepositoryFilesAsync(repoRoot, config, cancellationToken).ConfigureAwait(false);
         var importedEvidence = SelectArchiveOnlyEvidenceFiles(repoRoot, config);
+        var preflightEvidence = SelectPreflightCheckEvidenceFiles(repoRoot, staging.Root, config);
         var checkEvidence = await RunConfiguredChecksAsync(repoRoot, staging.Root, config, diagnostics, cancellationToken).ConfigureAwait(false);
-        var configuredEvidenceFiles = importedEvidence.Concat(checkEvidence).OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
+        var configuredEvidenceFiles = importedEvidence.Concat(preflightEvidence).Concat(checkEvidence).OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
 
         var previousVerdictPaths = SelectPreviousVerdictPaths(config);
         var patch = await CreatePatchAsync(repoRoot, staging.Root, options.Baseline, repoFiles, previousVerdictPaths, cancellationToken).ConfigureAwait(false);
@@ -306,12 +307,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
         WriteDeterministicZip(zipPath, archiveFiles);
 
-        using var cleanRepo = await CreateCleanCloneAsync(repoRoot, options.Baseline, cancellationToken).ConfigureAwait(false);
-        await VerifyPackageAsync(
-            new AuditVerifyOptions(zipPath, options.Baseline, cleanRepo.Root),
-            writeSuccessDiagnostic: false,
-            requireOperatorWorkflowSidecar: false,
-            cancellationToken).ConfigureAwait(false);
+        diagnostics.Write(new BuildDiagnostic(
+            "audit",
+            "audit package",
+            "info",
+            "E2D-BUILD-AUDIT-PACKAGE-VERIFY-ROUTE",
+            "Audit package clean verification route: cleanVerifyPasses=1; mode=operator-workflow-subprocess; duplicateDirectVerify=false."));
 
         await CreateOperatorWorkflowSidecarAsync(
             repoRoot,
@@ -581,6 +582,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         config.RepoFileGlobs ??= [];
         config.RepoFileAllowlist ??= [];
         config.ArchiveOnlyEvidenceGlobs ??= [];
+        config.PreflightChecks ??= [];
         config.Checks ??= [];
         config.ForbiddenPatterns ??= [];
         config.SecretScanPolicy ??= string.Empty;
@@ -597,6 +599,13 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             check.Cwd ??= ".";
             check.EnvAllowlist ??= [];
             check.TrxGlobs ??= [];
+        }
+
+        foreach (var preflightCheck in config.PreflightChecks)
+        {
+            preflightCheck.Name ??= string.Empty;
+            preflightCheck.Command ??= string.Empty;
+            preflightCheck.EvidenceGlobs ??= [];
         }
     }
 
@@ -640,10 +649,17 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         ValidateConfiguredPathList(config.ForbiddenPatterns, "forbiddenPatterns");
         ValidateConfiguredPathList(config.OneLineStubAllowlist, "oneLineStubAllowlist");
         ValidateScopeMetadata(config);
+        foreach (var preflightCheck in config.PreflightChecks)
+        {
+            ValidatePreflightCheck(preflightCheck);
+        }
+
         foreach (var check in config.Checks)
         {
             ValidateCheck(check);
         }
+
+        ValidateCheckNamesAreUnique(config);
 
         ValidateAuditLoopClosureConfiguration(repoRoot, config);
     }
@@ -698,6 +714,40 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         ValidateDotnetTestFilter(check);
     }
 
+    private static void ValidatePreflightCheck(AuditPreflightCheckConfiguration check)
+    {
+        if (string.IsNullOrWhiteSpace(check.Name) ||
+            check.Name.Any(ch => char.IsControl(ch) || ch is '/' or '\\') ||
+            string.IsNullOrWhiteSpace(check.Command) ||
+            check.Command.Any(char.IsControl) ||
+            check.EvidenceGlobs.Count == 0)
+        {
+            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", "Preflight check configuration is invalid.");
+        }
+
+        foreach (var glob in check.EvidenceGlobs)
+        {
+            AuditPath.ValidatePattern(glob, "preflightChecks.evidenceGlobs");
+        }
+    }
+
+    private static void ValidateCheckNamesAreUnique(AuditPackageConfiguration config)
+    {
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var name in GetEvidenceCheckNames(config))
+        {
+            if (!names.Add(name))
+            {
+                throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", $"Duplicate check name: {name}");
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetEvidenceCheckNames(AuditPackageConfiguration config)
+    {
+        return config.Checks.Select(check => check.Name).Concat(config.PreflightChecks.Select(check => check.Name));
+    }
+
     private static void ValidateAuditLoopClosureConfiguration(string repoRoot, AuditPackageConfiguration config)
     {
         if (config.PreviousVerdictChain.Count == 0)
@@ -713,23 +763,24 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "previousVerdictChain is not empty, so blockerClosureList must describe the local checks that close previous blockers.");
         }
 
+        var evidenceCheckNames = GetEvidenceCheckNames(config).ToArray();
         if (config.PreviousVerdictChain.Count > 2 &&
-            !config.Checks.Any(check => string.Equals(check.Name, "audit-loop-stabilization", StringComparison.Ordinal)))
+            !evidenceCheckNames.Any(name => string.Equals(name, "audit-loop-stabilization", StringComparison.Ordinal)))
         {
             throw new AuditPackageFailure(
                 "audit package",
                 "E2D-BUILD-AUDIT-CONFIG-INVALID",
-                "External audit loop exceeded the ordinary budget; add a configured check named audit-loop-stabilization before creating another package.");
+                "External audit loop exceeded the ordinary budget; add a configured or preflight check named audit-loop-stabilization before creating another package.");
         }
 
         foreach (var closure in config.BlockerClosureList)
         {
-            if (!config.Checks.Any(check => closure.Contains(check.Name, StringComparison.Ordinal)))
+            if (!evidenceCheckNames.Any(name => closure.Contains(name, StringComparison.Ordinal)))
             {
                 throw new AuditPackageFailure(
                     "audit package",
                     "E2D-BUILD-AUDIT-CONFIG-INVALID",
-                    "Each blockerClosureList entry must name at least one configured check from the current package.");
+                    "Each blockerClosureList entry must name at least one configured or preflight check from the current package.");
             }
         }
 
@@ -774,6 +825,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 }
             }
         }
+
     }
 
     private static IReadOnlyList<string> ExtractPreviousBlockerIds(string report)
@@ -846,6 +898,11 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 }
             }
         }
+
+        throw new AuditPackageFailure(
+            "audit package",
+            "E2D-BUILD-AUDIT-CONFIG-INVALID",
+            $"Check '{check.Name}' runs a test command. Run tests before audit package and import their evidence through preflightChecks instead.");
     }
 
     private static IEnumerable<string> ExtractDotnetTestFilters(IReadOnlyList<string> arguments)
@@ -1061,6 +1118,87 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             .ToArray();
 
         return selected;
+    }
+
+    private static EvidenceSourceFile[] SelectPreflightCheckEvidenceFiles(
+        string repoRoot,
+        string stagingRoot,
+        AuditPackageConfiguration config)
+    {
+        if (config.PreflightChecks.Count == 0)
+        {
+            return [];
+        }
+
+        var evidence = new List<EvidenceSourceFile>();
+        foreach (var check in config.PreflightChecks.OrderBy(check => check.Name, StringComparer.Ordinal))
+        {
+            var archiveRoot = $"evidence/{config.TaskId}-{config.Iteration}/preflight/{check.Name}";
+            var localRoot = Path.Combine(stagingRoot, archiveRoot.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(localRoot);
+            var commandPath = Path.Combine(localRoot, "command.txt");
+            WriteText(localRoot, "command.txt", check.Command);
+            evidence.Add(new EvidenceSourceFile(commandPath, $"{archiveRoot}/command.txt"));
+
+            var matchedPaths = SelectArchiveOnlyEvidenceCandidatePaths(repoRoot, check.EvidenceGlobs)
+                .Where(path => MatchesAny(check.EvidenceGlobs, path))
+                .Order(StringComparer.Ordinal)
+                .ToArray();
+            if (matchedPaths.Length == 0)
+            {
+                throw new AuditPackageFailure(
+                    "audit package",
+                    "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                    $"preflightChecks entry '{check.Name}' did not match any evidence files.");
+            }
+
+            var archivePaths = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var path in matchedPaths)
+            {
+                ValidateEvidenceInputPath(path, config);
+                var absolutePath = Path.Combine(repoRoot, path.Replace('/', Path.DirectorySeparatorChar));
+                ValidateInputFileSize(absolutePath, path, config.MaxFileSize);
+                ValidateSecretPolicy(absolutePath, path, config.SecretScanPolicy);
+                var relativeEvidencePath = ToPreflightEvidenceArchivePath(path, check.Name);
+                if (string.Equals(relativeEvidencePath, "command.txt", StringComparison.Ordinal))
+                {
+                    throw new AuditPackageFailure(
+                        "audit package",
+                        "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                        $"preflightChecks entry '{check.Name}' cannot import an evidence file named command.txt.");
+                }
+
+                var archivePath = $"{archiveRoot}/{relativeEvidencePath}";
+                if (!archivePaths.Add(archivePath))
+                {
+                    throw new AuditPackageFailure(
+                        "audit package",
+                        "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                        $"preflightChecks entry '{check.Name}' maps multiple evidence files to {archivePath}.");
+                }
+
+                evidence.Add(new EvidenceSourceFile(absolutePath, archivePath));
+            }
+        }
+
+        return evidence.OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
+    }
+
+    private static string ToPreflightEvidenceArchivePath(string path, string checkName)
+    {
+        var normalized = AuditPath.NormalizeRelativePath(path, "preflight evidence path", allowCurrentDirectory: false);
+        var checkRoot = $".temp/audit-evidence/preflight/{checkName}/";
+        if (normalized.StartsWith(checkRoot, StringComparison.Ordinal))
+        {
+            return normalized[checkRoot.Length..];
+        }
+
+        if (normalized.StartsWith(".temp/audit-evidence/", StringComparison.Ordinal))
+        {
+            return normalized[".temp/audit-evidence/".Length..];
+        }
+
+        return normalized;
     }
 
     private static string[] SelectArchiveOnlyEvidenceCandidatePaths(string repoRoot, IReadOnlyList<string> patterns)
@@ -2635,8 +2773,9 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         builder.AppendLine("- `evidence/` files are archive-only and are not applied to the repository.");
         builder.AppendLine();
         builder.AppendLine("## Checks");
-        var configuredChecks = config.Checks
-            .Select(check => new ManifestCheck(check.Name, check.ExpectedExitCode))
+        var configuredChecks = config.PreflightChecks
+            .Select(check => new ManifestCheck(check.Name, 0))
+            .Concat(config.Checks.Select(check => new ManifestCheck(check.Name, check.ExpectedExitCode)))
             .Concat(ExtractEvidenceCheckNames(evidencePaths).Select(name => new ManifestCheck(name, 0)))
             .GroupBy(check => check.Name, StringComparer.Ordinal)
             .Select(group => group.First())
@@ -2722,8 +2861,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                     continue;
                 }
 
-                var checkName = config.Checks
-                    .Select(check => check.Name)
+                var checkName = GetEvidenceCheckNames(config)
                     .FirstOrDefault(name => closure.Contains(name, StringComparison.Ordinal)) ?? string.Empty;
                 rows.Add(new PreviousBlockerClosureMatrixRow(reportPath, blockerId, checkName, closure));
             }
@@ -2736,7 +2874,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     {
         foreach (var path in evidencePaths)
         {
-            var match = Regex.Match(path, @"\Aevidence/[^/]+/checks/(?<name>[^/]+)/", RegexOptions.CultureInvariant);
+            var match = Regex.Match(path, @"\Aevidence/[^/]+/(?:checks|preflight)/(?<name>[^/]+)/", RegexOptions.CultureInvariant);
             if (match.Success)
             {
                 yield return match.Groups["name"].Value;
@@ -4645,6 +4783,7 @@ internal sealed class AuditPackageConfiguration
     public List<string> RepoFileGlobs { get; set; } = [];
     public List<string> RepoFileAllowlist { get; set; } = [];
     public List<string> ArchiveOnlyEvidenceGlobs { get; set; } = [];
+    public List<AuditPreflightCheckConfiguration> PreflightChecks { get; set; } = [];
     public List<AuditCheckConfiguration> Checks { get; set; } = [];
     public List<string> ForbiddenPatterns { get; set; } = [];
     public string SecretScanPolicy { get; set; } = "basic";
@@ -4665,6 +4804,13 @@ internal sealed class AuditCheckConfiguration
     public int TimeoutSeconds { get; set; } = 30;
     public int ExpectedExitCode { get; set; }
     public List<string> TrxGlobs { get; set; } = [];
+}
+
+internal sealed class AuditPreflightCheckConfiguration
+{
+    public string Name { get; set; } = string.Empty;
+    public string Command { get; set; } = string.Empty;
+    public List<string> EvidenceGlobs { get; set; } = [];
 }
 
 internal sealed record SelectedRepositoryFile(string Path, string AbsolutePath, bool Exists, bool ExistsInBaseline);

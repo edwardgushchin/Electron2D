@@ -2352,6 +2352,30 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageReportsSingleCleanVerifyPassThroughOperatorWorkflow()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-single-clean-verify-pass");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that package verification is not duplicated before sidecar evidence.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        AssertCommandSucceeded(package, "audit package");
+        using var diagnostics = ReadDiagnostics(package);
+        var route = diagnostics.RootElement.EnumerateArray().Single(diagnostic =>
+            diagnostic.GetProperty("code").GetString() == "E2D-BUILD-AUDIT-PACKAGE-VERIFY-ROUTE");
+        var message = route.GetProperty("message").GetString();
+        Assert.Contains("cleanVerifyPasses=1", message, StringComparison.Ordinal);
+        Assert.Contains("operator-workflow-subprocess", message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageVerifyFailsWhenOperatorWorkflowSidecarIsMissing()
     {
         using var fixture = await CreatePackagedFixtureAsync("audit-package-operator-workflow-missing-sidecar", "T-0001");
@@ -8226,6 +8250,78 @@ public sealed class RepositoryBuildToolTests
             metadata.RootElement.GetProperty("durationMs").GetDouble());
         Assert.Equal($"evidence/{taskId}-r01/checks/git-status/stdout.txt", metadata.RootElement.GetProperty("stdoutPath").GetString());
         Assert.Equal($"evidence/{taskId}-r01/checks/git-status/stderr.txt", metadata.RootElement.GetProperty("stderrPath").GetString());
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageImportsPreflightCheckEvidenceWithoutRunningCommand()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-evidence");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that preflight evidence is imported without rerunning tests.
+        """);
+        fixture.WriteTextFile(".temp/audit-evidence/preflight/audit-heavy/stdout.txt", """
+        E2D-BUILD-TEST-SLICE-SUMMARY: audit-heavy passed before package creation.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    "audit-heavy",
+                    "dotnet run --project eng/Electron2D.Build --no-build -- test --integration-slice audit-heavy --no-build --no-restore",
+                    [".temp/audit-evidence/preflight/audit-heavy/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        AssertCommandSucceeded(package, "audit package");
+        var entries = ReadZipEntryNames(fixture.ZipPath(taskId));
+        Assert.Contains($"evidence/{taskId}-r01/preflight/audit-heavy/command.txt", entries);
+        Assert.Contains($"evidence/{taskId}-r01/preflight/audit-heavy/stdout.txt", entries);
+        Assert.Contains(
+            "audit-heavy passed before package creation",
+            ReadZipEntryText(fixture.ZipPath(taskId), $"evidence/{taskId}-r01/preflight/audit-heavy/stdout.txt"),
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsTestRunnerCommandsInConfiguredChecks()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-rejects-test-runner-checks");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that package checks do not rerun test suites.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            checks:
+            [
+                new AuditFixtureCheck(
+                    "dotnet-test-help",
+                    "dotnet",
+                    ["test", "--help"],
+                    ".",
+                    [],
+                    30,
+                    0,
+                    [])
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("preflightChecks", package.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("E2D-BUILD-AUDIT-CHECK-RESULT", package.Stdout, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -17100,6 +17196,11 @@ public sealed class RepositoryBuildToolTests
         int ExpectedExitCode,
         string[] TrxGlobs);
 
+    private sealed record AuditFixturePreflightCheck(
+        string Name,
+        string Command,
+        string[] EvidenceGlobs);
+
     private sealed record BuiltChildProject(string Root, string AssemblyPath) : IDisposable
     {
         public void Dispose()
@@ -17218,6 +17319,7 @@ public sealed class RepositoryBuildToolTests
             string[]? repoFileGlobs = null,
             string[]? repoFileAllowlist = null,
             string[]? archiveOnlyEvidenceGlobs = null,
+            AuditFixturePreflightCheck[]? preflightChecks = null,
             AuditFixtureCheck[]? checks = null,
             string[]? scopeTaskIds = null,
             string? scopeSummary = null,
@@ -17239,6 +17341,7 @@ public sealed class RepositoryBuildToolTests
                     .Distinct(StringComparer.Ordinal)
                     .ToArray(),
                 archiveOnlyEvidenceGlobs = archiveOnlyEvidenceGlobs ?? [".temp/audit-evidence/**"],
+                preflightChecks = preflightChecks ?? Array.Empty<AuditFixturePreflightCheck>(),
                 checks = checks ??
                 [
                     new AuditFixtureCheck(
