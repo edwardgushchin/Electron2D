@@ -818,15 +818,12 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static EvidenceSourceFile[] SelectArchiveOnlyEvidenceFiles(string repoRoot, AuditPackageConfiguration config)
     {
-        var allFiles = Directory.EnumerateFiles(repoRoot, "*", SearchOption.AllDirectories)
-            .Select(path => Path.GetRelativePath(repoRoot, path).Replace('\\', '/'))
-            .Where(path => !path.StartsWith(".git/", StringComparison.Ordinal) &&
-                !path.StartsWith("bin/", StringComparison.Ordinal) &&
-                !path.Contains("/bin/", StringComparison.Ordinal) &&
-                !path.StartsWith("obj/", StringComparison.Ordinal) &&
-                !path.Contains("/obj/", StringComparison.Ordinal))
-            .ToArray();
-        var selected = allFiles
+        if (config.ArchiveOnlyEvidenceGlobs.Count == 0)
+        {
+            return [];
+        }
+
+        var selected = SelectArchiveOnlyEvidenceCandidatePaths(repoRoot, config.ArchiveOnlyEvidenceGlobs)
             .Where(path => MatchesAny(config.ArchiveOnlyEvidenceGlobs, path))
             .Order(StringComparer.Ordinal)
             .Select(path =>
@@ -843,6 +840,99 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             .ToArray();
 
         return selected;
+    }
+
+    private static string[] SelectArchiveOnlyEvidenceCandidatePaths(string repoRoot, IReadOnlyList<string> patterns)
+    {
+        var candidates = new HashSet<string>(StringComparer.Ordinal);
+        var searchRoots = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var pattern in patterns)
+        {
+            var normalized = AuditPath.NormalizeRelativePath(pattern, "archiveOnlyEvidenceGlobs", allowCurrentDirectory: false);
+            if (!ContainsGlobWildcard(normalized))
+            {
+                var exactPath = Path.Combine(repoRoot, normalized.Replace('/', Path.DirectorySeparatorChar));
+                if (File.Exists(exactPath) && !IsIgnoredArchiveOnlyCandidatePath(normalized))
+                {
+                    candidates.Add(normalized);
+                }
+
+                continue;
+            }
+
+            searchRoots.Add(GetArchiveOnlyEvidenceSearchRoot(normalized));
+        }
+
+        foreach (var searchRoot in searchRoots)
+        {
+            if (IsIgnoredArchiveOnlySearchRoot(searchRoot))
+            {
+                continue;
+            }
+
+            var absoluteRoot = string.IsNullOrEmpty(searchRoot)
+                ? repoRoot
+                : Path.Combine(repoRoot, searchRoot.Replace('/', Path.DirectorySeparatorChar));
+            if (!Directory.Exists(absoluteRoot))
+            {
+                continue;
+            }
+
+            foreach (var file in Directory.EnumerateFiles(absoluteRoot, "*", SearchOption.AllDirectories))
+            {
+                var relativePath = Path.GetRelativePath(repoRoot, file).Replace('\\', '/');
+                if (!IsIgnoredArchiveOnlyCandidatePath(relativePath))
+                {
+                    candidates.Add(relativePath);
+                }
+            }
+        }
+
+        return candidates.ToArray();
+    }
+
+    private static string GetArchiveOnlyEvidenceSearchRoot(string pattern)
+    {
+        var wildcardIndex = pattern.IndexOfAny(['*', '?', '[']);
+        if (wildcardIndex < 0)
+        {
+            return string.Empty;
+        }
+
+        var prefix = pattern[..wildcardIndex];
+        if (prefix.EndsWith("/", StringComparison.Ordinal))
+        {
+            return prefix.TrimEnd('/');
+        }
+
+        var slashIndex = prefix.LastIndexOf('/');
+        return slashIndex < 0 ? string.Empty : prefix[..slashIndex];
+    }
+
+    private static bool ContainsGlobWildcard(string pattern)
+    {
+        return pattern.IndexOfAny(['*', '?', '[']) >= 0;
+    }
+
+    private static bool IsIgnoredArchiveOnlySearchRoot(string path)
+    {
+        return string.Equals(path, ".git", StringComparison.Ordinal) ||
+            string.Equals(path, "bin", StringComparison.Ordinal) ||
+            string.Equals(path, "obj", StringComparison.Ordinal) ||
+            path.StartsWith(".git/", StringComparison.Ordinal) ||
+            path.StartsWith("bin/", StringComparison.Ordinal) ||
+            path.StartsWith("obj/", StringComparison.Ordinal) ||
+            path.Contains("/bin/", StringComparison.Ordinal) ||
+            path.Contains("/obj/", StringComparison.Ordinal);
+    }
+
+    private static bool IsIgnoredArchiveOnlyCandidatePath(string path)
+    {
+        return path.StartsWith(".git/", StringComparison.Ordinal) ||
+            path.StartsWith("bin/", StringComparison.Ordinal) ||
+            path.Contains("/bin/", StringComparison.Ordinal) ||
+            path.StartsWith("obj/", StringComparison.Ordinal) ||
+            path.Contains("/obj/", StringComparison.Ordinal);
     }
 
     private static string ToArchiveOnlyEvidenceArchivePath(string path)
@@ -965,6 +1055,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             "run",
             "--project",
             "eng/Electron2D.Build",
+            "--no-build",
+            "--no-restore",
             "--",
             "audit",
             "package",
@@ -982,6 +1074,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             "run",
             "--project",
             "eng/Electron2D.Build",
+            "--no-build",
+            "--no-restore",
             "--",
             "audit",
             "package",
@@ -994,6 +1088,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             "run",
             "--project",
             projectArgument,
+            "--no-build",
+            "--no-restore",
             "--",
             "audit",
             "package",
@@ -1042,6 +1138,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "run",
                 "--project",
                 projectArgument,
+                "--no-build",
+                "--no-restore",
                 "--",
                 "audit",
                 "package",

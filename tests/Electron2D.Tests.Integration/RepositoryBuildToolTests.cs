@@ -2196,6 +2196,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(archiveEntriesText, ReadZipEntryText(sidecarPath, "payload/archive-entries.txt"));
 
         var verifyCommand = ReadZipEntryText(sidecarPath, $"{verifyRoot}/command.txt");
+        Assert.Contains("- --no-build", verifyCommand, StringComparison.Ordinal);
+        Assert.Contains("- --no-restore", verifyCommand, StringComparison.Ordinal);
         Assert.Contains("- verify", verifyCommand, StringComparison.Ordinal);
         Assert.Contains("- --zip", verifyCommand, StringComparison.Ordinal);
         Assert.Contains("- .temp/audit/T-0001-audit-r01.zip", verifyCommand, StringComparison.Ordinal);
@@ -2210,6 +2212,8 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain(fixture.RepositoryRoot, verifyStdout, StringComparison.OrdinalIgnoreCase);
 
         var messageCommand = ReadZipEntryText(sidecarPath, $"{messageRoot}/command.txt");
+        Assert.Contains("- --no-build", messageCommand, StringComparison.Ordinal);
+        Assert.Contains("- --no-restore", messageCommand, StringComparison.Ordinal);
         Assert.Contains("- message", messageCommand, StringComparison.Ordinal);
         Assert.Contains("- --zip", messageCommand, StringComparison.Ordinal);
         Assert.Contains("- .temp/audit/T-0001-audit-r01.zip", messageCommand, StringComparison.Ordinal);
@@ -6350,6 +6354,43 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
+    public async Task AuditWorkflowVerifyAuditContractsRunsFastWithoutPackagingArtifacts()
+    {
+        using var workspace = CreateAuditContractFixture();
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            TimeSpan.FromSeconds(60),
+            "verify",
+            "audit-contracts");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-CONTRACTS-PASSED");
+        Assert.Contains("AuditTier=Fast", result.Stdout, StringComparison.Ordinal);
+        Assert.Contains("passed=", result.Stdout, StringComparison.Ordinal);
+        Assert.Contains("failed=0", result.Stdout, StringComparison.Ordinal);
+        Assert.Contains("Heavy: not-run", result.Stdout, StringComparison.Ordinal);
+        Assert.False(Directory.Exists(Path.Combine(workspace.Root, ".temp")));
+        Assert.Empty(Directory.EnumerateFiles(workspace.Root, "*.zip", SearchOption.AllDirectories));
+        Assert.DoesNotContain("E2D-BUILD-AUDIT-PACKAGE", result.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Fast")]
+    public async Task AuditWorkflowVerifyAuditContractsVerifierStaysInProcess()
+    {
+        var source = await File.ReadAllTextAsync(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditContractVerifier.cs"));
+
+        Assert.DoesNotContain("ProcessRunner", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("AuditProcessRunner", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Process.Start", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("new AuditPackageCommand", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("ZipFile", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AuditSubmitReportInvalidDiagnosticsExplainStrictFailure()
     {
         const string promptTemplate = """
@@ -7773,6 +7814,25 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains(
             $"evidence/{taskId}-r01/archive-only/audit-evidence/checks/result.txt",
             ReadZipEntryNames(fixture.ZipPath(taskId)));
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Fast")]
+    public async Task AuditPackageSelectsArchiveOnlyEvidenceWithoutRepositoryWideScan()
+    {
+        var source = await File.ReadAllTextAsync(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditPackageCommand.cs"));
+        var methodStart = source.IndexOf("private static EvidenceSourceFile[] SelectArchiveOnlyEvidenceFiles", StringComparison.Ordinal);
+        var nextMethodStart = source.IndexOf("private static string ToArchiveOnlyEvidenceArchivePath", methodStart, StringComparison.Ordinal);
+
+        Assert.True(methodStart >= 0);
+        Assert.True(nextMethodStart > methodStart);
+
+        var method = source[methodStart..nextMethodStart];
+        Assert.DoesNotContain("EnumerateFiles(repoRoot, \"*\", SearchOption.AllDirectories)", method, StringComparison.Ordinal);
+        Assert.Contains("SelectArchiveOnlyEvidenceCandidatePaths(repoRoot, config.ArchiveOnlyEvidenceGlobs)", method, StringComparison.Ordinal);
+        Assert.Contains("config.ArchiveOnlyEvidenceGlobs.Count == 0", source, StringComparison.Ordinal);
+        Assert.Contains("GetArchiveOnlyEvidenceSearchRoot", source, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -13308,6 +13368,27 @@ public sealed class RepositoryBuildToolTests
         }
 
         return workspace;
+    }
+
+    private static TemporaryDirectory CreateAuditContractFixture()
+    {
+        var sourceRoot = FindRepositoryRoot();
+        var workspace = TemporaryDirectory.Create("audit-contracts");
+        Directory.CreateDirectory(Path.Combine(workspace.Root, "src"));
+        WriteText(workspace.Root, "README.md", "# Temporary repository\n");
+        CopyRepositoryFile(sourceRoot, workspace.Root, "AGENTS.md");
+        CopyRepositoryFile(sourceRoot, workspace.Root, "docs/release-management/AUDIT-REQUEST.md");
+        CopyRepositoryFile(sourceRoot, workspace.Root, "docs/release-management/audit-package.md");
+        CopyRepositoryFile(sourceRoot, workspace.Root, ".codex/prompts/goal-task-loop.md");
+        return workspace;
+    }
+
+    private static void CopyRepositoryFile(string sourceRoot, string destinationRoot, string relativePath)
+    {
+        var sourcePath = Path.Combine(sourceRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        var destinationPath = Path.Combine(destinationRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+        File.Copy(sourcePath, destinationPath, overwrite: true);
     }
 
     private static string CreateAuditFollowupClosure(
