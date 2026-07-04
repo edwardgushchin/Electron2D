@@ -54,7 +54,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
     private static readonly DateTimeOffset DeterministicZipTimestamp = new(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
     private static readonly Regex TaskIdPattern = new(@"\bT-\d{4}\b", RegexOptions.CultureInvariant);
     private static readonly Regex SecretValuePattern = new(
-        @"(?im)(?:^|[^\p{L}\p{N}_-])[""']?(?:api[_-]?key|password|secret|token)[""']?\s*[:=]\s*[""']?(?<value>[^""'\s#][^#\r\n]*)",
+        @"(?im)(?:^|[^\p{L}\p{N}_-])[""']?(?:api[_-]?key|password|secret|token)[""']?\s*(?::|=(?!>))\s*[""']?(?<value>[^""'\s#][^#\r\n]*)",
         RegexOptions.CultureInvariant);
     private static readonly Regex PrivateKeyPattern = new(
         @"(?im)-----BEGIN [A-Z ]*PRIVATE\s+KEY-----|-----BEGIN[^\r\n]*PRIVATE\s+KEY|\bBEGIN\s+PRIVATE\s+KEY\b",
@@ -700,15 +700,25 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         if (string.IsNullOrWhiteSpace(check.Name) ||
             check.Name.Any(ch => char.IsControl(ch) || ch is '/' or '\\') ||
             string.IsNullOrWhiteSpace(check.FileName) ||
+            string.IsNullOrWhiteSpace(check.Rationale) ||
+            check.Rationale.Any(char.IsControl) ||
             check.TimeoutSeconds <= 0)
         {
-            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", "Check configuration is invalid.");
+            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-CONFIG-INVALID", "Check configuration is invalid; checks[].rationale is required.");
         }
 
         AuditPath.NormalizeRelativePath(check.Cwd, "checks.cwd", allowCurrentDirectory: true);
         foreach (var trxGlob in check.TrxGlobs)
         {
             AuditPath.ValidatePattern(trxGlob, "checks.trxGlobs");
+        }
+
+        if (IsShellExecutable(check.FileName))
+        {
+            throw new AuditPackageFailure(
+                "audit package",
+                "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                $"Check '{check.Name}' uses shell executable '{check.FileName}'. Use direct portable commands in checks[]; run shell scripts or tests before audit package and import their evidence through preflightChecks.");
         }
 
         ValidateDotnetTestFilter(check);
@@ -878,8 +888,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static void ValidateDotnetTestFilter(AuditCheckConfiguration check)
     {
-        if (!string.Equals(check.FileName, "dotnet", StringComparison.OrdinalIgnoreCase) ||
-            !check.Arguments.Any(argument => string.Equals(argument, "test", StringComparison.Ordinal)))
+        if (!IsDotnetTestRunnerCommand(check))
         {
             return;
         }
@@ -903,6 +912,54 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
             "audit package",
             "E2D-BUILD-AUDIT-CONFIG-INVALID",
             $"Check '{check.Name}' runs a test command. Run tests before audit package and import their evidence through preflightChecks instead.");
+    }
+
+    private static bool IsDotnetTestRunnerCommand(AuditCheckConfiguration check)
+    {
+        if (IsDotnetExecutable(check.FileName))
+        {
+            return ArgumentsContainDotnetTestCommand(check.Arguments);
+        }
+
+        return false;
+    }
+
+    private static bool ArgumentsContainDotnetTestCommand(IReadOnlyList<string> arguments)
+    {
+        return arguments.Any(argument => string.Equals(argument, "test", StringComparison.Ordinal));
+    }
+
+    private static bool IsDotnetExecutable(string fileName)
+    {
+        var leafName = GetExecutableLeafName(fileName);
+        if (leafName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+        {
+            leafName = leafName[..^".exe".Length];
+        }
+
+        return string.Equals(leafName, "dotnet", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsShellExecutable(string fileName)
+    {
+        var leafName = GetExecutableLeafName(fileName);
+        if (leafName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+        {
+            leafName = leafName[..^".exe".Length];
+        }
+
+        return string.Equals(leafName, "cmd", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(leafName, "sh", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(leafName, "bash", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(leafName, "pwsh", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(leafName, "powershell", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string GetExecutableLeafName(string fileName)
+    {
+        var normalized = fileName.Replace('\\', '/');
+        var separator = normalized.LastIndexOf('/');
+        return separator >= 0 ? normalized[(separator + 1)..] : normalized;
     }
 
     private static IEnumerable<string> ExtractDotnetTestFilters(IReadOnlyList<string> arguments)
@@ -1392,7 +1449,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "audit package",
                 "info",
                 "E2D-BUILD-AUDIT-CHECK-RESULT",
-                $"Package evidence check result: name={check.Name}; expectedExitCode={check.ExpectedExitCode}; actualExitCode={result.ExitCode}; durationMs={FormatDurationMs(durationMs)}; stdout={archiveRoot}/stdout.txt; stderr={archiveRoot}/stderr.txt; timeoutSeconds={check.TimeoutSeconds}."));
+                $"Package evidence check result: name={check.Name}; command={FormatInlineCommand(check.FileName, check.Arguments)}; expectedExitCode={check.ExpectedExitCode}; actualExitCode={result.ExitCode}; durationMs={FormatDurationMs(durationMs)}; stdout={archiveRoot}/stdout.txt; stderr={archiveRoot}/stderr.txt; timeoutSeconds={check.TimeoutSeconds}."));
 
             if (result.ExitCode != check.ExpectedExitCode)
             {
@@ -1421,7 +1478,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return string.Join(
             " | ",
             checks.Select(check =>
-                $"name={check.Name}; command={FormatInlineCommand(check.FileName, check.Arguments)}; cwd={check.Cwd}; timeoutSeconds={check.TimeoutSeconds}; expectedExitCode={check.ExpectedExitCode}"));
+                $"name={check.Name}; command={FormatInlineCommand(check.FileName, check.Arguments)}; cwd={check.Cwd}; timeoutSeconds={check.TimeoutSeconds}; expectedExitCode={check.ExpectedExitCode}; rationale={check.Rationale}"));
     }
 
     private static string FormatInlineCommand(string fileName, IReadOnlyList<string> arguments)
@@ -4802,6 +4859,7 @@ internal sealed class AuditCheckConfiguration
     public string Cwd { get; set; } = ".";
     public List<string> EnvAllowlist { get; set; } = [];
     public int TimeoutSeconds { get; set; } = 30;
+    public string Rationale { get; set; } = string.Empty;
     public int ExpectedExitCode { get; set; }
     public List<string> TrxGlobs { get; set; } = [];
 }

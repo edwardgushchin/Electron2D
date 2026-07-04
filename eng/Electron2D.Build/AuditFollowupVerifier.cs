@@ -53,8 +53,7 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             return RepositoryBuildExitCodes.Failed;
         }
 
-        var tasksText = File.ReadAllText(tasksPath, Encoding.UTF8);
-        var closures = AuditFollowupClosureParser.ExtractClosures(tasksText);
+        var closures = ReadClosureNotes(tasksPath);
         var reportPaths = await GetAuditReportPathsAsync(cancellationToken).ConfigureAwait(false);
         var findings = new List<AuditFollowupFinding>();
 
@@ -88,7 +87,7 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             {
                 errors.Add(Error(
                     "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED",
-                    $"Actionable {finding.Kind} {finding.FindingId} from {finding.ReportPath} has no closure note in TASKS.md.",
+                    $"Actionable {finding.Kind} {finding.FindingId} from {finding.ReportPath} has no closure note in TASKS.md or completed task archives.",
                     finding.ReportPath,
                     finding.LineNumber));
                 continue;
@@ -164,6 +163,38 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             .ToArray();
     }
 
+    private IReadOnlyList<AuditFollowupClosureNote> ReadClosureNotes(string tasksPath)
+    {
+        var sources = new List<(string RelativePath, string Text)>
+        {
+            ("TASKS.md", File.ReadAllText(tasksPath, Encoding.UTF8))
+        };
+
+        foreach (var archivePath in EnumerateCompletedTaskArchivePaths())
+        {
+            var fullPath = Path.Combine(repositoryRoot, archivePath.Replace('/', Path.DirectorySeparatorChar));
+            sources.Add((archivePath, File.ReadAllText(fullPath, Encoding.UTF8)));
+        }
+
+        return sources
+            .SelectMany(source => AuditFollowupClosureParser.ExtractClosures(source.Text, source.RelativePath))
+            .ToArray();
+    }
+
+    private IReadOnlyList<string> EnumerateCompletedTaskArchivePaths()
+    {
+        return new[]
+            {
+                Path.Combine(repositoryRoot, "completed-tasks"),
+                Path.Combine(repositoryRoot, "data", "completed-tasks")
+            }
+            .Where(Directory.Exists)
+            .SelectMany(root => Directory.EnumerateFiles(root, "*.md", SearchOption.AllDirectories))
+            .Select(path => Path.GetRelativePath(repositoryRoot, path).Replace('\\', '/'))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+    }
+
     private static bool IsAuditReportPath(string path)
     {
         return path.StartsWith("docs/verdicts/", StringComparison.Ordinal) &&
@@ -181,7 +212,7 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             errors.Add(Error(
                 "E2D-BUILD-AUDIT-FOLLOWUP-CLOSURE-INVALID",
                 $"Closure note for {finding.ReportPath} {finding.FindingId} has invalid state '{closure.State}'.",
-                "TASKS.md",
+                closure.SourcePath,
                 closure.LineNumber));
             return;
         }
@@ -191,7 +222,7 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             errors.Add(Error(
                 "E2D-BUILD-AUDIT-FOLLOWUP-CLOSURE-INVALID",
                 $"Closure note for {finding.ReportPath} {finding.FindingId} must include target and rationale.",
-                "TASKS.md",
+                closure.SourcePath,
                 closure.LineNumber));
             return;
         }
@@ -202,7 +233,7 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             errors.Add(Error(
                 "E2D-BUILD-AUDIT-FOLLOWUP-ACCEPTED-RISK",
                 $"Accepted-risk closure for {finding.ReportPath} {finding.FindingId} must include affected area, impact, likelihood, mitigation, owner/next decision point and decision state.",
-                "TASKS.md",
+                closure.SourcePath,
                 closure.LineNumber));
         }
     }
@@ -352,7 +383,7 @@ internal static class AuditFollowupClosureParser
         @"docs/verdicts/[^\s`'""]+\.md",
         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-    public static IReadOnlyList<AuditFollowupClosureNote> ExtractClosures(string tasksText)
+    public static IReadOnlyList<AuditFollowupClosureNote> ExtractClosures(string tasksText, string sourcePath = "TASKS.md")
     {
         var lines = NormalizeNewlines(tasksText).Split('\n');
         var closures = new List<AuditFollowupClosureNote>();
@@ -375,6 +406,7 @@ internal static class AuditFollowupClosureParser
 
             var block = string.Join('\n', lines.Skip(index).Take(end - index));
             closures.Add(new AuditFollowupClosureNote(
+                sourcePath,
                 ExtractSource(block),
                 ExtractField(block, "id", "finding id"),
                 ExtractField(block, "state", "closure state").ToLowerInvariant(),
@@ -444,6 +476,7 @@ internal sealed record AuditFollowupFinding(
     string Block);
 
 internal sealed record AuditFollowupClosureNote(
+    string SourcePath,
     string Source,
     string Id,
     string State,

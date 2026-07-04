@@ -84,7 +84,10 @@ public sealed class RepositoryBuildToolTests
         var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
         var dotnet = FindDotnetExecutable();
         var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
-        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = "Passed! - Failed: 0, Passed: 1, Skipped: 0, Total: 1, Duration: 123 ms"
+        };
 
         var result = await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), TimeSpan.FromSeconds(120), ["test"], environment);
 
@@ -112,7 +115,10 @@ public sealed class RepositoryBuildToolTests
         var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
         var dotnet = FindDotnetExecutable();
         var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
-        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = "Passed! - Failed: 0, Passed: 1, Skipped: 0, Total: 1, Duration: 123 ms"
+        };
 
         var result = await RunBuildToolFromDirectoryAsync(FindRepositoryRoot(), TimeSpan.FromSeconds(120), ["test", "--include-baseline"], environment);
 
@@ -184,7 +190,10 @@ public sealed class RepositoryBuildToolTests
         var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
         var dotnet = FindDotnetExecutable();
         var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
-        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = "Passed! - Failed: 0, Passed: 1, Skipped: 0, Total: 1, Duration: 123 ms"
+        };
 
         var result = await RunBuildToolFromDirectoryAsync(
             FindRepositoryRoot(),
@@ -204,10 +213,51 @@ public sealed class RepositoryBuildToolTests
 
     [Theory]
     [Trait("AuditTier", "Medium")]
-    [InlineData("audit-medium", "AuditTier=Medium", null, "AuditTier=Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
+    [InlineData("audit-medium", "AuditTier=Medium", "AuditCadence=Acceptance", "AuditTier=Heavy")]
+    public Task TestCommandAuditTierMediumIntegrationSlicesRunOnlySelectedAuditTier(
+        string integrationSlice,
+        string expectedFilter,
+        string? expectedAdditionalFilter,
+        string excludedFilter)
+    {
+        return AssertTestCommandAuditTierIntegrationSliceRunsOnlySelectedTierAsync(
+            integrationSlice,
+            expectedFilter,
+            expectedAdditionalFilter,
+            excludedFilter);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public Task TestCommandAuditTierMediumExhaustiveIntegrationSliceRunsOnlySelectedAuditTier()
+    {
+        return AssertTestCommandAuditTierIntegrationSliceRunsOnlySelectedTierAsync(
+            "audit-medium-exhaustive",
+            "AuditTier=Medium",
+            null,
+            "AuditCadence=Acceptance");
+    }
+
+    [Theory]
+    [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     [InlineData("audit-heavy", "AuditTier=Heavy", "AuditCadence=Acceptance", "AuditTier=Medium")]
     [InlineData("audit-exhaustive", "AuditTier=Heavy", null, "AuditCadence=Acceptance")]
-    public async Task TestCommandAuditTierIntegrationSlicesRunOnlySelectedAuditTier(
+    public Task TestCommandAuditTierHeavyIntegrationSlicesRunOnlySelectedAuditTier(
+        string integrationSlice,
+        string expectedFilter,
+        string? expectedAdditionalFilter,
+        string excludedFilter)
+    {
+        return AssertTestCommandAuditTierIntegrationSliceRunsOnlySelectedTierAsync(
+            integrationSlice,
+            expectedFilter,
+            expectedAdditionalFilter,
+            excludedFilter);
+    }
+
+    private async Task AssertTestCommandAuditTierIntegrationSliceRunsOnlySelectedTierAsync(
         string integrationSlice,
         string expectedFilter,
         string? expectedAdditionalFilter,
@@ -217,7 +267,10 @@ public sealed class RepositoryBuildToolTests
         var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
         var dotnet = FindDotnetExecutable();
         var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
-        var environment = CreateDotnetShimEnvironment(shimBin, dotnet, logPath);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = "Passed! - Failed: 0, Passed: 1, Skipped: 0, Total: 1, Duration: 123 ms"
+        };
 
         var result = await RunBuildToolFromDirectoryAsync(
             FindRepositoryRoot(),
@@ -240,10 +293,31 @@ public sealed class RepositoryBuildToolTests
 
     [Theory]
     [Trait("AuditTier", "Medium")]
-    [InlineData("audit-medium", "AuditTier=Medium")]
+    [Trait("AuditCadence", "Acceptance")]
+    [InlineData("audit-medium", "AuditTier=Medium&AuditCadence=Acceptance")]
+    public Task TestCommandAuditTierMediumIntegrationSlicesPrintSummary(string integrationSlice, string expectedTier)
+    {
+        return AssertTestCommandAuditTierIntegrationSlicePrintsSummaryAsync(integrationSlice, expectedTier);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public Task TestCommandAuditTierMediumExhaustiveIntegrationSlicePrintsSummary()
+    {
+        return AssertTestCommandAuditTierIntegrationSlicePrintsSummaryAsync("audit-medium-exhaustive", "AuditTier=Medium");
+    }
+
+    [Theory]
+    [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     [InlineData("audit-heavy", "AuditTier=Heavy&AuditCadence=Acceptance")]
     [InlineData("audit-exhaustive", "AuditTier=Heavy")]
-    public async Task TestCommandAuditTierIntegrationSlicesPrintSummary(string integrationSlice, string expectedTier)
+    public Task TestCommandAuditTierHeavyIntegrationSlicesPrintSummary(string integrationSlice, string expectedTier)
+    {
+        return AssertTestCommandAuditTierIntegrationSlicePrintsSummaryAsync(integrationSlice, expectedTier);
+    }
+
+    private async Task AssertTestCommandAuditTierIntegrationSlicePrintsSummaryAsync(string integrationSlice, string expectedTier)
     {
         using var shim = TemporaryDirectory.Create($"test-command-{integrationSlice}-summary-dotnet-shim");
         var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
@@ -278,6 +352,107 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("timeoutSeconds=30", message, StringComparison.Ordinal);
         Assert.Contains("timedOut=false", message, StringComparison.Ordinal);
         Assert.Contains("failure=none", message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
+    public async Task TestCommandAuditTierIntegrationSlicesParseLocalizedSummary()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-localized-summary-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = "Пройден!   : не пройдено     0, пройдено     7, пропущено     2, всего     9, длительность 1 s."
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", "audit-medium", "--no-build", "--no-restore", "--timeout-seconds", "30"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        using var diagnostics = ReadDiagnostics(result);
+        var summary = Assert.Single(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-TEST-SLICE-SUMMARY");
+        var message = summary.GetProperty("message").GetString()!;
+        Assert.Contains("tests=9", message, StringComparison.Ordinal);
+        Assert.Contains("passed=7", message, StringComparison.Ordinal);
+        Assert.Contains("failed=0", message, StringComparison.Ordinal);
+        Assert.Contains("skipped=2", message, StringComparison.Ordinal);
+        Assert.DoesNotContain("unknown", message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
+    public async Task TestCommandAuditTierIntegrationSlicesParseLocalizedVstestSummary()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-vstest-localized-summary-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = """
+            Тестовый запуск выполнен.
+            Всего тестов: 14
+                 Пройдено: 14
+             Общее время: 57,2857 Секунды
+            """
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", "audit-medium", "--no-build", "--no-restore", "--timeout-seconds", "30"],
+            environment);
+
+        Assert.Equal(0, result.ExitCode);
+        using var diagnostics = ReadDiagnostics(result);
+        var summary = Assert.Single(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-TEST-SLICE-SUMMARY");
+        var message = summary.GetProperty("message").GetString()!;
+        Assert.Contains("tests=14", message, StringComparison.Ordinal);
+        Assert.Contains("passed=14", message, StringComparison.Ordinal);
+        Assert.Contains("failed=0", message, StringComparison.Ordinal);
+        Assert.Contains("skipped=0", message, StringComparison.Ordinal);
+        Assert.DoesNotContain("unknown", message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
+    public async Task TestCommandAuditTierIntegrationSlicesFailWhenNumericSummaryIsUnavailable()
+    {
+        using var shim = TemporaryDirectory.Create("test-command-missing-summary-dotnet-shim");
+        var logPath = Path.Combine(shim.Root, "dotnet-invocations.log");
+        var dotnet = FindDotnetExecutable();
+        var shimBin = await BuildDotnetTestCommandShimAsync(shim.Root, dotnet);
+        var environment = new Dictionary<string, string>(CreateDotnetShimEnvironment(shimBin, dotnet, logPath), StringComparer.Ordinal)
+        {
+            ["DOTNET_SHIM_TEST_STDOUT"] = "Пройден! Summary line without numeric test counts."
+        };
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            FindRepositoryRoot(),
+            TimeSpan.FromSeconds(120),
+            ["test", "--integration-slice", "audit-heavy", "--no-build", "--no-restore", "--timeout-seconds", "30"],
+            environment);
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-TEST-SUMMARY-UNAVAILABLE");
+        using var diagnostics = ReadDiagnostics(result);
+        var summary = Assert.Single(
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic => diagnostic.GetProperty("code").GetString() == "E2D-BUILD-TEST-SLICE-SUMMARY");
+        var message = summary.GetProperty("message").GetString()!;
+        Assert.Contains("failure=test-counts-unavailable", message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -3171,6 +3346,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditSubmitReuseConversationRejectsExplicitMessageBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-reuse-explicit-message");
@@ -6491,6 +6667,26 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Medium")]
+    public async Task AuditWorkflowVerifyAuditFollowupsReadsCompletedTaskArchives()
+    {
+        const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-completed-archive",
+            string.Empty,
+            (reportPath, CreateAcceptedFollowupReport("F1")));
+        WriteText(
+            workspace.Root,
+            "data/completed-tasks/2026/07 July.md",
+            CreateAuditFollowupClosure(reportPath, "F1", "tracked-existing"));
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditFollowupsUsesReportPathInFindingKey()
     {
         using var workspace = CreateAuditFollowupFixture(
@@ -6746,6 +6942,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditWorkflowVerifyAuditContractsRunsFastWithoutPackagingArtifacts()
     {
         using var workspace = CreateAuditContractFixture();
@@ -6762,9 +6959,41 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("passed=", result.Stdout, StringComparison.Ordinal);
         Assert.Contains("failed=0", result.Stdout, StringComparison.Ordinal);
         Assert.Contains("Heavy: not-run", result.Stdout, StringComparison.Ordinal);
+        var countMatch = Regex.Match(result.Stdout, @"checks=(?<checks>\d+)", RegexOptions.CultureInvariant);
+        Assert.True(countMatch.Success, result.Stdout);
+        Assert.InRange(int.Parse(countMatch.Groups["checks"].Value, CultureInfo.InvariantCulture), 10, 15);
         Assert.False(Directory.Exists(Path.Combine(workspace.Root, ".temp")));
         Assert.Empty(Directory.EnumerateFiles(workspace.Root, "*.zip", SearchOption.AllDirectories));
         Assert.DoesNotContain("E2D-BUILD-AUDIT-PACKAGE", result.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
+    public async Task AuditWorkflowVerifyAuditContractsRejectsStaleFastCheckCountBudget()
+    {
+        using var workspace = CreateAuditContractFixture();
+        var domainDocumentPath = Path.Combine(workspace.Root, "docs", "release-management", "audit-package.md");
+        var domainDocument = File.ReadAllText(domainDocumentPath, Encoding.UTF8);
+        Assert.Contains("Ожидаемый объём - 10-15 лёгких проверок", domainDocument, StringComparison.Ordinal);
+        File.WriteAllText(
+            domainDocumentPath,
+            domainDocument.Replace(
+                "Ожидаемый объём - 10-15 лёгких проверок",
+                "Ожидаемый объём - 60-80 лёгких проверок",
+                StringComparison.Ordinal),
+            Encoding.UTF8);
+
+        var result = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            TimeSpan.FromSeconds(60),
+            "verify",
+            "audit-contracts");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-CONTRACT-FAILED");
+        Assert.Contains("fast-check-count-budget", result.Stdout, StringComparison.Ordinal);
+        Assert.Contains("60-80", result.Stdout, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -7928,6 +8157,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditSubmitPromptSubmissionSkipsPromptFillForEmptyReuseMessage()
     {
         var trace = await InvokeAuditSubmitPromptSubmissionAsync(deepResearch: false, message: string.Empty);
@@ -7968,6 +8198,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Medium")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditSubmitPromptPayloadReadyAllowsEmptyPromptOnlyForZipOnlyReuse()
     {
         var expression = await GetAuditSubmitCodexChromeAutomationPromptPayloadReadyExpressionAsync(
@@ -8351,25 +8582,33 @@ public sealed class RepositoryBuildToolTests
             StringComparison.Ordinal);
     }
 
-    [Fact]
+    [Theory]
     [Trait("AuditTier", "Heavy")]
-    public async Task AuditPackageRejectsTestRunnerCommandsInConfiguredChecks()
+    [InlineData("dotnet", false)]
+    [InlineData("dotnet.exe", false)]
+    [InlineData("/usr/bin/dotnet", false)]
+    [InlineData("tools/dotnet.exe", false)]
+    [InlineData("dotnet.exe", true)]
+    public async Task AuditPackageRejectsTestRunnerCommandsInConfiguredChecks(string fileName, bool useRunCommand)
     {
-        using var fixture = await AuditFixture.CreateAsync("audit-package-rejects-test-runner-checks");
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-rejects-test-runner-checks-{SanitizeFixtureName(fileName)}-{useRunCommand}");
         const string taskId = "T-0001";
         fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
         # Audit fixture
 
         This file proves that package checks do not rerun test suites.
         """);
+        var arguments = useRunCommand
+            ? new[] { "run", "--project", "eng/Electron2D.Build", "--", "test", "--integration-slice", "audit-medium" }
+            : ["test", "--help"];
         var configPath = fixture.WriteConfig(
             taskId,
             checks:
             [
                 new AuditFixtureCheck(
                     "dotnet-test-help",
-                    "dotnet",
-                    ["test", "--help"],
+                    fileName,
+                    arguments,
                     ".",
                     [],
                     30,
@@ -8382,6 +8621,125 @@ public sealed class RepositoryBuildToolTests
         Assert.NotEqual(0, package.ExitCode);
         AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
         Assert.Contains("preflightChecks", package.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("E2D-BUILD-AUDIT-CHECK-RESULT", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [Trait("AuditTier", "Heavy")]
+    [InlineData("cmd", "/c")]
+    [InlineData("cmd.exe", "/c")]
+    [InlineData("powershell", "-Command")]
+    [InlineData("powershell.exe", "-Command")]
+    [InlineData("pwsh", "-Command")]
+    [InlineData("sh", "-c")]
+    [InlineData("bash", "-c")]
+    public async Task AuditPackageRejectsShellSplitTestRunnerCommandsInConfiguredChecks(string shell, string commandFlag)
+    {
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-rejects-shell-split-test-runner-checks-{SanitizeFixtureName(shell)}");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that shell wrappers cannot hide split test runner commands.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            checks:
+            [
+                new AuditFixtureCheck(
+                    "shell-dotnet-test-help",
+                    shell,
+                    [commandFlag, "dotnet", "test", "--help"],
+                    ".",
+                    [],
+                    30,
+                    0,
+                    [])
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("preflightChecks", package.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("E2D-BUILD-AUDIT-CHECK-RESULT", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [Trait("AuditTier", "Heavy")]
+    [InlineData("cmd", "/c")]
+    [InlineData("cmd.exe", "/c")]
+    [InlineData("tools/cmd.exe", "/c")]
+    [InlineData("powershell", "-Command")]
+    [InlineData("powershell.exe", "-Command")]
+    [InlineData("pwsh", "-Command")]
+    [InlineData("sh", "-c")]
+    [InlineData("bash", "-c")]
+    [InlineData("/bin/sh", "-c")]
+    public async Task AuditPackageRejectsShellExecutablesInConfiguredChecks(string shell, string commandFlag)
+    {
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-rejects-shell-executable-checks-{SanitizeFixtureName(shell)}");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that package-local checks must use direct portable commands.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            checks:
+            [
+                new AuditFixtureCheck(
+                    "shell-echo",
+                    shell,
+                    [commandFlag, "echo", "audit"],
+                    ".",
+                    [],
+                    30,
+                    0,
+                    [])
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("preflightChecks", package.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("E2D-BUILD-AUDIT-CHECK-RESULT", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsConfiguredChecksWithoutRationale()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-check-without-rationale");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that configured checks explain why they run inside package-route evidence.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            checks:
+            [
+                new AuditFixtureCheck(
+                    "git-status",
+                    "git",
+                    ["status", "--short"],
+                    ".",
+                    [],
+                    10,
+                    0,
+                    [],
+                    "")
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("rationale", package.Stdout, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("E2D-BUILD-AUDIT-CHECK-RESULT", package.Stdout, StringComparison.Ordinal);
     }
 
@@ -8411,9 +8769,12 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Contains("checks=1", planMessage, StringComparison.Ordinal);
         Assert.Contains("git-status", planMessage, StringComparison.Ordinal);
+        Assert.Contains("command=git status --short", planMessage, StringComparison.Ordinal);
         Assert.Contains("timeoutSeconds=10", planMessage, StringComparison.Ordinal);
         Assert.Contains("expectedExitCode=0", planMessage, StringComparison.Ordinal);
+        Assert.Contains("rationale=Fixture package-local check proves a cheap command belongs inside package-route evidence.", planMessage, StringComparison.Ordinal);
         Assert.Contains("git-status", resultMessage, StringComparison.Ordinal);
+        Assert.Contains("command=git status --short", resultMessage, StringComparison.Ordinal);
         Assert.Contains("actualExitCode=0", resultMessage, StringComparison.Ordinal);
         Assert.Contains($"evidence/{taskId}-r01/checks/git-status/stdout.txt", resultMessage, StringComparison.Ordinal);
         Assert.Contains($"evidence/{taskId}-r01/checks/git-status/stderr.txt", resultMessage, StringComparison.Ordinal);
@@ -8918,6 +9279,26 @@ public sealed class RepositoryBuildToolTests
         while describing forbidden assignments without carrying real credentials.
         """);
         var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-PACKAGE-CREATED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageAllowsSplitSyntheticSecretFixturesInSelectedSourceFiles()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-source-split-secret-fixtures");
+        const string taskId = "T-0001";
+        const string sourcePath = "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs";
+        CopyRepositoryFile(FindRepositoryRoot(), fixture.RepositoryRoot, sourcePath);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            repoFileGlobs: [],
+            repoFileAllowlist: [sourcePath],
+            archiveOnlyEvidenceGlobs: []);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -15891,6 +16272,17 @@ public sealed class RepositoryBuildToolTests
         return text[start..];
     }
 
+    private static string SanitizeFixtureName(string value)
+    {
+        var builder = new StringBuilder(value.Length);
+        foreach (var character in value)
+        {
+            builder.Append(char.IsLetterOrDigit(character) ? character : '-');
+        }
+
+        return builder.ToString().Trim('-');
+    }
+
     private static string CreateOperatorWorkflowManifestForTest(
         string payloadPath,
         string payloadSha256,
@@ -17258,7 +17650,8 @@ public sealed class RepositoryBuildToolTests
         string[] EnvAllowlist,
         int TimeoutSeconds,
         int ExpectedExitCode,
-        string[] TrxGlobs);
+        string[] TrxGlobs,
+        string Rationale = "Fixture package-local check proves a cheap command belongs inside package-route evidence.");
 
     private sealed record AuditFixturePreflightCheck(
         string Name,

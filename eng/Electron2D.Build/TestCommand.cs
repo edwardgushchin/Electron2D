@@ -40,6 +40,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private const string IntegrationSliceRepositoryTooling = "repository-tooling";
     private const string IntegrationSliceAuditPackage = "audit-package";
     private const string IntegrationSliceAuditMedium = "audit-medium";
+    private const string IntegrationSliceAuditMediumExhaustive = "audit-medium-exhaustive";
     private const string IntegrationSliceAuditHeavy = "audit-heavy";
     private const string IntegrationSliceAuditExhaustive = "audit-exhaustive";
     private const string IntegrationSliceExternalProcess = "external-process";
@@ -52,6 +53,15 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private static readonly Regex DotnetTestSummaryPattern = new(
         @"Failed:\s*(?<failed>\d+),\s*Passed:\s*(?<passed>\d+),\s*Skipped:\s*(?<skipped>\d+),\s*Total:\s*(?<total>\d+)",
         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    private static readonly Regex LocalizedDotnetTestSummaryPattern = new(
+        @"не\s+пройдено\s+(?<failed>\d+),\s*пройдено\s+(?<passed>\d+),\s*пропущено\s+(?<skipped>\d+),\s*всего\s+(?<total>\d+)",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    private static readonly Regex LocalizedVstestSummaryPattern = new(
+        @"Всего\s+тестов:\s*(?<total>\d+).*?Пройдено:\s*(?<passed>\d+)(?:.*?Не\s+пройдено:\s*(?<failed>\d+))?(?:.*?Пропущено:\s*(?<skipped>\d+))?",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+    private static readonly Regex VstestSummaryPattern = new(
+        @"Total\s+tests:\s*(?<total>\d+).*?Passed:\s*(?<passed>\d+)(?:.*?Failed:\s*(?<failed>\d+))?(?:.*?Skipped:\s*(?<skipped>\d+))?",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
     private static readonly string[] TestProjects =
     [
@@ -128,17 +138,17 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             return RepositoryBuildExitCodes.Failed;
         }
 
+        var testProjects = GetTestProjects(options);
         diagnostics.Write(new BuildDiagnostic(
             "test",
             "test",
             "info",
             "E2D-BUILD-TEST-STARTED",
-            $"Running {TestProjects.Length} test projects.",
+            $"Running {testProjects.Length} test projects.",
             TimeoutSeconds: options.TimeoutSeconds));
 
         var stopwatch = Stopwatch.StartNew();
         var summary = new TestCommandRunSummary();
-        var testProjects = GetTestProjects(options);
         var testEnvironment = CreateDotnetTestEnvironment(options);
         foreach (var project in testProjects)
         {
@@ -224,6 +234,24 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                 TimedOut: false,
                 ProjectPath: project,
                 TimeoutSeconds: options.TimeoutSeconds));
+        }
+
+        if (IsAuditIntegrationSlice(options.IntegrationSlice) && !summary.HasCounts)
+        {
+            WriteIntegrationSliceSummary(
+                options,
+                summary,
+                stopwatch.Elapsed,
+                timedOut: false,
+                failure: "test-counts-unavailable");
+            diagnostics.Write(new BuildDiagnostic(
+                "test",
+                "test",
+                "error",
+                "E2D-BUILD-TEST-SUMMARY-UNAVAILABLE",
+                $"dotnet test passed for audit integration slice '{options.IntegrationSlice}', but the numeric test summary could not be parsed.",
+                TimeoutSeconds: options.TimeoutSeconds));
+            return RepositoryBuildExitCodes.Failed;
         }
 
         WriteIntegrationSliceSummary(options, summary, stopwatch.Elapsed, timedOut: false, failure: "none");
@@ -328,7 +356,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             "test",
             "error",
             "E2D-BUILD-CLI-INVALID-ARGUMENTS",
-            "Expected: test [--include-baseline] [--integration-slice <all|fast|repository-tooling|audit-package|audit-medium|audit-heavy|audit-exhaustive|external-process|slow>] [--no-build] [--no-restore] [--timeout-seconds <n>]."));
+            "Expected: test [--include-baseline] [--integration-slice <all|fast|repository-tooling|audit-package|audit-medium|audit-medium-exhaustive|audit-heavy|audit-exhaustive|external-process|slow>] [--no-build] [--no-restore] [--timeout-seconds <n>]."));
     }
 
     private static string[] GetTestProjects(TestCommandOptions options)
@@ -426,7 +454,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                     NotAuditTier(AuditTierMedium),
                     NotAuditTier(AuditTierHeavy)]),
             IntegrationSliceAuditPackage => Or([AuditTier(AuditTierMedium), AuditTier(AuditTierHeavy)]),
-            IntegrationSliceAuditMedium => AuditTier(AuditTierMedium),
+            IntegrationSliceAuditMedium => And([AuditTier(AuditTierMedium), AuditCadence(AuditCadenceAcceptance)]),
+            IntegrationSliceAuditMediumExhaustive => AuditTier(AuditTierMedium),
             IntegrationSliceAuditHeavy => And([AuditTier(AuditTierHeavy), AuditCadence(AuditCadenceAcceptance)]),
             IntegrationSliceAuditExhaustive => AuditTier(AuditTierHeavy),
             IntegrationSliceExternalProcess => Or([.. ExternalProcessIncludes.Select(FullyQualifiedNameContains)]),
@@ -440,7 +469,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         return integrationSlice switch
         {
             IntegrationSliceAuditPackage => "AuditTier=Medium|AuditTier=Heavy",
-            IntegrationSliceAuditMedium => "AuditTier=Medium",
+            IntegrationSliceAuditMedium => "AuditTier=Medium&AuditCadence=Acceptance",
+            IntegrationSliceAuditMediumExhaustive => "AuditTier=Medium",
             IntegrationSliceAuditHeavy => "AuditTier=Heavy&AuditCadence=Acceptance",
             IntegrationSliceAuditExhaustive => "AuditTier=Heavy",
             _ => "AuditTier=unknown"
@@ -452,6 +482,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         return integrationSlice is
             IntegrationSliceAuditPackage or
             IntegrationSliceAuditMedium or
+            IntegrationSliceAuditMediumExhaustive or
             IntegrationSliceAuditHeavy or
             IntegrationSliceAuditExhaustive;
     }
@@ -464,6 +495,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             IntegrationSliceRepositoryTooling or
             IntegrationSliceAuditPackage or
             IntegrationSliceAuditMedium or
+            IntegrationSliceAuditMediumExhaustive or
             IntegrationSliceAuditHeavy or
             IntegrationSliceAuditExhaustive or
             IntegrationSliceExternalProcess or
@@ -507,24 +539,30 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
 
     private static bool TryParseDotnetTestCounts(string standardOutput, out DotnetTestCounts counts)
     {
-        var match = DotnetTestSummaryPattern.Match(standardOutput);
-        if (!match.Success)
+        foreach (var pattern in new[] { DotnetTestSummaryPattern, LocalizedDotnetTestSummaryPattern, LocalizedVstestSummaryPattern, VstestSummaryPattern })
         {
-            counts = default;
-            return false;
+            var match = pattern.Match(standardOutput);
+            if (match.Success)
+            {
+                counts = new DotnetTestCounts(
+                    ParseGroup(match, "failed"),
+                    ParseGroup(match, "passed"),
+                    ParseGroup(match, "skipped"),
+                    ParseGroup(match, "total"));
+                return true;
+            }
         }
 
-        counts = new DotnetTestCounts(
-            ParseGroup(match, "failed"),
-            ParseGroup(match, "passed"),
-            ParseGroup(match, "skipped"),
-            ParseGroup(match, "total"));
-        return true;
+        counts = default;
+        return false;
     }
 
     private static int ParseGroup(Match match, string groupName)
     {
-        return int.Parse(match.Groups[groupName].Value, CultureInfo.InvariantCulture);
+        var group = match.Groups[groupName];
+        return group.Success && group.Length > 0
+            ? int.Parse(group.Value, CultureInfo.InvariantCulture)
+            : 0;
     }
 
     private static string FormatDuration(TimeSpan elapsed)
@@ -556,6 +594,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         private int passed;
         private int skipped;
         private int total;
+
+        public bool HasCounts => hasCounts;
 
         public void Add(DotnetTestCounts counts)
         {

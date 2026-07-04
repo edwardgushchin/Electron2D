@@ -25,12 +25,16 @@
 
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Electron2D.Build;
 
 internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosticSink diagnostics)
 {
     private const string Step = "verify audit-contracts";
+    private const int FastCheckCountMinimum = 10;
+    private const int FastCheckCountMaximum = 15;
+    private static readonly string FastCheckCountBudgetMarker = $"Ожидаемый объём - {FastCheckCountMinimum}-{FastCheckCountMaximum} лёгких проверок";
     private static readonly string[] AuditRequestRequiredMarkers =
     [
         "VERDICT: ACCEPT",
@@ -81,326 +85,19 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
         var checks = new List<AuditContractCheckResult>();
         var documents = ReadDocuments(checks);
 
-        Check(
-            checks,
-            "audit-request-required-markers",
-            documents.AuditRequestPath,
-            documents.AuditRequestText is not null &&
-                AuditRequestRequiredMarkers.All(marker => documents.AuditRequestText.Contains(marker, StringComparison.Ordinal)),
-            "External audit request must keep all required final-report and package-inspection markers.");
-        CheckContainsAll(
-            checks,
-            "audit-request-full-current-scope-review",
-            documents.AuditRequestPath,
-            documents.AuditRequestText,
-            ["full current-scope engineering review", "primary audit", "control audit"]);
-        CheckContainsAll(
-            checks,
-            "audit-request-risk-classes",
-            documents.AuditRequestPath,
-            documents.AuditRequestText,
-            ["current-task blocker", "follow-up finding", "global safety blocker", "unsupported concern"]);
-        CheckContainsAll(
-            checks,
-            "audit-request-evidence-backed-blockers",
-            documents.AuditRequestPath,
-            documents.AuditRequestText,
-            ["Правило доказанного blocker-а", "Проверка опровержения", "evidence-backed blocker", "blocker disproof"]);
-
-        CheckContainsAll(
-            checks,
-            "domain-fast-medium-heavy",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["`Fast`", "`Medium`", "`Heavy`"]);
-        CheckContainsAll(
-            checks,
-            "domain-fast-command",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["verify audit-contracts", "AuditTier=Fast", "30 секунд"]);
-        CheckContainsAll(
-            checks,
-            "domain-fast-forbids-heavy-work",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["не создаёт audit ZIP", "не создаёт чистую копию репозитория", "не вызывает дочерние `dotnet run`"]);
-        CheckContainsAll(
-            checks,
-            "domain-stop-loss",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["Правило остановки", "failure class", "не увеличивать `rNN`"]);
-        CheckContainsAll(
-            checks,
-            "domain-audit-loop-stabilization",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["audit-loop-stabilization", "metadata.previousVerdictChain", "metadata.blockerClosureList", "checks[].name", "preflightChecks[].name"]);
-        CheckContainsAll(
-            checks,
-            "domain-previous-blocker-closure-coverage",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["путь прошлого отчёта", "идентификатор blocker-а", "configured/preflight check", "каждый найденный blocker", "распознаваемые `B*` blocker ids"]);
-        CheckContainsAll(
-            checks,
-            "domain-previous-blocker-closure-matrix",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["матрицу закрытия прошлых blocker-ов", "путь отчёта", "blocker id", "configured check"]);
-        CheckContainsAll(
-            checks,
-            "domain-preflight-checks-no-test-rerun",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["preflightChecks", "audit package` и `audit package verify` не должны повторно запускать тестовые наборы", "любые команды тестового раннера внутри `checks[]` запрещены"]);
-        CheckContainsAll(
-            checks,
-            "domain-reuse-conversation-zip-only-submit",
-            documents.DomainDocumentPath,
-            documents.DomainDocumentText,
-            ["`--reuse-conversation`", "прикрепляет только основной ZIP", "не вставляет в composer текст `AUDIT-REQUEST.md`", "Явный `--message` вместе с `--reuse-conversation` отклоняется"]);
-        CheckContainsAll(
-            checks,
-            "request-previous-blocker-closure-coverage",
-            documents.AuditRequestPath,
-            documents.AuditRequestText,
-            ["путь прошлого отчёта", "идентификатор blocker-а", "каждого найденного blocker-а", "картой проверки закрытий"]);
-
-        CheckContainsAll(
-            checks,
-            "goal-prompt-short-entrypoint",
-            documents.GoalPromptPath,
-            documents.GoalPromptText,
-            [".codex/prompts/goal-task-workflow.md", "VERDICT: ACCEPT", "RISKS_AND_NOTES", "verify audit-followups", "git status", "Conventional Commit"]);
-        Check(
-            checks,
-            "goal-prompt-uses-repo-relative-workflow-path",
-            documents.GoalPromptPath,
-            documents.GoalPromptText is not null &&
-                documents.GoalPromptText.Contains("`.codex/prompts/goal-task-workflow.md`", StringComparison.Ordinal) &&
-                !documents.GoalPromptText.Contains("\\Electron2D\\", StringComparison.Ordinal),
-            "Active goal prompt must point to .codex/prompts/goal-task-workflow.md with a repo-relative path.");
-        Check(
-            checks,
-            "goal-prompt-stays-compact",
-            documents.GoalPromptPath,
-            documents.GoalPromptText is not null && documents.GoalPromptText.Length <= 3500,
-            "Active goal prompt must stay at or below 3500 characters; keep detailed workflow in .codex/prompts/goal-task-workflow.md.");
-        Check(
-            checks,
-            "goal-prompt-does-not-duplicate-workflow",
-            documents.GoalPromptPath,
-            documents.GoalPromptText is not null &&
-                !new[]
-                {
-                    "PREFLIGHT:",
-                    "WORKER:",
-                    "CHECKS:",
-                    "LOCAL LOOP:",
-                    "PACKAGE:",
-                    "VERIFY:",
-                    "SUBMIT:",
-                    "ACCEPT/DONE:"
-                }.Any(marker => documents.GoalPromptText.Contains(marker, StringComparison.Ordinal)),
-            "Active goal prompt must not duplicate workflow sections from .codex/prompts/goal-task-workflow.md.");
-        CheckContainsAll(
-            checks,
-            "goal-prompt-gitignore-exception",
-            documents.GitIgnorePath,
-            documents.GitIgnoreText,
-            ["!.codex/prompts/goal-prompt.md", "!.codex/prompts/goal-task-workflow.md"]);
-        CheckContainsAll(
-            checks,
-            "goal-workflow-fast-command",
-            documents.GoalLoopPath,
-            documents.GoalLoopText,
-            ["verify audit-contracts", "fast path", "focused integration tests"]);
-        CheckContainsAll(
-            checks,
-            "goal-workflow-numeric-diary-line",
-            documents.GoalLoopPath,
-            documents.GoalLoopText,
-            ["Fast: 3 теста / 1m13s", "Medium: 4 теста / 3m18s", "Heavy: не запускался"]);
-        CheckContainsAll(
-            checks,
-            "goal-workflow-delegates-audit-details",
-            documents.GoalLoopPath,
-            documents.GoalLoopText,
-            ["docs/release-management/audit-package.md", "audit-loop-stabilization", "previousVerdictChain", "blockerClosureList"]);
-        CheckContainsAll(
-            checks,
-            "goal-workflow-points-to-active-prompt",
-            documents.GoalLoopPath,
-            documents.GoalLoopText,
-            ["Goal Task Workflow", ".codex/prompts/goal-prompt.md", "лимит 3500 символов"]);
-        Check(
-            checks,
-            "goal-workflow-does-not-duplicate-agent-workflow",
-            documents.GoalLoopPath,
-            documents.GoalLoopText is not null &&
-                !new[]
-                {
-                    "## Docker",
-                    "## Worktree",
-                    "## Feature Gate",
-                    "## Development Diary",
-                    "public C#",
-                    "Manual ZIP assembly"
-                }.Any(marker => documents.GoalLoopText.Contains(marker, StringComparison.OrdinalIgnoreCase)),
-            "Goal workflow must only orchestrate the goal loop and must not duplicate AGENTS.md or docs/repository/agent-workflow.md.");
-
-        CheckContainsAll(
-            checks,
-            "agents-audit-package-command",
-            documents.AgentsPath,
-            documents.AgentsText,
-            ["audit package", "audit package verify", "audit submit"]);
-        CheckContainsAll(
-            checks,
-            "agents-no-manual-audit-zip",
-            documents.AgentsPath,
-            documents.AgentsText,
-            ["Manual ZIP assembly", "manual submit", "manual page verdict reading"]);
-        CheckContainsAll(
-            checks,
-            "agents-pre-package-focused-checks",
-            documents.AgentsPath,
-            documents.AgentsText,
-            ["docs/repository/agent-workflow.md", "docs/release-management/audit-package.md", "--no-build", "--no-restore"]);
-        CheckContainsAll(
-            checks,
-            "agents-points-to-detailed-contracts",
-            documents.AgentsPath,
-            documents.AgentsText,
-            ["docs/release-management/audit-package.md", "docs/repository/agent-workflow.md", "goal-task-workflow.md"]);
-        Check(
-            checks,
-            "agents-root-stays-compact",
-            documents.AgentsPath,
-            documents.AgentsText is not null && Encoding.UTF8.GetByteCount(documents.AgentsText) <= 8_192,
-            "Root AGENTS.md must stay compact and keep detailed rules in docs/repository/agent-workflow.md.");
-        CheckContainsAll(
-            checks,
-            "agents-repo-map-core-commands-subagents",
-            documents.AgentsPath,
-            documents.AgentsText,
-            ["## Repository Map", "## Core Commands", "## Guardrails", "docs/repository/agent-workflow.md", "verify audit-followups"]);
-        CheckContainsAll(
-            checks,
-            "agents-root-safety-boundaries",
-            documents.AgentsPath,
-            documents.AgentsText,
-            ["AGENTS.override.md", "closest applicable file", "only on explicit user request", "never push by default"]);
-        CheckContainsAll(
-            checks,
-            "agents-subagent-boundary",
-            documents.AgentsPath,
-            documents.AgentsText,
-            ["current harness and user request explicitly allow", "scoped to read-heavy work", "main agent owns final edits"]);
-        Check(
-            checks,
-            "agents-root-stays-english",
-            documents.AgentsPath,
-            documents.AgentsText is not null &&
-                !new[]
-                {
-                    "## Карта",
-                    "Перед содержательной",
-                    "Соблюдай",
-                    "Веди `TASKS.md`",
-                    "Проверки"
-                }.Any(marker => documents.AgentsText.Contains(marker, StringComparison.OrdinalIgnoreCase)),
-            "Root AGENTS.md must stay in English.");
-        Check(
-            checks,
-            "agents-does-not-duplicate-agent-workflow",
-            documents.AgentsPath,
-            documents.AgentsText is not null &&
-                !new[]
-                {
-                    "## Docker, Deployment",
-                    "## Worktree And Commit Hygiene",
-                    "## External Audit Workflow",
-                    "Subagent prompt must include",
-                    "Every repository-work session updates"
-                }.Any(marker => documents.AgentsText.Contains(marker, StringComparison.OrdinalIgnoreCase)),
-            "Root AGENTS.md must stay an index and guardrail file, not duplicate docs/repository/agent-workflow.md.");
-        CheckContainsAll(
-            checks,
-            "agent-workflow-detailed-rules",
-            documents.AgentWorkflowPath,
-            documents.AgentWorkflowText,
-            ["Feature Gate", "Task Workflow", "Development Diary", "External Audit Workflow", "Subagents"]);
-        Check(
-            checks,
-            "agent-workflow-stays-english",
-            documents.AgentWorkflowPath,
-            documents.AgentWorkflowText is not null &&
-                !new[]
-                {
-                    "# Рабочий протокол",
-                    "## Приоритет",
-                    "## Язык",
-                    "## Дневник",
-                    "## Проверки",
-                    "Правила:"
-                }.Any(marker => documents.AgentWorkflowText.Contains(marker, StringComparison.OrdinalIgnoreCase)),
-            "docs/repository/agent-workflow.md must stay in English.");
-
-        CheckContainsAll(
-            checks,
-            "test-command-audit-tier-slice",
-            documents.TestCommandPath,
-            documents.TestCommandText,
-            ["AuditTier(AuditTierMedium)", "AuditTier(AuditTierHeavy)", "NotAuditTier(AuditTierFast)", "IntegrationSliceAuditPackage", "IntegrationSliceAuditMedium", "IntegrationSliceAuditHeavy"]);
-        CheckContainsAll(
-            checks,
-            "test-command-slice-summary",
-            documents.TestCommandPath,
-            documents.TestCommandText,
-            ["E2D-BUILD-TEST-SLICE-SUMMARY", "TryParseDotnetTestCounts", "childProcesses", "failure={failure}"]);
-        CheckContainsAll(
-            checks,
-            "test-command-no-build-environment",
-            documents.TestCommandPath,
-            documents.TestCommandText,
-            ["ELECTRON2D_BUILD_TOOL_NO_BUILD", "CreateDotnetTestEnvironment", "BuildToolNoBuildEnvironmentVariable"]);
-        CheckContainsAll(
-            checks,
-            "operator-workflow-summary",
-            documents.AuditPackageCommandPath,
-            documents.AuditPackageCommandText,
-            ["E2D-BUILD-AUDIT-OPERATOR-WORKFLOW-SUMMARY", "Operator workflow sidecar summary", "audit-package-message", "audit-package-verify"]);
-        CheckContainsAll(
-            checks,
-            "audit-package-previous-blocker-closure-matrix",
-            documents.AuditPackageCommandPath,
-            documents.AuditPackageCommandText,
-            ["Previous Blocker Closure Matrix", "CreatePreviousBlockerClosureMatrix", "PreviousBlockerClosureMatrixRow"]);
-        CheckContainsAll(
-            checks,
-            "integration-audit-tier-guards",
-            documents.IntegrationTestsPath,
-            documents.IntegrationTestsText,
-            [
-                "AuditWorkflowAuditTestsDeclareAuditTierTraits",
-                "AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers",
-                "AuditWorkflowMediumAuditTierDoesNotUseHeavyPackagingHelpers",
-                "TestCommandAuditTierIntegrationSlicesPrintSummary",
-                "AuditPackageWritesPreviousBlockerClosureMatrixIntoManifest",
-                "AuditSubmitReuseConversationRejectsExplicitMessageBeforeBrowserLaunch",
-                "AuditSubmitPromptSubmissionSkipsPromptFillForEmptyReuseMessage",
-                "AuditSubmitPromptPayloadReadyAllowsEmptyPromptOnlyForZipOnlyReuse",
-                "env ELECTRON2D_BUILD_TOOL_NO_BUILD=",
-                "Trait(\"AuditTier\", \"Fast\")",
-                "Trait(\"AuditTier\", \"Medium\")",
-                "Trait(\"AuditTier\", \"Heavy\")"
-            ]);
+        VerifyRequiredDocuments(checks, documents);
+        VerifyAuditRequestContract(checks, documents);
+        VerifyDomainDocumentContract(checks, documents);
+        VerifyGoalPromptContract(checks, documents);
+        VerifyGoalWorkflowContract(checks, documents);
+        VerifyAgentsContract(checks, documents);
+        VerifyAgentWorkflowContract(checks, documents);
+        VerifyToolingSourceContracts(checks, documents);
+        VerifyIntegrationTestsContract(checks, documents);
 
         VerifyFollowupParser(checks);
         VerifyFinalReportExtractor(checks);
+        VerifyFastCheckCountBudget(checks, documents);
 
         stopwatch.Stop();
         var failed = checks.Count(check => !check.Passed && !check.Skipped);
@@ -468,26 +165,359 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
     private string? ReadRequiredText(List<AuditContractCheckResult> checks, string relativePath)
     {
         var fullPath = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
-        var exists = File.Exists(fullPath);
-        Check(
-            checks,
-            $"file-exists:{relativePath}",
-            relativePath,
-            exists,
-            $"Required audit contract file is missing: {relativePath}");
-        if (!exists)
+        if (!File.Exists(fullPath))
         {
             return null;
         }
 
         var text = File.ReadAllText(fullPath, Encoding.UTF8);
+        return text;
+    }
+
+    private static void VerifyRequiredDocuments(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var missing = RequiredDocumentTexts(documents)
+            .Where(document => string.IsNullOrWhiteSpace(document.Text))
+            .Select(document => document.Path)
+            .ToArray();
         Check(
             checks,
-            $"file-not-empty:{relativePath}",
-            relativePath,
-            !string.IsNullOrWhiteSpace(text),
-            $"Required audit contract file is empty: {relativePath}");
-        return text;
+            "required-audit-contract-files",
+            null,
+            missing.Length == 0,
+            missing.Length == 0
+                ? "All required audit contract files exist and are non-empty."
+                : $"Required audit contract files are missing or empty: {string.Join(", ", missing)}.");
+    }
+
+    private static void VerifyAuditRequestContract(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var markers = AuditRequestRequiredMarkers
+            .Concat(
+            [
+                "full current-scope engineering review",
+                "primary audit",
+                "control audit",
+                "current-task blocker",
+                "follow-up finding",
+                "global safety blocker",
+                "unsupported concern",
+                "Правило доказанного blocker-а",
+                "Проверка опровержения",
+                "evidence-backed blocker",
+                "blocker disproof",
+                "путь прошлого отчёта",
+                "идентификатор blocker-а",
+                "каждого найденного blocker-а",
+                "картой проверки закрытий"
+            ])
+            .ToArray();
+        CheckContainsAll(checks, "audit-request-contract", documents.AuditRequestPath, documents.AuditRequestText, markers);
+    }
+
+    private static void VerifyDomainDocumentContract(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        CheckContainsAll(
+            checks,
+            "domain-audit-package-contract",
+            documents.DomainDocumentPath,
+            documents.DomainDocumentText,
+            [
+                "`Fast`",
+                "`Medium`",
+                "`Heavy`",
+                "verify audit-contracts",
+                "AuditTier=Fast",
+                FastCheckCountBudgetMarker,
+                "30 секунд",
+                "не создаёт audit ZIP",
+                "не создаёт чистую копию репозитория",
+                "не вызывает дочерние `dotnet run`",
+                "Правило остановки",
+                "failure class",
+                "не увеличивать `rNN`",
+                "audit-loop-stabilization",
+                "metadata.previousVerdictChain",
+                "metadata.blockerClosureList",
+                "checks[].name",
+                "preflightChecks[].name",
+                "путь прошлого отчёта",
+                "идентификатор blocker-а",
+                "configured/preflight check",
+                "каждый найденный blocker",
+                "распознаваемые `B*` blocker ids",
+                "матрицу закрытия прошлых blocker-ов",
+                "blocker id",
+                "preflightChecks",
+                "audit package` и `audit package verify` не должны повторно запускать тестовые наборы",
+                "любые команды тестового раннера внутри `checks[]` запрещены",
+                ".temp/audit-evidence/...",
+                "archiveOnlyEvidenceGlobs",
+                "preflightChecks[].evidenceGlobs",
+                "checks[].trxGlobs",
+                "`--reuse-conversation`",
+                "прикрепляет только основной ZIP",
+                "не вставляет в composer текст `AUDIT-REQUEST.md`",
+                "Явный `--message` вместе с `--reuse-conversation` отклоняется"
+            ]);
+    }
+
+    private static void VerifyGoalPromptContract(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var missing = MissingMarkers(
+            documents.GoalPromptText,
+            [
+                ".codex/prompts/goal-task-workflow.md",
+                "VERDICT: ACCEPT",
+                "RISKS_AND_NOTES",
+                "verify audit-followups",
+                "git status",
+                "Conventional Commit"
+            ]).ToList();
+        if (documents.GoalPromptText is null ||
+            !documents.GoalPromptText.Contains("`.codex/prompts/goal-task-workflow.md`", StringComparison.Ordinal) ||
+            documents.GoalPromptText.Contains("\\Electron2D\\", StringComparison.Ordinal))
+        {
+            missing.Add("repo-relative workflow path");
+        }
+
+        if (documents.GoalPromptText is null || documents.GoalPromptText.Length > 3500)
+        {
+            missing.Add("<=3500 characters");
+        }
+
+        if (ContainsAny(
+            documents.GoalPromptText,
+            StringComparison.Ordinal,
+            "PREFLIGHT:",
+            "WORKER:",
+            "CHECKS:",
+            "LOCAL LOOP:",
+            "PACKAGE:",
+            "VERIFY:",
+            "SUBMIT:",
+            "ACCEPT/DONE:"))
+        {
+            missing.Add("no duplicated workflow sections");
+        }
+
+        if (!ContainsAll(documents.GitIgnoreText, ["!.codex/prompts/goal-prompt.md", "!.codex/prompts/goal-task-workflow.md"]))
+        {
+            missing.Add(".gitignore prompt exceptions");
+        }
+
+        Check(
+            checks,
+            "goal-prompt-contract",
+            documents.GoalPromptPath,
+            missing.Count == 0,
+            missing.Count == 0
+                ? "Goal prompt contract is satisfied."
+                : $"Goal prompt contract failed: {string.Join(", ", missing)}.");
+    }
+
+    private static void VerifyGoalWorkflowContract(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var missing = MissingMarkers(
+            documents.GoalLoopText,
+            [
+                "verify audit-contracts",
+                "fast path",
+                "focused integration tests",
+                "Fast: 3 теста / 1m13s",
+                "Medium: 4 теста / 3m18s",
+                "Heavy: не запускался",
+                "docs/release-management/audit-package.md",
+                "audit-loop-stabilization",
+                "previousVerdictChain",
+                "blockerClosureList",
+                "Goal Task Workflow",
+                ".codex/prompts/goal-prompt.md",
+                "лимит 3500 символов"
+            ]).ToList();
+        if (ContainsAny(
+            documents.GoalLoopText,
+            StringComparison.OrdinalIgnoreCase,
+            "## Docker",
+            "## Worktree",
+            "## Feature Gate",
+            "## Development Diary",
+            "public C#",
+            "Manual ZIP assembly"))
+        {
+            missing.Add("no duplicated AGENTS.md or agent-workflow sections");
+        }
+
+        Check(
+            checks,
+            "goal-workflow-contract",
+            documents.GoalLoopPath,
+            missing.Count == 0,
+            missing.Count == 0
+                ? "Goal workflow contract is satisfied."
+                : $"Goal workflow contract failed: {string.Join(", ", missing)}.");
+    }
+
+    private static void VerifyAgentsContract(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var missing = MissingMarkers(
+            documents.AgentsText,
+            [
+                "audit package",
+                "audit package verify",
+                "audit submit",
+                "Manual ZIP assembly",
+                "manual submit",
+                "manual page verdict reading",
+                "docs/repository/agent-workflow.md",
+                "docs/release-management/audit-package.md",
+                "--no-build",
+                "--no-restore",
+                "goal-task-workflow.md",
+                "## Repository Map",
+                "## Core Commands",
+                "## Guardrails",
+                "verify audit-followups",
+                "AGENTS.override.md",
+                "closest applicable file",
+                "only on explicit user request",
+                "never push by default",
+                "current harness and user request explicitly allow",
+                "scoped to read-heavy work",
+                "main agent owns final edits"
+            ]).ToList();
+        if (documents.AgentsText is null || Encoding.UTF8.GetByteCount(documents.AgentsText) > 8_192)
+        {
+            missing.Add("<=8192 bytes");
+        }
+
+        if (ContainsAny(
+            documents.AgentsText,
+            StringComparison.OrdinalIgnoreCase,
+            "## Карта",
+            "Перед содержательной",
+            "Соблюдай",
+            "Веди `TASKS.md`",
+            "Проверки"))
+        {
+            missing.Add("English-only root AGENTS.md");
+        }
+
+        if (ContainsAny(
+            documents.AgentsText,
+            StringComparison.OrdinalIgnoreCase,
+            "## Docker, Deployment",
+            "## Worktree And Commit Hygiene",
+            "## External Audit Workflow",
+            "Subagent prompt must include",
+            "Every repository-work session updates"))
+        {
+            missing.Add("no detailed agent-workflow duplication");
+        }
+
+        Check(
+            checks,
+            "agents-root-contract",
+            documents.AgentsPath,
+            missing.Count == 0,
+            missing.Count == 0
+                ? "Root AGENTS.md contract is satisfied."
+                : $"Root AGENTS.md contract failed: {string.Join(", ", missing)}.");
+    }
+
+    private static void VerifyAgentWorkflowContract(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var missing = MissingMarkers(
+            documents.AgentWorkflowText,
+            ["Feature Gate", "Task Workflow", "Development Diary", "External Audit Workflow", "Subagents"]).ToList();
+        if (ContainsAny(
+            documents.AgentWorkflowText,
+            StringComparison.OrdinalIgnoreCase,
+            "# Рабочий протокол",
+            "## Приоритет",
+            "## Язык",
+            "## Дневник",
+            "## Проверки",
+            "Правила:"))
+        {
+            missing.Add("English-only agent workflow");
+        }
+
+        Check(
+            checks,
+            "agent-workflow-contract",
+            documents.AgentWorkflowPath,
+            missing.Count == 0,
+            missing.Count == 0
+                ? "Agent workflow contract is satisfied."
+                : $"Agent workflow contract failed: {string.Join(", ", missing)}.");
+    }
+
+    private static void VerifyToolingSourceContracts(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var missing = new List<string>();
+        missing.AddRange(MissingMarkers(
+            documents.TestCommandText,
+            [
+                "AuditTier(AuditTierMedium)",
+                "AuditTier(AuditTierHeavy)",
+                "NotAuditTier(AuditTierFast)",
+                "IntegrationSliceAuditPackage",
+                "IntegrationSliceAuditMedium",
+                "IntegrationSliceAuditHeavy",
+                "E2D-BUILD-TEST-SLICE-SUMMARY",
+                "TryParseDotnetTestCounts",
+                "childProcesses",
+                "failure={failure}",
+                "ELECTRON2D_BUILD_TOOL_NO_BUILD",
+                "CreateDotnetTestEnvironment",
+                "BuildToolNoBuildEnvironmentVariable"
+            ]).Select(marker => $"{documents.TestCommandPath}: {marker}"));
+        missing.AddRange(MissingMarkers(
+            documents.AuditPackageCommandText,
+            [
+                "E2D-BUILD-AUDIT-OPERATOR-WORKFLOW-SUMMARY",
+                "Operator workflow sidecar summary",
+                "audit-package-message",
+                "audit-package-verify",
+                "Previous Blocker Closure Matrix",
+                "CreatePreviousBlockerClosureMatrix",
+                "PreviousBlockerClosureMatrixRow"
+            ]).Select(marker => $"{documents.AuditPackageCommandPath}: {marker}"));
+
+        Check(
+            checks,
+            "tooling-source-contracts",
+            null,
+            missing.Count == 0,
+            missing.Count == 0
+                ? "Tooling source contracts are satisfied."
+                : $"Tooling source contracts failed: {string.Join(", ", missing)}.");
+    }
+
+    private static void VerifyIntegrationTestsContract(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        CheckContainsAll(
+            checks,
+            "integration-tests-contract",
+            documents.IntegrationTestsPath,
+            documents.IntegrationTestsText,
+            [
+                "AuditWorkflowAuditTestsDeclareAuditTierTraits",
+                "AuditWorkflowFastAuditTierDoesNotUseHeavyHelpers",
+                "AuditWorkflowMediumAuditTierDoesNotUseHeavyPackagingHelpers",
+                "TestCommandAuditTierMediumIntegrationSlicesPrintSummary",
+                "TestCommandAuditTierHeavyIntegrationSlicesPrintSummary",
+                "AuditPackageWritesPreviousBlockerClosureMatrixIntoManifest",
+                "AuditSubmitReuseConversationRejectsExplicitMessageBeforeBrowserLaunch",
+                "AuditSubmitPromptSubmissionSkipsPromptFillForEmptyReuseMessage",
+                "AuditSubmitPromptPayloadReadyAllowsEmptyPromptOnlyForZipOnlyReuse",
+                "AuditWorkflowVerifyAuditContractsRejectsStaleFastCheckCountBudget",
+                "env ELECTRON2D_BUILD_TOOL_NO_BUILD=",
+                "Trait(\"AuditTier\", \"Fast\")",
+                "Trait(\"AuditTier\", \"Medium\")",
+                "Trait(\"AuditTier\", \"Heavy\")"
+            ]);
     }
 
     private static void VerifyFollowupParser(List<AuditContractCheckResult> checks)
@@ -519,20 +549,18 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
         var findings = AuditFollowupReportParser.ExtractActionableFindings(
             "docs/verdicts/release-management/t-0001-audit-r01.md",
             report);
+        var findsActionableRiskClasses = findings.Count == 2 &&
+            findings.Any(finding => finding.Kind == "FOLLOW_UP_FINDING" && finding.FindingId == "F1") &&
+            findings.Any(finding => finding.Kind == "INFO_NOTE" && finding.FindingId == "I1");
+        var ignoresPassiveOutOfScopeNote = findings.All(finding => finding.FindingId != "N1");
         Check(
             checks,
-            "followup-parser-finds-actionable-risk-classes",
+            "followup-parser-contract",
             null,
-            findings.Count == 2 &&
-                findings.Any(finding => finding.Kind == "FOLLOW_UP_FINDING" && finding.FindingId == "F1") &&
-                findings.Any(finding => finding.Kind == "INFO_NOTE" && finding.FindingId == "I1"),
-            "Follow-up parser must detect default and explicit actionable report notes.");
-        Check(
-            checks,
-            "followup-parser-ignores-passive-out-of-scope-note",
-            null,
-            findings.All(finding => finding.FindingId != "N1"),
-            "Follow-up parser must ignore passive out-of-scope notes.");
+            findsActionableRiskClasses && ignoresPassiveOutOfScopeNote,
+            findsActionableRiskClasses && ignoresPassiveOutOfScopeNote
+                ? "Follow-up parser detects actionable notes and ignores passive out-of-scope notes."
+                : "Follow-up parser contract failed.");
     }
 
     private static void VerifyFinalReportExtractor(List<AuditContractCheckResult> checks)
@@ -578,18 +606,85 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             [new AuditSubmitReportCandidate(validReport, AuditSubmitReportCandidateSource.OpenedReportCard)]);
         var invalid = AuditSubmitReportExtractor.Extract(
             [new AuditSubmitReportCandidate(invalidReport, AuditSubmitReportCandidateSource.OpenedReportCard)]);
+        var acceptsStrictAccept = valid.Ready && valid.Report is not null;
+        var rejectsAcceptWithBlocker = !invalid.Ready &&
+            invalid.FailureReason?.Contains("numbered blocker", StringComparison.OrdinalIgnoreCase) == true;
         Check(
             checks,
-            "final-report-extractor-accepts-strict-accept",
+            "final-report-extractor-contract",
             null,
-            valid.Ready && valid.Report is not null,
-            "Final report extractor must accept a strict ACCEPT report with required headings.");
+            acceptsStrictAccept && rejectsAcceptWithBlocker,
+            acceptsStrictAccept && rejectsAcceptWithBlocker
+                ? "Final report extractor accepts strict ACCEPT and rejects ACCEPT with numbered blockers."
+                : "Final report extractor contract failed.");
+    }
+
+    private static void VerifyFastCheckCountBudget(List<AuditContractCheckResult> checks, AuditContractDocuments documents)
+    {
+        var finalCheckCount = checks.Count + 1;
+        var documentedRange = ExtractFastCheckCountBudgetRange(documents.DomainDocumentText);
+        var documentedBudgetMatches = string.Equals(
+            documentedRange,
+            $"{FastCheckCountMinimum}-{FastCheckCountMaximum}",
+            StringComparison.Ordinal);
+        var countIsWithinBudget = finalCheckCount >= FastCheckCountMinimum && finalCheckCount <= FastCheckCountMaximum;
+
         Check(
             checks,
-            "final-report-extractor-rejects-accept-with-blocker",
-            null,
-            !invalid.Ready && invalid.FailureReason?.Contains("numbered blocker", StringComparison.OrdinalIgnoreCase) == true,
-            "Final report extractor must reject ACCEPT reports that still contain numbered blockers.");
+            "fast-check-count-budget",
+            documents.DomainDocumentPath,
+            documentedBudgetMatches && countIsWithinBudget,
+            documentedBudgetMatches && countIsWithinBudget
+                ? $"Fast check count budget is documented and satisfied: checks={finalCheckCount}; expected={FastCheckCountMinimum}-{FastCheckCountMaximum}."
+                : $"Fast check count budget mismatch: checks={finalCheckCount}; expected={FastCheckCountMinimum}-{FastCheckCountMaximum}; documented={documentedRange ?? "<missing>"}; required marker={FastCheckCountBudgetMarker}.");
+    }
+
+    private static string? ExtractFastCheckCountBudgetRange(string? text)
+    {
+        if (text is null)
+        {
+            return null;
+        }
+
+        var match = Regex.Match(
+            text,
+            @"Ожидаемый объём\s*-\s*(?<range>\d+-\d+)\s+лёгких проверок",
+            RegexOptions.CultureInvariant);
+        return match.Success ? match.Groups["range"].Value : null;
+    }
+
+    private static (string Path, string? Text)[] RequiredDocumentTexts(AuditContractDocuments documents)
+    {
+        return
+        [
+            (documents.AuditRequestPath, documents.AuditRequestText),
+            (documents.DomainDocumentPath, documents.DomainDocumentText),
+            (documents.AgentWorkflowPath, documents.AgentWorkflowText),
+            (documents.GoalPromptPath, documents.GoalPromptText),
+            (documents.GoalLoopPath, documents.GoalLoopText),
+            (documents.GitIgnorePath, documents.GitIgnoreText),
+            (documents.AgentsPath, documents.AgentsText),
+            (documents.TestCommandPath, documents.TestCommandText),
+            (documents.AuditPackageCommandPath, documents.AuditPackageCommandText),
+            (documents.IntegrationTestsPath, documents.IntegrationTestsText)
+        ];
+    }
+
+    private static bool ContainsAll(string? text, string[] requiredMarkers)
+    {
+        return !MissingMarkers(text, requiredMarkers).Any();
+    }
+
+    private static IEnumerable<string> MissingMarkers(string? text, string[] requiredMarkers)
+    {
+        return text is null
+            ? requiredMarkers
+            : requiredMarkers.Where(marker => !text.Contains(marker, StringComparison.Ordinal));
+    }
+
+    private static bool ContainsAny(string? text, StringComparison comparison, params string[] markers)
+    {
+        return text is not null && markers.Any(marker => text.Contains(marker, comparison));
     }
 
     private static void CheckContainsAll(
