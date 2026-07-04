@@ -26,8 +26,10 @@ using System.Collections;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Formats.Tar;
+using System.Globalization;
 using System.IO.Compression;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -909,6 +911,29 @@ public sealed class RepositoryBuildToolTests
         using (JsonDocument.Parse(index))
         {
         }
+    }
+
+    [Fact]
+    public async Task UpdateDocsExcludesSavedAuditVerdictsFromGeneratedDocumentationIndex()
+    {
+        using var workspace = CreateDocumentationGenerationFixture("update-docs-excludes-verdicts", initialIndex: "stale\n");
+        WriteText(
+            workspace.Root,
+            "docs/verdicts/release-management/t-0001-audit-r01.md",
+            """
+            VERDICT: NEEDS_FIXES
+
+            TASK_ASSESSMENT:
+            - Fixture previous verdict.
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "update", "docs");
+
+        AssertCommandSucceeded(result, "update docs");
+        var index = ReadText(workspace.Root, LocalDocumentationIndexRelativePath);
+        var documentationShard = ReadText(workspace.Root, DocumentationShardRelativePath);
+        Assert.DoesNotContain("docs/verdicts/", index, StringComparison.Ordinal);
+        Assert.DoesNotContain("docs/verdicts/", documentationShard, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -2507,6 +2532,8 @@ public sealed class RepositoryBuildToolTests
         - EVIDENCE_REVIEW
         - RISKS_AND_NOTES
         - CLOSURE_DECISION
+        - metadata.taskId
+        - metadata.iteration
         - metadata.scopeTaskIds
         - metadata.scopeSummary
         - combined scope
@@ -2515,14 +2542,26 @@ public sealed class RepositoryBuildToolTests
         - previous verdict files
         - verbatim preservation
         - previous blockers closure
+        - metadata/repo-file-snapshots.json
+        - repo-after/
+        - repo-before/
         - implementation content review
         - test coverage review
         - documentation review
         - task compliance review
         - secret scanning
         - scope scanning
+        - evidence gap
+        - patch-only inspection
         - single final report
         - no intermediate VERDICT
+        - full current-scope engineering review
+        - FOLLOW_UP_FINDING
+        - OUT_OF_SCOPE_NOTE
+        - ACCEPTED_RISK
+        - INFO_NOTE
+        - global safety blocker
+        - architecture coherence
         """);
         var configPath = fixture.WriteConfig(taskId);
         var expectedBytes = File.ReadAllBytes(fixture.FilePath("docs/release-management/AUDIT-REQUEST.md"));
@@ -2560,6 +2599,13 @@ public sealed class RepositoryBuildToolTests
     [InlineData("EVIDENCE_REVIEW")]
     [InlineData("RISKS_AND_NOTES")]
     [InlineData("CLOSURE_DECISION")]
+    [InlineData("full current-scope engineering review")]
+    [InlineData("FOLLOW_UP_FINDING")]
+    [InlineData("OUT_OF_SCOPE_NOTE")]
+    [InlineData("ACCEPTED_RISK")]
+    [InlineData("INFO_NOTE")]
+    [InlineData("global safety blocker")]
+    [InlineData("architecture coherence")]
     public async Task AuditPackageFailsWhenStaticRequestLacksRequiredMarkers(string removedMarker)
     {
         using var fixture = await AuditFixture.CreateAsync($"audit-package-static-request-marker-{removedMarker.ToLowerInvariant().Replace(':', '-').Replace('_', '-').Replace(' ', '-')}");
@@ -2751,7 +2797,7 @@ public sealed class RepositoryBuildToolTests
         fixture.WriteTextFile("docs/release-management/AUDIT-REQUEST.md", """
         # Запрос внешнему аудитору
 
-        Вы проводите глубокий внешний аудит audit package для Electron2D.
+        Вы проводите внешний аудит audit package для Electron2D.
 
         Required sections and markers:
 
@@ -2762,6 +2808,8 @@ public sealed class RepositoryBuildToolTests
         EVIDENCE_REVIEW
         RISKS_AND_NOTES
         CLOSURE_DECISION
+        metadata.taskId
+        metadata.iteration
         metadata.scopeTaskIds
         metadata.scopeSummary
         combined scope
@@ -2770,14 +2818,26 @@ public sealed class RepositoryBuildToolTests
         previous verdict files
         verbatim preservation
         previous blockers closure
+        metadata/repo-file-snapshots.json
+        repo-after/
+        repo-before/
         implementation content review
         test coverage review
         documentation review
         task compliance review
         secret scanning
         scope scanning
+        evidence gap
+        patch-only inspection
         single final report
         no intermediate VERDICT
+        full current-scope engineering review
+        FOLLOW_UP_FINDING
+        OUT_OF_SCOPE_NOTE
+        ACCEPTED_RISK
+        INFO_NOTE
+        global safety blocker
+        architecture coherence
         """);
         var configPath = fixture.WriteConfig(taskId);
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
@@ -2787,8 +2847,9 @@ public sealed class RepositoryBuildToolTests
 
         Assert.Equal(0, message.ExitCode);
         Assert.Equal(string.Empty, message.Stderr);
-        Assert.StartsWith("Вы проводите глубокий внешний аудит audit package для Electron2D.", message.Stdout, StringComparison.Ordinal);
+        Assert.StartsWith("Вы проводите внешний аудит audit package для Electron2D.", message.Stdout, StringComparison.Ordinal);
         Assert.DoesNotContain("# Запрос внешнему аудитору", message.Stdout, StringComparison.Ordinal);
+        Assert.DoesNotContain("@Глубокое исследование", message.Stdout, StringComparison.Ordinal);
         Assert.DoesNotContain("{\"command\":", message.Stdout, StringComparison.Ordinal);
         Assert.DoesNotContain($"{taskId} audit r01", message.Stdout, StringComparison.Ordinal);
         Assert.DoesNotContain("Приложен verified audit package", message.Stdout, StringComparison.Ordinal);
@@ -2927,7 +2988,7 @@ public sealed class RepositoryBuildToolTests
             "--zip",
             "T-0001-audit-r02.zip",
             "--out",
-            "report.md",
+            "docs/verdicts/release-management/t-0001-audit-r02.md",
             "--message",
             "message.md",
             "--reuse-conversation",
@@ -2955,7 +3016,7 @@ public sealed class RepositoryBuildToolTests
             "--zip",
             "T-0001-audit-r02.zip",
             "--out",
-            "report.md",
+            "docs/verdicts/release-management/t-0001-audit-r02.md",
             "--message",
             "message.md",
             "--browser-backend",
@@ -2965,6 +3026,107 @@ public sealed class RepositoryBuildToolTests
 
         Assert.NotEqual(0, submit.ExitCode);
         AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONVERSATION-REQUIRED");
+    }
+
+    [Fact]
+    public async Task AuditSubmitPrimaryIterationAfterNeedsFixesAllowsExplicitNewConversationBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-new-conversation");
+        File.WriteAllText(Path.Combine(workspace.Root, "T-0001-audit-r02.zip"), "placeholder", Encoding.UTF8);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r01", control: false, verdict: "VERDICT: NEEDS_FIXES");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-r02.md",
+            "--message",
+            "message.md",
+            "--new-conversation",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Fact]
+    public async Task AuditSubmitNewConversationUsesConfiguredProjectRoot()
+    {
+        var options = await InvokeAuditSubmitParseOptionsAsync(
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-r02.md",
+            "--message",
+            "message.md",
+            "--new-conversation");
+
+        Assert.True(GetProperty<bool>(options, "NewConversation"));
+        Assert.False(GetProperty<bool>(options, "ReuseConversation"));
+        Assert.False(GetProperty<bool>(options, "ControlAudit"));
+        Assert.False(GetProperty<bool>(options, "DeepResearch"));
+        Assert.Equal(
+            "https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project",
+            GetProperty<string>(options, "ProjectUrl"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditUsesConfiguredProjectRoot()
+    {
+        var options = await InvokeAuditSubmitParseOptionsAsync(
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit");
+
+        Assert.True(GetProperty<bool>(options, "ControlAudit"));
+        Assert.False(GetProperty<bool>(options, "ReuseConversation"));
+        Assert.False(GetProperty<bool>(options, "NewConversation"));
+        Assert.False(GetProperty<bool>(options, "DeepResearch"));
+        Assert.Equal(
+            "https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project",
+            GetProperty<string>(options, "ProjectUrl"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchIsExplicitOptIn()
+    {
+        var ordinary = await InvokeAuditSubmitParseOptionsAsync(
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r01.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-r01.md",
+            "--message",
+            "message.md");
+        var deepResearch = await InvokeAuditSubmitParseOptionsAsync(
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r01.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-r01.md",
+            "--message",
+            "message.md",
+            "--deep-research");
+
+        Assert.False(GetProperty<bool>(ordinary, "DeepResearch"));
+        Assert.True(GetProperty<bool>(deepResearch, "DeepResearch"));
     }
 
     [Fact]
@@ -3032,7 +3194,38 @@ public sealed class RepositoryBuildToolTests
     public async Task AuditSubmitControlAuditAcceptsSameIterationPrimaryAcceptBeforeBrowserLaunch()
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-accept");
-        File.WriteAllText(Path.Combine(workspace.Root, "T-0001-audit-r02.zip"), "placeholder", Encoding.UTF8);
+        WriteAuditSubmitZip(workspace.Root, "T-0001-audit-r02.zip");
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsPreviousVerdictChainBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-previous-chain");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            previousVerdictChain: ["docs/verdicts/release-management/t-0001-audit-r01.md"]);
         File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
         WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
 
@@ -3053,7 +3246,637 @@ public sealed class RepositoryBuildToolTests
             @"\\.\pipe\electron2d-audit-submit-missing-pipe");
 
         Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsBlockerClosureListBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-blocker-closures");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            blockerClosureList: ["B1 r01 closed by a fixture change."]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT");
+    }
+
+    [Theory]
+    [InlineData("previousVerdictChain", "[\"   \"]")]
+    [InlineData("previousVerdictChain", "[null]")]
+    [InlineData("previousVerdictChain", "[123]")]
+    [InlineData("blockerClosureList", "[\"   \"]")]
+    [InlineData("blockerClosureList", "[{}]")]
+    public async Task AuditSubmitControlAuditRejectsDirtyMetadataArrayElementsBeforeBrowserLaunch(string propertyName, string dirtyArrayJson)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-dirty-metadata-array");
+        WriteAuditSubmitZip(workspace.Root, "T-0001-audit-r02.zip");
+        ReplaceAuditSubmitZipMetadataArray(workspace.Root, "T-0001-audit-r02.zip", propertyName, dirtyArrayJson);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", propertyName);
+    }
+
+    [Theory]
+    [InlineData("previousVerdictChain")]
+    [InlineData("blockerClosureList")]
+    public async Task AuditSubmitControlAuditRejectsMissingMetadataArrayBeforeBrowserLaunch(string missingPropertyName)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-missing-metadata-array");
+        WriteAuditSubmitZip(workspace.Root, "T-0001-audit-r02.zip");
+        var metadataJson = string.Equals(missingPropertyName, "previousVerdictChain", StringComparison.Ordinal)
+            ? """
+            {
+              "taskId": "T-0001",
+              "iteration": "r02",
+              "blockerClosureList": []
+            }
+            """
+            : """
+            {
+              "taskId": "T-0001",
+              "iteration": "r02",
+              "previousVerdictChain": []
+            }
+            """;
+        ReplaceAuditSubmitZipMetadata(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            metadataJson);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", missingPropertyName);
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsSavedVerdictSnapshotsBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-verdict-snapshots");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            repoFilePaths: ["docs/verdicts/release-management/t-0001-audit-r01.md"],
+            extraEntries:
+            [
+                ("repo-after/docs/verdicts/release-management/t-0001-audit-r01.md", "VERDICT: NEEDS_FIXES\n")
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsSavedVerdictDeletedRepoFilesBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-deleted-verdicts");
+        WriteAuditSubmitZip(workspace.Root, "T-0001-audit-r02.zip");
+        ReplaceAuditSubmitZipRepoFileHashes(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            """
+            {
+              "taskId": "T-0001",
+              "iteration": "r02",
+              "repoFiles": [],
+              "deletedRepoFiles": [
+                "docs/verdicts/release-management/t-0001-audit-r01.md"
+              ]
+            }
+            """);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsSavedVerdictSnapshotIndexBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-verdict-snapshot-index");
+        WriteAuditSubmitZip(workspace.Root, "T-0001-audit-r02.zip");
+        AddZipEntryText(
+            Path.Combine(workspace.Root, "T-0001-audit-r02.zip"),
+            "metadata/repo-file-snapshots.json",
+            """
+            {
+              "taskId": "T-0001",
+              "iteration": "r02",
+              "files": [
+                {
+                  "path": "docs/verdicts/release-management/t-0001-audit-r01.md",
+                  "status": "deleted",
+                  "beforeSnapshot": "repo-before/docs/verdicts/release-management/t-0001-audit-r01.md"
+                }
+              ]
+            }
+            """);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "report.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsSavedVerdictReferencesInGeneratedDocumentationBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-generated-docs-verdict-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            repoFilePaths:
+            [
+                "data/documentation/electron2d-local-docs-index.json",
+                "data/documentation/local-docs-index/documentation.ndjson"
+            ],
+            extraEntries:
+            [
+                (
+                    "repo-after/data/documentation/electron2d-local-docs-index.json",
+                    """
+                    {
+                      "documents": [
+                        {
+                          "sourcePath": "docs/verdicts/release-management/t-0001-audit-r01.md",
+                          "summary": "VERDICT: NEEDS_FIXES"
+                        }
+                      ]
+                    }
+                    """),
+                (
+                    "repo-after/data/documentation/local-docs-index/documentation.ndjson",
+                    """
+                    {"sourcePath":"docs/verdicts/release-management/t-0001-audit-r01.md","title":"T-0001 r01 audit report"}
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", "data/documentation");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditAllowsHistoricGeneratedDocumentationBeforeSnapshotWhenAfterIsClean()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-generated-docs-before-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            repoFilePaths:
+            [
+                "data/documentation/electron2d-local-docs-index.json"
+            ],
+            extraEntries:
+            [
+                (
+                    "repo-before/data/documentation/electron2d-local-docs-index.json",
+                    """
+                    {
+                      "documents": [
+                        {
+                          "sourcePath": "docs/verdicts/release-management/t-0001-audit-r01.md",
+                          "summary": "VERDICT: NEEDS_FIXES"
+                        }
+                      ]
+                    }
+                    """),
+                (
+                    "repo-after/data/documentation/electron2d-local-docs-index.json",
+                    """
+                    {
+                      "documents": []
+                    }
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
         AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Theory]
+    [InlineData("AUDIT-MANIFEST.md")]
+    [InlineData("AUDIT-REQUEST.md")]
+    [InlineData("evidence/T-0001-r02/checks/verify-docs/stdout.txt")]
+    public async Task AuditSubmitControlAuditRejectsSavedVerdictReferencesInTextArtifactsBeforeBrowserLaunch(string entryName)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-text-artifact-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            extraEntries:
+            [
+                (
+                    entryName,
+                    """
+                    Previous verdict context: docs/verdicts/release-management/t-0001-audit-r01.md
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", entryName);
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsNonstandardSavedVerdictPathReferencesBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-nonstandard-verdict-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            repoFilePaths:
+            [
+                "data/documentation/electron2d-local-docs-index.json"
+            ],
+            extraEntries:
+            [
+                (
+                    "repo-after/data/documentation/electron2d-local-docs-index.json",
+                    """
+                    {
+                      "documents": [
+                        {
+                          "sourcePath": "docs/verdicts/release-management/t-0214-audit-r04-scope-challenge.md"
+                        }
+                      ]
+                    }
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", "t-0214-audit-r04-scope-challenge.md");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditAllowsSyntheticVerdictPathsInRepoOwnedTestFixturesBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-test-fixture-verdict-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            repoFilePaths:
+            [
+                "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+            ],
+            extraEntries:
+            [
+                (
+                    "repo-after/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs",
+                    """
+                    public static class Fixture
+                    {
+                        private const string SyntheticPath = "docs/verdicts/release-management/t-0001-audit-r01.md";
+                    }
+                    """),
+                (
+                    "T-0001.patch",
+                    """
+                    diff --git a/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs b/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs
+                    index 1111111..2222222 100644
+                    --- a/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs
+                    +++ b/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs
+                    @@ -1,3 +1,6 @@
+                    +public static class Fixture
+                    +{
+                    +    private const string SyntheticPath = "docs/verdicts/release-management/t-0001-audit-r01.md";
+                    +}
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditAllowsPatchRemovedSavedVerdictReferencesBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-patch-removed-verdict-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            extraEntries:
+            [
+                (
+                    "T-0001.patch",
+                    """
+                    diff --git a/data/documentation/electron2d-local-docs-index.json b/data/documentation/electron2d-local-docs-index.json
+                    index 1111111..2222222 100644
+                    --- a/data/documentation/electron2d-local-docs-index.json
+                    +++ b/data/documentation/electron2d-local-docs-index.json
+                    @@ -1,5 +1,3 @@
+                     {
+                    -  "sourcePath": "docs/verdicts/documentation/t-0213-audit-r01.md",
+                       "documents": []
+                     }
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsPatchAddedSavedVerdictReferencesBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-patch-added-verdict-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            extraEntries:
+            [
+                (
+                    "T-0001.patch",
+                    """
+                    diff --git a/data/documentation/electron2d-local-docs-index.json b/data/documentation/electron2d-local-docs-index.json
+                    index 1111111..2222222 100644
+                    --- a/data/documentation/electron2d-local-docs-index.json
+                    +++ b/data/documentation/electron2d-local-docs-index.json
+                    @@ -1,3 +1,5 @@
+                     {
+                    +  "sourcePath": "docs/verdicts/documentation/t-0213-audit-r01.md",
+                       "documents": []
+                     }
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", "T-0001.patch");
+    }
+
+    [Fact]
+    public async Task AuditSubmitControlAuditRejectsTaskLedgerBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-control-task-ledger-context");
+        WriteAuditSubmitZip(
+            workspace.Root,
+            "T-0001-audit-r02.zip",
+            repoFilePaths:
+            [
+                "TASKS.md"
+            ],
+            extraEntries:
+            [
+                (
+                    "repo-after/TASKS.md",
+                    """
+                    # Tasks
+
+                    ## T-0001 [x] Accepted task
+
+                    This clean-control package should not carry the mutable task ledger.
+                    """)
+            ]);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+        WriteSavedAuditVerdict(workspace.Root, "T-0001", "r02", control: false, verdict: "VERDICT: ACCEPT");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0001-audit-r02.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-control-r02.md",
+            "--message",
+            "message.md",
+            "--control-audit",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", "TASKS.md");
     }
 
     [Theory]
@@ -3100,6 +3923,32 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
     }
 
+    [Theory]
+    [InlineData("https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project")]
+    [InlineData("https://chatgpt.com/")]
+    [InlineData("https://chatgpt.com/g/g-p-other/project")]
+    [InlineData("https://example.com/audit")]
+    [InlineData("https://chatgpt.com/g/g-p-example/c/6a43b03e-9598-83ed-9c3d-24046e34fff3")]
+    public async Task AuditSubmitNewConversationRejectsExplicitProjectUrlBeforeBrowserLaunch(string projectUrl)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-new-conversation-url");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "missing.zip",
+            "--out",
+            "report.md",
+            "--new-conversation",
+            "--project-url",
+            projectUrl);
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
+    }
+
     [Fact]
     public async Task AuditSubmitDoesNotRequireOperatorWorkflowSidecarBeforeBrowserLaunch()
     {
@@ -3116,7 +3965,7 @@ public sealed class RepositoryBuildToolTests
             "--zip",
             "T-0001-audit-r01.zip",
             "--out",
-            "report.md",
+            "docs/verdicts/release-management/t-0001-audit-r01.md",
             "--message",
             "message.md",
             "--browser-backend",
@@ -3146,6 +3995,41 @@ public sealed class RepositoryBuildToolTests
 
         Assert.NotEqual(0, submit.ExitCode);
         AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-POLL-INTERVAL");
+    }
+
+    [Fact]
+    public async Task AuditSubmitDumpDomOnlyRejectsVerdictOutputBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-dump-dom-verdict-out");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--dump-dom-only",
+            "--project-url",
+            "https://chatgpt.com/g/example/c/6a466d5a-2fd4-83eb-b2cc-0b5b642be413",
+            "--dom-dump-dir",
+            ".temp/audit/T-0001/dom-dump",
+            "--out",
+            "docs/verdicts/release-management/t-0001-audit-r01.md",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
+        using var diagnostic = ReadFirstDiagnostic(submit);
+        var message = diagnostic.RootElement.GetProperty("message").GetString();
+        Assert.Contains("--dump-dom-only", message, StringComparison.Ordinal);
+        Assert.Contains("docs/verdicts", message, StringComparison.Ordinal);
+        Assert.False(File.Exists(Path.Combine(
+            workspace.Root,
+            "docs",
+            "verdicts",
+            "release-management",
+            "t-0001-audit-r01.md")));
     }
 
     [Fact]
@@ -3254,7 +4138,7 @@ public sealed class RepositoryBuildToolTests
             "--zip",
             "T-0001-audit-r01.zip",
             "--out",
-            "report.md",
+            "docs/verdicts/release-management/t-0001-audit-r01.md",
             "--message",
             "message.md",
             "--browser-backend",
@@ -3331,7 +4215,7 @@ public sealed class RepositoryBuildToolTests
             "--project-url",
             "https://chatgpt.com/g/example/c/report",
             "--out",
-            "report.md",
+            "docs/verdicts/release-management/t-0238-audit-r64.md",
             "--browser-backend",
             "codex-chrome",
             "--codex-chrome-pipe",
@@ -3379,7 +4263,7 @@ public sealed class RepositoryBuildToolTests
             "--project-url",
             projectUrl,
             "--out",
-            "report.md",
+            "docs/verdicts/release-management/t-0238-audit-r64.md",
             "--browser-backend",
             "codex-chrome",
             "--codex-chrome-pipe",
@@ -3389,6 +4273,101 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
         using var diagnostic = ReadFirstDiagnostic(submit);
         Assert.Contains("/c/<conversation-id>", diagnostic.RootElement.GetProperty("message").GetString(), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("report.md")]
+    [InlineData("scratch/docs/verdicts/release-management/t-0238-audit-r65.md")]
+    [InlineData("docs/verdicts/t-0238-audit-r65.md")]
+    [InlineData("docs/verdicts/release-management/../t-0238-audit-r65.md")]
+    [InlineData("docs/verdicts/release-management/t-0238-audit-control-r67.md")]
+    [InlineData("Docs/verdicts/release-management/t-0238-audit-r67.md")]
+    [InlineData("docs/Verdicts/release-management/t-0238-audit-r67.md")]
+    [InlineData("docs/verdicts/release-management/t-0238-audit-r67.MD")]
+    public async Task AuditSubmitDownloadReportOnlyRequiresStandardVerdictOutputBeforeBrowserLaunch(string outputPath)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-download-report-output-identity");
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--download-report-only",
+            "--project-url",
+            "https://chatgpt.com/c/6a439d82-c834-83eb-8f49-2144db57f0c7",
+            "--out",
+            outputPath,
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
+        using var diagnostic = ReadFirstDiagnostic(submit);
+        Assert.Contains("--download-report-only requires", diagnostic.RootElement.GetProperty("message").GetString(), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("report.md")]
+    [InlineData("scratch/docs/verdicts/release-management/t-0238-audit-r66.md")]
+    [InlineData("docs/verdicts/t-0238-audit-r66.md")]
+    [InlineData("docs/verdicts/release-management/../t-0238-audit-r66.md")]
+    [InlineData("docs/verdicts/release-management/t-0238-audit-r65.md")]
+    [InlineData("docs/verdicts/release-management/t-9999-audit-r66.md")]
+    [InlineData("docs/verdicts/release-management/t-0238-audit-control-r66.md")]
+    [InlineData("Docs/verdicts/release-management/t-0238-audit-r66.md")]
+    [InlineData("docs/Verdicts/release-management/t-0238-audit-r66.md")]
+    [InlineData("docs/verdicts/release-management/t-0238-audit-r66.MD")]
+    public async Task AuditSubmitRequiresOutputPathToMatchZipBeforeBrowserLaunch(string outputPath)
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-output-identity");
+        File.WriteAllText(Path.Combine(workspace.Root, "T-0238-audit-r66.zip"), "placeholder", Encoding.UTF8);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0238-audit-r66.zip",
+            "--out",
+            outputPath,
+            "--message",
+            "message.md",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-CLI-INVALID-ARGUMENTS");
+    }
+
+    [Fact]
+    public async Task AuditSubmitAcceptsCanonicalOutputPathBeforeBrowserLaunch()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-output-identity-positive");
+        File.WriteAllText(Path.Combine(workspace.Root, "T-0238-audit-r66.zip"), "placeholder", Encoding.UTF8);
+        File.WriteAllText(Path.Combine(workspace.Root, "message.md"), "Audit text", Encoding.UTF8);
+
+        var submit = await RunBuildToolFromDirectoryAsync(
+            workspace.Root,
+            "audit",
+            "submit",
+            "--zip",
+            "T-0238-audit-r66.zip",
+            "--out",
+            "docs/verdicts/release-management/t-0238-audit-r66.md",
+            "--message",
+            "message.md",
+            "--browser-backend",
+            "codex-chrome",
+            "--codex-chrome-pipe",
+            @"\\.\pipe\electron2d-audit-submit-missing-pipe");
+
+        Assert.NotEqual(0, submit.ExitCode);
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-UNAVAILABLE");
     }
 
     [Fact]
@@ -3431,7 +4410,7 @@ public sealed class RepositoryBuildToolTests
         CLOSURE_DECISION:
         Task can be closed.
         """;
-        const string acceptedReportWithoutClosurePermission = """
+        const string acceptedReportWithPlainClosureDecision = """
         VERDICT: ACCEPT
 
         TASK_ASSESSMENT:
@@ -3452,15 +4431,15 @@ public sealed class RepositoryBuildToolTests
 
         var incomplete = await InvokeAuditSubmitDownloadedReportValidationAsync((incompleteReport, "OpenedReportCard"));
         var acceptWithBlocker = await InvokeAuditSubmitDownloadedReportValidationAsync((acceptedReportWithBlocker, "OpenedReportCard"));
-        var acceptWithoutClosure = await InvokeAuditSubmitDownloadedReportValidationAsync((acceptedReportWithoutClosurePermission, "OpenedReportCard"));
+        var acceptWithPlainClosure = await InvokeAuditSubmitDownloadedReportValidationAsync((acceptedReportWithPlainClosureDecision, "OpenedReportCard"));
         var valid = await InvokeAuditSubmitDownloadedReportValidationAsync((validReport, "OpenedReportCard"));
 
         Assert.False(incomplete.Succeeded);
         Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID", incomplete.Code);
         Assert.False(acceptWithBlocker.Succeeded);
         Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID", acceptWithBlocker.Code);
-        Assert.False(acceptWithoutClosure.Succeeded);
-        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID", acceptWithoutClosure.Code);
+        Assert.True(acceptWithPlainClosure.Succeeded);
+        Assert.Equal(acceptedReportWithPlainClosureDecision, acceptWithPlainClosure.Report);
         Assert.True(valid.Succeeded);
         Assert.Equal(validReport, valid.Report);
     }
@@ -3509,6 +4488,8 @@ public sealed class RepositoryBuildToolTests
 
         TASK_ASSESSMENT:
         - Checked current report.
+        - `metadata.taskId`: `T-0237`
+        - `metadata.iteration`: `r02`
 
         BLOCKERS:
         B1: current report.
@@ -3541,18 +4522,49 @@ public sealed class RepositoryBuildToolTests
         CLOSURE_DECISION:
         - Keep open.
         """;
+        const string currentIdentityOutsideTaskAssessmentReport = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - Checked current report without current metadata identity here.
+
+        BLOCKERS:
+        B1: current report.
+
+        EVIDENCE_REVIEW:
+        - `metadata.taskId`: `T-0237`
+        - `metadata.iteration`: `r02`
+
+        RISKS_AND_NOTES:
+        - None.
+
+        CLOSURE_DECISION:
+        - Keep open.
+        """;
 
         var staleEvidence = await InvokeAuditSubmitIterationReportValidationAsync(staleEvidenceReport, "T-0237-audit-r02.zip");
         var staleZip = await InvokeAuditSubmitIterationReportValidationAsync(staleZipReport, "T-0237-audit-r02.zip");
         var current = await InvokeAuditSubmitIterationReportValidationAsync(currentReport, "T-0237-audit-r02.zip");
         var markerless = await InvokeAuditSubmitIterationReportValidationAsync(markerlessReport, "T-0237-audit-r02.zip");
+        var identityOutsideTaskAssessment = await InvokeAuditSubmitIterationReportValidationAsync(currentIdentityOutsideTaskAssessmentReport, "T-0237-audit-r02.zip");
+        var staleDownloadOnly = await InvokeAuditSubmitOutputReportValidationAsync(staleEvidenceReport, "docs/verdicts/release-management/t-0237-audit-r02.md");
+        var currentDownloadOnly = await InvokeAuditSubmitOutputReportValidationAsync(currentReport, "docs/verdicts/release-management/t-0237-audit-r02.md");
+        var identityOutsideTaskAssessmentDownloadOnly = await InvokeAuditSubmitOutputReportValidationAsync(currentIdentityOutsideTaskAssessmentReport, "docs/verdicts/release-management/t-0237-audit-r02.md");
 
         Assert.False(staleEvidence.Succeeded);
         Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-STALE", staleEvidence.Code);
         Assert.False(staleZip.Succeeded);
         Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-STALE", staleZip.Code);
+        Assert.False(staleDownloadOnly.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-STALE", staleDownloadOnly.Code);
         Assert.True(current.Succeeded);
-        Assert.True(markerless.Succeeded);
+        Assert.True(currentDownloadOnly.Succeeded);
+        Assert.False(markerless.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID", markerless.Code);
+        Assert.False(identityOutsideTaskAssessment.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID", identityOutsideTaskAssessment.Code);
+        Assert.False(identityOutsideTaskAssessmentDownloadOnly.Succeeded);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID", identityOutsideTaskAssessmentDownloadOnly.Code);
     }
 
     [Fact]
@@ -3614,6 +4626,186 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal("target-1", single.TargetId);
         Assert.True(multiple.Succeeded);
         Assert.Null(multiple.TargetId);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDownloadReportOnlyCanSelectLatestReadyTargetFromExistingConversation()
+    {
+        var selected = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            true,
+            "target-1",
+            "target-2",
+            "target-3");
+
+        Assert.True(selected.Succeeded);
+        Assert.Equal("target-3", selected.TargetId);
+    }
+
+    [Fact]
+    public async Task AuditSubmitReadyTargetSelectionIgnoresBaselineTargetsBeforeAmbiguityCheck()
+    {
+        var selected = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            ignoredTargetIds: ["target-1"],
+            allowLatestWhenMultiple: false,
+            "target-1",
+            "target-2");
+        var none = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            ignoredTargetIds: ["target-1"],
+            allowLatestWhenMultiple: false,
+            "target-1");
+        var ambiguous = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            ignoredTargetIds: ["target-1"],
+            allowLatestWhenMultiple: false,
+            "target-1",
+            "target-2",
+            "target-3");
+        var latest = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            ignoredTargetIds: ["target-1"],
+            allowLatestWhenMultiple: true,
+            "target-1",
+            "target-2",
+            "target-3");
+
+        Assert.True(selected.Succeeded);
+        Assert.Equal("target-2", selected.TargetId);
+        Assert.True(none.Succeeded);
+        Assert.Null(none.TargetId);
+        Assert.True(ambiguous.Succeeded);
+        Assert.Null(ambiguous.TargetId);
+        Assert.True(latest.Succeeded);
+        Assert.Equal("target-3", latest.TargetId);
+    }
+
+    [Fact]
+    public async Task AuditSubmitReadyTargetSelectionWaitsForNewestNonBaselineTarget()
+    {
+        var waitingForCurrent = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            targetIds: ["target-1", "target-2", "target-3"],
+            readyTargetIds: ["target-1", "target-2"],
+            ignoredTargetIds: [],
+            allowLatestWhenMultiple: true);
+        var readyCurrent = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            targetIds: ["target-1", "target-2", "target-3"],
+            readyTargetIds: ["target-1", "target-2", "target-3"],
+            ignoredTargetIds: [],
+            allowLatestWhenMultiple: true);
+        var ignoredBaselineWithCurrentGenerating = await InvokeAuditSubmitReadyTargetSelectionAsync(
+            targetIds: ["target-1", "target-2", "target-3"],
+            readyTargetIds: ["target-1", "target-2"],
+            ignoredTargetIds: ["target-1"],
+            allowLatestWhenMultiple: true);
+
+        Assert.True(waitingForCurrent.Succeeded);
+        Assert.Null(waitingForCurrent.TargetId);
+        Assert.True(readyCurrent.Succeeded);
+        Assert.Equal("target-3", readyCurrent.TargetId);
+        Assert.True(ignoredBaselineWithCurrentGenerating.Succeeded);
+        Assert.Null(ignoredBaselineWithCurrentGenerating.TargetId);
+    }
+
+    [Fact]
+    public async Task AuditSubmitReportCandidateFlowBlocksPageFallbackWhileNewestTargetGenerates()
+    {
+        var waiting = await InvokeAuditSubmitReportCandidateDownloadFlowAsync(waitForNewerTarget: true);
+        var ready = await InvokeAuditSubmitReportCandidateDownloadFlowAsync(waitForNewerTarget: false);
+
+        Assert.True(waiting.Succeeded);
+        Assert.Equal(1, waiting.Trace.FrameDownloads);
+        Assert.Equal(1, waiting.Trace.TargetSelections);
+        Assert.Equal(0, waiting.Trace.TargetDownloads);
+        Assert.Equal(0, waiting.Trace.PageDownloads);
+        Assert.Equal(0, waiting.Trace.CandidateCount);
+
+        Assert.True(ready.Succeeded);
+        Assert.Equal(1, ready.Trace.FrameDownloads);
+        Assert.Equal(1, ready.Trace.TargetSelections);
+        Assert.Equal(1, ready.Trace.TargetDownloads);
+        Assert.Equal(0, ready.Trace.PageDownloads);
+        Assert.Equal(1, ready.Trace.CandidateCount);
+    }
+
+    [Fact]
+    public void AuditSubmitDownloadReportOnlyDoesNotBaselineIgnoreExistingConversationTargets()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        var methodBody = ExtractMethodBody(source, "public async Task<string> DownloadReportFromUrlAsync");
+
+        Assert.DoesNotContain("SnapshotDeepResearchTargetIdsAsync", methodBody, StringComparison.Ordinal);
+        Assert.Contains("new HashSet<string>(StringComparer.Ordinal)", methodBody, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDumpDomOnlyWritesBaseDomBeforeDeepResearchFrameDiagnostics()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-dump-dom-driver");
+
+        var result = await InvokeAuditSubmitDumpDomFlowAsync(workspace.Root);
+
+        Assert.True(result.Succeeded, result.Code);
+        Assert.Equal(
+            ["create-tab", "initialize-tab", "navigate", "bring-front", "hydrate", "scroll-bottom", "hydrate", "capture", "frame-tree", "target-info", "selected", "selected-diagnostics"],
+            result.Trace.Events.Take(12).ToArray());
+        Assert.Contains(result.Trace.Events, entry => entry.StartsWith("dump-targets:", StringComparison.Ordinal));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "frame-tree.json")));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "target-info.json")));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "deep-research-selected-result.json")));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "deep-research-selected-diagnostics.json")));
+        Assert.True(File.Exists(Path.Combine(workspace.Root, "summary.txt")));
+    }
+
+    [Fact]
+    public void AuditSubmitOrdinarySubmitSkipsDeepResearchTargetBaseline()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        var methodBody = ExtractMethodBody(source, "public async Task<string> SubmitAndWaitForReportAsync");
+
+        Assert.Contains("options.DeepResearch", methodBody, StringComparison.Ordinal);
+        Assert.Matches(
+            new Regex(
+                "var ignoredDeepResearchTargetIds = options\\.DeepResearch\\s*\\?\\s*await SnapshotDeepResearchTargetIdsAsync\\(browser, tabId, linked\\.Token\\)\\.ConfigureAwait\\(false\\)\\s*:\\s*new HashSet<string>\\(StringComparer\\.Ordinal\\)",
+                RegexOptions.Singleline),
+            methodBody);
+        Assert.Matches(
+            new Regex(
+                "var report = options\\.DeepResearch\\s*\\?\\s*await WaitForReportAsync\\(browser, tabId, options, screenshots, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked\\.Token\\).*?:\\s*await WaitForOrdinaryChatReportAsync\\(browser, tabId, options, screenshots, messageCountBeforeSend, linked\\.Token\\)",
+                RegexOptions.Singleline),
+            methodBody);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDoesNotScrollProjectPageBeforePromptSubmission()
+    {
+        var trace = await InvokeAuditSubmitProjectPreparationAsync();
+
+        Assert.Equal(
+            [
+                "InitializeTabAsync",
+                "ConfigureDownloadsAsync",
+                "NavigateAsync:https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project",
+                "BringTabToFrontBestEffortAsync",
+                "CaptureAsync:open-project",
+                "WaitForComposerAsync:00:01:00",
+                "WaitForReportHydrationAsync",
+                "CaptureAsync:composer-ready"
+            ],
+            trace.Calls);
+        Assert.True(trace.DownloadDirectoryConfigured);
+    }
+
+    [Fact]
+    public void AuditSubmitOrdinaryPollingAllowsLatestReadyTargetAfterBaseline()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        var methodBody = ExtractMethodBody(source, "private static async Task<AuditSubmitPollingDecision> CapturePollingDecisionAsync");
+
+        Assert.Contains("ignoredDeepResearchTargetIds", methodBody, StringComparison.Ordinal);
+        Assert.Contains("allowLatestReadyTargetFallback: true", methodBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -3695,13 +4887,90 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task AuditSubmitRejectsPageMarkdownFallbackForSelectedDeepResearchSurface()
+    public async Task AuditSubmitDirectTopButtonMarkdownDownloadReturnsOpenedReportCandidate()
+    {
+        const string validReport = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        B1: missing evidence.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Do not close.
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-direct-download");
+        var managedDownloads = Path.Combine(workspace.Root, "managed-downloads");
+        Directory.CreateDirectory(managedDownloads);
+        var knownPath = Path.Combine(managedDownloads, "known.md");
+        await File.WriteAllTextAsync(knownPath, "old", Encoding.UTF8);
+        await File.WriteAllTextAsync(Path.Combine(managedDownloads, "deep-research-report.md"), validReport, Encoding.UTF8);
+
+        var result = await InvokeAuditSubmitDirectMarkdownDownloadAsync(
+            [managedDownloads],
+            [managedDownloads],
+            [knownPath]);
+
+        Assert.True(result.Succeeded);
+        Assert.Equal(validReport.ReplaceLineEndings("\n").Trim(), result.Report?.ReplaceLineEndings("\n").Trim());
+    }
+
+    [Fact]
+    public async Task AuditSubmitAllowsPageMarkdownMenuFallbackForSelectedDeepResearchSurface()
     {
         Assert.True(await InvokeAuditSubmitMarkdownClickResolutionAsync("Page", scopedMenuItemClicked: false, pageMenuItemClicked: true));
-        Assert.True(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchFrame", scopedMenuItemClicked: true, pageMenuItemClicked: false));
-        Assert.False(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchFrame", scopedMenuItemClicked: false, pageMenuItemClicked: true));
-        Assert.False(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchTarget", scopedMenuItemClicked: false, pageMenuItemClicked: true));
-        Assert.False(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchTargetFrame", scopedMenuItemClicked: false, pageMenuItemClicked: true));
+        Assert.True(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchFrame", scopedMenuItemClicked: true, pageMenuItemClicked: false, selectedExportButtonClicked: false));
+        Assert.False(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchFrame", scopedMenuItemClicked: false, pageMenuItemClicked: true, selectedExportButtonClicked: false));
+        Assert.True(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchFrame", scopedMenuItemClicked: false, pageMenuItemClicked: true, selectedExportButtonClicked: true));
+        Assert.True(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchTarget", scopedMenuItemClicked: false, pageMenuItemClicked: true, selectedExportButtonClicked: true));
+        Assert.True(await InvokeAuditSubmitMarkdownClickResolutionAsync("DeepResearchTargetFrame", scopedMenuItemClicked: false, pageMenuItemClicked: true, selectedExportButtonClicked: true));
+    }
+
+    [Fact]
+    public async Task AuditSubmitMarkdownMenuClickBlocksPageFallbackBeforeSelectedExportButtonClick()
+    {
+        var beforeExport = await InvokeAuditSubmitMarkdownMenuClickAsync(
+            "DeepResearchFrame",
+            selectedExportButtonClicked: false,
+            scopedMenuItemClicked: false,
+            pageMenuItemClicked: true);
+
+        Assert.False(beforeExport.Returned);
+        Assert.Equal(1, beforeExport.ScopedClicks);
+        Assert.Equal(0, beforeExport.PageClicks);
+
+        var afterExport = await InvokeAuditSubmitMarkdownMenuClickAsync(
+            "DeepResearchFrame",
+            selectedExportButtonClicked: true,
+            scopedMenuItemClicked: false,
+            pageMenuItemClicked: true);
+
+        Assert.True(afterExport.Returned);
+        Assert.Equal(1, afterExport.ScopedClicks);
+        Assert.Equal(1, afterExport.PageClicks);
+    }
+
+    [Theory]
+    [InlineData("DeepResearchFrame")]
+    [InlineData("DeepResearchTarget")]
+    [InlineData("DeepResearchTargetFrame")]
+    public async Task AuditSubmitSelectedDeepResearchSurfaceUsesPageMarkdownFallbackInProductionPath(string surfaceScope)
+    {
+        var trace = await InvokeAuditSubmitSelectedDeepResearchSurfaceExportAsync(surfaceScope);
+
+        Assert.True(trace.SurfaceSelected);
+        Assert.Equal(1, trace.CandidateCount);
+        Assert.Equal(1, trace.ExportClicks);
+        Assert.Equal(1, trace.ScopedMarkdownClicks);
+        Assert.Equal(1, trace.PageMarkdownClicks);
     }
 
     [Fact]
@@ -3734,13 +5003,24 @@ public sealed class RepositoryBuildToolTests
         var source = File.ReadAllText(
             Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
             Encoding.UTF8);
-        var methodBody = ExtractMethodBody(source, "private static async Task<AuditSubmitReportCandidate[]> DownloadReportCandidatesAsync");
+        var driverParameterIndex = source.IndexOf(
+            "IAuditSubmitReportCandidateDownloadDriver driver",
+            StringComparison.Ordinal);
+        Assert.True(driverParameterIndex >= 0, "Driver overload was not found.");
+        var driverSignatureIndex = source.LastIndexOf(
+            "private static async Task<AuditSubmitReportCandidate[]> DownloadReportCandidatesAsync",
+            driverParameterIndex,
+            StringComparison.Ordinal);
+        Assert.True(driverSignatureIndex >= 0, "Driver overload signature was not found.");
+        var methodBody = ExtractMethodBody(
+            source[driverSignatureIndex..],
+            "private static async Task<AuditSubmitReportCandidate[]> DownloadReportCandidatesAsync");
 
-        Assert.Contains("DownloadReportCandidatesFromDeepResearchFrameAsync", methodBody, StringComparison.Ordinal);
-        Assert.Contains("DownloadReportCandidatesFromDeepResearchTargetAsync", methodBody, StringComparison.Ordinal);
+        Assert.Contains("DownloadFromFrameAsync", methodBody, StringComparison.Ordinal);
+        Assert.Contains("DownloadFromTargetAsync", methodBody, StringComparison.Ordinal);
         Assert.True(
-            methodBody.IndexOf("DownloadReportCandidatesFromDeepResearchFrameAsync", StringComparison.Ordinal) <
-            methodBody.IndexOf("DownloadReportCandidatesFromDeepResearchTargetAsync", StringComparison.Ordinal),
+            methodBody.IndexOf("DownloadFromFrameAsync", StringComparison.Ordinal) <
+            methodBody.IndexOf("DownloadFromTargetAsync", StringComparison.Ordinal),
             "Current-page Deep Research frame must be tried before global Target.getTargets fallback.");
     }
 
@@ -3755,6 +5035,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("DeepResearchIframeVisibleExpression", methodBody, StringComparison.Ordinal);
         Assert.Contains("TryCreateDeepResearchFrameContextAsync", methodBody, StringComparison.Ordinal);
         Assert.Contains("frame is null", methodBody, StringComparison.Ordinal);
+        Assert.Contains("DeepResearchReportTargetReadyExpression", methodBody, StringComparison.Ordinal);
+        Assert.Contains("hasReadyReport", methodBody, StringComparison.Ordinal);
         Assert.Contains("return AuditSubmitReportCandidateResult.NoSurface;", methodBody, StringComparison.Ordinal);
         Assert.DoesNotContain("new AuditSubmitReportCandidateResult(true, [])", methodBody, StringComparison.Ordinal);
     }
@@ -3762,10 +5044,124 @@ public sealed class RepositoryBuildToolTests
     [Fact]
     public async Task AuditSubmitFrameSurfaceDecisionAllowsFallbackWhenContextIsMissing()
     {
-        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: false, hasFrameContext: false));
-        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: false, hasFrameContext: true));
-        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: true, hasFrameContext: false));
-        Assert.True(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: true, hasFrameContext: true));
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: false, hasFrameContext: false, hasReadyReport: false));
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: false, hasFrameContext: true, hasReadyReport: true));
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: true, hasFrameContext: false, hasReadyReport: true));
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: true, hasFrameContext: true, hasReadyReport: false));
+        Assert.True(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(hasVisibleIframe: true, hasFrameContext: true, hasReadyReport: true));
+    }
+
+    [Fact]
+    public void AuditSubmitReportExportButtonCanScrollOffscreenReportCard()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        const string exportExpressionName = "private const string ReportExportButtonClickExpression";
+        const string markdownMenuExpressionName = "private const string ExportReportMarkdownMenuItemClickExpression";
+        var exportExpressionStart = source.IndexOf(exportExpressionName, StringComparison.Ordinal);
+        var markdownMenuExpressionStart = source.IndexOf(markdownMenuExpressionName, StringComparison.Ordinal);
+        Assert.True(exportExpressionStart >= 0, $"{exportExpressionName} was not found.");
+        Assert.True(markdownMenuExpressionStart > exportExpressionStart, $"{markdownMenuExpressionName} must follow {exportExpressionName}.");
+
+        var reportExportExpression = source.Substring(exportExpressionStart, markdownMenuExpressionStart - exportExpressionStart);
+
+        Assert.Contains("const rendered = (element)", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("rendered(button)", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("labels = ['экспорт', 'export', 'скач', 'download']", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("button.scrollIntoView({ block: 'center', inline: 'center' });", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("fire('pointerdown')", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("fire('mouseup')", reportExportExpression, StringComparison.Ordinal);
+        Assert.DoesNotContain("rect.bottom >= 0", reportExportExpression, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDownloadReportOnlyPageFallbackExecutesProductionDomExportWhenFrameIsNotReady()
+    {
+        var readyExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchReportTargetReadyExpression");
+        var exportExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ReportExportButtonClickExpression");
+
+        using var workspace = TemporaryDirectory.Create("audit-submit-dom-export-fixture");
+        var fixtureResult = await RunAuditSubmitDomExportFixtureAsync(workspace.Root, readyExpression, exportExpression);
+
+        Assert.False(fixtureResult.FrameReady);
+        Assert.True(fixtureResult.PageReady);
+        Assert.False(await InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(
+            hasVisibleIframe: true,
+            hasFrameContext: true,
+            hasReadyReport: fixtureResult.FrameReady));
+        Assert.True(fixtureResult.PageExportReturned);
+        Assert.True(fixtureResult.ScrollIntoViewCalled);
+        Assert.Equal("center", fixtureResult.ScrollBlock);
+        Assert.Equal("center", fixtureResult.ScrollInline);
+        Assert.True(fixtureResult.FocusCalled);
+        Assert.Equal(1, fixtureResult.ClickCount);
+    }
+
+    [Fact]
+    public async Task AuditSubmitReportExportButtonAcceptsMenuPopupLabelWithoutLegacySvgPath()
+    {
+        var readyExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchReportTargetReadyExpression");
+        var exportExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ReportExportButtonClickExpression");
+
+        using var workspace = TemporaryDirectory.Create("audit-submit-popup-label-export-fixture");
+        var fixtureResult = await RunAuditSubmitDomExportFixtureAsync(
+            workspace.Root,
+            readyExpression,
+            exportExpression,
+            includeLegacyDownloadIcon: false,
+            exportLabel: "Экспорт");
+
+        Assert.True(fixtureResult.PageReady);
+        Assert.True(fixtureResult.PageExportReturned);
+        Assert.True(fixtureResult.ScrollIntoViewCalled);
+        Assert.True(fixtureResult.FocusCalled);
+        Assert.Equal(1, fixtureResult.ClickCount);
+    }
+
+    [Fact]
+    public async Task AuditSubmitMarkdownMenuSelectorAcceptsDownloadMarkdownLabel()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ExportReportMarkdownMenuItemClickExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-markdown-menu-fixture");
+
+        var result = await RunAuditSubmitMarkdownMenuFixtureAsync(workspace.Root, expression);
+
+        Assert.True(result.Returned);
+        Assert.True(result.FocusCalled);
+        Assert.Equal(1, result.ClickCount);
+    }
+
+    [Fact]
+    public async Task AuditSubmitMarkdownMenuSelectorAcceptsAriaMenuItemLabel()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ExportReportMarkdownMenuItemClickExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-markdown-menuitem-fixture");
+
+        var result = await RunAuditSubmitMarkdownMenuFixtureAsync(workspace.Root, expression, "div", "menuitem");
+
+        Assert.True(result.Returned);
+        Assert.True(result.FocusCalled);
+        Assert.Equal(1, result.ClickCount);
+    }
+
+    [Fact]
+    public async Task AuditSubmitMarkdownMenuSelectorAcceptsPlainChatGptMenuRow()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ExportReportMarkdownMenuItemClickExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-markdown-plain-row-fixture");
+
+        var result = await RunAuditSubmitMarkdownMenuFixtureAsync(
+            workspace.Root,
+            expression,
+            "div",
+            menuElementClass: "__menu-item",
+            dataFill: true,
+            tabIndex: true);
+
+        Assert.True(result.Returned);
+        Assert.True(result.FocusCalled);
+        Assert.Equal(1, result.ClickCount);
     }
 
     [Fact]
@@ -3779,7 +5175,9 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("WriteConversationUrlSidecarAsync", source, StringComparison.Ordinal);
         Assert.Contains("ReadCurrentLocationHrefAsync", source, StringComparison.Ordinal);
         Assert.Contains("WaitForConcreteConversationUrlAsync", source, StringComparison.Ordinal);
-        Assert.Contains("conversation-url-", source, StringComparison.Ordinal);
+        Assert.Contains("control-conversation-url", source, StringComparison.Ordinal);
+        Assert.Contains("\"conversation-url\"", source, StringComparison.Ordinal);
+        Assert.Contains("{prefix}-{iteration}.txt", source, StringComparison.Ordinal);
         Assert.True(
             submitBody.IndexOf("ClickSendAsync", StringComparison.Ordinal) <
             submitBody.IndexOf("WaitForConcreteConversationUrlAsync", StringComparison.Ordinal),
@@ -3858,7 +5256,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task AuditSubmitReportExtractorRequiresSingleOpenedReportCardCandidate()
+    public async Task AuditSubmitReportExtractorRequiresSingleAllowedReportCandidate()
     {
         const string acceptedReport = """
         VERDICT: ACCEPT
@@ -3896,7 +5294,7 @@ public sealed class RepositoryBuildToolTests
         CLOSURE_DECISION:
         Task can be closed.
         """;
-        const string acceptedReportWithoutClosurePermission = """
+        const string acceptedReportWithPlainClosureDecision = """
         VERDICT: ACCEPT
 
         TASK_ASSESSMENT:
@@ -3914,7 +5312,7 @@ public sealed class RepositoryBuildToolTests
         CLOSURE_DECISION:
         Accepted.
         """;
-        const string acceptedReportWithRussianImplicitClosure = """
+        const string acceptedReportWithRussianPlainClosureDecision = """
         VERDICT: ACCEPT
 
         TASK_ASSESSMENT:
@@ -3985,6 +5383,24 @@ public sealed class RepositoryBuildToolTests
 
         CLOSURE_DECISION:
         Пакет можно закрывать.
+        """;
+        const string acceptedReportWithRussianScopedPackageClosure = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Проверяемый пакет T-0238 r03 можно закрыть как текущую внешнюю audit-итерацию.
         """;
         const string needsFixesReport = """
         VERDICT: NEEDS_FIXES
@@ -4057,15 +5473,15 @@ public sealed class RepositoryBuildToolTests
         Assert.False(GetProperty<bool>(acceptWithBlocker, "Ready"));
         Assert.Null(GetProperty<string>(acceptWithBlocker, "Report"));
 
-        var acceptWithoutClosurePermission = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithoutClosurePermission, "OpenedReportCard"));
+        var acceptWithPlainClosureDecision = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithPlainClosureDecision, "OpenedReportCard"));
 
-        Assert.False(GetProperty<bool>(acceptWithoutClosurePermission, "Ready"));
-        Assert.Null(GetProperty<string>(acceptWithoutClosurePermission, "Report"));
+        Assert.True(GetProperty<bool>(acceptWithPlainClosureDecision, "Ready"));
+        Assert.Equal(acceptedReportWithPlainClosureDecision, GetProperty<string>(acceptWithPlainClosureDecision, "Report"));
 
-        var acceptWithRussianImplicitClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianImplicitClosure, "OpenedReportCard"));
+        var acceptWithRussianPlainClosureDecision = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianPlainClosureDecision, "OpenedReportCard"));
 
-        Assert.False(GetProperty<bool>(acceptWithRussianImplicitClosure, "Ready"));
-        Assert.Null(GetProperty<string>(acceptWithRussianImplicitClosure, "Report"));
+        Assert.True(GetProperty<bool>(acceptWithRussianPlainClosureDecision, "Ready"));
+        Assert.Equal(acceptedReportWithRussianPlainClosureDecision, GetProperty<string>(acceptWithRussianPlainClosureDecision, "Report"));
 
         var accepted = await InvokeAuditSubmitReportExtractorAsync((acceptedReport, "OpenedReportCard"));
 
@@ -4087,10 +5503,850 @@ public sealed class RepositoryBuildToolTests
         Assert.True(GetProperty<bool>(acceptedWithRussianPackageClosure, "Ready"));
         Assert.Equal(acceptedReportWithRussianPackageClosure, GetProperty<string>(acceptedWithRussianPackageClosure, "Report"));
 
+        var acceptedWithRussianScopedPackageClosure = await InvokeAuditSubmitReportExtractorAsync((acceptedReportWithRussianScopedPackageClosure, "OpenedReportCard"));
+
+        Assert.True(GetProperty<bool>(acceptedWithRussianScopedPackageClosure, "Ready"));
+        Assert.Equal(acceptedReportWithRussianScopedPackageClosure, GetProperty<string>(acceptedWithRussianScopedPackageClosure, "Report"));
+
         var ready = await InvokeAuditSubmitReportExtractorAsync((needsFixesReport, "OpenedReportCard"));
 
         Assert.True(GetProperty<bool>(ready, "Ready"));
         Assert.Equal(needsFixesReport, GetProperty<string>(ready, "Report"));
+
+        var ordinaryAssistantReport = await InvokeAuditSubmitReportExtractorAsync((needsFixesReport, "AssistantMessage"));
+
+        Assert.True(GetProperty<bool>(ordinaryAssistantReport, "Ready"));
+        Assert.Equal(needsFixesReport, GetProperty<string>(ordinaryAssistantReport, "Report"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryAssistantCopyButtonSelectorTargetsCurrentResponse()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-ordinary-copy");
+        var expression = await GetAuditSubmitCodexChromeAutomationLastAssistantCopyButtonPointExpressionAsync(minimumMessageCount: 4);
+        var result = await RunAuditSubmitOrdinaryCopyButtonFixtureAsync(workspace.Root, expression);
+
+        Assert.True(result.ReturnedPoint);
+        Assert.True(result.NewButtonScrolled);
+        Assert.False(result.OldButtonScrolled);
+        Assert.InRange(result.X, 429.9, 430.1);
+        Assert.InRange(result.Y, 69.9, 70.1);
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryAssistantCopyButtonDomClickTargetsCurrentResponse()
+    {
+        using var workspace = TemporaryDirectory.Create("audit-submit-ordinary-copy-dom-click");
+        var expression = await GetAuditSubmitCodexChromeAutomationLastAssistantCopyButtonClickExpressionAsync(minimumMessageCount: 4);
+        var result = await RunAuditSubmitOrdinaryCopyButtonFixtureAsync(workspace.Root, expression);
+
+        Assert.True(result.Clicked);
+        Assert.True(result.NewButtonClicked);
+        Assert.False(result.OldButtonClicked);
+        Assert.True(result.NewButtonScrolled);
+        Assert.False(result.OldButtonScrolled);
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryPollingUsesCopyActionClipboardMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r68`
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Accepted.
+        """;
+
+        var trace = await InvokeAuditSubmitOrdinaryReportPollingAsync(report, messageCountBeforeSend: 7);
+
+        Assert.Equal(report, trace.Report);
+        Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
+        Assert.DoesNotContain(trace.Calls, call => call.Contains("ReadDomMarkdown", StringComparison.Ordinal));
+        var calls = trace.Calls.ToArray();
+        Assert.True(
+            Array.IndexOf(calls, "IsGeneratingAsync") <
+            Array.IndexOf(calls, "CopyLatestAssistantMessageMarkdownAsync:9"));
+        Assert.True(trace.Calls.Count(call => call.StartsWith("CopyLatestAssistantMessageMarkdownAsync:", StringComparison.Ordinal)) >= 2);
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryPollingTreatsSingleCopyTimeoutAsTransient()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r68`
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Accepted.
+        """;
+
+        var trace = await InvokeAuditSubmitOrdinaryReportPollingAsync(
+            report,
+            messageCountBeforeSend: 7,
+            transientCopyFailuresBeforeSuccess: 1);
+
+        Assert.Equal(report, trace.Report);
+        Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9:timeout", trace.Calls);
+        Assert.Contains("CaptureAsync:ordinary-copy-transient-001", trace.Calls);
+        Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryPollingFailsPersistentCopyTimeoutWithLocalDiagnostic()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r68`
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Accepted.
+        """;
+
+        var exception = await Record.ExceptionAsync(
+            () => InvokeAuditSubmitOrdinaryReportPollingAsync(
+                report,
+                messageCountBeforeSend: 7,
+                transientCopyFailuresBeforeSuccess: int.MaxValue));
+
+        Assert.NotNull(exception);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE", GetProperty<string>(exception, "Code"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryPollingFailsPersistentMissingCopyButtonWithLocalDiagnostic()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r83`
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Accepted.
+        """;
+
+        var exception = await Record.ExceptionAsync(
+            () => InvokeAuditSubmitOrdinaryReportPollingAsync(
+                report,
+                messageCountBeforeSend: 7,
+                missingCopyButton: true));
+
+        Assert.NotNull(exception);
+        Assert.Equal("E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE", GetProperty<string>(exception, "Code"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryPollingWaitsWhenCurrentAssistantResponseHasNotAppeared()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r84`
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Accepted.
+        """;
+
+        var trace = await InvokeAuditSubmitOrdinaryReportPollingAsync(
+            report,
+            messageCountBeforeSend: 7,
+            noCurrentAssistantPollsBeforeSuccess: 35);
+
+        Assert.Equal(report, trace.Report);
+        Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9:no-current-assistant", trace.Calls);
+        Assert.Contains("CaptureAsync:ordinary-waiting-030", trace.Calls);
+        Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
+    }
+
+    [Fact]
+    public async Task AuditSubmitSystemClipboardRequiresInstalledSentinelBeforeAcceptingText()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r68`
+        """;
+        const string sentinel = "E2D-AUDIT-SUBMIT-CLIPBOARD-SENTINEL-test";
+
+        Assert.False(await InvokeAuditSubmitCanAcceptSystemClipboardTextAsync(report, sentinel, sentinelInstalled: false));
+        Assert.False(await InvokeAuditSubmitCanAcceptSystemClipboardTextAsync(sentinel, sentinel, sentinelInstalled: true));
+        Assert.True(await InvokeAuditSubmitCanAcceptSystemClipboardTextAsync(report, sentinel, sentinelInstalled: true));
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardReadRejectsSentinelBeforeCapturedFallback()
+    {
+        const string sentinel = "E2D-AUDIT-SUBMIT-CLIPBOARD-SENTINEL-test";
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r68`
+        """;
+
+        var staleRead = await InvokeAuditSubmitTryReadClipboardResultAsync(
+            $$"""{"ok":true,"text":"{{sentinel}}"}""",
+            sentinel);
+        var capturedRead = await InvokeAuditSubmitTryReadClipboardResultAsync(
+            $$"""{"ok":true,"text":"{{JsonEncodedText.Encode(report)}}"}""",
+            sentinel);
+
+        Assert.False(staleRead.Accepted);
+        Assert.Equal("clipboard text still contains the sentinel value.", staleRead.Error);
+        Assert.True(capturedRead.Accepted);
+        Assert.Equal(report, capturedRead.Text);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardCaptureInterceptsClipboardWriteMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r75`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-write");
+        var installExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureInstallExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardWriteCaptureFixtureAsync(workspace.Root, installExpression, capturedExpression, report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.OriginalWriteCalled);
+        Assert.True(result.Captured);
+        Assert.Equal(report, result.Text);
+        Assert.Empty(result.Error);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardCaptureInterceptsCopyEventSelectedMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r76`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-copy-event");
+        var installExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureInstallExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardCopyEventCaptureFixtureAsync(workspace.Root, installExpression, capturedExpression, report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.CopyListenerCount > 0);
+        Assert.True(result.Captured);
+        Assert.Equal(report, result.Text);
+        Assert.Empty(result.Error);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardCaptureRejectsStaleGlobalSelectionMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r82`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-stale-selection");
+        var installExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureInstallExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardScopedCopyEventFallbackFixtureAsync(
+            workspace.Root,
+            installExpression,
+            capturedExpression,
+            "stale-global-selection",
+            report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.CopyListenerCount > 0);
+        Assert.False(result.Captured);
+        Assert.Empty(result.Text);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardCaptureAcceptsCurrentAssistantSelectionMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r82`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-current-selection");
+        var installExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureInstallExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardScopedCopyEventFallbackFixtureAsync(
+            workspace.Root,
+            installExpression,
+            capturedExpression,
+            "current-assistant-selection",
+            report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.CopyListenerCount > 0);
+        Assert.True(result.Captured);
+        Assert.Equal(report, result.Text);
+        Assert.Empty(result.Error);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardCaptureRejectsFullActiveElementValueMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r82`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-full-active-value");
+        var installExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureInstallExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardScopedCopyEventFallbackFixtureAsync(
+            workspace.Root,
+            installExpression,
+            capturedExpression,
+            "full-active-value",
+            report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.CopyListenerCount > 0);
+        Assert.False(result.Captured);
+        Assert.Empty(result.Text);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardCaptureAcceptsTemporaryActiveSelectionMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r82`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-temporary-active-selection");
+        var installExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureInstallExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardScopedCopyEventFallbackFixtureAsync(
+            workspace.Root,
+            installExpression,
+            capturedExpression,
+            "temporary-active-selection",
+            report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.CopyListenerCount > 0);
+        Assert.True(result.Captured);
+        Assert.Equal(report, result.Text);
+        Assert.Empty(result.Error);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardCaptureInterceptsCopyEventSetDataMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r80`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-copy-event-set-data");
+        var installExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureInstallExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardCopyEventSetDataCaptureFixtureAsync(workspace.Root, installExpression, capturedExpression, report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.CopyListenerCount > 0);
+        Assert.True(result.SetDataCalled);
+        Assert.True(result.Captured);
+        Assert.Equal(report, result.Text);
+        Assert.Empty(result.Error);
+    }
+
+    [Fact]
+    public async Task AuditSubmitBrowserClipboardReadRequiresSentinelProof()
+    {
+        Assert.False(await InvokeAuditSubmitCanTrustBrowserClipboardReadTextAsync(null));
+        Assert.False(await InvokeAuditSubmitCanTrustBrowserClipboardReadTextAsync(string.Empty));
+        Assert.True(await InvokeAuditSubmitCanTrustBrowserClipboardReadTextAsync("E2D-AUDIT-SUBMIT-CLIPBOARD-SENTINEL-test"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitBrowserClipboardReadRejectsStaleTextWhenSentinelMissing()
+    {
+        const string staleReport = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r69`
+        """;
+        const string currentReport = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r69`
+        """;
+
+        var rejected = await InvokeAuditSubmitTrySelectClipboardTextAsync(
+            $$"""{"ok":true,"text":"{{JsonEncodedText.Encode(staleReport)}}"}""",
+            """{"ok":false,"error":"copy action Markdown was not captured"}""",
+            staleClipboardText: null);
+        var captured = await InvokeAuditSubmitTrySelectClipboardTextAsync(
+            $$"""{"ok":true,"text":"{{JsonEncodedText.Encode(staleReport)}}"}""",
+            $$"""{"ok":true,"text":"{{JsonEncodedText.Encode(currentReport)}}"}""",
+            staleClipboardText: null);
+
+        Assert.False(rejected.Accepted);
+        Assert.Empty(rejected.Text);
+        Assert.Equal("system clipboard sentinel was not installed; navigator.clipboard.readText cannot prove the current copy action.", rejected.ReadError);
+        Assert.Equal("copy action Markdown was not captured", rejected.CapturedError);
+        Assert.True(captured.Accepted);
+        Assert.Equal(currentReport, captured.Text);
+        Assert.Equal("system clipboard sentinel was not installed; navigator.clipboard.readText cannot prove the current copy action.", captured.ReadError);
+        Assert.Empty(captured.CapturedError);
+    }
+
+    [Fact]
+    public async Task AuditSubmitClipboardPreloadCaptureInterceptsEarlyBoundWriteTextMarkdown()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0238`
+        - metadata.iteration: `r79`
+        """;
+        using var workspace = TemporaryDirectory.Create("audit-submit-clipboard-preload-capture");
+        var preloadExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCapturePreloadExpression");
+        var resetExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardWriteCaptureResetExpression");
+        var capturedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("ClipboardCapturedWriteTextExpression");
+
+        var result = await RunAuditSubmitClipboardPreloadCaptureFixtureAsync(
+            workspace.Root,
+            preloadExpression,
+            resetExpression,
+            capturedExpression,
+            report);
+
+        Assert.True(result.InstallSucceeded);
+        Assert.True(result.OriginalWriteCalled);
+        Assert.True(result.Captured);
+        Assert.Equal(report, result.Text);
+        Assert.Empty(result.Error);
+    }
+
+    [Fact]
+    public async Task AuditSubmitOrdinaryCopyResetsPreloadCaptureBeforeClick()
+    {
+        var source = await File.ReadAllTextAsync(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"));
+        var ordinaryCopyMethodIndex = source.IndexOf(
+            "private static async Task<AuditSubmitOrdinaryCopyResult> CopyLatestAssistantMessageMarkdownAsync",
+            StringComparison.Ordinal);
+
+        Assert.True(ordinaryCopyMethodIndex >= 0);
+        Assert.True(
+            source.IndexOf("ResetClipboardWriteCaptureBestEffortAsync(browser, tabId, cancellationToken)", ordinaryCopyMethodIndex, StringComparison.Ordinal) <
+            source.IndexOf("ClickAtAsync(tabId, buttonState.Point.Value", ordinaryCopyMethodIndex, StringComparison.Ordinal));
+        Assert.True(
+            source.IndexOf("ClickAtAsync(tabId, buttonState.Point.Value", ordinaryCopyMethodIndex, StringComparison.Ordinal) <
+            source.IndexOf("ReadClipboardTextAsync(", ordinaryCopyMethodIndex, StringComparison.Ordinal));
+        Assert.Contains("\"Page.addScriptToEvaluateOnNewDocument\"", source, StringComparison.Ordinal);
+        Assert.Contains("ClipboardWriteCapturePreloadExpression", source, StringComparison.Ordinal);
+        Assert.Contains("__electron2dAuditClipboardPreloadCapture", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"tab_clipboard_read_text\"", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"tab_clipboard_write_text\"", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditSubmitReportExtractorAllowsAcceptWithStructuredFollowUpFinding()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        - FOLLOW_UP_FINDING F1
+          - Finding id: F1
+          - File/symbol: docs/release-management/audit-package.md
+          - Problem: B1-like wording from previous context should stay non-blocking here.
+          - Why not blocker for current task: outside current accepted scope.
+          - Suggested new task: T-9999
+          - Suggested priority: P2
+          - Verification idea: focused documentation verifier.
+
+        CLOSURE_DECISION:
+        Task can be closed.
+        """;
+
+        var extraction = await InvokeAuditSubmitReportExtractorAsync((report, "OpenedReportCard"));
+
+        Assert.True(GetProperty<bool>(extraction, "Ready"));
+        Assert.Equal(report, GetProperty<string>(extraction, "Report"));
+    }
+
+    [Fact]
+    public async Task AuditSubmitReportExtractorRejectsAcceptWithNumberedBlockerInBlockers()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        B1: current task blocker.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Task can be closed.
+        """;
+
+        var extraction = await InvokeAuditSubmitReportExtractorAsync((report, "OpenedReportCard"));
+
+        Assert.False(GetProperty<bool>(extraction, "Ready"));
+        Assert.Null(GetProperty<string>(extraction, "Report"));
+    }
+
+    [Fact]
+    public async Task AuditWorkflowFollowupParserFindsStructuredRisksAndIgnoresB1Context()
+    {
+        var report = CreateAcceptedFollowupReport(
+            "F1",
+            """
+            - OUT_OF_SCOPE_NOTE N1
+              - Problem: This note is not actionable by default.
+            - INFO_NOTE I1
+              - Problem: B1 from an older report is mentioned only as context.
+            """);
+
+        var findings = await InvokeAuditFollowupFindingExtractionAsync(
+            "docs/verdicts/release-management/t-0238-audit-r01.md",
+            report);
+
+        var finding = Assert.Single(findings);
+        Assert.Equal("FOLLOW_UP_FINDING", GetProperty<string>(finding, "Kind"));
+        Assert.Equal("F1", GetProperty<string>(finding, "FindingId"));
+        Assert.Equal("docs/verdicts/release-management/t-0238-audit-r01.md", GetProperty<string>(finding, "ReportPath"));
+    }
+
+    [Fact]
+    public async Task AuditWorkflowFollowupParserFindsMarkdownFormattedStructuredRiskMarkers()
+    {
+        const string report = """
+        VERDICT: ACCEPT
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        - **FOLLOW_UP_FINDING F1**
+          - Problem: Markdown emphasis around the marker must not hide the finding.
+        - *OUT_OF_SCOPE_NOTE N1*
+          - Problem: This note is not actionable by default.
+
+        CLOSURE_DECISION:
+        Task can be closed.
+        """;
+
+        var findings = await InvokeAuditFollowupFindingExtractionAsync(
+            "docs/verdicts/release-management/t-0238-audit-r45.md",
+            report);
+
+        var finding = Assert.Single(findings);
+        Assert.Equal("FOLLOW_UP_FINDING", GetProperty<string>(finding, "Kind"));
+        Assert.Equal("F1", GetProperty<string>(finding, "FindingId"));
+        Assert.Equal("docs/verdicts/release-management/t-0238-audit-r45.md", GetProperty<string>(finding, "ReportPath"));
+    }
+
+    [Fact]
+    public async Task AuditWorkflowVerifyAuditFollowupsDistinguishesClosedAndUnclosedFindings()
+    {
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-closed-unclosed",
+            CreateAuditFollowupClosure("docs/verdicts/release-management/t-0238-audit-r01.md", "F1", "tracked-new"),
+            ("docs/verdicts/release-management/t-0238-audit-r01.md", CreateAcceptedFollowupReport("F1")),
+            ("docs/verdicts/release-management/t-0238-audit-r02.md", CreateAcceptedFollowupReport("F2")));
+
+        var failing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.NotEqual(0, failing.ExitCode);
+        AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
+        Assert.Contains("docs/verdicts/release-management/t-0238-audit-r02.md", failing.Stdout, StringComparison.Ordinal);
+        Assert.Contains("F2", failing.Stdout, StringComparison.Ordinal);
+
+        AppendText(
+            workspace.Root,
+            "TASKS.md",
+            CreateAuditFollowupClosure("docs/verdicts/release-management/t-0238-audit-r02.md", "F2", "tracked-existing"));
+
+        var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, passing.ExitCode);
+        AssertDiagnosticCode(passing, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    public async Task AuditWorkflowVerifyAuditFollowupsUsesReportPathInFindingKey()
+    {
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-report-key",
+            CreateAuditFollowupClosure("docs/verdicts/release-management/t-0238-audit-r01.md", "F1", "tracked-new"),
+            ("docs/verdicts/release-management/t-0238-audit-r01.md", CreateAcceptedFollowupReport("F1")),
+            ("docs/verdicts/release-management/t-0238-audit-control-r01.md", CreateAcceptedFollowupReport("F1")));
+
+        var failing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.NotEqual(0, failing.ExitCode);
+        AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
+        Assert.Contains("docs/verdicts/release-management/t-0238-audit-control-r01.md", failing.Stdout, StringComparison.Ordinal);
+
+        AppendText(
+            workspace.Root,
+            "TASKS.md",
+            CreateAuditFollowupClosure("docs/verdicts/release-management/t-0238-audit-control-r01.md", "F1", "duplicate"));
+
+        var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, passing.ExitCode);
+        AssertDiagnosticCode(passing, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    public async Task AuditWorkflowVerifyAuditFollowupsRequiresClosureForNeedsFixesFindings()
+    {
+        const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-needs-fixes",
+            string.Empty,
+            (reportPath, CreateAcceptedFollowupReport("F1", verdict: "VERDICT: NEEDS_FIXES")));
+
+        var failing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.NotEqual(0, failing.ExitCode);
+        AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
+
+        AppendText(
+            workspace.Root,
+            "TASKS.md",
+            CreateAuditFollowupClosure(reportPath, "F1", "tracked-new"));
+
+        var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, passing.ExitCode);
+        AssertDiagnosticCode(passing, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    public async Task AuditWorkflowVerifyAuditFollowupsRequiresClosureForActionableOutOfScopeNote()
+    {
+        const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-actionable-out-of-scope-note",
+            CreateAuditFollowupClosure(reportPath, "F1", "tracked-new"),
+            (reportPath, CreateAcceptedFollowupReport(
+                "F1",
+                """
+                - OUT_OF_SCOPE_NOTE N1
+                  - Actionable: true
+                  - Problem: Follow-up work is outside the current package but must be tracked.
+                """)));
+
+        var failing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.NotEqual(0, failing.ExitCode);
+        AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
+        Assert.Contains("OUT_OF_SCOPE_NOTE", failing.Stdout, StringComparison.Ordinal);
+        Assert.Contains("N1", failing.Stdout, StringComparison.Ordinal);
+
+        AppendText(
+            workspace.Root,
+            "TASKS.md",
+            CreateAuditFollowupClosure(reportPath, "N1", "tracked-new"));
+
+        var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, passing.ExitCode);
+        AssertDiagnosticCode(passing, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    public async Task AuditWorkflowVerifyAuditFollowupsRequiresClosureForBracketActionableInfoNote()
+    {
+        const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-actionable-info-note",
+            CreateAuditFollowupClosure(reportPath, "F1", "tracked-new"),
+            (reportPath, CreateAcceptedFollowupReport(
+                "F1",
+                """
+                - INFO_NOTE I1 [actionable]
+                  - Problem: Informational note requires a tracked follow-up.
+                """)));
+
+        var failing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.NotEqual(0, failing.ExitCode);
+        AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
+        Assert.Contains("INFO_NOTE", failing.Stdout, StringComparison.Ordinal);
+        Assert.Contains("I1", failing.Stdout, StringComparison.Ordinal);
+
+        AppendText(
+            workspace.Root,
+            "TASKS.md",
+            CreateAuditFollowupClosure(reportPath, "I1", "tracked-existing"));
+
+        var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, passing.ExitCode);
+        AssertDiagnosticCode(passing, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    public async Task AuditWorkflowVerifyAuditFollowupsScansUntrackedSavedReportsInGitWorkspace()
+    {
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-untracked-report",
+            string.Empty,
+            ("docs/verdicts/release-management/t-0238-audit-r01.md", CreateAcceptedFollowupReport("F1")));
+        await RunGitAsync(workspace.Root, "init");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
+        Assert.Contains("docs/verdicts/release-management/t-0238-audit-r01.md", result.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AuditWorkflowVerifyAuditFollowupsAcceptedRiskRequiresRiskRegisterFields()
+    {
+        using var workspace = CreateAuditFollowupFixture(
+            "audit-followups-accepted-risk",
+            CreateAuditFollowupClosure("docs/verdicts/release-management/t-0238-audit-r01.md", "F1", "accepted-risk"),
+            ("docs/verdicts/release-management/t-0238-audit-r01.md", CreateAcceptedFollowupReport("F1")));
+
+        var failing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.NotEqual(0, failing.ExitCode);
+        AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-ACCEPTED-RISK");
+
+        WriteText(
+            workspace.Root,
+            "TASKS.md",
+            CreateAuditFollowupClosure(
+                "docs/verdicts/release-management/t-0238-audit-r01.md",
+                "F1",
+                "accepted-risk",
+                """
+                  - affected area: release-management audit closure
+                  - impact: delayed follow-up triage can hide accepted debt.
+                  - likelihood: low
+                  - mitigation: run verify audit-followups before archive.
+                  - owner/next decision point: T-0105 risk review
+                  - decision state: accepted until T-0105 revisits the risk.
+                """));
+
+        var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, passing.ExitCode);
+        AssertDiagnosticCode(passing, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
     }
 
     [Fact]
@@ -4165,7 +6421,7 @@ public sealed class RepositoryBuildToolTests
         CLOSURE_DECISION:
         Task can be closed.
         """;
-        const string acceptedReportWithoutClosurePermission = """
+        const string acceptedReportWithPlainClosureDecision = """
         VERDICT: ACCEPT
 
         TASK_ASSESSMENT:
@@ -4197,8 +6453,8 @@ public sealed class RepositoryBuildToolTests
             (missingHeading, "OpenedReportCard"));
         var blocker = await InvokeAuditSubmitReportExtractorAsync(
             (acceptedReportWithBlocker, "OpenedReportCard"));
-        var closure = await InvokeAuditSubmitReportExtractorAsync(
-            (acceptedReportWithoutClosurePermission, "OpenedReportCard"));
+        var plainClosure = await InvokeAuditSubmitReportExtractorAsync(
+            (acceptedReportWithPlainClosureDecision, "OpenedReportCard"));
 
         Assert.Contains("exactly one", GetProperty<string>(multipleCandidates, "FailureReason"), StringComparison.OrdinalIgnoreCase);
         Assert.Contains("OpenedReportCard", GetProperty<string>(nonCardSource, "FailureReason"), StringComparison.Ordinal);
@@ -4206,7 +6462,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("first non-empty line", GetProperty<string>(firstLine, "FailureReason"), StringComparison.OrdinalIgnoreCase);
         Assert.Contains("TASK_ASSESSMENT:", GetProperty<string>(heading, "FailureReason"), StringComparison.Ordinal);
         Assert.Contains("numbered blocker", GetProperty<string>(blocker, "FailureReason"), StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("closure", GetProperty<string>(closure, "FailureReason"), StringComparison.OrdinalIgnoreCase);
+        Assert.True(GetProperty<bool>(plainClosure, "Ready"));
+        Assert.Equal(acceptedReportWithPlainClosureDecision, GetProperty<string>(plainClosure, "Report"));
     }
 
     [Fact]
@@ -4303,11 +6560,54 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("Извлечение verdict-а - жёсткое правило", text, StringComparison.Ordinal);
         Assert.Contains("Углубленный исследовательский отчет", text, StringComparison.Ordinal);
         Assert.Contains("Deep research report", text, StringComparison.Ordinal);
+        Assert.Contains("новый ответ ассистента текущей отправки", text, StringComparison.Ordinal);
+        Assert.Contains("button[data-testid=\"copy-turn-action-button\"]", text, StringComparison.Ordinal);
+        Assert.Contains("navigator.clipboard.readText()", text, StringComparison.Ordinal);
+        Assert.Contains("navigator.clipboard.writeText()", text, StringComparison.Ordinal);
+        Assert.Contains("navigator.clipboard.write(...)", text, StringComparison.Ordinal);
+        Assert.Contains("browser `copy` event", text, StringComparison.Ordinal);
+        Assert.Contains("ещё до загрузки страницы ставит pre-load захват", text, StringComparison.Ordinal);
+        Assert.Contains("очищает оба состояния захвата перед кликом", text, StringComparison.Ordinal);
+        Assert.Contains("system clipboard принимается только после успешного sentinel", text, StringComparison.Ordinal);
+        Assert.Contains("произвольный старый clipboard text не является источником verdict-а", text, StringComparison.Ordinal);
+        Assert.Contains("`--deep-research` и `--download-report-only` берут Markdown только из export/download path", text, StringComparison.Ordinal);
+        Assert.Contains("команда доверяет `navigator.clipboard.readText()` только при успешно установленном sentinel", text, StringComparison.Ordinal);
+        Assert.Contains("если sentinel не был установлен, browser `readText()` не является доказательством текущей copy action", text, StringComparison.Ordinal);
+        Assert.Contains("Базовый ordinary path не восстанавливает Markdown из `innerText`, `textContent` или собственного DOM-to-Markdown renderer-а", text, StringComparison.Ordinal);
         Assert.Contains("Markdown-файл, скачанный пунктом `Экспортировать в Markdown`", text, StringComparison.Ordinal);
         Assert.Contains("main.textContent", text, StringComparison.Ordinal);
         Assert.Contains("conversation-turn", text, StringComparison.Ordinal);
         Assert.Contains("matches.at(-1)", text, StringComparison.Ordinal);
         Assert.Contains("verdictCount", text, StringComparison.Ordinal);
+        Assert.Contains("секция `TASK_ASSESSMENT:` должна явно назвать текущие `metadata.taskId` и `metadata.iteration`", text, StringComparison.Ordinal);
+        Assert.Contains("Все режимы `audit submit`, которые записывают verdict Markdown, принимают только строгий repo-relative путь `--out`", text, StringComparison.Ordinal);
+        Assert.Contains("Локальный индекс документации `data/documentation/**` не должен индексировать `docs/verdicts/**`", text, StringComparison.Ordinal);
+        Assert.Contains("активные контекстные артефакты контрольного ZIP", text, StringComparison.Ordinal);
+        Assert.Contains("`repo-after/data/documentation/**`", text, StringComparison.Ordinal);
+        Assert.Contains("`TASKS.md` и `data/dev-diary/**` запрещены как mutable process-history files", text, StringComparison.Ordinal);
+        Assert.Contains("Обычные repo-owned source/test files под `repo-after/**` могут содержать синтетические fixture paths", text, StringComparison.Ordinal);
+        Assert.Contains("Исторические снимки `repo-before/**`, а также удалённые и контекстные строки patch", text, StringComparison.Ordinal);
+        Assert.Contains("добавленные строки patch для context-bearing paths остаются запрещены", text, StringComparison.Ordinal);
+        Assert.Contains("для control audit это `docs/verdicts/<domain>/<task-id>-audit-control-rNN.md`", text, StringComparison.Ordinal);
+        Assert.Contains("точные сегменты `docs/verdicts`", text, StringComparison.Ordinal);
+        Assert.Contains("точное расширение `.md`", text, StringComparison.Ordinal);
+        Assert.Contains("`--download-report-only` принимает только primary filename", text, StringComparison.Ordinal);
+        Assert.Contains("совпадать с текущими `taskId`/`iteration` из ZIP и режимом primary/control", text, StringComparison.Ordinal);
+        Assert.Contains("`CLOSURE_DECISION:` не требует специальной фразы после `VERDICT: ACCEPT`", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("секция `CLOSURE_DECISION:` явно разрешала закрытие", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("команда восстанавливает списки, inline-code, code fences, выделение и ссылки из DOM-структуры нового ответа", text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AuditPackageDocumentationDefinesNoPrePromptScrollInOrdinarySubmit()
+    {
+        var text = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "docs", "release-management", "audit-package.md"),
+            Encoding.UTF8);
+
+        Assert.Contains("дождаться доступности поля сообщения без предварительного прокручивания страницы проекта", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("дождаться доступности поля сообщения, прокрутить обсуждение вниз, прикрепить", text, StringComparison.Ordinal);
+        Assert.Contains("Когда активной генерации нет, команда сначала прокручивает обсуждение вниз", text, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -4350,6 +6650,40 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public void AuditRequestRequiresReadableRussianReportExplanations()
+    {
+        var request = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "docs", "release-management", "AUDIT-REQUEST.md"),
+            Encoding.UTF8);
+
+        Assert.StartsWith("# Запрос внешнего аудита Electron2D\n\nВы проводите внешний аудит", request.Replace("\r\n", "\n", StringComparison.Ordinal), StringComparison.Ordinal);
+        Assert.DoesNotContain("@Глубокое исследование", request, StringComparison.Ordinal);
+        Assert.Contains("## Читаемость отчёта", request, StringComparison.Ordinal);
+        Assert.Contains("Не пишите объяснения как внутренний машинный протокол", request, StringComparison.Ordinal);
+        Assert.Contains("сначала пишите короткое русское объяснение", request, StringComparison.Ordinal);
+        Assert.Contains("Техническая привязка", request, StringComparison.Ordinal);
+        Assert.Contains("способ закрытия замечаний, который можно проверить автоматически", request, StringComparison.Ordinal);
+        Assert.Contains("штатная команда без ручных обходов", request, StringComparison.Ordinal);
+        Assert.Contains("проверка, что указанная связанная задача действительно существует и подходит по смыслу", request, StringComparison.Ordinal);
+        Assert.Contains("долг, который не мешает принять эту задачу", request, StringComparison.Ordinal);
+        Assert.Contains("критерий приёмки", request, StringComparison.Ordinal);
+        Assert.Contains("`Идентификатор`", request, StringComparison.Ordinal);
+        Assert.Contains("`Где найдено`", request, StringComparison.Ordinal);
+        Assert.Contains("`Почему не блокирует текущую задачу`", request, StringComparison.Ordinal);
+        Assert.Contains("`Куда перенести`", request, StringComparison.Ordinal);
+        Assert.Contains("`Рекомендуемый приоритет`", request, StringComparison.Ordinal);
+        Assert.Contains("`Как проверить`", request, StringComparison.Ordinal);
+        Assert.Contains("Если указана `Suggested new task`, она должна быть самодостаточной", request, StringComparison.Ordinal);
+        Assert.Contains("рабочий заголовок задачи", request, StringComparison.Ordinal);
+        Assert.Contains("рекомендуемый приоритет", request, StringComparison.Ordinal);
+        Assert.Contains("затронутый домен", request, StringComparison.Ordinal);
+        Assert.Contains("короткий критерий приёмки", request, StringComparison.Ordinal);
+        Assert.Contains("идею проверки", request, StringComparison.Ordinal);
+        Assert.Contains("Техническое имя поля, если оно нужно инструментам: `Why not blocker for current task`", request, StringComparison.Ordinal);
+        Assert.Contains("Это не блокирует T-0238", request, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AuditWorkflowDocumentsSeparateAgentRequestAndGoalPromptResponsibilities()
     {
         var repositoryRoot = FindRepositoryRoot();
@@ -4377,7 +6711,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("VERDICT: ACCEPT", agents, StringComparison.Ordinal);
         Assert.Contains("audit submit", agents, StringComparison.Ordinal);
         Assert.Contains("--browser-backend codex-chrome", agents, StringComparison.Ordinal);
-        Assert.Contains("same verified ZIP", agents, StringComparison.Ordinal);
+        Assert.Contains("clean-control ZIP", agents, StringComparison.Ordinal);
+        Assert.Contains("new ChatGPT project chat", agents, StringComparison.Ordinal);
         Assert.Contains("local conversation state", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("previousVerdictChain", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("blockerClosureList", agents, StringComparison.Ordinal);
@@ -4412,7 +6747,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("--browser-backend codex-chrome", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("--reuse-conversation", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("--control-audit", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("тот же verified ZIP", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("чистый control ZIP", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("в `TASKS.md` можно указать этот путь, но не сам URL", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("previousVerdictChain", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("blockerClosureList", goalPrompt, StringComparison.Ordinal);
@@ -4460,7 +6795,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("--browser-backend codex-chrome", text, StringComparison.Ordinal);
         Assert.Contains("--reuse-conversation", text, StringComparison.Ordinal);
         Assert.Contains("--control-audit", text, StringComparison.Ordinal);
-        Assert.Contains("тот же уже проверенный ZIP", text, StringComparison.Ordinal);
+        Assert.Contains("чистый контрольный ZIP", text, StringComparison.Ordinal);
+        Assert.Contains("создаёт новый чат", text, StringComparison.Ordinal);
+        Assert.Contains("запрещено использовать `--reuse-conversation`", text, StringComparison.Ordinal);
+        Assert.Contains("E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", text, StringComparison.Ordinal);
         Assert.Contains("metadata.previousVerdictChain", text, StringComparison.Ordinal);
         Assert.Contains("metadata.blockerClosureList", text, StringComparison.Ordinal);
         Assert.Contains("локальным состоянием отправки", text, StringComparison.Ordinal);
@@ -4474,17 +6812,18 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("пользовательской Chrome-сессии", text, StringComparison.Ordinal);
         Assert.Contains("единственный браузерный путь", text, StringComparison.Ordinal);
         Assert.Contains("прикрепляет проверенный основной аудиторский ZIP и не прикрепляет сопровождающий ZIP", text, StringComparison.Ordinal);
-        Assert.Contains("прикреплением ровно одного основного ZIP", text, StringComparison.Ordinal);
+        Assert.Contains("прикрепить ровно один основной ZIP-файл", text, StringComparison.Ordinal);
         Assert.Contains("не закрывает и не изменяет уже открытые пользовательские вкладки", text, StringComparison.Ordinal);
         Assert.Contains("закрывает только вкладку, созданную текущим запуском", text, StringComparison.Ordinal);
-        Assert.Contains("обновляет страницу раз в минуту", text, StringComparison.Ordinal);
-        Assert.Contains("всё равно обновляет страницу раз в минуту", text, StringComparison.Ordinal);
+        Assert.Contains("ждёт нового ответа ассистента текущей отправки", text, StringComparison.Ordinal);
+        Assert.Contains("Базовый режим `audit submit` использует обычный запрос в ChatGPT", text, StringComparison.Ordinal);
         Assert.Contains("сохраняет результат", text, StringComparison.Ordinal);
         Assert.Contains("не создаёт PNG-скриншоты", text, StringComparison.Ordinal);
         Assert.Contains("не принимает tool screenshots как доказательство", text, StringComparison.Ordinal);
-        Assert.Contains("кнопка `aria-label=\"Экспорт\"` используется только если меню закрыто", text, StringComparison.Ordinal);
-        Assert.Contains("DOM-кликом выбирает `Экспортировать в Markdown`", text, StringComparison.Ordinal);
-        Assert.Contains("не кликает по вычисленным координатам отчётной карточки", text, StringComparison.Ordinal);
+        Assert.Contains("`Экспорт`, `Export`, `Скачать` и `Download` с download icon", text, StringComparison.Ordinal);
+        Assert.Contains("`Экспортировать в Markdown`, `Скачать как Markdown`, `Export as Markdown`, `Download as Markdown`", text, StringComparison.Ordinal);
+        Assert.Contains("равнозначное Markdown-download действие", text, StringComparison.Ordinal);
+        Assert.Contains("Не вычисляйте координату правого верхнего угла карточки", text, StringComparison.Ordinal);
         Assert.DoesNotContain("правую верхнюю кнопку экспорта", text, StringComparison.Ordinal);
         Assert.DoesNotContain("Если точка ровно одна", text, StringComparison.Ordinal);
         Assert.Contains("Слишком много запросов", text, StringComparison.Ordinal);
@@ -4492,9 +6831,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("`Глубокое исследование`", text, StringComparison.Ordinal);
         Assert.Contains("кнопкой `+` слева от поля", text, StringComparison.Ordinal);
         Assert.Contains("connector `connector_openai_deep_research`", text, StringComparison.Ordinal);
-        Assert.Contains("без текстового префикса `@Глубокое исследование`", text, StringComparison.Ordinal);
+        Assert.Contains("--deep-research", text, StringComparison.Ordinal);
+        Assert.Contains("не вставляет текстовый маркер `@Глубокое исследование`", text, StringComparison.Ordinal);
         Assert.Contains("Короткий ручной запрос", text, StringComparison.Ordinal);
-        Assert.Contains("отправка без режима `Глубокое исследование` запрещены", text, StringComparison.Ordinal);
+        Assert.Contains("ручная отправка вместо `audit submit` запрещены", text, StringComparison.Ordinal);
         Assert.DoesNotContain("audit submit " + "auth", text, StringComparison.Ordinal);
         Assert.DoesNotContain("--chrome-profile-directory", text, StringComparison.Ordinal);
         Assert.DoesNotContain("--browser-backend " + "play" + "wright", text, StringComparison.Ordinal);
@@ -4531,6 +6871,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("button[data-testid=\"composer-plus-btn\"]", source, StringComparison.Ordinal);
         Assert.Contains("connector:connector_openai_deep_research", source, StringComparison.Ordinal);
         Assert.Contains("data-keyword=\"Глубокое исследование\"", source, StringComparison.Ordinal);
+        Assert.Contains("hasConnectorMetadata", source, StringComparison.Ordinal);
+        Assert.Contains("isCompactDeepResearchPill", source, StringComparison.Ordinal);
+        Assert.Contains("element !== prompt", source, StringComparison.Ordinal);
+        Assert.Contains("connectorSelectors", source, StringComparison.Ordinal);
         Assert.Contains("Input.dispatchMouseEvent", source, StringComparison.Ordinal);
         Assert.Contains("ClickAtAsync", source, StringComparison.Ordinal);
         Assert.Contains("deep-research-menu", source, StringComparison.Ordinal);
@@ -4559,11 +6903,16 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("DownloadReadyReportAsync", source, StringComparison.Ordinal);
         Assert.Contains("completed || !options.KeepTabOpenOnError", source, StringComparison.Ordinal);
         Assert.Contains("await BringTabToFrontBestEffortAsync(browser, tabId, linked.Token).ConfigureAwait(false);", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("AuditSubmitReportStabilityTracker", source, StringComparison.Ordinal);
+        Assert.Contains("AuditSubmitReportStabilityTracker", source, StringComparison.Ordinal);
+        Assert.Contains("WaitForOrdinaryChatReportAsync", source, StringComparison.Ordinal);
         Assert.Contains("WaitForConversationMessagesAsync", source, StringComparison.Ordinal);
         Assert.Contains("ConversationMessageCountExpression", source, StringComparison.Ordinal);
         Assert.Contains("HasRequiredConversationMessageCount", source, StringComparison.Ordinal);
         Assert.Contains("messageCountBeforeSend + 1", source, StringComparison.Ordinal);
+        Assert.Contains("RequireDeepResearchSelectedAsync", source, StringComparison.Ordinal);
+        Assert.Matches(
+            new Regex("SubmitPromptAsync\\(.*?AttachFilesAsync\\(zipPaths, cancellationToken\\).*?if \\(deepResearch\\).*?EnableDeepResearchAsync\\(cancellationToken\\).*?FillPromptAsync\\(message, cancellationToken\\).*?if \\(deepResearch\\).*?RequireDeepResearchSelectedAsync\\(cancellationToken\\).*?RequirePromptPayloadReadyAsync\\(message, zipPaths, cancellationToken\\).*?ClickSendAsync\\(cancellationToken\\)", RegexOptions.Singleline),
+            source);
         Assert.Contains("DownloadReportCandidatesAsync", source, StringComparison.Ordinal);
         Assert.Contains("ReportExportButtonClickExpression", source, StringComparison.Ordinal);
         Assert.Contains("ExportReportMarkdownMenuItemClickExpression", source, StringComparison.Ordinal);
@@ -4574,7 +6923,11 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("DownloadReportCandidatesFromBrowserUseVisibleDomAsync", source, StringComparison.Ordinal);
         Assert.DoesNotContain("GetBrowserUseVisibleDomAsync", source, StringComparison.Ordinal);
         Assert.DoesNotContain("ClickBrowserUseVisibleDomNodeAsync", source, StringComparison.Ordinal);
+        Assert.Contains("\"Page.addScriptToEvaluateOnNewDocument\"", source, StringComparison.Ordinal);
+        Assert.Contains("__electron2dAuditClipboardPreloadCapture", source, StringComparison.Ordinal);
         Assert.DoesNotContain("\"executeUnhandledCommand\"", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"tab_clipboard_read_text\"", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"tab_clipboard_write_text\"", source, StringComparison.Ordinal);
         Assert.DoesNotContain("\"dom_cua_get_visible_dom\"", source, StringComparison.Ordinal);
         Assert.DoesNotContain("\"dom_cua_click\"", source, StringComparison.Ordinal);
         Assert.DoesNotContain("browser-use-visible-dom", source, StringComparison.Ordinal);
@@ -4584,7 +6937,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Matches(
             new Regex("\"Page\\.setDownloadBehavior\".*?\"Browser\\.setDownloadBehavior\"", RegexOptions.Singleline),
             source);
-        Assert.Contains("var downloadDirectoryConfigured = await ConfigureDownloadsAsync", source, StringComparison.Ordinal);
+        Assert.Contains("var downloadDirectoryConfigured = await PrepareProjectForPromptSubmissionAsync", source, StringComparison.Ordinal);
+        Assert.Contains("var downloadDirectoryConfigured = await driver.ConfigureDownloadsAsync", source, StringComparison.Ordinal);
         Assert.Contains("includeUserDownloadsFallback: !downloadDirectoryConfigured", source, StringComparison.Ordinal);
         Assert.DoesNotContain("E2D-BUILD-AUDIT-SUBMIT-DOWNLOADS-UNCONFIGURED", source, StringComparison.Ordinal);
         Assert.Contains("WaitForMarkdownDownloadAsync", source, StringComparison.Ordinal);
@@ -4647,14 +7001,27 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("[\"contextId\"] = contextId", source, StringComparison.Ordinal);
         Assert.Contains("ResolveMarkdownMenuItemClickResult", source, StringComparison.Ordinal);
         Assert.Contains("CanUsePageLevelMarkdownMenu", source, StringComparison.Ordinal);
-        Assert.Contains("return surfaceScope == AuditSubmitExportSurfaceScope.Page;", source, StringComparison.Ordinal);
+        Assert.Contains("AuditSubmitExportSurfaceScope.DeepResearchTargetFrame", source, StringComparison.Ordinal);
         Assert.Contains("AuditSubmitExportSurfaceScope.DeepResearchFrame", source, StringComparison.Ordinal);
         Assert.Contains("AuditSubmitExportSurfaceScope.DeepResearchTarget", source, StringComparison.Ordinal);
-        Assert.Contains("AuditSubmitExportSurfaceScope.DeepResearchTargetFrame", source, StringComparison.Ordinal);
         Assert.Contains("EvaluateBoolInContextAsync(tabId, frame.Value.ContextId, ReportExportButtonClickExpression", source, StringComparison.Ordinal);
         Assert.Contains("EvaluateBoolInContextAsync(tabId, frame.Value.ContextId, ExportReportMarkdownMenuItemClickExpression", source, StringComparison.Ordinal);
         Assert.Contains("EvaluateBoolAsync(tabId, ExportReportMarkdownMenuItemClickExpression", source, StringComparison.Ordinal);
-        Assert.Contains("() => Task.FromResult(false)", source, StringComparison.Ordinal);
+        Assert.Contains("IAuditSubmitDeepResearchMarkdownExportDriver", source, StringComparison.Ordinal);
+        Assert.Contains("DownloadReportCandidatesFromSelectedDeepResearchSurfaceAsync", source, StringComparison.Ordinal);
+        Assert.Contains("ClickPageMarkdownMenuItemAsync", source, StringComparison.Ordinal);
+        foreach (var methodSignature in new[]
+        {
+            "private static async Task<AuditSubmitReportCandidateResult> DownloadReportCandidatesFromDeepResearchFrameAsync",
+            "private static async Task<AuditSubmitReportCandidateResult> DownloadReportCandidatesFromDeepResearchTargetAsync",
+            "private static async Task<AuditSubmitReportCandidateResult> DownloadReportCandidatesFromDeepResearchTargetFrameAsync"
+        })
+        {
+            var selectedSurfaceBody = ExtractMethodBody(source, methodSignature);
+            Assert.Contains("DownloadReportCandidatesFromSelectedDeepResearchSurfaceAsync", selectedSurfaceBody, StringComparison.Ordinal);
+            Assert.DoesNotContain("() => Task.FromResult(false)", selectedSurfaceBody, StringComparison.Ordinal);
+        }
+
         Assert.DoesNotContain("EvaluateBoolInContextAsync(tabId, frame.Value.ContextId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false) ||", source, StringComparison.Ordinal);
         Assert.DoesNotContain("EvaluateBoolOnTargetAsync(tabId, targetId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false) ||", source, StringComparison.Ordinal);
         Assert.DoesNotContain("EvaluateBoolInContextOnTargetAsync(tabId, targetId, context.Value.ContextId, ExportReportMarkdownMenuItemClickExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false) ||", source, StringComparison.Ordinal);
@@ -4689,21 +7056,29 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("document.querySelectorAll('button[aria-haspopup=\"menu\"],button[aria-label]')", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("contentDocument", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("ownerDocument.defaultView", reportExportExpression, StringComparison.Ordinal);
-        Assert.Contains("labels = ['экспорт', 'export']", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("labels = ['экспорт', 'export', 'скач', 'download']", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("hasDownloadIcon(button)", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("opensMenu", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("aria-expanded", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("candidates.length !== 1", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("button.scrollIntoView", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("button.focus();", reportExportExpression, StringComparison.Ordinal);
-        Assert.Contains("button.click();", reportExportExpression, StringComparison.Ordinal);
-        Assert.Contains("document.querySelectorAll('button')", markdownMenuExpression, StringComparison.Ordinal);
+        Assert.Contains("activate(button);", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("element.click();", reportExportExpression, StringComparison.Ordinal);
+        Assert.Contains("directDownloadPath", source, StringComparison.Ordinal);
+        Assert.Contains("TimeSpan.FromSeconds(3)", source, StringComparison.Ordinal);
+        Assert.Contains("button,[role=\"menuitem\"],[role=\"menuitemradio\"]", markdownMenuExpression, StringComparison.Ordinal);
         Assert.Contains("contentDocument", markdownMenuExpression, StringComparison.Ordinal);
         Assert.Contains("ownerDocument.defaultView", markdownMenuExpression, StringComparison.Ordinal);
         Assert.Contains("экспортировать в markdown", markdownMenuExpression, StringComparison.Ordinal);
+        Assert.Contains("скачать как markdown", markdownMenuExpression, StringComparison.Ordinal);
+        Assert.Contains("download markdown", markdownMenuExpression, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("isMarkdownDownload", markdownMenuExpression, StringComparison.Ordinal);
         Assert.Contains("export as markdown", markdownMenuExpression, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("buttons.length !== 1", markdownMenuExpression, StringComparison.Ordinal);
-        Assert.Contains("button.focus();", markdownMenuExpression, StringComparison.Ordinal);
-        Assert.Contains("button.click();", markdownMenuExpression, StringComparison.Ordinal);
+        Assert.Contains("items.length !== 1", markdownMenuExpression, StringComparison.Ordinal);
+        Assert.Contains("item.focus", markdownMenuExpression, StringComparison.Ordinal);
+        Assert.Contains("activate(item);", markdownMenuExpression, StringComparison.Ordinal);
+        Assert.Contains("element.click();", markdownMenuExpression, StringComparison.Ordinal);
         Assert.Contains("report-export-menu", source, StringComparison.Ordinal);
         Assert.Contains("report-export-point-missing", source, StringComparison.Ordinal);
         Assert.Contains("DismissRateLimitDialogAsync", source, StringComparison.Ordinal);
@@ -4719,22 +7094,63 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("completedReportCardVisible", source, StringComparison.Ordinal);
         Assert.Contains("исследование завершено", source, StringComparison.Ordinal);
         Assert.Contains("research completed", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("WindowsClipboard", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("OpenClipboard", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("SetClipboardData", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("CfUnicodeText", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("DllImport", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Get-Clipboard", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Set-Clipboard", source, StringComparison.Ordinal);
         Assert.DoesNotContain("powershell", source, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("ScreenshotSettleDelay", source, StringComparison.Ordinal);
         Assert.Contains("LooksLikePromptTemplate", submitSource, StringComparison.Ordinal);
         Assert.Contains("AuditSubmitReportCandidateSource.OpenedReportCard", source, StringComparison.Ordinal);
+        Assert.Contains("AuditSubmitReportCandidateSource.AssistantMessage", source, StringComparison.Ordinal);
+        Assert.Contains("LastAssistantCopyButtonPointExpression", source, StringComparison.Ordinal);
+        Assert.Contains("LastAssistantCopyButtonClickExpression", source, StringComparison.Ordinal);
+        Assert.Contains("LastAssistantCopyButtonStateExpression", source, StringComparison.Ordinal);
+        Assert.Contains("no-current-assistant-yet", source, StringComparison.Ordinal);
+        Assert.Contains("copy-button-missing", source, StringComparison.Ordinal);
+        Assert.Contains("ClickLatestAssistantCopyButtonDomBestEffortAsync", source, StringComparison.Ordinal);
+        Assert.Contains("button.click(); return true;", source, StringComparison.Ordinal);
+        Assert.Contains("ClipboardReadTextExpression", source, StringComparison.Ordinal);
+        Assert.Contains("navigator.clipboard.readText", source, StringComparison.Ordinal);
+        Assert.Contains("ClipboardWriteCaptureInstallExpression", source, StringComparison.Ordinal);
+        Assert.Contains("ClipboardCapturedWriteTextExpression", source, StringComparison.Ordinal);
+        Assert.Contains("navigator.clipboard.writeText", source, StringComparison.Ordinal);
+        Assert.Contains("navigator.clipboard.write = function", source, StringComparison.Ordinal);
+        Assert.Contains("navigator.clipboard.write did not include text/plain Markdown", source, StringComparison.Ordinal);
+        Assert.Contains("addEventListener('copy'", source, StringComparison.Ordinal);
+        Assert.Contains("doc.getSelection", source, StringComparison.Ordinal);
+        Assert.Contains("__electron2dAuditCopyContext", source, StringComparison.Ordinal);
+        Assert.Contains("nodeWithin(context.assistant", source, StringComparison.Ordinal);
+        Assert.Contains("active.selectionStart", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("return active.value;", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("return typeof active.textContent === 'string' ? active.textContent : '';", source, StringComparison.Ordinal);
+        Assert.Contains("text/plain", source, StringComparison.Ordinal);
+        Assert.Contains("Promise.race", source, StringComparison.Ordinal);
+        Assert.Contains("SystemClipboardTextAccess.TrySetText", source, StringComparison.Ordinal);
+        Assert.Contains("SystemClipboardTextAccess.TryGetText", source, StringComparison.Ordinal);
+        Assert.Contains("E2D-AUDIT-SUBMIT-CLIPBOARD-SENTINEL", source, StringComparison.Ordinal);
+        Assert.Contains("OpenClipboard", source, StringComparison.Ordinal);
+        Assert.Contains("SetClipboardData", source, StringComparison.Ordinal);
+        Assert.Contains("CfUnicodeText", source, StringComparison.Ordinal);
+        Assert.Contains("ClickAtAsync(tabId, buttonState.Point.Value", source, StringComparison.Ordinal);
+        var ordinaryCopyMethodIndex = source.IndexOf(
+            "private static async Task<AuditSubmitOrdinaryCopyResult> CopyLatestAssistantMessageMarkdownAsync",
+            StringComparison.Ordinal);
+        Assert.True(ordinaryCopyMethodIndex >= 0);
+        Assert.True(
+            source.IndexOf("GrantClipboardReadPermissionBestEffortAsync(browser, tabId, cancellationToken)", ordinaryCopyMethodIndex, StringComparison.Ordinal) <
+            source.IndexOf("ClickAtAsync(tabId, buttonState.Point.Value", ordinaryCopyMethodIndex, StringComparison.Ordinal));
+        Assert.True(
+            source.IndexOf("ClickAtAsync(tabId, buttonState.Point.Value", ordinaryCopyMethodIndex, StringComparison.Ordinal) <
+            source.IndexOf("ClickLatestAssistantCopyButtonDomBestEffortAsync(browser, tabId, minimumMessageCount, cancellationToken)", ordinaryCopyMethodIndex, StringComparison.Ordinal));
+        Assert.True(
+            source.IndexOf("ClickLatestAssistantCopyButtonDomBestEffortAsync(browser, tabId, minimumMessageCount, cancellationToken)", ordinaryCopyMethodIndex, StringComparison.Ordinal) <
+            source.IndexOf("ReadClipboardTextAsync(", ordinaryCopyMethodIndex, StringComparison.Ordinal));
+        Assert.Contains("minimumMessageCount", source, StringComparison.Ordinal);
+        Assert.Contains("copy-turn-action-button", source, StringComparison.Ordinal);
         Assert.DoesNotContain("ReadAssistantMessagesAsync", source, StringComparison.Ordinal);
         Assert.DoesNotContain("AssistantMessagesExpression", source, StringComparison.Ordinal);
         Assert.DoesNotContain("DeepResearchReportTextsExpression", source, StringComparison.Ordinal);
         Assert.DoesNotContain("const target = candidates[0]", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("'main'", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("'main'", reportExportExpression, StringComparison.Ordinal);
         Assert.Contains("ReattachCdpAsync", source, StringComparison.Ordinal);
         Assert.Contains("DetachOwnedTabBestEffortAsync", source, StringComparison.Ordinal);
         Assert.Contains("\"detach\"", source, StringComparison.Ordinal);
@@ -4751,7 +7167,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("\"ping\"", source, StringComparison.Ordinal);
         Assert.Contains("\"pong\"", source, StringComparison.Ordinal);
         Assert.Contains("Unsupported client method", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("new MouseEvent", source, StringComparison.Ordinal);
+        Assert.Contains("new EventCtor(type, eventOptions)", source, StringComparison.Ordinal);
         Assert.DoesNotMatch(
             new Regex("if \\(decision\\.Action == AuditSubmitPollingAction\\.Wait\\).*?continue;", RegexOptions.Singleline),
             source);
@@ -4767,6 +7183,480 @@ public sealed class RepositoryBuildToolTests
         Assert.Matches(
             new Regex("WaitForConversationMessagesAsync\\(browser, tabId, minimumMessageCount: 1, timeout: TimeSpan\\.FromMinutes\\(1\\).*?DismissRateLimitDialogAsync\\(browser, tabId, screenshots, cancellationToken\\).*?reloaded-", RegexOptions.Singleline),
             source);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchItemSelectorUsesConnectorMetadataWhenVisibleTextIsMissing()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-selector");
+
+        var result = await RunAuditSubmitDeepResearchItemFixtureAsync(workspace.Root, expression);
+
+        Assert.True(result.ReturnedPoint);
+        Assert.InRange(result.X, 309.9, 310.1);
+        Assert.InRange(result.Y, 327.9, 328.1);
+        Assert.True(result.MenuItemScrolled);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchItemSelectorClicksMenuItemInsideWidePopover()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-popover");
+
+        var result = await RunAuditSubmitDeepResearchItemFixtureAsync(
+            workspace.Root,
+            expression,
+            wrapInPopover: true);
+
+        Assert.True(result.ReturnedPoint);
+        Assert.InRange(result.X, 309.9, 310.1);
+        Assert.InRange(result.Y, 327.9, 328.1);
+        Assert.True(result.MenuItemScrolled);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchItemSelectorClicksPlainChatGptMenuRow()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-plain-row");
+
+        var result = await RunAuditSubmitDeepResearchItemFixtureAsync(
+            workspace.Root,
+            expression,
+            plainTextMenuItem: true);
+
+        Assert.True(result.ReturnedPoint);
+        Assert.InRange(result.X, 459.9, 460.1);
+        Assert.InRange(result.Y, 317.9, 318.1);
+        Assert.True(result.MenuItemScrolled);
+        Assert.False(result.LabelScrolled);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchItemSelectorUsesVisibleEnabledPlusForMenuBounds()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchItemPointExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-visible-plus");
+
+        var result = await RunAuditSubmitDeepResearchItemFixtureAsync(
+            workspace.Root,
+            expression,
+            stalePlusBeforeVisible: true);
+
+        Assert.True(result.ReturnedPoint);
+        Assert.InRange(result.X, 309.9, 310.1);
+        Assert.InRange(result.Y, 327.9, 328.1);
+        Assert.True(result.MenuItemScrolled);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectionClicksAlreadyOpenMenuItemBeforeTogglingPlus()
+    {
+        var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync();
+
+        Assert.Equal(
+            [
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync"
+            ],
+            trace.Calls);
+        Assert.Equal(1, trace.OpenItemClicks);
+        Assert.Equal(0, trace.MenuOpenAttempts);
+        Assert.Equal(0, trace.MenuItemClicks);
+        Assert.Equal(0, trace.MenuCaptures);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectionWaitsWhenComposerMenuIsAlreadyOpen()
+    {
+        var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync(
+            composerMenuOpenBeforeToggle: true,
+            openItemFailuresBeforeSuccess: 2);
+
+        Assert.Equal(
+            [
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "IsComposerMenuOpenAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "IsComposerMenuOpenAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync"
+            ],
+            trace.Calls);
+        Assert.Equal(3, trace.OpenItemClicks);
+        Assert.Equal(2, trace.MenuOpenChecks);
+        Assert.Equal(0, trace.MenuOpenAttempts);
+        Assert.Equal(0, trace.MenuItemClicks);
+        Assert.Equal(0, trace.MenuCaptures);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectionWaitsWhenComposerPlusIsExpandedBeforeRowsRender()
+    {
+        var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync(
+            composerMenuExpandedBeforeRows: true,
+            openItemFailuresBeforeSuccess: 2);
+
+        Assert.Equal(
+            [
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "IsComposerMenuOpenAsync",
+                "IsComposerMenuExpandedAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "IsComposerMenuOpenAsync",
+                "IsComposerMenuExpandedAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync"
+            ],
+            trace.Calls);
+        Assert.Equal(3, trace.OpenItemClicks);
+        Assert.Equal(2, trace.MenuOpenChecks);
+        Assert.Equal(2, trace.MenuExpandedChecks);
+        Assert.Equal(0, trace.MenuOpenAttempts);
+        Assert.Equal(0, trace.MenuItemClicks);
+        Assert.Equal(0, trace.MenuCaptures);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectionWaitsAfterOpeningMenuBeforeRetogglingPlus()
+    {
+        var trace = await InvokeAuditSubmitDeepResearchSelectionLoopAsync(
+            openItemFailuresBeforeSuccess: 3,
+            menuItemFailuresBeforeSuccess: 1);
+
+        Assert.Equal(
+            [
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "IsComposerMenuOpenAsync",
+                "IsComposerMenuExpandedAsync",
+                "TryOpenMenuAsync",
+                "DelayAsync:750",
+                "CaptureMenuAsync",
+                "TryClickMenuItemAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "IsComposerMenuOpenAsync",
+                "IsComposerMenuExpandedAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "IsComposerMenuOpenAsync",
+                "IsComposerMenuExpandedAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync",
+                "TryClickOpenItemAsync",
+                "DelayAsync:500",
+                "IsSelectedAsync"
+            ],
+            trace.Calls);
+        Assert.Equal(4, trace.OpenItemClicks);
+        Assert.Equal(3, trace.MenuOpenChecks);
+        Assert.Equal(3, trace.MenuExpandedChecks);
+        Assert.Equal(1, trace.MenuOpenAttempts);
+        Assert.Equal(1, trace.MenuItemClicks);
+        Assert.Equal(1, trace.MenuCaptures);
+    }
+
+    [Fact]
+    public async Task AuditSubmitPromptSubmissionUsesOrdinaryChatByDefault()
+    {
+        var trace = await InvokeAuditSubmitPromptSubmissionAsync(deepResearch: false);
+
+        Assert.Equal(
+            [
+                "AttachFilesAsync:T-0238-audit-r40.zip",
+                "CaptureAsync:files-attached",
+                "FillPromptAsync",
+                "CaptureAsync:prompt-filled",
+                "RequirePromptPayloadReadyAsync",
+                "ReadConversationMessageCountAsync",
+                "ClickSendAsync"
+            ],
+            trace.Calls);
+        Assert.Equal(7, trace.MessageCountBeforeSend);
+    }
+
+    [Fact]
+    public async Task AuditSubmitPromptSubmissionSelectsDeepResearchBeforePromptFillWhenRequested()
+    {
+        var trace = await InvokeAuditSubmitPromptSubmissionAsync(deepResearch: true);
+
+        Assert.Equal(
+            [
+                "AttachFilesAsync:T-0238-audit-r40.zip",
+                "CaptureAsync:files-attached",
+                "EnableDeepResearchAsync",
+                "CaptureAsync:deep-research",
+                "FillPromptAsync",
+                "CaptureAsync:prompt-filled",
+                "RequireDeepResearchSelectedAsync",
+                "RequirePromptPayloadReadyAsync",
+                "ReadConversationMessageCountAsync",
+                "ClickSendAsync"
+            ],
+            trace.Calls);
+        Assert.Equal(7, trace.MessageCountBeforeSend);
+    }
+
+    [Fact]
+    public async Task AuditSubmitPromptPayloadReadyRequiresPromptTextAndAuditZipChip()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationPromptPayloadReadyExpressionAsync(
+            "Audit body",
+            ["T-0238-audit-r40.zip"]);
+        using var workspace = TemporaryDirectory.Create("audit-submit-payload-ready");
+
+        Assert.True(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression));
+        Assert.True(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, includeAttachmentFilenameChild: true));
+        Assert.False(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, promptText: string.Empty));
+        Assert.False(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, includeAttachment: false));
+        Assert.False(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, includeAttachment: false, includePlainFilenameLabel: true));
+        Assert.False(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, expression, attachmentInHistory: true));
+
+        var deepResearchMessageExpression = await GetAuditSubmitCodexChromeAutomationPromptPayloadReadyExpressionAsync(
+            "@Глубокое исследование\n\nAudit body",
+            ["T-0238-audit-r40.zip"]);
+        Assert.True(await RunAuditSubmitPromptPayloadReadyFixtureAsync(workspace.Root, deepResearchMessageExpression));
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchComposerMenuOpenRequiresVisibleMenuRowsNearPlus()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchComposerMenuOpenExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-composer-menu-open");
+
+        var expandedOnly = await RunAuditSubmitDeepResearchComposerMenuOpenFixtureAsync(
+            workspace.Root,
+            expression,
+            plusAriaExpanded: true,
+            includePlainMenuRow: false);
+
+        Assert.False(expandedOnly);
+
+        var visiblePlainRow = await RunAuditSubmitDeepResearchComposerMenuOpenFixtureAsync(
+            workspace.Root,
+            expression,
+            plusAriaExpanded: false,
+            includePlainMenuRow: true);
+
+        Assert.True(visiblePlainRow);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorFindsConnectorMetadataSiblingNearPrompt()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-selected");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(workspace.Root, expression);
+
+        Assert.True(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorAcceptsConnectorMetadataWithoutInlineMarker()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-selected-no-inline");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            connectorMetadata: true);
+
+        Assert.True(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsHiddenConnectorDescendantInsidePrompt()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-hidden-descendant");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            connectorMetadata: true,
+            pillInsidePrompt: true,
+            pillVisible: false);
+
+        Assert.False(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsMenuItemDescendantInsidePrompt()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-menu-descendant");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            menuItem: true,
+            connectorMetadata: true,
+            pillInsidePrompt: true);
+
+        Assert.False(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsDistantNestedConnectorInPageAncestor()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-page-ancestor");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            connectorMetadata: true,
+            distantConnectorInPageAncestor: true);
+
+        Assert.False(selected);
+    }
+
+    [Theory]
+    [InlineData("button-tag")]
+    [InlineData("role-button")]
+    [InlineData("role-menuitem")]
+    [InlineData("role-option")]
+    [InlineData("plain-menu-row")]
+    [InlineData("plain-data-fill-tabindex")]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsConnectorDescendantInsideInteractiveAncestor(string interactiveAncestorKind)
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-interactive-ancestor");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            connectorMetadata: true,
+            connectorChildInteractiveAncestorKind: interactiveAncestorKind);
+
+        Assert.False(selected);
+    }
+
+    [Theory]
+    [InlineData("plain-menu-row")]
+    [InlineData("plain-data-fill-tabindex")]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsPlainMenuRowWithDirectConnectorMetadata(string plainSelectedRowKind)
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-plain-selected-row");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            connectorMetadata: true,
+            plainSelectedRowKind: plainSelectedRowKind);
+
+        Assert.False(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsInteractiveInlineSelectionPill()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-interactive-inline");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: true,
+            menuItem: true,
+            connectorMetadata: true);
+
+        Assert.False(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsMenuItemNearPrompt()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-menu-item");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            menuItem: true);
+
+        Assert.False(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitDeepResearchSelectedSelectorRejectsPlainTextMentionNearPrompt()
+    {
+        var expression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-deep-research-plain-text");
+
+        var selected = await RunAuditSubmitDeepResearchSelectedFixtureAsync(
+            workspace.Root,
+            expression,
+            inlineSelectionPill: false,
+            menuItem: false,
+            connectorMetadata: false,
+            text: "Глубокое исследование");
+
+        Assert.False(selected);
+    }
+
+    [Fact]
+    public async Task AuditSubmitFillPromptPreservesEnglishDeepResearchSelectionPill()
+    {
+        var fillExpression = await GetAuditSubmitCodexChromeAutomationFillPromptExpressionAsync("Audit body");
+        var selectedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-fill-preserves-deep-research");
+
+        var result = await RunAuditSubmitFillPromptPreservationFixtureAsync(
+            workspace.Root,
+            fillExpression,
+            selectedExpression);
+
+        Assert.True(result.FillSucceeded);
+        Assert.True(result.PillPreserved);
+        Assert.True(result.SelectedAfterFill);
+    }
+
+    [Fact]
+    public async Task AuditSubmitFillPromptPreservesConnectorMetadataPillWithoutInlineMarker()
+    {
+        var fillExpression = await GetAuditSubmitCodexChromeAutomationFillPromptExpressionAsync("Audit body");
+        var selectedExpression = await GetAuditSubmitCodexChromeAutomationStringConstantAsync("DeepResearchSelectedExpression");
+        using var workspace = TemporaryDirectory.Create("audit-submit-fill-preserves-deep-research-no-inline");
+
+        var result = await RunAuditSubmitFillPromptPreservationFixtureAsync(
+            workspace.Root,
+            fillExpression,
+            selectedExpression,
+            inlineSelectionPill: false);
+
+        Assert.True(result.FillSucceeded);
+        Assert.True(result.PillPreserved);
+        Assert.True(result.SelectedAfterFill);
     }
 
     [Fact]
@@ -5361,7 +8251,7 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task AuditPackageAllowsSyntheticSecretPlaceholdersFollowedByProse()
+    public async Task AuditPackageRejectsSyntheticSecretPlaceholdersFollowedByProseInTaskOwnedFiles()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-prose-secret-placeholders");
         const string taskId = "T-0001";
@@ -5381,8 +8271,75 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+    }
+
+    [Fact]
+    public async Task AuditPackageAllowsLegacyPlaceholderProseInRepoBeforeSnapshots()
+    {
+        var legacyTokenPlaceholder = SecretAssignment("token", "...");
+        var legacyPasswordPlaceholder = SecretAssignment("password", "<redacted>");
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-before-placeholder-prose",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["docs/release-management/audit-package.md"] = $"""
+                # Historical audit package
+
+                TRX evidence may include display names with synthetic examples like `{legacyTokenPlaceholder}`, не должны блокировать включение штатного TRX. Если настоящее секретное присваивание или блок приватного ключа попадает в текст результата теста, TRX всё равно отклоняется. Перед записью TRX в архив команда нормализует служебные XML-атрибуты с путями сборки, например `codeBase` и `storage`: путь к локальному корню репозитория заменяется на `<repo-root>`, чтобы архив не раскрывал путь машины. На macOS та же нормализация учитывает системные варианты одного временного пути через `/var` и `/private/var`, потому что test runner может записать один вариант, а проверка репозитория работать с другим.
+
+                Документальные упоминания `secretScanPolicy`, `secret`, `token`, `password` или `api_key` без секретного значения не считаются утечкой. Синтетические замещающие примеры вроде `{legacyTokenPlaceholder}` или `{legacyPasswordPlaceholder}` тоже допустимы, когда они описывают защитное правило. Если после такого замещающего маркера в той же обычной строке текста продолжается предложение, сканирование отделяет маркер по границе пунктуации, кавычек, обратных кавычек или пробела. Любое конкретное непустое значение после `secret`, `token`, `password`, `api_key` или `api-key` всё ещё считается потенциальным секретом, в том числе когда после значения продолжается обычный текст.
+                """
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-package.md", """
+        # Current audit package
+
+        Current documentation describes placeholder values without inline secret-assignment prose.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
         Assert.Equal(0, package.ExitCode);
-        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-PACKAGE-CREATED");
+        var zipPath = fixture.ZipPath(taskId);
+        Assert.Contains(
+            SecretAssignment("token", "..."),
+            ReadZipEntryText(zipPath, "repo-before/docs/release-management/audit-package.md"),
+            StringComparison.Ordinal);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-before-placeholder-prose");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+    }
+
+    [Fact]
+    public async Task AuditPackageRejectsConcreteSecretAssignmentsInRepoBeforeSnapshots()
+    {
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-before-real-secret",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["docs/release-management/audit-package.md"] = $"""
+                # Historical audit package
+
+                {TokenSecretAssignment(SyntheticTokenSecretValue())}
+                """
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-package.md", """
+        # Current audit package
+
+        Current documentation removed the unsafe assignment.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
     }
 
     [Fact]
@@ -5738,6 +8695,51 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
         Assert.False(Directory.Exists(Path.Combine(cleanRepo.Root, "obj")));
         Assert.False(Directory.Exists(Path.Combine(cleanRepo.Root, "bin")));
+    }
+
+    [Fact]
+    public async Task AuditPackageVerifyCleansExtraIgnoredDirectoriesWhenExpectedIgnoredFilesRemain()
+    {
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-verify-ignored-directory-with-expected-file",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                [".gitignore"] = "bin/\nobj/\ndocs/verdicts/\n"
+            });
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r01.md";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ignored directories are cleaned even when expected ignored files remain.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        Fixture previous report.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            previousVerdictChain: [previousVerdictPath]);
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+        Assert.Equal(0, package.ExitCode);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-ignored-directory-with-expected-file");
+        WriteText(
+            cleanRepo.Root,
+            "eng/Electron2D.Build/obj/Debug/net10.0/Electron2D.Build.AssemblyInfo.cs",
+            "// ignored build output\n");
+
+        var verify = await RunAuditVerifyAsync(fixture, fixture.ZipPath(taskId), cleanRepo.Root);
+
+        Assert.True(
+            verify.ExitCode == 0,
+            $"audit package verify failed with exit code {verify.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{verify.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{verify.Stderr}");
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-PACKAGE-VERIFIED");
+        Assert.False(Directory.Exists(Path.Combine(cleanRepo.Root, "eng", "Electron2D.Build", "obj")));
+        Assert.True(File.Exists(Path.Combine(cleanRepo.Root, previousVerdictPath.Replace('/', Path.DirectorySeparatorChar))));
     }
 
     [Fact]
@@ -6178,7 +9180,219 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
-    public async Task AuditPackageIncludesPreviousVerdictWithQuotedSecretEvidenceVerbatim()
+    public async Task AuditPackageAllowsPlaceholderWindowsUserPathsInPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-placeholder-path");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var placeholderPath = string.Concat("C", ":/Users/example/source.md");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: ACCEPT
+
+        OUT_OF_SCOPE_NOTE:
+        - Внешний отчёт цитирует синтетический пример пути: `{placeholderPath}`.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var zipPath = fixture.ZipPath(taskId);
+        Assert.Contains(placeholderPath, ReadZipEntryText(zipPath, $"repo-after/{previousVerdictPath}"), StringComparison.Ordinal);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-previous-verdict-placeholder-path");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+    }
+
+    [Fact]
+    public async Task AuditPackageAllowsPlaceholderSecretValuesInPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-placeholder-secret");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var placeholderEvidence = TokenSecretAssignment("<non-placeholder>");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: NEEDS_FIXES
+
+        B1
+
+        Внешний отчёт цитирует пример без реального значения секрета:
+        {placeholderEvidence}
+
+        Это не реальное значение секрета.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+        var zipPath = fixture.ZipPath(taskId);
+        Assert.Contains(placeholderEvidence, ReadZipEntryText(zipPath, $"repo-after/{previousVerdictPath}"), StringComparison.Ordinal);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-previous-verdict-placeholder-secret");
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+    }
+
+    [Fact]
+    public async Task AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-reviewer-placeholder");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var reviewerPhrase = TokenSecretAssignment(string.Concat("<non-placeholder> или private key marker, и убедиться, что audit package или audit package verify завершается с E2D-BUILD-AUDIT-SECRET-DETECTED. Отдельный тест с ", "C", ":/Users/example/source.md в previous verdict должен продолжать проходить, если это принятое исключение."));
+        var redactedConcreteSecret = TokenSecretAssignment(string.Concat("<redacted> concrete-secret или ", "token", "=<non-placeholder> concrete-secret считается безопасной."));
+        var redactedConcreteValue = TokenSecretAssignment(string.Concat("<redacted> concrete-value или ", "token", "=<non-placeholder> concrete-value, и убедиться, что packaging/verify завершается с E2D-BUILD-AUDIT-SECRET-DETECTED. Положительный тест с одиночным ", "token", "=<non-placeholder> может остаться, если проект осознанно считает это redacted placeholder."));
+        var r60ReviewerExample = TokenSecretAssignment("<redacted> concrete-secret additional-value проходит через тот же путь, что и точная reviewer-фраза.");
+        var r60ReviewerVerification = TokenSecretAssignment("<redacted> concrete-secret additional-value или аналогичную строку с reviewer-префиксом и suffix. Packaging/verify должен отказать с E2D-BUILD-AUDIT-SECRET-DETECTED. Отдельный тест должен подтвердить, что точная reviewer-фраза допускается только в previous verdict-файле, если это остаётся частью контракта.");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: NEEDS_FIXES
+
+        External reviewer quoted a neutral placeholder phrase:
+        {reviewerPhrase}
+
+        External reviewer quoted synthetic secret examples:
+        {redactedConcreteSecret}
+        {redactedConcreteValue}
+
+        External reviewer quoted a later exact blocker example:
+        {r60ReviewerExample}
+        {r60ReviewerVerification}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.Equal(0, package.ExitCode);
+
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-reviewer-placeholder");
+        var verify = await RunAuditVerifyAsync(fixture, fixture.ZipPath(taskId), cleanRepo.Root);
+
+        Assert.Equal(0, verify.ExitCode);
+    }
+
+    [Fact]
+    public async Task AuditPackageRejectsReviewerPlaceholderPhraseSuffixInPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-reviewer-placeholder-suffix");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var reviewerPhraseWithSuffix = TokenSecretAssignment("<redacted> concrete-secret unexpected-suffix");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: NEEDS_FIXES
+
+        External reviewer quoted an unsafe reviewer phrase suffix:
+        {reviewerPhraseWithSuffix}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+    }
+
+    [Fact]
+    public async Task AuditPackageRejectsReviewerPlaceholderPhraseInTaskOwnedFiles()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-task-owned-reviewer-placeholder");
+        const string taskId = "T-0001";
+        var reviewerPhrase = TokenSecretAssignment(string.Concat("<redacted> concrete-secret или ", "token", "=<non-placeholder> concrete-secret считается безопасной."));
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        Task-owned files must not use previous-verdict reviewer phrase exceptions:
+        {reviewerPhrase}
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+    }
+
+    [Fact]
+    public async Task AuditPackageRejectsPlaceholderSecretValuesWithConcreteSuffixInPreviousVerdicts()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-placeholder-secret-suffix");
+        const string taskId = "T-0001";
+        const string previousVerdictPath = "docs/verdicts/release-management/t-0001-audit-r00.md";
+        var placeholderWithSuffix = TokenSecretAssignment("<non-placeholder> concrete-reviewer-evidence");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves ordinary task documentation still restores.
+        """);
+        fixture.WriteTextFile(previousVerdictPath, $"""
+        VERDICT: NEEDS_FIXES
+
+        Исторический внешний ответ процитировал строку с unsafe placeholder prefix:
+        {placeholderWithSuffix}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            previousVerdictChain: [previousVerdictPath]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+    }
+
+    [Fact]
+    public async Task AuditPackageRejectsPlaceholderSecretValuesWithConcreteSuffixInTaskOwnedFiles()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-task-owned-placeholder-secret-suffix");
+        const string taskId = "T-0001";
+        var placeholderWithSuffix = TokenSecretAssignment("<redacted> task-owned-concrete-evidence");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        This task-owned file must reject placeholder prefixes followed by concrete values:
+        {placeholderWithSuffix}
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+    }
+
+    [Fact]
+    public async Task AuditPackageRejectsSecretValuesInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-secret-evidence");
         const string taskId = "T-0001";
@@ -6203,22 +9417,14 @@ public sealed class RepositoryBuildToolTests
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
-        Assert.Equal(0, package.ExitCode);
-        var zipPath = fixture.ZipPath(taskId);
-        var patch = ReadZipEntryText(zipPath, $"{taskId}.patch");
-        using var restoreManifest = JsonDocument.Parse(ReadZipEntryText(zipPath, "repo-file-hashes.json"));
-
-        Assert.Contains(previousVerdictPath, patch, StringComparison.Ordinal);
-        Assert.Contains(quotedSecretEvidence, patch, StringComparison.Ordinal);
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-SECRET-DETECTED");
+        using var diagnostics = ReadDiagnostics(package);
         Assert.Contains(
-            restoreManifest.RootElement.GetProperty("repoFiles").EnumerateArray(),
-            file => string.Equals(file.GetProperty("path").GetString(), previousVerdictPath, StringComparison.Ordinal));
-
-        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-previous-verdict-secret-evidence");
-        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
-
-        Assert.Equal(0, verify.ExitCode);
-        Assert.Contains(quotedSecretEvidence, File.ReadAllText(Path.Combine(cleanRepo.Root, previousVerdictPath.Replace('/', Path.DirectorySeparatorChar)), Encoding.UTF8), StringComparison.Ordinal);
+            diagnostics.RootElement.EnumerateArray(),
+            diagnostic =>
+                string.Equals(diagnostic.GetProperty("code").GetString(), "E2D-BUILD-AUDIT-SECRET-DETECTED", StringComparison.Ordinal) &&
+                diagnostic.GetProperty("message").GetString()?.Contains(previousVerdictPath, StringComparison.Ordinal) == true);
     }
 
     [Fact]
@@ -6376,6 +9582,16 @@ public sealed class RepositoryBuildToolTests
         return method.Invoke(null, [CreateAuditSubmitReportCandidateArray(assembly, candidates), true])!;
     }
 
+    private static async Task<object[]> InvokeAuditFollowupFindingExtractionAsync(string reportPath, string report)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var parserType = assembly.GetType("Electron2D.Build.AuditFollowupReportParser", throwOnError: true)!;
+        var method = parserType.GetMethod("ExtractActionableFindings", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(parserType.FullName, "ExtractActionableFindings");
+        var findings = Assert.IsAssignableFrom<IEnumerable>(method.Invoke(null, [reportPath, report])!);
+        return findings.Cast<object>().ToArray();
+    }
+
     private static async Task<(bool Succeeded, string? Report, string? Code)> InvokeAuditSubmitDownloadedReportValidationAsync(params (string Text, string Source)[] candidates)
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
@@ -6412,6 +9628,37 @@ public sealed class RepositoryBuildToolTests
         {
             return (false, GetProperty<string>(ex.InnerException, "Code"));
         }
+    }
+
+    private static async Task<(bool Succeeded, string? Code)> InvokeAuditSubmitOutputReportValidationAsync(string report, string outputPath)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var commandType = assembly.GetType("Electron2D.Build.AuditSubmitCommand", throwOnError: true)!;
+        var resolveOutputIdentity = commandType.GetMethod("ResolveAuditReportOutputIdentity", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(commandType.FullName, "ResolveAuditReportOutputIdentity");
+        var validateReport = commandType.GetMethod("ValidateReportMatchesSubmitIteration", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(commandType.FullName, "ValidateReportMatchesSubmitIteration");
+        var outputIdentity = resolveOutputIdentity.Invoke(null, [outputPath]);
+        Assert.NotNull(outputIdentity);
+
+        try
+        {
+            validateReport.Invoke(null, [report, outputIdentity, outputPath]);
+            return (true, null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, GetProperty<string>(ex.InnerException, "Code"));
+        }
+    }
+
+    private static async Task<object> InvokeAuditSubmitParseOptionsAsync(params string[] args)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var commandType = assembly.GetType("Electron2D.Build.AuditSubmitCommand", throwOnError: true)!;
+        var parseOptions = commandType.GetMethod("ParseOptions", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(commandType.FullName, "ParseOptions");
+        return parseOptions.Invoke(null, [args])!;
     }
 
     private static async Task<(bool Succeeded, int? ContextId, string? Code)> InvokeAuditSubmitReadyFrameContextSelectionAsync(params (string TargetId, string FrameId, int ContextId, bool IsRoot)[] contexts)
@@ -6485,15 +9732,24 @@ public sealed class RepositoryBuildToolTests
         }
     }
 
-    private static async Task<(bool Succeeded, string? TargetId, string? Code)> InvokeAuditSubmitReadyTargetSelectionAsync(params string[] readyTargetIds)
+    private static Task<(bool Succeeded, string? TargetId, string? Code)> InvokeAuditSubmitReadyTargetSelectionAsync(params string[] readyTargetIds)
+    {
+        return InvokeAuditSubmitReadyTargetSelectionAsync(allowLatestWhenMultiple: false, readyTargetIds);
+    }
+
+    private static async Task<(bool Succeeded, string? TargetId, string? Code)> InvokeAuditSubmitReadyTargetSelectionAsync(bool allowLatestWhenMultiple, params string[] readyTargetIds)
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
         var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
-        var method = automationType.GetMethod("SelectSingleReadyDeepResearchTargetId", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-            ?? throw new MissingMethodException(automationType.FullName, "SelectSingleReadyDeepResearchTargetId");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .SingleOrDefault(method =>
+                string.Equals(method.Name, "SelectReadyDeepResearchTargetId", StringComparison.Ordinal) &&
+                method.GetParameters().Length == 2)
+            ?? throw new MissingMethodException(automationType.FullName, "SelectReadyDeepResearchTargetId");
         try
         {
-            return (true, (string?)method.Invoke(null, [readyTargetIds.ToList()]), null);
+            return (true, (string?)method.Invoke(null, [readyTargetIds.ToList(), allowLatestWhenMultiple]), null);
         }
         catch (TargetInvocationException ex) when (ex.InnerException is not null)
         {
@@ -6501,13 +9757,2566 @@ public sealed class RepositoryBuildToolTests
         }
     }
 
-    private static async Task<bool> InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(bool hasVisibleIframe, bool hasFrameContext)
+    private static async Task<(bool Succeeded, string? TargetId, string? Code)> InvokeAuditSubmitReadyTargetSelectionAsync(
+        string[] ignoredTargetIds,
+        bool allowLatestWhenMultiple,
+        params string[] readyTargetIds)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .SingleOrDefault(method =>
+                string.Equals(method.Name, "SelectReadyDeepResearchTargetId", StringComparison.Ordinal) &&
+                method.GetParameters().Length == 3);
+        if (method is null)
+        {
+            return (false, null, "E2D-BUILD-AUDIT-SUBMIT-READY-TARGET-SELECTION-OVERLOAD-MISSING");
+        }
+
+        try
+        {
+            return (true, (string?)method.Invoke(null, [readyTargetIds.ToList(), ignoredTargetIds.ToHashSet(StringComparer.Ordinal), allowLatestWhenMultiple]), null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, null, GetProperty<string>(ex.InnerException, "Code"));
+        }
+    }
+
+    private static async Task<(bool Succeeded, string? TargetId, string? Code)> InvokeAuditSubmitReadyTargetSelectionAsync(
+        string[] targetIds,
+        string[] readyTargetIds,
+        string[] ignoredTargetIds,
+        bool allowLatestWhenMultiple)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .SingleOrDefault(method =>
+                string.Equals(method.Name, "SelectReadyDeepResearchTargetId", StringComparison.Ordinal) &&
+                method.GetParameters().Length == 4);
+        if (method is null)
+        {
+            return (false, null, "E2D-BUILD-AUDIT-SUBMIT-READY-TARGET-SELECTION-ORDERED-OVERLOAD-MISSING");
+        }
+
+        try
+        {
+            return (true, (string?)method.Invoke(null, [targetIds.ToList(), readyTargetIds.ToList(), ignoredTargetIds.ToHashSet(StringComparer.Ordinal), allowLatestWhenMultiple]), null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, null, GetProperty<string>(ex.InnerException, "Code"));
+        }
+    }
+
+    private static async Task<(bool Succeeded, AuditSubmitReportCandidateDownloadTrace Trace, string? Code)> InvokeAuditSubmitReportCandidateDownloadFlowAsync(bool waitForNewerTarget)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitReportCandidateDownloadDriver", BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(automationType.FullName, "IAuditSubmitReportCandidateDownloadDriver");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .SingleOrDefault(method =>
+                string.Equals(method.Name, "DownloadReportCandidatesAsync", StringComparison.Ordinal) &&
+                method.GetParameters().Length == 2 &&
+                method.GetParameters()[0].ParameterType == driverType)
+            ?? throw new MissingMethodException(automationType.FullName, "DownloadReportCandidatesAsync");
+
+        var resultType = assembly.GetType("Electron2D.Build.AuditSubmitReportCandidateResult", throwOnError: true)!;
+        var noSurface = resultType
+            .GetProperty("NoSurface", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)!
+            .GetValue(null)!;
+        var selectionType = assembly.GetType("Electron2D.Build.AuditSubmitDeepResearchTargetSelection", throwOnError: true)!;
+        var candidateArray = CreateAuditSubmitReportCandidateArray(
+            assembly,
+            [("VERDICT: NEEDS_FIXES\n\nTASK_ASSESSMENT:\n- current report\n\nBLOCKERS:\n- B1\n\nEVIDENCE_REVIEW:\n- checked\n\nRISKS_AND_NOTES:\nNone\n\nCLOSURE_DECISION:\nOpen\n", "OpenedReportCard")]);
+        var targetResult = Activator.CreateInstance(resultType, [true, candidateArray])!;
+        var selection = Activator.CreateInstance(selectionType, [waitForNewerTarget ? null : "target-current", waitForNewerTarget])!;
+        var proxy = DispatchProxy.Create(driverType, typeof(AuditSubmitReportCandidateDownloadDriverProxy));
+        var typedProxy = Assert.IsAssignableFrom<AuditSubmitReportCandidateDownloadDriverProxy>(proxy);
+        typedProxy.NoSurfaceResult = noSurface;
+        typedProxy.Selection = selection;
+        typedProxy.TargetResult = targetResult;
+        typedProxy.PageCandidates = candidateArray;
+
+        try
+        {
+            var task = (Task)method.Invoke(null, [proxy, CancellationToken.None])!;
+            await task.ConfigureAwait(false);
+            var candidates = (Array)task.GetType().GetProperty("Result")!.GetValue(task)!;
+            return (true, typedProxy.ToTrace(candidates.Length), null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, typedProxy.ToTrace(0), GetProperty<string>(ex.InnerException, "Code"));
+        }
+    }
+
+    private static async Task<(bool Succeeded, AuditSubmitDumpDomTrace Trace, string? Code)> InvokeAuditSubmitDumpDomFlowAsync(string dumpDirectory)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitDomDumpDriver", BindingFlags.NonPublic);
+        if (driverType is null)
+        {
+            return (false, new AuditSubmitDumpDomTrace([]), "IAuditSubmitDomDumpDriver missing");
+        }
+
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .SingleOrDefault(method =>
+                string.Equals(method.Name, "DumpDomFromUrlAsync", StringComparison.Ordinal) &&
+                method.GetParameters().Length == 4 &&
+                method.GetParameters()[0].ParameterType == driverType);
+        if (method is null)
+        {
+            return (false, new AuditSubmitDumpDomTrace([]), "DumpDomFromUrlAsync driver overload missing");
+        }
+
+        var createProxy = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), BindingFlags.Static | BindingFlags.Public, [typeof(Type), typeof(Type)])
+            ?? throw new MissingMethodException(typeof(DispatchProxy).FullName, nameof(DispatchProxy.Create));
+        var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitDomDumpDriverProxy)])
+            ?? throw new InvalidOperationException("DOM dump proxy was not created.");
+        var typedProxy = Assert.IsAssignableFrom<AuditSubmitDomDumpDriverProxy>(proxy);
+        var options = CreateAuditSubmitOptions(assembly, dumpDirectory);
+
+        try
+        {
+            var task = (Task<string>)method.Invoke(null, [proxy, options, dumpDirectory, CancellationToken.None])!;
+            _ = await task.ConfigureAwait(false);
+            return (true, typedProxy.ToTrace(), null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, typedProxy.ToTrace(), GetProperty<string>(ex.InnerException, "Code") ?? ex.InnerException.GetType().Name);
+        }
+    }
+
+    private static object CreateAuditSubmitOptions(Assembly assembly, string domDumpDirectory)
+    {
+        var optionsType = assembly.GetType("Electron2D.Build.AuditSubmitOptions", throwOnError: true)!;
+        return Activator.CreateInstance(
+            optionsType,
+            [
+                null,
+                Path.Combine(domDumpDirectory, "audit-report.md"),
+                null,
+                "https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/c/fixture",
+                null,
+                60,
+                1,
+                1,
+                false,
+                false,
+                true,
+                domDumpDirectory,
+                null,
+                "fixture-session",
+                "fixture-turn",
+                false,
+                false,
+                false,
+                false,
+                false
+            ])!;
+    }
+
+    private static async Task<bool> InvokeAuditSubmitDeepResearchFrameSurfaceDecisionAsync(bool hasVisibleIframe, bool hasFrameContext, bool hasReadyReport)
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
         var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
         var method = automationType.GetMethod("CanUseDeepResearchFrameSurface", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
             ?? throw new MissingMethodException(automationType.FullName, "CanUseDeepResearchFrameSurface");
-        return (bool)method.Invoke(null, [hasVisibleIframe, hasFrameContext])!;
+        return (bool)method.Invoke(null, [hasVisibleIframe, hasFrameContext, hasReadyReport])!;
+    }
+
+    private static async Task<AuditSubmitProjectPreparationTrace> InvokeAuditSubmitProjectPreparationAsync()
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitProjectPreparationDriver", BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(automationType.FullName, "IAuditSubmitProjectPreparationDriver");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .Single(candidate =>
+                string.Equals(candidate.Name, "PrepareProjectForPromptSubmissionAsync", StringComparison.Ordinal) &&
+                candidate.GetParameters().Length == 4 &&
+                candidate.GetParameters()[0].ParameterType == driverType);
+        var createProxy = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), BindingFlags.Static | BindingFlags.Public, [typeof(Type), typeof(Type)])
+            ?? throw new MissingMethodException(typeof(DispatchProxy).FullName, nameof(DispatchProxy.Create));
+        var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitProjectPreparationDriverProxy)])
+            ?? throw new InvalidOperationException("Project preparation proxy was not created.");
+        var trace = Assert.IsAssignableFrom<AuditSubmitProjectPreparationDriverProxy>(proxy);
+
+        var task = (Task<bool>)method.Invoke(
+            null,
+            [
+                proxy,
+                "https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project",
+                TimeSpan.FromMinutes(1),
+                CancellationToken.None
+            ])!;
+        trace.DownloadDirectoryConfigured = await task.ConfigureAwait(false);
+        return trace.ToTrace();
+    }
+
+    private static async Task<AuditSubmitDeepResearchSelectionTrace> InvokeAuditSubmitDeepResearchSelectionLoopAsync(
+        bool composerMenuOpenBeforeToggle = false,
+        bool composerMenuExpandedBeforeRows = false,
+        int openItemFailuresBeforeSuccess = 0,
+        int menuItemFailuresBeforeSuccess = 0)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitDeepResearchSelectionDriver", BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(automationType.FullName, "IAuditSubmitDeepResearchSelectionDriver");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .Single(candidate =>
+                string.Equals(candidate.Name, "EnableDeepResearchAsync", StringComparison.Ordinal) &&
+                candidate.GetParameters().Length == 2 &&
+                candidate.GetParameters()[0].ParameterType == driverType);
+        var createProxy = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), BindingFlags.Static | BindingFlags.Public, [typeof(Type), typeof(Type)])
+            ?? throw new MissingMethodException(typeof(DispatchProxy).FullName, nameof(DispatchProxy.Create));
+        var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitDeepResearchSelectionDriverProxy)])
+            ?? throw new InvalidOperationException("Deep Research selection proxy was not created.");
+        var trace = Assert.IsAssignableFrom<AuditSubmitDeepResearchSelectionDriverProxy>(proxy);
+        trace.Configure(
+            composerMenuOpenBeforeToggle,
+            composerMenuExpandedBeforeRows,
+            openItemFailuresBeforeSuccess,
+            menuItemFailuresBeforeSuccess);
+        var task = (Task)method.Invoke(null, [proxy, CancellationToken.None])!;
+
+        await task.ConfigureAwait(false);
+        return trace.ToTrace();
+    }
+
+    private static async Task<AuditSubmitOrdinaryReportPollingTrace> InvokeAuditSubmitOrdinaryReportPollingAsync(
+        string clipboardMarkdown,
+        int messageCountBeforeSend,
+        int transientCopyFailuresBeforeSuccess = 0,
+        bool missingCopyButton = false,
+        int noCurrentAssistantPollsBeforeSuccess = 0)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var exceptionType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeException", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitOrdinaryReportDriver", BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(automationType.FullName, "IAuditSubmitOrdinaryReportDriver");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+            .Single(candidate =>
+            {
+                if (!string.Equals(candidate.Name, "WaitForOrdinaryChatReportAsync", StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                var parameters = candidate.GetParameters();
+                return parameters.Length == 4 && parameters[0].ParameterType == driverType;
+            });
+        var createProxy = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), BindingFlags.Static | BindingFlags.Public, [typeof(Type), typeof(Type)])
+            ?? throw new MissingMethodException(typeof(DispatchProxy).FullName, nameof(DispatchProxy.Create));
+        var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitOrdinaryReportDriverProxy)])
+            ?? throw new InvalidOperationException("Ordinary report proxy was not created.");
+        var trace = Assert.IsAssignableFrom<AuditSubmitOrdinaryReportDriverProxy>(proxy);
+        trace.Configure(
+            clipboardMarkdown,
+            transientCopyFailuresBeforeSuccess,
+            missingCopyButton,
+            noCurrentAssistantPollsBeforeSuccess,
+            exceptionType);
+
+        var task = (Task<string>)method.Invoke(null, [proxy, 1, messageCountBeforeSend, CancellationToken.None])!;
+        var report = await task.ConfigureAwait(false);
+        return trace.ToTrace(report);
+    }
+
+    private static async Task<bool> InvokeAuditSubmitCanAcceptSystemClipboardTextAsync(
+        string text,
+        string sentinel,
+        bool sentinelInstalled)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("CanAcceptSystemClipboardText", BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "CanAcceptSystemClipboardText");
+        return (bool)method.Invoke(null, [text, sentinel, sentinelInstalled])!;
+    }
+
+    private static async Task<AuditSubmitClipboardReadTrace> InvokeAuditSubmitTryReadClipboardResultAsync(
+        string json,
+        string staleClipboardText)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("TryReadClipboardResult", BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "TryReadClipboardResult");
+        using var document = JsonDocument.Parse(json);
+        object?[] args = [document.RootElement.Clone(), staleClipboardText, string.Empty, string.Empty];
+        var accepted = (bool)method.Invoke(null, args)!;
+        return new AuditSubmitClipboardReadTrace(accepted, Assert.IsType<string>(args[2]), Assert.IsType<string>(args[3]));
+    }
+
+    private static async Task<bool> InvokeAuditSubmitCanTrustBrowserClipboardReadTextAsync(string? staleClipboardText)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("CanTrustBrowserClipboardReadText", BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "CanTrustBrowserClipboardReadText");
+        return (bool)method.Invoke(null, [staleClipboardText])!;
+    }
+
+    private static async Task<AuditSubmitClipboardSelectionTrace> InvokeAuditSubmitTrySelectClipboardTextAsync(
+        string readJson,
+        string capturedJson,
+        string? staleClipboardText)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("TrySelectClipboardText", BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "TrySelectClipboardText");
+        using var readDocument = JsonDocument.Parse(readJson);
+        using var capturedDocument = JsonDocument.Parse(capturedJson);
+        object?[] args =
+        [
+            readDocument.RootElement.Clone(),
+            capturedDocument.RootElement.Clone(),
+            staleClipboardText,
+            string.Empty,
+            string.Empty,
+            string.Empty
+        ];
+        var accepted = (bool)method.Invoke(null, args)!;
+        return new AuditSubmitClipboardSelectionTrace(
+            accepted,
+            Assert.IsType<string>(args[3]),
+            Assert.IsType<string>(args[4]),
+            Assert.IsType<string>(args[5]));
+    }
+
+    private static async Task<AuditSubmitPromptSubmissionTrace> InvokeAuditSubmitPromptSubmissionAsync(bool deepResearch)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitPromptSubmissionDriver", BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(automationType.FullName, "IAuditSubmitPromptSubmissionDriver");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .Single(candidate =>
+                string.Equals(candidate.Name, "SubmitPromptAsync", StringComparison.Ordinal) &&
+                candidate.GetParameters().Length == 5 &&
+                candidate.GetParameters()[0].ParameterType == driverType);
+        var createProxy = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), BindingFlags.Static | BindingFlags.Public, [typeof(Type), typeof(Type)])
+            ?? throw new MissingMethodException(typeof(DispatchProxy).FullName, nameof(DispatchProxy.Create));
+        var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitPromptSubmissionDriverProxy)])
+            ?? throw new InvalidOperationException("Audit submit prompt submission proxy was not created.");
+        var trace = Assert.IsAssignableFrom<AuditSubmitPromptSubmissionDriverProxy>(proxy);
+        var task = (Task<int>)method.Invoke(null, [proxy, new[] { "T-0238-audit-r40.zip" }, "audit request", deepResearch, CancellationToken.None])!;
+        var messageCount = await task.ConfigureAwait(false);
+        return trace.ToTrace(messageCount);
+    }
+
+    private static async Task<string> GetAuditSubmitCodexChromeAutomationStringConstantAsync(string fieldName)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var field = automationType.GetField(fieldName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingFieldException(automationType.FullName, fieldName);
+        return field.GetRawConstantValue() as string ?? (string)field.GetValue(null)!;
+    }
+
+    private static async Task<string> GetAuditSubmitCodexChromeAutomationFillPromptExpressionAsync(string message)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("FillPromptExpression", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "FillPromptExpression");
+        return (string)method.Invoke(null, [JsonSerializer.Serialize(message)])!;
+    }
+
+    private static async Task<string> GetAuditSubmitCodexChromeAutomationPromptPayloadReadyExpressionAsync(
+        string message,
+        string[] fileNames)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("PromptPayloadReadyExpression", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "PromptPayloadReadyExpression");
+        return (string)method.Invoke(null, [JsonSerializer.Serialize(message), JsonSerializer.Serialize(fileNames)])!;
+    }
+
+    private static async Task<string> GetAuditSubmitCodexChromeAutomationLastAssistantCopyButtonPointExpressionAsync(int minimumMessageCount)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("LastAssistantCopyButtonPointExpression", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "LastAssistantCopyButtonPointExpression");
+        return (string)method.Invoke(null, [minimumMessageCount])!;
+    }
+
+    private static async Task<string> GetAuditSubmitCodexChromeAutomationLastAssistantCopyButtonClickExpressionAsync(int minimumMessageCount)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var method = automationType.GetMethod("LastAssistantCopyButtonClickExpression", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "LastAssistantCopyButtonClickExpression");
+        return (string)method.Invoke(null, [minimumMessageCount])!;
+    }
+
+    private static async Task<AuditSubmitOrdinaryCopyButtonFixtureResult> RunAuditSubmitOrdinaryCopyButtonFixtureAsync(string workingDirectory, string expression)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-ordinary-copy-fixture.cjs");
+        File.WriteAllText(
+            scriptPath,
+            $$"""
+            const expression = {{JsonSerializer.Serialize(expression)}};
+
+            global.Node = {
+              ELEMENT_NODE: 1,
+              TEXT_NODE: 3,
+              DOCUMENT_POSITION_PRECEDING: 2,
+              DOCUMENT_POSITION_FOLLOWING: 4
+            };
+            global.getComputedStyle = () => ({ display: 'block', visibility: 'visible' });
+
+            let nextOrder = 1;
+            class Element {
+              constructor(tagName, attributes = {}, children = [], rect = null) {
+                this.nodeType = Node.ELEMENT_NODE;
+                this.tagName = tagName.toUpperCase();
+                this.attributes = new Map(Object.entries(attributes));
+                this.childNodes = [];
+                this.parentElement = null;
+                this.order = nextOrder++;
+                this.rect = rect || { left: 0, top: 0, width: 320, height: 24 };
+                this.scrolled = false;
+                this.clicked = false;
+                for (const child of children) this.append(child);
+              }
+
+              append(child) {
+                const node = typeof child === 'string'
+                  ? new TextNode(child)
+                  : child;
+                node.parentElement = this;
+                this.childNodes.push(node);
+                return node;
+              }
+
+              get children() { return this.childNodes.filter((node) => node.nodeType === Node.ELEMENT_NODE); }
+              get textContent() { return this.childNodes.map((node) => node.textContent || '').join(''); }
+              get innerText() { return this.textContent; }
+              getAttribute(name) { return this.attributes.has(name) ? this.attributes.get(name) : null; }
+              getBoundingClientRect() {
+                return {
+                  left: this.rect.left,
+                  top: this.rect.top,
+                  right: this.rect.left + this.rect.width,
+                  bottom: this.rect.top + this.rect.height,
+                  width: this.rect.width,
+                  height: this.rect.height
+                };
+              }
+
+              scrollIntoView() { this.scrolled = true; }
+              click() { this.clicked = true; }
+
+              compareDocumentPosition(other) {
+                return other.order > this.order
+                  ? Node.DOCUMENT_POSITION_FOLLOWING
+                  : Node.DOCUMENT_POSITION_PRECEDING;
+              }
+
+              contains(candidate) {
+                for (let current = candidate; current; current = current.parentElement) {
+                  if (current === this) return true;
+                }
+
+                return false;
+              }
+
+              matches(selector) {
+                return selector.split(',').some((part) => this.matchesSingle(part.trim()));
+              }
+
+              matchesSingle(selector) {
+                if (!selector) return false;
+                if (selector === 'article') return this.tagName === 'ARTICLE';
+                if (selector === 'button[data-testid="copy-turn-action-button"]') {
+                  return this.tagName === 'BUTTON' && this.getAttribute('data-testid') === 'copy-turn-action-button';
+                }
+
+                if (selector === '[data-message-id]') {
+                  return this.getAttribute('data-message-id') !== null;
+                }
+
+                if (selector === '[data-testid*="conversation-turn"]') {
+                  return (this.getAttribute('data-testid') || '').includes('conversation-turn');
+                }
+
+                const role = selector.match(/^\[data-message-author-role="([^"]+)"\]$/);
+                if (role) {
+                  return this.getAttribute('data-message-author-role') === role[1];
+                }
+
+                return false;
+              }
+
+              querySelectorAll(selector) {
+                const selectors = selector.split(',').map((part) => part.trim());
+                const result = [];
+                const visit = (node) => {
+                  if (node.nodeType !== Node.ELEMENT_NODE) return;
+                  if (selectors.some((part) => node.matchesSingle(part))) result.push(node);
+                  for (const child of node.childNodes) visit(child);
+                };
+                for (const child of this.childNodes) visit(child);
+                return result;
+              }
+
+              closest(selector) {
+                for (let current = this; current; current = current.parentElement) {
+                  if (current.matches(selector)) return current;
+                }
+
+                return null;
+              }
+            }
+
+            class TextNode {
+              constructor(value) {
+                this.nodeType = Node.TEXT_NODE;
+                this.nodeValue = value;
+                this.parentElement = null;
+                this.order = nextOrder++;
+              }
+
+              get textContent() { return this.nodeValue; }
+              get innerText() { return this.nodeValue; }
+            }
+
+            class Document extends Element {
+              constructor(children) { super('document', {}, children); }
+            }
+
+            const oldCopy = new Element('button', { 'data-testid': 'copy-turn-action-button', 'aria-label': 'Копировать ответ' }, ['Копировать'], { left: 120, top: 40, width: 20, height: 20 });
+            const newCopy = new Element('button', { 'data-testid': 'copy-turn-action-button', 'aria-label': 'Копировать ответ' }, ['Копировать'], { left: 420, top: 60, width: 20, height: 20 });
+            const oldAssistant = new Element('article', { 'data-testid': 'conversation-turn-old' }, [
+              new Element('div', { 'data-message-author-role': 'assistant' }, ['old answer']),
+              oldCopy
+            ]);
+            const newAssistant = new Element('article', { 'data-testid': 'conversation-turn-new' }, [
+              new Element('div', { 'data-message-author-role': 'assistant' }, ['new answer']),
+              newCopy
+            ]);
+            global.document = new Document([
+              new Element('div', { 'data-message-author-role': 'user' }, ['old prompt']),
+              oldAssistant,
+              new Element('div', { 'data-message-author-role': 'user' }, ['new prompt']),
+              newAssistant
+            ]);
+            let documentOrder = 1;
+            const assignDocumentOrder = (node) => {
+              node.order = documentOrder++;
+              for (const child of node.childNodes || []) assignDocumentOrder(child);
+            };
+            assignDocumentOrder(global.document);
+
+            const value = eval(expression);
+            const point = value && typeof value === 'object' && typeof value.x === 'number' && typeof value.y === 'number'
+              ? value
+              : null;
+            process.stdout.write(JSON.stringify({
+              returnedPoint: !!point,
+              clicked: value === true,
+              x: point ? point.x : 0,
+              y: point ? point.y : 0,
+              oldButtonScrolled: oldCopy.scrolled,
+              newButtonScrolled: newCopy.scrolled,
+              oldButtonClicked: oldCopy.clicked,
+              newButtonClicked: newCopy.clicked
+            }));
+            """,
+            Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"ordinary copy fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<AuditSubmitOrdinaryCopyButtonFixtureResult>(result.Stdout, JsonSerializerOptions.Web)!;
+    }
+
+    private static async Task<AuditSubmitClipboardWriteCaptureFixtureResult> RunAuditSubmitClipboardWriteCaptureFixtureAsync(
+        string workingDirectory,
+        string installExpression,
+        string capturedExpression,
+        string markdown)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-clipboard-write-capture-fixture.cjs");
+        File.WriteAllText(
+            scriptPath,
+            $$"""
+            const installExpression = {{JsonSerializer.Serialize(installExpression)}};
+            const capturedExpression = {{JsonSerializer.Serialize(capturedExpression)}};
+            const markdown = {{JsonSerializer.Serialize(markdown)}};
+
+            (async () => {
+              let originalWriteCalled = false;
+              global.window = global;
+              global.navigator = global.navigator || {};
+              Object.defineProperty(global.navigator, 'clipboard', {
+                configurable: true,
+                value: {
+                  writeText: async () => {},
+                  write: async () => {
+                    originalWriteCalled = true;
+                  }
+                }
+              });
+
+              const installSucceeded = await eval(installExpression);
+              const item = {
+                types: ['text/html', 'text/plain'],
+                getType: async (type) => {
+                  if (type !== 'text/plain') {
+                    throw new Error(`unexpected type ${type}`);
+                  }
+
+                  return {
+                    text: async () => markdown
+                  };
+                }
+              };
+              await navigator.clipboard.write([item]);
+              const captured = await eval(capturedExpression);
+              console.log(JSON.stringify({
+                installSucceeded,
+                originalWriteCalled,
+                captured: captured && captured.ok === true,
+                text: captured && captured.text ? captured.text : '',
+                error: captured && captured.error ? captured.error : ''
+              }));
+            })().catch((error) => {
+              console.error(error && (error.stack || error.message || error));
+              process.exit(1);
+            });
+            """,
+            Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"clipboard write capture fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<AuditSubmitClipboardWriteCaptureFixtureResult>(result.Stdout, JsonSerializerOptions.Web)!;
+    }
+
+    private static async Task<AuditSubmitClipboardWriteCaptureFixtureResult> RunAuditSubmitClipboardPreloadCaptureFixtureAsync(
+        string workingDirectory,
+        string preloadExpression,
+        string resetExpression,
+        string capturedExpression,
+        string markdown)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-clipboard-preload-capture-fixture.cjs");
+        File.WriteAllText(
+            scriptPath,
+            $$"""
+            const preloadExpression = {{JsonSerializer.Serialize(preloadExpression)}};
+            const resetExpression = {{JsonSerializer.Serialize(resetExpression)}};
+            const capturedExpression = {{JsonSerializer.Serialize(capturedExpression)}};
+            const markdown = {{JsonSerializer.Serialize(markdown)}};
+
+            (async () => {
+              let originalWriteCalled = false;
+              global.window = global;
+              global.navigator = global.navigator || {};
+              Object.defineProperty(global.navigator, 'clipboard', {
+                configurable: true,
+                value: {
+                  writeText: async () => {
+                    originalWriteCalled = true;
+                  },
+                  write: async () => {}
+                }
+              });
+
+              const installSucceeded = eval(preloadExpression);
+              const earlyBoundWriteText = navigator.clipboard.writeText;
+              const reset = eval(resetExpression);
+              await earlyBoundWriteText(markdown);
+              const captured = await eval(capturedExpression);
+              console.log(JSON.stringify({
+                installSucceeded,
+                reset,
+                originalWriteCalled,
+                captured: captured && captured.ok === true,
+                text: captured && captured.text ? captured.text : '',
+                error: captured && captured.error ? captured.error : ''
+              }));
+            })().catch((error) => {
+              console.error(error && (error.stack || error.message || error));
+              process.exit(1);
+            });
+            """,
+            Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"clipboard preload capture fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<AuditSubmitClipboardWriteCaptureFixtureResult>(result.Stdout, JsonSerializerOptions.Web)!;
+    }
+
+    private static async Task<AuditSubmitClipboardCopyEventCaptureFixtureResult> RunAuditSubmitClipboardCopyEventCaptureFixtureAsync(
+        string workingDirectory,
+        string installExpression,
+        string capturedExpression,
+        string markdown)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-clipboard-copy-event-capture-fixture.cjs");
+        File.WriteAllText(
+            scriptPath,
+            $$"""
+            const installExpression = {{JsonSerializer.Serialize(installExpression)}};
+            const capturedExpression = {{JsonSerializer.Serialize(capturedExpression)}};
+            const markdown = {{JsonSerializer.Serialize(markdown)}};
+
+            (async () => {
+              const copyListeners = [];
+              const currentAssistant = { name: 'current-assistant', parentElement: null };
+              const currentText = { name: 'current-text', parentElement: currentAssistant };
+              const currentButton = { name: 'current-button', parentElement: currentAssistant };
+              const selection = { toString: () => markdown, anchorNode: currentText, focusNode: currentText };
+              global.window = global;
+              global.__electron2dAuditCopyContext = {
+                assistant: currentAssistant,
+                button: currentButton,
+                activeBefore: null
+              };
+              global.addEventListener = (type, listener) => {
+                if (type === 'copy') {
+                  copyListeners.push(listener);
+                }
+              };
+              global.navigator = global.navigator || {};
+              Object.defineProperty(global.navigator, 'clipboard', {
+                configurable: true,
+                value: {
+                  writeText: async () => {},
+                  write: async () => {}
+                }
+              });
+              global.document = {
+                addEventListener: (type, listener) => {
+                  if (type === 'copy') {
+                    copyListeners.push(listener);
+                  }
+                },
+                getSelection: () => selection,
+                activeElement: null
+              };
+
+              const installSucceeded = await eval(installExpression);
+              const event = {
+                type: 'copy',
+                clipboardData: {
+                  getData: () => ''
+                }
+              };
+              for (const listener of copyListeners) {
+                listener(event);
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, 10));
+              const captured = await eval(capturedExpression);
+              console.log(JSON.stringify({
+                installSucceeded,
+                copyListenerCount: copyListeners.length,
+                captured: captured && captured.ok === true,
+                text: captured && captured.text ? captured.text : '',
+                error: captured && captured.error ? captured.error : ''
+              }));
+            })().catch((error) => {
+              console.error(error && (error.stack || error.message || error));
+              process.exit(1);
+            });
+            """,
+            Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"clipboard copy event capture fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<AuditSubmitClipboardCopyEventCaptureFixtureResult>(result.Stdout, JsonSerializerOptions.Web)!;
+    }
+
+    private static async Task<AuditSubmitClipboardCopyEventCaptureFixtureResult> RunAuditSubmitClipboardScopedCopyEventFallbackFixtureAsync(
+        string workingDirectory,
+        string installExpression,
+        string capturedExpression,
+        string scenario,
+        string markdown)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-clipboard-scoped-copy-event-fallback-fixture.cjs");
+        File.WriteAllText(
+            scriptPath,
+            $$"""
+            const installExpression = {{JsonSerializer.Serialize(installExpression)}};
+            const capturedExpression = {{JsonSerializer.Serialize(capturedExpression)}};
+            const scenario = {{JsonSerializer.Serialize(scenario)}};
+            const markdown = {{JsonSerializer.Serialize(markdown)}};
+
+            (async () => {
+              const copyListeners = [];
+              const makeNode = (name, parent = null) => ({ name, parentElement: parent });
+              const currentAssistant = makeNode('current-assistant');
+              const currentText = makeNode('current-text', currentAssistant);
+              const staleContainer = makeNode('stale-container');
+              const staleText = makeNode('stale-text', staleContainer);
+              const currentButton = makeNode('current-button', currentAssistant);
+              const activeBefore = { value: 'before', selectionStart: 0, selectionEnd: 0 };
+              const temporaryActive = { value: markdown, selectionStart: 0, selectionEnd: markdown.length };
+              const fullActiveValue = { value: markdown, selectionStart: 0, selectionEnd: 0 };
+              let activeElement = null;
+              let selection = { toString: () => '', anchorNode: null, focusNode: null };
+
+              if (scenario === 'stale-global-selection') {
+                selection = { toString: () => markdown, anchorNode: staleText, focusNode: staleText };
+                activeElement = null;
+              } else if (scenario === 'current-assistant-selection') {
+                selection = { toString: () => markdown, anchorNode: currentText, focusNode: currentText };
+                activeElement = null;
+              } else if (scenario === 'full-active-value') {
+                activeElement = fullActiveValue;
+              } else if (scenario === 'temporary-active-selection') {
+                activeElement = temporaryActive;
+              } else {
+                throw new Error(`unknown scenario ${scenario}`);
+              }
+
+              global.window = global;
+              global.__electron2dAuditCopyContext = {
+                assistant: currentAssistant,
+                button: currentButton,
+                activeBefore
+              };
+              global.getSelection = () => selection;
+              global.addEventListener = (type, listener) => {
+                if (type === 'copy') {
+                  copyListeners.push(listener);
+                }
+              };
+              global.navigator = global.navigator || {};
+              Object.defineProperty(global.navigator, 'clipboard', {
+                configurable: true,
+                value: {
+                  writeText: async () => {},
+                  write: async () => {}
+                }
+              });
+              global.document = {
+                addEventListener: (type, listener) => {
+                  if (type === 'copy') {
+                    copyListeners.push(listener);
+                  }
+                },
+                getSelection: () => selection,
+                activeElement
+              };
+
+              const installSucceeded = await eval(installExpression);
+              const event = {
+                type: 'copy',
+                clipboardData: {
+                  getData: () => ''
+                }
+              };
+              for (const listener of copyListeners) {
+                listener(event);
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, 10));
+              const captured = await eval(capturedExpression);
+              console.log(JSON.stringify({
+                installSucceeded,
+                copyListenerCount: copyListeners.length,
+                captured: captured && captured.ok === true,
+                text: captured && captured.text ? captured.text : '',
+                error: captured && captured.error ? captured.error : ''
+              }));
+            })().catch((error) => {
+              console.error(error && (error.stack || error.message || error));
+              process.exit(1);
+            });
+            """,
+            Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"clipboard scoped copy event fallback fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<AuditSubmitClipboardCopyEventCaptureFixtureResult>(result.Stdout, JsonSerializerOptions.Web)!;
+    }
+
+    private static async Task<AuditSubmitClipboardCopyEventSetDataCaptureFixtureResult> RunAuditSubmitClipboardCopyEventSetDataCaptureFixtureAsync(
+        string workingDirectory,
+        string installExpression,
+        string capturedExpression,
+        string markdown)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-clipboard-copy-event-set-data-capture-fixture.cjs");
+        File.WriteAllText(
+            scriptPath,
+            $$"""
+            const installExpression = {{JsonSerializer.Serialize(installExpression)}};
+            const capturedExpression = {{JsonSerializer.Serialize(capturedExpression)}};
+            const markdown = {{JsonSerializer.Serialize(markdown)}};
+
+            (async () => {
+              const copyListeners = [];
+              let setDataCalled = false;
+              global.window = global;
+              global.addEventListener = (type, listener) => {
+                if (type === 'copy') {
+                  copyListeners.push(listener);
+                }
+              };
+              global.navigator = global.navigator || {};
+              Object.defineProperty(global.navigator, 'clipboard', {
+                configurable: true,
+                value: {
+                  writeText: async () => {},
+                  write: async () => {}
+                }
+              });
+              global.DataTransfer = function DataTransfer() {};
+              global.DataTransfer.prototype.setData = function(type, text) {
+                if (type === 'text/plain' && text === markdown) {
+                  setDataCalled = true;
+                }
+
+                return true;
+              };
+              global.DataTransfer.prototype.getData = () => '';
+              global.document = {
+                addEventListener: (type, listener) => {
+                  if (type === 'copy') {
+                    copyListeners.push(listener);
+                  }
+                },
+                getSelection: () => ({ toString: () => '' }),
+                activeElement: null
+              };
+
+              const installSucceeded = await eval(installExpression);
+              const event = {
+                type: 'copy',
+                clipboardData: new DataTransfer()
+              };
+              for (const listener of copyListeners) {
+                listener(event);
+              }
+
+              event.clipboardData.setData('text/plain', markdown);
+              await new Promise((resolve) => setTimeout(resolve, 10));
+              const captured = await eval(capturedExpression);
+              console.log(JSON.stringify({
+                installSucceeded,
+                copyListenerCount: copyListeners.length,
+                setDataCalled,
+                captured: captured && captured.ok === true,
+                text: captured && captured.text ? captured.text : '',
+                error: captured && captured.error ? captured.error : ''
+              }));
+            })().catch((error) => {
+              console.error(error && (error.stack || error.message || error));
+              process.exit(1);
+            });
+            """,
+            Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"clipboard copy event setData capture fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<AuditSubmitClipboardCopyEventSetDataCaptureFixtureResult>(result.Stdout, JsonSerializerOptions.Web)!;
+    }
+
+    private static async Task<bool> RunAuditSubmitDeepResearchSelectedFixtureAsync(
+        string workingDirectory,
+        string selectedExpression,
+        bool inlineSelectionPill = true,
+        bool menuItem = false,
+        bool connectorMetadata = true,
+        bool pillInsidePrompt = false,
+        bool pillVisible = true,
+        bool distantConnectorInPageAncestor = false,
+        string connectorChildInteractiveAncestorKind = "",
+        string plainSelectedRowKind = "",
+        string text = "")
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-deep-research-selected-fixture.cjs");
+        var script = """
+            const selectedExpression = __SELECTED_EXPRESSION__;
+            const inlineSelectionPill = __INLINE_SELECTION_PILL__;
+            const menuItem = __MENU_ITEM__;
+            const connectorMetadata = __CONNECTOR_METADATA__;
+            const pillInsidePrompt = __PILL_INSIDE_PROMPT__;
+            const pillVisible = __PILL_VISIBLE__;
+            const distantConnectorInPageAncestor = __DISTANT_CONNECTOR_IN_PAGE_ANCESTOR__;
+            const connectorChildInteractiveAncestorKind = __CONNECTOR_CHILD_INTERACTIVE_ANCESTOR_KIND__;
+            const plainSelectedRowKind = __PLAIN_SELECTED_ROW_KIND__;
+            const visibleText = __VISIBLE_TEXT__;
+
+            class FakeElement {
+              constructor(tagName, attributes = {}, rect = {}, children = [], text = '') {
+                this.tagName = tagName.toLowerCase();
+                this.attributes = attributes;
+                this.rect = {
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: 0,
+                  height: 0,
+                  ...rect
+                };
+                this.children = children;
+                this.parentElement = null;
+                this.innerText = text;
+                this.textContent = text;
+                for (const child of children) {
+                  child.parentElement = this;
+                }
+              }
+
+              getAttribute(name) {
+                return Object.prototype.hasOwnProperty.call(this.attributes, name)
+                  ? this.attributes[name]
+                  : null;
+              }
+
+              getBoundingClientRect() {
+                return this.rect;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.children, selector);
+              }
+
+              querySelector(selector) {
+                return this.querySelectorAll(selector)[0] || null;
+              }
+
+              closest(selector) {
+                let current = this;
+                while (current) {
+                  if (matchesAny(current, selector)) {
+                    return current;
+                  }
+
+                  current = current.parentElement;
+                }
+
+                return null;
+              }
+            }
+
+            class FakeDocument {
+              constructor(elements) {
+                this.elements = elements;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.elements, selector);
+              }
+
+              querySelector(selector) {
+                return this.querySelectorAll(selector)[0] || null;
+              }
+            }
+
+            function splitSelectors(selector) {
+              return selector.split(',').map((entry) => entry.trim()).filter(Boolean);
+            }
+
+            function collectMatches(elements, selector) {
+              const result = [];
+              const visit = (element) => {
+                if (matchesAny(element, selector)) {
+                  result.push(element);
+                }
+
+                for (const child of element.children) {
+                  visit(child);
+                }
+              };
+
+              for (const element of elements) {
+                visit(element);
+              }
+
+              return result;
+            }
+
+            function matchesAny(element, selector) {
+              return splitSelectors(selector).some((candidate) => matches(element, candidate));
+            }
+
+            function matches(element, selector) {
+              if (selector === '#prompt-textarea') {
+                return element.getAttribute('id') === 'prompt-textarea';
+              }
+
+              if (selector === '[data-testid="composer-text-input"]') {
+                return element.getAttribute('data-testid') === 'composer-text-input';
+              }
+
+              if (selector === 'textarea') {
+                return element.tagName === 'textarea';
+              }
+
+              if (selector === '[contenteditable="true"][role="textbox"]') {
+                return element.getAttribute('contenteditable') === 'true' && element.getAttribute('role') === 'textbox';
+              }
+
+              if (selector === '[contenteditable="true"]') {
+                return element.getAttribute('contenteditable') === 'true';
+              }
+
+              if (selector === 'button') {
+                return element.tagName === 'button';
+              }
+
+              if (selector === 'div') {
+                return element.tagName === 'div';
+              }
+
+              if (selector === 'span') {
+                return element.tagName === 'span';
+              }
+
+              if (selector === '[role="button"]') {
+                return element.getAttribute('role') === 'button';
+              }
+
+              if (selector === '[data-id="connector:connector_openai_deep_research"]') {
+                return element.getAttribute('data-id') === 'connector:connector_openai_deep_research';
+              }
+
+              if (selector === '[data-id="connector:connector_openai_deep_research"][data-inline-selection-pill]') {
+                return element.getAttribute('data-id') === 'connector:connector_openai_deep_research' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+
+              if (selector === '[data-system-hint-type="connector:connector_openai_deep_research"]') {
+                return element.getAttribute('data-system-hint-type') === 'connector:connector_openai_deep_research';
+              }
+
+              if (selector === '[data-system-hint-type="connector:connector_openai_deep_research"][data-inline-selection-pill]') {
+                return element.getAttribute('data-system-hint-type') === 'connector:connector_openai_deep_research' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+
+              if (selector === '[data-keyword="Глубокое исследование"][data-inline-selection-pill]') {
+                return element.getAttribute('data-keyword') === 'Глубокое исследование' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+
+              if (selector === '[data-keyword="Deep Research"][data-inline-selection-pill]') {
+                return element.getAttribute('data-keyword') === 'Deep Research' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+
+              if (selector === '[data-message-author-role]') {
+                return element.getAttribute('data-message-author-role') !== null;
+              }
+
+              if (selector === '[data-testid^="project-conversation"]') {
+                return (element.getAttribute('data-testid') || '').startsWith('project-conversation');
+              }
+
+              if (selector === '[role="menu"]') {
+                return element.getAttribute('role') === 'menu';
+              }
+
+              if (selector === '[role="menuitem"]') {
+                return element.getAttribute('role') === 'menuitem';
+              }
+
+              if (selector === '[role="option"]') {
+                return element.getAttribute('role') === 'option';
+              }
+
+              if (selector === '.__menu-item') {
+                return (element.getAttribute('class') || '').split(/\s+/).includes('__menu-item');
+              }
+
+              if (selector === '[data-fill][tabindex]') {
+                return element.getAttribute('data-fill') !== null && element.getAttribute('tabindex') !== null;
+              }
+
+              if (selector === '[data-radix-popper-content-wrapper]') {
+                return element.getAttribute('data-radix-popper-content-wrapper') !== null;
+              }
+
+              if (selector === 'a[href]') {
+                return element.tagName === 'a' && element.getAttribute('href') !== null;
+              }
+
+              return false;
+            }
+
+            globalThis.getComputedStyle = (element) => ({
+              display: element.attributes.display || 'block',
+              visibility: element.attributes.visibility || 'visible'
+            });
+
+            const prompt = new FakeElement(
+              'div',
+              { id: 'prompt-textarea', contenteditable: 'true', role: 'textbox' },
+              { left: 200, top: 700, right: 1000, bottom: 760, width: 800, height: 60 });
+            const connectorAttributes = {};
+            if (connectorMetadata) {
+              connectorAttributes['data-id'] = 'connector:connector_openai_deep_research';
+            }
+            if (menuItem) {
+              connectorAttributes.role = 'menuitem';
+            }
+            if (inlineSelectionPill) {
+              connectorAttributes['data-inline-selection-pill'] = '';
+            }
+            if (!pillVisible) {
+              connectorAttributes.display = 'none';
+            }
+            if (plainSelectedRowKind === 'plain-menu-row') {
+              connectorAttributes.class = 'group __menu-item gap-1.5';
+              connectorAttributes['data-fill'] = '';
+              connectorAttributes.tabindex = '0';
+            } else if (plainSelectedRowKind === 'plain-data-fill-tabindex') {
+              connectorAttributes['data-fill'] = '';
+              connectorAttributes.tabindex = '0';
+            }
+            const selectedPill = new FakeElement(
+              plainSelectedRowKind ? 'div' : connectorChildInteractiveAncestorKind ? 'span' : menuItem ? 'button' : 'div',
+              connectorAttributes,
+              distantConnectorInPageAncestor
+                ? { left: 24, top: 24, right: 324, bottom: 64, width: 300, height: 40 }
+                : { left: 220, top: 640, right: 520, bottom: 680, width: 300, height: 40 },
+              [],
+              visibleText);
+            if (distantConnectorInPageAncestor) {
+              const pageAncestor = new FakeElement(
+                'div',
+                {},
+                { left: 0, top: 0, right: 1280, bottom: 900, width: 1280, height: 900 },
+                [prompt, selectedPill],
+                'Глубокое исследование');
+              globalThis.document = new FakeDocument([pageAncestor]);
+            } else if (connectorChildInteractiveAncestorKind) {
+              const ancestorAttributes = {};
+              let ancestorTagName = 'div';
+              if (connectorChildInteractiveAncestorKind === 'button-tag') {
+                ancestorTagName = 'button';
+              } else if (connectorChildInteractiveAncestorKind === 'role-button') {
+                ancestorAttributes.role = 'button';
+              } else if (connectorChildInteractiveAncestorKind === 'role-menuitem') {
+                ancestorAttributes.role = 'menuitem';
+              } else if (connectorChildInteractiveAncestorKind === 'role-option') {
+                ancestorAttributes.role = 'option';
+              } else if (connectorChildInteractiveAncestorKind === 'plain-menu-row') {
+                ancestorAttributes.class = 'group __menu-item gap-1.5';
+                ancestorAttributes['data-fill'] = '';
+                ancestorAttributes.tabindex = '0';
+              } else if (connectorChildInteractiveAncestorKind === 'plain-data-fill-tabindex') {
+                ancestorAttributes['data-fill'] = '';
+                ancestorAttributes.tabindex = '0';
+              }
+
+              const interactiveAncestor = new FakeElement(
+                ancestorTagName,
+                ancestorAttributes,
+                { left: 220, top: 640, right: 520, bottom: 680, width: 300, height: 40 },
+                [selectedPill],
+                visibleText || 'Глубокое исследование');
+              globalThis.document = new FakeDocument([prompt, interactiveAncestor]);
+            } else if (pillInsidePrompt) {
+              prompt.children.push(selectedPill);
+              selectedPill.parentElement = prompt;
+              globalThis.document = new FakeDocument([prompt]);
+            } else {
+              globalThis.document = new FakeDocument([prompt, selectedPill]);
+            }
+
+            const selected = Function('"use strict"; return (' + selectedExpression + ');')();
+            process.stdout.write(JSON.stringify(Boolean(selected)));
+            """
+            .Replace("__SELECTED_EXPRESSION__", JsonSerializer.Serialize(selectedExpression), StringComparison.Ordinal)
+            .Replace("__INLINE_SELECTION_PILL__", inlineSelectionPill ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__MENU_ITEM__", menuItem ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__CONNECTOR_METADATA__", connectorMetadata ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__PILL_INSIDE_PROMPT__", pillInsidePrompt ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__PILL_VISIBLE__", pillVisible ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__DISTANT_CONNECTOR_IN_PAGE_ANCESTOR__", distantConnectorInPageAncestor ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__CONNECTOR_CHILD_INTERACTIVE_ANCESTOR_KIND__", JsonSerializer.Serialize(connectorChildInteractiveAncestorKind), StringComparison.Ordinal)
+            .Replace("__PLAIN_SELECTED_ROW_KIND__", JsonSerializer.Serialize(plainSelectedRowKind), StringComparison.Ordinal)
+            .Replace("__VISIBLE_TEXT__", JsonSerializer.Serialize(text), StringComparison.Ordinal);
+        File.WriteAllText(scriptPath, script, Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"Deep Research selected fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<bool>(result.Stdout);
+    }
+
+    private static async Task<AuditSubmitFillPromptPreservationFixtureResult> RunAuditSubmitFillPromptPreservationFixtureAsync(
+        string workingDirectory,
+        string fillExpression,
+        string selectedExpression,
+        bool inlineSelectionPill = true)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-fill-prompt-preserves-pill.cjs");
+        var script = """
+            const fillExpression = __FILL_EXPRESSION__;
+            const selectedExpression = __SELECTED_EXPRESSION__;
+            const inlineSelectionPill = __INLINE_SELECTION_PILL__;
+
+            let activeElement = null;
+
+            class FakeElement {
+              constructor(tagName, attributes = {}, rect = {}, children = [], text = '') {
+                this.tagName = tagName.toLowerCase();
+                this.attributes = attributes;
+                this.rect = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, ...rect };
+                this.children = children;
+                this.parentElement = null;
+                this.innerTextValue = text;
+                this.textContentValue = text;
+                this.isContentEditable = attributes.contenteditable === 'true';
+                for (const child of children) {
+                  child.parentElement = this;
+                }
+              }
+
+              get innerText() {
+                return this.innerTextValue;
+              }
+
+              set innerText(value) {
+                this.innerTextValue = value;
+              }
+
+              get textContent() {
+                return this.textContentValue;
+              }
+
+              set textContent(value) {
+                this.textContentValue = value;
+                this.innerTextValue = value;
+                this.children = [];
+              }
+
+              getAttribute(name) {
+                return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null;
+              }
+
+              getBoundingClientRect() {
+                return this.rect;
+              }
+
+              focus() {
+                activeElement = this;
+              }
+
+              dispatchEvent() {
+                return true;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.children, selector);
+              }
+
+              querySelector(selector) {
+                return this.querySelectorAll(selector)[0] || null;
+              }
+
+              closest(selector) {
+                let current = this;
+                while (current) {
+                  if (matchesAny(current, selector)) return current;
+                  current = current.parentElement;
+                }
+
+                return null;
+              }
+            }
+
+            class FakeDocument {
+              constructor(elements) {
+                this.elements = elements;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.elements, selector);
+              }
+
+              querySelector(selector) {
+                return this.querySelectorAll(selector)[0] || null;
+              }
+
+              createRange() {
+                return {
+                  selectNodeContents() {},
+                  collapse() {}
+                };
+              }
+
+              execCommand(command, _showUi, value) {
+                if (command !== 'insertText' || !activeElement) return false;
+                activeElement.textContentValue += value;
+                activeElement.innerTextValue += value;
+                return true;
+              }
+            }
+
+            function splitSelectors(selector) {
+              return selector.split(',').map((entry) => entry.trim()).filter(Boolean);
+            }
+
+            function collectMatches(elements, selector) {
+              const result = [];
+              const visit = (element) => {
+                if (matchesAny(element, selector)) result.push(element);
+                for (const child of element.children) visit(child);
+              };
+              for (const element of elements) visit(element);
+              return result;
+            }
+
+            function matchesAny(element, selector) {
+              return splitSelectors(selector).some((candidate) => matches(element, candidate));
+            }
+
+            function matches(element, selector) {
+              if (selector === '#prompt-textarea') return element.getAttribute('id') === 'prompt-textarea';
+              if (selector === '[data-testid="composer-text-input"]') return element.getAttribute('data-testid') === 'composer-text-input';
+              if (selector === 'textarea') return element.tagName === 'textarea';
+              if (selector === '[contenteditable="true"][role="textbox"]') return element.getAttribute('contenteditable') === 'true' && element.getAttribute('role') === 'textbox';
+              if (selector === '[contenteditable="true"]') return element.getAttribute('contenteditable') === 'true';
+              if (selector === 'button') return element.tagName === 'button';
+              if (selector === 'div') return element.tagName === 'div';
+              if (selector === 'span') return element.tagName === 'span';
+              if (selector === '[role="button"]') return element.getAttribute('role') === 'button';
+              if (selector === '[data-id="connector:connector_openai_deep_research"]') {
+                return element.getAttribute('data-id') === 'connector:connector_openai_deep_research';
+              }
+              if (selector === '[data-id="connector:connector_openai_deep_research"][data-inline-selection-pill]') {
+                return element.getAttribute('data-id') === 'connector:connector_openai_deep_research' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+              if (selector === '[data-system-hint-type="connector:connector_openai_deep_research"]') {
+                return element.getAttribute('data-system-hint-type') === 'connector:connector_openai_deep_research';
+              }
+              if (selector === '[data-system-hint-type="connector:connector_openai_deep_research"][data-inline-selection-pill]') {
+                return element.getAttribute('data-system-hint-type') === 'connector:connector_openai_deep_research' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+              if (selector === '[data-keyword="Глубокое исследование"]') {
+                return element.getAttribute('data-keyword') === 'Глубокое исследование';
+              }
+              if (selector === '[data-keyword="Глубокое исследование"][data-inline-selection-pill]') {
+                return element.getAttribute('data-keyword') === 'Глубокое исследование' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+              if (selector === '[data-keyword="Deep Research"]') {
+                return element.getAttribute('data-keyword') === 'Deep Research';
+              }
+              if (selector === '[data-keyword="Deep Research"][data-inline-selection-pill]') {
+                return element.getAttribute('data-keyword') === 'Deep Research' &&
+                  element.getAttribute('data-inline-selection-pill') !== null;
+              }
+              if (selector === '[data-message-author-role]') return element.getAttribute('data-message-author-role') !== null;
+              if (selector === '[data-testid^="project-conversation"]') return (element.getAttribute('data-testid') || '').startsWith('project-conversation');
+              if (selector === 'a[href]') return element.tagName === 'a' && element.getAttribute('href') !== null;
+              return false;
+            }
+
+            globalThis.getComputedStyle = (element) => ({
+              display: element.attributes.display || 'block',
+              visibility: element.attributes.visibility || 'visible'
+            });
+            globalThis.Event = class {};
+            globalThis.InputEvent = class {};
+            globalThis.HTMLTextAreaElement = class {};
+            globalThis.HTMLInputElement = class {};
+            globalThis.window = {
+              getSelection: () => ({
+                removeAllRanges() {},
+                addRange() {}
+              })
+            };
+
+            const pill = new FakeElement(
+              'span',
+              inlineSelectionPill
+                ? { 'data-keyword': 'Deep Research', 'data-inline-selection-pill': '' }
+                : { 'data-keyword': 'Deep Research' },
+              { left: 220, top: 710, right: 420, bottom: 740, width: 200, height: 30 });
+            const prompt = new FakeElement(
+              'div',
+              { id: 'prompt-textarea', contenteditable: 'true', role: 'textbox' },
+              { left: 200, top: 700, right: 1000, bottom: 760, width: 800, height: 60 },
+              [pill]);
+            globalThis.document = new FakeDocument([prompt]);
+
+            const fillSucceeded = Function('"use strict"; return (' + fillExpression + ');')();
+            const selectedAfterFill = Function('"use strict"; return (' + selectedExpression + ');')();
+            process.stdout.write(JSON.stringify({
+              FillSucceeded: Boolean(fillSucceeded),
+              PillPreserved: prompt.children.includes(pill),
+              SelectedAfterFill: Boolean(selectedAfterFill)
+            }));
+            """
+            .Replace("__FILL_EXPRESSION__", JsonSerializer.Serialize(fillExpression), StringComparison.Ordinal)
+            .Replace("__SELECTED_EXPRESSION__", JsonSerializer.Serialize(selectedExpression), StringComparison.Ordinal)
+            .Replace("__INLINE_SELECTION_PILL__", inlineSelectionPill ? "true" : "false", StringComparison.Ordinal);
+        File.WriteAllText(scriptPath, script, Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"Deep Research fill prompt fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        var fixtureResult = JsonSerializer.Deserialize<AuditSubmitFillPromptPreservationFixtureResult>(result.Stdout);
+        Assert.NotNull(fixtureResult);
+        return fixtureResult;
+    }
+
+    private static async Task<bool> RunAuditSubmitPromptPayloadReadyFixtureAsync(
+        string workingDirectory,
+        string payloadExpression,
+        string promptText = "Audit body",
+        bool includeAttachment = true,
+        bool attachmentInHistory = false,
+        bool includePlainFilenameLabel = false,
+        bool includeAttachmentFilenameChild = false)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-payload-ready-fixture.cjs");
+        var script = """
+            const payloadExpression = __PAYLOAD_EXPRESSION__;
+            const promptText = __PROMPT_TEXT__;
+            const includeAttachment = __INCLUDE_ATTACHMENT__;
+            const attachmentInHistory = __ATTACHMENT_IN_HISTORY__;
+            const includePlainFilenameLabel = __INCLUDE_PLAIN_FILENAME_LABEL__;
+            const includeAttachmentFilenameChild = __INCLUDE_ATTACHMENT_FILENAME_CHILD__;
+
+            class FakeElement {
+              constructor(tagName, attributes = {}, rect = {}, children = [], text = '') {
+                this.tagName = tagName.toLowerCase();
+                this.attributes = attributes;
+                this.rect = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, ...rect };
+                this.children = children;
+                this.parentElement = null;
+                this.innerText = text;
+                this.textContent = text;
+                for (const child of children) {
+                  child.parentElement = this;
+                }
+              }
+
+              getAttribute(name) {
+                return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null;
+              }
+
+              getBoundingClientRect() {
+                return this.rect;
+              }
+
+              contains(other) {
+                if (other === this) return true;
+                return this.children.some((child) => child.contains(other));
+              }
+
+              closest(selector) {
+                let current = this;
+                while (current) {
+                  if (matchesAny(current, selector)) return current;
+                  current = current.parentElement;
+                }
+
+                return null;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.children, selector);
+              }
+            }
+
+            class FakeDocument {
+              constructor(elements) {
+                this.elements = elements;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.elements, selector);
+              }
+            }
+
+            function splitSelectors(selector) {
+              return selector.split(',').map((entry) => entry.trim()).filter(Boolean);
+            }
+
+            function collectMatches(elements, selector) {
+              const result = [];
+              const visit = (element) => {
+                if (matchesAny(element, selector)) result.push(element);
+                for (const child of element.children) visit(child);
+              };
+              for (const element of elements) visit(element);
+              return result;
+            }
+
+            function matchesAny(element, selector) {
+              return splitSelectors(selector).some((candidate) => matches(element, candidate));
+            }
+
+            function matches(element, selector) {
+              if (selector === '#prompt-textarea') return element.getAttribute('id') === 'prompt-textarea';
+              if (selector === '[data-testid="composer-text-input"]') return element.getAttribute('data-testid') === 'composer-text-input';
+              if (selector === 'textarea') return element.tagName === 'textarea';
+              if (selector === '[contenteditable="true"][role="textbox"]') {
+                return element.getAttribute('contenteditable') === 'true' && element.getAttribute('role') === 'textbox';
+              }
+              if (selector === '[contenteditable="true"]') return element.getAttribute('contenteditable') === 'true';
+              if (selector === 'button') return element.tagName === 'button';
+              if (selector === '[role="button"]') return element.getAttribute('role') === 'button';
+              if (selector === 'div') return element.tagName === 'div';
+              if (selector === 'span') return element.tagName === 'span';
+              if (selector === 'li') return element.tagName === 'li';
+              if (selector === '[aria-label]') return element.getAttribute('aria-label') !== null;
+              if (selector === '[title]') return element.getAttribute('title') !== null;
+              if (selector === '[data-testid]') return element.getAttribute('data-testid') !== null;
+              if (selector === '[data-message-author-role]') return element.getAttribute('data-message-author-role') !== null;
+              if (selector === '[data-testid^="project-conversation"]') {
+                return (element.getAttribute('data-testid') || '').startsWith('project-conversation');
+              }
+              if (selector === 'a[href]') return element.tagName === 'a' && element.getAttribute('href') !== null;
+              return false;
+            }
+
+            globalThis.getComputedStyle = (element) => ({
+              display: element.attributes.display || 'block',
+              visibility: element.attributes.visibility || 'visible'
+            });
+
+            const prompt = new FakeElement(
+              'div',
+              { id: 'prompt-textarea', contenteditable: 'true', role: 'textbox' },
+              { left: 200, top: 700, right: 1000, bottom: 760, width: 800, height: 60 },
+              [],
+              promptText);
+            const elements = [prompt];
+            if (includePlainFilenameLabel) {
+              elements.push(new FakeElement(
+                'div',
+                {},
+                { left: 220, top: 635, right: 560, bottom: 680, width: 340, height: 45 },
+                [],
+                'T-0238-audit-r40.zip'));
+            }
+
+            if (includeAttachment) {
+              const attachmentChildren = includeAttachmentFilenameChild
+                ? [
+                    new FakeElement(
+                      'span',
+                      {},
+                      { left: 240, top: 650, right: 540, bottom: 670, width: 300, height: 20 },
+                      [],
+                      'T-0238-audit-r40.zip')
+                  ]
+                : [];
+              const attachment = new FakeElement(
+                'div',
+                { 'data-testid': 'composer-attachment', title: 'T-0238-audit-r40.zip' },
+                { left: 220, top: 635, right: 560, bottom: 680, width: 340, height: 45 },
+                attachmentChildren,
+                'T-0238-audit-r40.zip');
+              if (attachmentInHistory) {
+                elements.push(new FakeElement(
+                  'div',
+                  { 'data-message-author-role': 'user' },
+                  { left: 180, top: 620, right: 650, bottom: 700, width: 470, height: 80 },
+                  [attachment]));
+              } else {
+                elements.push(attachment);
+              }
+            }
+
+            globalThis.document = new FakeDocument(elements);
+            const result = Function('"use strict"; return (' + payloadExpression + ');')();
+            process.stdout.write(JSON.stringify(Boolean(result)));
+            """
+            .Replace("__PAYLOAD_EXPRESSION__", JsonSerializer.Serialize(payloadExpression), StringComparison.Ordinal)
+            .Replace("__PROMPT_TEXT__", JsonSerializer.Serialize(promptText), StringComparison.Ordinal)
+            .Replace("__INCLUDE_ATTACHMENT__", includeAttachment ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__ATTACHMENT_IN_HISTORY__", attachmentInHistory ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__INCLUDE_PLAIN_FILENAME_LABEL__", includePlainFilenameLabel ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__INCLUDE_ATTACHMENT_FILENAME_CHILD__", includeAttachmentFilenameChild ? "true" : "false", StringComparison.Ordinal);
+        File.WriteAllText(scriptPath, script, Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"Audit submit payload fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<bool>(result.Stdout);
+    }
+
+    private static async Task<AuditSubmitMarkdownMenuFixtureResult> RunAuditSubmitMarkdownMenuFixtureAsync(
+        string workingDirectory,
+        string markdownMenuExpression,
+        string menuElementTagName = "button",
+        string? menuElementRole = null,
+        string? menuElementClass = null,
+        bool dataFill = false,
+        bool tabIndex = false)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-markdown-menu-fixture.cjs");
+        var script = """
+            const markdownMenuExpression = __MARKDOWN_MENU_EXPRESSION__;
+
+            class FakeElement {
+              constructor(tagName, attributes = {}, rect = {}, text = '') {
+                this.tagName = tagName.toLowerCase();
+                this.attributes = attributes;
+                this.rect = {
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: 0,
+                  height: 0,
+                  ...rect
+                };
+                this.children = [];
+                this.ownerDocument = null;
+                this.innerText = text;
+                this.textContent = text;
+                this.disabled = attributes.disabled === 'true';
+                this.focusCalled = false;
+                this.clickCount = 0;
+              }
+
+              getAttribute(name) {
+                return Object.prototype.hasOwnProperty.call(this.attributes, name)
+                  ? this.attributes[name]
+                  : null;
+              }
+
+              getBoundingClientRect() {
+                return this.rect;
+              }
+
+              querySelectorAll() {
+                return [];
+              }
+
+              focus() {
+                this.focusCalled = true;
+              }
+
+              dispatchEvent() {
+                return true;
+              }
+
+              click() {
+                this.clickCount += 1;
+              }
+            }
+
+            class FakeDocument {
+              constructor(elements) {
+                this.elements = elements;
+                this.defaultView = {
+                  innerHeight: 800,
+                  innerWidth: 1200,
+                  getComputedStyle(element) {
+                    return {
+                      display: element.attributes.display || 'block',
+                      visibility: element.attributes.visibility || 'visible'
+                    };
+                  }
+                };
+                for (const element of elements) {
+                  element.ownerDocument = this;
+                }
+              }
+
+              querySelectorAll(selector) {
+                if (selector === 'iframe') return [];
+                const selectors = selector.split(',').map((entry) => entry.trim()).filter(Boolean);
+                return this.elements.filter((element) => selectors.some((candidate) => matches(element, candidate)));
+              }
+            }
+
+            function matches(element, selector) {
+              if (selector === 'button') return element.tagName === 'button';
+              if (selector === '[role="menuitem"]') return element.getAttribute('role') === 'menuitem';
+              if (selector === '[role="menuitemradio"]') return element.getAttribute('role') === 'menuitemradio';
+              if (selector === '.__menu-item') return (element.getAttribute('class') || '').split(/\s+/).includes('__menu-item');
+              if (selector === '[data-fill][tabindex]') return element.getAttribute('data-fill') !== null && element.getAttribute('tabindex') !== null;
+              return false;
+            }
+
+            const menuAttributes = {};
+            if (__MENU_ELEMENT_ROLE__ !== null) {
+              menuAttributes.role = __MENU_ELEMENT_ROLE__;
+            }
+            if (__MENU_ELEMENT_CLASS__ !== null) {
+              menuAttributes.class = __MENU_ELEMENT_CLASS__;
+            }
+            if (__MENU_ELEMENT_DATA_FILL__) {
+              menuAttributes['data-fill'] = '';
+            }
+            if (__MENU_ELEMENT_TABINDEX__) {
+              menuAttributes.tabindex = '0';
+            }
+            const markdownItem = new FakeElement(
+              __MENU_ELEMENT_TAG_NAME__,
+              menuAttributes,
+              { left: 40, top: 80, right: 260, bottom: 120, width: 220, height: 40 },
+              'Скачать как Markdown');
+            globalThis.document = new FakeDocument([markdownItem]);
+            globalThis.window = document.defaultView;
+
+            const returned = Function('"use strict"; return (' + markdownMenuExpression + ');')();
+            process.stdout.write(JSON.stringify({
+              Returned: Boolean(returned),
+              FocusCalled: markdownItem.focusCalled,
+              ClickCount: markdownItem.clickCount
+            }));
+            """
+            .Replace("__MARKDOWN_MENU_EXPRESSION__", JsonSerializer.Serialize(markdownMenuExpression), StringComparison.Ordinal)
+            .Replace("__MENU_ELEMENT_TAG_NAME__", JsonSerializer.Serialize(menuElementTagName), StringComparison.Ordinal)
+            .Replace("__MENU_ELEMENT_ROLE__", menuElementRole is null ? "null" : JsonSerializer.Serialize(menuElementRole), StringComparison.Ordinal)
+            .Replace("__MENU_ELEMENT_CLASS__", menuElementClass is null ? "null" : JsonSerializer.Serialize(menuElementClass), StringComparison.Ordinal)
+            .Replace("__MENU_ELEMENT_DATA_FILL__", dataFill ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__MENU_ELEMENT_TABINDEX__", tabIndex ? "true" : "false", StringComparison.Ordinal);
+        File.WriteAllText(scriptPath, script, Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"Markdown menu fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        var fixtureResult = JsonSerializer.Deserialize<AuditSubmitMarkdownMenuFixtureResult>(result.Stdout);
+        Assert.NotNull(fixtureResult);
+        return fixtureResult;
+    }
+
+    private static async Task<AuditSubmitDeepResearchItemFixtureResult> RunAuditSubmitDeepResearchItemFixtureAsync(
+        string workingDirectory,
+        string itemExpression,
+        bool wrapInPopover = false,
+        bool stalePlusBeforeVisible = false,
+        bool plainTextMenuItem = false)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-deep-research-item-fixture.cjs");
+        var script = """
+            const itemExpression = __ITEM_EXPRESSION__;
+            const wrapInPopover = __WRAP_IN_POPOVER__;
+            const stalePlusBeforeVisible = __STALE_PLUS_BEFORE_VISIBLE__;
+            const plainTextMenuItem = __PLAIN_TEXT_MENU_ITEM__;
+
+            class FakeElement {
+              constructor(tagName, attributes = {}, rect = {}, children = [], text = '') {
+                this.tagName = tagName.toLowerCase();
+                this.attributes = attributes;
+                this.rect = {
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: 0,
+                  height: 0,
+                  x: rect.left || 0,
+                  y: rect.top || 0,
+                  ...rect
+                };
+                this.children = children;
+                this.parentElement = null;
+                this.innerText = text;
+                this.textContent = text;
+                this.disabled = attributes.disabled === 'true';
+                this.scrollIntoViewCalled = false;
+                for (const child of children) {
+                  child.parentElement = this;
+                }
+              }
+
+              getAttribute(name) {
+                return Object.prototype.hasOwnProperty.call(this.attributes, name)
+                  ? this.attributes[name]
+                  : null;
+              }
+
+              getBoundingClientRect() {
+                return this.rect;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.children, selector);
+              }
+
+              querySelector(selector) {
+                return this.querySelectorAll(selector)[0] || null;
+              }
+
+              closest(selector) {
+                let current = this;
+                while (current) {
+                  if (matchesAny(current, selector)) {
+                    return current;
+                  }
+
+                  current = current.parentElement;
+                }
+
+                return null;
+              }
+
+              scrollIntoView() {
+                this.scrollIntoViewCalled = true;
+              }
+            }
+
+            class FakeDocument {
+              constructor(elements) {
+                this.elements = elements;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.elements, selector);
+              }
+
+              querySelector(selector) {
+                return this.querySelectorAll(selector)[0] || null;
+              }
+            }
+
+            function splitSelectors(selector) {
+              return selector.split(',').map((entry) => entry.trim()).filter(Boolean);
+            }
+
+            function collectMatches(elements, selector) {
+              const result = [];
+              const visit = (element) => {
+                if (matchesAny(element, selector)) {
+                  result.push(element);
+                }
+
+                for (const child of element.children) {
+                  visit(child);
+                }
+              };
+
+              for (const element of elements) {
+                visit(element);
+              }
+
+              return result;
+            }
+
+            function matchesAny(element, selector) {
+              return splitSelectors(selector).some((candidate) => matches(element, candidate));
+            }
+
+            function matches(element, selector) {
+              if (selector === 'button') {
+                return element.tagName === 'button';
+              }
+
+              if (selector === 'div') {
+                return element.tagName === 'div';
+              }
+
+              if (selector === 'span') {
+                return element.tagName === 'span';
+              }
+
+              if (selector === 'button[data-testid="composer-plus-btn"]') {
+                return element.tagName === 'button' && element.getAttribute('data-testid') === 'composer-plus-btn';
+              }
+
+              if (selector === '[role="menuitem"]') {
+                return element.getAttribute('role') === 'menuitem';
+              }
+
+              if (selector === '[role="option"]') {
+                return element.getAttribute('role') === 'option';
+              }
+
+              if (selector === '[role="button"]') {
+                return element.getAttribute('role') === 'button';
+              }
+
+              if (selector === '.__menu-item') {
+                return (element.getAttribute('class') || '').split(/\s+/).includes('__menu-item');
+              }
+
+              if (selector === '[data-fill][tabindex]') {
+                return element.getAttribute('data-fill') !== null && element.getAttribute('tabindex') !== null;
+              }
+
+              if (selector === '[role="menu"]') {
+                return element.getAttribute('role') === 'menu';
+              }
+
+              if (selector === '[data-id="connector:connector_openai_deep_research"]') {
+                return element.getAttribute('data-id') === 'connector:connector_openai_deep_research';
+              }
+
+              if (selector === '[data-system-hint-type="connector:connector_openai_deep_research"]') {
+                return element.getAttribute('data-system-hint-type') === 'connector:connector_openai_deep_research';
+              }
+
+              if (selector === '[data-keyword="Глубокое исследование"]') {
+                return element.getAttribute('data-keyword') === 'Глубокое исследование';
+              }
+
+              if (selector === '[data-keyword="Deep Research"]') {
+                return element.getAttribute('data-keyword') === 'Deep Research';
+              }
+
+              if (selector === '[data-message-author-role]') {
+                return element.getAttribute('data-message-author-role') !== null;
+              }
+
+              if (selector === '[data-testid^="project-conversation"]') {
+                return (element.getAttribute('data-testid') || '').startsWith('project-conversation');
+              }
+
+              if (selector === 'a[href]') {
+                return element.tagName === 'a' && element.getAttribute('href') !== null;
+              }
+
+              return false;
+            }
+
+            globalThis.getComputedStyle = (element) => ({
+              display: element.attributes.display || 'block',
+              visibility: element.attributes.visibility || 'visible'
+            });
+
+            const plusButton = new FakeElement(
+              'button',
+              { 'data-testid': 'composer-plus-btn' },
+              { left: 100, top: 700, right: 134, bottom: 734, width: 34, height: 34, x: 100, y: 700 });
+            const stalePlusButton = new FakeElement(
+              'button',
+              { 'data-testid': 'composer-plus-btn', display: 'none', disabled: 'true' },
+              { left: 900, top: 120, right: 934, bottom: 154, width: 34, height: 34, x: 900, y: 120 });
+            const connectorMarker = new FakeElement(
+              'span',
+              { 'data-id': 'connector:connector_openai_deep_research' },
+              { left: 176, top: 312, right: 200, bottom: 336, width: 24, height: 24, x: 176, y: 312 });
+            const label = new FakeElement(
+              'span',
+              {},
+              { left: 196, top: 308, right: 350, bottom: 328, width: 154, height: 20, x: 196, y: 308 },
+              [],
+              'Глубокое исследование');
+            const description = new FakeElement(
+              'span',
+              {},
+              { left: 362, top: 308, right: 560, bottom: 328, width: 198, height: 20, x: 362, y: 308 },
+              [],
+              'Получить подробный отчет');
+            const legacyMenuItem = new FakeElement(
+              'button',
+              { role: 'menuitem' },
+              { left: 160, top: 300, right: 460, bottom: 356, width: 300, height: 56, x: 160, y: 300 },
+              [connectorMarker]);
+            const plainMenuItem = new FakeElement(
+              'div',
+              { class: 'group __menu-item gap-1.5', tabindex: '0', 'data-fill': '' },
+              { left: 160, top: 300, right: 760, bottom: 336, width: 600, height: 36, x: 160, y: 300 },
+              [label, description]);
+            const menuItem = plainTextMenuItem ? plainMenuItem : legacyMenuItem;
+            const popover = new FakeElement(
+              'div',
+              { role: 'menu' },
+              { left: 120, top: 260, right: 780, bottom: 620, width: 660, height: 360, x: 120, y: 260 },
+              [menuItem]);
+            const elements = stalePlusBeforeVisible
+              ? [stalePlusButton, plusButton, wrapInPopover ? popover : menuItem]
+              : [plusButton, wrapInPopover ? popover : menuItem];
+            globalThis.document = new FakeDocument(elements);
+
+            const point = Function('"use strict"; return (' + itemExpression + ');')();
+
+            process.stdout.write(JSON.stringify({
+              ReturnedPoint: Boolean(point),
+              X: point ? point.x : 0,
+              Y: point ? point.y : 0,
+              MenuItemScrolled: menuItem.scrollIntoViewCalled,
+              ConnectorMarkerScrolled: connectorMarker.scrollIntoViewCalled,
+              LabelScrolled: label.scrollIntoViewCalled
+            }));
+            """
+            .Replace("__ITEM_EXPRESSION__", JsonSerializer.Serialize(itemExpression), StringComparison.Ordinal);
+        script = script.Replace("__WRAP_IN_POPOVER__", wrapInPopover ? "true" : "false", StringComparison.Ordinal);
+        script = script.Replace("__STALE_PLUS_BEFORE_VISIBLE__", stalePlusBeforeVisible ? "true" : "false", StringComparison.Ordinal);
+        script = script.Replace("__PLAIN_TEXT_MENU_ITEM__", plainTextMenuItem ? "true" : "false", StringComparison.Ordinal);
+        File.WriteAllText(scriptPath, script, Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"Deep Research item fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        var fixtureResult = JsonSerializer.Deserialize<AuditSubmitDeepResearchItemFixtureResult>(result.Stdout);
+        Assert.NotNull(fixtureResult);
+        return fixtureResult;
+    }
+
+    private static async Task<bool> RunAuditSubmitDeepResearchComposerMenuOpenFixtureAsync(
+        string workingDirectory,
+        string menuOpenExpression,
+        bool plusAriaExpanded,
+        bool includePlainMenuRow)
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-composer-menu-open-fixture.cjs");
+        var script = """
+            const menuOpenExpression = __MENU_OPEN_EXPRESSION__;
+            const plusAriaExpanded = __PLUS_ARIA_EXPANDED__;
+            const includePlainMenuRow = __INCLUDE_PLAIN_MENU_ROW__;
+
+            class FakeElement {
+              constructor(tagName, attributes = {}, rect = {}, children = []) {
+                this.tagName = tagName.toLowerCase();
+                this.attributes = attributes;
+                this.rect = {
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: 0,
+                  height: 0,
+                  x: rect.left || 0,
+                  y: rect.top || 0,
+                  ...rect
+                };
+                this.children = children;
+                this.parentElement = null;
+                this.disabled = attributes.disabled === 'true';
+                for (const child of children) {
+                  child.parentElement = this;
+                }
+              }
+
+              getAttribute(name) {
+                return Object.prototype.hasOwnProperty.call(this.attributes, name)
+                  ? this.attributes[name]
+                  : null;
+              }
+
+              getBoundingClientRect() {
+                return this.rect;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.children, selector);
+              }
+
+              querySelector(selector) {
+                return this.querySelectorAll(selector)[0] || null;
+              }
+
+              matches(selector) {
+                return matchesAny(this, selector);
+              }
+
+              closest(selector) {
+                let current = this;
+                while (current) {
+                  if (matchesAny(current, selector)) {
+                    return current;
+                  }
+
+                  current = current.parentElement;
+                }
+
+                return null;
+              }
+            }
+
+            class FakeDocument {
+              constructor(elements) {
+                this.elements = elements;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.elements, selector);
+              }
+            }
+
+            function splitSelectors(selector) {
+              return selector.split(',').map((entry) => entry.trim()).filter(Boolean);
+            }
+
+            function collectMatches(elements, selector) {
+              const result = [];
+              const visit = (element) => {
+                if (matchesAny(element, selector)) {
+                  result.push(element);
+                }
+
+                for (const child of element.children) {
+                  visit(child);
+                }
+              };
+
+              for (const element of elements) {
+                visit(element);
+              }
+
+              return result;
+            }
+
+            function matchesAny(element, selector) {
+              return splitSelectors(selector).some((candidate) => matches(element, candidate));
+            }
+
+            function matches(element, selector) {
+              if (selector === 'button[data-testid="composer-plus-btn"]') {
+                return element.tagName === 'button' && element.getAttribute('data-testid') === 'composer-plus-btn';
+              }
+
+              if (selector === '[role="menu"]') {
+                return element.getAttribute('role') === 'menu';
+              }
+
+              if (selector === '[role="listbox"]') {
+                return element.getAttribute('role') === 'listbox';
+              }
+
+              if (selector === '[data-radix-popper-content-wrapper]') {
+                return element.getAttribute('data-radix-popper-content-wrapper') !== null;
+              }
+
+              if (selector === '.__menu-item') {
+                return (element.getAttribute('class') || '').split(/\s+/).includes('__menu-item');
+              }
+
+              if (selector === '[data-fill][tabindex]') {
+                return element.getAttribute('data-fill') !== null && element.getAttribute('tabindex') !== null;
+              }
+
+              if (selector === '[role="menuitem"]') {
+                return element.getAttribute('role') === 'menuitem';
+              }
+
+              if (selector === '[role="option"]') {
+                return element.getAttribute('role') === 'option';
+              }
+
+              if (selector === '[role="button"]') {
+                return element.getAttribute('role') === 'button';
+              }
+
+              if (selector === '[data-message-author-role]') {
+                return element.getAttribute('data-message-author-role') !== null;
+              }
+
+              if (selector === '[data-testid^="project-conversation"]') {
+                return (element.getAttribute('data-testid') || '').startsWith('project-conversation');
+              }
+
+              if (selector === 'a[href]') {
+                return element.tagName === 'a' && element.getAttribute('href') !== null;
+              }
+
+              return false;
+            }
+
+            globalThis.getComputedStyle = (element) => ({
+              display: element.attributes.display || 'block',
+              visibility: element.attributes.visibility || 'visible'
+            });
+
+            const plusAttributes = { 'data-testid': 'composer-plus-btn' };
+            if (plusAriaExpanded) {
+              plusAttributes['aria-expanded'] = 'true';
+            }
+            const plusButton = new FakeElement(
+              'button',
+              plusAttributes,
+              { left: 100, top: 700, right: 134, bottom: 734, width: 34, height: 34, x: 100, y: 700 });
+            const menuRow = new FakeElement(
+              'div',
+              { class: 'group __menu-item gap-1.5', tabindex: '0', 'data-fill': '' },
+              { left: 160, top: 300, right: 760, bottom: 336, width: 600, height: 36, x: 160, y: 300 });
+            const elements = includePlainMenuRow ? [plusButton, menuRow] : [plusButton];
+            globalThis.document = new FakeDocument(elements);
+
+            const returned = Function('"use strict"; return (' + menuOpenExpression + ');')();
+            process.stdout.write(JSON.stringify(Boolean(returned)));
+            """
+            .Replace("__MENU_OPEN_EXPRESSION__", JsonSerializer.Serialize(menuOpenExpression), StringComparison.Ordinal)
+            .Replace("__PLUS_ARIA_EXPANDED__", plusAriaExpanded ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__INCLUDE_PLAIN_MENU_ROW__", includePlainMenuRow ? "true" : "false", StringComparison.Ordinal);
+        File.WriteAllText(scriptPath, script, Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"Deep Research composer menu-open fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        return JsonSerializer.Deserialize<bool>(result.Stdout);
+    }
+
+    private static async Task<AuditSubmitDomExportFixtureResult> RunAuditSubmitDomExportFixtureAsync(
+        string workingDirectory,
+        string readyExpression,
+        string exportExpression,
+        bool includeLegacyDownloadIcon = true,
+        string exportLabel = "Скачать")
+    {
+        var scriptPath = Path.Combine(workingDirectory, "audit-submit-dom-export-fixture.cjs");
+        var script = """
+            const readyExpression = __READY_EXPRESSION__;
+            const exportExpression = __EXPORT_EXPRESSION__;
+
+            class FakeElement {
+              constructor(tagName, attributes = {}, rect = {}, children = []) {
+                this.tagName = tagName.toLowerCase();
+                this.attributes = attributes;
+                this.rect = {
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: 0,
+                  height: 0,
+                  ...rect
+                };
+                this.children = children;
+                this.ownerDocument = null;
+                this.contentDocument = null;
+                this.scrollIntoViewCalled = false;
+                this.scrollOptions = null;
+                this.focusCalled = false;
+                this.clickCount = 0;
+              }
+
+              getAttribute(name) {
+                return Object.prototype.hasOwnProperty.call(this.attributes, name)
+                  ? this.attributes[name]
+                  : null;
+              }
+
+              getBoundingClientRect() {
+                return this.rect;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.children, selector);
+              }
+
+              scrollIntoView(options) {
+                this.scrollIntoViewCalled = true;
+                this.scrollOptions = options;
+                this.rect = {
+                  left: this.rect.left,
+                  top: 320,
+                  right: this.rect.right,
+                  bottom: 360,
+                  width: this.rect.width,
+                  height: this.rect.height
+                };
+              }
+
+              focus() {
+                this.focusCalled = true;
+              }
+
+              dispatchEvent() {
+                return true;
+              }
+
+              click() {
+                this.clickCount += 1;
+              }
+            }
+
+            class FakeDocument {
+              constructor(elements, bodyText) {
+                this.elements = elements;
+                this.body = {
+                  innerText: bodyText,
+                  textContent: bodyText
+                };
+                this.defaultView = null;
+              }
+
+              querySelectorAll(selector) {
+                return collectMatches(this.elements, selector);
+              }
+            }
+
+            function assignOwner(element, document) {
+              element.ownerDocument = document;
+              for (const child of element.children) {
+                assignOwner(child, document);
+              }
+            }
+
+            function collectMatches(elements, selector) {
+              const selectors = selector.split(',').map((entry) => entry.trim());
+              const result = [];
+              const visit = (element) => {
+                if (selectors.some((candidate) => matches(element, candidate))) {
+                  result.push(element);
+                }
+
+                for (const child of element.children) {
+                  visit(child);
+                }
+              };
+
+              for (const element of elements) {
+                visit(element);
+              }
+
+              return result;
+            }
+
+            function matches(element, selector) {
+              if (selector === 'iframe') {
+                return element.tagName === 'iframe';
+              }
+
+              if (selector === 'path') {
+                return element.tagName === 'path';
+              }
+
+              if (selector === 'button') {
+                return element.tagName === 'button';
+              }
+
+              if (selector === 'button[aria-haspopup="menu"]') {
+                return element.tagName === 'button' && element.getAttribute('aria-haspopup') === 'menu';
+              }
+
+              if (selector === 'button[aria-label]') {
+                return element.tagName === 'button' && element.getAttribute('aria-label') !== null;
+              }
+
+              return false;
+            }
+
+            const view = {
+              innerHeight: 800,
+              innerWidth: 1200,
+              getComputedStyle(element) {
+                return {
+                  display: element.attributes.display || 'block',
+                  visibility: element.attributes.visibility || 'visible'
+                };
+              }
+            };
+
+            globalThis.window = view;
+            globalThis.getComputedStyle = (element) => view.getComputedStyle(element);
+
+            function useDocument(document) {
+              document.defaultView = view;
+              for (const element of document.elements) {
+                assignOwner(element, document);
+              }
+
+              globalThis.document = document;
+              view.document = document;
+            }
+
+            function runExpression(expression) {
+              return Function('"use strict"; return (' + expression + ');')();
+            }
+
+            const frameDocument = new FakeDocument([], 'Research is still running.');
+            useDocument(frameDocument);
+            const frameReady = runExpression(readyExpression);
+
+            const downloadPath = new FakeElement(
+              'path',
+              { d: 'M2.66821 12.6663 fixture 9.33521 3.33333' },
+              { width: 12, height: 12 });
+            const exportChildren = __INCLUDE_LEGACY_DOWNLOAD_ICON__ ? [downloadPath] : [];
+            const exportButton = new FakeElement(
+              'button',
+              {
+                'aria-haspopup': 'menu',
+                'aria-label': __EXPORT_LABEL__,
+                title: __EXPORT_LABEL__
+              },
+              {
+                left: 920,
+                top: -720,
+                right: 960,
+                bottom: -680,
+                width: 40,
+                height: 40
+              },
+              exportChildren);
+            const deepResearchFrame = new FakeElement(
+              'iframe',
+              { title: 'internal://deep-research' },
+              {
+                left: 20,
+                top: 900,
+                right: 520,
+                bottom: 1200,
+                width: 500,
+                height: 300
+              });
+            deepResearchFrame.contentDocument = frameDocument;
+
+            const pageDocument = new FakeDocument(
+              [deepResearchFrame, exportButton],
+              'Углубленный исследовательский отчет\nVERDICT: NEEDS_FIXES\n' + 'audit '.repeat(250));
+            useDocument(pageDocument);
+            frameDocument.defaultView = view;
+            const pageReady = runExpression(readyExpression);
+            const pageExportReturned = runExpression(exportExpression);
+
+            process.stdout.write(JSON.stringify({
+              FrameReady: frameReady,
+              PageReady: pageReady,
+              PageExportReturned: pageExportReturned,
+              ScrollIntoViewCalled: exportButton.scrollIntoViewCalled,
+              ScrollBlock: exportButton.scrollOptions ? exportButton.scrollOptions.block : null,
+              ScrollInline: exportButton.scrollOptions ? exportButton.scrollOptions.inline : null,
+              FocusCalled: exportButton.focusCalled,
+              ClickCount: exportButton.clickCount
+            }));
+            """
+            .Replace("__READY_EXPRESSION__", JsonSerializer.Serialize(readyExpression), StringComparison.Ordinal)
+            .Replace("__EXPORT_EXPRESSION__", JsonSerializer.Serialize(exportExpression), StringComparison.Ordinal)
+            .Replace("__INCLUDE_LEGACY_DOWNLOAD_ICON__", includeLegacyDownloadIcon ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__EXPORT_LABEL__", JsonSerializer.Serialize(exportLabel), StringComparison.Ordinal);
+        File.WriteAllText(scriptPath, script, Encoding.UTF8);
+
+        var result = await RunProcessAsync("node", [scriptPath], workingDirectory, TimeSpan.FromSeconds(10));
+        Assert.True(
+            result.ExitCode == 0,
+            $"DOM export fixture failed with exit code {result.ExitCode}.{Environment.NewLine}stdout:{Environment.NewLine}{result.Stdout}{Environment.NewLine}stderr:{Environment.NewLine}{result.Stderr}");
+        var fixtureResult = JsonSerializer.Deserialize<AuditSubmitDomExportFixtureResult>(result.Stdout);
+        Assert.NotNull(fixtureResult);
+        return fixtureResult;
     }
 
     private static async Task<(bool Succeeded, string? Path, string? Code)> InvokeAuditSubmitConversationUrlSidecarWriteAsync(
@@ -6541,7 +12350,11 @@ public sealed class RepositoryBuildToolTests
         }
     }
 
-    private static async Task<bool> InvokeAuditSubmitMarkdownClickResolutionAsync(string surfaceScope, bool scopedMenuItemClicked, bool pageMenuItemClicked)
+    private static async Task<bool> InvokeAuditSubmitMarkdownClickResolutionAsync(
+        string surfaceScope,
+        bool scopedMenuItemClicked,
+        bool pageMenuItemClicked,
+        bool selectedExportButtonClicked = true)
     {
         var assembly = await BuildAndLoadBuildToolAssemblyAsync();
         var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
@@ -6549,7 +12362,103 @@ public sealed class RepositoryBuildToolTests
         var method = automationType.GetMethod("ResolveMarkdownMenuItemClickResult", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
             ?? throw new MissingMethodException(automationType.FullName, "ResolveMarkdownMenuItemClickResult");
         var scope = Enum.Parse(scopeType, surfaceScope);
-        return (bool)method.Invoke(null, [scope, scopedMenuItemClicked, pageMenuItemClicked])!;
+        var parameters = method.GetParameters();
+        return parameters.Length == 4
+            ? (bool)method.Invoke(null, [scope, scopedMenuItemClicked, pageMenuItemClicked, selectedExportButtonClicked])!
+            : (bool)method.Invoke(null, [scope, scopedMenuItemClicked, pageMenuItemClicked])!;
+    }
+
+    private static async Task<AuditSubmitMarkdownMenuClickTrace> InvokeAuditSubmitMarkdownMenuClickAsync(
+        string surfaceScope,
+        bool selectedExportButtonClicked,
+        bool scopedMenuItemClicked,
+        bool pageMenuItemClicked)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var scopeType = assembly.GetType("Electron2D.Build.AuditSubmitExportSurfaceScope", throwOnError: true)!;
+        var method = automationType.GetMethod("ClickMarkdownMenuItemAsync", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "ClickMarkdownMenuItemAsync");
+        var scope = Enum.Parse(scopeType, surfaceScope);
+        var scopedClicks = 0;
+        var pageClicks = 0;
+        Func<Task<bool>> clickScoped = () =>
+        {
+            scopedClicks++;
+            return Task.FromResult(scopedMenuItemClicked);
+        };
+        Func<Task<bool>> clickPage = () =>
+        {
+            pageClicks++;
+            return Task.FromResult(pageMenuItemClicked);
+        };
+
+        var parameters = method.GetParameters();
+        var arguments = parameters.Length == 4
+            ? new object?[] { scope, clickScoped, clickPage, selectedExportButtonClicked }
+            : [scope, clickScoped, clickPage];
+        var task = (Task<bool>)method.Invoke(null, arguments)!;
+        var returned = await task.ConfigureAwait(false);
+        return new AuditSubmitMarkdownMenuClickTrace(returned, scopedClicks, pageClicks);
+    }
+
+    private static async Task<AuditSubmitSelectedDeepResearchSurfaceTrace> InvokeAuditSubmitSelectedDeepResearchSurfaceExportAsync(string surfaceScopeName)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitDeepResearchMarkdownExportDriver", BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(automationType.FullName, "IAuditSubmitDeepResearchMarkdownExportDriver");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            .Single(candidate =>
+                string.Equals(candidate.Name, "DownloadReportCandidatesFromSelectedDeepResearchSurfaceAsync", StringComparison.Ordinal) &&
+                candidate.GetParameters().Length == 5 &&
+                candidate.GetParameters()[0].ParameterType == driverType);
+        var scopeType = assembly.GetType("Electron2D.Build.AuditSubmitExportSurfaceScope", throwOnError: true)!;
+        var surfaceScope = Enum.Parse(scopeType, surfaceScopeName);
+        var candidateType = assembly.GetType("Electron2D.Build.AuditSubmitReportCandidate", throwOnError: true)!;
+        var sourceType = assembly.GetType("Electron2D.Build.AuditSubmitReportCandidateSource", throwOnError: true)!;
+        var candidate = Activator.CreateInstance(
+            candidateType,
+            [
+                """
+                VERDICT: ACCEPT
+
+                TASK_ASSESSMENT:
+                Checked.
+                """,
+                Enum.Parse(sourceType, "OpenedReportCard")
+            ])!;
+        var candidates = Array.CreateInstance(candidateType, 1);
+        candidates.SetValue(candidate, 0);
+
+        var createProxy = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), BindingFlags.Static | BindingFlags.Public, [typeof(Type), typeof(Type)])
+            ?? throw new MissingMethodException(typeof(DispatchProxy).FullName, nameof(DispatchProxy.Create));
+        var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitDeepResearchMarkdownExportDriverProxy)])
+            ?? throw new InvalidOperationException("Deep Research Markdown export proxy was not created.");
+        var trace = Assert.IsAssignableFrom<AuditSubmitDeepResearchMarkdownExportDriverProxy>(proxy);
+        trace.Candidates = candidates;
+
+        var exportClicks = 0;
+        var scopedClicks = 0;
+        Func<Task<bool>> clickExport = () =>
+        {
+            exportClicks++;
+            return Task.FromResult(true);
+        };
+        Func<Task<bool>> clickScopedMarkdown = () =>
+        {
+            scopedClicks++;
+            return Task.FromResult(false);
+        };
+
+        var task = (Task)method.Invoke(null, [proxy, surfaceScope, clickExport, clickScopedMarkdown, CancellationToken.None])!;
+        await task.ConfigureAwait(false);
+        var result = task.GetType().GetProperty("Result", BindingFlags.Instance | BindingFlags.Public)!.GetValue(task)!;
+        var surfaceSelected = GetProperty<bool>(result, "SurfaceSelected");
+        var resultCandidates = Assert.IsAssignableFrom<IEnumerable>(GetRawProperty(result, "Candidates")!);
+        var candidateCount = resultCandidates.Cast<object>().Count();
+        return trace.ToTrace(surfaceSelected, candidateCount, exportClicks, scopedClicks);
     }
 
     private static async Task<(bool Succeeded, string? Path, string? Code)> InvokeAuditSubmitMarkdownDownloadSelectionAsync(string[] acceptedDirectories, string[] stableDownloads)
@@ -6596,6 +12505,38 @@ public sealed class RepositoryBuildToolTests
                 [observedDirectories, acceptedDirectories, knownFileSet, TimeSpan.FromSeconds(3), CancellationToken.None])!;
             var selected = await task;
             return (true, selected, null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            return (false, null, TryGetExceptionCode(ex.InnerException));
+        }
+        catch (Exception ex)
+        {
+            return (false, null, TryGetExceptionCode(ex));
+        }
+    }
+
+    private static async Task<(bool Succeeded, string? Report, string? Code)> InvokeAuditSubmitDirectMarkdownDownloadAsync(
+        string[] observedDirectories,
+        string[] acceptedDirectories,
+        string[] knownFiles)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var directMethod = automationType.GetMethod("ReadDirectMarkdownDownloadCandidatesAsync", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "ReadDirectMarkdownDownloadCandidatesAsync");
+        var extractMethod = automationType.GetMethod("ExtractDownloadedReportOrThrow", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(automationType.FullName, "ExtractDownloadedReportOrThrow");
+        var knownFileSet = new HashSet<string>(knownFiles.Select(Path.GetFullPath), StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            var task = (Task)directMethod.Invoke(
+                null,
+                [observedDirectories, acceptedDirectories, knownFileSet, TimeSpan.FromSeconds(3), CancellationToken.None])!;
+            await task.ConfigureAwait(false);
+            var candidates = task.GetType().GetProperty("Result")!.GetValue(task)!;
+            var report = (string)extractMethod.Invoke(null, [candidates])!;
+            return (true, report, null);
         }
         catch (TargetInvocationException ex) when (ex.InnerException is not null)
         {
@@ -7353,6 +13294,74 @@ public sealed class RepositoryBuildToolTests
         Directory.CreateDirectory(Path.Combine(root, "src"));
     }
 
+    private static TemporaryDirectory CreateAuditFollowupFixture(
+        string name,
+        string tasksText,
+        params (string Path, string Report)[] reports)
+    {
+        var workspace = TemporaryDirectory.Create(name);
+        CreateRepositoryRootMarkers(workspace.Root);
+        WriteText(workspace.Root, "TASKS.md", "# Tasks\n\n" + tasksText.TrimStart());
+        foreach (var report in reports)
+        {
+            WriteText(workspace.Root, report.Path, report.Report);
+        }
+
+        return workspace;
+    }
+
+    private static string CreateAuditFollowupClosure(
+        string source,
+        string findingId,
+        string state,
+        string extraFields = "")
+    {
+        var fields = string.IsNullOrWhiteSpace(extraFields)
+            ? string.Empty
+            : Environment.NewLine + extraFields.TrimEnd();
+        return $$"""
+        - audit-followup-closure:
+          - source: {{source}}
+          - id: FOLLOW_UP_FINDING {{findingId}}
+          - state: {{state}}
+          - target: T-9999
+          - rationale: fixture closure decision.{{fields}}
+
+        """;
+    }
+
+    private static string CreateAcceptedFollowupReport(string findingId, string additionalRisks = "", string verdict = "VERDICT: ACCEPT")
+    {
+        var extraRisks = string.IsNullOrWhiteSpace(additionalRisks)
+            ? string.Empty
+            : Environment.NewLine + additionalRisks.TrimEnd();
+        return $$"""
+        {{verdict}}
+
+        TASK_ASSESSMENT:
+        Checked.
+
+        BLOCKERS:
+        No blockers found.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        - FOLLOW_UP_FINDING {{findingId}}
+          - Finding id: {{findingId}}
+          - File/symbol: docs/release-management/audit-package.md
+          - Problem: follow-up audit workflow improvement.
+          - Why not blocker for current task: outside accepted scope.
+          - Suggested new task: T-9999
+          - Suggested priority: P2
+          - Verification idea: run verify audit-followups.{{extraRisks}}
+
+        CLOSURE_DECISION:
+        Task can be closed.
+        """;
+    }
+
     private static string EnsureTrailingDirectorySeparator(string path)
     {
         return Path.EndsInDirectorySeparator(path) ? path : path + Path.DirectorySeparatorChar;
@@ -8040,6 +14049,104 @@ public sealed class RepositoryBuildToolTests
             CLOSURE_DECISION:
             - Fixture decision.
             """);
+    }
+
+    private static void WriteAuditSubmitZip(
+        string root,
+        string fileName,
+        string[]? previousVerdictChain = null,
+        string[]? blockerClosureList = null,
+        string[]? repoFilePaths = null,
+        (string EntryName, string Text)[]? extraEntries = null)
+    {
+        var zipPath = Path.Combine(root, fileName);
+        var match = Regex.Match(
+            fileName,
+            @"^(?<task>T-\d+)-audit-(?<iteration>r\d+)\.zip$",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        var taskId = match.Success ? match.Groups["task"].Value.ToUpperInvariant() : "T-0001";
+        var iteration = match.Success ? match.Groups["iteration"].Value.ToLowerInvariant() : "r01";
+        using (ZipFile.Open(zipPath, ZipArchiveMode.Create))
+        {
+        }
+
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+        AddZipEntryText(
+            zipPath,
+            "metadata/audit-package.input.json",
+            JsonSerializer.Serialize(
+                new
+                {
+                    taskId,
+                    iteration,
+                    previousVerdictChain = previousVerdictChain ?? Array.Empty<string>(),
+                    blockerClosureList = blockerClosureList ?? Array.Empty<string>()
+                },
+                jsonOptions) + "\n");
+        AddZipEntryText(
+            zipPath,
+            "repo-file-hashes.json",
+            JsonSerializer.Serialize(
+                new
+                {
+                    taskId,
+                    iteration,
+                    repoFiles = (repoFilePaths ?? Array.Empty<string>())
+                        .Select(path => new
+                        {
+                            path,
+                            sha256 = new string('0', 64)
+                        })
+                        .ToArray(),
+                    deletedRepoFiles = Array.Empty<string>()
+                },
+                jsonOptions) + "\n");
+
+        foreach (var (entryName, text) in extraEntries ?? Array.Empty<(string EntryName, string Text)>())
+        {
+            AddZipEntryText(zipPath, entryName, text);
+        }
+    }
+
+    private static void ReplaceAuditSubmitZipMetadataArray(string root, string fileName, string propertyName, string arrayJson)
+    {
+        var previousVerdictChainJson = string.Equals(propertyName, "previousVerdictChain", StringComparison.Ordinal)
+            ? arrayJson
+            : "[]";
+        var blockerClosureListJson = string.Equals(propertyName, "blockerClosureList", StringComparison.Ordinal)
+            ? arrayJson
+            : "[]";
+        var zipPath = Path.Combine(root, fileName);
+        AddZipEntryText(
+            zipPath,
+            "metadata/audit-package.input.json",
+            $$"""
+            {
+              "taskId": "T-0001",
+              "iteration": "r02",
+              "previousVerdictChain": {{previousVerdictChainJson}},
+              "blockerClosureList": {{blockerClosureListJson}}
+            }
+            """);
+    }
+
+    private static void ReplaceAuditSubmitZipMetadata(string root, string fileName, string json)
+    {
+        AddZipEntryText(
+            Path.Combine(root, fileName),
+            "metadata/audit-package.input.json",
+            json);
+    }
+
+    private static void ReplaceAuditSubmitZipRepoFileHashes(string root, string fileName, string json)
+    {
+        AddZipEntryText(
+            Path.Combine(root, fileName),
+            "repo-file-hashes.json",
+            json);
     }
 
     private static void WriteRawText(string root, string relativePath, string content)
@@ -9118,6 +15225,8 @@ public sealed class RepositoryBuildToolTests
         "EVIDENCE_REVIEW",
         "RISKS_AND_NOTES",
         "CLOSURE_DECISION",
+        "metadata.taskId",
+        "metadata.iteration",
         "metadata.scopeTaskIds",
         "metadata.scopeSummary",
         "combined scope",
@@ -9138,7 +15247,14 @@ public sealed class RepositoryBuildToolTests
         "evidence gap",
         "patch-only inspection",
         "single final report",
-        "no intermediate VERDICT"
+        "no intermediate VERDICT",
+        "full current-scope engineering review",
+        "FOLLOW_UP_FINDING",
+        "OUT_OF_SCOPE_NOTE",
+        "ACCEPTED_RISK",
+        "INFO_NOTE",
+        "global safety blocker",
+        "architecture coherence"
     ];
     private const string DefaultAuditRequestText = """
     # Static audit request
@@ -9152,6 +15268,8 @@ public sealed class RepositoryBuildToolTests
     EVIDENCE_REVIEW
     RISKS_AND_NOTES
     CLOSURE_DECISION
+    metadata.taskId
+    metadata.iteration
     metadata.scopeTaskIds
     metadata.scopeSummary
     combined scope
@@ -9173,6 +15291,13 @@ public sealed class RepositoryBuildToolTests
     patch-only inspection
     single final report
     no intermediate VERDICT
+    full current-scope engineering review
+    FOLLOW_UP_FINDING
+    OUT_OF_SCOPE_NOTE
+    ACCEPTED_RISK
+    INFO_NOTE
+    global safety blocker
+    architecture coherence
     """;
     private const string DarkReadmeAssetRelativePath = "data/assets/branding/readme/electron2d_readme_dark.svg";
     private const string LightReadmeAssetRelativePath = "data/assets/branding/readme/electron2d_readme_light.svg";
@@ -9221,6 +15346,699 @@ public sealed class RepositoryBuildToolTests
     private sealed record DocumentationFixtureShard(string Path, string Kind, int Count, string Sha256);
 
     private sealed record CommandResult(int ExitCode, string Stdout, string Stderr);
+
+    private sealed record AuditSubmitDeepResearchItemFixtureResult(
+        bool ReturnedPoint,
+        double X,
+        double Y,
+        bool MenuItemScrolled,
+        bool ConnectorMarkerScrolled,
+        bool LabelScrolled);
+
+    private sealed record AuditSubmitMarkdownMenuClickTrace(bool Returned, int ScopedClicks, int PageClicks);
+
+    private sealed record AuditSubmitSelectedDeepResearchSurfaceTrace(
+        bool SurfaceSelected,
+        int CandidateCount,
+        int ExportClicks,
+        int ScopedMarkdownClicks,
+        int PageMarkdownClicks);
+
+    private sealed record AuditSubmitProjectPreparationTrace(IReadOnlyList<string> Calls, bool DownloadDirectoryConfigured);
+
+    private sealed record AuditSubmitDeepResearchSelectionTrace(
+        IReadOnlyList<string> Calls,
+        int OpenItemClicks,
+        int MenuOpenChecks,
+        int MenuExpandedChecks,
+        int MenuOpenAttempts,
+        int MenuItemClicks,
+        int MenuCaptures);
+
+    private sealed record AuditSubmitOrdinaryReportPollingTrace(IReadOnlyList<string> Calls, string Report);
+
+    private sealed record AuditSubmitClipboardReadTrace(bool Accepted, string Text, string Error);
+
+    private sealed record AuditSubmitClipboardSelectionTrace(
+        bool Accepted,
+        string Text,
+        string ReadError,
+        string CapturedError);
+
+    private sealed record AuditSubmitClipboardWriteCaptureFixtureResult(
+        bool InstallSucceeded,
+        bool OriginalWriteCalled,
+        bool Captured,
+        string Text,
+        string Error);
+
+    private sealed record AuditSubmitClipboardCopyEventCaptureFixtureResult(
+        bool InstallSucceeded,
+        int CopyListenerCount,
+        bool Captured,
+        string Text,
+        string Error);
+
+    private sealed record AuditSubmitClipboardCopyEventSetDataCaptureFixtureResult(
+        bool InstallSucceeded,
+        int CopyListenerCount,
+        bool SetDataCalled,
+        bool Captured,
+        string Text,
+        string Error);
+
+    private sealed record AuditSubmitPromptSubmissionTrace(IReadOnlyList<string> Calls, int MessageCountBeforeSend);
+
+    private sealed record AuditSubmitReportCandidateDownloadTrace(
+        int FrameDownloads,
+        int TargetSelections,
+        int TargetDownloads,
+        int PageDownloads,
+        int CandidateCount);
+
+    private sealed record AuditSubmitDumpDomTrace(string[] Events);
+
+    private class AuditSubmitReportCandidateDownloadDriverProxy : DispatchProxy
+    {
+        public object? NoSurfaceResult { get; set; }
+
+        public object? Selection { get; set; }
+
+        public object? TargetResult { get; set; }
+
+        public object? PageCandidates { get; set; }
+
+        public int FrameDownloads { get; private set; }
+
+        public int TargetSelections { get; private set; }
+
+        public int TargetDownloads { get; private set; }
+
+        public int PageDownloads { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            var methodName = targetMethod?.Name ?? string.Empty;
+            switch (methodName)
+            {
+                case "DownloadFromFrameAsync":
+                    FrameDownloads++;
+                    return CreateCompletedTask(targetMethod!.ReturnType, NoSurfaceResult!);
+                case "SelectTargetAsync":
+                    TargetSelections++;
+                    return CreateCompletedTask(targetMethod!.ReturnType, Selection!);
+                case "DownloadFromTargetAsync":
+                    TargetDownloads++;
+                    return CreateCompletedTask(targetMethod!.ReturnType, TargetResult!);
+                case "DownloadFromPageAsync":
+                    PageDownloads++;
+                    return CreateCompletedTask(targetMethod!.ReturnType, PageCandidates!);
+                default:
+                    throw new MissingMethodException(targetMethod?.DeclaringType?.FullName, methodName);
+            }
+        }
+
+        public AuditSubmitReportCandidateDownloadTrace ToTrace(int candidateCount)
+        {
+            return new AuditSubmitReportCandidateDownloadTrace(
+                FrameDownloads,
+                TargetSelections,
+                TargetDownloads,
+                PageDownloads,
+                candidateCount);
+        }
+
+        private static object CreateCompletedTask(Type taskType, object result)
+        {
+            var resultType = taskType.GetGenericArguments()[0];
+            return typeof(Task)
+                .GetMethod(nameof(Task.FromResult), BindingFlags.Static | BindingFlags.Public)!
+                .MakeGenericMethod(resultType)
+                .Invoke(null, [result])!;
+        }
+    }
+
+    private class AuditSubmitDeepResearchMarkdownExportDriverProxy : DispatchProxy
+    {
+        public object? Candidates { get; set; }
+
+        public int PageMarkdownClicks { get; private set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            var methodName = targetMethod?.Name ?? string.Empty;
+            switch (methodName)
+            {
+                case "ClickReportExportAndReadDownloadedMarkdownAsync":
+                    return ClickReportExportAndReadDownloadedMarkdownAsync(targetMethod!, args);
+                case "ClickPageMarkdownMenuItemAsync":
+                    PageMarkdownClicks++;
+                    return Task.FromResult(true);
+                default:
+                    throw new MissingMethodException(targetMethod?.DeclaringType?.FullName, methodName);
+            }
+        }
+
+        public AuditSubmitSelectedDeepResearchSurfaceTrace ToTrace(
+            bool surfaceSelected,
+            int candidateCount,
+            int exportClicks,
+            int scopedMarkdownClicks)
+        {
+            return new AuditSubmitSelectedDeepResearchSurfaceTrace(
+                surfaceSelected,
+                candidateCount,
+                exportClicks,
+                scopedMarkdownClicks,
+                PageMarkdownClicks);
+        }
+
+        private object ClickReportExportAndReadDownloadedMarkdownAsync(MethodInfo targetMethod, object?[]? args)
+        {
+            Assert.NotNull(args);
+            var clickExportButtonAsync = Assert.IsType<Func<Task<bool>>>(args[1]);
+            var clickScopedMarkdownMenuItemAsync = Assert.IsType<Func<Task<bool>>>(args[2]);
+            var clickPageMarkdownMenuItemAsync = Assert.IsType<Func<Task<bool>>>(args[3]);
+
+            return CompleteAsync(
+                targetMethod.ReturnType,
+                async () =>
+                {
+                    Assert.False(await clickScopedMarkdownMenuItemAsync().ConfigureAwait(false));
+                    Assert.True(await clickExportButtonAsync().ConfigureAwait(false));
+                    Assert.True(await clickPageMarkdownMenuItemAsync().ConfigureAwait(false));
+                    return Candidates!;
+                });
+        }
+
+        private static object CompleteAsync(Type taskType, Func<Task<object>> factory)
+        {
+            var resultType = taskType.GetGenericArguments()[0];
+            var method = typeof(AuditSubmitDeepResearchMarkdownExportDriverProxy)
+                .GetMethod(nameof(CompleteAsyncCore), BindingFlags.Static | BindingFlags.NonPublic)!
+                .MakeGenericMethod(resultType);
+            return method.Invoke(null, [factory])!;
+        }
+
+        private static async Task<T> CompleteAsyncCore<T>(Func<Task<object>> factory)
+        {
+            return (T)await factory().ConfigureAwait(false);
+        }
+    }
+
+    private class AuditSubmitDomDumpDriverProxy : DispatchProxy
+    {
+        private readonly List<string> events = [];
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            Assert.NotNull(targetMethod);
+            return targetMethod.Name switch
+            {
+                "CreateTabAsync" => CompleteWith(17L, "create-tab"),
+                "InitializeTabAsync" => Complete("initialize-tab"),
+                "NavigateAsync" => Complete("navigate"),
+                "BringTabToFrontAsync" => Complete("bring-front"),
+                "WaitForReportHydrationAsync" => Complete("hydrate"),
+                "ScrollConversationToBottomAsync" => Complete("scroll-bottom"),
+                "CaptureAsync" => Complete("capture"),
+                "ExecuteCdpAsync" => ExecuteCdpAsync(args),
+                "EvaluateAsync" => EvaluateAsync(args),
+                "CreateFrameExecutionContextAsync" => CompleteWith(3, "create-frame-context"),
+                "EvaluateInContextAsync" => CompleteWith(ReadJsonElement("""{"html":"<p>child</p>","text":"child"}"""), "evaluate-context"),
+                "DumpDeepResearchTargetsAsync" => DumpDeepResearchTargets(args),
+                "FinalizeTabsAsync" => Complete("finalize"),
+                _ => throw new NotSupportedException(targetMethod.Name)
+            };
+        }
+
+        public AuditSubmitDumpDomTrace ToTrace()
+        {
+            return new AuditSubmitDumpDomTrace(events.ToArray());
+        }
+
+        private object ExecuteCdpAsync(object?[]? args)
+        {
+            var method = Assert.IsType<string>(args![1]);
+            return method switch
+            {
+                "Page.getFrameTree" => CompleteWith(
+                    ReadJsonElement(
+                        """
+                        {
+                          "frameTree": {
+                            "frame": {
+                              "id": "root-frame",
+                              "url": "https://chatgpt.com/c/fixture",
+                              "name": "root"
+                            }
+                          }
+                        }
+                        """),
+                    "frame-tree"),
+                "Target.getTargets" => CompleteWith(ReadJsonElement("""{"targetInfos": []}"""), "target-info"),
+                "Accessibility.getFullAXTree" => CompleteWith(ReadJsonElement("""{"nodes": []}"""), "accessibility"),
+                _ => throw new NotSupportedException(method)
+            };
+        }
+
+        private object EvaluateAsync(object?[]? args)
+        {
+            var expression = Assert.IsType<string>(args![1]);
+            if (expression.Contains("connector_openai_deep_research", StringComparison.Ordinal))
+            {
+                if (expression.Contains("acceptedCandidateCount", StringComparison.Ordinal))
+                {
+                    return CompleteWith(ReadJsonElement("""{"acceptedCandidateCount": 0, "candidates": []}"""), "selected-diagnostics");
+                }
+
+                return CompleteWith(ReadJsonElement("false"), "selected");
+            }
+
+            return CompleteWith(ReadJsonElement("""{"html":"<main>root</main>","text":"root"}"""), "dom-dump");
+        }
+
+        private object DumpDeepResearchTargets(object?[]? args)
+        {
+            var targets = Assert.IsAssignableFrom<IEnumerable>(args![3]!);
+            var targetCount = targets.Cast<object>().Count();
+            events.Add($"dump-targets:{targetCount.ToString(CultureInfo.InvariantCulture)}");
+            return Task.CompletedTask;
+        }
+
+        private Task Complete(string eventName)
+        {
+            events.Add(eventName);
+            return Task.CompletedTask;
+        }
+
+        private Task<T> CompleteWith<T>(T value, string eventName)
+        {
+            events.Add(eventName);
+            return Task.FromResult(value);
+        }
+
+        private static JsonElement ReadJsonElement(string json)
+        {
+            using var document = JsonDocument.Parse(json);
+            return document.RootElement.Clone();
+        }
+    }
+
+    private class AuditSubmitProjectPreparationDriverProxy : DispatchProxy
+    {
+        private readonly List<string> calls = [];
+
+        public bool DownloadDirectoryConfigured { get; set; }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            var methodName = targetMethod?.Name ?? string.Empty;
+            switch (methodName)
+            {
+                case "InitializeTabAsync":
+                    calls.Add(methodName);
+                    return Task.CompletedTask;
+                case "ConfigureDownloadsAsync":
+                    calls.Add(methodName);
+                    return Task.FromResult(true);
+                case "NavigateAsync":
+                    calls.Add($"{methodName}:{args![0]}");
+                    return Task.CompletedTask;
+                case "BringTabToFrontBestEffortAsync":
+                    calls.Add(methodName);
+                    return Task.CompletedTask;
+                case "CaptureAsync":
+                    calls.Add($"{methodName}:{args![0]}");
+                    return Task.CompletedTask;
+                case "WaitForComposerAsync":
+                    calls.Add($"{methodName}:{args![0]}");
+                    return Task.CompletedTask;
+                case "WaitForReportHydrationAsync":
+                    calls.Add(methodName);
+                    return Task.CompletedTask;
+                default:
+                    throw new MissingMethodException(targetMethod?.DeclaringType?.FullName, methodName);
+            }
+        }
+
+        public AuditSubmitProjectPreparationTrace ToTrace()
+        {
+            return new AuditSubmitProjectPreparationTrace(calls.ToArray(), DownloadDirectoryConfigured);
+        }
+    }
+
+    private class AuditSubmitOrdinaryReportDriverProxy : DispatchProxy
+    {
+        private readonly List<string> calls = [];
+        private DateTimeOffset currentTime = DateTimeOffset.Parse("2026-07-03T12:00:00+00:00", CultureInfo.InvariantCulture);
+        private string clipboardMarkdown = string.Empty;
+        private int transientCopyFailuresBeforeSuccess;
+        private bool missingCopyButton;
+        private int noCurrentAssistantPollsBeforeSuccess;
+        private int delayCalls;
+        private Type? exceptionType;
+
+        public void Configure(
+            string markdown,
+            int transientFailures,
+            bool missingCopyButtonValue,
+            int noCurrentAssistantPolls,
+            Type codexChromeExceptionType)
+        {
+            clipboardMarkdown = markdown;
+            transientCopyFailuresBeforeSuccess = transientFailures;
+            missingCopyButton = missingCopyButtonValue;
+            noCurrentAssistantPollsBeforeSuccess = noCurrentAssistantPolls;
+            exceptionType = codexChromeExceptionType;
+        }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            var methodName = targetMethod?.Name ?? string.Empty;
+            switch (methodName)
+            {
+                case "get_UtcNow":
+                    return currentTime;
+                case "IsGeneratingAsync":
+                    calls.Add(methodName);
+                    return Task.FromResult(false);
+                case "CopyLatestAssistantMessageMarkdownAsync":
+                    var minimumMessageCount = args is { Length: > 0 } && args[0] is int count
+                        ? count
+                        : -1;
+                    if (transientCopyFailuresBeforeSuccess > 0)
+                    {
+                        transientCopyFailuresBeforeSuccess--;
+                        calls.Add($"{methodName}:{minimumMessageCount}:timeout");
+                        ThrowCodexChromeProtocolTimeout();
+                    }
+
+                    if (noCurrentAssistantPollsBeforeSuccess > 0)
+                    {
+                        noCurrentAssistantPollsBeforeSuccess--;
+                        calls.Add($"{methodName}:{minimumMessageCount}:no-current-assistant");
+                        return CreateOrdinaryCopyTask(targetMethod, "NoCurrentAssistantYet", null);
+                    }
+
+                    calls.Add($"{methodName}:{minimumMessageCount}");
+                    return missingCopyButton
+                        ? CreateOrdinaryCopyTask(targetMethod, "CopyActionUnavailable", null)
+                        : CreateOrdinaryCopyTask(targetMethod, "CopiedMarkdown", clipboardMarkdown);
+                case "CaptureAsync":
+                    var captureName = args is { Length: > 0 } && args[0] is string name
+                        ? name
+                        : string.Empty;
+                    calls.Add($"{methodName}:{captureName}");
+                    return Task.CompletedTask;
+                case "DelayAsync":
+                    var delay = args is { Length: > 0 } && args[0] is TimeSpan span
+                        ? span
+                        : TimeSpan.Zero;
+                    currentTime += delay;
+                    delayCalls++;
+                    if (delayCalls > 40)
+                    {
+                        throw new TimeoutException("ordinary report polling did not fail before the test poll limit.");
+                    }
+
+                    calls.Add($"{methodName}:{delay.TotalSeconds.ToString("0", CultureInfo.InvariantCulture)}");
+                    return Task.CompletedTask;
+                default:
+                    throw new MissingMethodException(targetMethod?.DeclaringType?.FullName, methodName);
+            }
+        }
+
+        public AuditSubmitOrdinaryReportPollingTrace ToTrace(string report)
+        {
+            return new AuditSubmitOrdinaryReportPollingTrace(calls.ToArray(), report);
+        }
+
+        private void ThrowCodexChromeProtocolTimeout()
+        {
+            Assert.NotNull(exceptionType);
+            var exception = Assert.IsAssignableFrom<Exception>(
+                Activator.CreateInstance(
+                    exceptionType,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                    binder: null,
+                    args:
+                    [
+                        "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL",
+                        "Codex Chrome Extension method executeCdp failed: Timed out after 10000ms waiting for CDP command Runtime.evaluate."
+                    ],
+                    culture: CultureInfo.InvariantCulture));
+            ExceptionDispatchInfo.Capture(exception).Throw();
+        }
+
+        private static object CreateOrdinaryCopyTask(MethodInfo? targetMethod, string statusName, string? markdown)
+        {
+            Assert.NotNull(targetMethod);
+            Assert.True(targetMethod.ReturnType.IsGenericType);
+            var resultType = targetMethod.ReturnType.GetGenericArguments()[0];
+            var statusProperty = resultType.GetProperty("Status")
+                ?? throw new MissingMemberException(resultType.FullName, "Status");
+            var status = Enum.Parse(statusProperty.PropertyType, statusName);
+            var result = Activator.CreateInstance(resultType, [status, markdown])
+                ?? throw new InvalidOperationException("Ordinary copy result was not created.");
+            var fromResult = typeof(Task)
+                .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Single(candidate =>
+                    string.Equals(candidate.Name, nameof(Task.FromResult), StringComparison.Ordinal) &&
+                    candidate.IsGenericMethodDefinition &&
+                    candidate.GetParameters().Length == 1)
+                .MakeGenericMethod(resultType);
+            return fromResult.Invoke(null, [result])
+                ?? throw new InvalidOperationException("Ordinary copy task was not created.");
+        }
+    }
+
+    private class AuditSubmitDeepResearchSelectionDriverProxy : DispatchProxy
+    {
+        private readonly List<string> calls = [];
+        private bool composerMenuOpenBeforeToggle;
+        private bool composerMenuExpandedBeforeRows;
+        private bool itemClicked;
+        private DateTimeOffset currentTime = DateTimeOffset.Parse("2026-07-02T00:00:00+00:00", CultureInfo.InvariantCulture);
+        private int openItemFailuresBeforeSuccess;
+        private int menuItemFailuresBeforeSuccess;
+
+        public int OpenItemClicks { get; private set; }
+
+        public int MenuOpenChecks { get; private set; }
+
+        public int MenuExpandedChecks { get; private set; }
+
+        public int MenuOpenAttempts { get; private set; }
+
+        public int MenuItemClicks { get; private set; }
+
+        public int MenuCaptures { get; private set; }
+
+        public void Configure(
+            bool composerMenuOpenBeforeToggle,
+            bool composerMenuExpandedBeforeRows,
+            int openItemFailuresBeforeSuccess,
+            int menuItemFailuresBeforeSuccess)
+        {
+            this.composerMenuOpenBeforeToggle = composerMenuOpenBeforeToggle;
+            this.composerMenuExpandedBeforeRows = composerMenuExpandedBeforeRows;
+            this.openItemFailuresBeforeSuccess = openItemFailuresBeforeSuccess;
+            this.menuItemFailuresBeforeSuccess = menuItemFailuresBeforeSuccess;
+        }
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            var methodName = targetMethod?.Name ?? string.Empty;
+            switch (methodName)
+            {
+                case "get_UtcNow":
+                    return currentTime;
+                case "IsSelectedAsync":
+                    calls.Add(methodName);
+                    return Task.FromResult(itemClicked);
+                case "TryClickOpenItemAsync":
+                    calls.Add(methodName);
+                    OpenItemClicks++;
+                    var clicked = OpenItemClicks > openItemFailuresBeforeSuccess;
+                    if (clicked)
+                    {
+                        itemClicked = true;
+                    }
+
+                    return Task.FromResult(clicked);
+                case "IsComposerMenuOpenAsync":
+                    calls.Add(methodName);
+                    MenuOpenChecks++;
+                    return Task.FromResult(composerMenuOpenBeforeToggle && !itemClicked);
+                case "IsComposerMenuExpandedAsync":
+                    calls.Add(methodName);
+                    MenuExpandedChecks++;
+                    return Task.FromResult(composerMenuExpandedBeforeRows && !itemClicked);
+                case "TryOpenMenuAsync":
+                    calls.Add(methodName);
+                    MenuOpenAttempts++;
+                    return Task.FromResult(true);
+                case "TryClickMenuItemAsync":
+                    calls.Add(methodName);
+                    MenuItemClicks++;
+                    var clickedMenuItem = MenuItemClicks > menuItemFailuresBeforeSuccess;
+                    if (clickedMenuItem)
+                    {
+                        itemClicked = true;
+                    }
+
+                    return Task.FromResult(clickedMenuItem);
+                case "CaptureMenuAsync":
+                    calls.Add(methodName);
+                    MenuCaptures++;
+                    return Task.CompletedTask;
+                case "DelayAsync":
+                    var delay = args is { Length: > 0 } && args[0] is TimeSpan span
+                        ? span.TotalMilliseconds.ToString("0", CultureInfo.InvariantCulture)
+                        : "?";
+                    if (args is { Length: > 0 } && args[0] is TimeSpan actualDelay)
+                    {
+                        currentTime += actualDelay;
+                    }
+
+                    calls.Add($"{methodName}:{delay}");
+                    return Task.CompletedTask;
+                default:
+                    throw new MissingMethodException(targetMethod?.DeclaringType?.FullName, methodName);
+            }
+        }
+
+        public AuditSubmitDeepResearchSelectionTrace ToTrace()
+        {
+            return new AuditSubmitDeepResearchSelectionTrace(
+                calls.ToArray(),
+                OpenItemClicks,
+                MenuOpenChecks,
+                MenuExpandedChecks,
+                MenuOpenAttempts,
+                MenuItemClicks,
+                MenuCaptures);
+        }
+    }
+
+    private class AuditSubmitPromptSubmissionDriverProxy : DispatchProxy
+    {
+        private readonly List<string> calls = [];
+        private bool filesAttached;
+        private bool promptFilled;
+        private bool deepResearchSelected;
+        private bool payloadRequired;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            var methodName = targetMethod?.Name ?? string.Empty;
+            switch (methodName)
+            {
+                case "AttachFilesAsync":
+                    var paths = args is { Length: > 0 } && args[0] is string[] actualPaths
+                        ? string.Join(",", actualPaths)
+                        : string.Empty;
+                    calls.Add($"{methodName}:{paths}");
+                    filesAttached = true;
+                    return Task.CompletedTask;
+                case "CaptureAsync":
+                    var captureName = args is { Length: > 0 } && args[0] is string actualCaptureName
+                        ? actualCaptureName
+                        : string.Empty;
+                    calls.Add($"{methodName}:{captureName}");
+                    return Task.CompletedTask;
+                case "FillPromptAsync":
+                    calls.Add(methodName);
+                    if (!filesAttached)
+                    {
+                        throw new InvalidOperationException("Prompt must be filled after the audit ZIP is attached.");
+                    }
+
+                    promptFilled = true;
+                    return Task.CompletedTask;
+                case "EnableDeepResearchAsync":
+                    calls.Add(methodName);
+                    if (!filesAttached || promptFilled)
+                    {
+                        throw new InvalidOperationException("Deep Research must be selected after attachment and before prompt fill.");
+                    }
+
+                    deepResearchSelected = true;
+                    return Task.CompletedTask;
+                case "RequireDeepResearchSelectedAsync":
+                    calls.Add(methodName);
+                    if (!deepResearchSelected)
+                    {
+                        throw new InvalidOperationException("Deep Research must be selected before the final pre-send guard.");
+                    }
+
+                    return Task.CompletedTask;
+                case "RequirePromptPayloadReadyAsync":
+                    calls.Add(methodName);
+                    if (!filesAttached || !promptFilled)
+                    {
+                        throw new InvalidOperationException("Prompt payload must be checked after attachment and prompt fill.");
+                    }
+
+                    payloadRequired = true;
+                    return Task.CompletedTask;
+                case "ReadConversationMessageCountAsync":
+                    calls.Add(methodName);
+                    if (!payloadRequired)
+                    {
+                        throw new InvalidOperationException("Conversation baseline must be read after the final prompt payload guard.");
+                    }
+
+                    return Task.FromResult(7);
+                case "ClickSendAsync":
+                    calls.Add(methodName);
+                    if (!payloadRequired)
+                    {
+                        throw new InvalidOperationException("Submit must not happen before the final prompt payload guard.");
+                    }
+
+                    return Task.CompletedTask;
+                default:
+                    throw new MissingMethodException(targetMethod?.DeclaringType?.FullName, methodName);
+            }
+        }
+
+        public AuditSubmitPromptSubmissionTrace ToTrace(int messageCountBeforeSend)
+        {
+            return new AuditSubmitPromptSubmissionTrace(calls.ToArray(), messageCountBeforeSend);
+        }
+    }
+
+    private sealed record AuditSubmitFillPromptPreservationFixtureResult(
+        bool FillSucceeded,
+        bool PillPreserved,
+        bool SelectedAfterFill);
+
+    private sealed record AuditSubmitOrdinaryCopyButtonFixtureResult(
+        bool ReturnedPoint,
+        bool Clicked,
+        double X,
+        double Y,
+        bool OldButtonScrolled,
+        bool NewButtonScrolled,
+        bool OldButtonClicked,
+        bool NewButtonClicked);
+
+    private sealed record AuditSubmitMarkdownMenuFixtureResult(
+        bool Returned,
+        bool FocusCalled,
+        int ClickCount);
+
+    private sealed record AuditSubmitDomExportFixtureResult(
+        bool FrameReady,
+        bool PageReady,
+        bool PageExportReturned,
+        bool ScrollIntoViewCalled,
+        string? ScrollBlock,
+        string? ScrollInline,
+        bool FocusCalled,
+        int ClickCount);
 
     private sealed record ZipCentralDirectoryEntry(string Name, bool HasUtf8Flag, int ExternalAttributes);
 

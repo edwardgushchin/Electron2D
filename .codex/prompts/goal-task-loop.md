@@ -1,35 +1,23 @@
-Ты — Team Lead Electron2D. Русский. Цель: выполнить <task-id> до внешнего `VERDICT: ACCEPT`, закрыть задачу в рабочей памяти и сделать Conventional Commit без push.
+Выполнить <task-id>: получить primary/control `VERDICT: ACCEPT`, закрыть actionable `RISKS_AND_NOTES`, обновить `TASKS.md`, дневник, архив/release notes, удалить audit temp/ZIP, сделать Conventional Commit без push. Без reports, `verify audit-followups`, `git status` и commit цель не закрыта.
 
-ПРАВИЛА
-Не выдумывай проверки, ZIP, SHA, статус, verdict или служебные факты внешнего аудита. Чужие изменения не трогай. `TASKS.md` и дневник веди по `AGENTS.md`. Точный контракт внешнего аудита: `docs/release-management/audit-package.md`.
+ПРАВИЛА: русский. Не выдумывай проверки, ZIP, SHA, status, verdict или факты аудита. Чужие изменения не трогай. `TASKS.md` и дневник веди по `AGENTS.md`. Точный контракт: `docs/release-management/audit-package.md`.
 
-PREFLIGHT
-Прочитай `AGENTS.md`, `TASKS.md` по <task-id>, зависимости, связанный `docs/<domain>/`, `docs/release-management/audit-package.md`, прошлые `docs/verdicts/<domain>/`, дневник и состояние Git. Зафиксируй HEAD, baseline, domain, scope, критерии и реальные checks. Если task/domain неясны — стоп.
+PREFLIGHT: прочитай `AGENTS.md`, `TASKS.md` по <task-id>, зависимости, `docs/<domain>/`, `docs/release-management/audit-package.md`, прошлые `docs/verdicts/<domain>/`, дневник. Зафиксируй HEAD, baseline, domain, scope, критерии, checks.
 
-WORKER
-Сначала доведи domain document, тесты, код и документы по правилам `AGENTS.md`: документ → failing tests → implementation → green checks → итоговая синхронизация документа. Если доступен worker, выдай ему только нужный scope, write paths, запреты, критерии и checks. Один worker за раз. Пока worker активен, не меняй repo и не запускай проверки. После worker проверь отчёт, diff и scope.
+WORKER: документ -> failing tests -> implementation -> green checks -> sync. Если есть worker, дай scope, paths, запреты, критерии, checks; пока он активен, repo не меняй. Потом проверь отчёт/diff/scope.
 
-CHECKS
-Запусти минимальные релевантные проверки задачи, затем `git diff --check`. При source changes запусти `dotnet run --project eng/Electron2D.Build -- verify licenses`. Документируй только реально выполненные команды и результаты.
+CHECKS: сначала минимальные релевантные проверки, затем `git diff --check`. При source changes: `dotnet run --project eng/Electron2D.Build -- verify licenses`. Перед архивом задачи после triage: `dotnet run --project eng/Electron2D.Build -- verify audit-followups`.
 
-PACKAGE
-Перед упаковкой не пропускай нужные focused checks. ZIP собирай только C#-инструментом:
-`dotnet run --project eng/Electron2D.Build -- audit package --task <task-id> --iteration rNN --baseline <sha> --config <path> --out .temp/audit`
-Ручная сборка, правка ZIP/manifest/patch/SHA/evidence запрещена.
+LOCAL LOOP: внешний аудит не inner debugging loop. После мелкой правки - `Fast` regression без `audit package`, clean repo, restore или внешней отправки. Перед упаковкой - `Medium`: focused suite, docs/followups/licenses и `git diff --check`. `Heavy` (`audit package`, `audit package verify`, `audit package message`, `audit submit`) только перед отправкой. Перед `Heavy`: failure -> code path/test driver -> test -> command -> proof. Два повтора failure class: не увеличивай `rNN`; запиши отказ, добавь regression, зелёные `Fast`/`Medium`.
 
-VERIFY
-Перед отправкой проверь архив на отдельной clean repo:
-`dotnet run --project eng/Electron2D.Build -- audit package verify --zip <path> --baseline <sha> --repo <clean-repo-path>`
-Если package/verify падает — внешний аудит запрещён: исправь причину и собери новую итерацию.
+PACKAGE: ZIP собирай только `audit package --task <task-id> --iteration rNN --baseline <sha> --config <path> --out .temp/audit`; ручная сборка/правка запрещена. После первого `audit package`/`audit submit` scope заморожен: новые идеи, задачи, roadmap, unrelated docs/prompts/tooling и критерии только follow-up.
 
-SUBMIT
-Отправляй только штатной командой:
-`dotnet run --project eng/Electron2D.Build -- audit submit --zip <path> --out docs/verdicts/<domain>/<task-id>-audit-rNN.md --browser-backend codex-chrome`
-Первая итерация идёт без reuse. После отправки concrete URL оставь только в `.temp/audit/<task-id>/conversation-url.txt`; в `TASKS.md` можно указать этот путь, но не сам URL. Если исправления идут в ту же задачу, следующую rNN отправляй с `--reuse-conversation`. После первого ACCEPT отправь тот же verified ZIP на контроль с `--control-audit`, в чистом обсуждении; новый ZIP после primary ACCEPT не собирай, если code/docs/evidence/config не менялись.
-Не выполняй ручную отправку и не извлекай verdict вручную. Готовый результат принимает только сохранённый файл `--out`.
+VERIFY: перед отправкой clean-repo проверка `audit package verify --zip <path> --baseline <sha> --repo <clean-repo-path>`. Если падает - исправь и собери новую итерацию.
 
-VERDICT
-ACCEPT действителен только из сохранённого полного отчёта, где первая непустая строка ровно `VERDICT: ACCEPT`. Первый ACCEPT запускает контрольный аудит в чистом обсуждении; задача готова к закрытию только после control ACCEPT. `NEEDS_FIXES`: зафиксируй blocker-ы, исправь только scope, повтори нужные checks, package, verify и submit как новую rNN в тот же conversation. Если control вернул `NEEDS_FIXES`, включи control verdict в `previousVerdictChain`, закрой blocker-ы через `blockerClosureList` и вернись к primary loop. Вне-scope blocker оспаривай только доказательствами.
+SUBMIT: отправляй только штатно:
+`dotnet run --project eng/Electron2D.Build -- audit submit ... --browser-backend codex-chrome`
+r01 без reuse. URL оставь только в `.temp/audit/<task-id>/conversation-url.txt`; в `TASKS.md` можно указать этот путь, но не сам URL. Исправительная rNN после `NEEDS_FIXES` идёт с `--reuse-conversation`; если сохранённый чат штатно не продолжить, используй `--new-conversation` и запиши причину. После primary ACCEPT: чистый control ZIP той же rNN/области без `previousVerdictChain`, `blockerClosureList`, verdict-отчётов; проверь и отправь в новый чат проекта с `--control-audit`, не в primary-обсуждение. Изменилась область - новый primary. Ручная отправка/чтение verdict запрещены. Готовый результат принимает только сохранённый файл `--out`.
 
-ACCEPT/DONE
-Цель выполнена, когда критерии задачи закрыты, primary report сохранён как `VERDICT: ACCEPT` и control report сохранён как `VERDICT: ACCEPT`. После primary ACCEPT новый ZIP не собирай для control; используй тот же verified ZIP. Обнови `TASKS.md`, `completed-tasks`, дневник и нужные локальные release notes. Если после ACCEPT менялись code/criteria/evidence — нужен новый audit. Удали audit temp/ZIP для <task-id>, выполни финальные `git diff --check` и `git status`, сделай Conventional Commit без push. Финал: verdict, iteration, checks, verdict path, commit, clean status.
+VERDICT: ACCEPT действителен только из сохранённого полного отчёта, где первая непустая строка ровно `VERDICT: ACCEPT`. Первый ACCEPT запускает control; задача готова только после control ACCEPT. `NEEDS_FIXES`: зафиксируй blocker-ы, исправь scope, повтори checks/package/verify/submit как новую rNN. Если control вернул `NEEDS_FIXES`, включи control verdict в `previousVerdictChain`, закрой blocker-ы через `blockerClosureList` и вернись к primary loop.
+
+ACCEPT/DONE: готово, когда критерии закрыты, primary/control отчёты сохранены как `VERDICT: ACCEPT`, а actionable `RISKS_AND_NOTES` закрыты tracked note, `accepted-risk`, `duplicate`, `not-actionable` или `promoted-blocker`. После ACCEPT изменение области требует новый primary. Обнови `TASKS.md`, архив, дневник, release notes. Удали audit temp/ZIP, выполни `git diff --check` и `git status`, сделай Conventional Commit без push. Финал: verdict, iteration, проверки, путь verdict-отчёта, commit, чистое состояние Git.

@@ -385,7 +385,7 @@
       },
       {
         "path": "docs/release-management/AUDIT-REQUEST.md",
-        "sha256": "4564fdc5a0bc24cc2f384f2e454d097fa846f997a2b6e08a7f7a2fc371a24447"
+        "sha256": "86b1a43f43cc59bdda3d6fee1f5a931fba9a8a5827106a17a3a99b3a2bbb0c6b"
       },
       {
         "path": "docs/release-management/api-compatibility.md",
@@ -393,7 +393,7 @@
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "300d7ad03ae5c962fda253589b0e5b500969ee658c058ccf92fcfd29ef8a4b4d"
+        "sha256": "0fba85b192aaafeaf8f11d4dccd486011d0af509f1792739ce40893cb137e6a6"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -638,306 +638,6 @@
       {
         "path": "docs/ui/theme-tooltips.md",
         "sha256": "683adee81b8508acc4b76e1b5008786c722620594bf61784c70318e35ee84b72"
-      },
-      {
-        "path": "docs/verdicts/documentation/t-0213-audit-r01.md",
-        "sha256": "f40e9cb3932de4ae6136c3573f0aabb644a23e3095056b7907f33eb6b7483595"
-      },
-      {
-        "path": "docs/verdicts/documentation/t-0213-audit-r02.md",
-        "sha256": "990ff85187297805fa21a4b9347b5d816d9a44adb2d5e6d6d5ada4baa1185edc"
-      },
-      {
-        "path": "docs/verdicts/documentation/t-0213-audit-r03.md",
-        "sha256": "28bfe68e65fd465778ec3698b3c01c566bc2d434b153bcaba304c79a443e5454"
-      },
-      {
-        "path": "docs/verdicts/documentation/t-0213-audit-r04.md",
-        "sha256": "97c850e0e59c667234f7455df2431b55619587eed49a0958f0d2e17873812d86"
-      },
-      {
-        "path": "docs/verdicts/documentation/t-0213-audit-r05.md",
-        "sha256": "d7f449ff1e3a1886f14ccede1c0ec8feedfc6ebf11f274ef8402c7abbb55f95a"
-      },
-      {
-        "path": "docs/verdicts/documentation/t-0231-audit-r01.md",
-        "sha256": "3b73b60ed56355942275633bc1e010cdff78b5f97452ea03d0904fdbc9550c88"
-      },
-      {
-        "path": "docs/verdicts/documentation/t-0231-audit-r02.md",
-        "sha256": "5383ad83ff5f9a77a329b907666306e677cbe170ef0da5a747e183442cfce9ce"
-      },
-      {
-        "path": "docs/verdicts/project-system/t-0234-audit-r03.md",
-        "sha256": "1b2e9dd41c6d23c8410f4b62ba731cfbd2a9614ca28d23c89caea0a0dddd2c1d"
-      },
-      {
-        "path": "docs/verdicts/project-system/t-0234-audit-r04.md",
-        "sha256": "89d133a0fde85c79f8c192d81aeacc8f6d2251d094ab42c8acfe074e68612bad"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r02.md",
-        "sha256": "72842a6b858157f663ad4af2219ac16185204e0ece1ebd5da1a35ddb4f6694bf"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r03.md",
-        "sha256": "b0b1c4aaf6fbba70e90807f793df901d88b1dea8e6ad244467c93203ed252261"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r08.md",
-        "sha256": "0cabcada9671800f6571a855b981226bf6a220fcff2188e73811f6f6ae791d29"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r10.md",
-        "sha256": "cc0a17614a717a3d3eafdcba3db34387ee74573787175092ae7b54b33bc76fd7"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r27.md",
-        "sha256": "9ab143753c537da6f06cb5bb068acc0545c9eab02d8c1258b21261456feb37f6"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r29.md",
-        "sha256": "98cd07a89daf892f66b20d6aa5f20a12900bf342892d5eccb043074064382861"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r30.md",
-        "sha256": "a4e4df54d1e99a11942fe7105ce9774ef6df0caaa9f7482bd0093c0f14ffac80"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r31.md",
-        "sha256": "24f5c6a37faf472b48e5f02d23fc566bf1c806d7c9b5c1894e8728f0595b16b9"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r33.md",
-        "sha256": "38a246db6621ffa1d30abc99ffc03cf334368ec1302ccdd9eb5edbd8840de2c8"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0001-audit-r34.md",
-        "sha256": "7c526bfcab23f2e2f8541d0d8a07ca3f534bfa46fe8bedecfc8d9425f2570572"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0206-audit-r02.md",
-        "sha256": "88873ba3a5b85107e948e2f2586241eb79519af92b8ab6fe4da3c172c0bb2401"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0206-audit-r03.md",
-        "sha256": "095605947f4102fce8d436b9c12e081115c0e2627d52c3085cdd350480bdfd4e"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0207-audit-r01.md",
-        "sha256": "5a3c64c56f24533878b39c1bc4d642575debcbc49e29bf1b4abad09cd3b9e1d8"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0207-audit-r02.md",
-        "sha256": "c30ff3c54a223638de8557b98524d88632a40b99e18cc0ef6fb0486c1823c124"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0207-audit-r03.md",
-        "sha256": "e409ff8b74d9cc329c7d29144d0b9b4979f38835422fab771a96866a11f76105"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0207-audit-r04.md",
-        "sha256": "d9935a56de99897c7a2991ae42414645ee577694d008bfffb4b354e830fbed84"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0208-audit-r03.md",
-        "sha256": "624d7e577741e1557bf201e4a6dd360a1efa260bc90101ddbd4e0f976f64e4ad"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0209-audit-r04.md",
-        "sha256": "15dd2536af907d6fb1ce525043f0d782ef91daf6ede46b42b2ab0d54c79dd241"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0209-audit-r05.md",
-        "sha256": "ea1b4db4873a1470012faf809327c43b3dd5d2d0616755534b497210ba09a8be"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0209-audit-r07.md",
-        "sha256": "bdc222a6e06a73a32d2247a647d1e8f78f37de50d912e29ef05e48c412995750"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0209-audit-r12.md",
-        "sha256": "fcbaa752e96c0c8ecd7cc3c3344bc1560e596f1f1171f313626c89890007b4a4"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0209-audit-r13.md",
-        "sha256": "37b6b014d5514486808ae05620f59c4716eeef4e25d5355cbde18b2dae69d9db"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0210-audit-r02.md",
-        "sha256": "0f46e476c9ae1ad47c9762467987fa8e6169990768c4e5ea719674038e32a1ee"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0210-audit-r03.md",
-        "sha256": "61c6c3297330689ac12da32bcf7485cab230f3b6a245ae374e88c3f33d810971"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0210-audit-r04.md",
-        "sha256": "e39110562c57ad5f884c497c31611a92e4d2e15d6c2e7cda50676adef3589f30"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0210-audit-r16.md",
-        "sha256": "1b9fae51485856e6a70cb1c69e8cac204da53ab4604cc4639bfc298daf931722"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0210-audit-r20.md",
-        "sha256": "c14af6bba8501a47e947bdea7d31c33e28bef4aebe27dcbb1959ef4f25b6e234"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0214-audit-r01.md",
-        "sha256": "4096e1f84b29768f64d010fff07cb9ab148a67ef33744d85c116be0577eab03c"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0214-audit-r02.md",
-        "sha256": "93f23101cacf9282af8f7dcef03937fbeccdfe5a9a1bc86448dc4ee0c98c31ba"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0214-audit-r03.md",
-        "sha256": "e0ff14a760cf21ada58b6f7ff6e320a5e3058624e1d0a8a07144cbd769be085d"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0214-audit-r04-scope-challenge.md",
-        "sha256": "c297925c3f9688a14b28d844496fd523f700afe5423d99fee9c0005682527f2e"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0214-audit-r04.md",
-        "sha256": "eb215868597850ccd856f1783ca4a664fe462bac153cd95adcf8344bfb6a37d2"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0214-audit-r05.md",
-        "sha256": "73ad0d0bc4886fb25cb29b53c86fd1c648adeffdc930eec37d5ddaebc3ab00bf"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0215-audit-r05.md",
-        "sha256": "c6afdcf910a75faf528da48de0a5f05872e00f77ba7622e4031b066d73268f8d"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0215-audit-r06.md",
-        "sha256": "d24beab5b87fe7e514af8189cd60784ecf4c067ed49fe488e82a918f94151e3c"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0215-audit-r07.md",
-        "sha256": "f27295c58d9858daadf957aeddba65595cdf6410cf8e0236da1493163d0db763"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0228-audit-r01.md",
-        "sha256": "0c24ce034e9824eb82d8eb4e5dfd3921968b333c1491b76355d56cc09dce77fe"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0228-audit-r02.md",
-        "sha256": "8b0b4c65c08212cb446003511a2d7ba26dfb745c46963ce649ca6853f0282698"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0228-audit-r03.md",
-        "sha256": "0fcb473dff7d8d5b7e881bb95c77e828d05ff7be79964c0a6d3a85d621f49977"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0228-audit-r04.md",
-        "sha256": "c2c9258eea423b71100c606d1230279746e65d9ccdd76f2c7357d30ca45c9bec"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0229-audit-r01.md",
-        "sha256": "55458db50049f6605096a896eca1c5e0f869be57f72ebf892b7933de7e888cd2"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0229-audit-r02.md",
-        "sha256": "79353337ef2a3472aa5e68481030d65255618519e1e3c31d9c4383d00bced90b"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0230-audit-r01.md",
-        "sha256": "681e9eeabd5b8589413d2d7c5af1b2111865d88813f143591f41eb2733525da6"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0230-audit-r03.md",
-        "sha256": "f5440396e9293d69fd00de88de9ec9fce2c45262e94bd7c2cb6655f4e4169a41"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0230-audit-r04.md",
-        "sha256": "c2680651a6076acbcbbccdccb981a55e4fddda0fd1ee9d7dfd5e7785e819e727"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0233-audit-r01.md",
-        "sha256": "8907b7591bf9cde3ff396b7fade744498ec578d87af8b6306c5420bf7bf18c13"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0233-audit-r03.md",
-        "sha256": "03e0cda8b2be9df43577b3479d8de4e7c4cca21a67ce7d6e604873b4a36f7645"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0235-audit-r03.md",
-        "sha256": "2038200430a0d0fd693adecd5e96867981392283236ed2c958ab90940e7bf468"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0235-audit-r04.md",
-        "sha256": "70bd9b8787442fdfd1f6d5232f4ff2e0fe626a08f2f1eae679545a4dfdfbe924"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0235-audit-r05.md",
-        "sha256": "9b7467b4b4546cfeb5a5ee87a61a51324ada48e85fe56605b632e93bb05f12f6"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0236-audit-r01.md",
-        "sha256": "a22e8e650efee5b03ffc7d71391708a648ea71507e2a50c26368dce816fcfc4c"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0236-audit-r02.md",
-        "sha256": "5080fd8e9148d91a54c3d6106444cb74b53258504fc1d70ed04270214e9feec5"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0237-audit-control-r04.md",
-        "sha256": "7c3298d1cecfb3c5414cae4b79d6e3e7acf0b8fe968fbcc38649e2c106b0e9aa"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0237-audit-r01.md",
-        "sha256": "06aa96df3464d04f306395e974a5a73e64b2470a9b17592aa9e5bc7baf04f6b4"
-      },
-      {
-        "path": "docs/verdicts/release-management/t-0237-audit-r04.md",
-        "sha256": "2ec1a3542f7ee6288b70e8c1b0404d18f2d7e735bc6e6f42fd7cbe3f9b15bc1e"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
-        "sha256": "64f5edf9155455623cf21f7e0bf7a18807b08023eda6c06a5da2ac93e341c5d9"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
-        "sha256": "0778f10723838fb3d6780bb8864bc3ea279d21ae6f3c69a8e835ec24af5fc0f0"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
-        "sha256": "c5d8055ef88aeb6c9e869d3f785b699b5db1453dc3f10468372b8e06c48fb3d3"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md",
-        "sha256": "22b21a6e16527bc6fe96d2cd33b28c6118da4d172707f56ab1af3b58469dd1f8"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md",
-        "sha256": "fd97a4fd8e4e89759a6e640c33bf809a8fbe3c4359cca4b89ae3a9531103b453"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md",
-        "sha256": "f4f356f5e1cc6330ef1e666ac421c5882bf321f9a0fe0039052edfaf0e5a1a49"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md",
-        "sha256": "caca19a048a89e10b27b46d93db01069c6fc9673f19a80d86f849368a73be183"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0220-audit-r01.md",
-        "sha256": "e53cb5953083e7127fc837d0462fb6ca32d6bf2b5258789376798f0d989c8c3b"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0220-audit-r02.md",
-        "sha256": "3a113419c46cec3008af392f28fb8182ef048676b1e15be10a984ba66c9b130c"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0220-audit-r03.md",
-        "sha256": "84a907359cfa504197dfde8d7427359e0c25a73ede7a9577b15c483ceadd14b9"
-      },
-      {
-        "path": "docs/verdicts/runtime/t-0220-audit-r04.md",
-        "sha256": "e391567ddbdfc1c98e6ebe135b1c86b50afb3361019fc2c653db1073bae0e27a"
       }
     ],
     "examples": {
@@ -1152,82 +852,7 @@
         "docs/ui/control-layout-core.md",
         "docs/ui/public-api-gate.md",
         "docs/ui/structured-controls.md",
-        "docs/ui/theme-tooltips.md",
-        "docs/verdicts/documentation/t-0213-audit-r01.md",
-        "docs/verdicts/documentation/t-0213-audit-r02.md",
-        "docs/verdicts/documentation/t-0213-audit-r03.md",
-        "docs/verdicts/documentation/t-0213-audit-r04.md",
-        "docs/verdicts/documentation/t-0213-audit-r05.md",
-        "docs/verdicts/documentation/t-0231-audit-r01.md",
-        "docs/verdicts/documentation/t-0231-audit-r02.md",
-        "docs/verdicts/project-system/t-0234-audit-r03.md",
-        "docs/verdicts/project-system/t-0234-audit-r04.md",
-        "docs/verdicts/release-management/t-0001-audit-r02.md",
-        "docs/verdicts/release-management/t-0001-audit-r03.md",
-        "docs/verdicts/release-management/t-0001-audit-r08.md",
-        "docs/verdicts/release-management/t-0001-audit-r10.md",
-        "docs/verdicts/release-management/t-0001-audit-r27.md",
-        "docs/verdicts/release-management/t-0001-audit-r29.md",
-        "docs/verdicts/release-management/t-0001-audit-r30.md",
-        "docs/verdicts/release-management/t-0001-audit-r31.md",
-        "docs/verdicts/release-management/t-0001-audit-r33.md",
-        "docs/verdicts/release-management/t-0001-audit-r34.md",
-        "docs/verdicts/release-management/t-0206-audit-r02.md",
-        "docs/verdicts/release-management/t-0206-audit-r03.md",
-        "docs/verdicts/release-management/t-0207-audit-r01.md",
-        "docs/verdicts/release-management/t-0207-audit-r02.md",
-        "docs/verdicts/release-management/t-0207-audit-r03.md",
-        "docs/verdicts/release-management/t-0207-audit-r04.md",
-        "docs/verdicts/release-management/t-0208-audit-r03.md",
-        "docs/verdicts/release-management/t-0209-audit-r04.md",
-        "docs/verdicts/release-management/t-0209-audit-r05.md",
-        "docs/verdicts/release-management/t-0209-audit-r07.md",
-        "docs/verdicts/release-management/t-0209-audit-r12.md",
-        "docs/verdicts/release-management/t-0209-audit-r13.md",
-        "docs/verdicts/release-management/t-0210-audit-r02.md",
-        "docs/verdicts/release-management/t-0210-audit-r03.md",
-        "docs/verdicts/release-management/t-0210-audit-r04.md",
-        "docs/verdicts/release-management/t-0210-audit-r16.md",
-        "docs/verdicts/release-management/t-0210-audit-r20.md",
-        "docs/verdicts/release-management/t-0214-audit-r01.md",
-        "docs/verdicts/release-management/t-0214-audit-r02.md",
-        "docs/verdicts/release-management/t-0214-audit-r03.md",
-        "docs/verdicts/release-management/t-0214-audit-r04-scope-challenge.md",
-        "docs/verdicts/release-management/t-0214-audit-r04.md",
-        "docs/verdicts/release-management/t-0214-audit-r05.md",
-        "docs/verdicts/release-management/t-0215-audit-r05.md",
-        "docs/verdicts/release-management/t-0215-audit-r06.md",
-        "docs/verdicts/release-management/t-0215-audit-r07.md",
-        "docs/verdicts/release-management/t-0228-audit-r01.md",
-        "docs/verdicts/release-management/t-0228-audit-r02.md",
-        "docs/verdicts/release-management/t-0228-audit-r03.md",
-        "docs/verdicts/release-management/t-0228-audit-r04.md",
-        "docs/verdicts/release-management/t-0229-audit-r01.md",
-        "docs/verdicts/release-management/t-0229-audit-r02.md",
-        "docs/verdicts/release-management/t-0230-audit-r01.md",
-        "docs/verdicts/release-management/t-0230-audit-r03.md",
-        "docs/verdicts/release-management/t-0230-audit-r04.md",
-        "docs/verdicts/release-management/t-0233-audit-r01.md",
-        "docs/verdicts/release-management/t-0233-audit-r03.md",
-        "docs/verdicts/release-management/t-0235-audit-r03.md",
-        "docs/verdicts/release-management/t-0235-audit-r04.md",
-        "docs/verdicts/release-management/t-0235-audit-r05.md",
-        "docs/verdicts/release-management/t-0236-audit-r01.md",
-        "docs/verdicts/release-management/t-0236-audit-r02.md",
-        "docs/verdicts/release-management/t-0237-audit-control-r04.md",
-        "docs/verdicts/release-management/t-0237-audit-r01.md",
-        "docs/verdicts/release-management/t-0237-audit-r04.md",
-        "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md",
-        "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md",
-        "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md",
-        "docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md",
-        "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md",
-        "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md",
-        "docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md",
-        "docs/verdicts/runtime/t-0220-audit-r01.md",
-        "docs/verdicts/runtime/t-0220-audit-r02.md",
-        "docs/verdicts/runtime/t-0220-audit-r03.md",
-        "docs/verdicts/runtime/t-0220-audit-r04.md"
+        "docs/ui/theme-tooltips.md"
       ],
       "contract": "Current implementation documentation and Agent-native cross-platform 2D game engine architecture notes."
     },
@@ -1256,8 +881,8 @@
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
-      "count": 233,
-      "sha256": "ca4a3c8126189489fe5ce0d3d7c09522067c2db91c1b1a4af29de5bfbe9170ed"
+      "count": 158,
+      "sha256": "e95537c730632b079125f1f1455296989975e5e70ef1364bec77bfc9faa83d16"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -1269,7 +894,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "41f757c60cb0af03b5b8063632cc220d0748ae431ab55cef44f5e4cfb3b980e7",
+    "sourceDigest": "10b9eb421d91d922d7a33c98db97193d7ad18c25116c8bfc83a6819e4bd2d71d",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

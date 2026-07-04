@@ -67,7 +67,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
                 "usage",
                 "error",
                 "E2D-BUILD-CLI-USAGE",
-                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit, audit submit --download-report-only."));
+                "Expected one of: test [--include-baseline] [--timeout-seconds <n>], verify, verify readme, verify ci-matrix, verify docs, verify audit-followups, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, verify api-compatibility --wiki-path <path>, update wiki [--check] [--output <path>], update api-manifest [--check] [--output <path>] [--wiki-path <path>], update docs --check, update docs, package --rid <rid>, release verify, audit package, audit package verify, audit package message, audit submit [--deep-research], audit submit --download-report-only."));
             return Task.FromResult(RepositoryBuildExitCodes.Failed);
         }
 
@@ -103,6 +103,11 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         if (args is ["verify", "docs"])
         {
             return VerifyDocsAsync(cancellationToken);
+        }
+
+        if (args is ["verify", "audit-followups"])
+        {
+            return VerifyAuditFollowupsAsync(cancellationToken);
         }
 
         if (args is ["verify", "ci-matrix"])
@@ -225,7 +230,7 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
             return VerifyManifestsAsync(cancellationToken);
         }
 
-        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify ci-matrix, verify docs, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
+        return InvalidArgumentsAsync("verify", "verify", "Expected: verify, verify readme, verify ci-matrix, verify docs, verify audit-followups, verify no-powershell-workflows, verify no-powershell-workflows allowed-mentions, verify source-domain-layout, verify box2d-physics-candidate [--native-aot], verify user-documentation, verify canonical-goal-alignment, verify export-documentation, verify reference-game-assets, verify reference-game-platform-matrix, verify platformer, verify leak-checks, verify agent-acceptance-benchmarks, verify public-api-xml-docs [--fail-on-issues], verify ui-public-api-gate --wiki-path <path>, verify public-api-documentation --wiki-path <path>, verify line-endings, verify licenses, verify manifests, verify performance-budgets, verify performance [--out <path>], verify performance run --scenario <id> [--out <path>] [--timeout-seconds <n>] -- <fileName> [args...], verify release-metadata, verify project-template, or verify api-compatibility --wiki-path <path>.");
     }
 
     private Task<int> RunTestAsync(string[] args, CancellationToken cancellationToken)
@@ -354,6 +359,14 @@ internal sealed class RepositoryBuildApplication(JsonDiagnosticSink diagnostics)
         return Task.FromResult(repositoryRoot is null
             ? RepositoryBuildExitCodes.Failed
             : new PerformanceBudgetDocsVerifier(repositoryRoot, diagnostics).Verify());
+    }
+
+    private Task<int> VerifyAuditFollowupsAsync(CancellationToken cancellationToken)
+    {
+        var repositoryRoot = FindRepositoryRoot("verify", "verify audit-followups");
+        return repositoryRoot is null
+            ? Task.FromResult(RepositoryBuildExitCodes.Failed)
+            : new AuditFollowupVerifier(repositoryRoot, diagnostics, new ProcessRunner()).VerifyAsync(cancellationToken);
     }
 
     private Task<int> VerifyReferencePerformanceAsync(string[] args, CancellationToken cancellationToken)

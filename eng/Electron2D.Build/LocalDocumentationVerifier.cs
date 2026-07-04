@@ -240,6 +240,7 @@ internal sealed class LocalDocumentationVerifier(
             var documentationFiles = Directory
                 .EnumerateFiles(docsRoot, "*.md", SearchOption.AllDirectories)
                 .Select(Path.GetFullPath)
+                .Where(path => !IsSavedAuditVerdictDocumentationPath(path))
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray();
             var documentationHashRecords = documentationFiles.Select(NewHashRecord).ToArray();
@@ -380,6 +381,11 @@ internal sealed class LocalDocumentationVerifier(
     private DocumentationHashRecord NewHashRecord(string fullPath)
     {
         return new DocumentationHashRecord(GetRelativeUnixPath(fullPath), ComputeNormalizedSha256(fullPath));
+    }
+
+    private bool IsSavedAuditVerdictDocumentationPath(string fullPath)
+    {
+        return GetRelativeUnixPath(fullPath).StartsWith("docs/verdicts/", StringComparison.Ordinal);
     }
 
     private static JsonObject HashRecordJson(DocumentationHashRecord record)

@@ -1,0 +1,132 @@
+VERDICT: NEEDS_FIXES
+
+TASK_ASSESSMENT:
+- Проверен полный текущий объём пакета по `T-0238` итерации `r36`: metadata, manifest, полные снимки `repo-after/` и `repo-before/`, изменённый код `AuditSubmit*` и `AuditPackage*`, тесты `RepositoryBuildToolTests`, доменная документация, список прошлых verdict-файлов из `metadata.previousVerdictChain`, closure-заметки из `metadata.blockerClosureList`, а также приложенные evidence-артефакты. Архив читается, `metadata/repo-file-snapshots.json` полон по заявленной области, и основная часть старых замечаний действительно закрыта. Но текущее изменение нельзя принять, потому что два заявленных закрытия из текущей области доказаны неполно: экспортный page-level fallback разрешён слишком рано и может сработать до клика по выбранной кнопке `Экспорт`, а закрытие r35 опирается на production-детектор открытого меню, который сейчас считает достаточно одним `aria-expanded="true"` и не покрыт DOM-level регрессией. Дополнительно доменная документация сама себе противоречит по тому же export fallback.
+- Техническая привязка:
+  - `metadata.taskId`: `T-0238`
+  - `metadata.iteration`: `r36`
+  - `metadata.scopeTaskIds`: `["T-0238"]`
+  - `metadata.scopeSummary`: пакет заявляет закрытие `r33` dump-dom follow-up, `r34` local export recovery и dump/report mix-up, а также `r35` local Deep Research menu toggle failure
+  - Проверенные файлы реализации: `repo-after/eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`, `repo-after/eng/Electron2D.Build/AuditSubmitCommand.cs`, `repo-after/eng/Electron2D.Build/AuditPackageCommand.cs`, `repo-after/eng/Electron2D.Build/AuditFollowupVerifier.cs`, `repo-after/eng/Electron2D.Build/Program.cs`
+  - Проверенные тесты: `repo-after/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`
+  - Проверенные документы: `repo-after/docs/release-management/AUDIT-REQUEST.md`, `repo-after/docs/release-management/audit-package.md`, `repo-after/AGENTS.md`, `repo-after/TASKS.md`, verdict-файлы из `repo-after/docs/verdicts/release-management/`
+  - Проверенные доказательства: `evidence/T-0238-r36/checks/audit-submit-focused-tests-r36/*`, `verify-audit-followups/*`, `verify-docs/*`, `verify-licenses/*`, `git-diff-check/*`, `update-docs-check/*`
+  - Проверка полноты снимков: `metadata/repo-file-snapshots.json` содержит 28 записей по allowlist, для всех указан `fullContentIncluded: true`
+
+BLOCKERS:
+- B1
+  - Что не так: заявленное закрытие `r34 local export recovery failure` не подтверждается текущей реализацией. Код разрешает page-level Markdown fallback для выбранных `DeepResearchFrame`/`DeepResearchTarget`/`DeepResearchTargetFrame`, но пытается нажать Markdown-пункт ещё до клика по выбранной кнопке `Экспорт`. Это прямо ломает заявленный контракт «fallback только после выбранной кнопки экспорта» и открывает путь к клику по чужому уже открытому page-level меню.
+  - Почему это важно: текущая область аудита прямо заявляет, что r34 закрыт так, чтобы page-level fallback относился только к пункту Markdown после уже выбранной кнопки отчёта и не позволял выбирать другой отчёт или другой export path. Сейчас это не так: при наличии page-level меню код может завершить экспорт без подтверждённого клика по выбранной export-surface. Для recovery и обычного downloader path это риск скачать старый или чужой отчёт.
+  - Что исправить: перестроить production flow так, чтобы page-level Markdown fallback для выбранной Deep Research surface был разрешён только после успешного `clickExportButtonAsync()` этой же surface. Нужна явная state-gate проверка «кнопка выбранной surface уже нажата» перед любым page-level `clickPageMarkdownMenuItemAsync()`.
+  - Как проверить исправление: добавить поведенческий regression-тест на production-путь `ClickReportExportAndReadDownloadedMarkdownAsync` или эквивалентный внутренний driver-контракт, который доказывает два условия: до клика `clickExportButtonAsync()` page-level Markdown menu не нажимается; после клика выбранной export-button page-level Markdown fallback допускается только как продолжение того же export action.
+  - Техническая привязка:
+    - `File/symbol`: `repo-after/eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`, `ClickReportExportAndReadDownloadedMarkdownAsync`, `ClickMarkdownMenuItemAsync`, `CanUsePageLevelMarkdownMenu`
+    - `Criterion`: `previous blockers closure`, `implementation content review`, `test coverage review`, `documentation review`, `observable behavior`
+    - `Evidence`:
+      - Код сначала вызывает `ClickMarkdownMenuItemAsync(...)`, и только если это не сработало, переходит к `clickExportButtonAsync()` — `AuditSubmitCodexChromeCommand.cs:1875-1897`
+      - Для `DeepResearchFrame`, `DeepResearchTarget` и `DeepResearchTargetFrame` page-level fallback разрешён без дополнительного состояния «selected export button already clicked» — `AuditSubmitCodexChromeCommand.cs:1951-1970`
+      - `metadata.blockerClosureList` и `TASKS.md` утверждают обратное: fallback допустим только «после выбранной кнопки экспорта» — `metadata/audit-package.input.json` blockerClosureList entry `r34 local export recovery failure closed`; `repo-after/TASKS.md:1841`, `repo-after/TASKS.md:2047`
+      - Текущий regression-тест проверяет только булеву развилку `ResolveMarkdownMenuItemClickResult`, а не production-последовательность с кликом export-button — `repo-after/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs:4315-4321`, helper `InvokeAuditSubmitMarkdownClickResolutionAsync` вызывает только `ResolveMarkdownMenuItemClickResult` — `RepositoryBuildToolTests.cs:9459-9466`
+      - Доменная документация тоже описывает fallback именно после уже выбранной export-button — `repo-after/docs/release-management/audit-package.md:91`
+    - `Impact`: нельзя считать r34 закрытым проверяемым способом; текущий submit/export path всё ещё допускает неверный источник Markdown
+    - `Fix`: перенести page-level fallback за факт клика выбранной export-button и покрыть это поведенческим тестом production-flow
+    - `Verification`: новый test должен падать на текущем коде и проходить только после запрета pre-export page-level fallback; focused suite должен включать этот test в package evidence
+
+- B2
+  - Что не так: документация текущего пакета сама себе противоречит по ключевому контракту Markdown-export fallback. В одном месте она запрещает page-level fallback после выбора frame/target, в другом — разрешает его после выбранной кнопки `Экспорт`. Это делает операторский контракт неоднозначным и не даёт понять, какое поведение считается правильным.
+  - Почему это важно: `T-0238` меняет не только код, но и правила внешнего аудита и операторский путь `audit submit`. При таком объёме противоречивая документация сама по себе блокирует приёмку: невозможно понять, чему должен соответствовать инструмент и какие regression-тесты реально подтверждают задачу.
+  - Что исправить: привести `docs/release-management/audit-package.md` к одному непротиворечивому контракту, который совпадает с реальным кодом после исправления блока B1. После этого синхронизировать generated docs index.
+  - Как проверить исправление: перечитать весь раздел `audit submit` и убедиться, что во всех местах используется одна и та же формулировка для page-level Markdown fallback; затем прогнать `update docs --check` и `verify docs`.
+  - Техническая привязка:
+    - `File/symbol`: `repo-after/docs/release-management/audit-package.md`
+    - `Criterion`: `documentation review`, `task compliance review`
+    - `Evidence`:
+      - Документ разрешает page-level fallback для Markdown-пункта после выбранной export-button внутри выбранной surface — `audit-package.md:91`, также `audit-package.md:138`
+      - Тот же документ запрещает основной DOM как fallback для Markdown-пункта после выбора frame/target — `audit-package.md:537`, а ниже снова утверждает, что команда «запрещает page-level Markdown fallback после выбора frame/target» — `audit-package.md:587`
+      - `TASKS.md` одновременно фиксирует r34 как закрытый именно через разрешение такого fallback после клика export-button — `repo-after/TASKS.md:1841`, `repo-after/TASKS.md:2047`
+    - `Impact`: documentation review не пройдена; пакет не даёт единого проверяемого контракта для текущей области задачи
+    - `Fix`: выбрать одну модель поведения и везде описать её одинаково
+    - `Verification`: `update docs --check`, `verify docs`, ручное чтение всех упоминаний page-level fallback в `audit-package.md`
+
+- B3
+  - Что не так: заявленное закрытие `r35 local Deep Research menu toggle failure` неполно. Production-детектор `DeepResearchComposerMenuOpenExpression` считает меню открытым уже по одному `aria-expanded="true"` у кнопки `+`, ещё до проверки любых видимых строк меню рядом с composer. При этом closure-описание и `TASKS.md` утверждают более узкий и безопасный контракт: детекция по видимым menu/listbox/plain-row элементам возле кнопки `+`. Текущий regression-тест это не ловит, потому что он подменяет `IsComposerMenuOpenAsync` прокси-значением и вообще не исполняет production DOM expression.
+  - Почему это важно: r35 закрывался именно для медленного UI, где повторный клик по `+` не должен закрывать уже открывшееся меню. Если детектор даёт ложный `menu open` по одному лишь `aria-expanded`, цикл будет ждать вместо повторного открытия даже тогда, когда реального меню или строки `Глубокое исследование` ещё нет. Это делает закрытие r35 недоказанным и оставляет риск повторного `E2D-BUILD-AUDIT-SUBMIT-DEEP-RESEARCH-MISSING`.
+  - Что исправить: либо убрать безусловный short-circuit по `aria-expanded="true"` и требовать подтверждение видимым menu/listbox/plain-row surface возле composer, либо явно обосновать и задокументировать такой short-circuit как допустимый контракт. В любом случае нужен DOM-level regression, который исполняет production `DeepResearchComposerMenuOpenExpression` на реальных сценариях: меню реально открыто, `aria-expanded=true` без видимых строк, исторические элементы в чате, plain rows `.__menu-item` и `[data-fill][tabindex]`.
+  - Как проверить исправление: добавить тест, который выполняет именно `DeepResearchComposerMenuOpenExpression`, а не только driver proxy, и проверяет false для сценария `aria-expanded=true` без видимых menu rows; затем оставить существующий behavior-level test для цикла `EnableDeepResearchAsync`.
+  - Техническая привязка:
+    - `File/symbol`: `repo-after/eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`, `EnableDeepResearchAsync`, `DeepResearchComposerMenuOpenExpression`
+    - `Criterion`: `implementation content review`, `test coverage review`, `previous blockers closure`, `observable behavior`, `test-only branch`
+    - `Evidence`:
+      - Production loop теперь ожидает, если `IsComposerMenuOpenAsync()` возвращает `true` — `AuditSubmitCodexChromeCommand.cs:1084-1087`
+      - Production DOM expression возвращает `true` сразу при `plus.getAttribute('aria-expanded') === 'true'`, ещё до анализа видимых menu rows — `AuditSubmitCodexChromeCommand.cs:3235-3239`
+      - Только после этого в коде идут правила по видимым `menu/listbox/.__menu-item/[data-fill][tabindex]` рядом с composer — `AuditSubmitCodexChromeCommand.cs:3240-3269`
+      - `metadata.blockerClosureList` и `TASKS.md` описывают закрытие r35 как детекцию именно видимых menu/listbox/popup/plain rows возле `button[data-testid="composer-plus-btn"]` — `metadata/audit-package.input.json` blockerClosureList entry `r35 local Deep Research menu toggle failure closed`; `repo-after/TASKS.md:1843`
+      - Единственный regression-тест r35 проверяет только внутренний цикл с прокси-драйвером — `RepositoryBuildToolTests.cs:5957-5983`
+      - Helper создаёт proxy для `IAuditSubmitDeepResearchSelectionDriver`, а `IsComposerMenuOpenAsync` в нём просто возвращает заранее заданный bool и не исполняет production expression — `RepositoryBuildToolTests.cs:8188-8208`, `RepositoryBuildToolTests.cs:12586-12589`
+    - `Impact`: r35 closure не доказан production DOM path-ом; текущий пакет заявляет больше, чем реально подтверждают код и тесты
+    - `Fix`: привести DOM detector и тесты к одному проверяемому контракту
+    - `Verification`: dedicated DOM-expression regression + existing selection-loop regression в focused suite и package evidence
+
+EVIDENCE_REVIEW:
+- Проверены все материалы, которые требовались контрактом архива: `AUDIT-MANIFEST.md`, `metadata/audit-package.input.json`, `repo-file-hashes.json`, `metadata/repo-file-snapshots.json`, полный `repo-after/`, доступный `repo-before/`, `T-0238.patch` как карта изменений и evidence по запущенным check-ам. Полные снимки файлов по declared scope присутствуют; признаков patch-only inspection без full file review по ключевым файлам нет. По evidence видно, что локально прошли focused AuditSubmit tests `112/112`, `verify audit-followups`, `verify docs`, `verify licenses`, `git diff --check` и `update docs --check`, но этих зелёных check-ов недостаточно, потому что два текущих closure-утверждения не подтверждаются содержательно.
+- Техническая привязка:
+  - Metadata и область:
+    - `AUDIT-MANIFEST.md`
+    - `metadata/audit-package.input.json`
+    - `repo-file-hashes.json`
+    - `metadata/repo-file-snapshots.json`
+  - Реализация:
+    - `repo-after/eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`
+    - `repo-after/eng/Electron2D.Build/AuditSubmitCommand.cs`
+    - `repo-after/eng/Electron2D.Build/AuditPackageCommand.cs`
+    - `repo-after/eng/Electron2D.Build/AuditFollowupVerifier.cs`
+    - `repo-after/eng/Electron2D.Build/Program.cs`
+  - Тесты:
+    - `repo-after/tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`
+  - Документация:
+    - `repo-after/docs/release-management/AUDIT-REQUEST.md`
+    - `repo-after/docs/release-management/audit-package.md`
+    - `repo-after/AGENTS.md`
+    - `repo-after/TASKS.md`
+  - Прошлые verdict-файлы из `metadata.previousVerdictChain`, доступные в архиве:
+    - `repo-after/docs/verdicts/release-management/t-0238-audit-r01.md`
+    - `.../t-0238-audit-r02.md`
+    - `.../t-0238-audit-r04.md`
+    - `.../t-0238-audit-r16.md`
+    - `.../t-0238-audit-r18.md`
+    - `.../t-0238-audit-r19.md`
+    - `.../t-0238-audit-r20.md`
+    - `.../t-0238-audit-r21.md`
+    - `.../t-0238-audit-r24.md`
+    - `.../t-0238-audit-r25.md`
+    - `.../t-0238-audit-r27.md`
+    - `.../t-0238-audit-r29.md`
+    - `.../t-0238-audit-r31.md`
+    - `.../t-0238-audit-r32.md`
+    - `.../t-0238-audit-r33.md`
+  - Evidence checks:
+    - `evidence/T-0238-r36/checks/audit-submit-focused-tests-r36/stdout.txt` — `112/112`, exit code `0`
+    - `evidence/T-0238-r36/checks/verify-audit-followups/stdout.txt` — passed, exit code `0`
+    - `evidence/T-0238-r36/checks/verify-docs/stdout.txt` — passed, exit code `0`
+    - `evidence/T-0238-r36/checks/verify-licenses/stdout.txt` — passed, exit code `0`
+    - `evidence/T-0238-r36/checks/git-diff-check/exit-code.txt` — `0`
+    - `evidence/T-0238-r36/checks/update-docs-check/stdout.txt` — passed, exit code `0`
+  - Scope/evidence notes:
+    - `metadata.scopeTaskIds` содержит только `T-0238`
+    - сохранённых `r34`/`r35` verdict-файлов в пакете нет, что соответствует `scopeSummary`
+    - полные snapshots для 28 allowlist-файлов присутствуют; blocking `evidence gap` по ключевым файлам не найден
+  - Secret scanning:
+    - по прочитанным файлам реализации, тестов, patch и evidence не найдено реальных секретов, приватных ключей, токенов, паролей или абсолютных локальных путей, которые выглядели бы как живые данные
+
+RISKS_AND_NOTES:
+- ACCEPTED_RISK R1
+  - Объяснение: в `TASKS.md` уже зафиксирован принятый риск по отдельному усилению `verify audit-followups`: verifier пока не проверяет семантическое существование target task для состояний `tracked-existing` и `tracked-new`. Это не блокирует текущий отказ по `r36`, потому что он уже явно принят как отдельный риск и не относится к двум текущим незакрытым closure-утверждениям про export fallback и menu-open detection.
+  - Техническая привязка:
+    - `Идентификатор`: `R1`
+    - `Служебный класс`: `accepted risk`
+    - `Где найдено`: `repo-after/TASKS.md:1909-1920`
+    - `Rationale`: семантическая проверка target task вынесена в отдельное усиление verifier-а
+    - `Next decision point`: `T-0105 risk register`
+
+CLOSURE_DECISION:
+- Текущий пакет закрывать нельзя. Полный current-scope review выполнен, прошлые verdict-файлы и closure-заметки прочитаны, но два заявленных закрытия в пределах текущей области не выдерживают инженерской проверки: r34 export recovery закрыт только на уровне слишком слабой булевой развилки и при этом нарушен production order «сначала выбранная кнопка `Экспорт`, потом page-level Markdown fallback», а r35 menu toggle closure опирается на production-детектор открытого меню, который сейчас шире заявленного контракта и не покрыт DOM-level regression-тестом. Дополнительно доменная документация противоречит сама себе по тому же export path, поэтому задача остаётся открытой до исправлений кода, тестов и документации.
