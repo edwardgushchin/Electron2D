@@ -7108,9 +7108,16 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("audit package", agents, StringComparison.Ordinal);
         Assert.Contains("audit package verify", agents, StringComparison.Ordinal);
         Assert.Contains("audit submit", agents, StringComparison.Ordinal);
+        Assert.Contains("verify audit-followups", agents, StringComparison.Ordinal);
         Assert.Contains("--browser-backend codex-chrome", agents, StringComparison.Ordinal);
         Assert.Contains("docs/repository/agent-workflow.md", agents, StringComparison.Ordinal);
         Assert.Contains("goal-task-workflow.md", agents, StringComparison.Ordinal);
+        Assert.Contains("AGENTS.override.md", agents, StringComparison.Ordinal);
+        Assert.Contains("closest applicable file", agents, StringComparison.Ordinal);
+        Assert.Contains("only on explicit user request", agents, StringComparison.Ordinal);
+        Assert.Contains("never push by default", agents, StringComparison.Ordinal);
+        Assert.Contains("current harness and user request explicitly allow", agents, StringComparison.Ordinal);
+        Assert.Contains("scoped to read-heavy work", agents, StringComparison.Ordinal);
         Assert.Contains("## Repository Map", agents, StringComparison.Ordinal);
         Assert.Contains("## Core Commands", agents, StringComparison.Ordinal);
         Assert.Contains("## Guardrails", agents, StringComparison.Ordinal);
@@ -7157,12 +7164,14 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("вклад", request, StringComparison.OrdinalIgnoreCase);
 
         Assert.True(goalPrompt.Length <= 3500, $"goal-prompt.md must be no longer than 3500 characters, but was {goalPrompt.Length}.");
-        Assert.StartsWith("Выполнить <task-id> по регламенту \\Electron2D\\.codex\\prompts\\goal-task-workflow.md:", goalPrompt, StringComparison.Ordinal);
+        Assert.StartsWith("Выполнить <task-id> по регламенту `.codex/prompts/goal-task-workflow.md`:", goalPrompt, StringComparison.Ordinal);
         foreach (var marker in new[] { "PREFLIGHT:", "WORKER:", "CHECKS:", "LOCAL LOOP:", "PACKAGE:", "VERIFY:", "SUBMIT:", "ACCEPT/DONE:" })
         {
             Assert.DoesNotContain(marker, goalPrompt, StringComparison.Ordinal);
         }
 
+        Assert.Contains("`.codex/prompts/goal-task-workflow.md`", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("\\Electron2D\\", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("goal-task-workflow.md", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("TASKS.md", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("дневник", goalPrompt, StringComparison.OrdinalIgnoreCase);

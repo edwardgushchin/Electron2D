@@ -161,7 +161,15 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             "goal-prompt-short-entrypoint",
             documents.GoalPromptPath,
             documents.GoalPromptText,
-            ["goal-task-workflow.md", "VERDICT: ACCEPT", "RISKS_AND_NOTES", "verify audit-followups", "git status", "Conventional Commit"]);
+            [".codex/prompts/goal-task-workflow.md", "VERDICT: ACCEPT", "RISKS_AND_NOTES", "verify audit-followups", "git status", "Conventional Commit"]);
+        Check(
+            checks,
+            "goal-prompt-uses-repo-relative-workflow-path",
+            documents.GoalPromptPath,
+            documents.GoalPromptText is not null &&
+                documents.GoalPromptText.Contains("`.codex/prompts/goal-task-workflow.md`", StringComparison.Ordinal) &&
+                !documents.GoalPromptText.Contains("\\Electron2D\\", StringComparison.Ordinal),
+            "Active goal prompt must point to .codex/prompts/goal-task-workflow.md with a repo-relative path.");
         Check(
             checks,
             "goal-prompt-stays-compact",
@@ -266,7 +274,19 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
             "agents-repo-map-core-commands-subagents",
             documents.AgentsPath,
             documents.AgentsText,
-            ["## Repository Map", "## Core Commands", "## Guardrails", "docs/repository/agent-workflow.md"]);
+            ["## Repository Map", "## Core Commands", "## Guardrails", "docs/repository/agent-workflow.md", "verify audit-followups"]);
+        CheckContainsAll(
+            checks,
+            "agents-root-safety-boundaries",
+            documents.AgentsPath,
+            documents.AgentsText,
+            ["AGENTS.override.md", "closest applicable file", "only on explicit user request", "never push by default"]);
+        CheckContainsAll(
+            checks,
+            "agents-subagent-boundary",
+            documents.AgentsPath,
+            documents.AgentsText,
+            ["current harness and user request explicitly allow", "scoped to read-heavy work", "main agent owns final edits"]);
         Check(
             checks,
             "agents-root-stays-english",
