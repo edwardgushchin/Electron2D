@@ -41,11 +41,13 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private const string IntegrationSliceAuditPackage = "audit-package";
     private const string IntegrationSliceAuditMedium = "audit-medium";
     private const string IntegrationSliceAuditHeavy = "audit-heavy";
+    private const string IntegrationSliceAuditExhaustive = "audit-exhaustive";
     private const string IntegrationSliceExternalProcess = "external-process";
     private const string IntegrationSliceSlow = "slow";
     private const string AuditTierFast = "Fast";
     private const string AuditTierMedium = "Medium";
     private const string AuditTierHeavy = "Heavy";
+    private const string AuditCadenceAcceptance = "Acceptance";
     private const string BuildToolNoBuildEnvironmentVariable = "ELECTRON2D_BUILD_TOOL_NO_BUILD";
     private static readonly Regex DotnetTestSummaryPattern = new(
         @"Failed:\s*(?<failed>\d+),\s*Passed:\s*(?<passed>\d+),\s*Skipped:\s*(?<skipped>\d+),\s*Total:\s*(?<total>\d+)",
@@ -326,7 +328,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             "test",
             "error",
             "E2D-BUILD-CLI-INVALID-ARGUMENTS",
-            "Expected: test [--include-baseline] [--integration-slice <all|fast|repository-tooling|audit-package|audit-medium|audit-heavy|external-process|slow>] [--no-build] [--no-restore] [--timeout-seconds <n>]."));
+            "Expected: test [--include-baseline] [--integration-slice <all|fast|repository-tooling|audit-package|audit-medium|audit-heavy|audit-exhaustive|external-process|slow>] [--no-build] [--no-restore] [--timeout-seconds <n>]."));
     }
 
     private static string[] GetTestProjects(TestCommandOptions options)
@@ -425,7 +427,8 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
                     NotAuditTier(AuditTierHeavy)]),
             IntegrationSliceAuditPackage => Or([AuditTier(AuditTierMedium), AuditTier(AuditTierHeavy)]),
             IntegrationSliceAuditMedium => AuditTier(AuditTierMedium),
-            IntegrationSliceAuditHeavy => AuditTier(AuditTierHeavy),
+            IntegrationSliceAuditHeavy => And([AuditTier(AuditTierHeavy), AuditCadence(AuditCadenceAcceptance)]),
+            IntegrationSliceAuditExhaustive => AuditTier(AuditTierHeavy),
             IntegrationSliceExternalProcess => Or([.. ExternalProcessIncludes.Select(FullyQualifiedNameContains)]),
             IntegrationSliceSlow => Or([.. SlowIncludes.Select(FullyQualifiedNameContains)]),
             _ => throw new InvalidOperationException($"Unsupported integration slice: {integrationSlice}")
@@ -438,14 +441,19 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
         {
             IntegrationSliceAuditPackage => "AuditTier=Medium|AuditTier=Heavy",
             IntegrationSliceAuditMedium => "AuditTier=Medium",
-            IntegrationSliceAuditHeavy => "AuditTier=Heavy",
+            IntegrationSliceAuditHeavy => "AuditTier=Heavy&AuditCadence=Acceptance",
+            IntegrationSliceAuditExhaustive => "AuditTier=Heavy",
             _ => "AuditTier=unknown"
         };
     }
 
     private static bool IsAuditIntegrationSlice(string integrationSlice)
     {
-        return integrationSlice is IntegrationSliceAuditPackage or IntegrationSliceAuditMedium or IntegrationSliceAuditHeavy;
+        return integrationSlice is
+            IntegrationSliceAuditPackage or
+            IntegrationSliceAuditMedium or
+            IntegrationSliceAuditHeavy or
+            IntegrationSliceAuditExhaustive;
     }
 
     private static bool TryParseIntegrationSlice(string value, out string integrationSlice)
@@ -457,6 +465,7 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
             IntegrationSliceAuditPackage or
             IntegrationSliceAuditMedium or
             IntegrationSliceAuditHeavy or
+            IntegrationSliceAuditExhaustive or
             IntegrationSliceExternalProcess or
             IntegrationSliceSlow;
     }
@@ -479,6 +488,11 @@ internal sealed class TestCommand(string repositoryRoot, JsonDiagnosticSink diag
     private static string NotAuditTier(string value)
     {
         return $"AuditTier!={value}";
+    }
+
+    private static string AuditCadence(string value)
+    {
+        return $"AuditCadence={value}";
     }
 
     private static string And(IReadOnlyList<string> filters)

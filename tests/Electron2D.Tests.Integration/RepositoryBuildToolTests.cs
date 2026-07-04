@@ -204,11 +204,13 @@ public sealed class RepositoryBuildToolTests
 
     [Theory]
     [Trait("AuditTier", "Medium")]
-    [InlineData("audit-medium", "AuditTier=Medium", "AuditTier=Heavy")]
-    [InlineData("audit-heavy", "AuditTier=Heavy", "AuditTier=Medium")]
+    [InlineData("audit-medium", "AuditTier=Medium", null, "AuditTier=Heavy")]
+    [InlineData("audit-heavy", "AuditTier=Heavy", "AuditCadence=Acceptance", "AuditTier=Medium")]
+    [InlineData("audit-exhaustive", "AuditTier=Heavy", null, "AuditCadence=Acceptance")]
     public async Task TestCommandAuditTierIntegrationSlicesRunOnlySelectedAuditTier(
         string integrationSlice,
         string expectedFilter,
+        string? expectedAdditionalFilter,
         string excludedFilter)
     {
         using var shim = TemporaryDirectory.Create($"test-command-{integrationSlice}-slice-dotnet-shim");
@@ -227,6 +229,11 @@ public sealed class RepositoryBuildToolTests
         var invocation = Assert.Single(File.ReadAllLines(logPath), line => line.StartsWith("test ", StringComparison.Ordinal));
         Assert.Contains("tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj", invocation, StringComparison.Ordinal);
         Assert.Contains(expectedFilter, invocation, StringComparison.Ordinal);
+        if (expectedAdditionalFilter is not null)
+        {
+            Assert.Contains(expectedAdditionalFilter, invocation, StringComparison.Ordinal);
+        }
+
         Assert.DoesNotContain(excludedFilter, invocation, StringComparison.Ordinal);
         Assert.DoesNotContain("tests/Electron2D.Tests.Unit/Electron2D.Tests.Unit.csproj", invocation, StringComparison.Ordinal);
     }
@@ -234,7 +241,8 @@ public sealed class RepositoryBuildToolTests
     [Theory]
     [Trait("AuditTier", "Medium")]
     [InlineData("audit-medium", "AuditTier=Medium")]
-    [InlineData("audit-heavy", "AuditTier=Heavy")]
+    [InlineData("audit-heavy", "AuditTier=Heavy&AuditCadence=Acceptance")]
+    [InlineData("audit-exhaustive", "AuditTier=Heavy")]
     public async Task TestCommandAuditTierIntegrationSlicesPrintSummary(string integrationSlice, string expectedTier)
     {
         using var shim = TemporaryDirectory.Create($"test-command-{integrationSlice}-summary-dotnet-shim");
@@ -2055,6 +2063,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageGeneratesAndVerifiesMinimalFixtureRepository()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-minimal");
@@ -2226,6 +2235,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-operator-workflow-sidecar");
@@ -2588,6 +2598,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageMessageOperatorWorkflowEvidenceUsesCliSubprocesses()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-operator-workflow-subprocess");
@@ -2621,6 +2632,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageCopiesStaticRequestVerbatimIntoRootAuditRequest()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-static-request-verbatim");
@@ -6644,6 +6656,33 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
+    public void AuditWorkflowHeavyAcceptanceCadenceKeepsRepresentativePackageGate()
+    {
+        var auditTests = ReadRepositoryBuildToolAuditTests();
+        var invalidCadence = auditTests
+            .Where(test => test.AuditCadenceCount > 1 ||
+                test.AuditCadence is not null and not "Acceptance")
+            .Select(test => $"{test.LineNumber}: {test.Name} => {test.AuditCadence ?? "<missing>"}")
+            .ToArray();
+        var acceptanceTests = auditTests
+            .Where(test => string.Equals(test.AuditTier, "Heavy", StringComparison.Ordinal) &&
+                string.Equals(test.AuditCadence, "Acceptance", StringComparison.Ordinal))
+            .Select(test => test.Name)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(invalidCadence);
+        Assert.InRange(acceptanceTests.Length, 5, 12);
+        Assert.Contains(nameof(AuditPackageGeneratesAndVerifiesMinimalFixtureRepository), acceptanceTests);
+        Assert.Contains(nameof(AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload), acceptanceTests);
+        Assert.Contains(nameof(AuditPackageMessageOperatorWorkflowEvidenceUsesCliSubprocesses), acceptanceTests);
+        Assert.Contains(nameof(AuditPackagePrintsConfiguredChecksPlanAndResultSummary), acceptanceTests);
+        Assert.Contains(nameof(AuditPackageRejectsBroadAuditTestFiltersInEvidenceChecks), acceptanceTests);
+        Assert.Contains(nameof(AuditPackageAllowsPlaceholderSecretValuesInPreviousVerdicts), acceptanceTests);
+    }
+
+    [Fact]
     [Trait("AuditTier", "Medium")]
     public async Task AuditWorkflowVerifyAuditContractsRunsFastWithoutPackagingArtifacts()
     {
@@ -8124,6 +8163,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackagePrintsConfiguredChecksPlanAndResultSummary()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-checks-plan");
@@ -9566,6 +9606,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageRejectsBroadAuditTestFiltersInEvidenceChecks()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-broad-audit-test-filter");
@@ -9699,6 +9740,7 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    [Trait("AuditCadence", "Acceptance")]
     public async Task AuditPackageAllowsPlaceholderSecretValuesInPreviousVerdicts()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-placeholder-secret");
@@ -10079,8 +10121,21 @@ public sealed class RepositoryBuildToolTests
             var auditTier = auditTierMatches.Length == 1
                 ? auditTierMatches[0].Groups["tier"].Value
                 : null;
+            var auditCadenceMatches = attributes
+                .SelectMany(attribute => Regex.Matches(attribute, @"Trait\(""AuditCadence"",\s*""(?<cadence>[^""]+)""\)").Cast<Match>())
+                .ToArray();
+            var auditCadence = auditCadenceMatches.Length == 1
+                ? auditCadenceMatches[0].Groups["cadence"].Value
+                : null;
             var body = string.Join('\n', lines[scan..nextTest]);
-            tests.Add(new AuditTestDeclaration(scan + 1, name, auditTier, auditTierMatches.Length, body));
+            tests.Add(new AuditTestDeclaration(
+                scan + 1,
+                name,
+                auditTier,
+                auditTierMatches.Length,
+                auditCadence,
+                auditCadenceMatches.Length,
+                body));
         }
 
         return tests;
@@ -15974,7 +16029,14 @@ public sealed class RepositoryBuildToolTests
 
     private sealed record CommandResult(int ExitCode, string Stdout, string Stderr);
 
-    private sealed record AuditTestDeclaration(int LineNumber, string Name, string? AuditTier, int AuditTierCount, string Body);
+    private sealed record AuditTestDeclaration(
+        int LineNumber,
+        string Name,
+        string? AuditTier,
+        int AuditTierCount,
+        string? AuditCadence,
+        int AuditCadenceCount,
+        string Body);
 
     private sealed record AuditSubmitDeepResearchItemFixtureResult(
         bool ReturnedPoint,

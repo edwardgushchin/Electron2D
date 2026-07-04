@@ -30,7 +30,7 @@
 - `dotnet run --project eng/Electron2D.Build -- test` - единая C#-команда проверки тестовых проектов.
 - CI после `dotnet restore src/Electron2D.sln` должен выполнить одну сборку решения `dotnet build src/Electron2D.sln --no-restore`, затем запускать тесты как `dotnet run --project eng/Electron2D.Build -- test --timeout-seconds 3600 --integration-slice fast --no-build --no-restore`, чтобы `Electron2D.Tests.Integration` не пересобирал проект и все ссылки на каждом тестовом проекте.
 - Для обычного ежедневного цикла разработки и основного задания CI команда поддерживает `--integration-slice fast`: unit-тесты, короткие проверки запуска среды выполнения, golden-data проверки и быстрый срез `Electron2D.Tests.Integration` без проверок внутреннего инструмента репозитория, аудиторского пакета, внешних процессов, медленных тестов и двух проверок резервного представителя кадра, которым на GitHub runners нужен доступный видеодрайвер: `RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnsupportedTextureResource` и `RuntimeHostTests.RuntimeSdlRendererFallbackThrowsForUnknownRenderCommandKind`.
-- Тяжёлые срезы интеграционных тестов запускаются отдельными параллельными заданиями CI: `repository-tooling`, `audit-package`, `external-process`, `slow`. Они запускают только `tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj` с профильным фильтром.
+- Тяжёлые срезы интеграционных тестов запускаются отдельными заданиями CI: `repository-tooling`, `audit-medium`, `audit-heavy`, `external-process`, `slow`. Они запускают только `tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj` с профильным фильтром. Полный исчерпывающий аудиторский срез `audit-exhaustive` остаётся ручным или ночным маршрутом для изменений самой упаковки и восстановления, чтобы обычный CI не повторял 120 тяжёлых сценариев упаковки после каждой правки.
 
 ## Baseline-режим
 
@@ -69,7 +69,8 @@ dotnet run --project eng/Electron2D.Build -- test --integration-slice fast --no-
 
 ```bash
 dotnet run --project eng/Electron2D.Build -- test --integration-slice repository-tooling --no-build --no-restore
-dotnet run --project eng/Electron2D.Build -- test --integration-slice audit-package --no-build --no-restore
+dotnet run --project eng/Electron2D.Build -- test --integration-slice audit-medium --no-build --no-restore
+dotnet run --project eng/Electron2D.Build -- test --integration-slice audit-heavy --no-build --no-restore
 dotnet run --project eng/Electron2D.Build -- test --integration-slice external-process --no-build --no-restore
 dotnet run --project eng/Electron2D.Build -- test --integration-slice slow --no-build --no-restore
 ```
@@ -128,11 +129,13 @@ dotnet run --project eng/Electron2D.Build -- test --include-baseline
 - `all` - значение по умолчанию; запускает полный integration project за вычетом `Category=Baseline`;
 - `fast` - исключает тяжёлые срезы и остаётся обычным быстрым контуром;
 - `repository-tooling` - проверки внутреннего инструмента репозитория без аудиторского пакета;
-- `audit-package` - сборка аудиторского пакета, восстановление/проверка архива и границы команды `audit submit` для внешнего аудита;
+- `audit-medium` - средний аудиторский коридор: поведенческие проверки `audit submit`, verifier-ы и контролируемые дочерние процессы без полной упаковки и восстановления ZIP;
+- `audit-heavy` - короткий приёмочный аудиторский коридор: представительские `AuditTier=Heavy` тесты с меткой `AuditCadence=Acceptance`, которые реально создают и проверяют audit ZIP;
+- `audit-exhaustive` - полный `AuditTier=Heavy` набор для изменений самой упаковки, восстановления, ZIP-структуры, секретного сканирования или ручного глубокого разбора;
 - `external-process` - тесты, которые запускают редактор, CLI или другие внешние процессы;
 - `slow` - проверки устойчивости данных, утечек ресурсов и эталонных метрик производительности.
 
-CI запускает `fast` в основном задании вместе с остальными проверками, а `repository-tooling`, `audit-package`, `external-process` и `slow` - отдельной матрицей заданий. Так тяжёлые интеграционные тесты перестают блокировать один длинный шаг `Run tests` и дают отдельный статус по срезу.
+CI запускает `fast` в основном задании вместе с остальными проверками, а `repository-tooling`, `audit-medium`, `audit-heavy`, `external-process` и `slow` - отдельной матрицей заданий. Так тяжёлые интеграционные тесты перестают блокировать один длинный шаг `Run tests` и дают отдельный статус по срезу.
 
 Agent-native релизный контроль можно проверить без запуска тяжёлых коротких проверок запуска:
 
