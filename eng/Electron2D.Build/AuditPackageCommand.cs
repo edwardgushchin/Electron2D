@@ -106,6 +106,16 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         "global safety blocker",
         "architecture coherence"
     ];
+    private static readonly string[] BroadAuditTestFilterTokens =
+    [
+        "AuditSubmit",
+        "AuditPackage",
+        "AuditPackageMessage",
+        "AuditPackageDocumentation",
+        "AuditRequest",
+        "AuditMessage",
+        "AuditWorkflow"
+    ];
     private static readonly string[] RedactedSecretPlaceholderValues =
     [
         "<redacted>",
@@ -675,6 +685,82 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         {
             AuditPath.ValidatePattern(trxGlob, "checks.trxGlobs");
         }
+
+        ValidateDotnetTestFilter(check);
+    }
+
+    private static void ValidateDotnetTestFilter(AuditCheckConfiguration check)
+    {
+        if (!string.Equals(check.FileName, "dotnet", StringComparison.OrdinalIgnoreCase) ||
+            !check.Arguments.Any(argument => string.Equals(argument, "test", StringComparison.Ordinal)))
+        {
+            return;
+        }
+
+        foreach (var filter in ExtractDotnetTestFilters(check.Arguments))
+        {
+            foreach (var token in BroadAuditTestFilterTokens)
+            {
+                if (ContainsBroadAuditTestFilterToken(filter, token) ||
+                    ContainsBroadAuditTestFilterToken(filter, $"RepositoryBuildToolTests.{token}"))
+                {
+                    throw new AuditPackageFailure(
+                        "audit package",
+                        "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                        $"Check '{check.Name}' uses broad audit test filter '{token}'. Package evidence checks must use exact test names or an AuditTier/Trait filter instead of broad audit test families.");
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<string> ExtractDotnetTestFilters(IReadOnlyList<string> arguments)
+    {
+        for (var index = 0; index < arguments.Count; index++)
+        {
+            var argument = arguments[index];
+            if (string.Equals(argument, "--filter", StringComparison.Ordinal) &&
+                index + 1 < arguments.Count)
+            {
+                yield return arguments[index + 1];
+                index++;
+                continue;
+            }
+
+            if (argument.StartsWith("--filter=", StringComparison.Ordinal))
+            {
+                yield return argument["--filter=".Length..];
+            }
+        }
+    }
+
+    private static bool ContainsBroadAuditTestFilterToken(string filter, string token)
+    {
+        var start = 0;
+        while (start < filter.Length)
+        {
+            var index = filter.IndexOf(token, start, StringComparison.Ordinal);
+            if (index < 0)
+            {
+                return false;
+            }
+
+            var after = index + token.Length;
+            if ((index == 0 || IsFilterBoundary(filter[index - 1])) &&
+                (after == filter.Length || IsFilterBoundary(filter[after])))
+            {
+                return true;
+            }
+
+            start = after;
+        }
+
+        return false;
+    }
+
+    private static bool IsFilterBoundary(char value)
+    {
+        return char.IsWhiteSpace(value) ||
+            value is '|' or '&' or '(' or ')' or '=' or '!' or '<' or '>' or '~' or '"' or '\'';
     }
 
     private static void ValidateTaskId(string taskId, string step)

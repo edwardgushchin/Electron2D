@@ -9182,6 +9182,45 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    [Trait("AuditTier", "Fast")]
+    public async Task AuditPackageRejectsBroadAuditTestFiltersInEvidenceChecks()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-broad-audit-test-filter");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file gives the package a repository-owned change.
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            checks:
+            [
+                new AuditFixtureCheck(
+                    "wide-audit-tests",
+                    "dotnet",
+                    [
+                        "test",
+                        "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+                        "--filter",
+                        "FullyQualifiedName~AuditSubmit|FullyQualifiedName~AuditPackageMessage"
+                    ],
+                    ".",
+                    [],
+                    30,
+                    0,
+                    [])
+            ]);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-CONFIG-INVALID");
+        Assert.Contains("wide-audit-tests", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains("AuditSubmit", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AuditPackageIncludesExistingPreviousVerdictsInRestoreModel()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-previous-verdict-restore");
