@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="TileSetAtlasSource"/>
@@ -70,7 +70,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TileSetAtlasSource.CreateTile"/>
@@ -99,7 +99,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TileMapLayer"/>
@@ -137,7 +137,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TileMapLayer.MapToLocal"/>
@@ -175,7 +175,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.ZIndex"/>
@@ -217,7 +217,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCollisionPolygonsCount"/>
@@ -261,7 +261,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetCollisionPolygonsCount"/>
@@ -299,7 +299,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCollisionPolygonPoints"/>
@@ -334,7 +334,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetCollisionPolygonPoints"/>
@@ -368,7 +368,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsCollisionPolygonOneWay"/>
@@ -401,7 +401,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetCollisionPolygonOneWay"/>
@@ -435,7 +435,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCollisionPolygonOneWayMargin"/>
@@ -473,7 +473,7 @@ public sealed class TileData : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetCollisionPolygonOneWayMargin"/>

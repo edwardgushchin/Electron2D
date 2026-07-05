@@ -14,7 +14,7 @@
 
 ## Назначение
 
-`T-0023` должен довести внутренний SDL_GPU lifecycle до проверяемого release-baseline для `0.1.0 Preview`. Эта задача не реализует canvas drawing, textures или shaders. Она вводит:
+`T-0023` должен довести внутренний SDL_GPU lifecycle до проверяемого release-baseline для `0.1-preview`. Эта задача не реализует canvas drawing, textures или shaders. Она вводит:
 
 - controlled dependency на SDL3-CS release line;
 - internal lifecycle adapter для SDL_GPU device, swapchain/window claim, command buffer acquire/submit;
@@ -145,7 +145,7 @@ Smoke tests должны покрыть:
 
 ## Назначение
 
-Electron2D использует SDL3-CS как managed binding к SDL3/SDL_GPU. В `0.1.0 Preview` lifecycle SDL_GPU остаётся internal runtime surface и не расширяет public Electron2D API.
+Electron2D использует SDL3-CS как managed binding к SDL3/SDL_GPU. В `0.1-preview` lifecycle SDL_GPU остаётся internal runtime surface и не расширяет public Electron2D API.
 
 Реализованный baseline закрывает:
 

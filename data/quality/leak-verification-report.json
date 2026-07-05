@@ -1,7 +1,7 @@
 {
   "format": "Electron2D.LeakVerificationReport",
   "version": 1,
-  "release": "0.1.0-preview",
+  "release": "0.1-preview",
   "recordedAt": "2026-06-23T13:05:00Z",
   "budgets": {
     "minimumIterations": 64,

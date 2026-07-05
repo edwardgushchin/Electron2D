@@ -29,11 +29,11 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// This type is part of the Electron2D 0.1-preview public API.
 /// </remarks>
 ///
 /// <since>
-/// This API is available since Electron2D 0.1.0 Preview.
+/// This API is available since Electron2D 0.1-preview.
 /// </since>
 ///
 [Flags]
@@ -48,7 +48,7 @@ public enum ConnectFlags
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ConnectFlags" />
@@ -63,7 +63,7 @@ public enum ConnectFlags
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ConnectFlags" />
@@ -78,7 +78,7 @@ public enum ConnectFlags
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ConnectFlags" />
@@ -93,7 +93,7 @@ public enum ConnectFlags
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ConnectFlags" />
@@ -108,7 +108,7 @@ public enum ConnectFlags
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ConnectFlags" />
@@ -123,7 +123,7 @@ public enum ConnectFlags
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ConnectFlags" />

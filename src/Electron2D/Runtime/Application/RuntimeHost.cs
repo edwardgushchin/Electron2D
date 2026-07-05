@@ -70,7 +70,7 @@ internal static class RuntimeHost
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Run(SceneTree, RuntimeHostOptions?)"/>
@@ -163,7 +163,7 @@ internal static class RuntimeHost
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Run(Node, RuntimeHostOptions?)"/>

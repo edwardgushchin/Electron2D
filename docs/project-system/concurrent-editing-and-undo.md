@@ -12,7 +12,7 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация `0.1.0 Preview`.
+Статус: целевая спецификация `0.1-preview`.
 Задача: `T-0143`.
 Связанные документы: [Agent-native workflow](../architecture/agent-native-workflow.md); [Live ProjectWorkspace](live-project-workspace.md); [WorkspaceTransactionEngine](workspace-transactions.md); [External Change Synchronizer](external-change-synchronizer.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md).
 
@@ -40,7 +40,7 @@
 
 Для scene/resource/settings JSON безопасно объединяются только непересекающиеся property changes. Изменение одного свойства двумя участниками возвращает `WorkspaceTransactionConflictKind.PropertyConflict`. Удаление объекта, изменённого другим участником, возвращает `WorkspaceTransactionConflictKind.DeletedChangedObject`. Неподдержанные structural changes возвращают conflict record, а не применяются догадкой.
 
-Для C# и обычных text buffers минимальный `0.1.0-preview` слой должен либо выполнить безопасный text merge, либо вернуть conflict. Молчаливая перезапись dirty buffer запрещена.
+Для C# и обычных text buffers минимальный `0.1-preview` слой должен либо выполнить безопасный text merge, либо вернуть conflict. Молчаливая перезапись dirty buffer запрещена.
 
 Generated/cache paths не редактируются и не участвуют в automatic merge. Binary assets не получают automatic content merge.
 

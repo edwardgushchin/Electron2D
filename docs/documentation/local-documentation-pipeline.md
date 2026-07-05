@@ -17,7 +17,7 @@
 
 ## Назначение
 
-Electron2D `0.1.0 Preview` должен поставлять локальную документацию вместе с версией движка, чтобы человек, CLI, IDE, AI-агент, Inspector, генераторы и GitHub Wiki verifier-ы ссылались на один согласованный контракт.
+Electron2D `0.1-preview` должен поставлять локальную документацию вместе с версией движка, чтобы человек, CLI, IDE, AI-агент, Inspector, генераторы и GitHub Wiki verifier-ы ссылались на один согласованный контракт.
 
 В этой спецификации local documentation pipeline означает проверяемую цепочку:
 
@@ -88,7 +88,7 @@ dotnet run --project eng/Electron2D.Build -- update docs --check
 Local docs manifest должен содержать:
 
 - `schemaVersion = 2`;
-- `manifestVersion = 0.1.0-preview`;
+- `manifestVersion = 0.1-preview`;
 - `generatedFrom` с путями и hash для API manifest, documentation files и examples file;
 - `audiences` со значениями `human`, `ai`, `cli`, `ide`, `wiki`, `inspector`, `generator`;
 - `commands` с entries для `docs search`, `docs type`, `docs member`, `docs example`;

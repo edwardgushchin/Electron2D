@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить Electron2D узлы верхнего уровня для 2D-физики:
+`0.1-preview` должен предоставить Electron2D узлы верхнего уровня для 2D-физики:
 
 - `StaticBody2D`;
 - `RigidBody2D`;
@@ -145,7 +145,7 @@
 
 ## Фактическое состояние, ограничения и проверки
 
-`StaticBody2D`, `RigidBody2D`, `CharacterBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D` и `Shape2D` - текущий baseline физических узлов для `0.1.0 Preview`.
+`StaticBody2D`, `RigidBody2D`, `CharacterBody2D`, `Area2D`, `CollisionShape2D`, `RayCast2D` и `Shape2D` - текущий baseline физических узлов для `0.1-preview`.
 
 ## Что реализовано
 

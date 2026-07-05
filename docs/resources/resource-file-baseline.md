@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0035`.
 Обновлено: 2026-06-21.
-Связанные источники: [Godot ResourceUID](https://docs.godotengine.org/en/stable/classes/class_resourceuid.html), [Godot ResourceLoader](https://docs.godotengine.org/en/stable/classes/class_resourceloader.html), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Stable `Variant` serialization](../core-types/variant-serialization.md).
+Связанные источники: [Godot ResourceUID](https://docs.godotengine.org/en/stable/classes/class_resourceuid.html), [Godot ResourceLoader](https://docs.godotengine.org/en/stable/classes/class_resourceloader.html), [Electron2D 0.1-preview](../releases/0.1-preview.md), [Stable `Variant` serialization](../core-types/variant-serialization.md).
 
 ## Назначение
 
-`T-0035` вводит базу для файлов ресурсов Electron2D `0.1.0 Preview`: стабильные `uid://` идентификаторы, внешние ссылки, внутренние подресурсы и текстовый формат, который удобно смотреть в diff. Это нужно для будущих сцен, импорта, инспектора, текстового backend и Agent-native cross-platform 2D game engine tooling.
+`T-0035` вводит базу для файлов ресурсов Electron2D `0.1-preview`: стабильные `uid://` идентификаторы, внешние ссылки, внутренние подресурсы и текстовый формат, который удобно смотреть в diff. Это нужно для будущих сцен, импорта, инспектора, текстового backend и Agent-native cross-platform 2D game engine tooling.
 
 Формат должен быть узким и проверяемым. Он не обязан сам реализовать весь `ResourceLoader`/`ResourceSaver`, threaded loading, импорт и editor file dock. Import cache реализуется отдельной спецификацией `resource-import-cache.md`, а текущая задача должна дать устойчивую модель данных, на которую он сможет опереться.
 
@@ -48,9 +48,9 @@ public static class ResourceUid
 }
 ```
 
-Отличие от Godot фиксируется явно: в `0.1.0 Preview` это статический C# facade внутри Electron2D runtime, а не engine singleton object. Поведение намеренно соответствует Godot: UID хранит связь с путём, `uid://` переживает rename/move через `SetId()`, а `PathToUid()`/`UidToPath()` позволяют хранить ссылки по UID с path fallback в текстовом файле.
+Отличие от Godot фиксируется явно: в `0.1-preview` это статический C# facade внутри Electron2D runtime, а не engine singleton object. Поведение намеренно соответствует Godot: UID хранит связь с путём, `uid://` переживает rename/move через `SetId()`, а `PathToUid()`/`UidToPath()` позволяют хранить ссылки по UID с path fallback в текстовом файле.
 
-Нельзя добавлять публичные `ResourceFile`, `ResourceFileSerializer`, `ResourceFormatLoader` или похожие классы в этой задаче. Они не нужны пользовательскому API `0.1.0 Preview` до отдельного контракта загрузки/сохранения.
+Нельзя добавлять публичные `ResourceFile`, `ResourceFileSerializer`, `ResourceFormatLoader` или похожие классы в этой задаче. Они не нужны пользовательскому API `0.1-preview` до отдельного контракта загрузки/сохранения.
 
 ## Текстовый формат ресурса
 
@@ -95,7 +95,7 @@ Top-level поля идут в таком порядке:
 }
 ```
 
-`id` уникален только внутри файла. Свойства хранятся через stable `Variant` serialization и поэтому поддерживают только сериализуемый набор `Variant` из `0.1.0 Preview`.
+`id` уникален только внутри файла. Свойства хранятся через stable `Variant` serialization и поэтому поддерживают только сериализуемый набор `Variant` из `0.1-preview`.
 
 ## Инварианты
 
@@ -124,7 +124,7 @@ Top-level поля идут в таком порядке:
 
 ## Что реализовано
 
-В `T-0035` добавлена базовая модель ресурсов для Electron2D `0.1.0 Preview`:
+В `T-0035` добавлена базовая модель ресурсов для Electron2D `0.1-preview`:
 
 - public `ResourceUid` для связи числового UID, строки `uid://...` и `res://` пути;
 - internal `.e2res` document model, то есть внутренняя модель файла ресурса, доступная тестам и будущим загрузчикам;

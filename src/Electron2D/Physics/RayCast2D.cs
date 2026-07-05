@@ -29,7 +29,7 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// The 0.1.0 Preview baseline stores raycast query settings. Real physics
+/// The 0.1-preview baseline stores raycast query settings. Real physics
 /// query execution is introduced by the later raycast and shape query task, so
 /// result methods return an empty collision state.
 /// </remarks>
@@ -40,7 +40,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
 {
@@ -58,7 +58,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RayCast2D" />
@@ -83,7 +83,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -106,7 +106,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -129,7 +129,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -152,7 +152,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -175,7 +175,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -198,7 +198,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -221,7 +221,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -249,7 +249,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="RayCast2D" />
     ///
@@ -286,7 +286,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -310,7 +310,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -334,7 +334,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -358,7 +358,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -382,7 +382,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -406,7 +406,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.

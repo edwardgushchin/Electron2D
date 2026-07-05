@@ -30,13 +30,13 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// The 0.1.0 Preview runtime uses these values for scroll offset policy. Visual
+/// The 0.1-preview runtime uses these values for scroll offset policy. Visual
 /// scrollbar controls are outside this container task.
 /// </para>
 /// </remarks>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="ScrollContainer.HorizontalScrollMode"/>
@@ -52,7 +52,7 @@ public enum ScrollMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Disabled = 0,
 
@@ -65,7 +65,7 @@ public enum ScrollMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Auto = 1,
 
@@ -74,11 +74,11 @@ public enum ScrollMode
     /// </summary>
     ///
     /// <remarks>
-    /// Visual scrollbar presentation is not part of the 0.1.0 Preview baseline.
+    /// Visual scrollbar presentation is not part of the 0.1-preview baseline.
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ShowAlways = 2,
 
@@ -91,7 +91,7 @@ public enum ScrollMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ShowNever = 3,
 
@@ -105,7 +105,7 @@ public enum ScrollMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Reserve = 4,
 
@@ -119,7 +119,7 @@ public enum ScrollMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     MaximizeFirst = 5
 }

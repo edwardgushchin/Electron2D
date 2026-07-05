@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Range"/>
@@ -52,7 +52,7 @@ public class Slider : Range
     /// </summary>
     /// <remarks>The new slider can receive keyboard/gamepad focus and edit values.</remarks>
     /// <threadsafety>This constructor is not synchronized. Call it from the main scene thread.</threadsafety>
-    /// <since>This constructor is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This constructor is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Slider"/>
     public Slider()
     {
@@ -65,7 +65,7 @@ public class Slider : Range
     /// <value><c>true</c> when input can edit <see cref="Range.Value"/>; otherwise, <c>false</c>.</value>
     /// <remarks>Programmatic assignments to <see cref="Range.Value"/> remain allowed.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Range.Value"/>
     public bool Editable { get; set; } = true;
 
@@ -75,7 +75,7 @@ public class Slider : Range
     /// <value><c>true</c> when scroll input is allowed; otherwise, <c>false</c>.</value>
     /// <remarks>The preview stores this property for API consumers; wheel handling is not part of T-0069.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Editable"/>
     public bool Scrollable { get; set; } = true;
 
@@ -86,7 +86,7 @@ public class Slider : Range
     /// <remarks>Tick rendering is not drawn in the preview visual style.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="TicksOnBorders"/>
     public int Ticks
     {
@@ -105,7 +105,7 @@ public class Slider : Range
     /// <value><c>true</c> to include border ticks; otherwise, <c>false</c>.</value>
     /// <remarks>The preview stores this property for API consumers.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Ticks"/>
     public bool TicksOnBorders { get; set; }
 
@@ -117,7 +117,7 @@ public class Slider : Range
     /// <param name="inputEvent">The input event delivered by the viewport.</param>
     /// <remarks>Input is ignored when <see cref="Editable"/> is <c>false</c>.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Control._GuiInput(InputEvent)"/>
     public override void _GuiInput(InputEvent inputEvent)
     {
@@ -158,7 +158,7 @@ public class Slider : Range
     /// </summary>
     /// <remarks>The preview drawing path uses rectangle primitives.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Range.Ratio"/>
     public override void _Draw()
     {
@@ -180,7 +180,7 @@ public class Slider : Range
     /// <returns>A baseline horizontal slider size.</returns>
     /// <remarks>The minimum size does not depend on ticks in this preview.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Control.GetMinimumSize"/>
     public override Vector2 _GetMinimumSize()
     {

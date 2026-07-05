@@ -34,7 +34,7 @@ namespace Electron2D;
 /// It emits both item index and command id when an enabled item is activated.
 /// </para>
 /// <para>
-/// The 0.1.0 Preview implementation is a <see cref="Control"/>-based runtime
+/// The 0.1-preview implementation is a <see cref="Control"/>-based runtime
 /// menu. Native window integration and submenus are outside this task.
 /// </para>
 /// </remarks>
@@ -45,7 +45,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control"/>
@@ -70,7 +70,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PopupMenu"/>
@@ -104,7 +104,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddIconItem(Texture2D, string, int)"/>
@@ -138,7 +138,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddItem(string, int)"/>
@@ -171,7 +171,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddIconCheckItem(Texture2D, string, int)"/>
@@ -205,7 +205,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddCheckItem(string, int)"/>
@@ -237,7 +237,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsItemSeparator(int)"/>
@@ -261,7 +261,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddItem(string, int)"/>
@@ -289,7 +289,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Clear"/>
@@ -315,7 +315,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.Hide"/>
@@ -355,7 +355,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetItemText(int)"/>
@@ -390,7 +390,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemText(int, string)"/>
@@ -421,7 +421,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetItemIcon(int)"/>
@@ -455,7 +455,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemIcon(int, Texture2D?)"/>
@@ -486,7 +486,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsItemChecked(int)"/>
@@ -520,7 +520,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemChecked(int, bool)"/>
@@ -551,7 +551,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsItemDisabled(int)"/>
@@ -585,7 +585,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemDisabled(int, bool)"/>
@@ -615,7 +615,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetItemId(int)"/>
@@ -648,7 +648,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemId(int, int)"/>
@@ -681,7 +681,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddSeparator(string, int)"/>
@@ -707,7 +707,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control._GuiInput(InputEvent)"/>
@@ -757,7 +757,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.DrawRect(Rect2, Color, bool, float, bool)"/>
@@ -808,7 +808,7 @@ public class PopupMenu : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.GetMinimumSize"/>

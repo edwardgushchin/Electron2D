@@ -44,7 +44,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Node.ProcessMode" />
@@ -63,7 +63,7 @@ public enum ProcessMode
     /// </remarks>
     ///
     /// <since>
-    /// This value is available since Electron2D 0.1.0 Preview.
+    /// This value is available since Electron2D 0.1-preview.
     /// </since>
     Inherit = 0,
 
@@ -79,7 +79,7 @@ public enum ProcessMode
     /// </remarks>
     ///
     /// <since>
-    /// This value is available since Electron2D 0.1.0 Preview.
+    /// This value is available since Electron2D 0.1-preview.
     /// </since>
     Pausable = 1,
 
@@ -95,7 +95,7 @@ public enum ProcessMode
     /// </remarks>
     ///
     /// <since>
-    /// This value is available since Electron2D 0.1.0 Preview.
+    /// This value is available since Electron2D 0.1-preview.
     /// </since>
     WhenPaused = 2,
 
@@ -111,7 +111,7 @@ public enum ProcessMode
     /// </remarks>
     ///
     /// <since>
-    /// This value is available since Electron2D 0.1.0 Preview.
+    /// This value is available since Electron2D 0.1-preview.
     /// </since>
     Always = 3,
 
@@ -127,7 +127,7 @@ public enum ProcessMode
     /// </remarks>
     ///
     /// <since>
-    /// This value is available since Electron2D 0.1.0 Preview.
+    /// This value is available since Electron2D 0.1-preview.
     /// </since>
     Disabled = 4
 }

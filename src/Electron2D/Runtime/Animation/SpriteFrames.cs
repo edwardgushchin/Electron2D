@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="AnimatedSprite2D"/>
@@ -75,7 +75,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="SpriteFrames" />
     ///
@@ -94,7 +94,7 @@ public sealed class SpriteFrames : Resource
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum LoopModeEnum
     {
@@ -106,7 +106,7 @@ public sealed class SpriteFrames : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="LoopModeEnum" />
@@ -122,7 +122,7 @@ public sealed class SpriteFrames : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="LoopModeEnum" />
@@ -138,7 +138,7 @@ public sealed class SpriteFrames : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="LoopModeEnum" />
@@ -164,7 +164,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasAnimation"/>
@@ -223,7 +223,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetFrame"/>
@@ -260,7 +260,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ClearAll"/>
@@ -288,7 +288,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Clear"/>
@@ -318,7 +318,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RenameAnimation"/>
@@ -362,7 +362,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetAnimationLoop"/>
@@ -397,7 +397,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetAnimationLoopMode"/>
@@ -422,7 +422,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddAnimation"/>
@@ -458,7 +458,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetAnimationSpeed"/>
@@ -492,7 +492,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddFrame"/>
@@ -531,7 +531,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetFrame"/>
@@ -570,7 +570,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddFrame"/>
@@ -600,7 +600,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddAnimation"/>
@@ -636,7 +636,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddAnimation"/>
@@ -674,7 +674,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddFrame"/>
@@ -709,7 +709,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="DuplicateAnimation"/>
@@ -757,7 +757,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetAnimationLoop"/>
@@ -790,7 +790,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetAnimationLoopMode"/>
@@ -826,7 +826,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetAnimationSpeed"/>
@@ -869,7 +869,7 @@ public sealed class SpriteFrames : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetFrameTexture"/>

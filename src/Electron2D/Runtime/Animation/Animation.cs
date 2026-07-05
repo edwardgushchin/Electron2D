@@ -35,7 +35,7 @@ namespace Electron2D;
 /// or modify scene nodes by itself.
 /// </para>
 /// <para>
-/// Electron2D 0.1.0 Preview supports value tracks and method tracks only.
+/// Electron2D 0.1-preview supports value tracks and method tracks only.
 /// Editor-only tracks, audio tracks, section playback and blend-tree data are
 /// outside this runtime baseline.
 /// </para>
@@ -48,7 +48,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="AnimationLibrary"/>
@@ -73,7 +73,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Animation" />
     ///
@@ -86,12 +86,12 @@ public sealed class Animation : Resource
     /// </summary>
     ///
     /// <remarks>
-    /// The 0.1.0 Preview runtime intentionally keeps only the track kinds that
+    /// The 0.1-preview runtime intentionally keeps only the track kinds that
     /// can drive 2D scene state without editor-only systems.
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum TrackTypeEnum
     {
@@ -104,7 +104,7 @@ public sealed class Animation : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TrackTypeEnum" />
@@ -120,7 +120,7 @@ public sealed class Animation : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TrackTypeEnum" />
@@ -138,7 +138,7 @@ public sealed class Animation : Resource
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum InterpolationTypeEnum
     {
@@ -150,7 +150,7 @@ public sealed class Animation : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="InterpolationTypeEnum" />
@@ -165,7 +165,7 @@ public sealed class Animation : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="InterpolationTypeEnum" />
@@ -183,7 +183,7 @@ public sealed class Animation : Resource
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum LoopModeEnum
     {
@@ -195,7 +195,7 @@ public sealed class Animation : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="LoopModeEnum" />
@@ -210,7 +210,7 @@ public sealed class Animation : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="LoopModeEnum" />
@@ -235,7 +235,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -266,7 +266,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -297,7 +297,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RemoveTrack"/>
@@ -333,7 +333,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddTrack"/>
@@ -357,7 +357,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -387,7 +387,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -419,7 +419,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackGetPath"/>
@@ -449,7 +449,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackSetPath"/>
@@ -478,7 +478,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackIsEnabled"/>
@@ -508,7 +508,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackSetEnabled"/>
@@ -542,7 +542,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackGetInterpolationType"/>
@@ -579,7 +579,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackSetInterpolationType"/>
@@ -616,7 +616,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ValueTrackInterpolate"/>
@@ -658,7 +658,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -696,7 +696,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -729,7 +729,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -768,7 +768,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackInsertKey"/>
@@ -809,7 +809,7 @@ public sealed class Animation : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TrackSetInterpolationType"/>

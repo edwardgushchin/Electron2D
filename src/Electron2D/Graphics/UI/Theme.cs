@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control.Theme"/>
@@ -74,7 +74,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Theme"/>
@@ -104,7 +104,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasDefaultBaseScale"/>
@@ -144,7 +144,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasDefaultFont"/>
@@ -181,7 +181,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasDefaultFontSize"/>
@@ -218,7 +218,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="DefaultBaseScale"/>
@@ -246,7 +246,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="DefaultFont"/>
@@ -275,7 +275,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="DefaultFontSize"/>
@@ -299,7 +299,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetColor(string, string, Color)"/>
@@ -339,7 +339,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetColor(string, string)"/>
@@ -375,7 +375,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetColor(string, string, Color)"/>
@@ -410,7 +410,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetColor(string, string, Color)"/>
@@ -441,7 +441,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasColor(string, string)"/>
@@ -478,7 +478,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetConstant(string, string)"/>
@@ -519,7 +519,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetConstant(string, string, int)"/>
@@ -554,7 +554,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetConstant(string, string, int)"/>
@@ -585,7 +585,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasConstant(string, string)"/>
@@ -621,7 +621,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetFont(string, string)"/>
@@ -658,7 +658,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetFont(string, string, Font)"/>
@@ -694,7 +694,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetFont(string, string, Font)"/>
@@ -725,7 +725,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasFont(string, string)"/>
@@ -762,7 +762,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetFontSize(string, string)"/>
@@ -804,7 +804,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetFontSize(string, string, int)"/>
@@ -845,7 +845,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetFontSize(string, string, int)"/>
@@ -876,7 +876,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasFontSize(string, string)"/>
@@ -912,7 +912,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetIcon(string, string)"/>
@@ -949,7 +949,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetIcon(string, string, Texture2D)"/>
@@ -984,7 +984,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetIcon(string, string, Texture2D)"/>
@@ -1015,7 +1015,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasIcon(string, string)"/>
@@ -1051,7 +1051,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetStyleBox(string, string)"/>
@@ -1088,7 +1088,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetStyleBox(string, string, StyleBox)"/>
@@ -1123,7 +1123,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetStyleBox(string, string, StyleBox)"/>
@@ -1154,7 +1154,7 @@ public class Theme : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasStyleBox(string, string)"/>

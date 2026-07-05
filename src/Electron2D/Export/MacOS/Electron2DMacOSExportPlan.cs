@@ -68,7 +68,7 @@ internal sealed class Electron2DMacOSExportPlan
 
     public string[] UnsupportedRuntimeIdentifiers { get; init; } = [];
 
-    public string X64Policy { get; init; } = "unsupported-in-0.1.0-preview";
+    public string X64Policy { get; init; } = "unsupported-in-0.1-preview";
 
     public bool IncludeDebugSymbols { get; init; }
 

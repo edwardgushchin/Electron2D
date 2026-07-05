@@ -17,7 +17,7 @@
 
 ## Назначение
 
-Electron2D `0.1.0 Preview` должен иметь общий export preset model для платформенных export-задач. Generic preset layer сам не собирает пакеты: он фиксирует переносимый preset format и fail-closed validation. Фактические package builders подключаются отдельными platform-specific командами, включая WebAssembly browser `plan-web`, `build-web` и `run-web`.
+Electron2D `0.1-preview` должен иметь общий export preset model для платформенных export-задач. Generic preset layer сам не собирает пакеты: он фиксирует переносимый preset format и fail-closed validation. Фактические package builders подключаются отдельными platform-specific командами, включая WebAssembly browser `plan-web`, `build-web` и `run-web`.
 
 ## Preset document
 

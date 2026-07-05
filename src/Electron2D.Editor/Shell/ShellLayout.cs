@@ -186,7 +186,7 @@ internal sealed class ShellLayout
         ArgumentException.ThrowIfNullOrWhiteSpace(workspace);
         if (!WorkspaceSwitcher.Contains(workspace, StringComparer.Ordinal))
         {
-            throw new InvalidOperationException($"Editor shell workspace '{workspace}' is not supported by the 0.1.0 layout.");
+            throw new InvalidOperationException($"Editor shell workspace '{workspace}' is not supported by the 0.1-preview layout.");
         }
 
         SelectedWorkspace = workspace;

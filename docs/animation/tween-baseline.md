@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить deterministic runtime baseline для коротких script-driven animations: `Tween` создаётся через scene tree или node, обновляется во время `SceneTree.ProcessFrame()`, интерполирует property values, поддерживает easing, pause/resume, stop/kill и callback после завершения.
+`0.1-preview` должен предоставить deterministic runtime baseline для коротких script-driven animations: `Tween` создаётся через scene tree или node, обновляется во время `SceneTree.ProcessFrame()`, интерполирует property values, поддерживает easing, pause/resume, stop/kill и callback после завершения.
 
 Задача не реализует полную tweener hierarchy, subtween, await, physics process mode, pause modes scene-tree уровня, time scale, infinite loops и editor tooling. Эти части остаются отдельными задачами после базового runtime-среза.
 
@@ -109,7 +109,7 @@
 
 ## Текущее состояние
 
-`0.1.0 Preview` теперь поддерживает runtime `Tween` для коротких script-driven animations:
+`0.1-preview` теперь поддерживает runtime `Tween` для коротких script-driven animations:
 
 - `SceneTree.CreateTween()` создаёт valid tween и регистрирует его в processing list дерева;
 - `Node.CreateTween()` создаёт tween через текущее дерево и привязывает его к node lifetime;

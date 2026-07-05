@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация для `T-0116` с дополнением `T-0231` для локальной документации.
 Обновлено: 2026-06-28.
-Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
+Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1-preview](../releases/0.1-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
 
 ## Назначение
 
@@ -320,7 +320,7 @@ e2d api compare-godot Control --format json
 
 Команда читает `data/api/electron2d-api-manifest.json`, не открывает `ProjectWorkspace` и возвращает общий JSON envelope с `route = none`. В `data` находятся `mode = api.compareGodot`, `sourcePath`, краткое описание `type`, `result.status` и `strictParity`.
 
-Для типа внутри утверждённого `0.1.0` 2D-профиля `result.status = parity_verified`, `succeeded = true`, `exitCode = 0`, а счётчики `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches` и `unexpectedChanges` равны `0`.
+Для типа внутри утверждённого `0.1-preview` 2D-профиля `result.status = parity_verified`, `succeeded = true`, `exitCode = 0`, а счётчики `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches` и `unexpectedChanges` равны `0`.
 
 Для типа вне утверждённого профиля команда завершается fail-closed: `succeeded = false`, `exitCode = 1`, `data.result.status = out_of_profile`, diagnostics содержит `E2D-CLI-0002`. Output не предлагает alternative API или workaround, чтобы агент не обходил границы строгого profile contract.
 

@@ -12,7 +12,7 @@
 
 ## Контракт, состояние и проверки
 
-Статус: целевая спецификация для `0.1.0 Preview`.
+Статус: целевая спецификация для `0.1-preview`.
 Задача: `T-0157`, дополнена gate-задачей `T-0165`.
 Дата: 2026-06-23.
 
@@ -20,11 +20,11 @@
 
 `Electron2D.Editor` использует Godot 4 как канонический UX- и layout-референс: знакомая структура меню, переключения рабочих пространств, центральной области, docks и нижних panels должна сохраняться, чтобы разработчик быстро понимал редактор без отдельного обучения.
 
-Эта спецификация фиксирует именно интерфейсную структуру. Она не меняет runtime API-контракт: публичный C# API Electron2D `0.1.0` остаётся 100% совместимым с утверждённым 2D-профилем Godot `4.7-stable` .NET/C# API под namespace `Electron2D`.
+Эта спецификация фиксирует именно интерфейсную структуру. Она не меняет runtime API-контракт: публичный C# API Electron2D `0.1-preview` остаётся 100% совместимым с утверждённым 2D-профилем Godot `4.7-stable` .NET/C# API под namespace `Electron2D`.
 
 ## Baseline
 
-Baseline для `0.1.0`:
+Baseline для `0.1-preview`:
 
 - версия UI-референса: Godot `4.7-stable`;
 - документация: [первый взгляд на интерфейс Godot](https://docs.godotengine.org/ru/4.x/getting_started/introduction/first_look_at_the_editor.html);
@@ -113,7 +113,7 @@ Default docks:
 - basic code actions;
 - C# debugger.
 
-Внешняя IDE может существовать как дополнительный workflow после `0.1.0`, но не является способом закрыть обязательные требования `Script` workspace.
+Внешняя IDE может существовать как дополнительный workflow после `0.1-preview`, но не является способом закрыть обязательные требования `Script` workspace.
 
 Проверяемый минимум UI для `T-0158`:
 
@@ -143,7 +143,7 @@ Default docks:
 - Верхние debugger controls показывают `Start Debug`, `Attach`, `Pause`, `Continue`, `Stop`, `Restart`, `Step Into`, `Step Over`, `Step Out`; controls кликабельны и не меняют layout.
 - В нижней или правой Debugger панели видны threads, call stack, selected stack frame, locals, arguments, watches, watch evaluation result, exception info, stack trace и Debug Output.
 - JSON analysis фиксирует bounds breakpoint gutter, current line highlight, controls, call stack, threads, locals/arguments/watches, exception panel, debug output, `stale` marker, DAP boundary и отсутствие text overflow.
-- Screenshot и analysis фиксируют отсутствие `3D`, `AssetLib`, GDScript UI, `.gd` files и remote mobile/WebAssembly debugger controls в обязательном `0.1.0` workflow.
+- Screenshot и analysis фиксируют отсутствие `3D`, `AssetLib`, GDScript UI, `.gd` files и remote mobile/WebAssembly debugger controls в обязательном `0.1-preview` workflow.
 
 ### `Game`
 
@@ -207,7 +207,7 @@ Awaiting Acceptance | Done | Cancelled
 
 ## Project Settings UI
 
-Project Settings открывается из editor workflow как видимый экран внутри общего shell layout. Для `0.1.0 Preview` он не должен выглядеть как внешний wizard или отдельная утилита: пользователь остаётся в `Electron2D.Editor`, видит docks, bottom panel, workspace switcher и центральную область настроек.
+Project Settings открывается из editor workflow как видимый экран внутри общего shell layout. Для `0.1-preview` он не должен выглядеть как внешний wizard или отдельная утилита: пользователь остаётся в `Electron2D.Editor`, видит docks, bottom panel, workspace switcher и центральную область настроек.
 
 Проверяемый минимум UI для `T-0085`:
 
@@ -301,7 +301,7 @@ Toolbar справа в открытой панели содержит connectio
 
 ## Полное исключение 3D
 
-3D не является частью продукта `0.1.0`, даже как disabled UI.
+3D не является частью продукта `0.1-preview`, даже как disabled UI.
 
 В Editor отсутствуют:
 
@@ -321,7 +321,7 @@ Toolbar справа в открытой панели содержит connectio
 - 3D shortcuts;
 - 3D tutorial hints.
 
-`AssetLib` не копируется из Godot в `0.1.0`. Если в будущем появится каталог ассетов, он должен иметь отдельную спецификацию и задачи.
+`AssetLib` не копируется из Godot в `0.1-preview`. Если в будущем появится каталог ассетов, он должен иметь отдельную спецификацию и задачи.
 
 ## Layout persistence
 
@@ -360,7 +360,7 @@ Workspace switching не должен сбрасывать:
 - `Ctrl+P` — quick open project file;
 - `Ctrl+G` — go to line в Script workspace.
 
-Точный shortcut map должен быть machine-readable и проверяться, чтобы 3D/GDScript shortcuts не появлялись в `0.1.0`.
+Точный shortcut map должен быть machine-readable и проверяться, чтобы 3D/GDScript shortcuts не появлялись в `0.1-preview`.
 
 ## Visual acceptance reference
 
@@ -388,7 +388,7 @@ Workspace switching не должен сбрасывать:
 
 Исторически `T-0157` закрывала default shell через документированный automated harness до появления постоянного desktop event loop. После `T-0173` команда `--shell-layout-smoke` остаётся проверяемым способом построить тот же layout model, который создаёт стартовый `Application`, но пишет только layout state и машинно-читаемый JSON-анализ без synthetic PNG.
 
-Для релизной приёмки `0.1.0 Preview` этот layout smoke должен быть переаттестован через `--window-smoke <work-root>` или отдельный real-window сценарий: screenshot должен подтверждать, что пользователь видит тот же layout в окне `Electron2D.Editor`.
+Для релизной приёмки `0.1-preview` этот layout smoke должен быть переаттестован через `--window-smoke <work-root>` или отдельный real-window сценарий: screenshot должен подтверждать, что пользователь видит тот же layout в окне `Electron2D.Editor`.
 
 `--shell-layout-smoke` должен:
 

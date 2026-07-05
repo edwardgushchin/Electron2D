@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This is the Electron2D 0.1.0-preview Platformer project.
+This is the Electron2D 0.1-preview Platformer project.
 
 - Project name: `Platformer`
 - .NET SDK: `.NET 10.0.101`

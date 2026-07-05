@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить runtime baseline для покадровой 2D-анимации: ресурс `SpriteFrames` хранит именованные анимации, а узел `AnimatedSprite2D` воспроизводит выбранную анимацию в `SceneTree.ProcessFrame()` и отправляет текущую texture frame в существующий canvas submission pipeline.
+`0.1-preview` должен предоставить runtime baseline для покадровой 2D-анимации: ресурс `SpriteFrames` хранит именованные анимации, а узел `AnimatedSprite2D` воспроизводит выбранную анимацию в `SceneTree.ProcessFrame()` и отправляет текущую texture frame в существующий canvas submission pipeline.
 
 Задача не реализует editor UI для редактирования `SpriteFrames`, `AnimationPlayer`, `Tween`, timeline, import slicing или сложные animation tracks. Эти части остаются отдельными задачами анимационного и editor-доменов.
 
@@ -98,7 +98,7 @@
 
 ## Текущее состояние
 
-`0.1.0 Preview` поддерживает простой runtime-путь для покадровой 2D-анимации:
+`0.1-preview` поддерживает простой runtime-путь для покадровой 2D-анимации:
 
 - `SpriteFrames` хранит именованные animations, frame textures, relative frame durations, speed в frames per second и loop mode.
 - `AnimatedSprite2D` читает `SpriteFrames`, обновляет playback state в `SceneTree.ProcessFrame()` и отправляет текущую texture frame в canvas submission.

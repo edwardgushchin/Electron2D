@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация для `T-0154`.
 Обновлено: 2026-06-22.
-Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Live ProjectWorkspace](live-project-workspace.md); [WorkspaceTransactionEngine и безопасные project operations](workspace-transactions.md); [WorkspaceJob contract и event stream](workspace-jobs.md).
+Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1-preview](../releases/0.1-preview.md); [Live ProjectWorkspace](live-project-workspace.md); [WorkspaceTransactionEngine и безопасные project operations](workspace-transactions.md); [WorkspaceJob contract и event stream](workspace-jobs.md).
 
 ## Назначение
 
@@ -149,7 +149,7 @@ Task document использует `format = "Electron2D.TaskFile"` и schema ve
 
 `.electron2d/tasks/**` является `EditorMetadata`: эти документы доступны Editor, Tooling, CLI и MCP, но не импортируются как игровые ресурсы, не попадают в production asset packs, APK, AAB, app bundle или desktop distribution и не материализуются в runtime snapshot как игровые файлы.
 
-Completed tasks являются представлением `Status = Done ORDER BY CompletedAt DESC`, а не отдельной папкой или архивом. Экспорт task data во внешний отчёт возможен только отдельной явной report-командой, описанной в [Markdown report export для Project Tasks](project-tasks-markdown-report-export.md); такой отчёт не обязателен для `0.1.0` и не становится canonical storage.
+Completed tasks являются представлением `Status = Done ORDER BY CompletedAt DESC`, а не отдельной папкой или архивом. Экспорт task data во внешний отчёт возможен только отдельной явной report-командой, описанной в [Markdown report export для Project Tasks](project-tasks-markdown-report-export.md); такой отчёт не обязателен для `0.1-preview` и не становится canonical storage.
 
 ## Transaction integration и external import
 

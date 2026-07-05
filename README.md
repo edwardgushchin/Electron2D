@@ -15,7 +15,7 @@
 <p align="center">
   <img alt=".NET 10" src="https://img.shields.io/badge/.NET-10-512BD4">
   <img alt="C# 14" src="https://img.shields.io/badge/C%23-14-239120">
-  <img alt="Version 0.1.0-preview" src="https://img.shields.io/badge/version-0.1.0--preview-blue">
+  <img alt="Version 0.1-preview" src="https://img.shields.io/badge/version-0.1--preview-blue">
 </p>
 
 <p align="center">
@@ -81,7 +81,7 @@ cd Electron2D
 dotnet build src/Electron2D.sln -c Release
 ```
 
-The runtime package version is `0.1.0-preview`.
+The runtime package version is `0.1-preview`.
 
 <a id="quick-start"></a>
 

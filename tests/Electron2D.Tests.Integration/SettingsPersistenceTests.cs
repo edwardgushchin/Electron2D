@@ -50,7 +50,7 @@ public sealed class SettingsPersistenceTests
             var settings = Electron2D.Electron2DProjectSettings.Capture(
                 name: "Sample",
                 projectVersion: "0.1.0",
-                engineVersion: "0.1.0-preview",
+                engineVersion: "0.1-preview",
                 mainScene: "scenes/main.scene.json");
             settings.RendererProfile = Electron2D.Electron2DRendererProfileSetting.Standard;
             settings.PhysicsTicksPerSecond = 120;
@@ -81,7 +81,7 @@ public sealed class SettingsPersistenceTests
             var loaded = result.Settings;
             Assert.Equal("Sample", loaded.Name);
             Assert.Equal("0.1.0", loaded.ProjectVersion);
-            Assert.Equal("0.1.0-preview", loaded.EngineVersion);
+            Assert.Equal("0.1-preview", loaded.EngineVersion);
             Assert.Equal("scenes/main.scene.json", loaded.MainScene);
             Assert.Equal(Electron2D.Electron2DRendererProfileSetting.Standard, loaded.RendererProfile);
             Assert.Equal(120, loaded.PhysicsTicksPerSecond);
@@ -203,7 +203,7 @@ public sealed class SettingsPersistenceTests
             var settings = Electron2D.Electron2DProjectSettings.Capture(
                 name: "Sample",
                 projectVersion: "0.1.0",
-                engineVersion: "0.1.0-preview",
+                engineVersion: "0.1-preview",
                 mainScene: "scenes/main.scene.json");
             settings.InputActions =
             [

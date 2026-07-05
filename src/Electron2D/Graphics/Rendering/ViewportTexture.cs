@@ -36,7 +36,7 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview does not expose public GPU texture handles or image
+/// Electron2D 0.1-preview does not expose public GPU texture handles or image
 /// readback through this type. Pixel opacity queries therefore return
 /// <c>false</c>.
 /// </para>
@@ -48,7 +48,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Viewport" />
@@ -76,7 +76,7 @@ public sealed class ViewportTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -100,7 +100,7 @@ public sealed class ViewportTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -124,7 +124,7 @@ public sealed class ViewportTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -150,7 +150,7 @@ public sealed class ViewportTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.

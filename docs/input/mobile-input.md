@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0051`.
 Обновлено: 2026-06-21.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [InputMap, action state и persistence baseline](input-map-actions.md), [Gamepad input baseline](gamepad-input.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [InputMap, action state и persistence baseline](input-map-actions.md), [Gamepad input baseline](gamepad-input.md).
 
 ## Назначение
 
-`0.1.0 Preview` должен иметь минимальный mobile input surface, достаточный для touch-first игр и будущих Android/iOS smoke checks. Public API не должен раскрывать native handles, platform pointers или backend-specific event objects.
+`0.1-preview` должен иметь минимальный mobile input surface, достаточный для touch-first игр и будущих Android/iOS smoke checks. Public API не должен раскрывать native handles, platform pointers или backend-specific event objects.
 
 Задача закрывает baseline:
 
@@ -139,7 +139,7 @@ Requirements:
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` получил минимальный mobile input surface без public native handles.
+Electron2D `0.1-preview` получил минимальный mobile input surface без public native handles.
 
 Публичные event resources:
 

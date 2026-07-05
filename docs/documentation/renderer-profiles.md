@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0099`.
 Обновлено: 2026-06-21.
-Связанные документы: [Пользовательская документация 0.1.0 Preview](user-documentation.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [`RenderingServer` и renderer profiles](../rendering/rendering-server.md).
+Связанные документы: [Пользовательская документация 0.1-preview](user-documentation.md), [Electron2D 0.1-preview](../releases/0.1-preview.md), [`RenderingServer` и renderer profiles](../rendering/rendering-server.md).
 
 ## Назначение
 
-Пользовательская документация должна объяснить, как в `0.1.0 Preview` выбирать renderer profile, как читать feature flags и как работает fallback policy на Android. Документ не должен обещать реальный window presentation, shader execution или mobile export smoke раньше соответствующих задач.
+Пользовательская документация должна объяснить, как в `0.1-preview` выбирать renderer profile, как читать feature flags и как работает fallback policy на Android. Документ не должен обещать реальный window presentation, shader execution или mobile export smoke раньше соответствующих задач.
 
 ## Обязательный контент
 
@@ -33,7 +33,7 @@
 - поведение `Automatic`;
 - поведение `FailIfUnavailable`;
 - Android fallback policy;
-- ограничения `0.1.0 Preview`, включая незавершённый real-window rendering path и отсутствие гарантии visual parity между профилями.
+- ограничения `0.1-preview`, включая незавершённый real-window rendering path и отсутствие гарантии visual parity между профилями.
 
 ## Проверяемость
 
@@ -53,13 +53,13 @@
 
 ## Фактическое состояние, ограничения и проверки
 
-Эта страница описывает текущий пользовательский контракт renderer profiles в Electron2D `0.1.0 Preview`.
+Эта страница описывает текущий пользовательский контракт renderer profiles в Electron2D `0.1-preview`.
 
 ## Быстрый выбор
 
 Используйте `Compatibility`, если нужна минимальная 2D-сцена с sprites, UI, text, primitives, camera и стандартным blending. Это профиль по умолчанию в текущем runtime baseline.
 
-Используйте `Standard`, если проекту нужны расширенные возможности renderer feature flags: render targets, custom shaders, `ShaderMaterial`, multipass, advanced blending или post-processing. В `0.1.0 Preview` часть этих возможностей уже присутствует как resource/import/model layer, но не все они привязаны к реальному window rendering path.
+Используйте `Standard`, если проекту нужны расширенные возможности renderer feature flags: render targets, custom shaders, `ShaderMaterial`, multipass, advanced blending или post-processing. В `0.1-preview` часть этих возможностей уже присутствует как resource/import/model layer, но не все они привязаны к реальному window rendering path.
 
 ## Проверка профиля из кода
 
@@ -122,7 +122,7 @@ if (RenderingServer.HasFeature(RenderingServer.RenderingFeature.CustomShaders))
 
 `FailIfUnavailable` нужен для проектов, где визуальный результат зависит от standard-only features. В этом режиме runtime не должен молча переходить на `Compatibility`: он должен остановить запуск и вывести диагностическое сообщение.
 
-## Ограничения `0.1.0 Preview`
+## Ограничения `0.1-preview`
 
 - Real-window rendering path ещё не является production-ready.
 - `Compatibility` уже строит внутренний command plan, но не гарантирует pixel-perfect parity со `Standard`.

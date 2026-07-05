@@ -37,7 +37,7 @@ Smoke-модель принимает `CodeDocument` в памяти с unsaved 
 
 ## Поддержанные операции
 
-Реализованный минимум для `0.1.0 Preview`:
+Реализованный минимум для `0.1-preview`:
 
 - completion показывает symbols из Electron2D API, локальные symbols текущего файла и members, найденные через Roslyn semantic model;
 - signature help показывает overload `Vector2(float x, float y)` и активный параметр;

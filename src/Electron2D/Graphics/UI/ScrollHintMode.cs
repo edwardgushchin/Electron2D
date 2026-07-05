@@ -30,13 +30,13 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// The 0.1.0 Preview stores the value for UI policy. Rendering of hint
+/// The 0.1-preview stores the value for UI policy. Rendering of hint
 /// affordances is intentionally left to later widget work.
 /// </para>
 /// </remarks>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="ScrollContainer.ScrollHintMode"/>
@@ -51,7 +51,7 @@ public enum ScrollHintMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Disabled = 0,
 
@@ -64,7 +64,7 @@ public enum ScrollHintMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     All = 1,
 
@@ -77,7 +77,7 @@ public enum ScrollHintMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     TopAndLeft = 2,
 
@@ -90,7 +90,7 @@ public enum ScrollHintMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     BottomAndRight = 3
 }

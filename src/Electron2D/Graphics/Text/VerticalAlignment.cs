@@ -33,10 +33,10 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
 public enum VerticalAlignment
@@ -49,7 +49,7 @@ public enum VerticalAlignment
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VerticalAlignment" />
@@ -64,7 +64,7 @@ public enum VerticalAlignment
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VerticalAlignment" />
@@ -79,7 +79,7 @@ public enum VerticalAlignment
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VerticalAlignment" />
@@ -91,7 +91,7 @@ public enum VerticalAlignment
     /// Uses fill alignment.
     /// </para>
     /// <para>
-    /// Electron2D 0.1.0 Preview treats this like top alignment for single-line labels.
+    /// Electron2D 0.1-preview treats this like top alignment for single-line labels.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -99,7 +99,7 @@ public enum VerticalAlignment
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VerticalAlignment" />

@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control"/>
@@ -68,7 +68,7 @@ public class LineEdit : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="LineEdit"/>
@@ -104,7 +104,7 @@ public class LineEdit : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="LineEdit"/>
@@ -130,7 +130,7 @@ public class LineEdit : Control
     /// <remarks>Assigning this property queues a redraw.</remarks>
     /// <exception cref="ArgumentNullException">Thrown when the assigned value is <c>null</c>.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Text"/>
     public string PlaceholderText
     {
@@ -154,7 +154,7 @@ public class LineEdit : Control
     /// <value><c>true</c> when user input can change text; otherwise, <c>false</c>.</value>
     /// <remarks>Programmatic methods can still change text when this property is <c>false</c>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="_GuiInput(InputEvent)"/>
     public bool Editable { get; set; } = true;
 
@@ -164,7 +164,7 @@ public class LineEdit : Control
     /// <value><c>true</c> to hide the actual text while drawing; otherwise, <c>false</c>.</value>
     /// <remarks>This property affects drawing only. The <see cref="Text"/> value remains unchanged.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="SecretCharacter"/>
     public bool Secret { get; set; }
 
@@ -175,7 +175,7 @@ public class LineEdit : Control
     /// <remarks>The value is repeated once per UTF-16 code unit in the preview implementation.</remarks>
     /// <exception cref="ArgumentException">Thrown when the assigned value is <c>null</c>, empty or whitespace.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Secret"/>
     public string SecretCharacter
     {
@@ -200,7 +200,7 @@ public class LineEdit : Control
     /// <remarks>Reducing the maximum length truncates existing text and clamps the caret.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Text"/>
     public int MaxLength
     {
@@ -227,7 +227,7 @@ public class LineEdit : Control
     /// <value>The caret position clamped to the range <c>0</c> through <see cref="Text"/> length.</value>
     /// <remarks>The preview control stores one caret and no selection range.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Text"/>
     public int CaretColumn
     {
@@ -250,7 +250,7 @@ public class LineEdit : Control
     /// <value>The alignment used inside <see cref="Control.Size"/>.</value>
     /// <remarks>Input editing still uses logical text order and a single caret.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="HorizontalAlignment"/>
     public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Left;
 
@@ -270,7 +270,7 @@ public class LineEdit : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Text"/>
@@ -302,7 +302,7 @@ public class LineEdit : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CaretColumn"/>
@@ -347,7 +347,7 @@ public class LineEdit : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CaretColumn"/>
@@ -381,7 +381,7 @@ public class LineEdit : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Text"/>
@@ -407,7 +407,7 @@ public class LineEdit : Control
     /// <param name="inputEvent">The input event delivered by the viewport.</param>
     /// <remarks>Unsupported input events are ignored.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Control._GuiInput(InputEvent)"/>
     public override void _GuiInput(InputEvent inputEvent)
     {
@@ -429,7 +429,7 @@ public class LineEdit : Control
     /// </summary>
     /// <remarks>The preview implementation uses rectangle primitives and theme font overrides.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="CanvasItem.DrawString(Font, Vector2, string, HorizontalAlignment, float, int, Color?)"/>
     public override void _Draw()
     {
@@ -459,7 +459,7 @@ public class LineEdit : Control
     /// <returns>A conservative text-field size based on theme font state.</returns>
     /// <remarks>If no font is available, the method returns <c>96x24</c>.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Control.GetMinimumSize"/>
     public override Vector2 _GetMinimumSize()
     {

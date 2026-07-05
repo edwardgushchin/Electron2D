@@ -14,7 +14,7 @@
 
 ## Назначение
 
-`T-0025` вводит public Electron2D texture resource baseline и internal texture lifetime registry для `0.1.0 Preview`.
+`T-0025` вводит public Electron2D texture resource baseline и internal texture lifetime registry для `0.1-preview`.
 
 Задача закрывает:
 
@@ -111,7 +111,7 @@ public sealed class ImageTexture : Texture2D
 }
 ```
 
-`ImageTexture.LoadFromFile(path)` загружает PNG-файл из filesystem path, читает размеры, alpha channel и RGBA pixels. В `0.1.0 Preview` обязательна поддержка 8-bit PNG color types 2, 4 и 6, indexed palette PNG color type 3 с bit depth 1, 2, 4 или 8, `tRNS` transparency, palette chunks, non-interlaced images и PNG filter types 0-4. JPEG остаётся import-metadata path и не обязан быть runtime texture source для этой задачи.
+`ImageTexture.LoadFromFile(path)` загружает PNG-файл из filesystem path, читает размеры, alpha channel и RGBA pixels. В `0.1-preview` обязательна поддержка 8-bit PNG color types 2, 4 и 6, indexed palette PNG color type 3 с bit depth 1, 2, 4 или 8, `tRNS` transparency, palette chunks, non-interlaced images и PNG filter types 0-4. JPEG остаётся import-metadata path и не обязан быть runtime texture source для этой задачи.
 
 Публичные методы inherited от `Texture2D` должны возвращать реальные данные изображения:
 

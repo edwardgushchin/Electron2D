@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен иметь Electron2D baseline для collision filters и material/body state, который можно передать будущему production physics backend без изменения публичного API.
+`0.1-preview` должен иметь Electron2D baseline для collision filters и material/body state, который можно передать будущему production physics backend без изменения публичного API.
 
 Задача не реализует solver. Она фиксирует public resource/node properties, validation и внутреннюю синхронизацию состояния, чтобы следующие physics задачи могли подключить contacts, areas и queries к уже проверенному контракту.
 

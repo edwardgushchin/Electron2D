@@ -31,7 +31,7 @@ using VariantDictionary = Electron2D.Collections.Dictionary;
 namespace Electron2D;
 
 /// <summary>
-/// Stores one value from the closed Electron2D 0.1.0 Preview Variant type set.
+/// Stores one value from the closed Electron2D 0.1-preview Variant type set.
 /// </summary>
 ///
 /// <remarks>
@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview intentionally supports a closed preview set:
+/// Electron2D 0.1-preview intentionally supports a closed preview set:
 /// primitive values, 2D math types, identity handles, <see cref="Object"/>
 /// instances, <see cref="Callable"/>, and Electron2D collections. 3D types,
 /// packed arrays, <c>Signal</c>, editor-only values, and arbitrary CLR objects
@@ -56,7 +56,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public readonly struct Variant : IEquatable<Variant>
 {
@@ -74,12 +74,12 @@ public readonly struct Variant : IEquatable<Variant>
     /// </summary>
     ///
     /// <remarks>
-    /// The list is closed for Electron2D 0.1.0 Preview. Values not listed here
+    /// The list is closed for Electron2D 0.1-preview. Values not listed here
     /// are not supported by this version of the runtime.
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum Type
     {
@@ -91,7 +91,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -106,7 +106,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -121,7 +121,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -136,7 +136,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -151,7 +151,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -166,7 +166,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -181,7 +181,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -196,7 +196,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -211,7 +211,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -226,7 +226,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -241,7 +241,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -256,7 +256,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -271,7 +271,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -286,7 +286,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -301,7 +301,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -316,7 +316,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -331,7 +331,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -346,7 +346,7 @@ public readonly struct Variant : IEquatable<Variant>
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Type" />
@@ -370,7 +370,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -395,7 +395,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -403,7 +403,7 @@ public readonly struct Variant : IEquatable<Variant>
     public object? Obj => _value;
 
     /// <summary>
-    /// Creates a Variant from any supported Electron2D 0.1.0 Preview value.
+    /// Creates a Variant from any supported Electron2D 0.1-preview value.
     /// </summary>
     ///
     /// <param name="value">The value to store.</param>
@@ -428,7 +428,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -466,7 +466,7 @@ public readonly struct Variant : IEquatable<Variant>
             VariantArray arrayValue => new Variant(Type.Array, arrayValue),
             Object objectValue => new Variant(Type.Object, objectValue),
             _ => throw new ArgumentException(
-                $"Type '{value.GetType().FullName}' is not supported by Electron2D.Variant 0.1.0 Preview.",
+                $"Type '{value.GetType().FullName}' is not supported by Electron2D.Variant 0.1-preview.",
                 nameof(value))
         };
     }
@@ -493,7 +493,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -517,7 +517,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -551,7 +551,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -724,7 +724,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -750,7 +750,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -779,7 +779,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -811,7 +811,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -837,7 +837,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -863,7 +863,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -889,7 +889,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -915,7 +915,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -941,7 +941,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -967,7 +967,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -993,7 +993,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1019,7 +1019,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1045,7 +1045,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1071,7 +1071,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1097,7 +1097,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1123,7 +1123,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1149,7 +1149,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1175,7 +1175,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1201,7 +1201,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1237,7 +1237,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1261,7 +1261,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1292,7 +1292,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1321,7 +1321,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1348,7 +1348,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1378,7 +1378,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1408,7 +1408,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1438,7 +1438,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1468,7 +1468,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1498,7 +1498,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1528,7 +1528,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1558,7 +1558,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1588,7 +1588,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1623,7 +1623,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1653,7 +1653,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1683,7 +1683,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1713,7 +1713,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1743,7 +1743,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1773,7 +1773,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1803,7 +1803,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1833,7 +1833,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1863,7 +1863,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1893,7 +1893,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1923,7 +1923,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1953,7 +1953,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -1983,7 +1983,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -2013,7 +2013,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -2043,7 +2043,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -2073,7 +2073,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />
@@ -2103,7 +2103,7 @@ public readonly struct Variant : IEquatable<Variant>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Variant" />

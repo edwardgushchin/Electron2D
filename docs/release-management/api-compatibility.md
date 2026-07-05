@@ -18,7 +18,7 @@
 
 ## Цель
 
-Для `0.1.0 Preview` нужно поддерживать публичный API только в рамках согласованного Electron2D 2D-поднабора. Все публичные типы runtime assembly должны быть отражены в compatibility table с одним из статусов:
+Для `0.1-preview` нужно поддерживать публичный API только в рамках согласованного Electron2D 2D-поднабора. Все публичные типы runtime assembly должны быть отражены в compatibility table с одним из статусов:
 
 - `Supported`
 - `Partial`

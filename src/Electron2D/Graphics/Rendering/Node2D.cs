@@ -32,7 +32,7 @@ namespace Electron2D;
 /// `Node2D` combines position, rotation and scale into a local
 /// <see cref="Transform2D" />. A direct `Node2D` parent contributes to
 /// <see cref="GlobalTransform" />; a non-`Node2D` parent breaks the transform
-/// chain for the 0.1.0 Preview subset.
+/// chain for the 0.1-preview subset.
 /// </remarks>
 ///
 /// <threadsafety>
@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="CanvasItem" />
@@ -61,7 +61,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node2D" />
@@ -79,7 +79,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -102,7 +102,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RotationDegrees" />
@@ -125,7 +125,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Rotation" />
@@ -160,7 +160,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -180,7 +180,7 @@ public class Node2D : CanvasItem
     ///
     /// <remarks>
     /// The setter decomposes position, rotation and scale for transforms without
-    /// skew. Skew is outside the Electron2D 0.1.0 Preview subset.
+    /// skew. Skew is outside the Electron2D 0.1-preview subset.
     /// </remarks>
     ///
     /// <threadsafety>
@@ -188,7 +188,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current transform value.
@@ -219,7 +219,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -256,7 +256,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -291,7 +291,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GlobalRotation" />
@@ -326,7 +326,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -361,7 +361,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Transform" />
@@ -399,7 +399,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -424,7 +424,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -449,7 +449,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -475,7 +475,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ToLocal" />
@@ -501,7 +501,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ToGlobal" />
@@ -530,7 +530,7 @@ public class Node2D : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Node2D" />
     ///

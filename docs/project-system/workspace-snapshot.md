@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация для `T-0153`.
 Обновлено: 2026-06-22.
-Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Live ProjectWorkspace](live-project-workspace.md); [Canonical document model, revision model и structural diff](canonical-document-model.md).
+Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1-preview](../releases/0.1-preview.md); [Live ProjectWorkspace](live-project-workspace.md); [Canonical document model, revision model и structural diff](canonical-document-model.md).
 
 ## Назначение
 
@@ -39,7 +39,7 @@ Snapshot нужен, чтобы dirty workspace не заставлял инст
 
 ## Open code buffers
 
-`OpenCodeBuffers` — это snapshot-представление открытых `.cs` buffers. В `0.1.0 Preview` они считаются частью input snapshot для build/test/run, потому что compiler должен видеть то состояние кода, которое видел пользователь или AI-агент при запуске job.
+`OpenCodeBuffers` — это snapshot-представление открытых `.cs` buffers. В `0.1-preview` они считаются частью input snapshot для build/test/run, потому что compiler должен видеть то состояние кода, которое видел пользователь или AI-агент при запуске job.
 
 Минимальное правило: любой открытый document с расширением `.cs` попадает в `OpenCodeBuffers` с path, text и revision. Будущая Script workspace может расширить это отдельной моделью code documents, но не должна ломать snapshot identity.
 

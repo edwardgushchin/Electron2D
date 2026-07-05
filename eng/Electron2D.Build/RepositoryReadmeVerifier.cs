@@ -44,7 +44,7 @@ internal sealed class RepositoryReadmeVerifier(string repositoryRoot)
         "img.shields.io/badge/license-MIT-green",
         "img.shields.io/badge/.NET-10-512BD4",
         "img.shields.io/badge/C%23-14-239120",
-        "img.shields.io/badge/version-0.1.0--preview-blue"
+        "img.shields.io/badge/version-0.1--preview-blue"
     ];
 
     private static readonly (string Anchor, string Heading)[] RequiredSections =

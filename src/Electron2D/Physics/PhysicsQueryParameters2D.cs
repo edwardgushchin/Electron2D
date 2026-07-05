@@ -33,10 +33,10 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
 public sealed class PhysicsRayQueryParameters2D : RefCounted
@@ -55,7 +55,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -80,7 +80,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -103,7 +103,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -126,7 +126,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -149,7 +149,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -172,7 +172,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -195,7 +195,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -218,7 +218,7 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsRayQueryParameters2D" />
@@ -235,10 +235,10 @@ public sealed class PhysicsRayQueryParameters2D : RefCounted
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
 public sealed class PhysicsPointQueryParameters2D : RefCounted
@@ -257,7 +257,7 @@ public sealed class PhysicsPointQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsPointQueryParameters2D" />
@@ -282,7 +282,7 @@ public sealed class PhysicsPointQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsPointQueryParameters2D" />
@@ -305,7 +305,7 @@ public sealed class PhysicsPointQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsPointQueryParameters2D" />
@@ -328,7 +328,7 @@ public sealed class PhysicsPointQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsPointQueryParameters2D" />
@@ -351,7 +351,7 @@ public sealed class PhysicsPointQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsPointQueryParameters2D" />
@@ -374,7 +374,7 @@ public sealed class PhysicsPointQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsPointQueryParameters2D" />
@@ -391,10 +391,10 @@ public sealed class PhysicsPointQueryParameters2D : RefCounted
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
 public sealed class PhysicsShapeQueryParameters2D : RefCounted
@@ -413,7 +413,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -438,7 +438,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -461,7 +461,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -484,7 +484,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -507,7 +507,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -530,7 +530,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -553,7 +553,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -576,7 +576,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -599,7 +599,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />
@@ -622,7 +622,7 @@ public sealed class PhysicsShapeQueryParameters2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsShapeQueryParameters2D" />

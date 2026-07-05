@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0038`.
 Обновлено: 2026-06-21.
-Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Text backend baseline](../rendering/text-backend-baseline.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Text backend baseline](../rendering/text-backend-baseline.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
 `T-0038` добавляет font importer поверх import cache. Он должен принимать TTF/OTF source assets, извлекать базовые font metadata, учитывать fallback fonts и SDF/bitmap policy из sidecar и писать stable cache artifact для будущего loader.
 
-В `0.1.0 Preview` задача не добавляет public `FontFile`, public `ResourceLoader`, real glyph rasterization или SDL_ttf file handles в public API. Результат является внутренним механизмом для тестов, будущего редактора, будущего loader и backend-отрисовки.
+В `0.1-preview` задача не добавляет public `FontFile`, public `ResourceLoader`, real glyph rasterization или SDL_ttf file handles в public API. Результат является внутренним механизмом для тестов, будущего редактора, будущего loader и backend-отрисовки.
 
 ## Source assets и sidecar
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.1.0-preview",
+  "release": "0.1-preview",
   "assetRoot": "data/assets/reference-games",
   "networkRequiredDuringBuild": false,
   "sources": [

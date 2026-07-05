@@ -37,7 +37,7 @@ namespace Electron2D;
 /// and <see cref="Object.EmitSignal(string, object?[])"/>.
 /// </para>
 /// <para>
-/// Electron2D 0.1.0 Preview does not expose .NET events as script signals and
+/// Electron2D 0.1-preview does not expose .NET events as script signals and
 /// does not scan assemblies for signal delegates at runtime. Signal metadata is
 /// supplied explicitly for AOT-safe registration.
 /// </para>
@@ -46,7 +46,7 @@ namespace Electron2D;
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This attribute is available since Electron2D 0.1.0 Preview.
+/// This attribute is available since Electron2D 0.1-preview.
 /// </since>
 /// <seealso cref="ExportAttribute"/>
 /// <seealso cref="ToolAttribute"/>
@@ -70,7 +70,7 @@ public sealed class SignalAttribute : Attribute
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SignalAttribute" />

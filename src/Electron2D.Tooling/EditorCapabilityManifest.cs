@@ -113,7 +113,7 @@ internal static class EditorCapabilityManifestFactory
     {
         return new EditorCapabilityManifest(
             1,
-            "0.1.0-preview",
+            "0.1-preview",
             new EditorCapabilityApiManifestReference(
                 "data/api/electron2d-api-manifest.json",
                 [
@@ -571,7 +571,7 @@ internal static class EditorCapabilityManifestVerifier
             diagnostics.Add(Diagnostic("E2D-CAPABILITY-0003", $"Editor capability manifest schemaVersion '{manifest.SchemaVersion}' is not supported."));
         }
 
-        if (!string.Equals(manifest.ManifestVersion, "0.1.0-preview", StringComparison.Ordinal))
+        if (!string.Equals(manifest.ManifestVersion, "0.1-preview", StringComparison.Ordinal))
         {
             diagnostics.Add(Diagnostic("E2D-CAPABILITY-0003", $"Editor capability manifestVersion '{manifest.ManifestVersion}' is not supported."));
         }

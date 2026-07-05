@@ -30,7 +30,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// Apply this attribute to a script class that inherits from <see cref="Node"/>
-/// when the class is intended to run inside editor tooling. In Electron2D 0.1.0
+/// when the class is intended to run inside editor tooling. In Electron2D 0.1-preview
 /// Preview, tool scripts are experimental and require explicit sandboxed
 /// metadata before editor-time callbacks can run.
 /// </para>
@@ -44,7 +44,7 @@ namespace Electron2D;
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This attribute is available since Electron2D 0.1.0 Preview.
+/// This attribute is available since Electron2D 0.1-preview.
 /// </since>
 /// <seealso cref="ExportAttribute"/>
 /// <seealso cref="SignalAttribute"/>
@@ -68,7 +68,7 @@ public sealed class ToolAttribute : Attribute
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ToolAttribute" />

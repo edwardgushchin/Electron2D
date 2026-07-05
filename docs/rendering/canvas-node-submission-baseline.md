@@ -77,7 +77,7 @@ public class Node2D : CanvasItem
 }
 ```
 
-`Position` по умолчанию `Vector2.Zero`, `Rotation` - `0`, `Scale` - `Vector2.One`. `Transform` строится из position/rotation/scale. Setter `Transform` поддерживает decomposition без skew; skew остаётся вне `0.1.0 Preview` subset.
+`Position` по умолчанию `Vector2.Zero`, `Rotation` - `0`, `Scale` - `Vector2.One`. `Transform` строится из position/rotation/scale. Setter `Transform` поддерживает decomposition без skew; skew остаётся вне `0.1-preview` subset.
 
 `Sprite2D`:
 

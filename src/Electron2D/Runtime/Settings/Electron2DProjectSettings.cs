@@ -30,7 +30,7 @@ internal sealed class Electron2DProjectSettings
 
     public string ProjectVersion { get; set; } = "0.1.0";
 
-    public string EngineVersion { get; set; } = "0.1.0-preview";
+    public string EngineVersion { get; set; } = "0.1-preview";
 
     public string MainScene { get; set; } = "scenes/main.scene.json";
 

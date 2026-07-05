@@ -31,7 +31,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// `TileSetAtlasSource` maps atlas coordinates to <see cref="TileData"/> and
-/// texture regions. It is the only tile source implemented by the 0.1.0 Preview
+/// texture regions. It is the only tile source implemented by the 0.1-preview
 /// runtime.
 /// </para>
 /// </remarks>
@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="TileSet"/>
@@ -70,7 +70,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Texture"/>
@@ -98,7 +98,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Texture2D"/>
@@ -140,7 +140,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTileTextureRegion"/>
@@ -182,7 +182,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTileData"/>
@@ -224,7 +224,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasTile"/>
@@ -257,7 +257,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CreateTile"/>
@@ -285,7 +285,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTileId"/>
@@ -318,7 +318,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTilesCount"/>
@@ -345,7 +345,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview stores only the default alternative tile, but the
+    /// The 0.1-preview stores only the default alternative tile, but the
     /// parameter is accepted for call-site compatibility.
     /// </para>
     /// </remarks>
@@ -359,7 +359,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CreateTile"/>
@@ -397,7 +397,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TextureRegionSize"/>

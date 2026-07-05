@@ -35,7 +35,7 @@ namespace Electron2D;
 /// public marker for user code and source-generated metadata.
 /// </para>
 /// <para>
-/// Electron2D 0.1.0 Preview does not scan assemblies at runtime to discover
+/// Electron2D 0.1-preview does not scan assemblies at runtime to discover
 /// exported members. Serialization and Inspector tooling use explicit internal
 /// metadata generated or registered for a script type.
 /// </para>
@@ -44,7 +44,7 @@ namespace Electron2D;
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This attribute is available since Electron2D 0.1.0 Preview.
+/// This attribute is available since Electron2D 0.1-preview.
 /// </since>
 /// <seealso cref="SignalAttribute"/>
 /// <seealso cref="ToolAttribute"/>
@@ -68,7 +68,7 @@ public sealed class ExportAttribute : Attribute
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ExportAttribute" />

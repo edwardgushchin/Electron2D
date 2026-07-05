@@ -19,9 +19,9 @@
 
 Electron2D должен иметь отдельный web export target, который собирает игру в WebAssembly и запускает её в браузере без переписывания игрового кода. Этот target дополняет нативный экспорт для настольных и мобильных платформ и не заменяет Windows, Linux, macOS, Android или iOS.
 
-WebAssembly browser входит в `runtimeTargets` и в `releaseVerificationTargets` текущего preview-релиза, но остаётся отдельным release verification tier от самой runtime matrix. Локальный package-contract smoke artifact полезен для диагностики; финальный release gate требует browser launch evidence, runtime probes или отдельного изменения `docs/releases/0.1.0-preview.md`.
+WebAssembly browser входит в `runtimeTargets` и в `releaseVerificationTargets` текущего preview-релиза, но остаётся отдельным release verification tier от самой runtime matrix. Локальный package-contract smoke artifact полезен для диагностики; финальный release gate требует browser launch evidence, runtime probes или отдельного изменения `docs/releases/0.1-preview.md`.
 
-WebAssembly browser export в этой спецификации означает статический browser package: набор файлов, который можно открыть через локальный или внешний статический HTTP server. Публикация на внешний hosting, CDN, store или облачный сервис не входит в `0.1.0 Preview`.
+WebAssembly browser export в этой спецификации означает статический browser package: набор файлов, который можно открыть через локальный или внешний статический HTTP server. Публикация на внешний hosting, CDN, store или облачный сервис не входит в `0.1-preview`.
 
 ## Целевой export target
 

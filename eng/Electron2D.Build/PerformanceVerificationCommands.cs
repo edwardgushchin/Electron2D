@@ -432,9 +432,9 @@ internal sealed class ReferencePerformanceVerifier(string repositoryRoot, JsonDi
             WriteError("E2D-BUILD-PERFORMANCE-METRICS-VERSION", "Reference performance metrics version must be 1.", MetricsRelativePath);
         }
 
-        if (!TryGetString(root, "release", "metrics", out var release) || release != "0.1.0-preview")
+        if (!TryGetString(root, "release", "metrics", out var release) || release != "0.1-preview")
         {
-            WriteError("E2D-BUILD-PERFORMANCE-METRICS-RELEASE", "Reference performance metrics release must be 0.1.0-preview.", MetricsRelativePath);
+            WriteError("E2D-BUILD-PERFORMANCE-METRICS-RELEASE", "Reference performance metrics release must be 0.1-preview.", MetricsRelativePath);
         }
 
         if (!TryGetObject(root, "budgets", "metrics", out var budgets) ||

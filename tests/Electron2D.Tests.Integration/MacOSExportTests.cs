@@ -63,7 +63,7 @@ public sealed class MacOSExportTests
         Assert.False(result.Plan.IncludeDebugSymbols);
         Assert.Equal(Electron2D.Electron2DRendererProfileSetting.Standard, result.Plan.RendererProfile);
         Assert.Equal("metal", result.Plan.GraphicsBackend);
-        Assert.Equal("unsupported-in-0.1.0-preview", result.Plan.X64Policy);
+        Assert.Equal("unsupported-in-0.1-preview", result.Plan.X64Policy);
         Assert.Equal(Path.Combine("exports", "macos", "release"), result.Plan.OutputDirectory);
         Assert.Equal(Path.Combine("exports", "macos", "release", "publish"), result.Plan.PublishOutputDirectory);
         Assert.Equal(Path.Combine("exports", "macos", "release", "ReferenceGame.app"), result.Plan.AppBundlePath);
@@ -192,7 +192,7 @@ public sealed class MacOSExportTests
         {
             Name = "ReferenceGame",
             ProjectVersion = "0.1.0",
-            EngineVersion = "0.1.0-preview",
+            EngineVersion = "0.1-preview",
             MainScene = "scenes/main.scene.json",
             RendererProfile = rendererProfile,
             Display = new Electron2D.Electron2DDisplaySettings

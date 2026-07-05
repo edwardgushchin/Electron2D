@@ -29,7 +29,7 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// This type is part of the Electron2D 0.1-preview public API.
 /// </remarks>
 ///
 /// <threadsafety>
@@ -37,7 +37,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This API is available since Electron2D 0.1.0 Preview.
+/// This API is available since Electron2D 0.1-preview.
 /// </since>
 ///
 public class Node : Object
@@ -56,7 +56,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -91,7 +91,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -134,7 +134,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SceneTree.Paused" />
@@ -169,7 +169,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -205,7 +205,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -253,7 +253,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -284,7 +284,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -316,7 +316,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -350,7 +350,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -378,7 +378,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -410,7 +410,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -456,7 +456,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -509,7 +509,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -557,7 +557,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -606,7 +606,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -642,7 +642,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -675,7 +675,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -704,7 +704,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -732,7 +732,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -760,7 +760,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -787,7 +787,7 @@ public class Node : Object
     /// services, such as <see cref="Viewport.SetInputAsHandled"/>.
     /// </para>
     /// <para>
-    /// The 0.1.0 Preview scene tree creates a <see cref="Viewport"/> as its
+    /// The 0.1-preview scene tree creates a <see cref="Viewport"/> as its
     /// root node. Future subviewport nodes can make the nearest ancestor rule
     /// observable for nested viewports.
     /// </para>
@@ -799,7 +799,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Viewport"/>
@@ -850,7 +850,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SceneTree.CreateTween"/>
@@ -887,7 +887,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -924,7 +924,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -991,7 +991,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -1013,7 +1013,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -1039,7 +1039,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -1065,7 +1065,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -1091,7 +1091,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />
@@ -1113,7 +1113,7 @@ public class Node : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node" />

@@ -640,7 +640,7 @@ public sealed class PlatformerProjectTests
                 "Задача перенесена из корневого TASKS.md"
             ]),
         ["platformer-acceptance"] = new ExpectedProjectTask(
-            "Verify the 0.1.0 Preview Platformer",
+            "Verify the 0.1-preview Platformer",
             "Blocked",
             "P0",
             ["T-0166"],

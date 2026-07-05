@@ -29,7 +29,7 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// Electron2D 0.1.0 Preview uses `Viewport` as the concrete root node created
+/// Electron2D 0.1-preview uses `Viewport` as the concrete root node created
 /// by <see cref="SceneTree" />. The public `SceneTree.Root` property remains
 /// typed as <see cref="Node" /> for the current object-model baseline.
 /// </remarks>
@@ -40,7 +40,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Camera2D" />
@@ -60,7 +60,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Viewport" />
@@ -85,7 +85,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -113,7 +113,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current canvas transform value.
@@ -137,7 +137,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current snap2 dtransforms to pixel value.
@@ -160,7 +160,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current snap2 dvertices to pixel value.
@@ -181,7 +181,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -206,7 +206,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -230,7 +230,7 @@ public class Viewport : Node
     /// </returns>
     /// <remarks>
     /// The returned texture reflects the current <see cref="Size" /> when its
-    /// metadata is queried. Electron2D 0.1.0 Preview exposes the Electron2D
+    /// metadata is queried. Electron2D 0.1-preview exposes the Electron2D
     /// resource object before exposing public image readback or GPU handles.
     /// </remarks>
     ///
@@ -239,7 +239,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ViewportTexture" />
@@ -273,7 +273,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.AcceptEvent"/>
@@ -308,7 +308,7 @@ public class Viewport : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.GetTooltip(Vector2)"/>

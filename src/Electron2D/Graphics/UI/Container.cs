@@ -30,7 +30,7 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// <c>Container</c> is the common base for layout controls in the 0.1.0 Preview
+/// <c>Container</c> is the common base for layout controls in the 0.1-preview
 /// UI surface. It only arranges direct children that inherit from
 /// <see cref="Control"/> and leaves other child nodes untouched.
 /// </para>
@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control"/>
@@ -71,7 +71,7 @@ public class Container : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="QueueSort"/>
@@ -123,7 +123,7 @@ public class Container : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="QueueSort"/>
@@ -165,7 +165,7 @@ public class Container : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FitChildInRect(Control, Rect2)"/>
@@ -197,7 +197,7 @@ public class Container : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="QueueSort"/>

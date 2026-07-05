@@ -34,10 +34,10 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
 public class StaticBody2D : PhysicsBody2D
@@ -56,7 +56,7 @@ public class StaticBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="StaticBody2D" />
@@ -74,7 +74,7 @@ public class StaticBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -97,7 +97,7 @@ public class StaticBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.

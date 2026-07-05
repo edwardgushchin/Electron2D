@@ -18,7 +18,7 @@
 
 ## Цель
 
-Ввести закрытый 2D math baseline для `0.1.0 Preview`: `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`. Эти типы нужны будущим `Node2D`, rendering/physics API, сериализации ресурсов и `Variant`.
+Ввести закрытый 2D math baseline для `0.1-preview`: `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color` и `Mathf`. Эти типы нужны будущим `Node2D`, rendering/physics API, сериализации ресурсов и `Variant`.
 
 Контракт сверяется с официальной документацией Godot по встроенным 2D-типам:
 
@@ -254,7 +254,7 @@
 
 - `Variant` integration для этих math-типов реализована отдельной задачей `T-0020`.
 - `StringName` и `Rid` реализованы в `T-0019`.
-- 3D math-типы не входят в `0.1.0 Preview` math baseline.
+- 3D math-типы не входят в `0.1-preview` math baseline.
 - Полный XML documentation gate остаётся задачей `T-0106`.
 
 ## Размещение файлов

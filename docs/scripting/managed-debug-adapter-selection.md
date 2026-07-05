@@ -23,7 +23,7 @@
 
 ## Почему netcoredbg
 
-`netcoredbg` выбран как adapter для `0.1.0 Preview`, потому что:
+`netcoredbg` выбран как adapter для `0.1-preview`, потому что:
 
 - реализует VS Code Debug Adapter Protocol mode через `--interpreter=vscode`;
 - поддерживает launch и attach для .NET process;
@@ -32,7 +32,7 @@
 - имеет upstream binary release для Windows x64 и Linux x64;
 - может быть собран из source для macOS arm64, где upstream release `3.1.3-1062` не публикует готовый `osx-arm64` artifact.
 
-`SharpDbg` не выбран для `0.1.0`, потому что на момент проверки у него нет GitHub release/package assets. Microsoft debugger adapters не выбраны из-за несоответствия permissive redistribution policy Electron2D.
+`SharpDbg` не выбран для `0.1-preview`, потому что на момент проверки у него нет GitHub release/package assets. Microsoft debugger adapters не выбраны из-за несоответствия permissive redistribution policy Electron2D.
 
 ## Manifest
 
@@ -108,7 +108,7 @@ Local evidence сохранён в `.temp/debug-adapter/dap-smoke/` и не вх
 - `setBreakpoints` может сначала вернуть pending breakpoint. Electron2D должен считать breakpoint подтверждённым после события `stopped:breakpoint` и resolved stack frame.
 - `netcoredbg` не объявляет native DAP restart request в `initialize` response. Restart в `T-0160` нужно реализовать в Editor как `disconnect` текущей сессии и новый `launch` на свежем `WorkspaceSnapshot`.
 - macOS arm64 требует собственного source-build artifact в release pipeline.
-- Remote Android, iOS и WebAssembly debugger не входят в `0.1.0`.
+- Remote Android, iOS и WebAssembly debugger не входят в `0.1-preview`.
 
 ## Update procedure
 

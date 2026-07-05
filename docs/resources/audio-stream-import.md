@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0039`.
 Обновлено: 2026-06-21.
-Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
 `T-0039` добавляет resource importer для WAV и OGG source assets. Importer должен создавать stable cache artifact с metadata, из которого future audio runtime сможет создать `AudioStream` без чтения исходного проекта как generated state.
 
-В `0.1.0 Preview` задача не добавляет `AudioServer`, playback nodes, mixer graph или device playback. Результат закрывает asset pipeline baseline: source file остаётся в проекте, generated metadata лежит в import cache, UID стабилен относительно `res://` path, а loop/static/streaming/platform packaging decisions сохраняются в diff-friendly JSON.
+В `0.1-preview` задача не добавляет `AudioServer`, playback nodes, mixer graph или device playback. Результат закрывает asset pipeline baseline: source file остаётся в проекте, generated metadata лежит в import cache, UID стабилен относительно `res://` path, а loop/static/streaming/platform packaging decisions сохраняются в diff-friendly JSON.
 
 ## Source assets и sidecar
 

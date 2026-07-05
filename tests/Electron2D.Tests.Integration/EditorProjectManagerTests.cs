@@ -208,7 +208,7 @@ public sealed class EditorProjectManagerTests
         var agentsPath = Path.Combine(projectRoot, "AGENTS.md");
         Assert.True(File.Exists(agentsPath));
         var agents = File.ReadAllText(agentsPath);
-        Assert.Contains("Electron2D 0.1.0-preview", agents, StringComparison.Ordinal);
+        Assert.Contains("Electron2D 0.1-preview", agents, StringComparison.Ordinal);
         Assert.Contains(".NET 10.0.101", agents, StringComparison.Ordinal);
         Assert.Contains($"Renderer profile: `{rendererProfile}`", agents, StringComparison.Ordinal);
         Assert.Contains("e2d validate", agents, StringComparison.Ordinal);

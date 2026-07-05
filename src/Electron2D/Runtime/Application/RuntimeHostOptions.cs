@@ -44,7 +44,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="RuntimeHost"/>
@@ -66,7 +66,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RuntimeHostOptions"/>
@@ -92,7 +92,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RuntimeHost"/>
@@ -118,7 +118,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RuntimeHostResult.WindowWidth"/>
@@ -144,7 +144,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public int FrameLimit { get; set; }
 
@@ -176,7 +176,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SceneTree"/>
@@ -192,7 +192,7 @@ internal sealed class RuntimeHostOptions
     /// </value>
     ///
     /// <remarks>
-    /// The 0.1.0 Preview scheduler supports 60, 120, 144 and 165 hertz
+    /// The 0.1-preview scheduler supports 60, 120, 144 and 165 hertz
     /// targets. The normalized value is used by the interactive scheduler and
     /// is also passed to the presenter settings. Bounded runs with
     /// <see cref="FrameLimit"/> greater than <c>0</c> remain deterministic by
@@ -205,7 +205,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public int TargetFrameRate { get; set; } = 60;
 
@@ -238,7 +238,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public bool PresentationSyncEnabled { get; set; } = true;
 
@@ -269,7 +269,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RuntimeHostResult.ScreenshotPath"/>
@@ -293,7 +293,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public bool QuitOnEscape { get; set; } = true;
 
@@ -316,7 +316,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public Color ClearColor { get; set; } = new(0.04f, 0.05f, 0.06f, 1f);
 
@@ -349,7 +349,7 @@ internal sealed class RuntimeHostOptions
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RuntimeHost"/>
@@ -376,7 +376,7 @@ internal sealed class RuntimeHostOptions
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="RuntimeHostOptions.ScriptedInputProvider"/>
@@ -412,7 +412,7 @@ internal sealed class RuntimeHostScriptedInputContext
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     public RuntimeHostScriptedInputContext(SceneTree sceneTree, int frameIndex, Vector2I windowSize)
     {
@@ -446,7 +446,7 @@ internal sealed class RuntimeHostScriptedInputContext
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public SceneTree SceneTree { get; }
 
@@ -468,7 +468,7 @@ internal sealed class RuntimeHostScriptedInputContext
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public int FrameIndex { get; }
 
@@ -492,7 +492,7 @@ internal sealed class RuntimeHostScriptedInputContext
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public Vector2I WindowSize { get; }
 }

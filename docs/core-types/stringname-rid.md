@@ -18,7 +18,7 @@
 
 ## Цель
 
-Ввести два базовых Electron2D identity-типа для `0.1.0 Preview`:
+Ввести два базовых Electron2D identity-типа для `0.1-preview`:
 
 - `StringName` - immutable interned name для имён сигналов, групп, свойств, методов и будущего `Variant`;
 - `Rid` - opaque handle низкоуровневого ресурса для будущих rendering/physics/audio/text servers.
@@ -163,7 +163,7 @@ public readonly struct Rid : IEquatable<Rid>, IComparable<Rid>
 - comparison operators `<`, `<=`, `>`, `>=`;
 - equality, ordering и hashing.
 
-`default(Rid)` имеет ID `0` и считается invalid. Valid `Rid` значения в `0.1.0 Preview` выдаёт только внутренний allocator будущих серверов; публичного конструктора из integer ID нет.
+`default(Rid)` имеет ID `0` и считается invalid. Valid `Rid` значения в `0.1-preview` выдаёт только внутренний allocator будущих серверов; публичного конструктора из integer ID нет.
 
 ## Internal allocator
 

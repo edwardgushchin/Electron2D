@@ -29,7 +29,7 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// The 0.1.0 Preview baseline stores body properties and synchronizes the node
+/// The 0.1-preview baseline stores body properties and synchronizes the node
 /// transform to the physics server. Dynamic simulation is added by later physics
 /// tasks.
 /// </remarks>
@@ -40,7 +40,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public class RigidBody2D : PhysicsBody2D
 {
@@ -58,7 +58,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RigidBody2D" />
@@ -76,10 +76,10 @@ public class RigidBody2D : PhysicsBody2D
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum FreezeModeEnum
@@ -92,7 +92,7 @@ public class RigidBody2D : PhysicsBody2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="FreezeModeEnum" />
@@ -107,7 +107,7 @@ public class RigidBody2D : PhysicsBody2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="FreezeModeEnum" />
@@ -120,10 +120,10 @@ public class RigidBody2D : PhysicsBody2D
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum CenterOfMassModeEnum
@@ -136,7 +136,7 @@ public class RigidBody2D : PhysicsBody2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="CenterOfMassModeEnum" />
@@ -151,7 +151,7 @@ public class RigidBody2D : PhysicsBody2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="CenterOfMassModeEnum" />
@@ -168,7 +168,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -191,7 +191,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -214,7 +214,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -237,7 +237,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -260,7 +260,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -300,7 +300,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -323,7 +323,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -346,7 +346,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -369,7 +369,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -392,7 +392,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -427,7 +427,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -462,7 +462,7 @@ public class RigidBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.

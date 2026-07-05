@@ -287,7 +287,7 @@ internal sealed class LocalDocumentationVerifier(
             var root = new JsonObject
             {
                 ["schemaVersion"] = ManifestSchemaVersion,
-                ["manifestVersion"] = "0.1.0-preview",
+                ["manifestVersion"] = "0.1-preview",
                 ["generatedFrom"] = new JsonObject
                 {
                     ["apiManifest"] = HashRecordJson(NewHashRecord(apiManifestPath)),
@@ -1235,9 +1235,9 @@ internal sealed class LocalDocumentationVerifier(
         }
 
         if (!TryGetString(root, "manifestVersion", out var manifestVersion) ||
-            !string.Equals(manifestVersion, "0.1.0-preview", StringComparison.Ordinal))
+            !string.Equals(manifestVersion, "0.1-preview", StringComparison.Ordinal))
         {
-            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SCHEMA", "Local documentation index manifestVersion must be 0.1.0-preview.", IndexRelativePath));
+            result.Add(CreateError("E2D-BUILD-DOCS-INDEX-SCHEMA", "Local documentation index manifestVersion must be 0.1-preview.", IndexRelativePath));
         }
 
         if (root.TryGetProperty("entries", out _))

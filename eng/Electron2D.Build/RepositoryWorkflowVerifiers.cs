@@ -748,7 +748,7 @@ internal sealed class StaticRepositoryVerifier(string repositoryRoot, JsonDiagno
             "Canonical goal alignment verification passed.",
             new Dictionary<string, string[]>(StringComparer.Ordinal)
             {
-                ["docs/releases/0.1.0-preview.md"] = ["Agent-native cross-platform 2D game engine", "0.1.0 Preview"],
+                ["docs/releases/0.1-preview.md"] = ["Agent-native cross-platform 2D game engine", "0.1-preview"],
                 ["docs/architecture/agent-native-workflow.md"] = ["Agent-native", "ProjectTaskManager"],
                 ["docs/architecture/engine-platform-stack.md"] = ["verify canonical-goal-alignment", "C#"]
             },
@@ -1769,7 +1769,7 @@ internal sealed class ReferenceGameAssetsVerifier(string repositoryRoot, JsonDia
         {
             using var document = JsonDocument.Parse(File.ReadAllText(manifestPath, Encoding.UTF8));
             var root = document.RootElement;
-            AssertString(root, "release", "0.1.0-preview", "manifest", errors);
+            AssertString(root, "release", "0.1-preview", "manifest", errors);
             AssertString(root, "assetRoot", "data/assets/reference-games", "manifest", errors);
             AssertInt(root, "schemaVersion", 1, "manifest", errors);
             if (!TryGetBoolean(root, "networkRequiredDuringBuild", "manifest", errors, out var networkRequiredDuringBuild) || networkRequiredDuringBuild)
@@ -2221,7 +2221,7 @@ internal sealed class ReferenceGamePlatformMatrixVerifier(string repositoryRoot,
             }
 
             if (!root.TryGetProperty("version", out var version) || version.GetInt32() != 2 ||
-                !root.TryGetProperty("release", out var release) || release.GetString() != "0.1.0-preview")
+                !root.TryGetProperty("release", out var release) || release.GetString() != "0.1-preview")
             {
                 errors.Add(Error("E2D-BUILD-REFERENCE-MATRIX-IDENTITY", "Reference game platform matrix has invalid version or release.", "data/quality/reference-game-platform-matrix.json"));
             }
@@ -2268,7 +2268,7 @@ internal sealed class ReferenceGamePlatformMatrixVerifier(string repositoryRoot,
         {
             format = "Electron2D.ReferenceGamePlatformMatrix.VerificationSummary",
             version = 1,
-            release = "0.1.0-preview",
+            release = "0.1-preview",
             projects = new[]
             {
                 new
@@ -2337,8 +2337,8 @@ internal sealed class ReferenceGamePlatformMatrixVerifier(string repositoryRoot,
     {
         if (!root.TryGetProperty("releaseVerificationDecision", out var decision) ||
             decision.ValueKind != JsonValueKind.Object ||
-            decision.GetProperty("id").GetString() != "all-runtime-targets-for-0.1.0-preview" ||
-            decision.GetProperty("source").GetString() != "docs/releases/0.1.0-preview.md")
+            decision.GetProperty("id").GetString() != "all-runtime-targets-for-0.1-preview" ||
+            decision.GetProperty("source").GetString() != "docs/releases/0.1-preview.md")
         {
             errors.Add(Error("E2D-BUILD-REFERENCE-MATRIX-RELEASE-DECISION", "Reference game platform matrix releaseVerificationDecision is missing or invalid.", "data/quality/reference-game-platform-matrix.json"));
         }
@@ -2650,7 +2650,7 @@ internal sealed class LeakChecksVerifier(string repositoryRoot, JsonDiagnosticSi
         var report = document.RootElement;
         AssertString(report, "format", "Electron2D.LeakVerificationReport", "report", errors);
         AssertInt(report, "version", 1, "report", errors);
-        AssertString(report, "release", "0.1.0-preview", "report", errors);
+        AssertString(report, "release", "0.1-preview", "report", errors);
 
         if (!TryGetObject(report, "budgets", "report", errors, out var budgets))
         {
@@ -2778,7 +2778,7 @@ internal sealed class LeakChecksVerifier(string repositoryRoot, JsonDiagnosticSi
         {
             format = "Electron2D.LeakVerificationPlan",
             version = 1,
-            release = "0.1.0-preview",
+            release = "0.1-preview",
             focusedTest = CycleTestName,
             report = "data/quality/leak-verification-report.json",
             scenarios = RequiredScenarioIds

@@ -14,7 +14,7 @@
 
 ## Назначение
 
-`T-0027` вводит baseline камеры и viewport presentation для `0.1.0 Preview`.
+`T-0027` вводит baseline камеры и viewport presentation для `0.1-preview`.
 
 Задача закрывает:
 
@@ -60,7 +60,7 @@ Defaults:
 - `Offset == Vector2.Zero`;
 - `Zoom == Vector2.One`.
 
-Smoothing methods are no-op in `0.1.0 Preview`, because smoothing itself is outside this baseline. They exist only when they have observable camera state or documented no-op behavior covered by tests.
+Smoothing methods are no-op in `0.1-preview`, because smoothing itself is outside this baseline. They exist only when they have observable camera state or documented no-op behavior covered by tests.
 
 `Viewport`:
 
@@ -87,7 +87,7 @@ All new public types and members must have XML documentation in SDL-like C# styl
 
 When an enabled camera enters a viewport and the viewport has no active camera, it becomes current. When the current camera exits the tree or is disabled, the viewport clears it.
 
-For `0.1.0 Preview`:
+For `0.1-preview`:
 
 - target position is `GlobalPosition + Offset`;
 - screen center position equals target position;
@@ -243,7 +243,7 @@ Internal enums use Godot multiple-resolution terms:
 - `GetTargetPosition()` возвращает `GlobalPosition + Offset`;
 - `GetScreenCenterPosition()` возвращает target position;
 - `GetScreenRotation()` возвращает `0`, когда `IgnoreRotation == true`, иначе `GlobalRotation`;
-- `Align()`, `ForceUpdateScroll()` и `ResetSmoothing()` являются документированными no-op, потому что smoothing, limits и drag margins не входят в `0.1.0 Preview` baseline.
+- `Align()`, `ForceUpdateScroll()` и `ResetSmoothing()` являются документированными no-op, потому что smoothing, limits и drag margins не входят в `0.1-preview` baseline.
 
 ## Viewport
 

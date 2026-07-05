@@ -17,9 +17,9 @@
 
 ## Назначение
 
-Electron2D `0.1.0 Preview` должен экспортировать один проект в iOS runtime package без переписывания игровой логики. iOS является платформой запуска и экспорта, но не платформой редактирования проекта.
+Electron2D `0.1-preview` должен экспортировать один проект в iOS runtime package без переписывания игровой логики. iOS является платформой запуска и экспорта, но не платформой редактирования проекта.
 
-iOS входит в `runtimeTargets` и в `releaseVerificationTargets` текущего preview-релиза. Blocked-environment artifact допустим, когда macOS/Xcode, simulator/device или iOS workload недоступны, но такой artifact не закрывает release gate: финальная проверка требует реального simulator или device smoke/soak либо отдельного изменения `docs/releases/0.1.0-preview.md`.
+iOS входит в `runtimeTargets` и в `releaseVerificationTargets` текущего preview-релиза. Blocked-environment artifact допустим, когда macOS/Xcode, simulator/device или iOS workload недоступны, но такой artifact не закрывает release gate: финальная проверка требует реального simulator или device smoke/soak либо отдельного изменения `docs/releases/0.1-preview.md`.
 
 `T-0092` считается закрытой только после macOS/Xcode проверки с iOS simulator или подключённым iOS device. Частичные шаги, которые можно проверить на Windows, не являются готовым release path, но должны быть полезны для финального gate:
 
@@ -28,7 +28,7 @@ iOS входит в `runtimeTargets` и в `releaseVerificationTargets` теку
 - mobile runtime policy для touch, safe area, lifecycle, audio, resources, filesystem и precompiled rendering artifacts;
 - structured smoke artifact, который может честно вернуть `blocked`, если simulator/device недоступен.
 
-App Store Connect automation, внешний upload, cloud signing и публикация не входят в `0.1.0 Preview`.
+App Store Connect automation, внешний upload, cloud signing и публикация не входят в `0.1-preview`.
 
 ## Export target
 
@@ -195,7 +195,7 @@ Smoke artifact должен проверять:
 
 ## Статус
 
-`IosArm64` с runtime identifier `ios-arm64` остаётся заблокированным mobile release target для Electron2D `0.1.0 Preview`. В текущем состоянии репозитория это не готовый release path, потому что обязательный macOS/Xcode smoke на simulator или device ещё не выполнен.
+`IosArm64` с runtime identifier `ios-arm64` остаётся заблокированным mobile release target для Electron2D `0.1-preview`. В текущем состоянии репозитория это не готовый release path, потому что обязательный macOS/Xcode smoke на simulator или device ещё не выполнен.
 
 Текущий репозиторий умеет fail closed проверять iOS preset inputs, создавать deterministic Xcode project staging plan, записывать transient iOS staging project и сохранять structured smoke artifact со статусом `blocked`, когда simulator или device недоступны. Он пока не запускает `xcodebuild`, не подписывает app, не устанавливает app на simulator или device и не проходит реальный iOS smoke.
 

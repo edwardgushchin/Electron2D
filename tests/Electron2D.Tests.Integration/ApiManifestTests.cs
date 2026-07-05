@@ -42,8 +42,8 @@ public sealed class ApiManifestTests
         var rootElement = document.RootElement;
 
         Assert.Equal(1, rootElement.GetProperty("schemaVersion").GetInt32());
-        Assert.Equal("0.1.0-preview", rootElement.GetProperty("manifestVersion").GetString());
-        Assert.Equal("Electron2D 0.1.0 2D", rootElement.GetProperty("profileName").GetString());
+        Assert.Equal("0.1-preview", rootElement.GetProperty("manifestVersion").GetString());
+        Assert.Equal("Electron2D 0.1-preview 2D", rootElement.GetProperty("profileName").GetString());
         Assert.Equal("4.7-stable", rootElement.GetProperty("godotBaseline").GetString());
 
         var generatedFrom = rootElement.GetProperty("generatedFrom");

@@ -30,7 +30,7 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// `TileSet` is a resource assigned to <see cref="TileMapLayer"/>. The 0.1.0
+/// `TileSet` is a resource assigned to <see cref="TileMapLayer"/>. The 0.1-preview
 /// Preview supports atlas sources and a single rectangular cell size.
 /// </para>
 /// </remarks>
@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="TileMapLayer"/>
@@ -67,7 +67,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddSource"/>
@@ -99,7 +99,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TileMapLayer.MapToLocal"/>
@@ -148,7 +148,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSource"/>
@@ -193,7 +193,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasSource"/>
@@ -227,7 +227,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddSource"/>
@@ -260,7 +260,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSource"/>
@@ -288,7 +288,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSourceId"/>
@@ -320,7 +320,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSourceCount"/>
@@ -352,7 +352,7 @@ public sealed class TileSet : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RemoveSource"/>

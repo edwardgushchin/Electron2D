@@ -52,13 +52,13 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 После `T-0209` инструмент принимает только точную форму `package --rid <rid>` с непустым `rid`; лишние, переставленные, повторные или пустые аргументы возвращают `E2D-BUILD-CLI-INVALID-ARGUMENTS`. Поддерживаемые значения `rid`: `win-x64`, `linux-x64`, `osx-arm64`. Неподдерживаемый `rid` возвращает `E2D-BUILD-PACKAGE-RID-UNSUPPORTED` и не создаёт архив.
 
-`package --rid <rid>` создаёт локальный черновой набор релизных файлов в `artifacts/release/0.1.0-preview/<rid>/`:
+`package --rid <rid>` создаёт локальный черновой набор релизных файлов в `artifacts/release/0.1-preview/<rid>/`:
 
 - каталог подготовки `package/` с корневыми `README.md`, `LICENSE` и `release-manifest.json`;
 - `library/` с NuGet-пакетом `Electron2D`;
 - `editor/` с выходными файлами `dotnet publish` проекта `Electron2D.Editor`;
 - `tools/e2d/` с выходными файлами `dotnet publish` проекта `Electron2D.Cli`;
-- основной архив `electron2d-0.1.0-preview-<rid>.zip` для `win-x64` или `electron2d-0.1.0-preview-<rid>.tar.gz` для Linux/macOS;
+- основной архив `electron2d-0.1-preview-<rid>.zip` для `win-x64` или `electron2d-0.1-preview-<rid>.tar.gz` для Linux/macOS;
 - соседний файл `<archive>.sha256` с SHA-256 основного архива.
 
 Команда запускает `dotnet pack src/Electron2D/Electron2D.csproj -c Release` и два `dotnet publish` для `src\Electron2D.Editor\Electron2D.Editor.csproj` и `src\Electron2D.Cli\Electron2D.Cli.csproj` с `-c Release`, `-r <rid>` и `--self-contained true`. Внутренний `eng/Electron2D.Build` не копируется в релизный архив, потому что это инструмент репозитория, а не пользовательская среда выполнения или инструмент разработчика.
@@ -66,7 +66,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 `release-manifest.json` внутри архива обязан фиксировать:
 
 - `format`: `Electron2D.ReleaseManifest`;
-- `version`: `0.1.0-preview`;
+- `version`: `0.1-preview`;
 - `runtimeIdentifier`;
 - `configuration`: `Release`;
 - имя архива и тип архива;
@@ -76,7 +76,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 Политика запрещённых файлов запрещает попадание в архив и каталог подготовки следующих путей: `.git/`, `.github/`, `.temp/`, `.codex/`, `TASKS.md`, старые корневые `dev-diary/` и `completed-tasks/`, текущие `data/dev-diary/` и `data/completed-tasks/`, `CHANGELOG*`, `RELEASE-NOTES*`, любые `*.ps1`, `eng/Electron2D.Build\`, `docs/verdicts/`, `audit-evidence/`, `artifacts/` внутри самого пакета и любые `*.zip`, `*.tar.gz`, `*.sha256`, не являющиеся текущим выходным архивом и его контрольной суммой.
 
-`release verify` не создаёт тег, GitHub Release, черновик релиза или публикацию. Команда проверяет локальный набор черновых релизных файлов в `artifacts/release/0.1.0-preview/`: все три runtime identifiers присутствуют, имена архивов соответствуют матрице, соседние `.sha256` совпадают с фактическим SHA-256, каждый архив содержит `README.md`, `LICENSE`, `release-manifest.json`, `library/`, `editor/` и `tools/e2d/`, манифест перечисляет конкретные файлы в `library/`, `editor/` и `tools/e2d/`, этот список совпадает с каталогом подготовки и содержимым архива, а политика запрещённых файлов проходит для содержимого архива и распакованного каталога подготовки. При успехе команда возвращает `E2D-BUILD-RELEASE-VERIFY-PASSED`; при неполном наборе или нарушении политики возвращает структурированную ошибку и не меняет внешнее состояние GitHub.
+`release verify` не создаёт тег, GitHub Release, черновик релиза или публикацию. Команда проверяет локальный набор черновых релизных файлов в `artifacts/release/0.1-preview/`: все три runtime identifiers присутствуют, имена архивов соответствуют матрице, соседние `.sha256` совпадают с фактическим SHA-256, каждый архив содержит `README.md`, `LICENSE`, `release-manifest.json`, `library/`, `editor/` и `tools/e2d/`, манифест перечисляет конкретные файлы в `library/`, `editor/` и `tools/e2d/`, этот список совпадает с каталогом подготовки и содержимым архива, а политика запрещённых файлов проходит для содержимого архива и распакованного каталога подготовки. При успехе команда возвращает `E2D-BUILD-RELEASE-VERIFY-PASSED`; при неполном наборе или нарушении политики возвращает структурированную ошибку и не меняет внешнее состояние GitHub.
 
 Обязательные свойства:
 
@@ -95,7 +95,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 Обязательные входные параметры:
 
-- `version`, по умолчанию `0.1.0-preview`;
+- `version`, по умолчанию `0.1-preview`;
 - `dry_run`, по умолчанию `true`;
 - `create_draft_release`, по умолчанию `false`;
 - `configuration`, по умолчанию `Release`.
@@ -119,7 +119,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 Правила тегов:
 
-- формат тега: `v<version>`, например `v0.1.0-preview`;
+- формат тега: `v<version>`, например `v0.1-preview`;
 - тег должен указывать на commit, прошедший `T-0104`;
 - рабочий процесс может создать черновик релиза для тега и версии, но не переводит его в опубликованное состояние.
 

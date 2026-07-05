@@ -115,7 +115,7 @@ public sealed class EditorCapabilityManifestTests
         var resource = session.ReadResource("electron2d://editor/capabilities");
 
         Assert.Equal("electron2d://editor/capabilities", resource.Uri);
-        Assert.Equal("0.1.0-preview", resource.Content["manifestVersion"]!.GetValue<string>());
+        Assert.Equal("0.1-preview", resource.Content["manifestVersion"]!.GetValue<string>());
         Assert.Contains(resource.Content["capabilities"]!.AsArray(), node =>
             node!["capability"]!.GetValue<string>() == "scene.node.set_property" &&
             node["tooling"]!["status"]!.GetValue<string>() == "supported" &&

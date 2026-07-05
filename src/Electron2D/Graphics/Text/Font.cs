@@ -34,7 +34,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// `Font` supplies the text metrics used by <see cref="CanvasItem.DrawString" />
-/// and <see cref="Label" />. Electron2D 0.1.0 Preview implements a minimal
+/// and <see cref="Label" />. Electron2D 0.1-preview implements a minimal
 /// layout cache, Unicode scalar enumeration through <see cref="Rune" /> and
 /// fallback font resolution. Concrete font loading remains a later resource
 /// import task.
@@ -52,7 +52,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="CanvasItem.DrawString" />
@@ -72,7 +72,7 @@ public abstract class Font : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Font" />
@@ -106,7 +106,7 @@ public abstract class Font : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -139,7 +139,7 @@ public abstract class Font : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -169,7 +169,7 @@ public abstract class Font : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -199,7 +199,7 @@ public abstract class Font : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -225,7 +225,7 @@ public abstract class Font : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.

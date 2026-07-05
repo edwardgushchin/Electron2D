@@ -14,7 +14,7 @@
 
 ## Назначение
 
-`RenderingServer` должен стать внутренней границей Electron2D для всего, что будет отображаться в Electron2D. В `0.1.0 Preview` задача `T-0022` не создаёт настоящий SDL device и не рисует кадр. Она вводит минимальную проверяемую границу:
+`RenderingServer` должен стать внутренней границей Electron2D для всего, что будет отображаться в Electron2D. В `0.1-preview` задача `T-0022` не создаёт настоящий SDL device и не рисует кадр. Она вводит минимальную проверяемую границу:
 
 - публичный singleton-style facade `RenderingServer`;
 - два renderer profile: `Compatibility` и `Standard`;
@@ -24,7 +24,7 @@
 ## Источники поведения
 
 - [Godot RenderingServer](https://docs.godotengine.org/en/stable/classes/class_renderingserver.html);
-- `docs/releases/0.1.0-preview.md`, разделы «Два профиля рендеринга» и Android fallback;
+- `docs/releases/0.1-preview.md`, разделы «Два профиля рендеринга» и Android fallback;
 - `docs/architecture/engine-platform-stack.md`, раздел «Ключевая архитектурная граница».
 
 Godot `RenderingServer` описывается как непрозрачный backend для всего видимого. Resources создаются server methods и возвращают `Rid`, а nodes не должны знать, какой concrete backend активен.

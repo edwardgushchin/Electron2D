@@ -51,10 +51,30 @@ Do not create a second implementation-documentation file for the same behavior w
 - Active tasks live in tracked `TASKS.md`.
 - Every substantive change should be represented in `TASKS.md` when the file exists.
 - Each task entry must be zero-context: priority, dependencies, linked docs/source/tests, brief, acceptance criteria, subtasks, and agent notes.
+- Every active task must include `### Execution contract` with task type, ready-to-start rules, stop conditions, allowed and forbidden changes, required outputs, required commands, and external-audit handling. Public API class tasks must also include `### First implementation slice`; internal-substrate tasks must include a substrate-specific acceptance contract; tracking tasks must forbid production changes; blocked tasks must include `### Blocked protocol`.
+- In active tasks, acceptance criteria and subtasks are the target contract and stay unchecked until explicit user acceptance or archival. Current local progress, historical attempts, audit verdicts, and remaining gaps belong in a separate current-evidence section, not in checked acceptance boxes.
 - Do not close or archive a task without explicit user acceptance.
 - Completed tasks are appended to monthly archives under `data/completed-tasks/YYYY/MM <Russian month name>.md`, not to one-file-per-task archives.
 - `TASKS.md` must end with `## ROADMAP`. The roadmap must not create new task IDs and is not an acceptance state.
 - `CHANGELOG*` and `RELEASE-NOTES*` are local release drafts. They stay ignored and are not canonical documentation.
+
+### Ready-To-Start Gate
+
+When a user request, goal prompt, or automation names a concrete `T-XXXX`, run this gate before changing production code, tests, generated artifacts, docs, or task state for that task.
+
+You may start implementation work only when all of these are true:
+
+- the task state is `open` or an explicitly defined ready state;
+- every task dependency is accepted, closed, or has a saved `ACCEPT` verdict when audit-managed;
+- every external blocker has an explicit current user override recorded in the task notes and diary.
+
+Stop conditions:
+
+- If the task state is `blocked`, do not implement production code, do not add tests for that task, do not package audit artifacts, and do not commit.
+- If the task state is `tracking`, use it only as context; pick an unblocked child task instead of implementing the tracking task directly.
+- If the task has `Execution class: final-gate`, treat it as verify-only: run the gate commands, gather evidence, produce the gate report, and record blockers with owning tasks. Do not fix leaf implementations, subsystem backends, platform runtime behavior, or class-specific docs inside the final gate; only missing or stale gate tooling/evidence plumbing may be changed there.
+- If dependencies are not accepted or an external blocker has no explicit current user override, write a blocker report in `TASKS.md` and the diary, then stop without commit.
+- A goal prompt that says to reach `ACCEPT` and commit does not bypass this gate. The gate must pass first, or the correct result is a blocker report.
 
 ## Development Diary
 

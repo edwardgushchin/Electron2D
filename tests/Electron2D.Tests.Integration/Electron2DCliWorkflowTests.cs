@@ -103,7 +103,7 @@ public sealed class Electron2DCliWorkflowTests
             "--milestone",
             "preview",
             "--version",
-            "0.1.0-preview",
+            "0.1-preview",
             "--epic",
             "editor",
             "--assignee",
@@ -119,7 +119,7 @@ public sealed class Electron2DCliWorkflowTests
         > Markdown report only. Canonical task storage stays in `.electron2d/tasks/*.e2task` and `.electron2d/tasks/board.e2tasks`.
 
         - Source: `.electron2d/tasks/*.e2task`
-        - Filters: status=Done, milestone=preview, version=0.1.0-preview, epic=editor, assignee=agent-1, agent-session=agent-session-1
+        - Filters: status=Done, milestone=preview, version=0.1-preview, epic=editor, assignee=agent-1, agent-session=agent-session-1
         - Task count: 2
 
         ## Done
@@ -130,7 +130,7 @@ public sealed class Electron2DCliWorkflowTests
         - Priority: P0
         - Rank: 0100
         - Assignee: agent-1
-        - Labels: agent-session:agent-session-1, epic:editor, milestone:preview, version:0.1.0-preview
+        - Labels: agent-session:agent-session-1, epic:editor, milestone:preview, version:0.1-preview
         - Created: 2026-06-22T12:00:00.0000000+00:00
         - Completed: 2026-06-22T14:00:00.0000000+00:00
         - Accepted: 2026-06-22T14:00:00.0000000+00:00 by user-1
@@ -145,7 +145,7 @@ public sealed class Electron2DCliWorkflowTests
         - Priority: P0
         - Rank: 0200
         - Assignee: agent-1
-        - Labels: agent-session:agent-session-1, epic:editor, milestone:preview, version:0.1.0-preview
+        - Labels: agent-session:agent-session-1, epic:editor, milestone:preview, version:0.1-preview
         - Created: 2026-06-22T12:00:00.0000000+00:00
         - Completed: 2026-06-22T13:00:00.0000000+00:00
         - Accepted: 2026-06-22T13:00:00.0000000+00:00 by user-1
@@ -216,7 +216,7 @@ public sealed class Electron2DCliWorkflowTests
         using var summaryJson = JsonDocument.Parse(File.ReadAllText(Path.Combine(contextRoot, "project-summary.json")));
         var summary = summaryJson.RootElement;
         Assert.Equal("ContextGame", summary.GetProperty("project").GetProperty("name").GetString());
-        Assert.Equal("0.1.0-preview", summary.GetProperty("engineVersion").GetString());
+        Assert.Equal("0.1-preview", summary.GetProperty("engineVersion").GetString());
         Assert.False(string.IsNullOrWhiteSpace(summary.GetProperty("dotnetVersion").GetString()));
         Assert.Equal("Standard", summary.GetProperty("rendererProfile").GetString());
         Assert.Equal("scenes/main.scene.json", summary.GetProperty("mainScene").GetString());
@@ -480,7 +480,7 @@ public sealed class Electron2DCliWorkflowTests
         Assert.Equal("Electron2D.CharacterBody2D", type.GetProperty("fullName").GetString());
         Assert.True(profile.GetProperty("outOfProfile").GetBoolean());
         Assert.Equal("E2D-CLI-0002", diagnostic.GetProperty("code").GetString());
-        Assert.Contains("outside the Electron2D 0.1.0 2D profile", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+        Assert.Contains("outside the Electron2D 0.1-preview 2D profile", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
         Assert.DoesNotContain("workaround", result.Output, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("alternative", result.Output, StringComparison.OrdinalIgnoreCase);
     }
@@ -1088,7 +1088,7 @@ public sealed class Electron2DCliWorkflowTests
         var settings = Electron2D.Electron2DProjectSettings.Capture(
             "ReferenceGame",
             "0.1.0",
-            "0.1.0-preview",
+            "0.1-preview",
             "scenes/main.scene.json");
         Electron2D.Electron2DSettingsStore.SaveProject(Path.Combine(root, "project.e2d.json"), settings);
         File.WriteAllText(
@@ -1159,7 +1159,7 @@ public sealed class Electron2DCliWorkflowTests
             var settings = Electron2D.Electron2DProjectSettings.Capture(
                 "ContextGame",
                 "0.1.0",
-                "0.1.0-preview",
+                "0.1-preview",
                 "scenes/main.scene.json");
             settings.RendererProfile = Electron2D.Electron2DRendererProfileSetting.Standard;
             Electron2D.Electron2DSettingsStore.SaveProject(Path.Combine(root, "project.e2d.json"), settings);
@@ -1244,7 +1244,7 @@ public sealed class Electron2DCliWorkflowTests
                 : ProjectTaskAcceptanceState.Accepted
         };
         task.Labels.Add("milestone:preview");
-        task.Labels.Add("version:0.1.0-preview");
+        task.Labels.Add("version:0.1-preview");
         task.Labels.Add("epic:editor");
         task.Labels.Add("agent-session:agent-session-1");
         task.AcceptanceCriteria.Add(new AcceptanceCriterion(
@@ -1542,7 +1542,7 @@ public sealed class Electron2DCliWorkflowTests
         Assert.False(Directory.Exists(Path.Combine(projectRoot, "dev-diary")));
 
         var agents = File.ReadAllText(Path.Combine(projectRoot, "AGENTS.md"));
-        Assert.Contains("Electron2D 0.1.0-preview", agents, StringComparison.Ordinal);
+        Assert.Contains("Electron2D 0.1-preview", agents, StringComparison.Ordinal);
         Assert.Contains($"Renderer profile: `{rendererProfile}`", agents, StringComparison.Ordinal);
         Assert.Contains("task_submit_for_acceptance", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("TASKS.md", agents, StringComparison.Ordinal);

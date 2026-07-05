@@ -332,7 +332,7 @@ public sealed class WebAssemblyExportTests
         {
             Name = "ReferenceGame",
             ProjectVersion = "0.1.0",
-            EngineVersion = "0.1.0-preview",
+            EngineVersion = "0.1-preview",
             MainScene = "scenes/main.scene.json",
             RendererProfile = rendererProfile,
             Display = new Electron2D.Electron2DDisplaySettings

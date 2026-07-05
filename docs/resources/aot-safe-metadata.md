@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0043`.
 Обновлено: 2026-06-21.
-Связанные документы: [Сериализация сцен, ресурсов и переносимых property values](scene-resource-serialization.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Сериализация сцен, ресурсов и переносимых property values](scene-resource-serialization.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
 `T-0043` заменяет reflection fallback в custom `Resource` serialization на явную metadata-модель, пригодную для будущего source generator и Inspector. Serializer не должен сам искать CLR-типы по загруженным сборкам, обходить public properties или создавать resource instance через динамический поиск конструктора.
 
-В `0.1.0 Preview` metadata остаётся internal механизмом: публичные `[Export]`, `[Signal]`, `[Tool]`, editor Inspector UI и source generator добавляются отдельными задачами. Эта задача фиксирует runtime contract, на который они будут опираться.
+В `0.1-preview` metadata остаётся internal механизмом: публичные `[Export]`, `[Signal]`, `[Tool]`, editor Inspector UI и source generator добавляются отдельными задачами. Эта задача фиксирует runtime contract, на который они будут опираться.
 
 ## Metadata contract
 

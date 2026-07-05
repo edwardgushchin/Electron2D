@@ -40,7 +40,7 @@ namespace Electron2D;
 /// tracks to target nodes.
 /// </para>
 /// <para>
-/// Electron2D 0.1.0 Preview supports value tracks, method call tracks, FIFO
+/// Electron2D 0.1-preview supports value tracks, method call tracks, FIFO
 /// queue playback and the <c>animation_finished</c> signal. Blend trees, editor
 /// timeline tooling and audio or 3D-specific tracks are outside this baseline.
 /// </para>
@@ -52,7 +52,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Animation"/>
@@ -84,7 +84,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="AnimationPlayer" />
     ///
@@ -112,7 +112,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="AnimationPlayer" />
     ///
@@ -131,7 +131,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play"/>
@@ -156,7 +156,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -179,7 +179,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -202,7 +202,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -226,7 +226,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -261,7 +261,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -304,7 +304,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RemoveAnimationLibrary"/>
@@ -347,7 +347,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="AnimationPlayer" />
     ///
@@ -372,7 +372,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -401,7 +401,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -426,7 +426,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -458,7 +458,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -481,7 +481,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// <see cref="AssignedAnimation"/>.
     /// </param>
     /// <param name="customBlend">
-    /// Reserved blend time parameter. The 0.1.0 Preview runtime accepts the
+    /// Reserved blend time parameter. The 0.1-preview runtime accepts the
     /// value but does not blend animations yet.
     /// </param>
     /// <param name="customSpeed">The finite custom speed multiplier.</param>
@@ -505,7 +505,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Queue"/>
@@ -554,7 +554,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetQueue"/>
@@ -579,7 +579,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Queue"/>
@@ -602,7 +602,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Queue"/>
@@ -625,7 +625,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play"/>
@@ -659,7 +659,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Pause"/>
@@ -689,7 +689,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -725,7 +725,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="AnimationPlayer" />
     ///
@@ -777,7 +777,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="AnimationPlayer" />
     ///

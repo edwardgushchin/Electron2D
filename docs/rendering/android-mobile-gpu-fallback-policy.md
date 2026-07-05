@@ -13,7 +13,7 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация `T-0034`.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Архитектура и платформенный стек Electron2D](../architecture/engine-platform-stack.md), [SDL_GPU lifecycle baseline](sdl-gpu-lifecycle.md), [SDL_Renderer Compatibility backend baseline](sdl-renderer-compatibility-backend.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Архитектура и платформенный стек Electron2D](../architecture/engine-platform-stack.md), [SDL_GPU lifecycle baseline](sdl-gpu-lifecycle.md), [SDL_Renderer Compatibility backend baseline](sdl-renderer-compatibility-backend.md).
 
 ## Назначение
 

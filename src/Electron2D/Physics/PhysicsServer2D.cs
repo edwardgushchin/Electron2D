@@ -36,7 +36,7 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview implements the server resource boundary only.
+/// Electron2D 0.1-preview implements the server resource boundary only.
 /// Physical bodies, shape data, contacts and queries are added by later physics
 /// tasks.
 /// </para>
@@ -49,7 +49,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public static class PhysicsServer2D
 {
@@ -61,10 +61,10 @@ public static class PhysicsServer2D
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum SpaceParameter
@@ -77,7 +77,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -92,7 +92,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -107,7 +107,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -122,7 +122,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -137,7 +137,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -152,7 +152,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -167,7 +167,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -182,7 +182,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -197,7 +197,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpaceParameter" />
@@ -210,10 +210,10 @@ public static class PhysicsServer2D
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum ShapeType
@@ -226,7 +226,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -241,7 +241,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -256,7 +256,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -271,7 +271,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -286,7 +286,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -301,7 +301,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -316,7 +316,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -331,7 +331,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -346,7 +346,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ShapeType" />
@@ -359,10 +359,10 @@ public static class PhysicsServer2D
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum ProcessInfo
@@ -375,7 +375,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ProcessInfo" />
@@ -390,7 +390,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ProcessInfo" />
@@ -405,7 +405,7 @@ public static class PhysicsServer2D
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ProcessInfo" />
@@ -426,7 +426,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -452,7 +452,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -479,7 +479,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -506,7 +506,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -534,7 +534,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -562,7 +562,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -588,7 +588,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -614,7 +614,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -645,7 +645,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -671,7 +671,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -694,7 +694,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -717,7 +717,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -740,7 +740,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -763,7 +763,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -786,7 +786,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -809,7 +809,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -832,7 +832,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -856,7 +856,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -882,7 +882,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />
@@ -909,7 +909,7 @@ public static class PhysicsServer2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsServer2D" />

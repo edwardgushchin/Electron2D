@@ -1,7 +1,7 @@
 {
   "format": "Electron2D.ReferenceGamePlatformMatrix",
   "version": 2,
-  "release": "0.1.0-preview",
+  "release": "0.1-preview",
   "runtimeTargets": [
     "AndroidArm64",
     "IosArm64",
@@ -54,9 +54,9 @@
     }
   ],
   "releaseVerificationDecision": {
-    "id": "all-runtime-targets-for-0.1.0-preview",
-    "source": "docs/releases/0.1.0-preview.md",
-    "summary": "0.1.0 Preview keeps all six runtime targets in releaseVerificationTargets; blocked-environment artifacts document missing prerequisites but do not pass the release gate."
+    "id": "all-runtime-targets-for-0.1-preview",
+    "source": "docs/releases/0.1-preview.md",
+    "summary": "0.1-preview keeps all six runtime targets in releaseVerificationTargets; blocked-environment artifacts document missing prerequisites but do not pass the release gate."
   },
   "allowedDifferences": [
     "export preset target/configuration/runtime identifier/output directory",

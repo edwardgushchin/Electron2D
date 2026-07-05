@@ -58,7 +58,7 @@
 - [XML documentation публичного API](documentation/public-api-xml-documentation.md)
 - [Документация renderer profiles](documentation/renderer-profiles.md)
 - [Troubleshooting guide и release checklist](documentation/troubleshooting-release-checklist.md)
-- [Пользовательская документация 0.1.0 Preview](documentation/user-guide.md)
+- [Пользовательская документация 0.1-preview](documentation/user-guide.md)
 
 ## Редактор
 
@@ -80,9 +80,9 @@
 
 ## Примеры и reference games
 
-- [Ассеты reference games 0.1.0 Preview](examples/reference-game-assets.md)
-- [Reference game platform matrix 0.1.0 Preview](examples/reference-game-platform-matrix.md)
-- [Platformer 0.1.0 Preview](examples/platformer.md)
+- [Ассеты reference games 0.1-preview](examples/reference-game-assets.md)
+- [Reference game platform matrix 0.1-preview](examples/reference-game-platform-matrix.md)
+- [Platformer 0.1-preview](examples/platformer.md)
 
 ## Export pipeline и платформы
 
@@ -149,22 +149,22 @@
 
 ## Качество
 
-- [Leak verification для `0.1.0 Preview`](quality/leak-verification.md)
-- [Performance verification для `0.1.0 Preview`](quality/performance-verification.md)
+- [Leak verification для `0.1-preview`](quality/leak-verification.md)
+- [Performance verification для `0.1-preview`](quality/performance-verification.md)
 
 ## Релизное управление
 
 - [Таблица совместимости Electron2D API](release-management/api-compatibility.md)
-- [CI-матрица `0.1.0 Preview`](release-management/ci-matrix.md)
-- [Performance budgets и soak-критерии `0.1.0 Preview`](release-management/performance-budgets.md)
+- [CI-матрица `0.1-preview`](release-management/ci-matrix.md)
+- [Performance budgets и soak-критерии `0.1-preview`](release-management/performance-budgets.md)
 - [Формат проекта и шаблон `electron2d-empty`](release-management/project-template.md)
 - [Release packaging и GitHub Release rehearsal](release-management/release-packaging.md)
-- [Версионирование и release metadata `0.1.0 Preview`](release-management/release-metadata.md)
-- [Тестовая инфраструктура `0.1.0 Preview`](release-management/test-infrastructure.md)
+- [Версионирование и release metadata `0.1-preview`](release-management/release-metadata.md)
+- [Тестовая инфраструктура `0.1-preview`](release-management/test-infrastructure.md)
 
 ## Релизы
 
-- [Electron2D 0.1.0 Preview](releases/0.1.0-preview.md)
+- [Electron2D 0.1-preview](releases/0.1-preview.md)
 
 ## Рендеринг
 

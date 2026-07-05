@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация `T-0074`.
 Дата: 2026-06-21.
-Связанные документы: `docs/releases/0.1.0-preview.md`, `docs/audio/audio-server-voice-handles.md`, `docs/audio/audio-stream-player-nodes.md`.
+Связанные документы: `docs/releases/0.1-preview.md`, `docs/audio/audio-server-voice-handles.md`, `docs/audio/audio-stream-player-nodes.md`.
 
 ## Контекст
 
@@ -33,7 +33,7 @@ Bus graph здесь означает список именованных audio 
 - mute глушит весь routing path, если включён на любом bus path;
 - solo пропускает только voices, чей routing path содержит solo bus, когда хотя бы один bus находится в solo;
 - общая громкость проекта задаётся громкостью `Master` через тот же volume API;
-- сложный DSP graph и effects editor не входят в `0.1.0 Preview`.
+- сложный DSP graph и effects editor не входят в `0.1-preview`.
 
 ## Public API
 
@@ -156,7 +156,7 @@ selected bus -> send bus -> ... -> Master
 
 ## Ограничения
 
-В `0.1.0 Preview` bus graph deliberately simple:
+В `0.1-preview` bus graph deliberately simple:
 
 - audio effects и effect bypass не реализованы;
 - editor UI для bus layout не реализован;

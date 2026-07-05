@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Range"/>
@@ -52,7 +52,7 @@ public class ProgressBar : Range
     /// </summary>
     /// <remarks>The new progress bar does not accept focus.</remarks>
     /// <threadsafety>This constructor is not synchronized. Call it from the main scene thread.</threadsafety>
-    /// <since>This constructor is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This constructor is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="ProgressBar"/>
     public ProgressBar()
     {
@@ -65,7 +65,7 @@ public class ProgressBar : Range
     /// <value><c>true</c> to draw percentage text when a font is available; otherwise, <c>false</c>.</value>
     /// <remarks>The percentage is rounded to the nearest whole number.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Range.Ratio"/>
     public bool ShowPercentage { get; set; } = true;
 
@@ -75,7 +75,7 @@ public class ProgressBar : Range
     /// <value><c>true</c> for indeterminate state; otherwise, <c>false</c>.</value>
     /// <remarks>The preview stores this flag and draws an empty progress fill when enabled.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="ProgressBar"/>
     public bool Indeterminate { get; set; }
 
@@ -84,7 +84,7 @@ public class ProgressBar : Range
     /// </summary>
     /// <remarks>The preview drawing path uses rectangle primitives.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Range.Ratio"/>
     public override void _Draw()
     {
@@ -114,7 +114,7 @@ public class ProgressBar : Range
     /// <returns>A baseline progress bar size.</returns>
     /// <remarks>The minimum size does not depend on percentage text in this preview.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Control.GetMinimumSize"/>
     public override Vector2 _GetMinimumSize()
     {

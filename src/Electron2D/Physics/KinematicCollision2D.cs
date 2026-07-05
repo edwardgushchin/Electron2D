@@ -30,7 +30,7 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// The 0.1.0 Preview baseline stores collision information produced by the
+/// The 0.1-preview baseline stores collision information produced by the
 /// managed AABB kinematic solver. It does not expose backend-specific handles.
 /// </para>
 /// </remarks>
@@ -40,7 +40,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="PhysicsBody2D.MoveAndCollide"/>
@@ -117,7 +117,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetNormal"/>
@@ -145,7 +145,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetColliderRid"/>
@@ -173,7 +173,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCollider"/>
@@ -200,7 +200,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCollider"/>
@@ -227,7 +227,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetColliderShapeIndex"/>
@@ -244,7 +244,7 @@ public class KinematicCollision2D : RefCounted
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline reports the index within the collider's active
+    /// The 0.1-preview baseline reports the index within the collider's active
     /// collision shapes collected for the movement query.
     /// </para>
     /// </remarks>
@@ -254,7 +254,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetColliderShape"/>
@@ -281,7 +281,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CharacterBody2D.GetPlatformVelocity"/>
@@ -308,7 +308,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetNormal"/>
@@ -335,7 +335,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetColliderShape"/>
@@ -363,7 +363,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetAngle"/>
@@ -391,7 +391,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTravel"/>
@@ -418,7 +418,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTravel"/>
@@ -446,7 +446,7 @@ public class KinematicCollision2D : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetRemainder"/>

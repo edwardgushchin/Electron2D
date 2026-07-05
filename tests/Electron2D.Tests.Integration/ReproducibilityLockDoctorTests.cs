@@ -68,7 +68,7 @@ public sealed class ReproducibilityLockDoctorTests
         Assert.Equal("https://electron2d.dev/schemas/project-system/electron2d-lock.schema.json", lockRoot.GetProperty("$schema").GetString());
         Assert.Equal("Electron2D.ReproducibilityLock", lockRoot.GetProperty("format").GetString());
         Assert.Equal(1, lockRoot.GetProperty("schemaVersion").GetInt32());
-        Assert.Equal("0.1.0-preview", lockRoot.GetProperty("engine").GetProperty("version").GetString());
+        Assert.Equal("0.1-preview", lockRoot.GetProperty("engine").GetProperty("version").GetString());
         Assert.Equal("net10.0", lockRoot.GetProperty("dotnet").GetProperty("targetFramework").GetString());
         Assert.Equal("referencesOnly", lockRoot.GetProperty("signing").GetProperty("mode").GetString());
     }

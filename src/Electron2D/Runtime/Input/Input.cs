@@ -35,7 +35,7 @@ namespace Electron2D;
 /// frame-local transition state such as <see cref="IsActionJustPressed"/>.
 /// </para>
 /// <para>
-/// 0.1.0 Preview supports keyboard bindings, mouse button bindings, gamepad
+/// 0.1-preview supports keyboard bindings, mouse button bindings, gamepad
 /// bindings and direct <see cref="InputEventAction"/> events. Touch input is
 /// delivered as screen touch and drag events and is not an action binding in
 /// this baseline.
@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="InputMap"/>
@@ -77,7 +77,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetActionStrength(string, bool)"/>
@@ -111,7 +111,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsActionPressed(string, bool)"/>
@@ -150,7 +150,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputMap.ActionGetDeadzone"/>
@@ -196,7 +196,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetActionStrength(string, bool)"/>
@@ -258,7 +258,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetJoyName(int)"/>
@@ -295,7 +295,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventJoypadMotion"/>
@@ -330,7 +330,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetConnectedJoypads"/>
@@ -369,7 +369,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="StartJoyVibration"/>
@@ -404,7 +404,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="StartJoyVibration"/>
@@ -440,7 +440,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventJoypadButton"/>
@@ -479,7 +479,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Input" />
     ///
@@ -525,7 +525,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="StopJoyVibration"/>
@@ -583,7 +583,7 @@ public static class Input
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="StartJoyVibration"/>

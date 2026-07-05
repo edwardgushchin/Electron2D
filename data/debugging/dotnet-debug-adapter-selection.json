@@ -43,7 +43,7 @@
     },
     {
       "id": "sharpdbg",
-      "status": "rejected-for-0.1.0",
+      "status": "rejected-for-0.1-preview",
       "licenseSpdx": "MIT",
       "reason": "Promising pure .NET DAP adapter, but no GitHub release/package assets were available during validation; using it would make T-0160 depend on a young source-only debugger before its packaging story is stable."
     }
@@ -124,9 +124,9 @@
     "pause": true,
     "limitations": [
       "setBreakpoints may initially report a pending breakpoint; Electron2D must treat the later stopped:breakpoint event and resolved frame as the binding confirmation.",
-      "NetCoreDbg initialize response does not advertise a native DAP restart request; Electron2D 0.1.0 restart must be implemented by the Editor as disconnect plus a new launch over the same adapter package.",
+      "NetCoreDbg initialize response does not advertise a native DAP restart request; Electron2D 0.1-preview restart must be implemented by the Editor as disconnect plus a new launch over the same adapter package.",
       "macOS arm64 is a source-build packaging target for Electron2D because the selected upstream release does not publish osx-arm64 binaries.",
-      "Remote Android, iOS and WebAssembly debugging remain outside Electron2D 0.1.0."
+      "Remote Android, iOS and WebAssembly debugging remain outside Electron2D 0.1-preview."
     ]
   },
   "primarySources": [

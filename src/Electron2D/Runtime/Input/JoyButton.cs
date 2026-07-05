@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="InputEventJoypadButton"/>
@@ -57,7 +57,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -72,7 +72,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -87,7 +87,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -102,7 +102,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -117,7 +117,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -132,7 +132,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -147,7 +147,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -162,7 +162,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -177,7 +177,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -192,7 +192,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -207,7 +207,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -222,7 +222,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -237,7 +237,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -252,7 +252,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -267,7 +267,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -282,7 +282,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -297,7 +297,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -312,7 +312,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -327,7 +327,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -342,7 +342,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -357,7 +357,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />
@@ -372,7 +372,7 @@ public enum JoyButton
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="JoyButton" />

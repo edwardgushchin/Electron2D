@@ -18,7 +18,7 @@
 
 ## Цель
 
-Довести базовую иерархию `Node` до Electron2D поведения для `0.1.0 Preview`: parent-child дерево, `Owner`, reparent/move операции и безопасное отложенное удаление через `QueueFree()`.
+Довести базовую иерархию `Node` до Electron2D поведения для `0.1-preview`: parent-child дерево, `Owner`, reparent/move операции и безопасное отложенное удаление через `QueueFree()`.
 
 ## Public API
 

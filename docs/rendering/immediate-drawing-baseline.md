@@ -14,7 +14,7 @@
 
 ## Назначение
 
-`T-0028` вводит Electron2D custom drawing baseline для `CanvasItem` в `0.1.0 Preview`.
+`T-0028` вводит Electron2D custom drawing baseline для `CanvasItem` в `0.1-preview`.
 
 Задача закрывает:
 

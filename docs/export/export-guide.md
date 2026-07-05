@@ -17,7 +17,7 @@
 
 ## Назначение
 
-Пользовательская export-документация Electron2D `0.1.0 Preview` должна дать проверяемый путь для текущих export targets, описать WebAssembly browser package/smoke проверку, честно обозначить mobile/web execution gaps и не смешивать `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`. Документация не должна выдавать Android/iOS export или remote WebAssembly hosting как готовый release path до закрытия соответствующих platform tasks и реальных smoke checks.
+Пользовательская export-документация Electron2D `0.1-preview` должна дать проверяемый путь для текущих export targets, описать WebAssembly browser package/smoke проверку, честно обозначить mobile/web execution gaps и не смешивать `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`. Документация не должна выдавать Android/iOS export или remote WebAssembly hosting как готовый release path до закрытия соответствующих platform tasks и реальных smoke checks.
 
 ## Обязательные страницы
 
@@ -87,14 +87,14 @@ WebAssembly status page должна описывать `browser-wasm`, static p
 <!-- export-doc:overview -->
 ## Обзор
 
-Electron2D `0.1.0 Preview` имеет локально проверенные механизмы экспорта для desktop, проверки структуры WebAssembly browser package и Android arm64 debug APK с запуском на эмуляторе. Эта страница является пользовательской входной точкой в export-документацию: она объясняет, какие targets сейчас имеют проверяемые механизмы, какие toolchains нужны, как представлены signing references и какие команды подтверждают текущее состояние репозитория. Это не означает, что финальная релизная проверка уже пройдена: полный проход остаётся за `T-0093` и `T-0104`.
+Electron2D `0.1-preview` имеет локально проверенные механизмы экспорта для desktop, проверки структуры WebAssembly browser package и Android arm64 debug APK с запуском на эмуляторе. Эта страница является пользовательской входной точкой в export-документацию: она объясняет, какие targets сейчас имеют проверяемые механизмы, какие toolchains нужны, как представлены signing references и какие команды подтверждают текущее состояние репозитория. Это не означает, что финальная релизная проверка уже пройдена: полный проход остаётся за `T-0093` и `T-0104`.
 
 Export layer намеренно работает по правилу fail closed: отсутствующий SDK, неподдерживаемый runtime identifier, отсутствующая signing identity или отсутствующая project setting должны дать диагностику, а не частичный package.
 
 <!-- export-doc:target-matrix -->
 ## Матрица runtime/export targets
 
-`runtimeTargets` - это платформы, для которых существуют export presets и где экспортированная игра должна работать. `editorTargets` для `0.1.0 Preview` ограничены Windows, Linux и macOS. `releaseVerificationTargets` задаются отдельно в [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md): для текущего релиза они включают все runtime targets, но blocked-environment artifact не считается успешным release gate.
+`runtimeTargets` - это платформы, для которых существуют export presets и где экспортированная игра должна работать. `editorTargets` для `0.1-preview` ограничены Windows, Linux и macOS. `releaseVerificationTargets` задаются отдельно в [Electron2D 0.1-preview](../releases/0.1-preview.md): для текущего релиза они включают все runtime targets, но blocked-environment artifact не считается успешным release gate.
 
 | Target | Runtime identifier | Статус | Проверка |
 | --- | --- | --- | --- |

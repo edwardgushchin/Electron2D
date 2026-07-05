@@ -33,7 +33,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// `CanvasItem` owns visibility, color modulation and draw-order properties for
-/// 2D nodes. Electron2D 0.1.0 Preview implements the subset required by
+/// 2D nodes. Electron2D 0.1-preview implements the subset required by
 /// `Node2D`, `Sprite2D` and internal sprite submission.
 /// </para>
 ///
@@ -50,7 +50,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Node2D" />
@@ -71,7 +71,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem" />
@@ -101,7 +101,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current visible value.
@@ -126,7 +126,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SelfModulate" />
@@ -150,7 +150,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Modulate" />
@@ -175,7 +175,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current zindex value.
@@ -190,7 +190,7 @@ public class CanvasItem : Node
     /// </summary>
     ///
     /// <remarks>
-    /// Electron2D 0.1.0 Preview forwards this flag to the internal render
+    /// Electron2D 0.1-preview forwards this flag to the internal render
     /// queue. The full Y-sort container behavior is intentionally
     /// limited to the existing queue ordering rules.
     /// </remarks>
@@ -200,7 +200,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current ysort enabled value.
@@ -228,7 +228,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -257,7 +257,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Hide" />
@@ -282,7 +282,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Show" />
@@ -307,7 +307,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="QueueRedraw" />
@@ -330,7 +330,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_Draw" />
@@ -356,7 +356,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -385,7 +385,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -419,7 +419,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -456,7 +456,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -505,7 +505,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -563,7 +563,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Font" />
@@ -604,7 +604,7 @@ public class CanvasItem : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.

@@ -37,7 +37,7 @@ namespace Electron2D;
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 public enum KeyLocation
 {
@@ -47,7 +47,7 @@ public enum KeyLocation
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="KeyLocation" />
@@ -60,7 +60,7 @@ public enum KeyLocation
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="KeyLocation" />
@@ -73,7 +73,7 @@ public enum KeyLocation
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="KeyLocation" />

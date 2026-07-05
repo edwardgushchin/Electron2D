@@ -40,7 +40,7 @@ namespace Electron2D;
 /// <see cref="TextureButton"/> and <see cref="CanvasItem.DrawTexture"/>.
 /// </para>
 /// <para>
-/// Electron2D 0.1.0 Preview supports non-interlaced PNG images with 8-bit RGB,
+/// Electron2D 0.1-preview supports non-interlaced PNG images with 8-bit RGB,
 /// RGBA, grayscale-alpha data and 1-bit, 2-bit, 4-bit or 8-bit indexed palette
 /// data. Unsupported or malformed files fail before a texture instance is
 /// returned.
@@ -53,7 +53,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Texture2D"/>
@@ -126,7 +126,7 @@ public sealed class ImageTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Texture2D"/>
@@ -151,7 +151,7 @@ public sealed class ImageTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     public override int GetWidth()
     {
@@ -172,7 +172,7 @@ public sealed class ImageTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     public override int GetHeight()
     {
@@ -194,7 +194,7 @@ public sealed class ImageTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     public override bool HasAlpha()
     {
@@ -224,7 +224,7 @@ public sealed class ImageTexture : Texture2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     public override bool IsPixelOpaque(int x, int y)
     {

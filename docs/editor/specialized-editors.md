@@ -12,9 +12,9 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `T-0086` и `0.1.0 Preview`.
+Статус: целевая спецификация для `T-0086` и `0.1-preview`.
 Дата: 2026-06-23.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Референс интерфейса редактора Godot 4](godot4-editor-reference.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md); [Референс интерфейса редактора Godot 4](godot4-editor-reference.md).
 
 ## Цель
 
@@ -125,7 +125,7 @@ PNG является frame, отправленным в созданное deskt
 
 - Текущий workflow является preview-level smoke surface: он проверяет сохранение и видимую структуру specialized editors, но не является полной ручной панелью редактирования всех свойств.
 - Sprite texture references сохраняются как external resource references в `Electron2D.SerializedResource`; полноценный resolver импортированных texture assets не расширяется этой задачей.
-- Timeline покрывает только value track и method track. Blend tree, state machine, audio tracks, skeletal animation, секции timeline и capture mode не входят в `0.1.0 Preview`.
+- Timeline покрывает только value track и method track. Blend tree, state machine, audio tracks, skeletal animation, секции timeline и capture mode не входят в `0.1-preview`.
 - TileMap editor показывает palette/cell workflow и сохраняет cells; полный collision polygon editor не входит в scope этой задачи.
 
 ## Проверки

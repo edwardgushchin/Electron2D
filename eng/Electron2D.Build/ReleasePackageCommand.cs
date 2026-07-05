@@ -32,7 +32,7 @@ namespace Electron2D.Build;
 
 internal sealed class ReleasePackageCommand(string repositoryRoot, JsonDiagnosticSink diagnostics, ProcessRunner processRunner)
 {
-    private const string Version = "0.1.0-preview";
+    private const string Version = "0.1-preview";
     private const string Configuration = "Release";
     private const int TimeoutSeconds = 1800;
 
@@ -44,9 +44,9 @@ internal sealed class ReleasePackageCommand(string repositoryRoot, JsonDiagnosti
 
     private static readonly ReleaseTarget[] SupportedTargets =
     [
-        new("win-x64", "electron2d-0.1.0-preview-win-x64.zip", "zip"),
-        new("linux-x64", "electron2d-0.1.0-preview-linux-x64.tar.gz", "tar.gz"),
-        new("osx-arm64", "electron2d-0.1.0-preview-osx-arm64.tar.gz", "tar.gz")
+        new("win-x64", "electron2d-0.1-preview-win-x64.zip", "zip"),
+        new("linux-x64", "electron2d-0.1-preview-linux-x64.tar.gz", "tar.gz"),
+        new("osx-arm64", "electron2d-0.1-preview-osx-arm64.tar.gz", "tar.gz")
     ];
 
     private static readonly string[] ManifestForbiddenPaths =

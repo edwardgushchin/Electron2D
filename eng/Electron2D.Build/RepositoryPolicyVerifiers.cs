@@ -202,11 +202,11 @@ internal sealed class ReleaseMetadataVerifier(string repositoryRoot, JsonDiagnos
 {
     private static readonly Dictionary<string, string> ExpectedProperties = new(StringComparer.Ordinal)
     {
-        ["Version"] = "0.1.0-preview",
-        ["PackageVersion"] = "0.1.0-preview",
+        ["Version"] = "0.1-preview",
+        ["PackageVersion"] = "0.1-preview",
         ["AssemblyVersion"] = "0.1.0.0",
         ["FileVersion"] = "0.1.0.0",
-        ["InformationalVersion"] = "0.1.0-preview",
+        ["InformationalVersion"] = "0.1-preview",
         ["PackageId"] = "Electron2D",
         ["Authors"] = "Electron2D Team",
         ["PackageLicenseExpression"] = "MIT",
@@ -264,9 +264,9 @@ internal sealed class ReleaseMetadataVerifier(string repositoryRoot, JsonDiagnos
         if (File.Exists(readmePath))
         {
             var readme = File.ReadAllText(readmePath, Encoding.UTF8);
-            if (!readme.Contains("0.1.0-preview", StringComparison.OrdinalIgnoreCase))
+            if (!readme.Contains("0.1-preview", StringComparison.OrdinalIgnoreCase))
             {
-                errors.Add(Error("E2D-BUILD-RELEASE-METADATA-README-VERSION", "README.md does not mention 0.1.0-preview.", "README.md"));
+                errors.Add(Error("E2D-BUILD-RELEASE-METADATA-README-VERSION", "README.md does not mention 0.1-preview.", "README.md"));
             }
 
             foreach (var asset in new[] { "data/assets/branding/readme/electron2d_readme_dark.svg", "data/assets/branding/readme/electron2d_readme_light.svg" })
@@ -488,7 +488,7 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
         }
 
         var text = File.ReadAllText(path, Encoding.UTF8);
-        foreach (var requiredText in new[] { "Electron2D 0.1.0-preview", ".NET 10.0.101", "e2d validate", "e2d api compare-godot <type>", "ProjectTaskManager", "task_submit_for_acceptance" })
+        foreach (var requiredText in new[] { "Electron2D 0.1-preview", ".NET 10.0.101", "e2d validate", "e2d api compare-godot <type>", "ProjectTaskManager", "task_submit_for_acceptance" })
         {
             if (!text.Contains(requiredText, StringComparison.Ordinal))
             {
@@ -1457,7 +1457,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     private static string RenderManifestHome(IReadOnlyList<ApiWikiType> types)
     {
         var builder = NewGeneratedPage();
-        builder.AppendLine("Electron2D is an Agent-native cross-platform 2D game engine for C# and .NET. The `0.1.0 Preview` line focuses on a clean runtime API, deterministic project tooling and documentation that can be read by both developers and coding agents.");
+        builder.AppendLine("Electron2D is an Agent-native cross-platform 2D game engine for C# and .NET. The `0.1-preview` line focuses on a clean runtime API, deterministic project tooling and documentation that can be read by both developers and coding agents.");
         builder.AppendLine();
         builder.AppendLine("This Wiki is the public documentation hub for the preview API surface. It is generated from the API manifest, so the reference follows the code that ships in the engine package.");
         builder.AppendLine();
@@ -1474,7 +1474,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     private static string RenderReflectionHome(WikiReflectionContext context)
     {
         var builder = NewGeneratedPage();
-        builder.AppendLine("Electron2D is an Agent-native cross-platform 2D game engine for C# and .NET. The `0.1.0 Preview` line focuses on a clean runtime API, deterministic project tooling and documentation that can be read by both developers and coding agents.");
+        builder.AppendLine("Electron2D is an Agent-native cross-platform 2D game engine for C# and .NET. The `0.1-preview` line focuses on a clean runtime API, deterministic project tooling and documentation that can be read by both developers and coding agents.");
         builder.AppendLine();
         builder.AppendLine("This Wiki is the public documentation hub for the preview API surface. It is generated from the compiled runtime assembly and XML documentation comments, so the reference follows the code that ships in the engine package.");
         builder.AppendLine();
@@ -1506,7 +1506,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine("| Runtime API | `" + context.Types.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) + "` public types generated from the current assembly |");
         builder.AppendLine("| Documentation source | XML comments and compiled public surface |");
         builder.AppendLine("| Navigation | Category pages, complete index and focused common API sidebar |");
-        builder.AppendLine("| Release line | `0.1.0 Preview` |");
+        builder.AppendLine("| Release line | `0.1-preview` |");
         builder.AppendLine();
         builder.AppendLine("## Agent-native cross-platform 2D game engine workflow");
         builder.AppendLine();
@@ -1554,7 +1554,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     {
         var builder = NewGeneratedPage();
         builder.AppendLine();
-        builder.AppendLine("Electron2D `0.1.0 Preview` API reference. Generated from `" + typeCount.ToString(System.Globalization.CultureInfo.InvariantCulture) + "` public runtime types.");
+        builder.AppendLine("Electron2D `0.1-preview` API reference. Generated from `" + typeCount.ToString(System.Globalization.CultureInfo.InvariantCulture) + "` public runtime types.");
         return builder.ToString();
     }
 

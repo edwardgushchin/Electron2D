@@ -32,7 +32,7 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// Electron2D 0.1.0 Preview implements a managed AABB query baseline over
+/// Electron2D 0.1-preview implements a managed AABB query baseline over
 /// active <see cref="CollisionShape2D" /> nodes. The result format follows the
 /// Electron2D dynamic dictionary/array surface and does not expose backend
 /// handles.
@@ -43,7 +43,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public sealed class PhysicsDirectSpaceState2D : Object
 {
@@ -71,7 +71,7 @@ public sealed class PhysicsDirectSpaceState2D : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsDirectSpaceState2D" />
@@ -122,7 +122,7 @@ public sealed class PhysicsDirectSpaceState2D : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsDirectSpaceState2D" />
@@ -160,7 +160,7 @@ public sealed class PhysicsDirectSpaceState2D : Object
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsDirectSpaceState2D" />

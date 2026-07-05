@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="CollisionObject2D"/>
@@ -63,7 +63,7 @@ public abstract class PhysicsBody2D : CollisionObject2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsBody2D" />
@@ -84,7 +84,7 @@ public abstract class PhysicsBody2D : CollisionObject2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline stores this value in the internal body-state
+    /// The 0.1-preview baseline stores this value in the internal body-state
     /// snapshot so future physics backends can combine material properties.
     /// </para>
     /// </remarks>
@@ -94,7 +94,7 @@ public abstract class PhysicsBody2D : CollisionObject2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsMaterial"/>
@@ -127,7 +127,7 @@ public abstract class PhysicsBody2D : CollisionObject2D
     /// Extra separation margin used by the managed AABB baseline when sweeping the body.
     /// </param>
     /// <param name="recoveryAsCollision">
-    /// Whether recovery movement should be reported as a collision. The 0.1.0 Preview
+    /// Whether recovery movement should be reported as a collision. The 0.1-preview
     /// AABB baseline stores the value for API compatibility but does not run a separate
     /// recovery phase yet.
     /// </param>
@@ -138,7 +138,7 @@ public abstract class PhysicsBody2D : CollisionObject2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline performs a managed AABB sweep against
+    /// The 0.1-preview baseline performs a managed AABB sweep against
     /// <see cref="StaticBody2D"/> targets whose collision layers match this
     /// body's <see cref="CollisionObject2D.CollisionMask"/>.
     /// </para>
@@ -154,7 +154,7 @@ public abstract class PhysicsBody2D : CollisionObject2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CharacterBody2D.MoveAndSlide"/>

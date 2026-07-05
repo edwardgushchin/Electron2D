@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0045`.
 Обновлено: 2026-06-21.
-Связанные документы: [C# script classes](csharp-script-classes.md), [Безопасное editor-time выполнение `[Tool]` scripts](tool-script-execution.md), [AOT-safe metadata для Inspector и serialization](../resources/aot-safe-metadata.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [C# script classes](csharp-script-classes.md), [Безопасное editor-time выполнение `[Tool]` scripts](tool-script-execution.md), [AOT-safe metadata для Inspector и serialization](../resources/aot-safe-metadata.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
-`0.1.0 Preview` должен дать C# script classes минимальную metadata-модель:
+`0.1-preview` должен дать C# script classes минимальную metadata-модель:
 
 - `[Export]` помечает property или field как сериализуемое и видимое для Inspector значение;
 - `[Signal]` помечает delegate как описание сигнала script class;
@@ -76,7 +76,7 @@ Exported properties должны round-trip через переносимую м
 
 ## `[Tool]`
 
-В `0.1.0 Preview` `[Tool]` помечается как experimental и sandboxed metadata. Safe editor-time execution, exception isolation и запрет dynamic assembly load описаны отдельной спецификацией `tool-script-execution.md`.
+В `0.1-preview` `[Tool]` помечается как experimental и sandboxed metadata. Safe editor-time execution, exception isolation и запрет dynamic assembly load описаны отдельной спецификацией `tool-script-execution.md`.
 
 ## Проверки
 
@@ -94,7 +94,7 @@ Exported properties должны round-trip через переносимую м
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` предоставляет три публичных marker attributes:
+Electron2D `0.1-preview` предоставляет три публичных marker attributes:
 
 - `ExportAttribute` - `[Export]` для fields/properties, которые должны попасть в serialization/Inspector metadata;
 - `SignalAttribute` - `[Signal]` для delegate declarations, описывающих signal payload;

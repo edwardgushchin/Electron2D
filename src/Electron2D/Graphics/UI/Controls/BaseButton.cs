@@ -46,7 +46,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Button"/>
@@ -76,7 +76,7 @@ public class BaseButton : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="BaseButton.ActionMode"/>
@@ -91,7 +91,7 @@ public class BaseButton : Control
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ActionModeEnum"/>
@@ -106,7 +106,7 @@ public class BaseButton : Control
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ActionModeEnum"/>
@@ -127,7 +127,7 @@ public class BaseButton : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="BaseButton"/>
@@ -160,7 +160,7 @@ public class BaseButton : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ActionModeEnum"/>
@@ -188,7 +188,7 @@ public class BaseButton : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ToggleMode"/>
@@ -223,7 +223,7 @@ public class BaseButton : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.FocusMode"/>
@@ -269,7 +269,7 @@ public class BaseButton : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ButtonPressed"/>
@@ -300,7 +300,7 @@ public class BaseButton : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control._GuiInput(InputEvent)"/>

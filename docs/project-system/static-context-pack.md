@@ -65,7 +65,7 @@ e2d context build --project <path> --format json
 - custom script classes, найденные в project-local `.cs` files;
 - список рекомендуемых check commands для агента.
 
-`api-surface.json` содержит компактную сводку tracked API manifest: путь manifest-а, число типов, число supported/partial/out-of-profile строк и короткий список типов `0.1.0 Preview`. Файл не включает полный исходный код движка.
+`api-surface.json` содержит компактную сводку tracked API manifest: путь manifest-а, число типов, число supported/partial/out-of-profile строк и короткий список типов `0.1-preview`. Файл не включает полный исходный код движка.
 
 `godot-differences.json` фиксирует только machine-readable статус выбранного API-подмножества, команду проверки `e2d api compare-godot <type>` и ссылку на локальную API compatibility документацию. Он не является руководством по обходу границ profile contract.
 

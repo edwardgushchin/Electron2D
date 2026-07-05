@@ -41,7 +41,7 @@ namespace Electron2D;
 ///
 /// <para>
 /// This class provides Electron2D's resource UID registry using the C# naming
-/// shape used by the runtime API. In Electron2D 0.1.0 Preview it is a static
+/// shape used by the runtime API. In Electron2D 0.1-preview it is a static
 /// runtime facade, not an engine singleton object.
 /// </para>
 /// </remarks>
@@ -52,7 +52,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 public static class ResourceUid
 {
@@ -65,7 +65,7 @@ public static class ResourceUid
     /// </remarks>
     ///
     /// <since>
-    /// This constant is available since Electron2D 0.1.0 Preview.
+    /// This constant is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="ResourceUid" />
     ///
@@ -99,7 +99,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetId(long, string)"/>
@@ -141,7 +141,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -191,7 +191,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="ResourceUid" />
     ///
@@ -243,7 +243,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="UidToPath(string)"/>
@@ -276,7 +276,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasId(long)"/>
@@ -307,7 +307,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -336,7 +336,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TextToId(string)"/>
@@ -362,7 +362,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="UidToPath(string)"/>
@@ -395,7 +395,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -438,7 +438,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddId(long, string)"/>
@@ -482,7 +482,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IdToText(long)"/>
@@ -519,7 +519,7 @@ public static class ResourceUid
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PathToUid(string)"/>

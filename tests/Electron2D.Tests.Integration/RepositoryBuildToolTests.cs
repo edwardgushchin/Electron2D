@@ -952,7 +952,7 @@ public sealed class RepositoryBuildToolTests
             """
             {
               "schemaVersion": 1,
-              "manifestVersion": "0.1.0-preview",
+              "manifestVersion": "0.1-preview",
               "types": [
                 {
                   "id": "electron2d://api/type/Electron2D.IComponent",
@@ -1817,7 +1817,7 @@ public sealed class RepositoryBuildToolTests
 
         var ridRoot = ReleaseArtifactRidRoot(workspace.Root, "win-x64");
         var packageRoot = Path.Combine(ridRoot, "package");
-        var archiveName = "electron2d-0.1.0-preview-win-x64.zip";
+        var archiveName = "electron2d-0.1-preview-win-x64.zip";
         var archivePath = Path.Combine(ridRoot, archiveName);
         var checksumPath = archivePath + ".sha256";
         AssertReleasePackageStagingLayout(packageRoot);
@@ -1829,7 +1829,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("README.md", zipEntries);
         Assert.Contains("LICENSE", zipEntries);
         Assert.Contains("release-manifest.json", zipEntries);
-        Assert.Contains("library/Electron2D.0.1.0-preview.nupkg", zipEntries);
+        Assert.Contains("library/Electron2D.0.1-preview.nupkg", zipEntries);
         Assert.Contains("editor/Electron2D.Editor.dll", zipEntries);
         Assert.Contains("tools/e2d/e2d.dll", zipEntries);
         Assert.DoesNotContain(zipEntries, ReleasePackagePathIsForbiddenForTest);
@@ -1906,8 +1906,8 @@ public sealed class RepositoryBuildToolTests
                     message.Contains("publication", StringComparison.OrdinalIgnoreCase);
             });
 
-        var linuxArchive = Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "linux-x64"), "electron2d-0.1.0-preview-linux-x64.tar.gz");
-        var macArchive = Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "osx-arm64"), "electron2d-0.1.0-preview-osx-arm64.tar.gz");
+        var linuxArchive = Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "linux-x64"), "electron2d-0.1-preview-linux-x64.tar.gz");
+        var macArchive = Path.Combine(ReleaseArtifactRidRoot(workspace.Root, "osx-arm64"), "electron2d-0.1-preview-osx-arm64.tar.gz");
         Assert.Contains("release-manifest.json", ReadTarGzEntryNames(linuxArchive));
         Assert.Contains("tools/e2d/e2d.dll", ReadTarGzEntryNames(macArchive));
     }
@@ -1928,7 +1928,7 @@ public sealed class RepositoryBuildToolTests
             AssertCommandSucceeded(package, $"package {rid}");
         }
 
-        WriteText(workspace.Root, "artifacts/release/0.1.0-preview/win-x64/package/dev-diary/notes.md", "forbidden\n");
+        WriteText(workspace.Root, "artifacts/release/0.1-preview/win-x64/package/dev-diary/notes.md", "forbidden\n");
 
         var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "release", "verify");
 
@@ -14411,7 +14411,7 @@ public sealed class RepositoryBuildToolTests
             """
             {
               "schemaVersion": 1,
-              "manifestVersion": "0.1.0-preview",
+              "manifestVersion": "0.1-preview",
               "types": [
                 {
                   "id": "electron2d://api/type/Electron2D.CharacterBody2D",
@@ -14424,7 +14424,7 @@ public sealed class RepositoryBuildToolTests
                   "summary": "Provides a 2D character body moved directly by user code.",
                   "category": "Physics",
                   "profile": {
-                    "name": "Electron2D 0.1.0 2D",
+                    "name": "Electron2D 0.1-preview 2D",
                     "status": "partial",
                     "parity": "not_verified",
                     "outOfProfile": true,
@@ -14483,7 +14483,7 @@ public sealed class RepositoryBuildToolTests
             | Supported | Implemented, tested and documented |
             | Partial | Implemented only for the described subset |
             | Experimental | Implemented but allowed to change before stable release |
-            | Planned | Required by `0.1.0 Preview`, not implemented yet |
+            | Planned | Required by `0.1-preview`, not implemented yet |
 
             ## Current Public Runtime Surface
 
@@ -14528,7 +14528,7 @@ public sealed class RepositoryBuildToolTests
             $$"""
             # Electron2D
 
-            Version `0.1.0-preview`.
+            Version `0.1-preview`.
 
             ![dark]({{DarkReadmeAssetRelativePath}})
             ![light]({{LightReadmeAssetRelativePath}})
@@ -14541,11 +14541,11 @@ public sealed class RepositoryBuildToolTests
             """
             <Project Sdk="Microsoft.NET.Sdk">
               <PropertyGroup>
-                <Version>0.1.0-preview</Version>
-                <PackageVersion>0.1.0-preview</PackageVersion>
+                <Version>0.1-preview</Version>
+                <PackageVersion>0.1-preview</PackageVersion>
                 <AssemblyVersion>0.1.0.0</AssemblyVersion>
                 <FileVersion>0.1.0.0</FileVersion>
-                <InformationalVersion>0.1.0-preview</InformationalVersion>
+                <InformationalVersion>0.1-preview</InformationalVersion>
                 <PackageId>Electron2D</PackageId>
                 <Authors>Electron2D Team</Authors>
                 <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -14573,7 +14573,7 @@ public sealed class RepositoryBuildToolTests
         WriteText(workspace.Root, $"{templateRoot}/.template.config/template.json", "{ \"identity\": \"Electron2D.Empty\", \"name\": \"Electron2D Empty\" }\n");
         WriteText(workspace.Root, $"{templateRoot}/Electron2D.Empty.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\"></Project>\n");
         WriteText(workspace.Root, $"{templateRoot}/global.json", "{ \"sdk\": { \"version\": \"10.0.101\", \"rollForward\": \"latestFeature\" } }\n");
-        WriteText(workspace.Root, $"{templateRoot}/electron2d.lock.json", "{ \"engineVersion\": \"0.1.0-preview\", \"targetFramework\": \"net10.0\" }\n");
+        WriteText(workspace.Root, $"{templateRoot}/electron2d.lock.json", "{ \"engineVersion\": \"0.1-preview\", \"targetFramework\": \"net10.0\" }\n");
         WriteText(workspace.Root, $"{templateRoot}/Program.cs", "Console.WriteLine(\"Electron2D empty scene loaded: scenes/main.scene.json\");\n");
         WriteText(workspace.Root, $"{templateRoot}/Scripts/MainScene.cs", "namespace Electron2D.Empty.Scripts;\npublic sealed class MainScene { }\n");
         WriteText(
@@ -14583,7 +14583,7 @@ public sealed class RepositoryBuildToolTests
             {
               "format": "Electron2D.ProjectSettings",
               "formatVersion": 1,
-              "engineVersion": "0.1.0-preview",
+              "engineVersion": "0.1-preview",
               "mainScene": "scenes/main.scene.json",
               "rendererProfile": "Compatibility"
             }
@@ -14604,7 +14604,7 @@ public sealed class RepositoryBuildToolTests
             workspace.Root,
             $"{templateRoot}/AGENTS.md",
             """
-            Electron2D 0.1.0-preview
+            Electron2D 0.1-preview
             .NET 10.0.101
             e2d validate
             e2d api compare-godot <type>
@@ -14951,13 +14951,13 @@ public sealed class RepositoryBuildToolTests
 
     private static string ReleaseArtifactRidRoot(string root, string rid)
     {
-        return Path.Combine(root, "artifacts", "release", "0.1.0-preview", rid);
+        return Path.Combine(root, "artifacts", "release", "0.1-preview", rid);
     }
 
     private static string ReleaseArchivePath(string root, string rid)
     {
         var extension = string.Equals(rid, "win-x64", StringComparison.Ordinal) ? ".zip" : ".tar.gz";
-        return Path.Combine(ReleaseArtifactRidRoot(root, rid), $"electron2d-0.1.0-preview-{rid}{extension}");
+        return Path.Combine(ReleaseArtifactRidRoot(root, rid), $"electron2d-0.1-preview-{rid}{extension}");
     }
 
     private static async Task PackageAllReleaseTargetsAsync(string root, IReadOnlyDictionary<string, string> environment)
@@ -15003,7 +15003,7 @@ public sealed class RepositoryBuildToolTests
             $$"""
             {
               "format": "Electron2D.ReleaseManifest",
-              "version": "0.1.0-preview",
+              "version": "0.1-preview",
               "runtimeIdentifier": "{{rid}}",
               "configuration": "Release",
               "archive": {
@@ -15044,7 +15044,7 @@ public sealed class RepositoryBuildToolTests
         Assert.True(File.Exists(Path.Combine(packageRoot, "README.md")), "README.md must be staged.");
         Assert.True(File.Exists(Path.Combine(packageRoot, "LICENSE")), "LICENSE must be staged.");
         Assert.True(File.Exists(Path.Combine(packageRoot, "release-manifest.json")), "release-manifest.json must be staged.");
-        Assert.True(File.Exists(Path.Combine(packageRoot, "library", "Electron2D.0.1.0-preview.nupkg")), "Runtime library package must be staged.");
+        Assert.True(File.Exists(Path.Combine(packageRoot, "library", "Electron2D.0.1-preview.nupkg")), "Runtime library package must be staged.");
         Assert.True(File.Exists(Path.Combine(packageRoot, "editor", "Electron2D.Editor.dll")), "Editor publish output must be staged.");
         Assert.True(File.Exists(Path.Combine(packageRoot, "tools", "e2d", "e2d.dll")), "e2d publish output must be staged.");
     }
@@ -15052,7 +15052,7 @@ public sealed class RepositoryBuildToolTests
     private static void AssertReleaseManifestShape(JsonElement manifest, string rid, string archiveName, string archiveType)
     {
         Assert.Equal("Electron2D.ReleaseManifest", manifest.GetProperty("format").GetString());
-        Assert.Equal("0.1.0-preview", manifest.GetProperty("version").GetString());
+        Assert.Equal("0.1-preview", manifest.GetProperty("version").GetString());
         Assert.Equal(rid, manifest.GetProperty("runtimeIdentifier").GetString());
         Assert.Equal("Release", manifest.GetProperty("configuration").GetString());
         Assert.True(manifest.GetProperty("dryRun").GetBoolean());
@@ -15062,7 +15062,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(archiveType, archive.GetProperty("type").GetString());
 
         var outputs = manifest.GetProperty("outputs").EnumerateArray().ToArray();
-        AssertManifestOutputFiles(outputs, "runtimeLibraryPackage", "library/", "library/Electron2D.0.1.0-preview.nupkg");
+        AssertManifestOutputFiles(outputs, "runtimeLibraryPackage", "library/", "library/Electron2D.0.1-preview.nupkg");
         AssertManifestOutputFiles(outputs, "editorPublishOutput", "editor/", "editor/Electron2D.Editor.dll");
         AssertManifestOutputFiles(outputs, "cliPublishOutput", "tools/e2d/", "tools/e2d/e2d.dll");
 
@@ -15221,7 +15221,7 @@ public sealed class RepositoryBuildToolTests
 
         ![.NET](https://img.shields.io/badge/.NET-10-512BD4)
         ![C#](https://img.shields.io/badge/C%23-14-239120)
-        ![Version](https://img.shields.io/badge/version-0.1.0--preview-blue)
+        ![Version](https://img.shields.io/badge/version-0.1--preview-blue)
 
         <a href="#about">About</a>
         <a href="#features">Features</a>
@@ -15398,7 +15398,7 @@ public sealed class RepositoryBuildToolTests
         var index = $$"""
         {
           "schemaVersion": 2,
-          "manifestVersion": "0.1.0-preview",
+          "manifestVersion": "0.1-preview",
           "generatedFrom": {
             "apiManifest": {
               "path": "{{ApiManifestRelativePath}}",
@@ -16482,7 +16482,7 @@ public sealed class RepositoryBuildToolTests
                     {
                         var output = FindOptionValue(args, "-o", "--output") ?? throw new InvalidOperationException("dotnet pack did not provide an output directory.");
                         Directory.CreateDirectory(output);
-                        File.WriteAllText(Path.Combine(output, "Electron2D.0.1.0-preview.nupkg"), "fixture runtime package\n", Encoding.UTF8);
+                        File.WriteAllText(Path.Combine(output, "Electron2D.0.1-preview.nupkg"), "fixture runtime package\n", Encoding.UTF8);
                         return ReadExitCode("DOTNET_SHIM_PACK_EXIT_CODE");
                     }
 

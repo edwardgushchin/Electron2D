@@ -31,7 +31,7 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// This type is part of the Electron2D 0.1-preview public API.
 /// </remarks>
 ///
 /// <threadsafety>
@@ -39,7 +39,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This API is available since Electron2D 0.1.0 Preview.
+/// This API is available since Electron2D 0.1-preview.
 /// </since>
 ///
 public readonly struct Callable : IEquatable<Callable>
@@ -69,7 +69,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -114,7 +114,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -149,7 +149,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -176,7 +176,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -203,7 +203,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -230,7 +230,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -261,7 +261,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -289,7 +289,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -325,7 +325,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -362,7 +362,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -389,7 +389,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -424,7 +424,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />
@@ -459,7 +459,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Callable" />

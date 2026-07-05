@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0042`.
 Обновлено: 2026-06-21.
-Связанные документы: [Сериализация сцен, ресурсов и переносимых property values](scene-resource-serialization.md), [Import cache ресурсов](resource-import-cache.md), [Resource file baseline](resource-file-baseline.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Сериализация сцен, ресурсов и переносимых property values](scene-resource-serialization.md), [Import cache ресурсов](resource-import-cache.md), [Resource file baseline](resource-file-baseline.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
-`T-0042` вводит stress gate для данных `0.1.0 Preview`: многократный save/load, rename/move ресурсов, rebuild import cache и сценарии повреждения файлов должны быть проверяемыми автоматическими тестами. Цель - поймать silent property loss до того, как будут добавлены public loader/saver, editor и project tooling.
+`T-0042` вводит stress gate для данных `0.1-preview`: многократный save/load, rename/move ресурсов, rebuild import cache и сценарии повреждения файлов должны быть проверяемыми автоматическими тестами. Цель - поймать silent property loss до того, как будут добавлены public loader/saver, editor и project tooling.
 
 ## Проверяемые сценарии
 
@@ -74,7 +74,7 @@ Resource UID должен переживать перенос source asset на 
 
 ## Что реализовано
 
-Добавлен stress gate для данных `0.1.0 Preview`. Он проверяет, что scene/resource serializers и import cache не теряют значения, ссылки и cache artifacts в сценариях, которые часто ломают проектные форматы.
+Добавлен stress gate для данных `0.1-preview`. Он проверяет, что scene/resource serializers и import cache не теряют значения, ссылки и cache artifacts в сценариях, которые часто ломают проектные форматы.
 
 Текущий набор проверок находится в `tests/Electron2D.Tests.Integration/DataStabilityStressTests.cs`.
 

@@ -40,7 +40,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public class CanvasLayer : Node
 {
@@ -58,7 +58,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasLayer" />
@@ -81,7 +81,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current layer value.
@@ -100,7 +100,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -123,7 +123,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RotationDegrees" />
@@ -146,7 +146,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Rotation" />
@@ -181,7 +181,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -201,7 +201,7 @@ public class CanvasLayer : Node
     ///
     /// <remarks>
     /// The setter decomposes offset, rotation and scale for transforms without
-    /// skew. Skew is outside the Electron2D 0.1.0 Preview subset.
+    /// skew. Skew is outside the Electron2D 0.1-preview subset.
     /// </remarks>
     ///
     /// <threadsafety>
@@ -209,7 +209,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current transform value.
@@ -242,7 +242,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -260,14 +260,14 @@ public class CanvasLayer : Node
     /// Gets the transform applied to descendant canvas items during submission.
     /// </summary>
     ///
-    /// <returns>The layer transform for Electron2D 0.1.0 Preview.</returns>
+    /// <returns>The layer transform for Electron2D 0.1-preview.</returns>
     ///
     /// <threadsafety>
     /// This method is not synchronized. Call it on the main scene thread.
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -290,7 +290,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Show" />
@@ -313,7 +313,7 @@ public class CanvasLayer : Node
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Hide" />

@@ -51,7 +51,7 @@ internal static class ShaderMaterialParameterValidator
                 return;
             default:
                 throw new ArgumentException(
-                    $"Variant type '{value.VariantType}' is not supported as a ShaderMaterial parameter in Electron2D 0.1.0 Preview.",
+                    $"Variant type '{value.VariantType}' is not supported as a ShaderMaterial parameter in Electron2D 0.1-preview.",
                     nameof(value));
         }
     }

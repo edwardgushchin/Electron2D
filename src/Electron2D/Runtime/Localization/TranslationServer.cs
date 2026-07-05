@@ -37,7 +37,7 @@ namespace Electron2D;
 /// <see cref="Object.Tr(string, string)" />.
 /// </para>
 /// <para>
-/// The 0.1.0 Preview lookup policy checks the exact locale, the base language,
+/// The 0.1-preview lookup policy checks the exact locale, the base language,
 /// the <c>en</c> fallback locale and then returns the original message key.
 /// </para>
 /// </remarks>
@@ -48,7 +48,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Translation" />
@@ -84,7 +84,7 @@ public static class TranslationServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetLocale" />
@@ -124,7 +124,7 @@ public static class TranslationServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetLocale" />
@@ -166,7 +166,7 @@ public static class TranslationServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RemoveTranslation" />
@@ -205,7 +205,7 @@ public static class TranslationServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddTranslation" />
@@ -240,7 +240,7 @@ public static class TranslationServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="TranslationServer" />
     ///
@@ -271,7 +271,7 @@ public static class TranslationServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -319,7 +319,7 @@ public static class TranslationServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Object.Tr(string, string)" />

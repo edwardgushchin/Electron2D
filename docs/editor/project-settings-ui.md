@@ -23,7 +23,7 @@
 
 ## Область настроек
 
-Минимальный экран `Project Settings` для `0.1.0 Preview` содержит:
+Минимальный экран `Project Settings` для `0.1-preview` содержит:
 
 - `Project Settings` как центральный workspace или modal-like panel внутри общего shell layout;
 - поле `Main Scene`, которое записывает `mainScene` в `project.e2d.json`;

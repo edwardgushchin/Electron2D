@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация для `T-0128`.
 Обновлено: 2026-06-30.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Референс интерфейса редактора Godot 4](../editor/godot4-editor-reference.md), [Локальный MCP-сервер поверх active Editor session и Tooling](../mcp/mcp-server.md), [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md), [ProjectTaskManager, TaskActivity и task storage](../project-system/project-task-manager.md), [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md), [Human-AI concurrent editing, conflicts и grouped Undo](../project-system/concurrent-editing-and-undo.md), [Headless runtime automation](../runtime/headless-runtime-automation.md), [Script workspace и встроенная C# IDE](../scripting/editor-script-workflow.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Референс интерфейса редактора Godot 4](../editor/godot4-editor-reference.md), [Локальный MCP-сервер поверх active Editor session и Tooling](../mcp/mcp-server.md), [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md), [ProjectTaskManager, TaskActivity и task storage](../project-system/project-task-manager.md), [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md), [Human-AI concurrent editing, conflicts и grouped Undo](../project-system/concurrent-editing-and-undo.md), [Headless runtime automation](../runtime/headless-runtime-automation.md), [Script workspace и встроенная C# IDE](../scripting/editor-script-workflow.md).
 
 ## Назначение
 
@@ -39,7 +39,7 @@ data/quality/agent-acceptance-benchmarks.json
 {
   "format": "Electron2D.AgentAcceptanceBenchmarkManifest",
   "version": 1,
-  "release": "0.1.0-preview",
+  "release": "0.1-preview",
   "suites": []
 }
 ```
@@ -97,7 +97,7 @@ agent-acceptance-benchmarks/
 
 ## Editor co-development suite
 
-`editor-co-development` является release-required suite. Для `0.1.0 Preview` он считается успешным только при `targetSuccessRatio = 1.0`.
+`editor-co-development` является release-required suite. Для `0.1-preview` он считается успешным только при `targetSuccessRatio = 1.0`.
 
 Обязательные сценарии:
 
@@ -128,7 +128,7 @@ agent-acceptance-benchmarks/
 
 ## Headless AI suite
 
-`headless-ai` является release-required suite, но до полной автоматизации допускается `documentedManualHarness`, если он хранит инструкции, входные задания, expected evidence и журнал результата. Целевой показатель для `0.1.0 Preview` - минимум `0.8`.
+`headless-ai` является release-required suite, но до полной автоматизации допускается `documentedManualHarness`, если он хранит инструкции, входные задания, expected evidence и журнал результата. Целевой показатель для `0.1-preview` - минимум `0.8`.
 
 Suite содержит ровно пять эталонных заданий:
 
@@ -156,13 +156,13 @@ Suite содержит ровно пять эталонных заданий:
 - Runner dry run создаёт `benchmark-plan.json` и не запускает тяжёлые проверки.
 - Минимальный automated run выполняет существующие focused integration/smoke checks для Editor co-development и headless runtime coverage.
 - Implementation documentation в `docs/testing/` описывает текущий runner, manifest, evidence mapping, команды и ограничения manual harness.
-- Release documentation или release gate documentation ссылается на benchmark как обязательную проверку `0.1.0 Preview`.
+- Release documentation или release gate documentation ссылается на benchmark как обязательную проверку `0.1-preview`.
 
 ## Фактическое состояние, ограничения и проверки
 
 Статус: текущая реализация для `T-0128`.
 Обновлено: 2026-06-30.
-Связанные спецификации: [Agent acceptance benchmarks для Electron2D 0.1](agent-acceptance-benchmarks.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные спецификации: [Agent acceptance benchmarks для Electron2D 0.1](agent-acceptance-benchmarks.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Что реализовано
 

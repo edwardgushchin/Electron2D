@@ -38,7 +38,7 @@ namespace Electron2D;
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 /// <seealso cref="InputEventKey"/>
 /// <seealso cref="InputEventMouseButton"/>
@@ -63,7 +63,7 @@ public class InputEvent : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEvent" />
@@ -77,7 +77,7 @@ public class InputEvent : Resource
     /// </summary>
     /// <remarks>
     /// Platform device identifiers are copied into this value by the internal
-    /// input mapper. The value is informational in 0.1.0 Preview and can be
+    /// input mapper. The value is informational in 0.1-preview and can be
     /// used by future device-specific action bindings.
     /// </remarks>
     /// <value>
@@ -89,7 +89,7 @@ public class InputEvent : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEvent" />
@@ -120,7 +120,7 @@ public class InputEvent : Resource
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="InputMap"/>
@@ -141,7 +141,7 @@ public class InputEventAction : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventAction" />
@@ -167,7 +167,7 @@ public class InputEventAction : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current action value.
@@ -195,7 +195,7 @@ public class InputEventAction : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current pressed value.
@@ -221,7 +221,7 @@ public class InputEventAction : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current strength value.
@@ -250,7 +250,7 @@ public class InputEventAction : InputEvent
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
     /// <threadsafety>
     /// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
@@ -272,7 +272,7 @@ public class InputEventFromWindow : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventFromWindow" />
@@ -297,7 +297,7 @@ public class InputEventFromWindow : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventFromWindow" />
@@ -320,7 +320,7 @@ public class InputEventFromWindow : InputEvent
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
     /// <threadsafety>
     /// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
@@ -342,7 +342,7 @@ public class InputEventWithModifiers : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventWithModifiers" />
@@ -367,7 +367,7 @@ public class InputEventWithModifiers : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventWithModifiers" />
@@ -390,7 +390,7 @@ public class InputEventWithModifiers : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventWithModifiers" />
@@ -413,7 +413,7 @@ public class InputEventWithModifiers : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventWithModifiers" />
@@ -436,7 +436,7 @@ public class InputEventWithModifiers : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventWithModifiers" />
@@ -460,7 +460,7 @@ public class InputEventWithModifiers : InputEventFromWindow
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
     /// <threadsafety>
     /// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
@@ -482,7 +482,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -507,7 +507,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -530,7 +530,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -553,7 +553,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -576,7 +576,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -599,7 +599,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -622,7 +622,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -645,7 +645,7 @@ public class InputEventKey : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventKey" />
@@ -658,7 +658,7 @@ public class InputEventKey : InputEventWithModifiers
 /// </summary>
 /// <remarks>
 /// <para>
-/// Mouse events carry viewport-local and global positions. In the 0.1.0 Preview
+/// Mouse events carry viewport-local and global positions. In the 0.1-preview
 /// baseline these positions are identical because viewport scaling and GUI local
 /// coordinates are not yet part of the input pipeline.
 /// </para>
@@ -668,7 +668,7 @@ public class InputEventKey : InputEventWithModifiers
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
     /// <threadsafety>
     /// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
@@ -688,7 +688,7 @@ public class InputEventMouse : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouse" />
@@ -714,7 +714,7 @@ public class InputEventMouse : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouse" />
@@ -737,7 +737,7 @@ public class InputEventMouse : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouse" />
@@ -760,7 +760,7 @@ public class InputEventMouse : InputEventWithModifiers
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouse" />
@@ -783,7 +783,7 @@ public class InputEventMouse : InputEventWithModifiers
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
     /// <threadsafety>
     /// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
@@ -805,7 +805,7 @@ public class InputEventMouseButton : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseButton" />
@@ -830,7 +830,7 @@ public class InputEventMouseButton : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseButton" />
@@ -853,7 +853,7 @@ public class InputEventMouseButton : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseButton" />
@@ -876,7 +876,7 @@ public class InputEventMouseButton : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseButton" />
@@ -899,7 +899,7 @@ public class InputEventMouseButton : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseButton" />
@@ -922,7 +922,7 @@ public class InputEventMouseButton : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseButton" />
@@ -944,7 +944,7 @@ public class InputEventMouseButton : InputEventMouse
 /// </threadsafety>
 /// </remarks>
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
     /// <threadsafety>
     /// Instances of this type are not synchronized. Access them from the thread that owns the object unless the member documentation states otherwise.
@@ -966,7 +966,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />
@@ -991,7 +991,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />
@@ -1014,7 +1014,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />
@@ -1037,7 +1037,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />
@@ -1060,7 +1060,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />
@@ -1083,7 +1083,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />
@@ -1106,7 +1106,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />
@@ -1129,7 +1129,7 @@ public class InputEventMouseMotion : InputEventMouse
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventMouseMotion" />

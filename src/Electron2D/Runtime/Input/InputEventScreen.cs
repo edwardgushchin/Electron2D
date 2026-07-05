@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="InputEventScreenDrag"/>
@@ -62,7 +62,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventScreenTouch" />
@@ -86,7 +86,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current index value.
@@ -101,7 +101,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </summary>
     ///
     /// <remarks>
-    /// The 0.1.0 Preview input mapper stores the platform-provided touch
+    /// The 0.1-preview input mapper stores the platform-provided touch
     /// coordinates directly. Future viewport scaling work can transform this
     /// value before dispatch.
     /// </remarks>
@@ -111,7 +111,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current position value.
@@ -135,7 +135,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current pressed value.
@@ -150,7 +150,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </summary>
     ///
     /// <remarks>
-    /// The 0.1.0 Preview platform mapper leaves this value <c>false</c> until a
+    /// The 0.1-preview platform mapper leaves this value <c>false</c> until a
     /// platform backend reports double-tap semantics.
     /// </remarks>
     ///
@@ -159,7 +159,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current double tap value.
@@ -183,7 +183,7 @@ public class InputEventScreenTouch : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current canceled value.
@@ -212,7 +212,7 @@ public class InputEventScreenTouch : InputEventFromWindow
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="InputEventScreenTouch"/>
@@ -232,7 +232,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventScreenDrag" />
@@ -256,7 +256,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current index value.
@@ -275,7 +275,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -298,7 +298,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -321,7 +321,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -344,7 +344,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -367,7 +367,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -395,7 +395,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current pressure value.
@@ -418,7 +418,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -441,7 +441,7 @@ public class InputEventScreenDrag : InputEventFromWindow
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.

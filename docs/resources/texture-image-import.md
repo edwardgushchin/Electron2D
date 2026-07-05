@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0037`.
 Обновлено: 2026-06-21.
-Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Texture2D resource baseline](../rendering/texture-resource-baseline.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Texture2D resource baseline](../rendering/texture-resource-baseline.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
 `T-0037` добавляет первый image importer поверх import cache. Он должен принимать PNG/JPEG source assets, извлекать переносимые metadata, учитывать настройки импорта и создавать cache artifact, из которого будущий loader сможет создать `Texture2D` и связанные `AtlasTexture`.
 
-В `0.1.0 Preview` задача не добавляет public `ImageTexture`, public `ResourceLoader`, GPU upload и runtime decoding pixels. Результат является внутренним механизмом: он доступен тестам, будущему editor import dock и будущему loader, но не расширяет пользовательский public API.
+В `0.1-preview` задача не добавляет public `ImageTexture`, public `ResourceLoader`, GPU upload и runtime decoding pixels. Результат является внутренним механизмом: он доступен тестам, будущему editor import dock и будущему loader, но не расширяет пользовательский public API.
 
 ## Source assets и sidecar
 

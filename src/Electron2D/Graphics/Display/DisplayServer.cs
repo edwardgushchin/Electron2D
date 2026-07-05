@@ -30,7 +30,7 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// The 0.1.0 Preview implementation stores a compact process-wide state used by
+/// The 0.1-preview implementation stores a compact process-wide state used by
 /// mobile input and export pipelines. Platform backends feed this state through
 /// internal methods; public methods expose stable values without native handles.
 /// </para>
@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="InputEventScreenTouch"/>
@@ -69,7 +69,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum ScreenOrientation
     {
@@ -81,7 +81,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ScreenOrientation" />
@@ -96,7 +96,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ScreenOrientation" />
@@ -111,7 +111,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ScreenOrientation" />
@@ -126,7 +126,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ScreenOrientation" />
@@ -141,7 +141,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ScreenOrientation" />
@@ -156,7 +156,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ScreenOrientation" />
@@ -171,7 +171,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="ScreenOrientation" />
@@ -195,7 +195,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum VirtualKeyboardType
     {
@@ -207,7 +207,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -222,7 +222,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -237,7 +237,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -252,7 +252,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -267,7 +267,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -282,7 +282,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -297,7 +297,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -312,7 +312,7 @@ public static class DisplayServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="VirtualKeyboardType" />
@@ -341,7 +341,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="DisplayServer" />
     ///
@@ -357,7 +357,7 @@ public static class DisplayServer
     /// Gets the current screen orientation state.
     /// </summary>
     ///
-    /// <param name="screen">The screen index. The 0.1.0 Preview stores one process-wide state.</param>
+    /// <param name="screen">The screen index. The 0.1-preview stores one process-wide state.</param>
     /// <returns>
     /// The current screen orientation.
     /// </returns>
@@ -374,7 +374,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ScreenSetOrientation"/>
@@ -392,7 +392,7 @@ public static class DisplayServer
     /// </summary>
     ///
     /// <param name="orientation">The requested orientation.</param>
-    /// <param name="screen">The screen index. The 0.1.0 Preview stores one process-wide state.</param>
+    /// <param name="screen">The screen index. The 0.1-preview stores one process-wide state.</param>
     ///
     /// <remarks>
     /// <para>
@@ -406,7 +406,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ScreenGetOrientation"/>
@@ -438,7 +438,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VirtualKeyboardShow"/>
@@ -471,7 +471,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VirtualKeyboardShow"/>
@@ -507,7 +507,7 @@ public static class DisplayServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VirtualKeyboardHide"/>

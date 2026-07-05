@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация `T-0073`.
 Дата: 2026-06-21.
-Связанные документы: `docs/releases/0.1.0-preview.md`, `docs/audio/audio-server-voice-handles.md`, `docs/resources/audio-stream-import.md`.
+Связанные документы: `docs/releases/0.1-preview.md`, `docs/audio/audio-server-voice-handles.md`, `docs/resources/audio-stream-import.md`.
 
 ## Контекст
 

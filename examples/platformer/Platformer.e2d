@@ -3,7 +3,7 @@
   "formatVersion": 1,
   "name": "Platformer",
   "version": "0.1.0",
-  "engineVersion": "0.1.0-preview",
+  "engineVersion": "0.1-preview",
   "mainScene": "scenes/main.scene.json",
   "rendererProfile": "Automatic",
   "physicsTicksPerSecond": 60,
@@ -209,7 +209,7 @@
     "format": "Electron2D.ReproducibilityLock",
     "schemaVersion": 1,
     "engine": {
-      "version": "0.1.0-preview"
+      "version": "0.1-preview"
     },
     "dotnet": {
       "sdkVersion": "10.0.101",
@@ -220,7 +220,7 @@
       "packages": [
         {
           "id": "Electron2D",
-          "version": "0.1.0-preview"
+          "version": "0.1-preview"
         }
       ]
     },
@@ -245,10 +245,10 @@
       ]
     },
     "assetImporters": {
-      "texture": "0.1.0-preview",
-      "font": "0.1.0-preview",
-      "audio": "0.1.0-preview",
-      "shader": "0.1.0-preview"
+      "texture": "0.1-preview",
+      "font": "0.1-preview",
+      "audio": "0.1-preview",
+      "shader": "0.1-preview"
     },
     "project": {
       "rendererProfile": "Automatic",
@@ -256,7 +256,7 @@
       "serializationSchemaVersion": "1"
     },
     "exportTemplates": {
-      "version": "0.1.0-preview"
+      "version": "0.1-preview"
     },
     "signing": {
       "mode": "referencesOnly"

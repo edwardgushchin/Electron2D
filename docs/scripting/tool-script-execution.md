@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен иметь проверяемый внутренний механизм, который позволяет tooling/editor-слою явно выполнить callback script class, помеченного `[Tool]`, без смешивания этого пути с обычным runtime traversal и без динамической загрузки пользовательских assemblies.
+`0.1-preview` должен иметь проверяемый внутренний механизм, который позволяет tooling/editor-слою явно выполнить callback script class, помеченного `[Tool]`, без смешивания этого пути с обычным runtime traversal и без динамической загрузки пользовательских assemblies.
 
 Эта задача не реализует GUI редактора, hot reload, compile pipeline, external IDE workflow, загрузку assemblies по path, source generation или полноценный sandbox process. Она фиксирует минимальный execution contract, на который будущий editor host сможет опереться.
 
@@ -95,7 +95,7 @@ Runtime остаётся обычным path: если пользователь 
 
 ## Текущее состояние
 
-`0.1.0 Preview` теперь содержит внутренний `ToolScriptExecutionHost` для явного выполнения callbacks у script classes, помеченных `[Tool]` и зарегистрированных в `ScriptObjectMetadataRegistry`.
+`0.1-preview` теперь содержит внутренний `ToolScriptExecutionHost` для явного выполнения callbacks у script classes, помеченных `[Tool]` и зарегистрированных в `ScriptObjectMetadataRegistry`.
 
 Host не является публичным API. Он предназначен для будущего editor/tooling layer и тестируется как internal runtime contract.
 

@@ -66,7 +66,7 @@ internal static class TileSetResourceMetadata
             if (source.Value is not TileSetAtlasSource atlasSource)
             {
                 throw new InvalidOperationException(
-                    $"Tile source type '{source.Value.GetType().FullName}' is not supported by the 0.1.0 Preview serializer.");
+                    $"Tile source type '{source.Value.GetType().FullName}' is not supported by the 0.1-preview serializer.");
             }
 
             return Object(
@@ -119,7 +119,7 @@ internal static class TileSetResourceMetadata
             var alternativeTile = ReadInt32(Required(tile, "alternative_tile", "atlas tile"), "alternative tile");
             if (alternativeTile != 0)
             {
-                throw new FormatException("Only the default alternative tile is supported by the 0.1.0 Preview serializer.");
+                throw new FormatException("Only the default alternative tile is supported by the 0.1-preview serializer.");
             }
 
             var atlasCoords = ReadVector2I(Required(tile, "atlas_coords", "atlas tile"), "atlas coordinates");

@@ -32,7 +32,7 @@ namespace Electron2D;
 /// <para>
 /// <c>ScrollContainer</c> stores programmatic scroll offsets and offsets visible
 /// child controls by those values. It does not create public scrollbar nodes in
-/// the 0.1.0 Preview runtime.
+/// the 0.1-preview runtime.
 /// </para>
 /// </remarks>
 ///
@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Container"/>
@@ -69,7 +69,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.ClipContents"/>
@@ -98,7 +98,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public bool DrawFocusBorder { get; set; }
 
@@ -123,7 +123,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="EnsureControlVisible(Control)"/>
@@ -149,7 +149,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VerticalScrollMode"/>
@@ -175,7 +175,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HorizontalScrollMode"/>
@@ -205,7 +205,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public int ScrollDeadzone
     {
@@ -232,7 +232,7 @@ public class ScrollContainer : Container
     /// <remarks>
     /// <para>
     /// The value is stored for future visual hint rendering and does not change
-    /// layout in the 0.1.0 Preview runtime.
+    /// layout in the 0.1-preview runtime.
     /// </para>
     /// </remarks>
     ///
@@ -241,7 +241,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public ScrollHintMode ScrollHintMode { get; set; } = ScrollHintMode.All;
 
@@ -269,7 +269,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ScrollVertical"/>
@@ -303,7 +303,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public bool ScrollHorizontalByDefault { get; set; }
 
@@ -330,7 +330,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public float ScrollHorizontalCustomStep
     {
@@ -362,7 +362,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ScrollHorizontal"/>
@@ -399,7 +399,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public float ScrollVerticalCustomStep
     {
@@ -426,7 +426,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     public bool TileScrollHint { get; set; }
 
@@ -461,7 +461,7 @@ public class ScrollContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ScrollHorizontal"/>

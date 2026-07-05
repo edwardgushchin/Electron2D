@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Texture2D"/>
@@ -70,7 +70,7 @@ public class TextureRect : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TextureRect.ExpandMode"/>
@@ -78,37 +78,37 @@ public class TextureRect : Control
     {
         /// <summary>Keeps the texture size as minimum size.</summary>
         /// <remarks>Use this value with <see cref="TextureRect.ExpandMode"/>.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="ExpandModeEnum"/>
         KeepSize = 0,
 
         /// <summary>Ignores texture size for minimum size.</summary>
         /// <remarks>Use this value when layout should fully control size.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="ExpandModeEnum"/>
         IgnoreSize = 1,
 
         /// <summary>Uses texture width as minimum width.</summary>
         /// <remarks>The minimum height is zero.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="ExpandModeEnum"/>
         FitWidth = 2,
 
         /// <summary>Uses the full texture size while fitting by width.</summary>
         /// <remarks>Use this value to preserve proportional minimum size.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="ExpandModeEnum"/>
         FitWidthProportional = 3,
 
         /// <summary>Uses texture height as minimum height.</summary>
         /// <remarks>The minimum width is zero.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="ExpandModeEnum"/>
         FitHeight = 4,
 
         /// <summary>Uses the full texture size while fitting by height.</summary>
         /// <remarks>Use this value to preserve proportional minimum size.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="ExpandModeEnum"/>
         FitHeightProportional = 5
     }
@@ -129,7 +129,7 @@ public class TextureRect : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TextureRect.StretchMode"/>
@@ -137,43 +137,43 @@ public class TextureRect : Control
     {
         /// <summary>Scales the texture to the control rectangle.</summary>
         /// <remarks>Use this value with <see cref="TextureRect.StretchMode"/>.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         Scale = 0,
 
         /// <summary>Draws the texture over the control rectangle.</summary>
         /// <remarks>Use this value for texture-backed UI surfaces.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         Tile = 1,
 
         /// <summary>Keeps the original texture size at the top-left corner.</summary>
         /// <remarks>Use this value to avoid scaling.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         Keep = 2,
 
         /// <summary>Keeps the original texture size and centers it.</summary>
         /// <remarks>Use this value for fixed-size centered images.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepCentered = 3,
 
         /// <summary>Fits the texture inside the control while preserving aspect ratio.</summary>
         /// <remarks>Use this value when the full texture should remain visible.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepAspect = 4,
 
         /// <summary>Fits the texture inside the control and centers it.</summary>
         /// <remarks>Use this value for centered aspect-ratio drawing.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepAspectCentered = 5,
 
         /// <summary>Covers the control while preserving aspect ratio.</summary>
         /// <remarks>The destination rectangle can extend outside the control area.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepAspectCovered = 6
     }
@@ -192,7 +192,7 @@ public class TextureRect : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TextureRect"/>
@@ -207,7 +207,7 @@ public class TextureRect : Control
     /// <value>The texture resource, or <c>null</c> to draw nothing.</value>
     /// <remarks>Assigning this property queues a redraw.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Texture2D"/>
     public Texture2D? Texture
     {
@@ -225,7 +225,7 @@ public class TextureRect : Control
     /// <value>The expand mode used by <see cref="_GetMinimumSize"/>.</value>
     /// <remarks>The default is <see cref="ExpandModeEnum.KeepSize"/>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="ExpandModeEnum"/>
     public ExpandModeEnum ExpandMode
     {
@@ -243,7 +243,7 @@ public class TextureRect : Control
     /// <value>The stretch mode used by <see cref="_Draw"/>.</value>
     /// <remarks>The default is <see cref="StretchModeEnum.Scale"/>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="StretchModeEnum"/>
     public StretchModeEnum StretchMode
     {
@@ -261,7 +261,7 @@ public class TextureRect : Control
     /// <value><c>true</c> to request horizontal flip; otherwise, <c>false</c>.</value>
     /// <remarks>The flip flag is stored in the internal texture draw command.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="FlipV"/>
     public bool FlipH
     {
@@ -279,7 +279,7 @@ public class TextureRect : Control
     /// <value><c>true</c> to request vertical flip; otherwise, <c>false</c>.</value>
     /// <remarks>The flip flag is stored in the internal texture draw command.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="FlipH"/>
     public bool FlipV
     {
@@ -296,7 +296,7 @@ public class TextureRect : Control
     /// </summary>
     /// <remarks>No draw command is submitted when <see cref="Texture"/> is <c>null</c>.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="CanvasItem.DrawTexture(Texture2D, Vector2, Color?)"/>
     public override void _Draw()
     {
@@ -320,7 +320,7 @@ public class TextureRect : Control
     /// <returns>A size derived from <see cref="Texture"/> and <see cref="ExpandMode"/>.</returns>
     /// <remarks>When no texture is assigned, the minimum size is zero.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="ExpandMode"/>
     public override Vector2 _GetMinimumSize()
     {

@@ -1,6 +1,6 @@
 # Platformer
 
-This is a valid `Electron2D.Editor` project used as the 0.1.0 Preview Platformer.
+This is a valid `Electron2D.Editor` project used as the 0.1-preview Platformer.
 
 Play from this directory or from the repository root:
 

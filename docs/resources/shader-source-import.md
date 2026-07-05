@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0040`.
 Обновлено: 2026-06-21.
-Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Canvas shaders import и diagnostics baseline](../rendering/canvas-shader-import-baseline.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Import cache ресурсов](resource-import-cache.md), [Canvas shaders import и diagnostics baseline](../rendering/canvas-shader-import-baseline.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
 `T-0040` подключает canvas shader source к общему import cache. Source asset `.e2shader` должен импортироваться в стабильный cache artifact с platform-specific compiled stages, structured diagnostics и явным флагом, нужна ли runtime compilation.
 
-В `0.1.0 Preview` задача не добавляет public `ResourceLoader`, public `ShaderFile`, public GPU shader handles и не меняет public `Shader` API. Результат является внутренним механизмом для тестов, будущего редактора, export pipeline и будущего loader.
+В `0.1-preview` задача не добавляет public `ResourceLoader`, public `ShaderFile`, public GPU shader handles и не меняет public `Shader` API. Результат является внутренним механизмом для тестов, будущего редактора, export pipeline и будущего loader.
 
 ## Source assets и sidecar
 

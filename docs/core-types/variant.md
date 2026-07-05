@@ -14,7 +14,7 @@
 
 ## Назначение
 
-`Variant` должен стать Electron2D контейнером значения для динамических runtime API Electron2D `0.1.0 Preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и Agent-native cross-platform 2D game engine tooling. Публичный C# API `Variant`, входящий в утверждённый 2D-профиль, должен совпадать с Godot `4.7-stable` .NET/C# API. Значения и типы, относящиеся к API вне 2D-профиля, в `0.1.0 Preview` не входят, но их отсутствие должно быть явно отражено в profile manifest и проверках совместимости.
+`Variant` должен стать Electron2D контейнером значения для динамических runtime API Electron2D `0.1-preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и Agent-native cross-platform 2D game engine tooling. Публичный C# API `Variant`, входящий в утверждённый 2D-профиль, должен совпадать с Godot `4.7-stable` .NET/C# API. Значения и типы, относящиеся к API вне 2D-профиля, в `0.1-preview` не входят, но их отсутствие должно быть явно отражено в profile manifest и проверках совместимости.
 
 ## Источники поведения
 
@@ -24,9 +24,9 @@
 
 Godot C# использует `Variant` как `struct`, где `default`/пустой constructor означают null-like `Nil`, а совместимые C# значения преобразуются в `Variant` через implicit conversions или `Variant.From<T>()`.
 
-## Закрытый список типов `0.1.0 Preview`
+## Закрытый список типов `0.1-preview`
 
-`Variant.Type` в Electron2D `0.1.0 Preview` поддерживает только эти значения:
+`Variant.Type` в Electron2D `0.1-preview` поддерживает только эти значения:
 
 - `Nil`;
 - `Bool`;
@@ -49,7 +49,7 @@ Godot C# использует `Variant` как `struct`, где `default`/пус
 
 `Resource` и `Node` хранятся как `Object`, потому что они наследуются от `Electron2D.Object`. Перечисления хранятся как `Int`, как в Godot C#.
 
-В `0.1.0 Preview` намеренно не входят:
+В `0.1-preview` намеренно не входят:
 
 - 3D-типы (`Vector3`, `Transform3D`, `Basis`, `Projection` и связанные типы);
 - `Signal`, пока в публичном API нет отдельного Electron2D `Signal`;
@@ -128,7 +128,7 @@ public sealed class Dictionary;
 
 - Unit-тесты покрывают `Nil`, primitive values, numeric normalization, enum mapping, 2D math values, identity values, `Object`/`Resource`, `Array`, `Dictionary` и ошибки неподдержанных типов.
 - Public API baseline содержит только Electron2D новые типы `Electron2D.Variant`, `Electron2D.Variant.Type`, `Electron2D.Collections.Array` и `Electron2D.Collections.Dictionary`.
-- Документация текущего поведения описывает закрытый список и ограничения `0.1.0 Preview`.
+- Документация текущего поведения описывает закрытый список и ограничения `0.1-preview`.
 - `Signal`, 3D-типы и stable serialization не реализуются в этой задаче.
 
 ## Фактическое состояние, ограничения и проверки
@@ -150,7 +150,7 @@ public sealed class Dictionary;
 
 ## Закрытый список `Variant.Type`
 
-В `0.1.0 Preview` поддержаны только:
+В `0.1-preview` поддержаны только:
 
 - `Nil`;
 - `Bool`;
@@ -247,7 +247,7 @@ Enum значения создаются через `Variant.From<T>()` или `
 ## Ограничения
 
 - `Signal` пока не входит в public API и не поддержан как `Variant.Type`.
-- 3D-типы и packed arrays не входят в `0.1.0 Preview`.
+- 3D-типы и packed arrays не входят в `0.1-preview`.
 - Stable text serialization round-trip реализован отдельной задачей `T-0021` как internal runtime contract.
 - Signal/group/deferred/property APIs пока не мигрированы на `Variant`; они будут переводиться отдельными задачами.
 

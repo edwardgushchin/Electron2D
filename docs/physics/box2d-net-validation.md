@@ -14,7 +14,7 @@
 
 ## Цель
 
-`Box2D.NET` рассматривается только как candidate backend для будущего `PhysicsServer2D`, а не как уже выбранная production-зависимость runtime. До реализации тел, форм, queries и `CharacterBody2D` нужно иметь отдельный validation gate, который подтверждает, что candidate можно собрать и выполнить в режимах, важных для `0.1.0 Preview`.
+`Box2D.NET` рассматривается только как candidate backend для будущего `PhysicsServer2D`, а не как уже выбранная production-зависимость runtime. До реализации тел, форм, queries и `CharacterBody2D` нужно иметь отдельный validation gate, который подтверждает, что candidate можно собрать и выполнить в режимах, важных для `0.1-preview`.
 
 Основание: архитектурная спецификация выбирает чистую C# реализацию `ikpil/Box2D.NET` как предпочтительный candidate, но требует собственной проверки Electron2D по desktop JIT/NativeAOT, mobile Release/AOT gaps и allocations per physics tick. Текущий публичный источник пакета: [NuGet `Box2D.NET` 3.1.654](https://packages.nuget.org/packages/Box2D.NET), upstream: [ikpil/Box2D.NET](https://github.com/ikpil/Box2D.NET).
 
@@ -63,7 +63,7 @@ CI на desktop matrix должен запускать verifier с `-NativeAot`,
 | Linux x64 | required | required | GitHub Actions `ubuntu-latest` |
 | macOS arm64/x64 runner | required | required | GitHub Actions `macos-latest` |
 
-Mobile gaps для `0.1.0 Preview`:
+Mobile gaps для `0.1-preview`:
 
 | Платформа | Статус |
 | --- | --- |

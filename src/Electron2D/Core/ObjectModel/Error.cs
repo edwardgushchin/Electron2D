@@ -29,11 +29,11 @@ namespace Electron2D;
 /// </summary>
 ///
 /// <remarks>
-/// This type is part of the Electron2D 0.1.0 Preview public API.
+/// This type is part of the Electron2D 0.1-preview public API.
 /// </remarks>
 ///
 /// <since>
-/// This API is available since Electron2D 0.1.0 Preview.
+/// This API is available since Electron2D 0.1-preview.
 /// </since>
 ///
 public enum Error
@@ -47,7 +47,7 @@ public enum Error
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Error" />
@@ -62,7 +62,7 @@ public enum Error
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Error" />
@@ -77,7 +77,7 @@ public enum Error
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Error" />
@@ -92,7 +92,7 @@ public enum Error
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Error" />
@@ -107,7 +107,7 @@ public enum Error
     /// </remarks>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Error" />

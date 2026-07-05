@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="CanvasItem" />
@@ -68,7 +68,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control" />
@@ -117,7 +117,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="OffsetLeft"/>
@@ -148,7 +148,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="OffsetTop"/>
@@ -179,7 +179,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="OffsetRight"/>
@@ -210,7 +210,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="OffsetBottom"/>
@@ -241,7 +241,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AnchorLeft"/>
@@ -272,7 +272,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AnchorTop"/>
@@ -303,7 +303,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AnchorRight"/>
@@ -334,7 +334,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AnchorBottom"/>
@@ -365,7 +365,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetRect"/>
@@ -396,7 +396,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetSize(Vector2)"/>
@@ -432,7 +432,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_GetMinimumSize"/>
@@ -465,7 +465,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GrowVertical"/>
@@ -494,7 +494,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GrowHorizontal"/>
@@ -522,7 +522,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SizeFlagsVertical"/>
@@ -551,7 +551,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SizeFlagsHorizontal"/>
@@ -584,7 +584,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SizeFlagsHorizontal"/>
@@ -614,7 +614,7 @@ public class Control : CanvasItem
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline applies this flag to mouse and touch
+    /// The 0.1-preview baseline applies this flag to mouse and touch
     /// dispatch. Renderer scissor integration is handled by later rendering
     /// backend work.
     /// </para>
@@ -625,7 +625,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetGlobalRect"/>
@@ -659,7 +659,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MouseFilter"/>
@@ -693,7 +693,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FocusMode"/>
@@ -722,7 +722,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Theme"/>
@@ -762,7 +762,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Theme"/>
@@ -802,7 +802,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTooltip(Vector2)"/>
@@ -841,7 +841,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FocusPrevious"/>
@@ -869,7 +869,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FocusNext"/>
@@ -897,7 +897,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FocusNeighborRight"/>
@@ -924,7 +924,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FocusNeighborBottom"/>
@@ -951,7 +951,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FocusNeighborLeft"/>
@@ -978,7 +978,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FocusNeighborTop"/>
@@ -1011,7 +1011,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AcceptEvent"/>
@@ -1046,7 +1046,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTooltip(Vector2)"/>
@@ -1081,7 +1081,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTooltip(Vector2)"/>
@@ -1118,7 +1118,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CustomMinimumSize"/>
@@ -1149,7 +1149,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetGlobalRect"/>
@@ -1182,7 +1182,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetRect"/>
@@ -1214,7 +1214,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_GetMinimumSize"/>
@@ -1235,7 +1235,7 @@ public class Control : CanvasItem
     ///
     /// <remarks>
     /// <para>
-    /// In the 0.1.0 Preview layout baseline this is the same value as
+    /// In the 0.1-preview layout baseline this is the same value as
     /// <see cref="GetMinimumSize"/>. Future container and theme work can add
     /// style contributions without changing the public call site.
     /// </para>
@@ -1246,7 +1246,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetMinimumSize"/>
@@ -1284,7 +1284,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Size"/>
@@ -1320,7 +1320,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetSize(Vector2)"/>
@@ -1354,7 +1354,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FindPrevValidFocus"/>
@@ -1388,7 +1388,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FindNextValidFocus"/>
@@ -1417,7 +1417,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_GuiInput(InputEvent)"/>
@@ -1446,7 +1446,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ReleaseFocus"/>
@@ -1474,7 +1474,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GrabFocus"/>
@@ -1507,7 +1507,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GrabFocus"/>
@@ -1533,7 +1533,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="TooltipText"/>
     /// <seealso cref="_MakeCustomTooltip(string)"/>
@@ -1558,7 +1558,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="GetThemeColor(string, string)"/>
     public void AddThemeColorOverride(string name, Color color)
@@ -1581,7 +1581,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="HasThemeColorOverride(string)"/>
     public void RemoveThemeColorOverride(string name)
@@ -1608,7 +1608,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="AddThemeColorOverride(string, Color)"/>
     public bool HasThemeColorOverride(string name)
@@ -1633,7 +1633,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="Theme"/>
     public Color GetThemeColor(string name, string themeType = "")
@@ -1665,7 +1665,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="GetThemeColor(string, string)"/>
     public bool HasThemeColor(string name, string themeType = "")
@@ -1696,7 +1696,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -1726,7 +1726,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="HasThemeFontOverride(string)"/>
     public void RemoveThemeFontOverride(string name)
@@ -1753,7 +1753,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="AddThemeFontOverride(string, Font)"/>
     public bool HasThemeFontOverride(string name)
@@ -1795,7 +1795,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddThemeFontOverride(string, Font)"/>
@@ -1839,7 +1839,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -1872,7 +1872,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="HasThemeFontSizeOverride(string)"/>
     public void RemoveThemeFontSizeOverride(string name)
@@ -1899,7 +1899,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="AddThemeFontSizeOverride(string, int)"/>
     public bool HasThemeFontSizeOverride(string name)
@@ -1942,7 +1942,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddThemeFontSizeOverride(string, int)"/>
@@ -1981,7 +1981,7 @@ public class Control : CanvasItem
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview UI containers use this baseline for spacing and
+    /// The 0.1-preview UI containers use this baseline for spacing and
     /// margins before full theme resources are introduced.
     /// </para>
     /// </remarks>
@@ -1999,7 +1999,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetThemeConstant"/>
@@ -2030,7 +2030,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="HasThemeConstantOverride(string)"/>
     public void RemoveThemeConstantOverride(string name)
@@ -2077,7 +2077,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddThemeConstantOverride(string, int)"/>
@@ -2113,7 +2113,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="GetThemeConstant(string, string)"/>
     public bool HasThemeConstant(string name, string themeType = "")
@@ -2152,7 +2152,7 @@ public class Control : CanvasItem
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddThemeConstantOverride"/>
@@ -2179,7 +2179,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="GetThemeIcon(string, string)"/>
     public void AddThemeIconOverride(string name, Texture2D icon)
@@ -2203,7 +2203,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="HasThemeIconOverride(string)"/>
     public void RemoveThemeIconOverride(string name)
@@ -2230,7 +2230,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="AddThemeIconOverride(string, Texture2D)"/>
     public bool HasThemeIconOverride(string name)
@@ -2255,7 +2255,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="Theme.SetIcon(string, string, Texture2D)"/>
     public Texture2D? GetThemeIcon(string name, string themeType = "")
@@ -2285,7 +2285,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="GetThemeIcon(string, string)"/>
     public bool HasThemeIcon(string name, string themeType = "")
@@ -2310,7 +2310,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="GetThemeStyleBox(string, string)"/>
     public void AddThemeStyleBoxOverride(string name, StyleBox styleBox)
@@ -2334,7 +2334,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="HasThemeStyleBoxOverride(string)"/>
     public void RemoveThemeStyleBoxOverride(string name)
@@ -2361,7 +2361,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="AddThemeStyleBoxOverride(string, StyleBox)"/>
     public bool HasThemeStyleBoxOverride(string name)
@@ -2386,7 +2386,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="StyleBox"/>
     public StyleBox? GetThemeStyleBox(string name, string themeType = "")
@@ -2416,7 +2416,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="GetThemeStyleBox(string, string)"/>
     public bool HasThemeStyleBox(string name, string themeType = "")
@@ -2437,7 +2437,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="Theme.DefaultBaseScale"/>
     public float GetThemeDefaultBaseScale()
@@ -2464,7 +2464,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="Theme.DefaultFont"/>
     public Font? GetThemeDefaultFont()
@@ -2491,7 +2491,7 @@ public class Control : CanvasItem
     ///
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
     ///
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     ///
     /// <seealso cref="Theme.DefaultFontSize"/>
     public int GetThemeDefaultFontSize()

@@ -548,7 +548,7 @@ internal static partial class StaticContextPackBuilder
         return new JsonObject
         {
             ["schemaVersion"] = 1,
-            ["profile"] = "Electron2D 0.1.0 2D",
+            ["profile"] = "Electron2D 0.1-preview 2D",
             ["status"] = "strict-profile-summary",
             ["compareCommand"] = "e2d api compare-godot <type> --format json",
             ["compatibilityDocumentation"] = "docs/release-management/api-compatibility.md"

@@ -34,7 +34,7 @@ namespace Electron2D;
 /// panels that need a compact list of selectable rows.
 /// </para>
 /// <para>
-/// The 0.1.0 Preview implementation supports item storage, single and multi
+/// The 0.1-preview implementation supports item storage, single and multi
 /// selection, pointer activation, keyboard activation and simple canvas
 /// drawing. Scrolling and text search are reserved for later UI tasks.
 /// </para>
@@ -46,7 +46,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control"/>
@@ -76,7 +76,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SelectMode"/>
@@ -91,7 +91,7 @@ public class ItemList : Control
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SelectModeEnum"/>
@@ -106,7 +106,7 @@ public class ItemList : Control
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SelectModeEnum"/>
@@ -128,7 +128,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ItemList"/>
@@ -161,7 +161,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetItemCount"/>
@@ -188,7 +188,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Select(int, bool)"/>
@@ -223,7 +223,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Select(int, bool)"/>
@@ -247,7 +247,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_GuiInput(InputEvent)"/>
@@ -262,7 +262,7 @@ public class ItemList : Control
     /// </value>
     ///
     /// <remarks>
-    /// The 0.1.0 Preview stores this value for layout consumers. Pointer
+    /// The 0.1-preview stores this value for layout consumers. Pointer
     /// hit-testing remains row-based.
     /// </remarks>
     ///
@@ -275,7 +275,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FixedColumnWidth"/>
@@ -312,7 +312,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MaxColumns"/>
@@ -349,7 +349,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Texture2D.GetSize"/>
@@ -390,7 +390,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddIconItem(Texture2D, bool)"/>
@@ -428,7 +428,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddItem(string, Texture2D?, bool)"/>
@@ -451,7 +451,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddItem(string, Texture2D?, bool)"/>
@@ -480,7 +480,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ItemCount"/>
@@ -513,7 +513,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetItemText(int)"/>
@@ -548,7 +548,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemText(int, string)"/>
@@ -578,7 +578,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetItemIcon(int)"/>
@@ -613,7 +613,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemIcon(int, Texture2D?)"/>
@@ -643,7 +643,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsItemDisabled(int)"/>
@@ -683,7 +683,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemDisabled(int, bool)"/>
@@ -713,7 +713,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsItemSelectable(int)"/>
@@ -753,7 +753,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetItemSelectable(int, bool)"/>
@@ -786,7 +786,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Deselect(int)"/>
@@ -837,7 +837,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Select(int, bool)"/>
@@ -873,7 +873,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSelectedItems"/>
@@ -921,7 +921,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSelectedItems"/>
@@ -949,7 +949,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsSelected(int)"/>
@@ -983,7 +983,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_GuiInput(InputEvent)"/>
@@ -1016,7 +1016,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control._GuiInput(InputEvent)"/>
@@ -1072,7 +1072,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.DrawRect(Rect2, Color, bool, float, bool)"/>
@@ -1120,7 +1120,7 @@ public class ItemList : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.GetMinimumSize"/>

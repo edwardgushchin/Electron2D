@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация для `T-0144`.
 Обновлено: 2026-06-23.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md); [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Run/output workflow редактора](../editor/run-output-workflow.md); [Runtime debug bridge и scene inspection](runtime-debug-bridge.md); [WorkspaceSnapshot, job input identity и dirty export policy](../project-system/workspace-snapshot.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md); [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Run/output workflow редактора](../editor/run-output-workflow.md); [Runtime debug bridge и scene inspection](runtime-debug-bridge.md); [WorkspaceSnapshot, job input identity и dirty export policy](../project-system/workspace-snapshot.md).
 
 ## Назначение
 
@@ -40,7 +40,7 @@
 - `Diagnostics`;
 - `HighlightedNodePath`, если Editor, Inspector или агент выбрали runtime node.
 
-`SeparateWindow` является допустимым видимым режимом для `0.1.0 Preview`; embedded viewport может быть добавлен поверх того же session contract без изменения Tooling/MCP payload.
+`SeparateWindow` является допустимым видимым режимом для `0.1-preview`; embedded viewport может быть добавлен поверх того же session contract без изменения Tooling/MCP payload.
 
 ## Управление
 

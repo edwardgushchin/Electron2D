@@ -95,15 +95,15 @@ public sealed class ReferenceGamePlatformMatrixTests
 
         Assert.Equal("Electron2D.ReferenceGamePlatformMatrix", artifact.GetProperty("format").GetString());
         Assert.Equal(2, artifact.GetProperty("version").GetInt32());
-        Assert.Equal("0.1.0-preview", artifact.GetProperty("release").GetString());
+        Assert.Equal("0.1-preview", artifact.GetProperty("release").GetString());
         Assert.False(artifact.TryGetProperty("targetSet", out _), "Use runtimeTargets and releaseVerificationTargets instead of a generic targetSet.");
         Assert.Equal(ExpectedRuntimeTargets, ReadStringArray(artifact.GetProperty("runtimeTargets")).Order(StringComparer.Ordinal).ToArray());
         Assert.Equal(ExpectedEditorTargets, ReadStringArray(artifact.GetProperty("editorTargets")).Order(StringComparer.Ordinal).ToArray());
         AssertReleaseVerificationTargets(artifact.GetProperty("releaseVerificationTargets"));
 
         var releaseDecision = artifact.GetProperty("releaseVerificationDecision");
-        Assert.Equal("all-runtime-targets-for-0.1.0-preview", releaseDecision.GetProperty("id").GetString());
-        Assert.Equal("docs/releases/0.1.0-preview.md", releaseDecision.GetProperty("source").GetString());
+        Assert.Equal("all-runtime-targets-for-0.1-preview", releaseDecision.GetProperty("id").GetString());
+        Assert.Equal("docs/releases/0.1-preview.md", releaseDecision.GetProperty("source").GetString());
         Assert.Contains("all six runtime targets", releaseDecision.GetProperty("summary").GetString(), StringComparison.Ordinal);
 
         var allowedDifferences = ReadStringArray(artifact.GetProperty("allowedDifferences"));
@@ -196,7 +196,7 @@ public sealed class ReferenceGamePlatformMatrixTests
     public void ReleaseDocumentationAndReadmeSeparateRuntimeEditorAndVerificationTargets()
     {
         var root = FindRepositoryRoot();
-        var releasePath = Path.Combine(root, "docs", "releases", "0.1.0-preview.md");
+        var releasePath = Path.Combine(root, "docs", "releases", "0.1-preview.md");
         var exportGuidePath = Path.Combine(root, "docs", "export", "export-guide.md");
         var readmeContractPath = Path.Combine(root, "docs", "documentation", "repository-readme.md");
         var readmePath = Path.Combine(root, "README.md");
@@ -205,7 +205,7 @@ public sealed class ReferenceGamePlatformMatrixTests
         Assert.Contains("runtimeTargets", release, StringComparison.Ordinal);
         Assert.Contains("editorTargets", release, StringComparison.Ordinal);
         Assert.Contains("releaseVerificationTargets", release, StringComparison.Ordinal);
-        Assert.Contains("Продуктовое решение для `0.1.0 Preview`", release, StringComparison.Ordinal);
+        Assert.Contains("Продуктовое решение для `0.1-preview`", release, StringComparison.Ordinal);
         Assert.Contains("| iOS arm64 | Да | Да |", release, StringComparison.Ordinal);
         Assert.Contains("| WebAssembly browser | Да | Да |", release, StringComparison.Ordinal);
         Assert.Contains("статус законченной приёмочной игры требует принятия `T-0222`, `T-0223` и `T-0225`", release, StringComparison.Ordinal);
@@ -218,9 +218,9 @@ public sealed class ReferenceGamePlatformMatrixTests
 
         var readmeContract = File.ReadAllText(readmeContractPath);
         Assert.Contains("Cross-platform runtime должен формулироваться прямо: `Build and run games on Windows, Linux, macOS and Android. iOS and Web are planned as future runtime targets.`", readmeContract, StringComparison.Ordinal);
-        Assert.Contains("README не отображает уровень релизной проверки; текущий состав `releaseVerificationTargets` задаётся в `docs/releases/0.1.0-preview.md`.", readmeContract, StringComparison.Ordinal);
+        Assert.Contains("README не отображает уровень релизной проверки; текущий состав `releaseVerificationTargets` задаётся в `docs/releases/0.1-preview.md`.", readmeContract, StringComparison.Ordinal);
         Assert.Contains("README закрепляет текущее публичное имя `Platformer` и ссылку на `examples/platformer`.", readmeContract, StringComparison.Ordinal);
-        Assert.DoesNotContain("iOS и Web показываются только как future runtime targets и не входят в mandatory `0.1.0 Preview` gate.", readmeContract, StringComparison.Ordinal);
+        Assert.DoesNotContain("iOS и Web показываются только как future runtime targets и не входят в mandatory `0.1-preview` gate.", readmeContract, StringComparison.Ordinal);
         Assert.DoesNotContain("- `platformer`;", readmeContract, StringComparison.Ordinal);
         Assert.DoesNotContain("- `Platformer`;", readmeContract, StringComparison.Ordinal);
         Assert.DoesNotContain("`Platformer` в `Platformer`", readmeContract, StringComparison.Ordinal);
@@ -236,7 +236,7 @@ public sealed class ReferenceGamePlatformMatrixTests
         Assert.Contains("| Web | ❌ Not planned | 🕓 Planned |", readme, StringComparison.Ordinal);
         Assert.Contains("A 2D platformer example built with Electron2D.", readme, StringComparison.Ordinal);
         Assert.DoesNotContain("A complete 2D platformer", readme, StringComparison.Ordinal);
-        Assert.DoesNotContain("0.1.0 Preview verification", readme, StringComparison.Ordinal);
+        Assert.DoesNotContain("0.1-preview verification", readme, StringComparison.Ordinal);
         Assert.DoesNotContain("Verified desktop export", readme, StringComparison.Ordinal);
         Assert.DoesNotContain("Browser package and smoke", readme, StringComparison.Ordinal);
     }
@@ -275,7 +275,7 @@ public sealed class ReferenceGamePlatformMatrixTests
         foreach (var target in ExpectedRuntimeTargets)
         {
             var verificationTarget = targets[target];
-            Assert.True(verificationTarget.GetProperty("realSmokeSoakRequired").GetBoolean(), $"{target} must require real smoke/soak for 0.1.0 Preview.");
+            Assert.True(verificationTarget.GetProperty("realSmokeSoakRequired").GetBoolean(), $"{target} must require real smoke/soak for 0.1-preview.");
             Assert.True(verificationTarget.GetProperty("blockedEnvironmentArtifactAllowed").GetBoolean(), $"{target} must allow blocked-environment diagnostics without passing the release gate.");
             Assert.False(string.IsNullOrWhiteSpace(verificationTarget.GetProperty("releaseGateBlocker").GetString()));
         }

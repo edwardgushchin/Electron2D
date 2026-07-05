@@ -1,4 +1,4 @@
-# CI-матрица `0.1.0 Preview`
+# CI-матрица `0.1-preview`
 
 Обновлено: 2026-07-01.
 
@@ -133,7 +133,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 - `update wiki --check` генерирует ожидаемые Wiki pages в C# и проверяет API manifest; с `--output .github/wiki` дополнительно сверяет рабочий Wiki clone.
 - `update api-manifest --wiki-path .github/wiki --check` пересоздаёт ожидаемый API manifest и сравнивает его с `data/api/electron2d-api-manifest.json`.
 - `package --rid <rid>` обязан принимать только точную форму из трёх аргументов: команда `package`, флаг `--rid` и непустой `runtime identifier`, то есть идентификатор целевой платформы .NET. Лишние, переставленные, повторные или пустые аргументы должны завершаться ненулевым кодом и диагностикой `E2D-BUILD-CLI-INVALID-ARGUMENTS`. Поддерживаемые значения: `win-x64`, `linux-x64`, `osx-arm64`; другие значения возвращают `E2D-BUILD-PACKAGE-RID-UNSUPPORTED`.
-- `package --rid <rid>` создаёт локальный релизный набор в `artifacts/release/0.1.0-preview/<rid>/`: пакет библиотеки среды выполнения `Electron2D`, выходные файлы `dotnet publish` для `Electron2D.Editor`, выходные файлы `dotnet publish` для `e2d`, `README.md`, `LICENSE`, `release-manifest.json`, основной архив и файл SHA-256. Команда не копирует скрипты PowerShell, рабочий журнал задач, дневники, архивы завершённых задач, доказательства внешнего аудита и внутренний `eng/Electron2D.Build` в пользовательский релизный архив.
+- `package --rid <rid>` создаёт локальный релизный набор в `artifacts/release/0.1-preview/<rid>/`: пакет библиотеки среды выполнения `Electron2D`, выходные файлы `dotnet publish` для `Electron2D.Editor`, выходные файлы `dotnet publish` для `e2d`, `README.md`, `LICENSE`, `release-manifest.json`, основной архив и файл SHA-256. Команда не копирует скрипты PowerShell, рабочий журнал задач, дневники, архивы завершённых задач, доказательства внешнего аудита и внутренний `eng/Electron2D.Build` в пользовательский релизный архив.
 - `release verify` проверяет локальный набор черновых релизных файлов для `win-x64`, `linux-x64` и `osx-arm64`: имена архивов, SHA-256, форму манифеста, обязательные каталоги `library/`, `editor/`, `tools/e2d/` и политику запрещённых файлов. Команда не создаёт тег, GitHub Release, черновик релиза или публикацию.
 
 Механизм запуска дочерних процессов внутри инструмента должен быть переносимым между Windows, Linux и macOS: использовать `ProcessStartInfo.ArgumentList`, явно задавать рабочий каталог, захватывать стандартный вывод и поток ошибок, поддерживать отмену и ограничение времени (`timeout`), возвращать код завершения дочернего процесса и сообщать об истечении времени отдельной диагностикой. При внешней отмене от вызывающего кода механизм должен завершить дерево дочернего процесса, дочитать стандартный вывод и поток ошибок, не считать это истечением времени и вернуть диагностический код `E2D-BUILD-PROCESS-CANCELED`. Инструмент не должен строить команды через строки, зависящие от конкретной командной оболочки (`shell`).
@@ -238,7 +238,7 @@ dotnet run --project eng/Electron2D.Build -- verify
 - неизвестная команда возвращает ненулевой код и диагностический код `E2D-BUILD-CLI-UNKNOWN-COMMAND`.
 - `package` без точной формы `package --rid <rid>` возвращает ненулевой код и диагностический код `E2D-BUILD-CLI-INVALID-ARGUMENTS`.
 - `package --rid <rid>` для `win-x64`, `linux-x64` и `osx-arm64` создаёт локальный релизный набор, пишет `E2D-BUILD-PACKAGE-CREATED` и поле `runtimeIdentifier`; неподдерживаемый `rid` возвращает `E2D-BUILD-PACKAGE-RID-UNSUPPORTED` без архивов.
-- `release verify` проверяет уже созданные локальные релизные файлы и возвращает `E2D-BUILD-RELEASE-VERIFY-PASSED`; теги, архивы вне `artifacts/release/0.1.0-preview/` и GitHub Release не создаются.
+- `release verify` проверяет уже созданные локальные релизные файлы и возвращает `E2D-BUILD-RELEASE-VERIFY-PASSED`; теги, архивы вне `artifacts/release/0.1-preview/` и GitHub Release не создаются.
 - `ProcessRunner` возвращает структурированные диагностические коды `E2D-BUILD-PROCESS-EXITED`, `E2D-BUILD-PROCESS-TIMEOUT`, `E2D-BUILD-PROCESS-CANCELED` и `E2D-BUILD-PROCESS-START-FAILED` для завершения дочернего процесса, истечения времени, внешней отмены и ошибки запуска.
 
 Проверка, выполненная для этого поведения:

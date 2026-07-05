@@ -45,7 +45,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control.MouseFilter"/>
@@ -69,7 +69,7 @@ public enum MouseFilter
     /// </threadsafety>
     ///
     /// <since>
-    /// This field is available since Electron2D 0.1.0 Preview.
+    /// This field is available since Electron2D 0.1-preview.
     /// </since>
     Stop = 0,
 
@@ -89,7 +89,7 @@ public enum MouseFilter
     /// </threadsafety>
     ///
     /// <since>
-    /// This field is available since Electron2D 0.1.0 Preview.
+    /// This field is available since Electron2D 0.1-preview.
     /// </since>
     Pass = 1,
 
@@ -109,7 +109,7 @@ public enum MouseFilter
     /// </threadsafety>
     ///
     /// <since>
-    /// This field is available since Electron2D 0.1.0 Preview.
+    /// This field is available since Electron2D 0.1-preview.
     /// </since>
     Ignore = 2
 }

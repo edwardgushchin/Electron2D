@@ -31,7 +31,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// `Material` is the common base for resources that describe how geometry is
-/// colored or shaded. Electron2D 0.1.0 Preview uses it as the inheritance base
+/// colored or shaded. Electron2D 0.1-preview uses it as the inheritance base
 /// for <see cref="ShaderMaterial" />.
 /// </para>
 ///
@@ -48,7 +48,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="ShaderMaterial" />
@@ -68,7 +68,7 @@ public abstract class Material : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Material" />
@@ -88,7 +88,7 @@ public abstract class Material : Resource
     /// </summary>
     ///
     /// <remarks>
-    /// Electron2D 0.1.0 Preview stores this value so resource data can round
+    /// Electron2D 0.1-preview stores this value so resource data can round
     /// trip through tooling. Rendering extra passes is part of a later renderer
     /// task.
     /// </remarks>
@@ -99,7 +99,7 @@ public abstract class Material : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current next pass value.
@@ -142,7 +142,7 @@ public abstract class Material : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current render priority value.

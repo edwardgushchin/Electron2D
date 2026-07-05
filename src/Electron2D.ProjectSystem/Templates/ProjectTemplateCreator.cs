@@ -86,7 +86,7 @@ internal sealed class ProjectTemplateCreateResult
 internal static class ProjectTemplateCreator
 {
     private const string TemplateProjectName = "Electron2D.Empty";
-    private const string EngineVersion = "0.1.0-preview";
+    private const string EngineVersion = "0.1-preview";
     private const string DotNetSdkVersion = "10.0.101";
 
     private static readonly string[] StarterSkillNames =
@@ -419,7 +419,7 @@ internal static class ProjectTemplateCreator
         return $$"""
         # Agent Instructions
 
-        This is an Electron2D 0.1.0-preview project.
+        This is an Electron2D 0.1-preview project.
 
         - Project name: `{{projectName}}`
         - .NET SDK: `.NET {{DotNetSdkVersion}}`

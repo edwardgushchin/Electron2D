@@ -39,7 +39,7 @@ namespace Electron2D;
 /// as an invalid value for API parity checks and cannot receive tweeners.
 /// </para>
 /// <para>
-/// Electron2D 0.1.0 Preview processes tweens after node process callbacks and
+/// Electron2D 0.1-preview processes tweens after node process callbacks and
 /// before draw callbacks. This baseline supports sequential tweeners, easing,
 /// pause/resume, stop, cancellation and completion signals.
 /// </para>
@@ -51,7 +51,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="SceneTree.CreateTween"/>
@@ -97,7 +97,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsValid"/>
@@ -126,7 +126,7 @@ public class Tween : RefCounted
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum TransitionType
     {
@@ -138,7 +138,7 @@ public class Tween : RefCounted
         /// The interpolated value advances at a constant rate.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -154,7 +154,7 @@ public class Tween : RefCounted
         /// <see cref="EaseType"/>.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -170,7 +170,7 @@ public class Tween : RefCounted
         /// <see cref="Quad"/>.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -186,7 +186,7 @@ public class Tween : RefCounted
         /// <see cref="Quad"/>.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -202,7 +202,7 @@ public class Tween : RefCounted
         /// one quarter of the value delta.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -218,7 +218,7 @@ public class Tween : RefCounted
         /// opposite side.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -233,7 +233,7 @@ public class Tween : RefCounted
         /// The curve may move past the target range before settling.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -249,7 +249,7 @@ public class Tween : RefCounted
         /// <see cref="Quart"/>.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -264,7 +264,7 @@ public class Tween : RefCounted
         /// The curve follows a quarter-circle acceleration profile.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -280,7 +280,7 @@ public class Tween : RefCounted
         /// eased side.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -297,7 +297,7 @@ public class Tween : RefCounted
         /// <see cref="EaseType.Out"/>.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -313,7 +313,7 @@ public class Tween : RefCounted
         /// curve without oscillation.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TransitionType" />
@@ -331,7 +331,7 @@ public class Tween : RefCounted
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum EaseType
     {
@@ -343,7 +343,7 @@ public class Tween : RefCounted
         /// Values start slowly for accelerating transition curves.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="EaseType" />
@@ -358,7 +358,7 @@ public class Tween : RefCounted
         /// Values end slowly for accelerating transition curves.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="EaseType" />
@@ -373,7 +373,7 @@ public class Tween : RefCounted
         /// Values start and end smoothly for accelerating transition curves.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="EaseType" />
@@ -389,7 +389,7 @@ public class Tween : RefCounted
         /// accelerate toward the end.
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="EaseType" />
@@ -426,7 +426,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Node.CreateTween"/>
@@ -482,7 +482,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PropertyTweener"/>
@@ -531,7 +531,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CallbackTweener"/>
@@ -574,7 +574,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IntervalTweener"/>
@@ -611,7 +611,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetEase"/>
@@ -644,7 +644,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetTrans"/>
@@ -677,7 +677,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Tween" />
     ///
@@ -703,7 +703,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play"/>
@@ -733,7 +733,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Pause"/>
@@ -762,7 +762,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play"/>
@@ -798,7 +798,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Stop"/>
@@ -834,7 +834,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Tween" />
     ///
@@ -860,7 +860,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -885,7 +885,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -913,7 +913,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -945,7 +945,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Tween" />
     ///
@@ -978,7 +978,7 @@ public class Tween : RefCounted
     /// value immediately.
     /// </para>
     /// <para>
-    /// The supported type set is intentionally small for 0.1.0 Preview:
+    /// The supported type set is intentionally small for 0.1-preview:
     /// integer, floating-point, <see cref="Vector2"/> and <see cref="Color"/>.
     /// </para>
     /// </remarks>
@@ -993,7 +993,7 @@ public class Tween : RefCounted
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TweenProperty"/>
@@ -1542,7 +1542,7 @@ public class Tween : RefCounted
 ///
 /// <remarks>
 /// This is the public base type returned through concrete tweener classes.
-/// Electron2D 0.1.0 Preview executes tweeners sequentially and exposes concrete
+/// Electron2D 0.1-preview executes tweeners sequentially and exposes concrete
 /// configuration methods only on the derived tweener types that need them.
 /// </remarks>
 ///
@@ -1552,7 +1552,7 @@ public class Tween : RefCounted
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="PropertyTweener"/>
@@ -1635,7 +1635,7 @@ public abstract class Tweener : RefCounted
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Tween.TweenProperty"/>
@@ -1692,7 +1692,7 @@ public sealed class PropertyTweener : Tweener
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="PropertyTweener" />
     ///
@@ -1724,7 +1724,7 @@ public sealed class PropertyTweener : Tweener
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetEase"/>
@@ -1757,7 +1757,7 @@ public sealed class PropertyTweener : Tweener
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetTrans"/>
@@ -1839,7 +1839,7 @@ public sealed class PropertyTweener : Tweener
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Tween.TweenCallback"/>
@@ -1876,7 +1876,7 @@ public sealed class CallbackTweener : Tweener
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="CallbackTweener" />
     ///
@@ -1922,7 +1922,7 @@ public sealed class CallbackTweener : Tweener
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Tween.TweenInterval"/>

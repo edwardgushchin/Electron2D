@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен иметь Electron2D baseline для `Area2D` sensors: область должна находить пересечения с телами и другими областями, хранить текущие overlap lists и эмитить вход/выход через стандартную систему `Object.Connect()`/`EmitSignal()`.
+`0.1-preview` должен иметь Electron2D baseline для `Area2D` sensors: область должна находить пересечения с телами и другими областями, хранить текущие overlap lists и эмитить вход/выход через стандартную систему `Object.Connect()`/`EmitSignal()`.
 
 Задача не реализует полноценный solver и не раскрывает backend-типы. Текущий результат нужен как проверяемый managed baseline для editor/runtime gameplay logic, пока production physics backend ещё подключается отдельными задачами.
 
@@ -48,7 +48,7 @@
 
 ## Overlap baseline
 
-Для `0.1.0 Preview` managed baseline использует AABB-пересечение активных `CollisionShape2D`:
+Для `0.1-preview` managed baseline использует AABB-пересечение активных `CollisionShape2D`:
 
 - shape считается активным, если у `CollisionShape2D.Shape` есть concrete `Shape2D` и `Disabled == false`;
 - transform берётся из `CollisionShape2D.GlobalTransform`;
@@ -98,7 +98,7 @@
 
 ## Фактическое состояние, ограничения и проверки
 
-`Area2D` теперь имеет начальный sensor baseline для `0.1.0 Preview`: область на physics frame находит пересечения с телами и другими областями, хранит текущие overlap snapshots и эмитит стандартные signal names через `Object.Connect()`.
+`Area2D` теперь имеет начальный sensor baseline для `0.1-preview`: область на physics frame находит пересечения с телами и другими областями, хранит текущие overlap snapshots и эмитит стандартные signal names через `Object.Connect()`.
 
 ## Что реализовано
 

@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Texture2D"/>
@@ -72,7 +72,7 @@ public class NinePatchRect : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="NinePatchRect.AxisStretchHorizontal"/>
@@ -81,19 +81,19 @@ public class NinePatchRect : Control
     {
         /// <summary>Stretches the center segment to fill the destination span.</summary>
         /// <remarks>Use this value for ordinary scalable panels.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="AxisStretchModeEnum"/>
         Stretch = 0,
 
         /// <summary>Tiles the center segment using its source size.</summary>
         /// <remarks>Partial edge tiles use a clipped source segment.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="AxisStretchModeEnum"/>
         Tile = 1,
 
         /// <summary>Tiles the center segment with adjusted tile size so it fits exactly.</summary>
         /// <remarks>Use this value to avoid clipped final tiles.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="AxisStretchModeEnum"/>
         TileFit = 2
     }
@@ -103,7 +103,7 @@ public class NinePatchRect : Control
     /// </summary>
     /// <remarks>The new control draws its center segment by default.</remarks>
     /// <threadsafety>This constructor is not synchronized. Call it from the main scene thread.</threadsafety>
-    /// <since>This constructor is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This constructor is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="NinePatchRect"/>
     public NinePatchRect()
     {
@@ -116,7 +116,7 @@ public class NinePatchRect : Control
     /// <value>The texture resource, or <c>null</c> to draw nothing.</value>
     /// <remarks>Assigning this property queues a redraw.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Texture2D"/>
     public Texture2D? Texture
     {
@@ -135,7 +135,7 @@ public class NinePatchRect : Control
     /// <remarks>Negative size components are rejected.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the rectangle is not finite or has negative size.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Texture"/>
     public Rect2 RegionRect
     {
@@ -154,7 +154,7 @@ public class NinePatchRect : Control
     /// <value><c>true</c> to draw the center segment; otherwise, <c>false</c>.</value>
     /// <remarks>Edges and corners are still drawn when this property is <c>false</c>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="NinePatchRect"/>
     public bool DrawCenter { get; set; }
 
@@ -165,7 +165,7 @@ public class NinePatchRect : Control
     /// <remarks>The margin is clamped to available source and destination size during drawing.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="PatchMarginRight"/>
     public int PatchMarginLeft
     {
@@ -180,7 +180,7 @@ public class NinePatchRect : Control
     /// <remarks>The margin is clamped to available source and destination size during drawing.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="PatchMarginBottom"/>
     public int PatchMarginTop
     {
@@ -195,7 +195,7 @@ public class NinePatchRect : Control
     /// <remarks>The margin is clamped to available source and destination size during drawing.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="PatchMarginLeft"/>
     public int PatchMarginRight
     {
@@ -210,7 +210,7 @@ public class NinePatchRect : Control
     /// <remarks>The margin is clamped to available source and destination size during drawing.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="PatchMarginTop"/>
     public int PatchMarginBottom
     {
@@ -224,7 +224,7 @@ public class NinePatchRect : Control
     /// <value>The mode used for the center column.</value>
     /// <remarks>The default is <see cref="AxisStretchModeEnum.Stretch"/>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="AxisStretchModeEnum"/>
     public AxisStretchModeEnum AxisStretchHorizontal { get; set; }
 
@@ -234,7 +234,7 @@ public class NinePatchRect : Control
     /// <value>The mode used for the center row.</value>
     /// <remarks>The default is <see cref="AxisStretchModeEnum.Stretch"/>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="AxisStretchModeEnum"/>
     public AxisStretchModeEnum AxisStretchVertical { get; set; }
 
@@ -243,7 +243,7 @@ public class NinePatchRect : Control
     /// </summary>
     /// <remarks>No draw command is submitted when <see cref="Texture"/> is <c>null</c>.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Texture"/>
     public override void _Draw()
     {
@@ -267,7 +267,7 @@ public class NinePatchRect : Control
     /// <returns>The sum of horizontal and vertical patch margins.</returns>
     /// <remarks>The value is independent of <see cref="Texture"/>.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="PatchMarginLeft"/>
     public override Vector2 _GetMinimumSize()
     {

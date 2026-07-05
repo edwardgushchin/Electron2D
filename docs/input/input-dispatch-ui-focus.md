@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0052`.
 Обновлено: 2026-06-22.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Input event mapping и `InputEvent*`](sdl-input-event-mapping.md), [InputMap, action state и persistence baseline](input-map-actions.md), [Text backend baseline](../rendering/text-backend-baseline.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Input event mapping и `InputEvent*`](sdl-input-event-mapping.md), [InputMap, action state и persistence baseline](input-map-actions.md), [Text backend baseline](../rendering/text-backend-baseline.md).
 
 ## Назначение
 
-`0.1.0 Preview` должен иметь предсказуемый путь доставки input events в сцену и минимальную UI-ветку для `Control`. Эта задача закрывает базовый порядок распространения событий, handled-state для текущего события, прямоугольный hit-test `Control`, mouse filter и focus ownership.
+`0.1-preview` должен иметь предсказуемый путь доставки input events в сцену и минимальную UI-ветку для `Control`. Эта задача закрывает базовый порядок распространения событий, handled-state для текущего события, прямоугольный hit-test `Control`, mouse filter и focus ownership.
 
 Baseline не добавляет полноценные widgets, navigation graph, shortcuts, tooltips, hover signals или text editing controls. Эти части остаются задачами UI/editor layers.
 
@@ -92,7 +92,7 @@ Focus baseline хранится на root `Viewport`: в один момент f
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` получил базовый порядок доставки input events в сцену и минимальный GUI-input путь для `Control`.
+Electron2D `0.1-preview` получил базовый порядок доставки input events в сцену и минимальный GUI-input путь для `Control`.
 
 Публичные additions:
 

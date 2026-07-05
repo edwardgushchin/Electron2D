@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить Electron2D query surface для простых physics checks:
+`0.1-preview` должен предоставить Electron2D query surface для простых physics checks:
 
 - `RayCast2D` должен выполнять запрос и хранить последний result;
 - `PhysicsDirectSpaceState2D.IntersectRay()` должен возвращать ближайший hit;
@@ -133,7 +133,7 @@
 
 ## Фактическое состояние, ограничения и проверки
 
-`0.1.0 Preview` теперь имеет начальный query surface для 2D-физики. Он работает поверх managed AABB baseline активных `CollisionShape2D` и не раскрывает Box2D.NET или другие backend handles.
+`0.1-preview` теперь имеет начальный query surface для 2D-физики. Он работает поверх managed AABB baseline активных `CollisionShape2D` и не раскрывает Box2D.NET или другие backend handles.
 
 ## Что реализовано
 

@@ -59,7 +59,7 @@ internal readonly record struct RuntimeHostTimingDiagnostics(
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="RuntimeHost"/>
@@ -101,7 +101,7 @@ internal sealed class RuntimeHostResult
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     public RuntimeHostResult(
         bool succeeded,
@@ -186,7 +186,7 @@ internal sealed class RuntimeHostResult
     /// </remarks>
     ///
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public bool Succeeded { get; }
 
     /// <summary>
@@ -195,7 +195,7 @@ internal sealed class RuntimeHostResult
     /// <value><c>true</c> if the window was created; otherwise, <c>false</c>.</value>
     /// <remarks>This value proves that the run did not stay in a text-only path.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public bool WindowCreated { get; }
 
     /// <summary>
@@ -204,7 +204,7 @@ internal sealed class RuntimeHostResult
     /// <value><c>true</c> if the backend reported a shown window; otherwise, <c>false</c>.</value>
     /// <remarks>Some headless display drivers may create a window without showing a desktop surface.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public bool WindowShown { get; }
 
     /// <summary>
@@ -213,7 +213,7 @@ internal sealed class RuntimeHostResult
     /// <value><c>true</c> after a frame is copied to the window surface; otherwise, <c>false</c>.</value>
     /// <remarks>Reference-game acceptance checks require this value to be <c>true</c>.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public bool FramePresented { get; }
 
     /// <summary>
@@ -222,7 +222,7 @@ internal sealed class RuntimeHostResult
     /// <value><c>true</c> when the host polled window/input events; otherwise, <c>false</c>.</value>
     /// <remarks>This is a host-level marker, not a guarantee that user input was received.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public bool EventPumpObserved { get; }
 
     /// <summary>
@@ -231,7 +231,7 @@ internal sealed class RuntimeHostResult
     /// <value>The dispatched input event count.</value>
     /// <remarks>Automated runs may report zero when no user input was pending.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int InputEventsDispatched { get; }
 
     /// <summary>
@@ -240,7 +240,7 @@ internal sealed class RuntimeHostResult
     /// <value>The presented frame count.</value>
     /// <remarks>For a positive <see cref="RuntimeHostOptions.FrameLimit"/>, this normally equals that limit.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int FrameCount { get; }
 
     /// <summary>
@@ -249,7 +249,7 @@ internal sealed class RuntimeHostResult
     /// <value>The final draw command count.</value>
     /// <remarks>A value greater than zero proves that scene canvas/UI drawing reached the renderer submission path.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int DrawCommands { get; }
 
     /// <summary>
@@ -258,7 +258,7 @@ internal sealed class RuntimeHostResult
     /// <value>The logical window width in pixels.</value>
     /// <remarks>The value is captured after the final frame.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int WindowWidth { get; }
 
     /// <summary>
@@ -267,7 +267,7 @@ internal sealed class RuntimeHostResult
     /// <value>The logical window height in pixels.</value>
     /// <remarks>The value is captured after the final frame.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int WindowHeight { get; }
 
     /// <summary>
@@ -276,7 +276,7 @@ internal sealed class RuntimeHostResult
     /// <value>The physical pixel width reported by the window backend.</value>
     /// <remarks>This can differ from <see cref="WindowWidth"/> on high-DPI displays.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int PixelWidth { get; }
 
     /// <summary>
@@ -285,7 +285,7 @@ internal sealed class RuntimeHostResult
     /// <value>The physical pixel height reported by the window backend.</value>
     /// <remarks>This can differ from <see cref="WindowHeight"/> on high-DPI displays.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int PixelHeight { get; }
 
     /// <summary>
@@ -294,7 +294,7 @@ internal sealed class RuntimeHostResult
     /// <value>The display driver name, or <c>unknown</c> when unavailable.</value>
     /// <remarks>The value is diagnostic only and should not be used for gameplay branching.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public string VideoDriver { get; }
 
     /// <summary>
@@ -303,7 +303,7 @@ internal sealed class RuntimeHostResult
     /// <value>The requested path, or <c>null</c> when no screenshot was requested.</value>
     /// <remarks>Use <see cref="ScreenshotSaved"/> to check whether the file was written.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public string? ScreenshotPath { get; }
 
     /// <summary>
@@ -316,7 +316,7 @@ internal sealed class RuntimeHostResult
     /// is <c>0</c>.
     /// </remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public bool ScreenshotSaved { get; }
 
     /// <summary>
@@ -325,7 +325,7 @@ internal sealed class RuntimeHostResult
     /// <value>An empty string on success, or a failure summary when the host could not complete the run.</value>
     /// <remarks>The message does not include secret values or native handles.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public string DiagnosticMessage { get; }
 
     /// <summary>
@@ -334,7 +334,7 @@ internal sealed class RuntimeHostResult
     /// <value>The renderer source label.</value>
     /// <remarks>This value is diagnostic and is not part of the public game API.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public string RenderSource { get; }
 
     /// <summary>
@@ -343,7 +343,7 @@ internal sealed class RuntimeHostResult
     /// <value>The presenter backend label.</value>
     /// <remarks>This value is diagnostic and is not part of the public game API.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public string PresentationBackend { get; }
 
     /// <summary>
@@ -352,7 +352,7 @@ internal sealed class RuntimeHostResult
     /// <value><c>true</c> when a fallback presenter was used; otherwise, <c>false</c>.</value>
     /// <remarks>The fallback presenter is selected only after the primary backend cannot be created or cannot present.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public bool UsedFallbackPresenter { get; }
 
     /// <summary>
@@ -361,7 +361,7 @@ internal sealed class RuntimeHostResult
     /// <value>The fallback reason, or an empty string when the primary presenter was used.</value>
     /// <remarks>The message is intended for diagnostics and must not contain secret values.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public string FallbackReason { get; }
 
     /// <summary>
@@ -370,7 +370,7 @@ internal sealed class RuntimeHostResult
     /// <value>The final frame batch count.</value>
     /// <remarks>The value comes from the shared canvas render plan.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int RenderBatches { get; }
 
     /// <summary>
@@ -379,7 +379,7 @@ internal sealed class RuntimeHostResult
     /// <value>The final frame presenter draw-call count.</value>
     /// <remarks>This can differ from <see cref="RenderBatches"/> when a presenter cannot submit one batch with one native draw call.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int ActualDrawCalls { get; }
 
     /// <summary>
@@ -388,7 +388,7 @@ internal sealed class RuntimeHostResult
     /// <value>The number of texture changes in draw order.</value>
     /// <remarks>Ordering barriers may make this value larger than upload count.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int TextureSwitches { get; }
 
     /// <summary>
@@ -397,7 +397,7 @@ internal sealed class RuntimeHostResult
     /// <value>The number of solid/textured pipeline changes in draw order.</value>
     /// <remarks>This value is separate from <see cref="TextureSwitches"/> because textured batches can change sampler state without changing pipeline.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int PipelineSwitches { get; }
 
     /// <summary>
@@ -406,7 +406,7 @@ internal sealed class RuntimeHostResult
     /// <value>The cumulative texture upload count.</value>
     /// <remarks>Repeated use of the same texture should increase <see cref="TextureCacheHits"/> instead.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int TextureUploads { get; }
 
     /// <summary>
@@ -415,7 +415,7 @@ internal sealed class RuntimeHostResult
     /// <value>The cumulative texture cache hit count.</value>
     /// <remarks>This value proves unchanged textures were reused by the presenter.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int TextureCacheHits { get; }
 
     /// <summary>
@@ -424,7 +424,7 @@ internal sealed class RuntimeHostResult
     /// <value>The cumulative presentation resource creation count.</value>
     /// <remarks>A steady-size window should create the presenter resources once.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int PresentationResourcesCreated { get; }
 
     /// <summary>
@@ -433,7 +433,7 @@ internal sealed class RuntimeHostResult
     /// <value>The cumulative screenshot texture or readback resource recreation count.</value>
     /// <remarks>This value is separate from observed window-size changes and backend reconfiguration.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int PresentationResourcesRecreated { get; }
 
     /// <summary>
@@ -442,7 +442,7 @@ internal sealed class RuntimeHostResult
     /// <value>The observed presentation resize count.</value>
     /// <remarks>This count is separate from owned presentation resource recreation.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int ObservedPresentationResizes { get; }
 
     /// <summary>
@@ -451,7 +451,7 @@ internal sealed class RuntimeHostResult
     /// <value>The backend or swapchain reconfiguration count.</value>
     /// <remarks>Observed window-size changes do not increase this value unless the presenter performs a real backend reconfiguration.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int PresentationBackendReconfigurations { get; }
 
     /// <summary>
@@ -460,7 +460,7 @@ internal sealed class RuntimeHostResult
     /// <value>The maximum measured presenter-boundary allocation after warm-up.</value>
     /// <remarks>This value intentionally starts at the presenter boundary after the render plan has already been built.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public long MaxPresenterManagedBytesPerFrame { get; }
 
     /// <summary>
@@ -469,7 +469,7 @@ internal sealed class RuntimeHostResult
     /// <value>The measured presenter frame count after warm-up.</value>
     /// <remarks>Warm-up frames are excluded so one-time presenter setup does not masquerade as steady-state allocation.</remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int PresenterMeasuredFrames { get; }
 
     /// <summary>
@@ -481,7 +481,7 @@ internal sealed class RuntimeHostResult
     /// readback buffer. PNG encoding and file writes happen after this presenter-boundary measurement.
     /// </remarks>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public long CapturePresenterManagedBytesAllocated { get; }
 
     /// <summary>
@@ -489,7 +489,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The input dispatch time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double InputTimeSeconds { get; }
 
     /// <summary>
@@ -497,7 +497,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The physics callback time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double PhysicsTimeSeconds { get; }
 
     /// <summary>
@@ -505,7 +505,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The process callback time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double ProcessTimeSeconds { get; }
 
     /// <summary>
@@ -513,7 +513,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The render-plan build time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double RenderPlanTimeSeconds { get; }
 
     /// <summary>
@@ -521,7 +521,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The presenter submission time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double SubmitTimeSeconds { get; }
 
     /// <summary>
@@ -529,7 +529,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The presenter presentation time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double PresentTimeSeconds { get; }
 
     /// <summary>
@@ -537,7 +537,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The clamped time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double SchedulerClampedTimeSeconds { get; }
 
     /// <summary>
@@ -545,7 +545,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The dropped time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double SchedulerDroppedTimeSeconds { get; }
 
     /// <summary>
@@ -553,7 +553,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The requested deadline wait time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double SchedulerRequestedWaitTimeSeconds { get; }
 
     /// <summary>
@@ -561,7 +561,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The observed deadline wait time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double SchedulerObservedWaitTimeSeconds { get; }
 
     /// <summary>
@@ -569,7 +569,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The observed pause wait time in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double SchedulerPauseWaitTimeSeconds { get; }
 
     /// <summary>
@@ -577,7 +577,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The target frame rate in hertz.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int SchedulerTargetFrameRate { get; }
 
     /// <summary>
@@ -585,7 +585,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The target frame interval in seconds.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public double SchedulerTargetFrameIntervalSeconds { get; }
 
     /// <summary>
@@ -593,7 +593,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The accumulated physics scheduler step count.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int SchedulerPhysicsSteps { get; }
 
     /// <summary>
@@ -601,7 +601,7 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The software wait count.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int SchedulerSoftwareWaits { get; }
 
     /// <summary>
@@ -609,6 +609,6 @@ internal sealed class RuntimeHostResult
     /// </summary>
     /// <value>The pause wait count.</value>
     /// <threadsafety>This property is immutable.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     public int SchedulerPausedWaits { get; }
 }

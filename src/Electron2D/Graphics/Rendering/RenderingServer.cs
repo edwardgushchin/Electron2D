@@ -36,7 +36,7 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview keeps the native GPU backend device lifecycle behind internal
+/// Electron2D 0.1-preview keeps the native GPU backend device lifecycle behind internal
 /// backend types. This public server remains the stable Electron2D query
 /// boundary for the active renderer profile and feature flags.
 /// </para>
@@ -49,7 +49,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public static class RenderingServer
 {
@@ -61,10 +61,10 @@ public static class RenderingServer
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum RenderingProfile
@@ -77,7 +77,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingProfile" />
@@ -92,7 +92,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingProfile" />
@@ -105,10 +105,10 @@ public static class RenderingServer
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum RenderingFeature
@@ -121,7 +121,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -136,7 +136,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -151,7 +151,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -166,7 +166,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -181,7 +181,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -196,7 +196,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -211,7 +211,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -226,7 +226,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -241,7 +241,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -256,7 +256,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -271,7 +271,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -286,7 +286,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -301,7 +301,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -316,7 +316,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -331,7 +331,7 @@ public static class RenderingServer
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="RenderingFeature" />
@@ -355,7 +355,7 @@ public static class RenderingServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RenderingServer" />
@@ -387,7 +387,7 @@ public static class RenderingServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RenderingServer" />

@@ -1,4 +1,4 @@
-# Ассеты reference games 0.1.0 Preview
+# Ассеты reference games 0.1-preview
 
 Обновлено: 2026-06-30.
 
@@ -12,7 +12,7 @@
 
 ## Контракт и ожидаемое поведение
 
-`T-0136` закрывает блокер по отсутствующим реальным ассетам для приёмочного Platformer-проекта `0.1.0 Preview`.
+`T-0136` закрывает блокер по отсутствующим реальным ассетам для приёмочного Platformer-проекта `0.1-preview`.
 
 Эта спецификация не закрывает сам reference game. `T-0094` должен создать полноценный валидный проект `Electron2D.Editor`: с `.e2d`, `.csproj`, main scene, project settings, Input Map, export presets, импортируемыми resources, scripts и `.electron2d/tasks/**` metadata. Успешная проверка ассетов означает только готовность исходных файлов ресурсов; она не заменяет Editor project validation, открытие проекта в Editor, save/reopen cycle, run/debug/export workflow и platform packaging checks.
 
@@ -44,7 +44,7 @@ Platformer должен получать локально поставляемы
 - source URL;
 - hash upstream archive, если набор подготовлен из архива.
 
-Для `0.1.0 Preview` допускаются только источники, которые можно положить в public repository и release archive без runtime/download условий. Первый baseline использует CC0-наборы Kenney и project-owned metadata/resources под MIT.
+Для `0.1-preview` допускаются только источники, которые можно положить в public repository и release archive без runtime/download условий. Первый baseline использует CC0-наборы Kenney и project-owned metadata/resources под MIT.
 
 ## Проверяемость
 
@@ -69,7 +69,7 @@ Verifier `dotnet run --project eng/Electron2D.Build -- verify reference-game-ass
 
 ## Фактическое состояние, ограничения и проверки
 
-Текущий baseline `0.1.0 Preview` поставляет curated subset ассетов в `data/assets/reference-games/`.
+Текущий baseline `0.1-preview` поставляет curated subset ассетов в `data/assets/reference-games/`.
 
 Маркер проверки: `reference-assets:manifest`.
 

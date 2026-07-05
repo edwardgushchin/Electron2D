@@ -1,7 +1,7 @@
 {
   "format": "Electron2D.AgentAcceptanceBenchmarkManifest",
   "version": 1,
-  "release": "0.1.0-preview",
+  "release": "0.1-preview",
   "suites": [
     {
       "id": "editor-co-development",

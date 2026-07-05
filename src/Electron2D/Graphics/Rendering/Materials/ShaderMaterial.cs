@@ -31,7 +31,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// `ShaderMaterial` stores a shader resource and a case-sensitive map of shader
-/// parameter values. Electron2D 0.1.0 Preview supports scalar 2D uniforms and
+/// parameter values. Electron2D 0.1-preview supports scalar 2D uniforms and
 /// <see cref="Texture2D" /> sampler values.
 /// </para>
 ///
@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Material" />
@@ -69,7 +69,7 @@ public sealed class ShaderMaterial : Material
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ShaderMaterial" />
@@ -91,7 +91,7 @@ public sealed class ShaderMaterial : Material
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -140,7 +140,7 @@ public sealed class ShaderMaterial : Material
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetShaderParameter" />
@@ -166,7 +166,7 @@ public sealed class ShaderMaterial : Material
     /// </param>
     ///
     /// <remarks>
-    /// In Electron2D 0.1.0 Preview the supported value subset is
+    /// In Electron2D 0.1-preview the supported value subset is
     /// <see cref="bool" />, integer values, floating-point values,
     /// <see cref="Vector2" />, <see cref="Color" />,
     /// <see cref="Transform2D" /> and <see cref="Texture2D" /> references.
@@ -184,7 +184,7 @@ public sealed class ShaderMaterial : Material
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetShaderParameter" />

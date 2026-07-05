@@ -13,7 +13,7 @@ body:
     attributes:
       label: Version or commit
       description: The Electron2D version, branch or commit where the problem happens.
-      placeholder: 0.1.0-preview, main, or a commit SHA
+      placeholder: 0.1-preview, main, or a commit SHA
     validations:
       required: true
   - type: dropdown

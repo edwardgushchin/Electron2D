@@ -93,7 +93,7 @@ public sealed class LeakVerificationTests
 
         Assert.Equal("Electron2D.LeakVerificationReport", report.GetProperty("format").GetString());
         Assert.Equal(1, report.GetProperty("version").GetInt32());
-        Assert.Equal("0.1.0-preview", report.GetProperty("release").GetString());
+        Assert.Equal("0.1-preview", report.GetProperty("release").GetString());
 
         var budgets = report.GetProperty("budgets");
         Assert.True(budgets.GetProperty("minimumIterations").GetInt32() >= Iterations);

@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0050`.
 Обновлено: 2026-06-21.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [InputMap, action state и persistence baseline](input-map-actions.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [InputMap, action state и persistence baseline](input-map-actions.md).
 
 ## Назначение
 
-`0.1.0 Preview` должен принимать gamepad lifecycle, button и axis события через internal platform input boundary и передавать пользовательскому коду стабильные Electron2D events. Public API не должен раскрывать platform handles, native pointers или backend-specific controller objects.
+`0.1-preview` должен принимать gamepad lifecycle, button и axis события через internal platform input boundary и передавать пользовательскому коду стабильные Electron2D events. Public API не должен раскрывать platform handles, native pointers или backend-specific controller objects.
 
 Задача закрывает desktop gamepad baseline:
 
@@ -144,7 +144,7 @@ Lifecycle updates are not delivered to `_Input()` as public event resources. Use
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` получил desktop gamepad baseline поверх internal platform input boundary. Public API работает только с Electron2D types и не раскрывает platform handles.
+Electron2D `0.1-preview` получил desktop gamepad baseline поверх internal platform input boundary. Public API работает только с Electron2D types и не раскрывает platform handles.
 
 Публичные типы:
 

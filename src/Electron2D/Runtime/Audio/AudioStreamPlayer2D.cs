@@ -35,7 +35,7 @@ namespace Electron2D;
 /// internal voice.
 /// </para>
 /// <para>
-/// Electron2D 0.1.0 Preview uses the origin of the 2D world as the listener
+/// Electron2D 0.1-preview uses the origin of the 2D world as the listener
 /// position. Dedicated listener nodes and area-based routing are future audio
 /// tasks.
 /// </para>
@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="AudioStream" />
@@ -77,7 +77,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Stream" />
@@ -96,7 +96,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </value>
     ///
     /// <remarks>
-    /// Area-based audio routing is not active in 0.1.0 Preview. The value is
+    /// Area-based audio routing is not active in 0.1-preview. The value is
     /// stored for scene data compatibility with the selected public API subset.
     /// </remarks>
     ///
@@ -109,7 +109,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AudioStreamPlayer2D" />
@@ -157,7 +157,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MaxDistance" />
@@ -195,7 +195,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play(float)" />
@@ -232,7 +232,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AudioServer.GetBusName(int)" />
@@ -278,7 +278,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Attenuation" />
@@ -320,7 +320,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play(float)" />
@@ -363,7 +363,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MaxDistance" />
@@ -406,7 +406,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VolumeDb" />
@@ -442,7 +442,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="StreamPaused" />
@@ -477,7 +477,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play(float)" />
@@ -515,7 +515,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Playing" />
@@ -555,7 +555,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VolumeLinear" />
@@ -597,7 +597,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="VolumeDb" />
@@ -635,7 +635,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Seek(float)" />
@@ -664,7 +664,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Playing" />
@@ -700,7 +700,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Stop" />
@@ -736,7 +736,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetPlaybackPosition" />
@@ -760,7 +760,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Play(float)" />
@@ -807,7 +807,7 @@ public class AudioStreamPlayer2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Stop" />

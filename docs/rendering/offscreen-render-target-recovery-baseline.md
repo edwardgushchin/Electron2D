@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0030`.
 Обновлено: 2026-06-21.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Texture2D resource baseline](texture-resource-baseline.md), [SDL_GPU lifecycle baseline](sdl-gpu-lifecycle.md), [Camera2D, Viewport and presentation baseline](camera-viewport-presentation-baseline.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Texture2D resource baseline](texture-resource-baseline.md), [SDL_GPU lifecycle baseline](sdl-gpu-lifecycle.md), [Camera2D, Viewport and presentation baseline](camera-viewport-presentation-baseline.md).
 
 ## Цель
 
-Electron2D `0.1.0 Preview` должен иметь минимальный baseline для render-to-texture и восстановления GPU resources после потери или пересоздания устройства:
+Electron2D `0.1-preview` должен иметь минимальный baseline для render-to-texture и восстановления GPU resources после потери или пересоздания устройства:
 
 - `Viewport.GetTexture()` возвращает Electron2D `ViewportTexture`;
 - `ViewportTexture` наследуется от `Texture2D` и отражает текущий размер `Viewport`;
@@ -109,7 +109,7 @@ Electron2D `0.1.0 Preview` должен иметь минимальный baseli
 - `HasAlpha()` возвращает `true`;
 - `HasMipmaps()` возвращает `false`;
 - `GetMipmapCount()` возвращает `0`;
-- `IsPixelOpaque()` возвращает `false`, потому что публичного чтения пикселей из render target в `0.1.0 Preview` ещё нет.
+- `IsPixelOpaque()` возвращает `false`, потому что публичного чтения пикселей из render target в `0.1-preview` ещё нет.
 
 Public render-target handles и другие backend-specific методы не добавлены.
 

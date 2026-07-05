@@ -30,7 +30,7 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// <para>
-/// <see cref="CharacterBody2D"/> is not moved by forces in the 0.1.0 Preview
+/// <see cref="CharacterBody2D"/> is not moved by forces in the 0.1-preview
 /// baseline. Assign <see cref="Velocity"/> in <see cref="Node._PhysicsProcess"/>
 /// and call <see cref="MoveAndSlide"/> to move with managed AABB collision
 /// response.
@@ -43,7 +43,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="PhysicsBody2D"/>
@@ -83,7 +83,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="CharacterBody2D" />
     ///
@@ -104,7 +104,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MotionMode"/>
@@ -120,7 +120,7 @@ public class CharacterBody2D : PhysicsBody2D
         /// </para>
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="MotionModeEnum" />
@@ -138,7 +138,7 @@ public class CharacterBody2D : PhysicsBody2D
         /// </para>
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="MotionModeEnum" />
@@ -152,14 +152,14 @@ public class CharacterBody2D : PhysicsBody2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline exposes this policy as part of the public
+    /// The 0.1-preview baseline exposes this policy as part of the public
     /// movement contract. Complex leave behavior is reserved for a later solver
     /// pass.
     /// </para>
     /// </remarks>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PlatformOnLeave"/>
@@ -175,7 +175,7 @@ public class CharacterBody2D : PhysicsBody2D
         /// </para>
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="PlatformOnLeaveEnum" />
@@ -193,7 +193,7 @@ public class CharacterBody2D : PhysicsBody2D
         /// </para>
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="PlatformOnLeaveEnum" />
@@ -211,7 +211,7 @@ public class CharacterBody2D : PhysicsBody2D
         /// </para>
         /// </remarks>
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="PlatformOnLeaveEnum" />
@@ -239,7 +239,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MoveAndSlide"/>
@@ -270,7 +270,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FloorMaxAngle"/>
@@ -319,7 +319,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ApplyFloorSnap"/>
@@ -363,7 +363,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetFloorAngle"/>
@@ -392,7 +392,7 @@ public class CharacterBody2D : PhysicsBody2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline stores this setting for API completeness. The
+    /// The 0.1-preview baseline stores this setting for API completeness. The
     /// simple AABB solver does not yet implement full slope stop behavior.
     /// </para>
     /// </remarks>
@@ -402,7 +402,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FloorConstantSpeed"/>
@@ -418,7 +418,7 @@ public class CharacterBody2D : PhysicsBody2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline stores this setting for API completeness. The
+    /// The 0.1-preview baseline stores this setting for API completeness. The
     /// simple AABB solver does not yet implement full constant-speed slope
     /// movement.
     /// </para>
@@ -429,7 +429,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FloorStopOnSlope"/>
@@ -445,7 +445,7 @@ public class CharacterBody2D : PhysicsBody2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline stores this setting for API completeness. Wall
+    /// The 0.1-preview baseline stores this setting for API completeness. Wall
     /// classification still uses <see cref="FloorMaxAngle"/> and
     /// <see cref="UpDirection"/>.
     /// </para>
@@ -456,7 +456,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnWall"/>
@@ -482,7 +482,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnCeiling"/>
@@ -512,7 +512,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MoveAndSlide"/>
@@ -556,7 +556,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnFloor"/>
@@ -587,7 +587,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsBody2D.MoveAndCollide"/>
@@ -615,7 +615,7 @@ public class CharacterBody2D : PhysicsBody2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline stores this setting for API completeness. The
+    /// The 0.1-preview baseline stores this setting for API completeness. The
     /// simple AABB solver does not yet implement wall minimum slide angle
     /// filtering.
     /// </para>
@@ -630,7 +630,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnWall"/>
@@ -669,7 +669,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetPlatformVelocity"/>
@@ -696,7 +696,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetPlatformVelocity"/>
@@ -713,7 +713,7 @@ public class CharacterBody2D : PhysicsBody2D
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline stores this setting for API completeness.
+    /// The 0.1-preview baseline stores this setting for API completeness.
     /// Complex platform leave velocity application is reserved for a later
     /// solver pass.
     /// </para>
@@ -724,7 +724,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetPlatformVelocity"/>
@@ -748,7 +748,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="FloorSnapLength"/>
@@ -772,7 +772,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// <see cref="GetSlideCollision"/>.
     /// </para>
     /// <para>
-    /// The 0.1.0 Preview baseline uses managed AABB sweeps against
+    /// The 0.1-preview baseline uses managed AABB sweeps against
     /// <see cref="StaticBody2D"/> nodes. It is a gameplay baseline, not a final
     /// narrow-phase solver.
     /// </para>
@@ -783,7 +783,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Velocity"/>
@@ -841,7 +841,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetFloorNormal"/>
@@ -874,7 +874,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetFloorAngle"/>
@@ -902,7 +902,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetPositionDelta"/>
@@ -929,7 +929,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSlideCollision"/>
@@ -958,7 +958,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PlatformFloorLayers"/>
@@ -986,7 +986,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetRealVelocity"/>
@@ -1005,7 +1005,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// <remarks>
     /// <para>
     /// The value is <see cref="GetPositionDelta"/> divided by the fixed physics
-    /// tick used by the 0.1.0 Preview baseline.
+    /// tick used by the 0.1-preview baseline.
     /// </para>
     /// </remarks>
     ///
@@ -1014,7 +1014,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Velocity"/>
@@ -1044,7 +1044,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSlideCollisionCount"/>
@@ -1071,7 +1071,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSlideCollision"/>
@@ -1097,7 +1097,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnWall"/>
@@ -1124,7 +1124,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnCeilingOnly"/>
@@ -1152,7 +1152,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnCeiling"/>
@@ -1180,7 +1180,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnFloorOnly"/>
@@ -1208,7 +1208,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnFloor"/>
@@ -1235,7 +1235,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnWallOnly"/>
@@ -1263,7 +1263,7 @@ public class CharacterBody2D : PhysicsBody2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsOnWall"/>

@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен дать будущему редактору и тестовому окружению проверяемый способ включить отображение collision shapes и получить данные для debug visualization без доступа к внутренним объектам physics backend.
+`0.1-preview` должен дать будущему редактору и тестовому окружению проверяемый способ включить отображение collision shapes и получить данные для debug visualization без доступа к внутренним объектам physics backend.
 
 Публичный API ограничивается уже согласованными runtime-именами:
 
@@ -57,7 +57,7 @@
 
 ## Текущее состояние
 
-`0.1.0 Preview` предоставляет минимальный runtime hook для будущего отображения collision shapes в редакторе и для автоматических diagnostics checks. Внешний API состоит из двух публичных свойств:
+`0.1-preview` предоставляет минимальный runtime hook для будущего отображения collision shapes в редакторе и для автоматических diagnostics checks. Внешний API состоит из двух публичных свойств:
 
 - `SceneTree.DebugCollisionsHint` - включает или отключает внутренний снимок collision shapes для дерева сцены.
 - `CollisionShape2D.DebugColor` - задаёт цвет override для debug visualization конкретной формы.

@@ -100,7 +100,7 @@ internal static class Electron2DMacOSExportPlanner
                 "Contents/MacOS/" + NormalizePortablePath(projectSettings.MainScene)
             ],
             UnsupportedRuntimeIdentifiers = UnsupportedRuntimeIdentifiers.ToArray(),
-            X64Policy = "unsupported-in-0.1.0-preview",
+            X64Policy = "unsupported-in-0.1-preview",
             IncludeDebugSymbols = preset.IncludeDebugSymbols,
             SigningRequired = preset.Signing.Required,
             SigningIdentity = signingIdentity,

@@ -12,13 +12,13 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для `0.1.0 Preview`.
+Статус: целевая спецификация для `0.1-preview`.
 Задачи: `T-0158`, `T-0159`, `T-0160`, `T-0161`, `T-0163`.
 Дата: 2026-06-22.
 
 ## Цель
 
-`Electron2D.Editor 0.1.0` должен позволять написать, исследовать, собрать и пошагово отладить игровую C#-логику без выхода из редактора и без установки внешней IDE. Внешний IDE не является обязательной частью workflow и не может использоваться как замена отсутствующим возможностям `Script` workspace.
+`Electron2D.Editor 0.1-preview` должен позволять написать, исследовать, собрать и пошагово отладить игровую C#-логику без выхода из редактора и без установки внешней IDE. Внешний IDE не является обязательной частью workflow и не может использоваться как замена отсутствующим возможностям `Script` workspace.
 
 `Script` является центральным workspace редактора, а не вспомогательным dock. Он работает с тем же `ProjectWorkspace`, что Scene Tree, Inspector, FileSystem, Agent Workspace, Tooling и MCP.
 
@@ -35,7 +35,7 @@
 - managed C# debugger для local desktop runs;
 - Tooling/MCP parity для script и debugger operations.
 
-Не входит в `0.1.0`:
+Не входит в `0.1-preview`:
 
 - GDScript;
 - visual scripting;
@@ -80,7 +80,7 @@
 - gutter drawing;
 - mouse hit testing по строке и колонке.
 
-Если эти типы входят в обязательный 2D-профиль `0.1.0`, они должны пройти обычный parity gate как `Supported / Parity verified`, а не реализовываться только для Editor приватным путём.
+Если эти типы входят в обязательный 2D-профиль `0.1-preview`, они должны пройти обычный parity gate как `Supported / Parity verified`, а не реализовываться только для Editor приватным путём.
 
 ## CodeDocument и ProjectWorkspace
 
@@ -201,7 +201,7 @@ AI-изменение должно одновременно отображать
 
 Это project-aware language services, а не словарное дополнение текста.
 
-Архитектурный baseline — Roslyn. Для `0.1.0` Roslyn host реализуется как отдельный assembly `Electron2D.CSharpLanguageServices`, работающий внутри Editor process. Он не попадает в игровой runtime и не зависит от Editor UI. Отдельный language-service process не входит в `0.1.0`; его можно добавить позже отдельной задачей, где будут описаны IPC, restart, crash recovery и синхронизация процесса. Граница реализации:
+Архитектурный baseline — Roslyn. Для `0.1-preview` Roslyn host реализуется как отдельный assembly `Electron2D.CSharpLanguageServices`, работающий внутри Editor process. Он не попадает в игровой runtime и не зависит от Editor UI. Отдельный language-service process не входит в `0.1-preview`; его можно добавить позже отдельной задачей, где будут описаны IPC, restart, crash recovery и синхронизация процесса. Граница реализации:
 
 ```text
 Electron2D.CSharpLanguageServices
@@ -434,7 +434,7 @@ Electron2D.ManagedDebugging
 - breakpoint следует за document rename через `DocumentId`, rebases `SourceAnchor` после text edits и получает `Verified = false` при неоднозначном переносе;
 - debug state содержит current execution line, выбранный thread/frame, call stack, threads, locals, arguments, watch definitions, watch evaluation result, exception info и debug output;
 - изменение C# document после старта debug session помечает session как `stale` и предлагает rebuild/restart без автоматического сохранения dirty buffer;
-- remote Android/iOS/WebAssembly debugger явно помечен как excluded from `0.1.0`;
+- remote Android/iOS/WebAssembly debugger явно помечен как excluded from `0.1-preview`;
 - UI smoke harness создаёт PNG screenshot и JSON analysis. Acceptance требует открыть screenshot, проверить breakpoint gutter, current line highlight, debugger controls, call stack, threads, locals, arguments, watches, exception panel, absence of overflow, absence of 3D/GDScript/AssetLib UI и соответствие `docs/editor/godot4-editor-reference.md`.
 
 ## Breakpoint model
@@ -544,7 +544,7 @@ debug_stop
 
 `debug_update_breakpoint` управляет включением, отключением и изменением существующего breakpoint через `BreakpointId`. `debug_get_stack()` возвращает stacks всех threads. `debug_get_locals(frameId)` и `debug_get_arguments(frameId)` всегда читают данные выбранного stack frame явно, без скрытой зависимости от текущего UI selection. `debug_get_watches()` возвращает только определения watches без вычисления expressions; `debug_evaluate_watches(frameId)` вычисляет watches в явно указанном frame.
 
-Для `0.1.0` `debug_attach` не является произвольным `attach(pid)` для агента:
+Для `0.1-preview` `debug_attach` не является произвольным `attach(pid)` для агента:
 
 - agent session может attach только к game process активной Editor play/debug session;
 - developer может подтвердить дополнительный attach интерактивно;
@@ -617,7 +617,7 @@ Acceptance для `T-0161`:
 
 ## Назначение
 
-`Electron2D.Editor` содержит внутреннюю модель script workflow для `0.1.0 Preview`: создать C# script, открыть его во встроенной модели редактора кода, изменить и сохранить текст, прикрепить script к node, собрать проект и запустить проект после successful rebuild.
+`Electron2D.Editor` содержит внутреннюю модель script workflow для `0.1-preview`: создать C# script, открыть его во встроенной модели редактора кода, изменить и сохранить текст, прикрепить script к node, собрать проект и запустить проект после successful rebuild.
 
 Workflow не добавляет runtime compilation и не загружает пользовательские assemblies динамически. Script остаётся обычным `.cs` файлом проекта игры и компилируется обычной .NET toolchain.
 

@@ -30,7 +30,7 @@ namespace Electron2D;
 ///
 /// <remarks>
 /// `Camera2D` can become current on the nearest ancestor <see cref="Viewport" />.
-/// Electron2D 0.1.0 Preview implements target position, offset, zoom and
+/// Electron2D 0.1-preview implements target position, offset, zoom and
 /// rotation behavior; camera limits, drag margins and smoothing are intentionally
 /// not implemented yet.
 /// </remarks>
@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Viewport" />
@@ -61,7 +61,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Camera2D" />
@@ -88,7 +88,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current enabled value.
@@ -138,7 +138,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -161,7 +161,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This property follows the validation and lifetime rules of its declaring type.
@@ -188,7 +188,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current zoom value.
@@ -220,7 +220,7 @@ public class Camera2D : Node2D
     /// </summary>
     ///
     /// <remarks>
-    /// This is a no-op in Electron2D 0.1.0 Preview because camera smoothing and
+    /// This is a no-op in Electron2D 0.1-preview because camera smoothing and
     /// drag margins are not implemented yet.
     /// </remarks>
     ///
@@ -229,7 +229,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Camera2D" />
     ///
@@ -252,7 +252,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -271,7 +271,7 @@ public class Camera2D : Node2D
     /// </summary>
     ///
     /// <remarks>
-    /// This is a no-op in Electron2D 0.1.0 Preview because smoothing state is
+    /// This is a no-op in Electron2D 0.1-preview because smoothing state is
     /// not implemented yet.
     /// </remarks>
     ///
@@ -280,7 +280,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Camera2D" />
     ///
@@ -293,14 +293,14 @@ public class Camera2D : Node2D
     /// Gets the screen center position in global coordinates.
     /// </summary>
     ///
-    /// <returns>The camera target position for the 0.1.0 Preview baseline.</returns>
+    /// <returns>The camera target position for the 0.1-preview baseline.</returns>
     ///
     /// <threadsafety>
     /// This method is not synchronized. Call it on the main scene thread.
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTargetPosition" />
@@ -325,7 +325,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -350,7 +350,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -375,7 +375,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -402,7 +402,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.
@@ -427,7 +427,7 @@ public class Camera2D : Node2D
     /// </summary>
     ///
     /// <remarks>
-    /// This is a no-op in Electron2D 0.1.0 Preview because smoothing state is
+    /// This is a no-op in Electron2D 0.1-preview because smoothing state is
     /// not implemented yet.
     /// </remarks>
     ///
@@ -436,7 +436,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Camera2D" />
     ///
@@ -458,7 +458,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Camera2D" />
@@ -484,7 +484,7 @@ public class Camera2D : Node2D
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Camera2D" />

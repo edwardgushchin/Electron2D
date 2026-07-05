@@ -35,7 +35,7 @@ public sealed class SolutionLayoutTests
         var root = FindRepositoryRoot();
 
         Assert.True(File.Exists(Path.Combine(root, "src", "Electron2D", "Electron2D.csproj")));
-        Assert.True(File.Exists(Path.Combine(root, "docs", "releases", "0.1.0-preview.md")));
+        Assert.True(File.Exists(Path.Combine(root, "docs", "releases", "0.1-preview.md")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "templates", "electron2d-empty")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "assets", "reference-games")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "schemas")));

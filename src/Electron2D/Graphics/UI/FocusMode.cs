@@ -46,7 +46,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control.FocusMode"/>
@@ -69,7 +69,7 @@ public enum FocusMode
     /// </threadsafety>
     ///
     /// <since>
-    /// This field is available since Electron2D 0.1.0 Preview.
+    /// This field is available since Electron2D 0.1-preview.
     /// </since>
     None = 0,
 
@@ -90,7 +90,7 @@ public enum FocusMode
     /// </threadsafety>
     ///
     /// <since>
-    /// This field is available since Electron2D 0.1.0 Preview.
+    /// This field is available since Electron2D 0.1-preview.
     /// </since>
     Click = 1,
 
@@ -111,7 +111,7 @@ public enum FocusMode
     /// </threadsafety>
     ///
     /// <since>
-    /// This field is available since Electron2D 0.1.0 Preview.
+    /// This field is available since Electron2D 0.1-preview.
     /// </since>
     All = 2
 }

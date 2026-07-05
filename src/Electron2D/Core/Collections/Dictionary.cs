@@ -51,7 +51,7 @@ namespace Electron2D.Collections;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Array"/>
@@ -72,7 +72,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Dictionary" />
@@ -108,7 +108,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This indexer is available since Electron2D 0.1.0 Preview.
+    /// This indexer is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Add"/>
@@ -144,7 +144,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Dictionary" />
     ///
@@ -174,7 +174,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ContainsKey"/>
@@ -201,7 +201,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Count"/>
@@ -230,7 +230,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TryGetValue"/>
@@ -259,7 +259,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Add"/>
@@ -293,7 +293,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="ContainsKey"/>
@@ -321,7 +321,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TryGetValue"/>
@@ -355,7 +355,7 @@ public sealed class Dictionary : IEnumerable<KeyValuePair<Variant, Variant>>
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="Dictionary" />
     ///

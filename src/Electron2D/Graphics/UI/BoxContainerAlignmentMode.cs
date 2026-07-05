@@ -36,7 +36,7 @@ namespace Electron2D;
 /// </remarks>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="BoxContainer.Alignment"/>
@@ -51,7 +51,7 @@ public enum BoxContainerAlignmentMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Begin = 0,
 
@@ -64,7 +64,7 @@ public enum BoxContainerAlignmentMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Center = 1,
 
@@ -77,7 +77,7 @@ public enum BoxContainerAlignmentMode
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     End = 2
 }

@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0048`.
 Обновлено: 2026-06-21.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Node и SceneTree lifecycle](../object-model/node-scene-tree-lifecycle.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Node и SceneTree lifecycle](../object-model/node-scene-tree-lifecycle.md).
 
 ## Назначение
 
-`0.1.0 Preview` должен принимать базовые platform input events и передавать в `Node._Input(InputEvent)` Electron2D события. Нативные types не входят в публичный API Electron2D: они остаются внутренней платформенной границей.
+`0.1-preview` должен принимать базовые platform input events и передавать в `Node._Input(InputEvent)` Electron2D события. Нативные types не входят в публичный API Electron2D: они остаются внутренней платформенной границей.
 
 В этой задаче закрывается desktop baseline:
 
@@ -140,7 +140,7 @@ Internal platform dispatcher должен сохранять порядок plat
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` получил desktop baseline для platform input events. Нативный backend остаётся internal platform boundary, а пользовательский код получает Electron2D events через `Node._Input(InputEvent)`.
+Electron2D `0.1-preview` получил desktop baseline для platform input events. Нативный backend остаётся internal platform boundary, а пользовательский код получает Electron2D events через `Node._Input(InputEvent)`.
 
 Публичные типы:
 

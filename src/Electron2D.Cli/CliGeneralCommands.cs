@@ -278,8 +278,8 @@ internal static partial class Electron2DCommandLine
                     options,
                     NormalizeProjectRoot(options.ProjectRoot),
                     CliRoute.None,
-                    "API type is outside the Electron2D 0.1.0 2D profile.",
-                    CreateCliDiagnostic("E2D-CLI-0002", $"API type '{fullName}' is outside the Electron2D 0.1.0 2D profile."),
+                    "API type is outside the Electron2D 0.1-preview 2D profile.",
+                    CreateCliDiagnostic("E2D-CLI-0002", $"API type '{fullName}' is outside the Electron2D 0.1-preview 2D profile."),
                     data),
                 output,
                 error);
@@ -1424,7 +1424,7 @@ internal static partial class Electron2DCommandLine
             "test" => "  <default>             Queue a job, or run scene tests with --format json and a scene-test manifest.",
             "validate" => "  <default>             Validate a project and emit text, JSON or SARIF diagnostics.",
             "docs" => "  search|type|member|example",
-            "api" => "  compare-godot <type>  Compare one API type against the approved Electron2D 0.1.0 2D profile.",
+            "api" => "  compare-godot <type>  Compare one API type against the approved Electron2D 0.1-preview 2D profile.",
             "tasks" => "  export                Write a Markdown report from `.electron2d/tasks/*.e2task`.",
             "context" => "  build                 Write a compact static context pack to `.electron2d/context/`.",
             _ => "  Reserved for a later Preview task."

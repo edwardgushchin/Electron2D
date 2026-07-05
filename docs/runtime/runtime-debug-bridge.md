@@ -14,7 +14,7 @@
 
 Статус: целевая спецификация для `T-0124`.
 Обновлено: 2026-06-22.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Headless runtime automation](headless-runtime-automation.md), [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md), [Headless runtime automation](headless-runtime-automation.md), [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
 
 ## Назначение
 
@@ -72,7 +72,7 @@ Bridge строит Remote Scene Tree snapshot:
 
 ## Runtime mutation policy
 
-В `0.1.0 Preview` runtime debug bridge является наблюдающим и управляющим execution state слоем. Он не меняет serialized project documents и не изменяет arbitrary runtime node properties. Попытка mutation через bridge должна возвращать failed result с `E2D-RUNTIME-0001`.
+В `0.1-preview` runtime debug bridge является наблюдающим и управляющим execution state слоем. Он не меняет serialized project documents и не изменяет arbitrary runtime node properties. Попытка mutation через bridge должна возвращать failed result с `E2D-RUNTIME-0001`.
 
 Будущие безопасные runtime actions, если они появятся, должны быть отдельными явно описанными командами и не должны обходить project transaction layer.
 

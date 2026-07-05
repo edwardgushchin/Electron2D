@@ -18,9 +18,9 @@
 
 ## Цель
 
-Ввести Electron2D `RandomNumberGenerator` для `0.1.0 Preview`: отдельный объект генератора псевдослучайных чисел с воспроизводимым `Seed`, сохраняемым `State`, integer/float range API и нормальным распределением.
+Ввести Electron2D `RandomNumberGenerator` для `0.1-preview`: отдельный объект генератора псевдослучайных чисел с воспроизводимым `Seed`, сохраняемым `State`, integer/float range API и нормальным распределением.
 
-Контракт сверяется с официальной документацией Godot `RandomNumberGenerator`: класс имеет `seed`, `state`, `randf()`, `randf_range()`, `randfn()`, `randi()`, `randi_range()` и `randomize()`, а Godot указывает PCG32 как текущий алгоритм, но предупреждает, что сам алгоритм является implementation detail. В Electron2D `0.1.0 Preview` алгоритм фиксируется как часть preview-контракта, потому что release gate требует воспроизводимые deterministic tests.
+Контракт сверяется с официальной документацией Godot `RandomNumberGenerator`: класс имеет `seed`, `state`, `randf()`, `randf_range()`, `randfn()`, `randi()`, `randi_range()` и `randomize()`, а Godot указывает PCG32 как текущий алгоритм, но предупреждает, что сам алгоритм является implementation detail. В Electron2D `0.1-preview` алгоритм фиксируется как часть preview-контракта, потому что release gate требует воспроизводимые deterministic tests.
 
 Источник Electron2D поверхности: [Godot RandomNumberGenerator](https://docs.godotengine.org/en/stable/classes/class_randomnumbergenerator.html).
 
@@ -60,7 +60,7 @@ public class RandomNumberGenerator : RefCounted
 
 ## Алгоритм
 
-`0.1.0 Preview` использует PCG32 с 64-битным state, multiplier `6364136223846793005` и increment `1442695040888963407`.
+`0.1-preview` использует PCG32 с 64-битным state, multiplier `6364136223846793005` и increment `1442695040888963407`.
 
 Seed initialization:
 
@@ -141,7 +141,7 @@ Unity-like aliases (`Next`, `NextFloat`, `Range`) не добавлены.
 
 ## Алгоритм
 
-`0.1.0 Preview` фиксирует PCG32 с 64-битным state, multiplier `6364136223846793005` и increment `1442695040888963407`.
+`0.1-preview` фиксирует PCG32 с 64-битным state, multiplier `6364136223846793005` и increment `1442695040888963407`.
 
 Для `Seed = 42` первые значения `Randi()`:
 
@@ -168,5 +168,5 @@ Unity-like aliases (`Next`, `NextFloat`, `Range`) не добавлены.
 ## Ограничения
 
 - `RandWeighted()` не реализован в `T-0018`: weights API должен вводиться отдельной задачей с тестами.
-- Алгоритм фиксирован для `0.1.0 Preview`; изменение последовательности требует отдельной breaking-change записи.
+- Алгоритм фиксирован для `0.1-preview`; изменение последовательности требует отдельной breaking-change записи.
 - `State` предназначен для сохранения значения, прочитанного из `State`; для пользовательского input нужно использовать `Seed`.

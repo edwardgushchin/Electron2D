@@ -31,7 +31,7 @@ namespace Electron2D;
 /// <remarks>
 /// <para>
 /// `Shader` stores source code that is imported by Electron2D tooling into
-/// compiled canvas shader stages. Electron2D 0.1.0 Preview supports only the
+/// compiled canvas shader stages. Electron2D 0.1-preview supports only the
 /// canvas item mode.
 /// </para>
 ///
@@ -48,7 +48,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 public sealed class Shader : Resource
 {
@@ -66,7 +66,7 @@ public sealed class Shader : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Shader" />
@@ -82,10 +82,10 @@ public sealed class Shader : Resource
     /// </summary>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
-    /// This type is part of the Electron2D 0.1.0 Preview public API.
+    /// This type is part of the Electron2D 0.1-preview public API.
     /// </remarks>
     ///
     public enum Mode
@@ -98,7 +98,7 @@ public sealed class Shader : Resource
         /// </remarks>
         ///
         /// <since>
-        /// This API is available since Electron2D 0.1.0 Preview.
+        /// This API is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="Mode" />
@@ -122,7 +122,7 @@ public sealed class Shader : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current code value.
@@ -148,7 +148,7 @@ public sealed class Shader : Resource
     /// Gets the shader mode.
     /// </summary>
     ///
-    /// <returns><see cref="Mode.CanvasItem" />, the only supported shader mode in Electron2D 0.1.0 Preview.</returns>
+    /// <returns><see cref="Mode.CanvasItem" />, the only supported shader mode in Electron2D 0.1-preview.</returns>
     ///
     /// <threadsafety>
     /// This method is safe to call from any thread when the shader is not being
@@ -156,7 +156,7 @@ public sealed class Shader : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     /// <remarks>
     /// This method follows the validation and lifetime rules of its declaring type.

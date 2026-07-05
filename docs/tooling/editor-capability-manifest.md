@@ -12,7 +12,7 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация `0.1.0 Preview`.
+Статус: целевая спецификация `0.1-preview`.
 Задача: `T-0142`.
 Связанные документы: [Agent-native workflow](../architecture/agent-native-workflow.md); [Electron2D.Tooling service boundary](tooling-service-boundary.md); [Локальный MCP-сервер](../mcp/mcp-server.md); [Machine-readable API manifest](../api-manifest.md).
 
@@ -35,7 +35,7 @@ data/editor/electron2d-editor-capabilities.json
 Root object:
 
 - `schemaVersion`: `1`;
-- `manifestVersion`: `0.1.0-preview`;
+- `manifestVersion`: `0.1-preview`;
 - `apiManifest.path`: `data/api/electron2d-api-manifest.json`;
 - `apiManifest.references`: stable API identifiers, на которые ссылаются Inspector, scene/resource, UI и runtime capabilities;
 - `capabilities`: отсортированный список capability records.

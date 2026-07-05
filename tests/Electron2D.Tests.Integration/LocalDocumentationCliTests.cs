@@ -332,7 +332,7 @@ public sealed class LocalDocumentationCliTests
             $$"""
             {
               "schemaVersion": 2,
-              "manifestVersion": "0.1.0-preview",
+              "manifestVersion": "0.1-preview",
               "generatedFrom": {
                 "apiManifest": {
                   "path": "data/api/electron2d-api-manifest.json",

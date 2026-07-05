@@ -35,7 +35,7 @@ namespace Electron2D;
 /// current selected item through <see cref="GetSelected"/>.
 /// </para>
 /// <para>
-/// The 0.1.0 Preview implementation focuses on runtime tree display and
+/// The 0.1-preview implementation focuses on runtime tree display and
 /// selection. Drag-and-drop, editing controls and scrolling are planned for
 /// later UI tasks.
 /// </para>
@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="TreeItem"/>
@@ -78,7 +78,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SelectMode"/>
@@ -93,7 +93,7 @@ public class Tree : Control
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SelectModeEnum"/>
@@ -108,7 +108,7 @@ public class Tree : Control
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SelectModeEnum"/>
@@ -124,7 +124,7 @@ public class Tree : Control
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SelectModeEnum"/>
@@ -147,7 +147,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Tree"/>
@@ -179,7 +179,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSelected"/>
@@ -202,7 +202,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_GuiInput(InputEvent)"/>
@@ -227,7 +227,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.TooltipText"/>
@@ -250,7 +250,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetColumnTitle(int, string)"/>
@@ -278,7 +278,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetColumnTitle(int, string)"/>
@@ -310,7 +310,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TreeItem.SetCollapsed(bool)"/>
@@ -334,7 +334,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetRoot"/>
@@ -358,7 +358,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TreeItem.Select(int, bool)"/>
@@ -389,7 +389,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetRoot"/>
@@ -433,7 +433,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CreateItem(TreeItem?, int)"/>
@@ -459,7 +459,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSelected"/>
@@ -497,7 +497,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetColumnTitle(int, string)"/>
@@ -532,7 +532,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetColumnTitle(int)"/>
@@ -562,7 +562,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CreateItem(TreeItem?, int)"/>
@@ -589,7 +589,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSelectedColumn"/>
@@ -616,7 +616,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetSelected"/>
@@ -645,7 +645,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TreeItem.GetNextVisible"/>
@@ -685,7 +685,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control._GuiInput(InputEvent)"/>
@@ -736,7 +736,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.DrawRect(Rect2, Color, bool, float, bool)"/>
@@ -794,7 +794,7 @@ public class Tree : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.GetMinimumSize"/>

@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Shape2D"/>
@@ -62,7 +62,7 @@ public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CollisionShape2D" />
@@ -84,7 +84,7 @@ public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview baseline uses this resource for managed AABB overlap,
+    /// The 0.1-preview baseline uses this resource for managed AABB overlap,
     /// query, motion and debug visualization snapshots.
     /// </para>
     /// </remarks>
@@ -99,7 +99,7 @@ public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="DebugColor"/>
@@ -140,7 +140,7 @@ public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Shape"/>
@@ -171,7 +171,7 @@ public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SceneTree.DebugCollisionsHint"/>
@@ -198,7 +198,7 @@ public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="OneWayCollisionMargin"/>
@@ -223,7 +223,7 @@ public class CollisionShape2D : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="OneWayCollision"/>

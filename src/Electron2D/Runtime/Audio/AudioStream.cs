@@ -37,7 +37,7 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview exposes stream metadata queries only. Device
+/// Electron2D 0.1-preview exposes stream metadata queries only. Device
 /// lifecycle, user bus routing and public stream playback handle objects are
 /// separate audio runtime tasks.
 /// </para>
@@ -51,7 +51,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Resource" />
@@ -74,7 +74,7 @@ public abstract class AudioStream : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AudioStream" />
@@ -105,7 +105,7 @@ public abstract class AudioStream : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanBeSampled" />
@@ -131,7 +131,7 @@ public abstract class AudioStream : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AudioStream" />
@@ -160,7 +160,7 @@ public abstract class AudioStream : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetLength" />
@@ -198,7 +198,7 @@ public abstract class AudioStream : Resource
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetLength" />

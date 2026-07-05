@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить `CharacterBody2D` для управляемых персонажей и платформенных контроллеров. API должен следовать выбранной форме API Godot 4: `CharacterBody2D` наследуется от `PhysicsBody2D`, хранит `Velocity`, а `MoveAndSlide()` двигает тело на основе этой скорости. `MoveAndCollide()` доступен на `PhysicsBody2D` и возвращает `KinematicCollision2D`.
+`0.1-preview` должен предоставить `CharacterBody2D` для управляемых персонажей и платформенных контроллеров. API должен следовать выбранной форме API Godot 4: `CharacterBody2D` наследуется от `PhysicsBody2D`, хранит `Velocity`, а `MoveAndSlide()` двигает тело на основе этой скорости. `MoveAndCollide()` доступен на `PhysicsBody2D` и возвращает `KinematicCollision2D`.
 
 Источник формы API: официальные документы Godot описывают `CharacterBody2D` как тело для персонажей, которое не двигается физикой само, но двигается скриптом через `move_and_collide()` и `move_and_slide()`; `move_and_slide()` использует свойство `velocity`, а `move_and_collide()` возвращает `KinematicCollision2D` с данными столкновения.
 
@@ -124,7 +124,7 @@
 
 ## Фактическое состояние, ограничения и проверки
 
-`CharacterBody2D` в `0.1.0 Preview` даёт управляемому персонажу начальный kinematic solver поверх managed AABB-проверок. Тело не двигается силами: игровой код задаёт `Velocity`, вызывает `MoveAndSlide()` внутри `_PhysicsProcess()`, а runtime двигает узел, останавливает его перед статической геометрией и обновляет состояние пола, стены и потолка.
+`CharacterBody2D` в `0.1-preview` даёт управляемому персонажу начальный kinematic solver поверх managed AABB-проверок. Тело не двигается силами: игровой код задаёт `Velocity`, вызывает `MoveAndSlide()` внутри `_PhysicsProcess()`, а runtime двигает узел, останавливает его перед статической геометрией и обновляет состояние пола, стены и потолка.
 
 ## Что реализовано
 

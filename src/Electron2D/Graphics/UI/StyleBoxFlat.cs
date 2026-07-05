@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="StyleBox"/>
@@ -70,7 +70,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="StyleBoxFlat"/>
@@ -95,7 +95,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Draw(CanvasItem, Rect2)"/>
@@ -130,7 +130,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="BorderWidthLeft"/>
@@ -169,7 +169,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="BorderColor"/>
@@ -208,7 +208,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="BorderColor"/>
@@ -247,7 +247,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="BorderColor"/>
@@ -286,7 +286,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="BorderColor"/>
@@ -334,7 +334,7 @@ public class StyleBoxFlat : StyleBox
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.DrawRect(Rect2, Color, bool, float, bool)"/>

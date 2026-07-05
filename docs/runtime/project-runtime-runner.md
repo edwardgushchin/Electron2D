@@ -12,7 +12,7 @@
 
 ## Контракт и ожидаемое поведение
 
-Статус: целевая спецификация для исправления playable reference games `0.1.0 Preview`.
+Статус: целевая спецификация для исправления playable reference games `0.1-preview`.
 Обновлено: 2026-06-25.
 Связанные документы: [Platformer](../examples/platformer.md), [Headless runtime automation](headless-runtime-automation.md), [Runtime debug bridge и scene inspection](runtime-debug-bridge.md).
 
@@ -87,7 +87,7 @@ measuredDeltaTime = now - previous
 deltaTime = Min(measuredDeltaTime, MaxDeltaTime)
 ```
 
-`MaxDeltaTime` для `0.1.0 Preview` равен `0.25` секунды. Это ограничение не ускоряет игру после долгой остановки процесса, а защищает физику и пользовательский `_Process(double delta)` от патологически большого скачка. Значение `FixedDelta` по умолчанию остаётся `1/60` секунды для ограниченного автоматического прогона, но интерактивная физика берёт реальный шаг из `SceneTree.FixedPhysicsStep`.
+`MaxDeltaTime` для `0.1-preview` равен `0.25` секунды. Это ограничение не ускоряет игру после долгой остановки процесса, а защищает физику и пользовательский `_Process(double delta)` от патологически большого скачка. Значение `FixedDelta` по умолчанию остаётся `1/60` секунды для ограниченного автоматического прогона, но интерактивная физика берёт реальный шаг из `SceneTree.FixedPhysicsStep`.
 
 `RuntimeHost` имеет собственный накопитель времени для догоняющих шагов физики. На каждом отображаемом кадре он добавляет `deltaTime` в накопитель и выполняет:
 

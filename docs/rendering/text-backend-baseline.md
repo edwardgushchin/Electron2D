@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0029`.
 Обновлено: 2026-06-21.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Immediate drawing baseline](immediate-drawing-baseline.md), [Canvas node submission baseline](canvas-node-submission-baseline.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Immediate drawing baseline](immediate-drawing-baseline.md), [Canvas node submission baseline](canvas-node-submission-baseline.md).
 
 ## Цель
 
-Electron2D `0.1.0 Preview` должен иметь минимальный текстовый baseline для рендеринга UI и пользовательского immediate drawing:
+Electron2D `0.1-preview` должен иметь минимальный текстовый baseline для рендеринга UI и пользовательского immediate drawing:
 
 - `Font` умеет измерять строку, высоту, ascent, descent и наличие Unicode codepoint;
 - `CanvasItem.DrawString()` создаёт render command с layout glyphs, fallback font resolution и cache;
@@ -185,7 +185,7 @@ Text layout выполняется для UTF-8/Unicode текста через 
 
 Unicode обрабатывается через `System.Text.Rune`, поэтому surrogate pairs считаются одним codepoint. Базовый RTL определяется по Hebrew/Arabic Unicode ranges. Для RTL glyphs в layout идут в визуальном порядке справа налево.
 
-`HorizontalAlignment.Center` и `Right` смещают glyphs внутри заданной ширины. `Fill` в `0.1.0 Preview` пока ведёт себя как left alignment: распределение пробелов и complex shaping не реализованы.
+`HorizontalAlignment.Center` и `Right` смещают glyphs внутри заданной ширины. `Fill` в `0.1-preview` пока ведёт себя как left alignment: распределение пробелов и complex shaping не реализованы.
 
 ## Fallback и cache
 

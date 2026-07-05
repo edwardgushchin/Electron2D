@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0044`.
 Обновлено: 2026-06-21.
-Связанные документы: [Формат проекта и шаблон `electron2d-empty`](../release-management/project-template.md), [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](script-metadata.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Формат проекта и шаблон `electron2d-empty`](../release-management/project-template.md), [Script metadata: `[Export]`, `[Signal]`, `[Tool]`](script-metadata.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
-`0.1.0 Preview` поддерживает только C# script classes. Script class - это обычный C# тип в проекте пользователя, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется обычной .NET toolchain вместе с проектом игры.
+`0.1-preview` поддерживает только C# script classes. Script class - это обычный C# тип в проекте пользователя, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется обычной .NET toolchain вместе с проектом игры.
 
-Задача не добавляет GDScript, visual scripting, обязательный Hot Reload, runtime C# compilation, dynamic iOS code load или managed debugger. Встроенная C# IDE описана отдельной спецификацией `editor-script-workflow.md` и обязательна для полного редакторского workflow `0.1.0`.
+Задача не добавляет GDScript, visual scripting, обязательный Hot Reload, runtime C# compilation, dynamic iOS code load или managed debugger. Встроенная C# IDE описана отдельной спецификацией `editor-script-workflow.md` и обязательна для полного редакторского workflow `0.1-preview`.
 
 ## Контракт script class
 
@@ -65,7 +65,7 @@ Script class должен:
 
 ## Что реализовано
 
-Electron2D `0.1.0 Preview` фиксирует C# script model без runtime compilation: пользовательский script - это обычный C# класс, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется вместе с проектом игры.
+Electron2D `0.1-preview` фиксирует C# script model без runtime compilation: пользовательский script - это обычный C# класс, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется вместе с проектом игры.
 
 Текущий runtime уже предоставляет lifecycle callbacks на `Node`:
 

@@ -32,7 +32,7 @@ namespace Electron2D;
 /// <para>
 /// <c>Panel</c> submits one filled rectangle that matches <see cref="Control.Size"/>.
 /// It is intended for simple runtime interface backgrounds and container
-/// decoration in the 0.1.0 Preview UI subset.
+/// decoration in the 0.1-preview UI subset.
 /// </para>
 /// </remarks>
 ///
@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control"/>
@@ -62,7 +62,7 @@ public class Panel : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Panel"/>
@@ -86,7 +86,7 @@ public class Panel : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.DrawRect(Rect2, Color, bool, float, bool)"/>

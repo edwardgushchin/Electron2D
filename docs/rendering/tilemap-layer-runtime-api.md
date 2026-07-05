@@ -18,7 +18,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить минимальный runtime API для tilemap-слоя, достаточный для Platformer и других 2D-примеров без временных обходных решений в `examples/`.
+`0.1-preview` должен предоставить минимальный runtime API для tilemap-слоя, достаточный для Platformer и других 2D-примеров без временных обходных решений в `examples/`.
 
 Контракт этой задачи закрывает только runtime-поверхность:
 
@@ -118,7 +118,7 @@ Texture loading/import остаётся отдельным resource pipeline: ru
 - cell ссылается на существующий `TileSetAtlasSource`;
 - у tile data есть collision polygon с минимум тремя точками.
 
-На `0.1.0 Preview` polygon участвует как AABB bounds. Это должно быть явно отражено в документации реализации. One-way collision работает по существующим правилам managed AABB movement: движение сверху вниз блокируется, движение снизу вверх пропускается.
+На `0.1-preview` polygon участвует как AABB bounds. Это должно быть явно отражено в документации реализации. One-way collision работает по существующим правилам managed AABB movement: движение сверху вниз блокируется, движение снизу вверх пропускается.
 
 ## Acceptance criteria
 
@@ -140,7 +140,7 @@ Texture loading/import остаётся отдельным resource pipeline: ru
 
 ## Tileset
 
-`TileSet` хранит размер клетки и набор source objects. Для `0.1.0 Preview` реализован `TileSetAtlasSource`:
+`TileSet` хранит размер клетки и набор source objects. Для `0.1-preview` реализован `TileSetAtlasSource`:
 
 - `Texture` задаёт atlas texture;
 - `TextureRegionSize` задаёт размер одной atlas region;

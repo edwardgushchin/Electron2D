@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This is an Electron2D 0.1.0-preview project.
+This is an Electron2D 0.1-preview project.
 
 - Project name: `Electron2D.Empty`
 - .NET SDK: `.NET 10.0.101`

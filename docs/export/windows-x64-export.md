@@ -86,7 +86,7 @@ Diagnostics не должны содержать секреты или credentia
 2. выходные файлы `dotnet publish` для `Electron2D.Editor`;
 3. выходные файлы `dotnet publish` для инструмента разработчика `e2d`;
 4. root `README.md`, `LICENSE` и `release-manifest.json`;
-5. Windows archive `electron2d-0.1.0-preview-win-x64.zip`;
+5. Windows archive `electron2d-0.1-preview-win-x64.zip`;
 6. SHA-256 файл рядом с архивом;
 7. отсутствие `.ps1`, рабочего журнала задач, дневников, доказательств внешнего аудита и репозиторных служебных каталогов внутри архива.
 
@@ -127,7 +127,7 @@ The current Windows verifier does not sign artifacts. If a future release preset
 
 ## Known limitations
 
-- x64 is the only Windows runtime identifier verified in `0.1.0 Preview`.
+- x64 is the only Windows runtime identifier verified in `0.1-preview`.
 - Installer generation, code signing, store packaging, auto-update metadata, and GitHub Release publication are outside this verifier.
 - The verifier covers the empty project template, not final reference games.
 

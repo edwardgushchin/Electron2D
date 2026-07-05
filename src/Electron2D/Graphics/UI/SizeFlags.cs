@@ -37,7 +37,7 @@ namespace Electron2D;
 /// </remarks>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control.SizeFlagsHorizontal"/>
@@ -54,7 +54,7 @@ public enum SizeFlags
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ShrinkBegin = 0,
 
@@ -68,7 +68,7 @@ public enum SizeFlags
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Fill = 1,
 
@@ -82,7 +82,7 @@ public enum SizeFlags
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     Expand = 2,
 
@@ -96,7 +96,7 @@ public enum SizeFlags
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ExpandFill = 3,
 
@@ -110,7 +110,7 @@ public enum SizeFlags
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ShrinkCenter = 4,
 
@@ -124,7 +124,7 @@ public enum SizeFlags
     /// </remarks>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ShrinkEnd = 8
 }

@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0041`.
 Обновлено: 2026-06-21.
-Связанные документы: [Stable `Variant` serialization](../core-types/variant-serialization.md), [Resource file baseline](resource-file-baseline.md), [`PackedScene` и смена активной сцены](../object-model/packed-scene.md), [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md).
+Связанные документы: [Stable `Variant` serialization](../core-types/variant-serialization.md), [Resource file baseline](resource-file-baseline.md), [`PackedScene` и смена активной сцены](../object-model/packed-scene.md), [Electron2D 0.1-preview](../releases/0.1-preview.md).
 
 ## Назначение
 
 `T-0041` добавляет внутренний file-level serializer baseline для сцен и ресурсов. Он должен сохранять переносимые значения, ссылки на ресурсы и структуру сцены в стабильном JSON, чтобы `load -> modify -> save -> load` не терял values и references.
 
-В `0.1.0 Preview` задача не добавляет public `ResourceLoader`, public `ResourceSaver`, editor FileSystem dock или полный metadata database. Результат является внутренним механизмом для тестов, будущего редактора, import/export tooling и Agent-native cross-platform 2D game engine project operations.
+В `0.1-preview` задача не добавляет public `ResourceLoader`, public `ResourceSaver`, editor FileSystem dock или полный metadata database. Результат является внутренним механизмом для тестов, будущего редактора, import/export tooling и Agent-native cross-platform 2D game engine project operations.
 
 ## Property value model
 

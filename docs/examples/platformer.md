@@ -1,4 +1,4 @@
-# Platformer 0.1.0 Preview
+# Platformer 0.1-preview
 
 Обновлено: 2026-06-30.
 
@@ -16,7 +16,7 @@
 
 ## Цель
 
-`examples/platformer/` должен быть законченной приёмочной игрой `0.1.0 Preview`, а не standalone demo, fixture или набором runtime files. Проект должен открываться и проверяться тем же форматом, который использует `Electron2D.Editor`: `Platformer.e2d`, `.csproj`, main scene, project settings, Input Map, export presets, ресурсы, C# scripts и `.electron2d/tasks/**`.
+`examples/platformer/` должен быть законченной приёмочной игрой `0.1-preview`, а не standalone demo, fixture или набором runtime files. Проект должен открываться и проверяться тем же форматом, который использует `Electron2D.Editor`: `Platformer.e2d`, `.csproj`, main scene, project settings, Input Map, export presets, ресурсы, C# scripts и `.electron2d/tasks/**`.
 
 Игра проверяет небольшой 2D platformer loop: игрок двигается по tilemap-уровню, прыгает на one-way platform, камера следует за игроком, анимация меняет кадры, звук запускается на игровых событиях, gamepad/keyboard/touch input приводят к одному action flow, pause menu останавливает gameplay, а progress save фиксирует checkpoint и собранные предметы.
 

@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="JoyButton"/>
@@ -69,7 +69,7 @@ public class InputEventJoypadButton : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventJoypadButton" />
@@ -101,7 +101,7 @@ public class InputEventJoypadButton : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="InputEventJoypadButton" />
     ///
@@ -123,7 +123,7 @@ public class InputEventJoypadButton : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <value>
     /// The current pressed value.
@@ -154,7 +154,7 @@ public class InputEventJoypadButton : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="InputEventJoypadButton" />
     ///
@@ -188,7 +188,7 @@ public class InputEventJoypadButton : InputEvent
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="JoyAxis"/>
@@ -210,7 +210,7 @@ public class InputEventJoypadMotion : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This API is available since Electron2D 0.1.0 Preview.
+    /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="InputEventJoypadMotion" />
@@ -242,7 +242,7 @@ public class InputEventJoypadMotion : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="InputEventJoypadMotion" />
     ///
@@ -269,7 +269,7 @@ public class InputEventJoypadMotion : InputEvent
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     /// <seealso cref="InputEventJoypadMotion" />
     ///

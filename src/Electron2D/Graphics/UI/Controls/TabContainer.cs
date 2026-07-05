@@ -35,7 +35,7 @@ namespace Electron2D;
 /// node tree but are ignored by tab layout and tab metadata queries.
 /// </para>
 /// <para>
-/// The 0.1.0 Preview implementation stores tab titles, icons, disabled state
+/// The 0.1-preview implementation stores tab titles, icons, disabled state
 /// and hidden state, routes pointer presses on the tab header and fits the
 /// selected page into the remaining rectangle.
 /// </para>
@@ -47,7 +47,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Container"/>
@@ -77,7 +77,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TabAlignment"/>
@@ -92,7 +92,7 @@ public class TabContainer : Container
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="AlignmentModeEnum"/>
@@ -108,7 +108,7 @@ public class TabContainer : Container
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="AlignmentModeEnum"/>
@@ -123,7 +123,7 @@ public class TabContainer : Container
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="AlignmentModeEnum"/>
@@ -146,7 +146,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TabsPosition"/>
@@ -161,7 +161,7 @@ public class TabContainer : Container
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TabPositionEnum"/>
@@ -177,7 +177,7 @@ public class TabContainer : Container
         /// </remarks>
         ///
         /// <since>
-        /// This value is available since Electron2D 0.1.0 Preview.
+        /// This value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="TabPositionEnum"/>
@@ -199,7 +199,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TabContainer"/>
@@ -237,7 +237,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCurrentTabControl"/>
@@ -276,7 +276,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TabsPosition"/>
@@ -319,7 +319,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_Draw"/>
@@ -344,7 +344,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CurrentTab"/>
@@ -369,7 +369,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTabIdxAtPoint(Vector2)"/>
@@ -393,7 +393,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TabsVisible"/>
@@ -417,7 +417,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetTabHidden(int, bool)"/>
@@ -440,7 +440,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTabControl(int)"/>
@@ -475,7 +475,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCurrentTabControl"/>
@@ -503,7 +503,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CurrentTab"/>
@@ -532,7 +532,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CurrentTab"/>
@@ -566,7 +566,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTabTitle(int)"/>
@@ -604,7 +604,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetTabTitle(int, string)"/>
@@ -638,7 +638,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTabIcon(int)"/>
@@ -673,7 +673,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetTabIcon(int, Texture2D?)"/>
@@ -704,7 +704,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsTabDisabled(int)"/>
@@ -745,7 +745,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetTabDisabled(int, bool)"/>
@@ -776,7 +776,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsTabHidden(int)"/>
@@ -822,7 +822,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetTabHidden(int, bool)"/>
@@ -855,7 +855,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetTabControl(int)"/>
@@ -888,7 +888,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="_GuiInput(InputEvent)"/>
@@ -936,7 +936,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SelectPreviousAvailable"/>
@@ -973,7 +973,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SelectNextAvailable"/>
@@ -1007,7 +1007,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control._GuiInput(InputEvent)"/>
@@ -1038,7 +1038,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.DrawRect(Rect2, Color, bool, float, bool)"/>
@@ -1101,7 +1101,7 @@ public class TabContainer : Container
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Control.GetMinimumSize"/>

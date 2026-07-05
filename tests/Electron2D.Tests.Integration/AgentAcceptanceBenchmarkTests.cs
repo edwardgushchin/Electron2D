@@ -74,7 +74,7 @@ public sealed class AgentAcceptanceBenchmarkTests
 
         Assert.Equal("Electron2D.AgentAcceptanceBenchmarkManifest", manifest.GetProperty("format").GetString());
         Assert.Equal(1, manifest.GetProperty("version").GetInt32());
-        Assert.Equal("0.1.0-preview", manifest.GetProperty("release").GetString());
+        Assert.Equal("0.1-preview", manifest.GetProperty("release").GetString());
 
         var suites = manifest.GetProperty("suites").EnumerateArray().ToDictionary(
             suite => suite.GetProperty("id").GetString()!,
@@ -174,7 +174,7 @@ public sealed class AgentAcceptanceBenchmarkTests
             var plan = planDocument.RootElement;
             Assert.Equal("Electron2D.AgentAcceptanceBenchmarkPlan", plan.GetProperty("format").GetString());
             Assert.True(plan.GetProperty("dryRun").GetBoolean());
-            Assert.Equal("0.1.0-preview", plan.GetProperty("release").GetString());
+            Assert.Equal("0.1-preview", plan.GetProperty("release").GetString());
             Assert.Equal(2, plan.GetProperty("suites").GetArrayLength());
             Assert.True(plan.GetProperty("requiredEvidenceCount").GetInt32() >= 10);
             Assert.True(plan.GetProperty("visualEvidenceCount").GetInt32() >= 1);

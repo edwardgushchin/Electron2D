@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="TileSet"/>
@@ -77,7 +77,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TileSet"/>
@@ -106,7 +106,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TileSet"/>
@@ -145,7 +145,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CollisionEnabled"/>
@@ -185,7 +185,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Enabled"/>
@@ -227,7 +227,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="PhysicsQuadrantSize"/>
@@ -270,7 +270,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="RenderingQuadrantSize"/>
@@ -310,7 +310,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetUsedCells"/>
@@ -349,7 +349,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This property is available since Electron2D 0.1.0 Preview.
+    /// This property is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="CanvasItem.YSortEnabled"/>
@@ -393,7 +393,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="EraseCell"/>
@@ -428,7 +428,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetCell"/>
@@ -456,7 +456,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="EraseCell"/>
@@ -491,7 +491,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetCell"/>
@@ -520,7 +520,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCellSourceId"/>
@@ -539,7 +539,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     ///
     /// <remarks>
     /// <para>
-    /// The 0.1.0 Preview stores the value but only default atlas alternative
+    /// The 0.1-preview stores the value but only default atlas alternative
     /// data is implemented by <see cref="TileSetAtlasSource"/>.
     /// </para>
     /// </remarks>
@@ -549,7 +549,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetCell"/>
@@ -578,7 +578,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TileData"/>
@@ -605,7 +605,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetUsedCellsById"/>
@@ -636,7 +636,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetUsedCells"/>
@@ -668,7 +668,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetUsedCells"/>
@@ -711,7 +711,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="MapToLocal"/>
@@ -743,7 +743,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="LocalToMap"/>
@@ -774,7 +774,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetCoordsForBodyRid"/>
@@ -803,7 +803,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="HasBodyRid"/>
@@ -829,7 +829,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="NotifyRuntimeTileDataUpdate"/>
@@ -855,7 +855,7 @@ public class TileMapLayer : Node2D, ISceneTreeLifecycleHandler
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="UpdateInternals"/>

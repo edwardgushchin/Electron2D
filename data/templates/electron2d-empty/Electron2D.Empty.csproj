@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Electron2D" Version="0.1.0-preview" />
+    <PackageReference Include="Electron2D" Version="0.1-preview" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,11 +14,11 @@
 
 Статус: целевая спецификация для `T-0031`.
 Обновлено: 2026-06-21.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [`RenderingServer` и renderer profiles](rendering-server.md), [SDL_GPU lifecycle baseline](sdl-gpu-lifecycle.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [`RenderingServer` и renderer profiles](rendering-server.md), [SDL_GPU lifecycle baseline](sdl-gpu-lifecycle.md).
 
 ## Цель
 
-Electron2D `0.1.0 Preview` должен получить минимальный проверяемый baseline canvas shaders:
+Electron2D `0.1-preview` должен получить минимальный проверяемый baseline canvas shaders:
 
 - public Electron2D `Shader` resource для canvas shader source;
 - импортный формат source-файла с vertex/fragment entry points;
@@ -55,7 +55,7 @@ public sealed class Shader : Resource
 
 Ограничения public API:
 
-- `Shader` поддерживает только canvas item mode в `0.1.0 Preview`;
+- `Shader` поддерживает только canvas item mode в `0.1-preview`;
 - `ShaderMaterial` не добавляется в `T-0031`;
 - public uniforms API, sampler API и native shader inspection API не добавляются в `T-0031`;
 - SDL_shadercross handles, SDL_GPU shader handles и compiled bytecode не становятся public API.
@@ -172,7 +172,7 @@ Runtime project может ссылаться на managed `SDL3-CS` shadercross
 - nested enum `Shader.Mode`;
 - `Shader.Mode.CanvasItem`.
 
-В `0.1.0 Preview` поддерживается только canvas item shader mode. `Shader.Code` хранит исходный текст как пользователь написал его, а `GetMode()` возвращает `Shader.Mode.CanvasItem`.
+В `0.1-preview` поддерживается только canvas item shader mode. `Shader.Code` хранит исходный текст как пользователь написал его, а `GetMode()` возвращает `Shader.Mode.CanvasItem`.
 
 `ShaderMaterial`, uniforms, samplers и reserved canvas built-ins реализованы отдельным baseline [ShaderMaterial, uniforms, samplers и canvas built-ins baseline](shader-material-baseline.md). Default texture parameters, global uniforms и native shader inspection остаются будущими renderer/resource задачами.
 
@@ -186,7 +186,7 @@ vertex_entry VSMain;
 fragment_entry PSMain;
 ```
 
-После header идёт обычный HLSL-код. Parser принимает только `shader_type canvas_item;`, потому что 3D, particles, sky/fog и compute shaders не входят в `0.1.0 Preview`.
+После header идёт обычный HLSL-код. Parser принимает только `shader_type canvas_item;`, потому что 3D, particles, sky/fog и compute shaders не входят в `0.1-preview`.
 
 Header lines заменяются пустыми строками перед передачей source в compiler. Так diagnostics от compiler сохраняют line numbers исходного файла.
 
@@ -252,7 +252,7 @@ Sidecar `<shader>.e2import.json` может ограничить список ta
 - Default texture parameters и global uniforms не реализованы.
 - Реальная привязка shader artifact к draw pipeline ещё не реализована.
 - Compatibility backend не обязан поддерживать custom shaders.
-- Visual shader editor не входит в `0.1.0 Preview`.
+- Visual shader editor не входит в `0.1-preview`.
 
 ## Проверки
 

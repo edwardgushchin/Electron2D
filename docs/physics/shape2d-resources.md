@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить Electron2D resources для основных 2D collision shapes:
+`0.1-preview` должен предоставить Electron2D resources для основных 2D collision shapes:
 
 - `RectangleShape2D`;
 - `CircleShape2D`;
@@ -114,7 +114,7 @@
 
 ## Фактическое состояние, ограничения и проверки
 
-`Shape2D` resources - текущий baseline форм столкновений для `CollisionShape2D` в `0.1.0 Preview`.
+`Shape2D` resources - текущий baseline форм столкновений для `CollisionShape2D` в `0.1-preview`.
 
 ## Что реализовано
 

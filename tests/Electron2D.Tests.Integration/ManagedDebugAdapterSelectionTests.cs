@@ -56,7 +56,7 @@ public sealed class ManagedDebugAdapterSelectionTests
         var candidates = rootElement.GetProperty("candidateReview").EnumerateArray().ToArray();
         Assert.Contains(candidates, candidate => candidate.GetProperty("id").GetString() == "netcoredbg" && candidate.GetProperty("status").GetString() == "selected");
         Assert.Contains(candidates, candidate => candidate.GetProperty("id").GetString() == "microsoft-vsdbg" && candidate.GetProperty("status").GetString() == "rejected");
-        Assert.Contains(candidates, candidate => candidate.GetProperty("id").GetString() == "sharpdbg" && candidate.GetProperty("status").GetString() == "rejected-for-0.1.0");
+        Assert.Contains(candidates, candidate => candidate.GetProperty("id").GetString() == "sharpdbg" && candidate.GetProperty("status").GetString() == "rejected-for-0.1-preview");
 
         var platformTargets = rootElement.GetProperty("platformTargets").EnumerateArray().ToArray();
         AssertPlatform(platformTargets, "windows-x64", "upstream-release-binary", "executed-local-dap-smoke");

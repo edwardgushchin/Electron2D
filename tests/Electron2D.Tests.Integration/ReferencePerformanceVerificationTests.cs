@@ -169,7 +169,7 @@ public sealed class ReferencePerformanceVerificationTests
 
         Assert.Equal("Electron2D.ReferencePerformanceMetrics", metrics.GetProperty("format").GetString());
         Assert.Equal(1, metrics.GetProperty("version").GetInt32());
-        Assert.Equal("0.1.0-preview", metrics.GetProperty("release").GetString());
+        Assert.Equal("0.1-preview", metrics.GetProperty("release").GetString());
 
         var budgets = metrics.GetProperty("budgets");
         Assert.Equal(60, budgets.GetProperty("targetFps").GetInt32());
@@ -264,7 +264,7 @@ public sealed class ReferencePerformanceVerificationTests
         {
           "format": "Electron2D.ReferencePerformanceMetrics",
           "version": 1,
-          "release": "0.1.0-preview",
+          "release": "0.1-preview",
           "budgets": {
             "targetFps": 60,
             "minimumWarmupFrames": 120,

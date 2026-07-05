@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "manifestVersion": "0.1.0-preview",
+  "manifestVersion": "0.1-preview",
   "examples": [
     {
       "id": "example:platformer-movement",

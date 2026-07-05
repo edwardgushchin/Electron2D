@@ -41,7 +41,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="BaseButton"/>
@@ -72,7 +72,7 @@ public class TextureButton : BaseButton
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TextureButton.StretchMode"/>
@@ -80,43 +80,43 @@ public class TextureButton : BaseButton
     {
         /// <summary>Scales the texture to the control rectangle.</summary>
         /// <remarks>Use this value with <see cref="TextureButton.StretchMode"/>.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         Scale = 0,
 
         /// <summary>Draws the texture in the control rectangle.</summary>
         /// <remarks>Repeating tiles are not split into public draw calls.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         Tile = 1,
 
         /// <summary>Keeps the texture size at the top-left corner.</summary>
         /// <remarks>Use this value to avoid scaling.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         Keep = 2,
 
         /// <summary>Keeps the texture size and centers it.</summary>
         /// <remarks>Use this value to draw fixed-size centered button art.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepCentered = 3,
 
         /// <summary>Fits the texture inside the control while preserving aspect ratio.</summary>
         /// <remarks>Use this value when clipping is not desired.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepAspect = 4,
 
         /// <summary>Fits the texture inside the control and centers it.</summary>
         /// <remarks>Use this value for centered aspect-ratio drawing.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepAspectCentered = 5,
 
         /// <summary>Covers the control while preserving aspect ratio.</summary>
         /// <remarks>The destination rectangle can extend outside the control area.</remarks>
-        /// <since>This value is available since Electron2D 0.1.0 Preview.</since>
+        /// <since>This value is available since Electron2D 0.1-preview.</since>
         /// <seealso cref="StretchModeEnum"/>
         KeepAspectCovered = 6
     }
@@ -135,7 +135,7 @@ public class TextureButton : BaseButton
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="TextureButton"/>
@@ -149,7 +149,7 @@ public class TextureButton : BaseButton
     /// <value>The texture used when no more specific state texture applies.</value>
     /// <remarks>Assigning this property queues a redraw.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Texture2D"/>
     public Texture2D? TextureNormal
     {
@@ -167,7 +167,7 @@ public class TextureButton : BaseButton
     /// <value>The texture used when the button is pressed.</value>
     /// <remarks>If this value is <c>null</c>, <see cref="TextureNormal"/> is used.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="TextureNormal"/>
     public Texture2D? TexturePressed
     {
@@ -185,7 +185,7 @@ public class TextureButton : BaseButton
     /// <value>The texture reserved for hover rendering.</value>
     /// <remarks>Pointer hover tracking is not exposed as public state in this preview.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="TextureNormal"/>
     public Texture2D? TextureHover
     {
@@ -203,7 +203,7 @@ public class TextureButton : BaseButton
     /// <value>The texture used when <see cref="BaseButton.Disabled"/> is <c>true</c>.</value>
     /// <remarks>If this value is <c>null</c>, <see cref="TextureNormal"/> is used.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="BaseButton.Disabled"/>
     public Texture2D? TextureDisabled
     {
@@ -221,7 +221,7 @@ public class TextureButton : BaseButton
     /// <value>The texture drawn after the state texture when the button has focus.</value>
     /// <remarks>Set this to <c>null</c> to skip focus overlay drawing.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Control.HasFocus"/>
     public Texture2D? TextureFocused
     {
@@ -239,7 +239,7 @@ public class TextureButton : BaseButton
     /// <value>The texture reserved for opaque-pixel hit testing.</value>
     /// <remarks>The preview stores this resource for API compatibility; rectangular hit testing remains active.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Texture2D.IsPixelOpaque(int, int)"/>
     public Texture2D? TextureClickMask
     {
@@ -257,7 +257,7 @@ public class TextureButton : BaseButton
     /// <value><c>true</c> to return zero texture minimum size; otherwise, <c>false</c>.</value>
     /// <remarks>This property does not affect drawing, only <see cref="_GetMinimumSize"/>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="_GetMinimumSize"/>
     public bool IgnoreTextureSize
     {
@@ -275,7 +275,7 @@ public class TextureButton : BaseButton
     /// <value>The stretch mode used by <see cref="_Draw"/>.</value>
     /// <remarks>The default is <see cref="StretchModeEnum.Scale"/>.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="StretchModeEnum"/>
     public StretchModeEnum StretchMode
     {
@@ -292,7 +292,7 @@ public class TextureButton : BaseButton
     /// </summary>
     /// <remarks>The focus texture, when set, is drawn after the state texture.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="TextureNormal"/>
     public override void _Draw()
     {
@@ -309,7 +309,7 @@ public class TextureButton : BaseButton
     /// <returns>The normal texture size, or <see cref="Vector2.Zero"/> when no texture is available or size is ignored.</returns>
     /// <remarks>The pressed/disabled/focus textures do not change minimum size.</remarks>
     /// <threadsafety>This callback is invoked on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="TextureNormal"/>
     public override Vector2 _GetMinimumSize()
     {

@@ -14,7 +14,7 @@
 
 ## Цель
 
-`0.1.0 Preview` должен предоставить runtime baseline для ресурсных animation tracks. Ресурс `Animation` хранит value tracks и method call tracks, `AnimationLibrary` группирует именованные animations, а `AnimationPlayer` воспроизводит их во время `SceneTree.ProcessFrame()`.
+`0.1-preview` должен предоставить runtime baseline для ресурсных animation tracks. Ресурс `Animation` хранит value tracks и method call tracks, `AnimationLibrary` группирует именованные animations, а `AnimationPlayer` воспроизводит их во время `SceneTree.ProcessFrame()`.
 
 Задача не реализует editor timeline, blend tree, animation state machine, audio tracks, 3D transform tracks, skeletal animation, секции и capture mode. Эти части остаются отдельными задачами после базового runtime-среза.
 
@@ -114,7 +114,7 @@
 
 ## Текущее состояние
 
-`0.1.0 Preview` теперь поддерживает ресурсные animation tracks:
+`0.1-preview` теперь поддерживает ресурсные animation tracks:
 
 - `Animation` хранит value tracks и method call tracks.
 - `AnimationLibrary` группирует animations по именам и отдаёт стабильный список имён.

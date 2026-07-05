@@ -14,13 +14,13 @@
 
 Статус: целевая спецификация для `T-0077`.
 Обновлено: 2026-06-21.
-Связанные документы: [Electron2D 0.1.0 Preview](../releases/0.1.0-preview.md), [Translation resource, locale switching и `Tr`](translation-runtime.md), [Text backend baseline](../rendering/text-backend-baseline.md), [Input event mapping и `InputEvent*`](../input/sdl-input-event-mapping.md).
+Связанные документы: [Electron2D 0.1-preview](../releases/0.1-preview.md), [Translation resource, locale switching и `Tr`](translation-runtime.md), [Text backend baseline](../rendering/text-backend-baseline.md), [Input event mapping и `InputEvent*`](../input/sdl-input-event-mapping.md).
 
 ## Назначение
 
-Electron2D `0.1.0 Preview` должен явно описать и проверить минимальный уровень поддержки Unicode, IME и текста справа налево для игр, редактора и экспортируемых desktop-сборок.
+Electron2D `0.1-preview` должен явно описать и проверить минимальный уровень поддержки Unicode, IME и текста справа налево для игр, редактора и экспортируемых desktop-сборок.
 
-`IME` означает Input Method Editor: системный способ ввода текста для языков и раскладок, где пользователь набирает промежуточную композицию, а приложение получает уже подтверждённый текст. В `0.1.0 Preview` Electron2D фиксирует только подтверждённый текст, а не UI композиции.
+`IME` означает Input Method Editor: системный способ ввода текста для языков и раскладок, где пользователь набирает промежуточную композицию, а приложение получает уже подтверждённый текст. В `0.1-preview` Electron2D фиксирует только подтверждённый текст, а не UI композиции.
 
 ## Уровень поддержки
 
@@ -89,7 +89,7 @@ Acceptance набор:
 
 Если система передала строку из нескольких Unicode scalar values, Electron2D создаёт несколько событий в том же порядке. Это покрывает обычный keyboard text input, подтверждённый ввод через IME и emoji.
 
-`0.1.0 Preview` не реализует public API для промежуточной IME-композиции: нет preedit text, selection range, candidate window control или отдельного `InputEventText`.
+`0.1-preview` не реализует public API для промежуточной IME-композиции: нет preedit text, selection range, candidate window control или отдельного `InputEventText`.
 
 ## Текст справа налево
 

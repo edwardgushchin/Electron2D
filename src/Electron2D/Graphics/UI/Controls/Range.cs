@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This type is available since Electron2D 0.1.0 Preview.
+/// This type is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Slider"/>
@@ -70,7 +70,7 @@ public class Range : Control
     /// </threadsafety>
     ///
     /// <since>
-    /// This constructor is available since Electron2D 0.1.0 Preview.
+    /// This constructor is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Range"/>
@@ -86,7 +86,7 @@ public class Range : Control
     /// <remarks>If assigned above <see cref="MaxValue"/>, the maximum is moved to the same value.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not finite.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="MaxValue"/>
     public double MinValue
     {
@@ -110,7 +110,7 @@ public class Range : Control
     /// <remarks>If assigned below <see cref="MinValue"/>, the minimum is moved to the same value.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not finite.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="MinValue"/>
     public double MaxValue
     {
@@ -134,7 +134,7 @@ public class Range : Control
     /// <remarks>Non-zero values snap to the nearest step from <see cref="MinValue"/>.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative or not finite.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Value"/>
     public double Step
     {
@@ -158,7 +158,7 @@ public class Range : Control
     /// <remarks>The preview stores page size for API consumers; sliders do not render page indicators.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is negative or not finite.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Range"/>
     public double Page
     {
@@ -181,7 +181,7 @@ public class Range : Control
     /// <remarks>Changing this property emits <c>value_changed</c> when the normalized value changes.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is not finite.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="SetValueNoSignal(double)"/>
     public double Value
     {
@@ -196,7 +196,7 @@ public class Range : Control
     /// <remarks>Assigning this property maps the ratio to <see cref="Value"/>.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the assigned value is not finite.</exception>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Value"/>
     public double Ratio
     {
@@ -219,7 +219,7 @@ public class Range : Control
     /// <value><c>true</c> to round values; otherwise, <c>false</c>.</value>
     /// <remarks>Rounding uses midpoint-away-from-zero behavior.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Value"/>
     public bool Rounded { get; set; }
 
@@ -229,7 +229,7 @@ public class Range : Control
     /// <value><c>true</c> to allow greater values; otherwise, <c>false</c>.</value>
     /// <remarks>Disabling this property clamps the current value if needed.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="AllowLesser"/>
     public bool AllowGreater
     {
@@ -247,7 +247,7 @@ public class Range : Control
     /// <value><c>true</c> to allow lesser values; otherwise, <c>false</c>.</value>
     /// <remarks>Disabling this property clamps the current value if needed.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="AllowGreater"/>
     public bool AllowLesser
     {
@@ -265,7 +265,7 @@ public class Range : Control
     /// <value><c>true</c> when exponential editing is requested; otherwise, <c>false</c>.</value>
     /// <remarks>The preview stores this flag for API consumers; slider input remains linear.</remarks>
     /// <threadsafety>This property is not synchronized. Mutate it on the main scene thread.</threadsafety>
-    /// <since>This property is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This property is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Slider"/>
     public bool ExpEdit { get; set; }
 
@@ -276,7 +276,7 @@ public class Range : Control
     /// <remarks>The assigned value is still clamped and snapped.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is not finite.</exception>
     /// <threadsafety>This method is not synchronized. Call it on the main scene thread.</threadsafety>
-    /// <since>This method is available since Electron2D 0.1.0 Preview.</since>
+    /// <since>This method is available since Electron2D 0.1-preview.</since>
     /// <seealso cref="Value"/>
     public void SetValueNoSignal(double value)
     {

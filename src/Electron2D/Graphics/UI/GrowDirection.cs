@@ -42,7 +42,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This enum is available since Electron2D 0.1.0 Preview.
+/// This enum is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="Control.GrowHorizontal"/>
@@ -64,7 +64,7 @@ public enum GrowDirection
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="End"/>
@@ -86,7 +86,7 @@ public enum GrowDirection
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Begin"/>
@@ -108,7 +108,7 @@ public enum GrowDirection
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum value is available since Electron2D 0.1.0 Preview.
+    /// This enum value is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Begin"/>

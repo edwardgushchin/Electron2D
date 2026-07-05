@@ -37,7 +37,7 @@ namespace Electron2D;
 /// </para>
 ///
 /// <para>
-/// Electron2D 0.1.0 Preview exposes the default <c>Master</c> bus,
+/// Electron2D 0.1-preview exposes the default <c>Master</c> bus,
 /// user-defined buses, simple volume routing, mute and solo state. Audio
 /// effects and editor-side bus layout editing are not part of this preview
 /// server surface.
@@ -51,7 +51,7 @@ namespace Electron2D;
 /// </threadsafety>
 ///
 /// <since>
-/// This class is available since Electron2D 0.1.0 Preview.
+/// This class is available since Electron2D 0.1-preview.
 /// </since>
 ///
 /// <seealso cref="AudioStream" />
@@ -74,7 +74,7 @@ public static class AudioServer
     /// <remarks>
     /// <para>
     /// The active platform backend reports the closest layout it can guarantee.
-    /// Electron2D 0.1.0 Preview defaults to <see cref="Stereo" />.
+    /// Electron2D 0.1-preview defaults to <see cref="Stereo" />.
     /// </para>
     /// </remarks>
     ///
@@ -83,7 +83,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This enum is available since Electron2D 0.1.0 Preview.
+    /// This enum is available since Electron2D 0.1-preview.
     /// </since>
     public enum SpeakerMode
     {
@@ -96,7 +96,7 @@ public static class AudioServer
         /// </remarks>
         ///
         /// <since>
-        /// This enum value is available since Electron2D 0.1.0 Preview.
+        /// This enum value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpeakerMode" />
@@ -111,7 +111,7 @@ public static class AudioServer
         /// </remarks>
         ///
         /// <since>
-        /// This enum value is available since Electron2D 0.1.0 Preview.
+        /// This enum value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpeakerMode" />
@@ -126,7 +126,7 @@ public static class AudioServer
         /// </remarks>
         ///
         /// <since>
-        /// This enum value is available since Electron2D 0.1.0 Preview.
+        /// This enum value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpeakerMode" />
@@ -141,7 +141,7 @@ public static class AudioServer
         /// </remarks>
         ///
         /// <since>
-        /// This enum value is available since Electron2D 0.1.0 Preview.
+        /// This enum value is available since Electron2D 0.1-preview.
         /// </since>
         ///
         /// <seealso cref="SpeakerMode" />
@@ -168,7 +168,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetOutputLatency" />
@@ -202,7 +202,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetMixRate" />
@@ -234,7 +234,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SpeakerMode" />
@@ -267,7 +267,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusName" />
@@ -306,7 +306,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusCount" />
@@ -349,7 +349,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusName" />
@@ -392,7 +392,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusCount" />
@@ -446,7 +446,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetBusName(int, string)" />
@@ -492,7 +492,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="AddBus(int)" />
@@ -548,7 +548,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusName(int)" />
@@ -606,7 +606,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusName(int)" />
@@ -673,7 +673,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusSend(int)" />
@@ -736,7 +736,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetBusSend(int, StringName)" />
@@ -777,7 +777,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusVolumeDb(int)" />
@@ -821,7 +821,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetBusVolumeDb(int, float)" />
@@ -863,7 +863,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="GetBusVolumeLinear(int)" />
@@ -909,7 +909,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetBusVolumeLinear(int, float)" />
@@ -947,7 +947,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsBusMute(int)" />
@@ -986,7 +986,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetBusMute(int, bool)" />
@@ -1024,7 +1024,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="IsBusSolo(int)" />
@@ -1062,7 +1062,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="SetBusSolo(int, bool)" />
@@ -1092,7 +1092,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Unlock" />
@@ -1127,7 +1127,7 @@ public static class AudioServer
     /// </threadsafety>
     ///
     /// <since>
-    /// This method is available since Electron2D 0.1.0 Preview.
+    /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
     /// <seealso cref="Lock" />

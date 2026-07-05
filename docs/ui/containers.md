@@ -17,7 +17,7 @@
 
 ## Цель
 
-Electron2D `0.1.0 Preview` должен иметь базовый набор UI-контейнеров, достаточный для вложенного layout: общий `Container`, линейные `HBoxContainer`/`VBoxContainer`, табличный `GridContainer`, контейнер внешних отступов `MarginContainer`, центрирующий `CenterContainer` и прокручиваемый `ScrollContainer`.
+Electron2D `0.1-preview` должен иметь базовый набор UI-контейнеров, достаточный для вложенного layout: общий `Container`, линейные `HBoxContainer`/`VBoxContainer`, табличный `GridContainer`, контейнер внешних отступов `MarginContainer`, центрирующий `CenterContainer` и прокручиваемый `ScrollContainer`.
 
 Контейнеры работают только с прямыми дочерними `Control`. Остальные дочерние `Node` остаются в дереве, но не участвуют в layout. Готовые widgets, scrollbar nodes, tooltips, theme resources и editor-only panels остаются отдельными задачами.
 
