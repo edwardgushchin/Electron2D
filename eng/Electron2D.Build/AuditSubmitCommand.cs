@@ -355,7 +355,6 @@ internal sealed class AuditSubmitCommand
             outputPath,
             messagePath,
             projectUrl,
-            ScreenshotsDirectory: null,
             pollSeconds,
             timeoutMinutes,
             loginTimeoutMinutes,
@@ -1347,12 +1346,6 @@ internal static class AuditSubmitPollingPolicy
             : new AuditSubmitPollingDecision(AuditSubmitPollingAction.Reload, null);
     }
 
-    public static string CreateScreenshotName(AuditSubmitPollingDecision decision, int poll)
-    {
-        return decision.Action == AuditSubmitPollingAction.Wait
-            ? decision.Reason == AuditSubmitPollingReason.Stabilizing ? $"stabilizing-{poll:000}" : $"generating-{poll:000}"
-            : $"waiting-{poll:000}";
-    }
 }
 
 internal enum AuditSubmitPollingAction
@@ -1386,8 +1379,6 @@ internal interface IAuditSubmitBrowserOptions
 {
     string ProjectUrl { get; }
 
-    string? ScreenshotsDirectory { get; }
-
     int LoginTimeoutMinutes { get; }
 
     string? CodexChromePipe { get; }
@@ -1406,7 +1397,6 @@ internal sealed record AuditSubmitOptions(
     string OutputPath,
     string? MessagePath,
     string ProjectUrl,
-    string? ScreenshotsDirectory,
     int PollSeconds,
     int TimeoutMinutes,
     int LoginTimeoutMinutes,

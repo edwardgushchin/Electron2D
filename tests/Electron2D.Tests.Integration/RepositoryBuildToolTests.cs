@@ -5178,7 +5178,7 @@ public sealed class RepositoryBuildToolTests
 
         Assert.True(result.Succeeded, result.Code);
         Assert.Equal(
-            ["create-tab", "initialize-tab", "navigate", "bring-front", "hydrate", "scroll-bottom", "hydrate", "capture", "frame-tree", "target-info", "selected", "selected-diagnostics"],
+            ["create-tab", "initialize-tab", "navigate", "bring-front", "hydrate", "scroll-bottom", "hydrate", "frame-tree", "target-info", "selected", "selected-diagnostics", "accessibility"],
             result.Trace.Events.Take(12).ToArray());
         Assert.Contains(result.Trace.Events, entry => entry.StartsWith("dump-targets:", StringComparison.Ordinal));
         Assert.True(File.Exists(Path.Combine(workspace.Root, "frame-tree.json")));
@@ -5205,7 +5205,7 @@ public sealed class RepositoryBuildToolTests
             methodBody);
         Assert.Matches(
             new Regex(
-                "var report = options\\.DeepResearch\\s*\\?\\s*await WaitForReportAsync\\(browser, tabId, options, screenshots, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked\\.Token\\).*?:\\s*await WaitForOrdinaryChatReportAsync\\(browser, tabId, options, screenshots, messageCountBeforeSend, linked\\.Token\\)",
+                "var report = options\\.DeepResearch\\s*\\?\\s*await WaitForReportAsync\\(browser, tabId, options, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked\\.Token\\).*?:\\s*await WaitForOrdinaryChatReportAsync\\(browser, tabId, options, messageCountBeforeSend, linked\\.Token\\)",
                 RegexOptions.Singleline),
             methodBody);
     }
@@ -5222,10 +5222,8 @@ public sealed class RepositoryBuildToolTests
                 "ConfigureDownloadsAsync",
                 "NavigateAsync:https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/project",
                 "BringTabToFrontBestEffortAsync",
-                "CaptureAsync:open-project",
                 "WaitForComposerAsync:00:01:00",
-                "WaitForReportHydrationAsync",
-                "CaptureAsync:composer-ready"
+                "WaitForReportHydrationAsync"
             ],
             trace.Calls);
         Assert.True(trace.DownloadDirectoryConfigured);
@@ -6074,7 +6072,7 @@ public sealed class RepositoryBuildToolTests
 
         AssertEquivalentMarkdown(report, trace.Report);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9:timeout", trace.Calls);
-        Assert.Contains("CaptureAsync:ordinary-copy-transient-001", trace.Calls);
+        Assert.Contains("DelayAsync:1", trace.Calls);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
     }
 
@@ -6177,7 +6175,7 @@ public sealed class RepositoryBuildToolTests
 
         AssertEquivalentMarkdown(report, trace.Report);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9:no-current-assistant", trace.Calls);
-        Assert.Contains("CaptureAsync:ordinary-waiting-030", trace.Calls);
+        Assert.Contains("DelayAsync:1", trace.Calls);
         Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
     }
 
@@ -7570,6 +7568,26 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Fast")]
+    public void AuditSubmitSourceDoesNotContainScreenshotRecorderOrCapturePlumbing()
+    {
+        var source = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCodexChromeCommand.cs"),
+            Encoding.UTF8);
+        var submitSource = File.ReadAllText(
+            Path.Combine(FindRepositoryRoot(), "eng", "Electron2D.Build", "AuditSubmitCommand.cs"),
+            Encoding.UTF8);
+
+        Assert.DoesNotContain("AuditSubmitCodexChromeScreenshotRecorder", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("CapturePngAsync", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("CaptureAsync(", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("ScreenshotSettleDelay", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("SanitizeStageName", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("ScreenshotsDirectory", submitSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("CreateScreenshotName", submitSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Fast")]
     public void AuditSubmitCodexChromeClicksDeepResearchTool()
     {
         var source = File.ReadAllText(
@@ -7606,7 +7624,6 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("connectorSelectors", source, StringComparison.Ordinal);
         Assert.Contains("Input.dispatchMouseEvent", source, StringComparison.Ordinal);
         Assert.Contains("ClickAtAsync", source, StringComparison.Ordinal);
-        Assert.Contains("deep-research-menu", source, StringComparison.Ordinal);
         Assert.Contains("aboveComposer", source, StringComparison.Ordinal);
         Assert.Contains("belowComposer || aboveComposer", source, StringComparison.Ordinal);
         Assert.Contains("FinalizeTabsAsync(CancellationToken.None)", source, StringComparison.Ordinal);
@@ -7640,7 +7657,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("messageCountBeforeSend + 1", source, StringComparison.Ordinal);
         Assert.Contains("RequireDeepResearchSelectedAsync", source, StringComparison.Ordinal);
         Assert.Matches(
-            new Regex("SubmitPromptAsync\\(.*?AttachFilesAsync\\(zipPaths, cancellationToken\\).*?if \\(deepResearch\\).*?EnableDeepResearchAsync\\(cancellationToken\\).*?if \\(!string\\.IsNullOrWhiteSpace\\(message\\)\\).*?FillPromptAsync\\(message, cancellationToken\\).*?CaptureAsync\\(\"prompt-filled\", cancellationToken\\).*?if \\(deepResearch\\).*?RequireDeepResearchSelectedAsync\\(cancellationToken\\).*?RequirePromptPayloadReadyAsync\\(message, zipPaths, cancellationToken\\).*?ClickSendAsync\\(cancellationToken\\)", RegexOptions.Singleline),
+            new Regex("SubmitPromptAsync\\(.*?AttachFilesAsync\\(zipPaths, cancellationToken\\).*?if \\(deepResearch\\).*?EnableDeepResearchAsync\\(cancellationToken\\).*?if \\(!string\\.IsNullOrWhiteSpace\\(message\\)\\).*?FillPromptAsync\\(message, cancellationToken\\).*?if \\(deepResearch\\).*?RequireDeepResearchSelectedAsync\\(cancellationToken\\).*?RequirePromptPayloadReadyAsync\\(message, zipPaths, cancellationToken\\).*?ClickSendAsync\\(cancellationToken\\)", RegexOptions.Singleline),
             source);
         Assert.Contains("DownloadReportCandidatesAsync", source, StringComparison.Ordinal);
         Assert.Contains("ReportExportButtonClickExpression", source, StringComparison.Ordinal);
@@ -7769,7 +7786,6 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("ToTabPoint", source, StringComparison.Ordinal);
         Assert.DoesNotContain("report-download-svg-found-bottom", source, StringComparison.Ordinal);
         Assert.DoesNotContain("report-export-point-found-bottom", source, StringComparison.Ordinal);
-        Assert.Contains("report-download-missing", source, StringComparison.Ordinal);
         Assert.Contains("one deterministic download-report-only attempt", source, StringComparison.Ordinal);
         Assert.Contains("E2D-BUILD-AUDIT-SUBMIT-REPORT-STILL-GENERATING", source, StringComparison.Ordinal);
         Assert.Contains("GetDownloadSearchDirectories", source, StringComparison.Ordinal);
@@ -7808,11 +7824,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("item.focus", markdownMenuExpression, StringComparison.Ordinal);
         Assert.Contains("activate(item);", markdownMenuExpression, StringComparison.Ordinal);
         Assert.Contains("element.click();", markdownMenuExpression, StringComparison.Ordinal);
-        Assert.Contains("report-export-menu", source, StringComparison.Ordinal);
-        Assert.Contains("report-export-point-missing", source, StringComparison.Ordinal);
         Assert.Contains("DismissRateLimitDialogAsync", source, StringComparison.Ordinal);
         Assert.Contains("RateLimitDialogDismissPointExpression", source, StringComparison.Ordinal);
-        Assert.Contains("rate-limit-dialog", source, StringComparison.Ordinal);
         Assert.Contains("слишком много запросов", rateLimitExpression, StringComparison.Ordinal);
         Assert.Contains("вы отправляете запросы слишком часто", rateLimitExpression, StringComparison.Ordinal);
         Assert.Contains("too many requests", rateLimitExpression, StringComparison.Ordinal);
@@ -7826,7 +7839,7 @@ public sealed class RepositoryBuildToolTests
         Assert.DoesNotContain("Get-Clipboard", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Set-Clipboard", source, StringComparison.Ordinal);
         Assert.DoesNotContain("powershell", source, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("ScreenshotSettleDelay", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("ScreenshotSettleDelay", source, StringComparison.Ordinal);
         Assert.Contains("LooksLikePromptTemplate", submitSource, StringComparison.Ordinal);
         Assert.Contains("AuditSubmitReportCandidateSource.OpenedReportCard", source, StringComparison.Ordinal);
         Assert.Contains("AuditSubmitReportCandidateSource.AssistantMessage", source, StringComparison.Ordinal);
@@ -7907,10 +7920,10 @@ public sealed class RepositoryBuildToolTests
             new Regex("await Task\\.Delay\\(delay, cancellationToken\\).*?Page\\.reload.*?WaitForConversationMessagesAsync", RegexOptions.Singleline),
             source);
         Assert.Matches(
-            new Regex("DismissRateLimitDialogAsync\\(browser, tabId, screenshots, cancellationToken\\).*?CapturePollingDecisionAsync", RegexOptions.Singleline),
+            new Regex("DismissRateLimitDialogAsync\\(browser, tabId, cancellationToken\\).*?CapturePollingDecisionAsync", RegexOptions.Singleline),
             source);
         Assert.Matches(
-            new Regex("WaitForConversationMessagesAsync\\(browser, tabId, minimumMessageCount: 1, timeout: TimeSpan\\.FromMinutes\\(1\\).*?DismissRateLimitDialogAsync\\(browser, tabId, screenshots, cancellationToken\\).*?reloaded-", RegexOptions.Singleline),
+            new Regex("WaitForConversationMessagesAsync\\(browser, tabId, minimumMessageCount: 1, timeout: TimeSpan\\.FromMinutes\\(1\\).*?DismissRateLimitDialogAsync\\(browser, tabId, cancellationToken\\)", RegexOptions.Singleline),
             source);
     }
 
@@ -8001,7 +8014,6 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(1, trace.OpenItemClicks);
         Assert.Equal(0, trace.MenuOpenAttempts);
         Assert.Equal(0, trace.MenuItemClicks);
-        Assert.Equal(0, trace.MenuCaptures);
     }
 
     [Fact]
@@ -8032,7 +8044,6 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(2, trace.MenuOpenChecks);
         Assert.Equal(0, trace.MenuOpenAttempts);
         Assert.Equal(0, trace.MenuItemClicks);
-        Assert.Equal(0, trace.MenuCaptures);
     }
 
     [Fact]
@@ -8066,7 +8077,6 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(2, trace.MenuExpandedChecks);
         Assert.Equal(0, trace.MenuOpenAttempts);
         Assert.Equal(0, trace.MenuItemClicks);
-        Assert.Equal(0, trace.MenuCaptures);
     }
 
     [Fact]
@@ -8085,7 +8095,6 @@ public sealed class RepositoryBuildToolTests
                 "IsComposerMenuExpandedAsync",
                 "TryOpenMenuAsync",
                 "DelayAsync:750",
-                "CaptureMenuAsync",
                 "TryClickMenuItemAsync",
                 "DelayAsync:500",
                 "IsSelectedAsync",
@@ -8109,7 +8118,6 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(3, trace.MenuExpandedChecks);
         Assert.Equal(1, trace.MenuOpenAttempts);
         Assert.Equal(1, trace.MenuItemClicks);
-        Assert.Equal(1, trace.MenuCaptures);
     }
 
     [Fact]
@@ -8121,9 +8129,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(
             [
                 "AttachFilesAsync:T-0238-audit-r40.zip",
-                "CaptureAsync:files-attached",
                 "FillPromptAsync",
-                "CaptureAsync:prompt-filled",
                 "RequirePromptPayloadReadyAsync",
                 "ReadConversationMessageCountAsync",
                 "ClickSendAsync"
@@ -8141,11 +8147,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(
             [
                 "AttachFilesAsync:T-0238-audit-r40.zip",
-                "CaptureAsync:files-attached",
                 "EnableDeepResearchAsync",
-                "CaptureAsync:deep-research",
                 "FillPromptAsync",
-                "CaptureAsync:prompt-filled",
                 "RequireDeepResearchSelectedAsync",
                 "RequirePromptPayloadReadyAsync",
                 "ReadConversationMessageCountAsync",
@@ -8165,7 +8168,6 @@ public sealed class RepositoryBuildToolTests
         Assert.Equal(
             [
                 "AttachFilesAsync:T-0238-audit-r40.zip",
-                "CaptureAsync:files-attached",
                 "RequirePromptPayloadReadyAsync",
                 "ReadConversationMessageCountAsync",
                 "ClickSendAsync"
@@ -11436,7 +11438,6 @@ public sealed class RepositoryBuildToolTests
                 Path.Combine(domDumpDirectory, "audit-report.md"),
                 null,
                 "https://chatgpt.com/g/g-p-6950376d4d8c8191a0fe600e98389912-electro2d/c/fixture",
-                null,
                 60,
                 1,
                 1,
@@ -16969,8 +16970,7 @@ public sealed class RepositoryBuildToolTests
         int MenuOpenChecks,
         int MenuExpandedChecks,
         int MenuOpenAttempts,
-        int MenuItemClicks,
-        int MenuCaptures);
+        int MenuItemClicks);
 
     private sealed record AuditSubmitOrdinaryReportPollingTrace(IReadOnlyList<string> Calls, string Report);
 
@@ -17158,7 +17158,6 @@ public sealed class RepositoryBuildToolTests
                 "BringTabToFrontAsync" => Complete("bring-front"),
                 "WaitForReportHydrationAsync" => Complete("hydrate"),
                 "ScrollConversationToBottomAsync" => Complete("scroll-bottom"),
-                "CaptureAsync" => Complete("capture"),
                 "ExecuteCdpAsync" => ExecuteCdpAsync(args),
                 "EvaluateAsync" => EvaluateAsync(args),
                 "CreateFrameExecutionContextAsync" => CompleteWith(3, "create-frame-context"),
@@ -17265,9 +17264,6 @@ public sealed class RepositoryBuildToolTests
                 case "BringTabToFrontBestEffortAsync":
                     calls.Add(methodName);
                     return Task.CompletedTask;
-                case "CaptureAsync":
-                    calls.Add($"{methodName}:{args![0]}");
-                    return Task.CompletedTask;
                 case "WaitForComposerAsync":
                     calls.Add($"{methodName}:{args![0]}");
                     return Task.CompletedTask;
@@ -17342,12 +17338,6 @@ public sealed class RepositoryBuildToolTests
                     return missingCopyButton
                         ? CreateOrdinaryCopyTask(targetMethod, "CopyActionUnavailable", null)
                         : CreateOrdinaryCopyTask(targetMethod, "CopiedMarkdown", clipboardMarkdown);
-                case "CaptureAsync":
-                    var captureName = args is { Length: > 0 } && args[0] is string name
-                        ? name
-                        : string.Empty;
-                    calls.Add($"{methodName}:{captureName}");
-                    return Task.CompletedTask;
                 case "DelayAsync":
                     var delay = args is { Length: > 0 } && args[0] is TimeSpan span
                         ? span
@@ -17430,8 +17420,6 @@ public sealed class RepositoryBuildToolTests
 
         public int MenuItemClicks { get; private set; }
 
-        public int MenuCaptures { get; private set; }
-
         public void Configure(
             bool composerMenuOpenBeforeToggle,
             bool composerMenuExpandedBeforeRows,
@@ -17486,10 +17474,6 @@ public sealed class RepositoryBuildToolTests
                     }
 
                     return Task.FromResult(clickedMenuItem);
-                case "CaptureMenuAsync":
-                    calls.Add(methodName);
-                    MenuCaptures++;
-                    return Task.CompletedTask;
                 case "DelayAsync":
                     var delay = args is { Length: > 0 } && args[0] is TimeSpan span
                         ? span.TotalMilliseconds.ToString("0", CultureInfo.InvariantCulture)
@@ -17514,8 +17498,7 @@ public sealed class RepositoryBuildToolTests
                 MenuOpenChecks,
                 MenuExpandedChecks,
                 MenuOpenAttempts,
-                MenuItemClicks,
-                MenuCaptures);
+                MenuItemClicks);
         }
     }
 
@@ -17538,12 +17521,6 @@ public sealed class RepositoryBuildToolTests
                         : string.Empty;
                     calls.Add($"{methodName}:{paths}");
                     filesAttached = true;
-                    return Task.CompletedTask;
-                case "CaptureAsync":
-                    var captureName = args is { Length: > 0 } && args[0] is string actualCaptureName
-                        ? actualCaptureName
-                        : string.Empty;
-                    calls.Add($"{methodName}:{captureName}");
                     return Task.CompletedTask;
                 case "FillPromptAsync":
                     calls.Add(methodName);

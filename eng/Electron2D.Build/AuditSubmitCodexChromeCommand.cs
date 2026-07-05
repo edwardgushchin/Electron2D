@@ -56,35 +56,32 @@ internal sealed class AuditSubmitCodexChromeAutomation
             using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(options.TimeoutMinutes));
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
             await using var browser = await AuditSubmitCodexChromeClient.ConnectAsync(options, linked.Token).ConfigureAwait(false);
-            var screenshots = AuditSubmitCodexChromeScreenshotRecorder.Create(repoRoot, options.ScreenshotsDirectory);
-            var downloadsDirectory = CreateDownloadsDirectory(repoRoot, options);
+            var downloadsDirectory = CreateDownloadsDirectory(repoRoot);
             var tabId = await browser.CreateTabAsync(linked.Token).ConfigureAwait(false);
             var completed = false;
             try
             {
                 var downloadDirectoryConfigured = await PrepareProjectForPromptSubmissionAsync(
-                    new AuditSubmitProjectPreparationDriver(browser, tabId, screenshots, downloadsDirectory),
+                    new AuditSubmitProjectPreparationDriver(browser, tabId, downloadsDirectory),
                     options.ProjectUrl,
                     TimeSpan.FromMinutes(options.LoginTimeoutMinutes),
                     linked.Token).ConfigureAwait(false);
                 var ignoredDeepResearchTargetIds = options.DeepResearch
                     ? await SnapshotDeepResearchTargetIdsAsync(browser, tabId, linked.Token).ConfigureAwait(false)
                     : new HashSet<string>(StringComparer.Ordinal);
-                await screenshots.CaptureAsync(browser, tabId, "composer-ready", linked.Token).ConfigureAwait(false);
                 var messageCountBeforeSend = await SubmitPromptAsync(
-                    new AuditSubmitPromptSubmissionDriver(browser, tabId, screenshots),
+                    new AuditSubmitPromptSubmissionDriver(browser, tabId),
                     [zipPath],
                     message,
                     options.DeepResearch,
                     linked.Token).ConfigureAwait(false);
-                await screenshots.CaptureAsync(browser, tabId, "sent", linked.Token).ConfigureAwait(false);
                 await WaitForConversationMessagesAsync(browser, tabId, messageCountBeforeSend + 1, TimeSpan.FromMinutes(2), linked.Token).ConfigureAwait(false);
                 var conversationUrl = await WaitForConcreteConversationUrlAsync(browser, tabId, TimeSpan.FromSeconds(30), linked.Token).ConfigureAwait(false);
                 await WriteConversationUrlSidecarAsync(repoRoot, zipPath, conversationUrl, options.ControlAudit, linked.Token).ConfigureAwait(false);
 
                 var report = options.DeepResearch
-                    ? await WaitForReportAsync(browser, tabId, options, screenshots, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false)
-                    : await WaitForOrdinaryChatReportAsync(browser, tabId, options, screenshots, messageCountBeforeSend, linked.Token).ConfigureAwait(false);
+                    ? await WaitForReportAsync(browser, tabId, options, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false)
+                    : await WaitForOrdinaryChatReportAsync(browser, tabId, options, messageCountBeforeSend, linked.Token).ConfigureAwait(false);
                 completed = true;
                 return report;
             }
@@ -140,8 +137,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(options.TimeoutMinutes));
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
             await using var browser = await AuditSubmitCodexChromeClient.ConnectAsync(options, linked.Token).ConfigureAwait(false);
-            var screenshots = AuditSubmitCodexChromeScreenshotRecorder.Create(repoRoot, options.ScreenshotsDirectory);
-            var downloadsDirectory = CreateDownloadsDirectory(repoRoot, options);
+            var downloadsDirectory = CreateDownloadsDirectory(repoRoot);
             var tabId = await browser.CreateTabAsync(linked.Token).ConfigureAwait(false);
             var completed = false;
             try
@@ -154,10 +150,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 await WaitForReportHydrationAsync(linked.Token).ConfigureAwait(false);
                 await ScrollConversationToBottomAsync(browser, tabId, linked.Token).ConfigureAwait(false);
                 await WaitForReportHydrationAsync(linked.Token).ConfigureAwait(false);
-                _ = await WaitForDeepResearchFrameContentAsync(browser, tabId, screenshots, TimeSpan.FromSeconds(90), linked.Token).ConfigureAwait(false);
-                await screenshots.CaptureAsync(browser, tabId, "open-report-page-bottom", linked.Token).ConfigureAwait(false);
+                _ = await WaitForDeepResearchFrameContentAsync(browser, tabId, TimeSpan.FromSeconds(90), linked.Token).ConfigureAwait(false);
 
-                var report = await DownloadReadyReportAsync(browser, tabId, options, screenshots, downloadsDirectory, includeUserDownloadsFallback: true, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false);
+                var report = await DownloadReadyReportAsync(browser, tabId, options, downloadsDirectory, includeUserDownloadsFallback: true, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false);
                 completed = true;
                 return report;
             }
@@ -209,9 +204,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
             using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(options.TimeoutMinutes));
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
             await using var browser = await AuditSubmitCodexChromeClient.ConnectAsync(options, linked.Token).ConfigureAwait(false);
-            var screenshots = AuditSubmitCodexChromeScreenshotRecorder.Create(repoRoot, options.ScreenshotsDirectory);
             return await DumpDomFromUrlAsync(
-                new AuditSubmitDomDumpDriver(browser, screenshots),
+                new AuditSubmitDomDumpDriver(browser),
                 options,
                 repoRoot,
                 linked.Token).ConfigureAwait(false);
@@ -263,7 +257,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             await driver.WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
             await driver.ScrollConversationToBottomAsync(tabId, cancellationToken).ConfigureAwait(false);
             await driver.WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
-            await driver.CaptureAsync(tabId, "dom-dump-page-bottom", cancellationToken).ConfigureAwait(false);
 
             var frameTree = await driver.ExecuteCdpAsync(tabId, "Page.getFrameTree", EmptyObject(), TimeSpan.FromSeconds(15), cancellationToken).ConfigureAwait(false);
             await WriteJsonFileAsync(Path.Combine(dumpDirectory, "frame-tree.json"), frameTree, cancellationToken).ConfigureAwait(false);
@@ -379,8 +372,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
         Task ScrollConversationToBottomAsync(long tabId, CancellationToken cancellationToken);
 
-        Task CaptureAsync(long tabId, string name, CancellationToken cancellationToken);
-
         Task<JsonElement> ExecuteCdpAsync(long tabId, string method, Dictionary<string, object?> parameters, TimeSpan timeout, CancellationToken cancellationToken);
 
         Task<JsonElement> EvaluateAsync(long tabId, string expression, TimeSpan timeout, CancellationToken cancellationToken);
@@ -399,9 +390,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
         Task FinalizeTabsAsync(CancellationToken cancellationToken);
     }
 
-    private sealed class AuditSubmitDomDumpDriver(
-        AuditSubmitCodexChromeClient browser,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots) : IAuditSubmitDomDumpDriver
+    private sealed class AuditSubmitDomDumpDriver(AuditSubmitCodexChromeClient browser) : IAuditSubmitDomDumpDriver
     {
         public Task<long> CreateTabAsync(CancellationToken cancellationToken)
         {
@@ -431,11 +420,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         public Task ScrollConversationToBottomAsync(long tabId, CancellationToken cancellationToken)
         {
             return AuditSubmitCodexChromeAutomation.ScrollConversationToBottomAsync(browser, tabId, cancellationToken);
-        }
-
-        public Task CaptureAsync(long tabId, string name, CancellationToken cancellationToken)
-        {
-            return screenshots.CaptureAsync(browser, tabId, name, cancellationToken);
         }
 
         public Task<JsonElement> ExecuteCdpAsync(long tabId, string method, Dictionary<string, object?> parameters, TimeSpan timeout, CancellationToken cancellationToken)
@@ -594,11 +578,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
         return configured;
     }
 
-    private static string CreateDownloadsDirectory(string repoRoot, AuditSubmitOptions options)
+    private static string CreateDownloadsDirectory(string repoRoot)
     {
-        var baseDirectory = string.IsNullOrWhiteSpace(options.ScreenshotsDirectory)
-            ? Path.Combine(repoRoot, ".temp", "audit-submit-downloads")
-            : Path.Combine(ResolvePath(repoRoot, options.ScreenshotsDirectory), "downloads");
+        var baseDirectory = Path.Combine(repoRoot, ".temp", "audit-submit-downloads");
         var stamp = DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
         return Path.Combine(baseDirectory, $"{stamp}-{Guid.NewGuid():N}");
     }
@@ -1078,11 +1060,10 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private static async Task EnableDeepResearchAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         CancellationToken cancellationToken)
     {
         await EnableDeepResearchAsync(
-            new AuditSubmitDeepResearchSelectionDriver(browser, tabId, screenshots),
+            new AuditSubmitDeepResearchSelectionDriver(browser, tabId),
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -1092,7 +1073,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     {
         var selectedThroughMenu = false;
         var deadline = driver.UtcNow + TimeSpan.FromSeconds(20);
-        var menuScreenshotCaptured = false;
         var menuOpenRetrySuppressedUntil = DateTimeOffset.MinValue;
         while (driver.UtcNow < deadline)
         {
@@ -1135,11 +1115,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
             menuOpenRetrySuppressedUntil = driver.UtcNow + TimeSpan.FromSeconds(3);
             await driver.DelayAsync(TimeSpan.FromMilliseconds(750), cancellationToken).ConfigureAwait(false);
-            if (!menuScreenshotCaptured)
-            {
-                await driver.CaptureMenuAsync(cancellationToken).ConfigureAwait(false);
-                menuScreenshotCaptured = true;
-            }
 
             if (await driver.TryClickMenuItemAsync(cancellationToken).ConfigureAwait(false))
             {
@@ -1176,15 +1151,12 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
         Task<bool> TryClickMenuItemAsync(CancellationToken cancellationToken);
 
-        Task CaptureMenuAsync(CancellationToken cancellationToken);
-
         Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken);
     }
 
     private sealed class AuditSubmitDeepResearchSelectionDriver(
         AuditSubmitCodexChromeClient browser,
-        long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots) : IAuditSubmitDeepResearchSelectionDriver
+        long tabId) : IAuditSubmitDeepResearchSelectionDriver
     {
         public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 
@@ -1216,11 +1188,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         public async Task<bool> TryClickMenuItemAsync(CancellationToken cancellationToken)
         {
             return await TryClickPointAsync(DeepResearchItemPointExpression, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task CaptureMenuAsync(CancellationToken cancellationToken)
-        {
-            await screenshots.CaptureAsync(browser, tabId, "deep-research-menu", cancellationToken).ConfigureAwait(false);
         }
 
         public async Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken)
@@ -1266,10 +1233,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
         var downloadDirectoryConfigured = await driver.ConfigureDownloadsAsync(cancellationToken).ConfigureAwait(false);
         await driver.NavigateAsync(projectUrl, cancellationToken).ConfigureAwait(false);
         await driver.BringTabToFrontBestEffortAsync(cancellationToken).ConfigureAwait(false);
-        await driver.CaptureAsync("open-project", cancellationToken).ConfigureAwait(false);
         await driver.WaitForComposerAsync(loginTimeout, cancellationToken).ConfigureAwait(false);
         await driver.WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
-        await driver.CaptureAsync("composer-ready", cancellationToken).ConfigureAwait(false);
         return downloadDirectoryConfigured;
     }
 
@@ -1283,8 +1248,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
         Task BringTabToFrontBestEffortAsync(CancellationToken cancellationToken);
 
-        Task CaptureAsync(string name, CancellationToken cancellationToken);
-
         Task WaitForComposerAsync(TimeSpan loginTimeout, CancellationToken cancellationToken);
 
         Task WaitForReportHydrationAsync(CancellationToken cancellationToken);
@@ -1293,7 +1256,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private sealed class AuditSubmitProjectPreparationDriver(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory) : IAuditSubmitProjectPreparationDriver
     {
         public async Task InitializeTabAsync(CancellationToken cancellationToken)
@@ -1316,11 +1278,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             await AuditSubmitCodexChromeAutomation.BringTabToFrontBestEffortAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task CaptureAsync(string name, CancellationToken cancellationToken)
-        {
-            await screenshots.CaptureAsync(browser, tabId, name, cancellationToken).ConfigureAwait(false);
-        }
-
         public async Task WaitForComposerAsync(TimeSpan loginTimeout, CancellationToken cancellationToken)
         {
             await AuditSubmitCodexChromeAutomation.WaitForComposerAsync(browser, tabId, loginTimeout, cancellationToken).ConfigureAwait(false);
@@ -1340,17 +1297,14 @@ internal sealed class AuditSubmitCodexChromeAutomation
         CancellationToken cancellationToken)
     {
         await driver.AttachFilesAsync(zipPaths, cancellationToken).ConfigureAwait(false);
-        await driver.CaptureAsync("files-attached", cancellationToken).ConfigureAwait(false);
         if (deepResearch)
         {
             await driver.EnableDeepResearchAsync(cancellationToken).ConfigureAwait(false);
-            await driver.CaptureAsync("deep-research", cancellationToken).ConfigureAwait(false);
         }
 
         if (!string.IsNullOrWhiteSpace(message))
         {
             await driver.FillPromptAsync(message, cancellationToken).ConfigureAwait(false);
-            await driver.CaptureAsync("prompt-filled", cancellationToken).ConfigureAwait(false);
         }
 
         if (deepResearch)
@@ -1368,8 +1322,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     {
         Task AttachFilesAsync(string[] paths, CancellationToken cancellationToken);
 
-        Task CaptureAsync(string name, CancellationToken cancellationToken);
-
         Task FillPromptAsync(string message, CancellationToken cancellationToken);
 
         Task EnableDeepResearchAsync(CancellationToken cancellationToken);
@@ -1385,17 +1337,11 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
     private sealed class AuditSubmitPromptSubmissionDriver(
         AuditSubmitCodexChromeClient browser,
-        long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots) : IAuditSubmitPromptSubmissionDriver
+        long tabId) : IAuditSubmitPromptSubmissionDriver
     {
         public async Task AttachFilesAsync(string[] paths, CancellationToken cancellationToken)
         {
             await AuditSubmitCodexChromeAutomation.AttachFilesAsync(browser, tabId, paths, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task CaptureAsync(string name, CancellationToken cancellationToken)
-        {
-            await screenshots.CaptureAsync(browser, tabId, name, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task FillPromptAsync(string message, CancellationToken cancellationToken)
@@ -1405,7 +1351,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
         public async Task EnableDeepResearchAsync(CancellationToken cancellationToken)
         {
-            await AuditSubmitCodexChromeAutomation.EnableDeepResearchAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
+            await AuditSubmitCodexChromeAutomation.EnableDeepResearchAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task RequireDeepResearchSelectedAsync(CancellationToken cancellationToken)
@@ -1623,26 +1569,22 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeClient browser,
         long tabId,
         AuditSubmitOptions options,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         IReadOnlySet<string> ignoredDeepResearchTargetIds,
         CancellationToken cancellationToken)
     {
         var delay = TimeSpan.FromSeconds(options.PollSeconds);
-        var poll = 1;
         while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
-            var decision = await CapturePollingDecisionAsync(browser, tabId, screenshots, downloadsDirectory, includeUserDownloadsFallback, ignoredDeepResearchTargetIds, cancellationToken).ConfigureAwait(false);
+            _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+            var decision = await CapturePollingDecisionAsync(browser, tabId, downloadsDirectory, includeUserDownloadsFallback, ignoredDeepResearchTargetIds, cancellationToken).ConfigureAwait(false);
             if (decision.Action == AuditSubmitPollingAction.ReturnReport && decision.Report is not null)
             {
-                await screenshots.CaptureAsync(browser, tabId, "report-ready", cancellationToken).ConfigureAwait(false);
                 return decision.Report;
             }
 
-            await screenshots.CaptureAsync(browser, tabId, AuditSubmitPollingPolicy.CreateScreenshotName(decision, poll), cancellationToken).ConfigureAwait(false);
             if (options.DownloadReportOnly && decision.Action == AuditSubmitPollingAction.Reload)
             {
                 throw new AuditSubmitCodexChromeException(
@@ -1653,7 +1595,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
             if (options.DownloadReportOnly)
             {
-                poll++;
                 continue;
             }
 
@@ -1661,9 +1602,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             await WaitForPageReadyAsync(browser, tabId, UiActionTimeout, cancellationToken).ConfigureAwait(false);
             await WaitForConversationMessagesAsync(browser, tabId, minimumMessageCount: 1, timeout: TimeSpan.FromMinutes(1), cancellationToken: cancellationToken).ConfigureAwait(false);
             await WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
-            _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
-            await screenshots.CaptureAsync(browser, tabId, $"reloaded-{poll:000}", cancellationToken).ConfigureAwait(false);
-            poll++;
+            _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -1671,7 +1610,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeClient browser,
         long tabId,
         AuditSubmitOptions options,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         IReadOnlySet<string> ignoredDeepResearchTargetIds,
@@ -1679,7 +1617,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
     {
         await ScrollConversationToBottomAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         await WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
-        _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
+        _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
 
         var generationDeadline = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(60);
         while (await browser.EvaluateBoolAsync(tabId, IsGeneratingExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false))
@@ -1692,13 +1630,12 @@ internal sealed class AuditSubmitCodexChromeAutomation
             }
 
             await Task.Delay(TimeSpan.FromSeconds(Math.Max(1, options.PollSeconds)), cancellationToken).ConfigureAwait(false);
-            _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
+            _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         }
 
         var candidates = await DownloadReportCandidatesAsync(
             browser,
             tabId,
-            screenshots,
             downloadsDirectory,
             includeUserDownloadsFallback: true,
             ignoredDeepResearchTargetIds,
@@ -1706,14 +1643,12 @@ internal sealed class AuditSubmitCodexChromeAutomation
             cancellationToken).ConfigureAwait(false);
         if (candidates.Length == 0)
         {
-            await screenshots.CaptureAsync(browser, tabId, "report-download-missing", cancellationToken).ConfigureAwait(false);
             throw new AuditSubmitCodexChromeException(
                 "E2D-BUILD-AUDIT-SUBMIT-REPORT-EXPORT-MISSING",
                 "The ready report page did not produce a Markdown export in one deterministic download-report-only attempt.");
         }
 
         var report = ExtractDownloadedReportOrThrow(candidates);
-        await screenshots.CaptureAsync(browser, tabId, "report-ready", cancellationToken).ConfigureAwait(false);
         return report;
     }
 
@@ -1736,11 +1671,10 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeClient browser,
         long tabId,
         AuditSubmitOptions options,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         int messageCountBeforeSend,
         CancellationToken cancellationToken)
     {
-        var driver = new AuditSubmitOrdinaryReportDriver(browser, tabId, screenshots);
+        var driver = new AuditSubmitOrdinaryReportDriver(browser, tabId);
         return await WaitForOrdinaryChatReportAsync(
             driver,
             options.PollSeconds,
@@ -1765,7 +1699,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         DateTimeOffset lastOrdinaryCopyFailureFirstSeenUtc = default;
         var ordinaryCopyButtonMissing = false;
         DateTimeOffset ordinaryCopyButtonMissingFirstSeenUtc = default;
-        var poll = 1;
         while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -1820,8 +1753,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
                             "E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE",
                             $"The ordinary ChatGPT response copy action repeatedly failed before a valid Markdown report could be read: {ex.Message}");
                     }
-
-                    await driver.CaptureAsync($"ordinary-copy-transient-{poll:000}", cancellationToken).ConfigureAwait(false);
                 }
             }
             else
@@ -1842,11 +1773,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
                     var decision = validReportStability.Decide(candidates, isGenerating);
                     if (decision.Action == AuditSubmitPollingAction.ReturnReport && decision.Report is not null)
                     {
-                        await driver.CaptureAsync("ordinary-report-ready", cancellationToken).ConfigureAwait(false);
                         return decision.Report;
                     }
-
-                    await driver.CaptureAsync($"ordinary-stabilizing-{poll:000}", cancellationToken).ConfigureAwait(false);
                 }
                 else if (!isGenerating)
                 {
@@ -1865,8 +1793,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
                                 ? "The ordinary ChatGPT assistant response copied from the response action does not match the strict final report contract."
                                 : $"The ordinary ChatGPT assistant response copied from the response action does not match the strict final report contract: {lastInvalidReason}");
                     }
-
-                    await driver.CaptureAsync($"ordinary-invalid-{poll:000}", cancellationToken).ConfigureAwait(false);
                 }
             }
             else
@@ -1874,11 +1800,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 lastInvalidCandidate = null;
                 lastInvalidReason = null;
                 lastInvalidCandidateFirstSeenUtc = default;
-                await driver.CaptureAsync(isGenerating ? $"ordinary-generating-{poll:000}" : $"ordinary-waiting-{poll:000}", cancellationToken).ConfigureAwait(false);
             }
 
             await driver.DelayAsync(delay, cancellationToken).ConfigureAwait(false);
-            poll++;
         }
     }
 
@@ -1904,8 +1828,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         Task<bool> IsGeneratingAsync(CancellationToken cancellationToken);
 
         Task<AuditSubmitOrdinaryCopyResult> CopyLatestAssistantMessageMarkdownAsync(int minimumMessageCount, CancellationToken cancellationToken);
-
-        Task CaptureAsync(string name, CancellationToken cancellationToken);
 
         Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken);
     }
@@ -1942,14 +1864,13 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
     private sealed class AuditSubmitOrdinaryReportDriver(
         AuditSubmitCodexChromeClient browser,
-        long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots) : IAuditSubmitOrdinaryReportDriver
+        long tabId) : IAuditSubmitOrdinaryReportDriver
     {
         public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 
         public async Task<bool> IsGeneratingAsync(CancellationToken cancellationToken)
         {
-            _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
+            _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
             return await browser.EvaluateBoolAsync(tabId, IsGeneratingExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false);
         }
 
@@ -1960,11 +1881,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 tabId,
                 minimumMessageCount,
                 cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task CaptureAsync(string name, CancellationToken cancellationToken)
-        {
-            await screenshots.CaptureAsync(browser, tabId, name, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken)
@@ -2306,7 +2222,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private static async Task<AuditSubmitPollingDecision> CapturePollingDecisionAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         IReadOnlySet<string> ignoredDeepResearchTargetIds,
@@ -2320,7 +2235,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         var candidates = await DownloadReportCandidatesAsync(
             browser,
             tabId,
-            screenshots,
             downloadsDirectory,
             includeUserDownloadsFallback,
             ignoredDeepResearchTargetIds,
@@ -2471,12 +2385,10 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private static async Task<bool> WaitForDeepResearchFrameContentAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         TimeSpan timeout,
         CancellationToken cancellationToken)
     {
         var deadline = DateTimeOffset.UtcNow + timeout;
-        var diagnosticCaptured = false;
         while (DateTimeOffset.UtcNow < deadline)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -2492,12 +2404,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 return true;
             }
 
-            if (!diagnosticCaptured)
-            {
-                diagnosticCaptured = true;
-                await screenshots.CaptureAsync(browser, tabId, "deep-research-iframe-waiting", cancellationToken).ConfigureAwait(false);
-            }
-
             return true;
         }
 
@@ -2507,23 +2413,21 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private static async Task<AuditSubmitReportCandidate[]> DownloadReportCandidatesAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         IReadOnlySet<string> ignoredDeepResearchTargetIds,
         bool allowLatestReadyTargetFallback,
         CancellationToken cancellationToken)
     {
-        _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
+        _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         await ScrollConversationToBottomAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         await WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
-        _ = await DismissRateLimitDialogAsync(browser, tabId, screenshots, cancellationToken).ConfigureAwait(false);
+        _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
 
         return await DownloadReportCandidatesAsync(
             new AuditSubmitReportCandidateDownloadDriver(
                 browser,
                 tabId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback,
                 ignoredDeepResearchTargetIds,
@@ -2573,7 +2477,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private sealed class AuditSubmitReportCandidateDownloadDriver(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         IReadOnlySet<string> ignoredDeepResearchTargetIds,
@@ -2584,7 +2487,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             return await DownloadReportCandidatesFromDeepResearchFrameAsync(
                 browser,
                 tabId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback,
                 cancellationToken).ConfigureAwait(false);
@@ -2606,7 +2508,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 browser,
                 tabId,
                 targetId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback,
                 cancellationToken).ConfigureAwait(false);
@@ -2617,7 +2518,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             return await ClickReportExportAndReadDownloadedMarkdownAsync(
                 browser,
                 tabId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback,
                 AuditSubmitExportSurfaceScope.Page,
@@ -2643,7 +2543,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private sealed class AuditSubmitDeepResearchMarkdownExportDriver(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback) : IAuditSubmitDeepResearchMarkdownExportDriver
     {
@@ -2657,7 +2556,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             return await AuditSubmitCodexChromeAutomation.ClickReportExportAndReadDownloadedMarkdownAsync(
                 browser,
                 tabId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback,
                 surfaceScope,
@@ -2698,7 +2596,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeClient browser,
         long tabId,
         string targetId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         CancellationToken cancellationToken)
@@ -2713,7 +2610,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 browser,
                 tabId,
                 targetId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback,
                 cancellationToken).ConfigureAwait(false);
@@ -2726,7 +2622,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 new AuditSubmitDeepResearchMarkdownExportDriver(
                     browser,
                     tabId,
-                    screenshots,
                     downloadsDirectory,
                     includeUserDownloadsFallback),
                 AuditSubmitExportSurfaceScope.DeepResearchTarget,
@@ -2743,7 +2638,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private static async Task<AuditSubmitReportCandidateResult> DownloadReportCandidatesFromDeepResearchFrameAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         CancellationToken cancellationToken)
@@ -2775,7 +2669,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             new AuditSubmitDeepResearchMarkdownExportDriver(
                 browser,
                 tabId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback),
             AuditSubmitExportSurfaceScope.DeepResearchFrame,
@@ -2792,7 +2685,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private static async Task<AuditSubmitReportCandidate[]> ClickReportExportAndReadDownloadedMarkdownAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         AuditSubmitExportSurfaceScope surfaceScope,
@@ -2813,12 +2705,10 @@ internal sealed class AuditSubmitCodexChromeAutomation
         {
             if (!await clickExportButtonAsync().ConfigureAwait(false))
             {
-                await screenshots.CaptureAsync(browser, tabId, "report-export-point-missing", cancellationToken).ConfigureAwait(false);
                 return [];
             }
 
             await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-            await screenshots.CaptureAsync(browser, tabId, "report-export-menu", cancellationToken).ConfigureAwait(false);
             var directCandidates = await ReadDirectMarkdownDownloadCandidatesAsync(
                 observedDownloadDirectories,
                 acceptedDownloadDirectories,
@@ -2843,7 +2733,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         }
 
         await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-        await screenshots.CaptureAsync(browser, tabId, "report-markdown-clicked", cancellationToken).ConfigureAwait(false);
 
         var reportPath = await WaitForMarkdownDownloadAsync(observedDownloadDirectories, acceptedDownloadDirectories, knownFiles, TimeSpan.FromSeconds(30), cancellationToken).ConfigureAwait(false);
         var report = string.IsNullOrWhiteSpace(reportPath)
@@ -2928,7 +2817,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeClient browser,
         long tabId,
         string targetId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         string downloadsDirectory,
         bool includeUserDownloadsFallback,
         CancellationToken cancellationToken)
@@ -2945,7 +2833,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             new AuditSubmitDeepResearchMarkdownExportDriver(
                 browser,
                 tabId,
-                screenshots,
                 downloadsDirectory,
                 includeUserDownloadsFallback),
             AuditSubmitExportSurfaceScope.DeepResearchTargetFrame,
@@ -3484,7 +3371,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private static async Task<bool> DismissRateLimitDialogAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
-        AuditSubmitCodexChromeScreenshotRecorder screenshots,
         CancellationToken cancellationToken)
     {
         var point = await browser.EvaluatePointAsync(tabId, RateLimitDialogDismissPointExpression, TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
@@ -3493,7 +3379,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             return false;
         }
 
-        await screenshots.CaptureAsync(browser, tabId, "rate-limit-dialog", cancellationToken).ConfigureAwait(false);
         await browser.ClickAtAsync(tabId, point.Value, cancellationToken).ConfigureAwait(false);
         await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken).ConfigureAwait(false);
         return true;
@@ -5916,35 +5801,6 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
             allowTransientRecovery: false).ConfigureAwait(false);
     }
 
-    public async Task<byte[]> CapturePngAsync(long tabId, CancellationToken cancellationToken)
-    {
-        List<string> failures = [];
-        foreach (var parameters in await CreateScreenshotParameterVariantsAsync(tabId, cancellationToken).ConfigureAwait(false))
-        {
-            for (var attempt = 0; attempt < 2; attempt++)
-            {
-                try
-                {
-                    return await CapturePngWithParametersAsync(tabId, parameters, cancellationToken).ConfigureAwait(false);
-                }
-                catch (AuditSubmitCodexChromeException ex) when (attempt == 0 && IsRecoverableScreenshotFailure(ex))
-                {
-                    failures.Add(ex.Message);
-                    await ReattachCdpAsync(tabId, cancellationToken).ConfigureAwait(false);
-                }
-                catch (AuditSubmitCodexChromeException ex)
-                {
-                    failures.Add(ex.Message);
-                    break;
-                }
-            }
-        }
-
-        throw new AuditSubmitCodexChromeException(
-            "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL",
-            "Page.captureScreenshot did not return image data. Attempts: " + string.Join("; ", failures));
-    }
-
     private async Task ReattachCdpAsync(long tabId, CancellationToken cancellationToken)
     {
         List<string> failures = [];
@@ -5986,12 +5842,6 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         }
     }
 
-    private static bool IsRecoverableScreenshotFailure(AuditSubmitCodexChromeException exception)
-    {
-        return IsRecoverableCdpFailure(exception) ||
-            exception.Message.Contains("Page.captureScreenshot", StringComparison.OrdinalIgnoreCase);
-    }
-
     private static bool IsRecoverableCdpFailure(AuditSubmitCodexChromeException exception)
     {
         return exception.Message.Contains("Debugger unattached", StringComparison.OrdinalIgnoreCase) ||
@@ -5999,106 +5849,6 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
             exception.Message.Contains("Timed out", StringComparison.OrdinalIgnoreCase) ||
             exception.Message.Contains("Cannot find context", StringComparison.OrdinalIgnoreCase) ||
             exception.Message.Contains("Target closed", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private async Task<List<Dictionary<string, object?>>> CreateScreenshotParameterVariantsAsync(
-        long tabId,
-        CancellationToken cancellationToken)
-    {
-        var variants = new List<Dictionary<string, object?>>();
-        var viewportClip = await TryCreateViewportClipAsync(tabId, cancellationToken).ConfigureAwait(false);
-        if (viewportClip is not null)
-        {
-            variants.Add(new Dictionary<string, object?>
-            {
-                ["format"] = "png",
-                ["clip"] = viewportClip,
-                ["captureBeyondViewport"] = true
-            });
-        }
-
-        variants.Add(new Dictionary<string, object?>
-        {
-            ["format"] = "png",
-            ["fromSurface"] = false
-        });
-        variants.Add(new Dictionary<string, object?> { ["format"] = "png" });
-        return variants;
-    }
-
-    private async Task<Dictionary<string, object?>?> TryCreateViewportClipAsync(long tabId, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var metrics = await ExecuteCdpAsync(
-                tabId,
-                "Page.getLayoutMetrics",
-                [],
-                TimeSpan.FromSeconds(10),
-                cancellationToken).ConfigureAwait(false);
-            if (!metrics.TryGetProperty("cssVisualViewport", out var viewport) ||
-                !TryReadFiniteDouble(viewport, "pageX", out var x) ||
-                !TryReadFiniteDouble(viewport, "pageY", out var y) ||
-                !TryReadFiniteDouble(viewport, "clientWidth", out var width) ||
-                !TryReadFiniteDouble(viewport, "clientHeight", out var height) ||
-                width <= 0 ||
-                height <= 0)
-            {
-                return null;
-            }
-
-            var devicePixelRatio = await TryReadDevicePixelRatioAsync(tabId, cancellationToken).ConfigureAwait(false);
-            return new Dictionary<string, object?>
-            {
-                ["x"] = x,
-                ["y"] = y,
-                ["width"] = width,
-                ["height"] = height,
-                ["scale"] = devicePixelRatio > 0 ? 1 / devicePixelRatio : 1
-            };
-        }
-        catch (AuditSubmitCodexChromeException)
-        {
-            return null;
-        }
-    }
-
-    private async Task<double> TryReadDevicePixelRatioAsync(long tabId, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var value = await EvaluateAsync(
-                tabId,
-                "(() => window.devicePixelRatio)()",
-                TimeSpan.FromSeconds(10),
-                cancellationToken).ConfigureAwait(false);
-            return value.ValueKind == JsonValueKind.Number ? value.GetDouble() : 1;
-        }
-        catch (AuditSubmitCodexChromeException)
-        {
-            return 1;
-        }
-    }
-
-    private async Task<byte[]> CapturePngWithParametersAsync(
-        long tabId,
-        Dictionary<string, object?> parameters,
-        CancellationToken cancellationToken)
-    {
-        var result = await ExecuteCdpAsync(
-            tabId,
-            "Page.captureScreenshot",
-            parameters,
-            TimeSpan.FromSeconds(30),
-            cancellationToken).ConfigureAwait(false);
-        if (!result.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.String)
-        {
-            throw new AuditSubmitCodexChromeException(
-                "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL",
-                "Page.captureScreenshot did not return image data.");
-        }
-
-        return Convert.FromBase64String(data.GetString() ?? string.Empty);
     }
 
     private static bool TryReadFiniteDouble(JsonElement value, string propertyName, out double number)
@@ -6368,61 +6118,6 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         return exceptionDetails.TryGetProperty("text", out var text) && text.ValueKind == JsonValueKind.String
             ? text.GetString() ?? "unknown browser exception"
             : "unknown browser exception";
-    }
-}
-
-internal sealed class AuditSubmitCodexChromeScreenshotRecorder
-{
-    private static readonly TimeSpan ScreenshotSettleDelay = TimeSpan.FromSeconds(2);
-    private readonly string? directory;
-    private int nextIndex;
-
-    private AuditSubmitCodexChromeScreenshotRecorder(string? directory)
-    {
-        this.directory = directory;
-    }
-
-    public static AuditSubmitCodexChromeScreenshotRecorder Create(string repoRoot, string? configuredDirectory)
-    {
-        if (string.IsNullOrWhiteSpace(configuredDirectory))
-        {
-            return new AuditSubmitCodexChromeScreenshotRecorder(null);
-        }
-
-        var directory = Path.GetFullPath(Path.IsPathRooted(configuredDirectory)
-            ? configuredDirectory
-            : Path.Combine(repoRoot, configuredDirectory));
-        Directory.CreateDirectory(directory);
-        return new AuditSubmitCodexChromeScreenshotRecorder(directory);
-    }
-
-    public async Task CaptureAsync(
-        AuditSubmitCodexChromeClient browser,
-        long tabId,
-        string stage,
-        CancellationToken cancellationToken)
-    {
-        if (directory is null)
-        {
-            return;
-        }
-
-        nextIndex++;
-        var path = Path.Combine(directory, $"{nextIndex:00}-{SanitizeStageName(stage)}.png");
-        await Task.Delay(ScreenshotSettleDelay, cancellationToken).ConfigureAwait(false);
-        var bytes = await browser.CapturePngAsync(tabId, cancellationToken).ConfigureAwait(false);
-        await File.WriteAllBytesAsync(path, bytes, cancellationToken).ConfigureAwait(false);
-    }
-
-    private static string SanitizeStageName(string stage)
-    {
-        var builder = new StringBuilder(stage.Length);
-        foreach (var ch in stage)
-        {
-            builder.Append(char.IsAsciiLetterOrDigit(ch) || ch == '-' ? ch : '-');
-        }
-
-        return builder.ToString().Trim('-');
     }
 }
 
