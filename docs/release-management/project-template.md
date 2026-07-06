@@ -82,7 +82,7 @@ data/templates/electron2d-empty/
 - структуру проекта: `project.e2d.json`, `scenes/`, `Scripts/`, `.electron2d/tasks/`, `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/user/`;
 - запрет редактировать `.electron2d/import-cache/` и другие generated/local-only каталоги вручную;
 - правило сохранять stable UID и проверять проект через `e2d validate`;
-- предупреждение не использовать внешний API вне утверждённого Electron2D 2D-профиля;
+- предупреждение не использовать внешний API вне утверждённого Electron2D Godot 4.7 public API contract;
 - правило подключаться к активной Editor-сессии, если она открыта;
 - правило использовать `ProjectTaskManager` через Editor, Tooling или MCP, а не прямую правку task storage files;
 - правило отправлять завершённую агентом работу на человеческую приёмку через `task_submit_for_acceptance`.

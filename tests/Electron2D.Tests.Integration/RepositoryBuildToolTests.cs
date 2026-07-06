@@ -943,6 +943,311 @@ public sealed class RepositoryBuildToolTests
     }
 
     [Fact]
+    public async Task VerifyApiCompatibilityRejectsObsoleteRootPublicApiContract()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-obsolete-root-contract");
+        ReplaceInFile(
+            workspace.Root,
+            "docs/release-management/api-compatibility.md",
+            "Корневой контракт совместимости Godot 4.7",
+            "Для `0.1-preview` нужно поддерживать публичный API только в рамках согласованного Electron2D 2D-поднабора.");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-OBSOLETE", "obsolete root public API contract");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsStaleT0241DomainDocumentLink()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-stale-t0241-link");
+        ReplaceInFile(
+            workspace.Root,
+            "TASKS.md",
+            "docs/release-management/api-compatibility.md",
+            "docs/runtime/godot-47-public-api-public-api-parity-contract.md");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-OBSOLETE", "stale T-0241 domain document link");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsMissingRootPublicApiConsumerMap()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-missing-root-consumer-map");
+        ReplaceInFile(
+            workspace.Root,
+            "docs/release-management/api-compatibility.md",
+            "Карта потребителей контракта",
+            "Карта публичного API");
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-FRAGMENT", "missing root public API consumer map");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsManualPublicApiListInRootContract()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-manual-public-api-list");
+        AppendText(
+            workspace.Root,
+            "docs/release-management/api-compatibility.md",
+            """
+
+            ## Текущий baseline
+
+            - `Electron2D.AudioServer`
+            - `Electron2D.Button`
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "manual public API list in root contract");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsManualPublicApiListInScopedDomainDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-manual-public-api-list-domain-doc");
+        WriteText(
+            workspace.Root,
+            "docs/core-types/variant.md",
+            """
+            # Variant
+
+            ## Public API
+
+            Текущий runtime экспортирует:
+
+            - `Electron2D.Variant`;
+            - `Electron2D.Collections.Array`.
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "manual public API list in scoped domain document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsFencedPublicApiDeclarationInScopedDomainDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-fenced-public-api-declaration-domain-doc");
+        WriteText(
+            workspace.Root,
+            "docs/core-types/variant.md",
+            """
+            # Variant
+
+            ## C# API
+
+            ```csharp
+            public readonly struct Variant : IEquatable<Variant>
+            public sealed class Texture2D;
+            ```
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "fenced public API declaration in scoped domain document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsTexturePublicApiDeclarationInScopedDomainDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-texture-public-api-declaration-domain-doc");
+        WriteText(
+            workspace.Root,
+            "docs/rendering/texture-resource-baseline.md",
+            """
+            # Texture baseline
+
+            ## Целевой публичный API
+
+            ```csharp
+            public abstract class Texture2D : Resource
+            public sealed class ImageTexture : Texture2D
+            ```
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "texture public API declaration in scoped domain document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsDensePublicUiPrerequisiteListInScopedDomainDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-public-ui-prerequisite-list-domain-doc");
+        WriteText(
+            workspace.Root,
+            "docs/scripting/editor-script-workflow.md",
+            """
+            # Script workspace
+
+            ## UI prerequisites
+
+            Перед запуском нужен prerequisite manifest с `TextEdit`, `CodeEdit`, `SyntaxHighlighter`, `CodeHighlighter`, `PopupMenu`, `TabContainer`, `Tree`, `ItemList`, `SplitContainer`, `ScrollBar`, `LineEdit`, `Label`, `Button`.
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "dense public UI prerequisite list in scoped domain document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsManualPublicApiListInReleaseRootContractDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-manual-public-api-list-release-doc");
+        AppendText(
+            workspace.Root,
+            "docs/releases/0.1-preview.md",
+            """
+
+            ## Public API
+
+            Exported runtime surface:
+
+            - `Electron2D.AudioServer`
+            - `Electron2D.Button`
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "manual public API list in release root contract document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsFencedBarePublicApiListInReleaseRootContractDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-fenced-public-api-list-release-doc");
+        AppendText(
+            workspace.Root,
+            "docs/releases/0.1-preview.md",
+            """
+
+            ## Public API
+
+            Release public model:
+
+            ```text
+            Object
+            Node
+            Vector2
+            Control
+            ```
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "fenced manual public API list in release root contract document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsFencedPublicApiMembersInReleaseRootContractDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-fenced-public-api-members-release-doc");
+        AppendText(
+            workspace.Root,
+            "docs/releases/0.1-preview.md",
+            """
+
+            ## Public API
+
+            Release public model:
+
+            ```csharp
+            RenderingServer.CurrentProfile
+            RenderingServer.HasFeature(RenderingFeature feature)
+            ```
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "fenced public API members in release root contract document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsFencedPublicApiAttributesInReleaseRootContractDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-fenced-public-api-attributes-release-doc");
+        AppendText(
+            workspace.Root,
+            "docs/releases/0.1-preview.md",
+            """
+
+            ## Public API
+
+            Release public model:
+
+            ```csharp
+            [Export]
+            [Signal]
+            [Tool]
+            ```
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "fenced public API attributes in release root contract document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsInlineGeneratedPublicApiNamesInReleaseRootContractDocument()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-inline-public-api-list-release-doc");
+        AppendText(
+            workspace.Root,
+            "docs/releases/0.1-preview.md",
+            """
+
+            ## Public API
+
+            Baseline: `PhysicsServer2D`, `StaticBody2D`, `RigidBody2D`, `CharacterBody2D` and `Area2D` provide the release public model.
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST", "inline generated public API names in release root contract document");
+    }
+
+    [Fact]
+    public async Task VerifyApiCompatibilityRejectsUnapprovedWaiverStatusInRootContract()
+    {
+        using var workspace = CreateApiWikiFixture("api-compatibility-unapproved-waiver-status");
+        AppendText(
+            workspace.Root,
+            "docs/releases/0.1-preview.md",
+            """
+
+            ## Compatibility statuses
+
+            | Status | Meaning |
+            | --- | --- |
+            | Not planned | Intentionally unsupported |
+            """);
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "api-compatibility", "--wiki-path", ".github/wiki");
+
+        Assert.NotEqual(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-API-COMPATIBILITY-CONTRACT-WAIVER-STATUS", "unapproved waiver status in root contract");
+    }
+
+    [Fact]
     public async Task VerifyApiCompatibilityRejectsForbiddenLegacyPublicType()
     {
         using var workspace = CreateApiWikiFixture("api-compatibility-forbidden-type");
@@ -6043,6 +6348,37 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Medium")]
+    public async Task AuditSubmitDownloadReportOnlyCanRecoverOrdinaryAssistantReportFromExistingConversation()
+    {
+        const string report = """
+        VERDICT: NEEDS_FIXES
+
+        TASK_ASSESSMENT:
+        - metadata.taskId: `T-0241`
+        - metadata.iteration: `r06`
+
+        BLOCKERS:
+        - B1: current ordinary recovery report.
+
+        EVIDENCE_REVIEW:
+        Evidence checked.
+
+        RISKS_AND_NOTES:
+        None.
+
+        CLOSURE_DECISION:
+        Do not close.
+        """;
+
+        var trace = await InvokeAuditSubmitOrdinaryDownloadOnlyRecoveryAsync(report, currentMessageCount: 9);
+
+        AssertEquivalentMarkdown(report, trace.Report);
+        Assert.Contains("CopyLatestAssistantMessageMarkdownAsync:9", trace.Calls);
+        Assert.DoesNotContain(trace.Calls, call => call.Contains("ReadDomMarkdown", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
     public async Task AuditSubmitOrdinaryPollingTreatsSingleCopyTimeoutAsTransient()
     {
         const string report = """
@@ -7233,7 +7569,9 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("очищает оба состояния захвата перед кликом", text, StringComparison.Ordinal);
         Assert.Contains("system clipboard принимается только после успешного sentinel", text, StringComparison.Ordinal);
         Assert.Contains("произвольный старый clipboard text не является источником verdict-а", text, StringComparison.Ordinal);
-        Assert.Contains("`--deep-research` и `--download-report-only` берут Markdown только из export/download path", text, StringComparison.Ordinal);
+        Assert.Contains("`--download-report-only` остаётся диагностическим read-only режимом", text, StringComparison.Ordinal);
+        Assert.Contains("controlled ordinary copy action последнего assistant-ответа", text, StringComparison.Ordinal);
+        Assert.Contains("Deep Research export/download recovery", text, StringComparison.Ordinal);
         Assert.Contains("команда доверяет `navigator.clipboard.readText()` только при успешно установленном sentinel", text, StringComparison.Ordinal);
         Assert.Contains("если sentinel не был установлен, browser `readText()` не является доказательством текущей copy action", text, StringComparison.Ordinal);
         Assert.Contains("Базовый ordinary path не восстанавливает Markdown из `innerText`, `textContent` или собственного DOM-to-Markdown renderer-а", text, StringComparison.Ordinal);
@@ -11568,6 +11906,44 @@ public sealed class RepositoryBuildToolTests
         return trace.ToTrace(report);
     }
 
+    private static async Task<AuditSubmitOrdinaryDownloadOnlyRecoveryTrace> InvokeAuditSubmitOrdinaryDownloadOnlyRecoveryAsync(
+        string clipboardMarkdown,
+        int currentMessageCount)
+    {
+        var assembly = await BuildAndLoadBuildToolAssemblyAsync();
+        var automationType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeAutomation", throwOnError: true)!;
+        var exceptionType = assembly.GetType("Electron2D.Build.AuditSubmitCodexChromeException", throwOnError: true)!;
+        var driverType = automationType.GetNestedType("IAuditSubmitOrdinaryReportDriver", BindingFlags.NonPublic)
+            ?? throw new MissingMemberException(automationType.FullName, "IAuditSubmitOrdinaryReportDriver");
+        var method = automationType
+            .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+            .Single(candidate =>
+            {
+                if (!string.Equals(candidate.Name, "TryDownloadReadyOrdinaryChatReportAsync", StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                var parameters = candidate.GetParameters();
+                return parameters.Length == 3 && parameters[0].ParameterType == driverType;
+            });
+        var createProxy = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), BindingFlags.Static | BindingFlags.Public, [typeof(Type), typeof(Type)])
+            ?? throw new MissingMethodException(typeof(DispatchProxy).FullName, nameof(DispatchProxy.Create));
+        var proxy = createProxy.Invoke(null, [driverType, typeof(AuditSubmitOrdinaryReportDriverProxy)])
+            ?? throw new InvalidOperationException("Ordinary report proxy was not created.");
+        var trace = Assert.IsAssignableFrom<AuditSubmitOrdinaryReportDriverProxy>(proxy);
+        trace.Configure(
+            clipboardMarkdown,
+            transientFailures: 0,
+            missingCopyButtonValue: false,
+            noCurrentAssistantPolls: 0,
+            exceptionType);
+
+        var task = (Task<string?>)method.Invoke(null, [proxy, currentMessageCount, CancellationToken.None])!;
+        var report = await task.ConfigureAwait(false);
+        return trace.ToDownloadOnlyRecoveryTrace(report);
+    }
+
     private static async Task<bool> InvokeAuditSubmitCanAcceptSystemClipboardTextAsync(
         string text,
         string sentinel,
@@ -14406,6 +14782,7 @@ public sealed class RepositoryBuildToolTests
     {
         var workspace = TemporaryDirectory.Create(name);
         CreateRepositoryRootMarkers(workspace.Root);
+        WriteRootPublicApiContractFixture(workspace.Root);
         WriteText(
             workspace.Root,
             ApiManifestRelativePath,
@@ -14425,7 +14802,7 @@ public sealed class RepositoryBuildToolTests
                   "summary": "Provides a 2D character body moved directly by user code.",
                   "category": "Physics",
                   "profile": {
-                    "name": "Electron2D 0.1-preview 2D",
+                    "name": "Electron2D 0.1-preview",
                     "status": "partial",
                     "parity": "not_verified",
                     "outOfProfile": true,
@@ -14508,6 +14885,53 @@ public sealed class RepositoryBuildToolTests
             """);
 
         return workspace;
+    }
+
+    private static void WriteRootPublicApiContractFixture(string root)
+    {
+        WriteText(
+            root,
+            "TASKS.md",
+            """
+            ## T-0241 [ ] P0: Зафиксировать полный контракт совместимости Godot 4.7 для публичного API
+
+            - Состояние: open
+            - Зависимости: нет
+            - Ссылки:
+              - Доменный документ: `docs/release-management/api-compatibility.md`
+
+            ### Корневой контракт совместимости
+            - Входные данные Godot закреплены на `4.7-stable`.
+            - `T-0242`, `T-0243`, `T-0244`, `T-0245` и `T-0963` задают владельцев generated artifacts и исключений.
+            - Публичный путь скриптов: C#; публичный shader source language: HLSL.
+            - Windows/Linux/macOS требуют runtime+editor diagnostics, Android/iOS/WebAssembly browser требуют runtime/export diagnostics.
+            - `EditorOnly` rows сохраняются как будущий editor-scope.
+
+            ## ROADMAP
+            """);
+        WriteText(root, "docs/release-management/api-compatibility.md", CreateRootPublicApiContractDocument());
+        WriteText(root, "docs/documentation/api-manifest.md", CreateRootPublicApiContractDocument());
+        WriteText(root, "docs/documentation/github-wiki-api-reference.md", CreateRootPublicApiContractDocument());
+        WriteText(root, "docs/releases/0.1-preview.md", CreateRootPublicApiContractDocument());
+    }
+
+    private static string CreateRootPublicApiContractDocument()
+    {
+        return """
+            # Root contract
+
+            Корневой контракт совместимости Godot 4.7 фиксирует полный публичный API Electron2D `0.1-preview`, совместимый с Godot `4.7-stable`.
+            `T-0242` владеет generated API descriptions, `T-0243` владеет API diff checks, `T-0244` владеет behavior evidence, `T-0245` владеет class-ready gate, `T-0963` утверждает `Deferred`/`Unsupported`.
+            Публичный путь скриптов: C#. Публичный shader source language: HLSL.
+            Windows/Linux/macOS требуют runtime+editor diagnostics, Android/iOS/WebAssembly browser требуют runtime/export diagnostics.
+            `EditorOnly` rows не считаются неподдержанными по умолчанию.
+
+            ## Карта потребителей контракта
+
+            | Потребитель / задача | Внутренняя возможность | Source of truth | Первое evidence | Ограничение |
+            | --- | --- | --- | --- | --- |
+            | `T-0242` | Generated API descriptions | API manifest | `verify api-compatibility` | Не ручной список типов. |
+            """;
     }
 
     private static TemporaryDirectory CreateLicenseFixture(string name)
@@ -16974,6 +17398,8 @@ public sealed class RepositoryBuildToolTests
 
     private sealed record AuditSubmitOrdinaryReportPollingTrace(IReadOnlyList<string> Calls, string Report);
 
+    private sealed record AuditSubmitOrdinaryDownloadOnlyRecoveryTrace(IReadOnlyList<string> Calls, string? Report);
+
     private sealed record AuditSubmitClipboardReadTrace(bool Accepted, string Text, string Error);
 
     private sealed record AuditSubmitClipboardSelectionTrace(
@@ -17359,6 +17785,11 @@ public sealed class RepositoryBuildToolTests
         public AuditSubmitOrdinaryReportPollingTrace ToTrace(string report)
         {
             return new AuditSubmitOrdinaryReportPollingTrace(calls.ToArray(), report);
+        }
+
+        public AuditSubmitOrdinaryDownloadOnlyRecoveryTrace ToDownloadOnlyRecoveryTrace(string? report)
+        {
+            return new AuditSubmitOrdinaryDownloadOnlyRecoveryTrace(calls.ToArray(), report);
         }
 
         private void ThrowCodexChromeProtocolTimeout()

@@ -67,7 +67,7 @@ e2d context build --project <path> --format json
 
 `api-surface.json` содержит компактную сводку tracked API manifest: путь manifest-а, число типов, число supported/partial/out-of-profile строк и короткий список типов `0.1-preview`. Файл не включает полный исходный код движка.
 
-`godot-differences.json` фиксирует только machine-readable статус выбранного API-подмножества, команду проверки `e2d api compare-godot <type>` и ссылку на локальную API compatibility документацию. Он не является руководством по обходу границ profile contract.
+`godot-differences.json` фиксирует только machine-readable статус Electron2D Godot 4.7 public API contract, команду проверки `e2d api compare-godot <type>` и ссылку на локальную API compatibility документацию. Он не является руководством по обходу границ compatibility contract.
 
 `scene-index.json` содержит список `*.scene.json`, root/node counts, имена и типы узлов, persistent groups, external resource references и diagnostics parsing failures.
 
@@ -117,7 +117,7 @@ Context pack не должен включать:
 - `context-manifest.json` - время генерации, список файлов, суммарный размер и предупреждение о snapshot.
 - `project-summary.json` - project name/version, engine/.NET version, `mainScene`, `rendererProfile`, display settings, physics tick rate, Input Map, custom C# classes и recommended check commands.
 - `api-surface.json` - компактная сводка tracked API manifest без исходного кода движка.
-- `godot-differences.json` - machine-readable указатель на проверку выбранного API-подмножества через `e2d api compare-godot <type>`.
+- `godot-differences.json` - machine-readable указатель на проверку Godot 4.7 public API contract через `e2d api compare-godot <type>`.
 - `scene-index.json` - список `*.scene.json`, node names/types/groups и scene external resource references.
 - `resource-graph.json` - `.e2res` files, resource type/uid и references из scenes к resources.
 - `diagnostics.json` - summary context build, категории пропущенных файлов и parse/security diagnostics без значений секретов.

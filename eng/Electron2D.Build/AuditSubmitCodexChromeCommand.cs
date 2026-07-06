@@ -152,7 +152,14 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 await WaitForReportHydrationAsync(linked.Token).ConfigureAwait(false);
                 _ = await WaitForDeepResearchFrameContentAsync(browser, tabId, TimeSpan.FromSeconds(90), linked.Token).ConfigureAwait(false);
 
-                var report = await DownloadReadyReportAsync(browser, tabId, options, downloadsDirectory, includeUserDownloadsFallback: true, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false);
+                var report = await DownloadReadyReportAsync(
+                    browser,
+                    tabId,
+                    options,
+                    downloadsDirectory,
+                    includeUserDownloadsFallback: true,
+                    ignoredDeepResearchTargetIds,
+                    linked.Token).ConfigureAwait(false);
                 completed = true;
                 return report;
             }
@@ -1633,6 +1640,12 @@ internal sealed class AuditSubmitCodexChromeAutomation
             _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         }
 
+        var ordinaryReport = await TryDownloadReadyOrdinaryChatReportAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(ordinaryReport))
+        {
+            return ordinaryReport;
+        }
+
         var candidates = await DownloadReportCandidatesAsync(
             browser,
             tabId,
@@ -1650,6 +1663,50 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
         var report = ExtractDownloadedReportOrThrow(candidates);
         return report;
+    }
+
+    private static async Task<string?> TryDownloadReadyOrdinaryChatReportAsync(
+        AuditSubmitCodexChromeClient browser,
+        long tabId,
+        CancellationToken cancellationToken)
+    {
+        var currentMessageCount = await ReadConversationMessageCountAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+        return await TryDownloadReadyOrdinaryChatReportAsync(
+            new AuditSubmitOrdinaryReportDriver(browser, tabId),
+            currentMessageCount,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task<string?> TryDownloadReadyOrdinaryChatReportAsync(
+        IAuditSubmitOrdinaryReportDriver driver,
+        int currentMessageCount,
+        CancellationToken cancellationToken)
+    {
+        if (currentMessageCount < 2)
+        {
+            return null;
+        }
+
+        try
+        {
+            var copyResult = await driver.CopyLatestAssistantMessageMarkdownAsync(currentMessageCount, cancellationToken).ConfigureAwait(false);
+            if (copyResult.Status != AuditSubmitOrdinaryCopyStatus.CopiedMarkdown ||
+                string.IsNullOrWhiteSpace(copyResult.Markdown))
+            {
+                return null;
+            }
+
+            var candidates = new[]
+            {
+                new AuditSubmitReportCandidate(copyResult.Markdown, AuditSubmitReportCandidateSource.AssistantMessage)
+            };
+            var extraction = AuditSubmitReportExtractor.Extract(candidates, generationComplete: true);
+            return extraction.Ready ? extraction.Report : null;
+        }
+        catch (AuditSubmitCodexChromeException ex) when (IsTransientOrdinaryCopyFailure(ex))
+        {
+            return null;
+        }
     }
 
     private static string ExtractDownloadedReportOrThrow(IReadOnlyList<AuditSubmitReportCandidate> candidates)

@@ -18,7 +18,7 @@
 
 ## Назначение
 
-Electron2D должен иметь минимальный project runtime runner — инфраструктурный механизм запуска проекта, который не становится отдельным публичным API-типом и не вызывается из пользовательского кода. Пользовательский игровой код создаёт `Node`, `Node2D`, UI controls и resources, описывает поведение через callbacks (`_Ready`, `_Process`, `_PhysicsProcess`, `_Input`, `_Draw`) и остаётся внутри существующего профиля Electron2D, совместимого с выбранным API-подмножеством Godot. Окно, event loop, перевод платформенного ввода в `InputEvent`, продвижение кадров, построение canvas draw commands, показ кадра и screenshot выполняет runner проекта: CLI или Editor.
+Electron2D должен иметь минимальный project runtime runner — инфраструктурный механизм запуска проекта, который не становится отдельным публичным API-типом и не вызывается из пользовательского кода. Пользовательский игровой код создаёт `Node`, `Node2D`, UI controls и resources, описывает поведение через callbacks (`_Ready`, `_Process`, `_PhysicsProcess`, `_Input`, `_Draw`) и остаётся внутри утверждённого Electron2D Godot 4.7 public API contract. Окно, event loop, перевод платформенного ввода в `InputEvent`, продвижение кадров, построение canvas draw commands, показ кадра и screenshot выполняет runner проекта: CLI или Editor.
 
 Reference games не должны иметь собственный оконный loop, `Program.cs`, прямые вызовы backend/window/input библиотек, `Console.ReadKey` или ASCII-псевдоинтерфейс. Игровые скрипты должны быть обычными `Node`/`Control`-скриптами на API Electron2D. Runner движка не должен попадать в API manifest, GitHub Wiki или compatibility таблицы как публичный тип и не должен быть доступен проектам reference games через `InternalsVisibleTo`.
 
@@ -29,7 +29,7 @@ Reference games не должны иметь собственный оконны
 - `Electron2DApplication`;
 - `Electron2DRunOptions`;
 - `Electron2DRunResult`;
-- любой другой отдельный public static application/bootstrap class, отсутствующий в выбранном API-подмножестве Godot.
+- любой другой отдельный public static application/bootstrap class, отсутствующий в generated Godot `4.7-stable` API packets или не утверждённый отдельной задачей совместимости.
 
 Минимальный непубличный runner, доступный CLI, Editor и автоматическим тестам, имеет право принимать:
 

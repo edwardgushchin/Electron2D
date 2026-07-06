@@ -448,7 +448,7 @@ internal static class ProjectTemplateCreator
         - Do not edit `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/` or `.electron2d/user/` by hand.
         - Keep stable UID values intact unless the documented operation intentionally creates a new object.
         - Run `e2d validate --project .` after changing project files.
-        - Do not use external API members outside the approved Electron2D 2D profile. Use `e2d api compare-godot <type>` as the strict verifier when in doubt.
+        - Do not use external API members outside the approved Electron2D Godot 4.7 public API contract. Use `e2d api compare-godot <type>` as the strict verifier when in doubt.
         - Use ProjectTaskManager through Editor, Tooling or MCP. Do not edit task storage files directly.
         - Link changes, tests, diagnostics, jobs and artifacts to the active task when the workflow exposes that operation.
         - Submit completed agent work for human acceptance with `task_submit_for_acceptance`; do not mark work as accepted for the user.
@@ -460,7 +460,7 @@ internal static class ProjectTemplateCreator
         var description = skillName switch
         {
             "electron2d-scene" => "Create and update Electron2D scenes with stable UID values and project validation.",
-            "electron2d-gameplay-code" => "Write C# gameplay code that stays inside the supported Electron2D 2D profile.",
+            "electron2d-gameplay-code" => "Write C# gameplay code that stays inside the approved Electron2D Godot 4.7 public API contract.",
             "electron2d-resource-import" => "Import textures, fonts, audio and other resources without editing generated import cache files.",
             "electron2d-run-test" => "Validate, build, run and test an Electron2D project with structured diagnostics.",
             "electron2d-export" => "Prepare export presets and verify production package contents.",
@@ -469,7 +469,7 @@ internal static class ProjectTemplateCreator
         var body = skillName switch
         {
             "electron2d-scene" => "Use scene files under `scenes/`, preserve existing UID values, and run `e2d validate --project .` after structural changes.",
-            "electron2d-gameplay-code" => "Use C# files under `scripts/`, prefer Electron2D APIs from the approved 2D profile, and verify uncertain APIs with `e2d api compare-godot <type>`.",
+            "electron2d-gameplay-code" => "Use C# files under `scripts/`, prefer Electron2D APIs from the approved Godot 4.7 public API contract, and verify uncertain APIs with `e2d api compare-godot <type>`.",
             "electron2d-resource-import" => "Add source assets to project folders, let Electron2D rebuild `.electron2d/import-cache/`, and never edit cache artifacts by hand.",
             "electron2d-run-test" => "Run the narrowest useful check first, then `dotnet build`, scene tests or `e2d run --project .` when the change affects runtime behavior.",
             "electron2d-export" => "Use explicit export presets, keep signing credentials out of project files, and confirm `.electron2d/tasks/` is not included in production packages.",

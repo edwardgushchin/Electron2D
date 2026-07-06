@@ -34,6 +34,8 @@ https://github.com/edwardgushchin/Electron2D.wiki.git
 
 Ручной список типов не допускается как основной источник API reference, потому что он быстро расходится с public surface.
 
+Для корневого контракта совместимости этот документ является потребителем generated source of truth, а не вторым перечнем public API. Точные имена типов, членов и marker-атрибутов должны приходить из `data/api/electron2d-api-manifest.json`, XML documentation и Wiki `API-Compatibility.md`; доменный текст описывает только процесс генерации, проверки и публикации Wiki.
+
 ## Структура GitHub Wiki
 
 GitHub Wiki repository должен содержать:

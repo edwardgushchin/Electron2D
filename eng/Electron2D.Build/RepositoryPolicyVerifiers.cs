@@ -610,9 +610,291 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         "Electron2D.PhysicsBodyType"
     ];
 
+    private static readonly string[] RootContractPaths =
+    [
+        "TASKS.md",
+        "docs/release-management/api-compatibility.md",
+        "docs/documentation/api-manifest.md",
+        "docs/documentation/github-wiki-api-reference.md",
+        "docs/releases/0.1-preview.md"
+    ];
+
+    private static readonly string[] ManualPublicApiListPaths =
+    [
+        "TASKS.md",
+        "docs/release-management/api-compatibility.md",
+        "docs/documentation/api-manifest.md",
+        "docs/documentation/github-wiki-api-reference.md",
+        "docs/releases/0.1-preview.md",
+        "docs/core-types/variant.md",
+        "docs/rendering/texture-resource-baseline.md",
+        "docs/scripting/editor-script-workflow.md"
+    ];
+
+    private static readonly HashSet<string> ManualPublicApiAdvancedListPaths = new(StringComparer.Ordinal)
+    {
+        "docs/release-management/api-compatibility.md",
+        "docs/documentation/api-manifest.md",
+        "docs/documentation/github-wiki-api-reference.md",
+        "docs/releases/0.1-preview.md",
+        "docs/core-types/variant.md",
+        "docs/rendering/texture-resource-baseline.md",
+        "docs/scripting/editor-script-workflow.md"
+    };
+
+    private static readonly string[] RootContractWaiverStatusPaths =
+    [
+        "docs/release-management/api-compatibility.md",
+        "docs/documentation/api-manifest.md",
+        "docs/documentation/github-wiki-api-reference.md",
+        "docs/releases/0.1-preview.md"
+    ];
+
+    private static readonly string[] ManualPublicApiListContextFragments =
+    [
+        "Public API",
+        "C# API",
+        "public surface",
+        "public runtime surface",
+        "release public model",
+        "prerequisite manifest",
+        "public UI types",
+        "baseline",
+        "exported runtime",
+        "runtime экспорт",
+        "экспортирует",
+        "публичная поверхность",
+        "публичной поверхности",
+        "публичный API",
+        "публичного API",
+        "минимальный публичный API",
+        "целевой публичный API",
+        "полностью рабочими",
+        "проверяемый минимум",
+        "минимальный набор типов",
+        "минимальные узлы",
+        "минимальный публичный набор",
+        "минимальные типы",
+        "обязательный минимум",
+        "обязательные ресурсы",
+        "обязательны аналоги",
+        "минимальный lifecycle",
+        "нужен законченный 2D-набор",
+        "формы:",
+        "события:"
+    ];
+
+    private static readonly HashSet<string> ManualPublicApiFenceNames = new(StringComparer.Ordinal)
+    {
+        "Object",
+        "RefCounted",
+        "Resource",
+        "Node",
+        "SceneTree",
+        "PackedScene",
+        "Node2D",
+        "CanvasItem",
+        "CanvasLayer",
+        "Viewport",
+        "Timer",
+        "_EnterTree",
+        "_Ready",
+        "_Process",
+        "_PhysicsProcess",
+        "_Input",
+        "_ExitTree",
+        "AddChild",
+        "RemoveChild",
+        "GetNode",
+        "GetNodeOrNull",
+        "QueueFree",
+        "CallDeferred",
+        "EmitSignal",
+        "Connect",
+        "Disconnect",
+        "Vector2",
+        "Vector2I",
+        "Rect2",
+        "Rect2I",
+        "Transform2D",
+        "Color",
+        "Mathf",
+        "RandomNumberGenerator",
+        "NodePath",
+        "StringName",
+        "Callable",
+        "Signal",
+        "Rid",
+        "Variant",
+        "Sprite2D",
+        "AnimatedSprite2D",
+        "Camera2D",
+        "TileMapLayer",
+        "Polygon2D",
+        "Line2D",
+        "TextureRect",
+        "ColorRect",
+        "NinePatchRect",
+        "Label",
+        "DrawLine",
+        "DrawPolyline",
+        "DrawRect",
+        "DrawCircle",
+        "DrawPolygon",
+        "DrawTexture",
+        "DrawTextureRect",
+        "DrawString",
+        "QueueRedraw",
+        "Texture2D",
+        "AtlasTexture",
+        "ImageTexture",
+        "PlaceholderTexture2D",
+        "Image",
+        "SpriteFrames",
+        "Font",
+        "AudioStream",
+        "Shader",
+        "ShaderMaterial",
+        "PhysicsMaterial",
+        "Theme",
+        "Translation",
+        "InputMap",
+        "RenderingServer",
+        "RenderingDeviceFeatures",
+        "Input.IsActionPressed",
+        "Input.IsActionJustPressed",
+        "Input.GetActionStrength",
+        "Input.GetVector",
+        "InputEventKey",
+        "InputEventMouseButton",
+        "InputEventMouseMotion",
+        "InputEventJoypadButton",
+        "InputEventJoypadMotion",
+        "InputEventScreenTouch",
+        "InputEventScreenDrag",
+        "InputEventAction",
+        "StaticBody2D",
+        "RigidBody2D",
+        "CharacterBody2D",
+        "Area2D",
+        "CollisionShape2D",
+        "RayCast2D",
+        "RectangleShape2D",
+        "CircleShape2D",
+        "CapsuleShape2D",
+        "SegmentShape2D",
+        "ConvexPolygonShape2D",
+        "ConcavePolygonShape2D",
+        "MoveAndCollide",
+        "MoveAndSlide",
+        "IsOnFloor",
+        "IsOnWall",
+        "IsOnCeiling",
+        "FloorNormal",
+        "FloorSnapLength",
+        "UpDirection",
+        "Animation",
+        "AnimationLibrary",
+        "AnimationPlayer",
+        "Tween",
+        "Control",
+        "Container",
+        "Panel",
+        "Button",
+        "TextureButton",
+        "LineEdit",
+        "TextEdit",
+        "CodeEdit",
+        "SyntaxHighlighter",
+        "CodeHighlighter",
+        "PopupMenu",
+        "TabContainer",
+        "Tree",
+        "ItemList",
+        "SplitContainer",
+        "ScrollBar",
+        "Label",
+        "CheckBox",
+        "Slider",
+        "ProgressBar",
+        "ScrollContainer",
+        "HBoxContainer",
+        "VBoxContainer",
+        "GridContainer",
+        "MarginContainer",
+        "CenterContainer",
+        "Export",
+        "Tool",
+        "AudioStreamPlayer",
+        "AudioStreamPlayer2D",
+        "AudioServer"
+    };
+
+    private static readonly string[] RootContractRequiredFragments =
+    [
+        "Корневой контракт совместимости Godot 4.7",
+        "`4.7-stable`",
+        "`T-0242`",
+        "`T-0243`",
+        "`T-0244`",
+        "`T-0245`",
+        "`T-0963`",
+        "C#",
+        "HLSL",
+        "Windows/Linux/macOS",
+        "Android/iOS/WebAssembly browser",
+        "`EditorOnly`"
+    ];
+
+    private static readonly string[] RootContractDomainRequiredFragments =
+    [
+        "## Карта потребителей контракта",
+        "Потребитель / задача",
+        "Первое evidence"
+    ];
+
+    private static readonly string[] RootContractForbiddenFragments =
+    [
+        "docs/runtime/godot-47-public-api-public-api-parity-contract.md",
+        "Electron2D 0.1-preview 2D",
+        "утверждённый 2D-профиль",
+        "утверждённого 2D-профиля",
+        "утверждённом 2D-профиле",
+        "обязательного 2D-профиля",
+        "согласованного Electron2D 2D-поднабора",
+        "согласованном 2D-поднаборе",
+        "API вне 2D-профиля",
+        "Не 100% всего Godot API.",
+        "100% Godot C# API внутри утверждённого 2D-профиля."
+    ];
+
     private static readonly Regex CompatibilityRowPattern = new(
         @"^\|\s*`(?<type>Electron2D\.[^`|]+)`\s*\|(?:[^|]*\|)*\s*(?<status>Supported|Partial|Experimental|Planned)\s*\|",
         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
+    private static readonly Regex ManualPublicApiListPattern = new(
+        @"^\s*-\s*`Electron2D\.[^`]+`\s*[.;:,]?\s*$",
+        RegexOptions.CultureInvariant);
+
+    private static readonly Regex ManualPublicApiFenceLinePattern = new(
+        @"^\s*(?<name>_?[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)?)(?:\([^)]*\))?\s*[.;:,]?\s*$",
+        RegexOptions.CultureInvariant);
+
+    private static readonly Regex ManualPublicApiCSharpDeclarationPattern = new(
+        @"^\s*(?:public|protected|internal|private)\s+(?:abstract\s+|sealed\s+|readonly\s+|static\s+|partial\s+)*(?:(?:class|struct|record|interface|enum)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)|[A-Za-z_][A-Za-z0-9_<>?.]*(?:\[\])?\s+(?<name>[A-Z][A-Za-z0-9_]*)\s*(?:\(|\{|;|=>|=))",
+        RegexOptions.CultureInvariant);
+
+    private static readonly Regex ManualPublicApiAttributeLinePattern = new(
+        @"^\s*\[(?<name>[A-Za-z][A-Za-z0-9_]*)\]\s*[.;:,]?\s*$",
+        RegexOptions.CultureInvariant);
+
+    private static readonly Regex ManualPublicApiInlineTokenPattern = new(
+        @"`(?<name>_?[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)?(?:\(\))?)`|(?<![A-Za-z0-9_])(?<name>_?[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)?(?:\(\))?)(?![A-Za-z0-9_])",
+        RegexOptions.CultureInvariant);
+
+    private static readonly Regex UnapprovedWaiverStatusPattern = new(
+        @"(?im)^\s*\|\s*`?Not\s+planned`?\s*\|",
+        RegexOptions.CultureInvariant);
 
     public int Verify(string[] args)
     {
@@ -652,6 +934,8 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         {
             errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-LOCAL-SITE", "Local generated site directory is not allowed for the GitHub Wiki table.", "site"));
         }
+
+        VerifyRootPublicApiContract(manifestTypes, errors);
 
         foreach (var error in errors)
         {
@@ -745,6 +1029,269 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
                 errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-FORBIDDEN-TYPE", $"Forbidden legacy type is published in GitHub Wiki compatibility table: {typeName}.", ToRepositoryPath(compatibilityPath)));
             }
         }
+    }
+
+    private void VerifyRootPublicApiContract(IReadOnlyList<string> manifestTypes, List<BuildDiagnostic> errors)
+    {
+        var combined = new StringBuilder();
+        foreach (var relativePath in RootContractPaths)
+        {
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path))
+            {
+                errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-CONTRACT-DOC-MISSING", $"Root public API contract document was not found: {relativePath}.", relativePath));
+                continue;
+            }
+
+            combined.AppendLine(Normalize(File.ReadAllText(path, Encoding.UTF8)));
+        }
+
+        var text = combined.ToString();
+        foreach (var required in RootContractRequiredFragments)
+        {
+            if (!text.Contains(required, StringComparison.Ordinal))
+            {
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-CONTRACT-FRAGMENT",
+                    $"Root public API contract is missing required fragment: {required}.",
+                    "docs/release-management/api-compatibility.md"));
+            }
+        }
+
+        foreach (var forbidden in RootContractForbiddenFragments)
+        {
+            if (text.Contains(forbidden, StringComparison.Ordinal))
+            {
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-CONTRACT-OBSOLETE",
+                    $"Root public API contract contains obsolete fragment: {forbidden}.",
+                    "docs/release-management/api-compatibility.md"));
+            }
+        }
+
+        VerifyNoManualPublicApiLists(manifestTypes, errors);
+        VerifyNoUnapprovedWaiverStatuses(errors);
+        VerifyDomainDocumentConsumerMap(errors);
+    }
+
+    private void VerifyNoUnapprovedWaiverStatuses(List<BuildDiagnostic> errors)
+    {
+        foreach (var relativePath in RootContractWaiverStatusPaths)
+        {
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            var text = Normalize(File.ReadAllText(path, Encoding.UTF8));
+            if (UnapprovedWaiverStatusPattern.IsMatch(text))
+            {
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-CONTRACT-WAIVER-STATUS",
+                    $"Root public API contract must use explicit Deferred/Unsupported exceptions through T-0963 instead of an unapproved waiver status: {relativePath}.",
+                    relativePath));
+            }
+        }
+    }
+
+    private void VerifyDomainDocumentConsumerMap(List<BuildDiagnostic> errors)
+    {
+        const string relativePath = "docs/release-management/api-compatibility.md";
+        var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        var text = Normalize(File.ReadAllText(path, Encoding.UTF8));
+        foreach (var required in RootContractDomainRequiredFragments)
+        {
+            if (!text.Contains(required, StringComparison.Ordinal))
+            {
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-CONTRACT-FRAGMENT",
+                    $"Root public API domain contract is missing required fragment: {required}.",
+                    relativePath));
+            }
+        }
+    }
+
+    private void VerifyNoManualPublicApiLists(IReadOnlyList<string> manifestTypes, List<BuildDiagnostic> errors)
+    {
+        var publicApiNames = BuildManualPublicApiNameSet(manifestTypes);
+        foreach (var relativePath in ManualPublicApiListPaths)
+        {
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            var text = Normalize(File.ReadAllText(path, Encoding.UTF8));
+            var enableAdvancedDetection = ManualPublicApiAdvancedListPaths.Contains(relativePath);
+            if (ContainsManualPublicApiList(text, publicApiNames, enableAdvancedDetection))
+            {
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST",
+                    $"Root public API contract and scoped domain documents must not contain a manual Markdown or fenced-code list of public API elements: {relativePath}.",
+                    relativePath));
+            }
+        }
+    }
+
+    private static HashSet<string> BuildManualPublicApiNameSet(IReadOnlyList<string> manifestTypes)
+    {
+        var names = new HashSet<string>(ManualPublicApiFenceNames, StringComparer.Ordinal);
+        foreach (var fullName in manifestTypes)
+        {
+            names.Add(fullName);
+            const string prefix = "Electron2D.";
+            if (fullName.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                var shortName = fullName[prefix.Length..].Replace('+', '.');
+                names.Add(shortName);
+                var nestedNameSeparator = shortName.LastIndexOf('.');
+                if (nestedNameSeparator >= 0)
+                {
+                    names.Add(shortName[(nestedNameSeparator + 1)..]);
+                }
+
+                const string attributeSuffix = "Attribute";
+                if (shortName.EndsWith(attributeSuffix, StringComparison.Ordinal) && shortName.Length > attributeSuffix.Length)
+                {
+                    names.Add(shortName[..^attributeSuffix.Length]);
+                }
+            }
+        }
+
+        return names;
+    }
+
+    private static bool ContainsManualPublicApiList(string text, ISet<string> publicApiNames, bool enableAdvancedDetection)
+    {
+        var inManualSurfaceContext = false;
+        var inCodeFence = false;
+        var codeFenceStartedInManualSurfaceContext = false;
+        var codeFencePublicApiMatches = 0;
+        foreach (var rawLine in text.Split('\n'))
+        {
+            var line = rawLine.Trim();
+            if (line.StartsWith("```", StringComparison.Ordinal))
+            {
+                if (inCodeFence)
+                {
+                    if (codeFenceStartedInManualSurfaceContext && codeFencePublicApiMatches >= 2)
+                    {
+                        return true;
+                    }
+
+                    inCodeFence = false;
+                    codeFenceStartedInManualSurfaceContext = false;
+                    codeFencePublicApiMatches = 0;
+                }
+                else
+                {
+                    inCodeFence = true;
+                    codeFenceStartedInManualSurfaceContext = inManualSurfaceContext;
+                    codeFencePublicApiMatches = 0;
+                }
+
+                continue;
+            }
+
+            if (inCodeFence)
+            {
+                if (enableAdvancedDetection && codeFenceStartedInManualSurfaceContext && IsManualPublicApiFenceLine(line, publicApiNames))
+                {
+                    codeFencePublicApiMatches++;
+                }
+
+                continue;
+            }
+
+            if (line.StartsWith("#", StringComparison.Ordinal))
+            {
+                inManualSurfaceContext = ContainsManualPublicApiListContext(line);
+            }
+            else if (line.Length > 0 && ContainsManualPublicApiListContext(line))
+            {
+                inManualSurfaceContext = true;
+            }
+
+            if (enableAdvancedDetection && line.Length > 0 && inManualSurfaceContext && CountManualPublicApiInlineNames(line, publicApiNames) >= 3)
+            {
+                return true;
+            }
+
+            if (inManualSurfaceContext && ManualPublicApiListPattern.IsMatch(line))
+            {
+                return true;
+            }
+        }
+
+        return codeFenceStartedInManualSurfaceContext && codeFencePublicApiMatches >= 2;
+    }
+
+    private static bool ContainsManualPublicApiListContext(string line)
+    {
+        return ManualPublicApiListContextFragments.Any(fragment => line.Contains(fragment, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsManualPublicApiFenceLine(string line, ISet<string> publicApiNames)
+    {
+        var csharpDeclarationMatch = ManualPublicApiCSharpDeclarationPattern.Match(line);
+        if (csharpDeclarationMatch.Success && publicApiNames.Contains(csharpDeclarationMatch.Groups["name"].Value))
+        {
+            return true;
+        }
+
+        var attributeMatch = ManualPublicApiAttributeLinePattern.Match(line);
+        if (attributeMatch.Success && publicApiNames.Contains(attributeMatch.Groups["name"].Value))
+        {
+            return true;
+        }
+
+        var match = ManualPublicApiFenceLinePattern.Match(line);
+        return match.Success && IsManualPublicApiName(match.Groups["name"].Value, publicApiNames);
+    }
+
+    private static int CountManualPublicApiInlineNames(string line, ISet<string> publicApiNames)
+    {
+        var matches = new HashSet<string>(StringComparer.Ordinal);
+        foreach (Match match in ManualPublicApiInlineTokenPattern.Matches(line))
+        {
+            var value = match.Groups["name"].Value;
+            if (IsManualPublicApiName(value, publicApiNames))
+            {
+                matches.Add(NormalizeManualPublicApiToken(value));
+            }
+        }
+
+        return matches.Count;
+    }
+
+    private static bool IsManualPublicApiName(string value, ISet<string> publicApiNames)
+    {
+        var normalized = NormalizeManualPublicApiToken(value);
+        if (publicApiNames.Contains(normalized))
+        {
+            return true;
+        }
+
+        var firstSegment = normalized.Split('.')[0];
+        return publicApiNames.Contains(firstSegment);
+    }
+
+    private static string NormalizeManualPublicApiToken(string value)
+    {
+        var normalized = value.Trim();
+        if (normalized.EndsWith("()", StringComparison.Ordinal))
+        {
+            normalized = normalized[..^2];
+        }
+
+        return normalized;
     }
 
     private Dictionary<string, string> ExtractCompatibilityRows(string text, List<BuildDiagnostic> errors, string compatibilityPath)

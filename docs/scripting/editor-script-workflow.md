@@ -51,21 +51,7 @@
 
 ## UI prerequisites
 
-Поскольку `Electron2D.Editor` написан на Electron2D, `Script` workspace не должен строиться на приватных обходных controls, если нужные публичные UI types входят в утверждённый 2D-профиль Godot C# API. Перед реализацией `T-0158` нужен точный prerequisite manifest с полностью рабочими:
-
-- `TextEdit`;
-- `CodeEdit`;
-- `SyntaxHighlighter`;
-- `CodeHighlighter`;
-- `PopupMenu`;
-- `TabContainer`;
-- `Tree`;
-- `ItemList`;
-- `SplitContainer`;
-- `ScrollBar`;
-- `LineEdit`;
-- `Label`;
-- `Button`.
+Поскольку `Electron2D.Editor` написан на Electron2D, `Script` workspace не должен строиться на приватных обходных controls, если нужные публичные UI capabilities входят в утверждённую публичную поверхность Godot 4.7 C# API. Перед реализацией `T-0158` нужен generated prerequisite manifest, который ссылается на API manifest и UI compatibility table, а не переписывает public type list вручную. Manifest должен подтвердить готовность text-editing surface, syntax highlighting, popup/menu behavior, tabbed documents, hierarchical/list navigation, split/scroll layout и basic labeled/action controls.
 
 Также должны быть проверены:
 
@@ -80,7 +66,7 @@
 - gutter drawing;
 - mouse hit testing по строке и колонке.
 
-Если эти типы входят в обязательный 2D-профиль `0.1-preview`, они должны пройти обычный parity gate как `Supported / Parity verified`, а не реализовываться только для Editor приватным путём.
+Если эти типы входят в обязательную публичную поверхность `0.1-preview`, они должны пройти обычный parity gate как `Supported / Parity verified` либо получить утверждённую строку `Deferred`/`Unsupported` через `T-0963`, а не реализовываться только для Editor приватным путём.
 
 ## CodeDocument и ProjectWorkspace
 
@@ -184,7 +170,7 @@ AI-изменение должно одновременно отображать
 Проверяемый минимум `T-0158` для базового `Script` workspace:
 
 - `Script` выбран через общий workspace switcher `2D`, `Script`, `Game`, `Tasks` и занимает центральную область редактора;
-- prerequisite manifest перед запуском workspace фиксирует, что `TextEdit`, `CodeEdit`, `SyntaxHighlighter`, `CodeHighlighter`, `PopupMenu`, `TabContainer`, `Tree`, `ItemList`, `SplitContainer`, `ScrollBar`, `LineEdit`, `Label`, `Button`, IME, clipboard, selection, caret navigation, Unicode, monospace font rendering, large documents, scrolling, gutter drawing и mouse hit testing по строке/колонке закрыты публичным UI gate;
+- prerequisite manifest перед запуском workspace фиксирует через generated UI gate, что text editing, syntax highlighting, popup/menu behavior, tabbed documents, hierarchical/list navigation, split/scroll layout, basic labeled/action controls, IME, clipboard, selection, caret navigation, Unicode, monospace font rendering, large documents, scrolling, gutter drawing и mouse hit testing по строке/колонке закрыты публичной поверхностью;
 - `CodeDocument` хранит `DocumentId`, path, text, revision, persisted revision, dirty state, diagnostics и semantic version;
 - создание, открытие, редактирование, rename и delete `.cs` files проходят через `Script` workspace model и возвращают structured result;
 - document tabs показывают открытые `.cs` buffers, dirty marker, active tab и восстанавливаются после restart через persistence state;

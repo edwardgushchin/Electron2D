@@ -14,13 +14,13 @@
 
 ## Назначение
 
-`T-0025` вводит public Electron2D texture resource baseline и internal texture lifetime registry для `0.1-preview`.
+`T-0025` вводит Electron2D texture resource behavior baseline и internal texture lifetime registry для `0.1-preview`.
 
 Задача закрывает:
 
-- public `Texture2D` resource API для размера, прозрачности и mipmaps;
-- public `ImageTexture` для загрузки PNG asset-файлов в immutable image-backed texture;
-- public `AtlasTexture` для atlas regions, margin и filter clipping;
+- resource-level metadata для размера, прозрачности и mipmaps;
+- загрузку PNG asset-файлов в immutable image-backed texture;
+- atlas regions, margin и filter clipping behavior;
 - internal upload/reload/release registry с leak tracking;
 - internal sampling descriptor для texture filter/repeat, который future `CanvasItem` nodes будут передавать в renderer;
 - runtime smoke test, который доказывает отсутствие остаточных active texture handles после release.
@@ -34,86 +34,19 @@
 
 ## Уточнение совместимости Godot 4.7
 
-`T-0025` реализовала только минимальный слой `Texture2D`: размер, прозрачность, mipmap-данные и проверку прозрачности пикселя. Это не полное соответствие выбранному API-подмножеству Godot 4.7.
+`T-0025` реализовала только минимальный слой `Texture2D`: размер, прозрачность, mipmap-данные и проверку прозрачности пикселя. Это не полное соответствие Godot 4.7 public API contract.
 
-`T-0226` должен добавить недостающий базовый контракт `Texture2D`: `GetFormat()`, `GetImage()`, `CreatePlaceholder()`, `Draw(...)`, `DrawRect(...)`, `DrawRectRegion(...)`, внутренний переопределяемый контракт отрисовки, публичный `Image`, `Image.Format` и `PlaceholderTexture2D`.
+`T-0226` должен добавить недостающий базовый texture contract: доступ к формату и копии изображения, placeholder-resource behavior, draw-entry behavior и внутренний переопределяемый контракт отрисовки. Точный список public members берётся из generated API manifest и Wiki compatibility table.
 
-`T-0227` должен после `T-0226` привести `AtlasTexture` к тому же контракту: рекурсивный `Atlas` любого `Texture2D`, запрет прямой ссылки на себя, правила `Region`, `Margin`, `FilterClip`, `GetImage()` и обрезку области при отрисовке.
+`T-0227` должен после `T-0226` привести atlas resource к тому же контракту: рекурсивный atlas source, запрет прямой ссылки на себя, region/margin/filter clipping behavior, image copy и обрезку области при отрисовке. Точные public signatures остаются generated source of truth.
 
-## Публичный API `T-0025`
+## Контракт публичной поверхности
 
-`Texture2D`:
-
-```csharp
-public abstract class Texture2D : Resource
-{
-    public abstract int GetWidth();
-    public abstract int GetHeight();
-    public Vector2 GetSize();
-    public abstract bool HasAlpha();
-    public virtual bool HasMipmaps();
-    public virtual int GetMipmapCount();
-    public virtual bool IsPixelOpaque(int x, int y);
-}
-```
-
-## Целевой публичный API `T-0226`
-
-```csharp
-public abstract class Texture2D : Resource
-{
-    public abstract int GetWidth();
-    public abstract int GetHeight();
-    public Vector2 GetSize();
-    public abstract bool HasAlpha();
-    public virtual bool HasMipmaps();
-    public virtual int GetMipmapCount();
-    public virtual bool IsPixelOpaque(int x, int y);
-    public virtual Image.Format GetFormat();
-    public virtual Image? GetImage();
-    public Resource CreatePlaceholder();
-    public void Draw(Rid toCanvasItem, Vector2 position, Color modulate, bool transpose = false);
-    public void DrawRect(Rid toCanvasItem, Rect2 rect, bool tile, Color modulate, bool transpose = false);
-    public void DrawRectRegion(Rid toCanvasItem, Rect2 rect, Rect2 sourceRect, Color modulate, bool transpose = false, bool clipUv = true);
-}
-
-public sealed class PlaceholderTexture2D : Texture2D
-{
-}
-
-public sealed class Image : Resource
-{
-    public enum Format
-    {
-        Rgba8
-    }
-}
-```
-
-`AtlasTexture`:
-
-```csharp
-public sealed class AtlasTexture : Texture2D
-{
-    public Texture2D? Atlas { get; set; }
-    public bool FilterClip { get; set; }
-    public Rect2 Margin { get; set; }
-    public Rect2 Region { get; set; }
-}
-```
-
-`ImageTexture`:
-
-```csharp
-public sealed class ImageTexture : Texture2D
-{
-    public static ImageTexture LoadFromFile(string path);
-}
-```
+Публичная texture-domain поверхность задаётся `data/api/electron2d-api-manifest.json`, GitHub Wiki `API-Compatibility.md` и `verify api-compatibility --wiki-path .github/wiki`. Этот документ описывает поведение и ограничения texture resources, но не повторяет полный список public types, properties или methods.
 
 `ImageTexture.LoadFromFile(path)` загружает PNG-файл из filesystem path, читает размеры, alpha channel и RGBA pixels. В `0.1-preview` обязательна поддержка 8-bit PNG color types 2, 4 и 6, indexed palette PNG color type 3 с bit depth 1, 2, 4 или 8, `tRNS` transparency, palette chunks, non-interlaced images и PNG filter types 0-4. JPEG остаётся import-metadata path и не обязан быть runtime texture source для этой задачи.
 
-Публичные методы inherited от `Texture2D` должны возвращать реальные данные изображения:
+Публичные texture queries должны возвращать реальные данные изображения:
 
 - `GetWidth()` и `GetHeight()` возвращают размеры PNG;
 - `HasAlpha()` возвращает `true`, если PNG имеет alpha channel или transparency metadata;
@@ -122,7 +55,7 @@ public sealed class ImageTexture : Texture2D
 
 `ImageTexture` immutable: после загрузки пиксели не меняются. Невалидный path, отсутствующий файл, unsupported PNG feature или malformed image fail closed через исключение до создания texture.
 
-Все public members должны иметь XML documentation в SDL-like C# стиле: `summary`, `remarks` при необходимости, `param`, `returns`, `threadsafety`, `since` и `seealso` для связанных API.
+Все public members, перечисленные в generated manifest, должны иметь XML documentation в SDL-like C# стиле: `summary`, `remarks` при необходимости, `param`, `returns`, `threadsafety`, `since` и `seealso` для связанных API.
 
 ## Atlas behavior
 
@@ -185,7 +118,7 @@ Registry пишет события:
 
 ## Runtime preview presentation
 
-Project runtime host preview rasterizer должен рисовать `ImageTexture` и `AtlasTexture` поверх `ImageTexture` реальными пикселями, а не fallback rectangle. Это нужно для reference games и screenshot acceptance:
+Project runtime host preview rasterizer должен рисовать image-backed и atlas-backed texture resources реальными пикселями, а не fallback rectangle. Это нужно для reference games и screenshot acceptance:
 
 - `Sprite2D`, `AnimatedSprite2D`, `TextureRect`, `TextureButton`, `NinePatchRect`, `TileMapLayer` и `CanvasItem.DrawTexture()` должны доходить до texture-backed render commands;
 - nearest-neighbor scaling достаточно для preview host;
@@ -202,37 +135,17 @@ Project runtime host preview rasterizer должен рисовать `ImageText
 
 ## Фактическое состояние, ограничения и проверки
 
-Статус: минимальный слой `T-0025` реализован; полная совместимость с выбранным API-подмножеством Godot 4.7 открыта задачами `T-0226` и `T-0227`.
+Статус: минимальный слой `T-0025` реализован; полная совместимость с Godot 4.7 public API contract открыта задачами `T-0226` и `T-0227`.
 Задача: `T-0025`, обновлено в `T-0030`, `T-0037`, `T-0226` и `T-0227`.
 Обновлено: 2026-06-25.
 
-## Public API
+## Runtime behavior
 
-В runtime добавлены Electron2D public ресурсы:
+Runtime texture resources и offscreen texture resources перечисляются в generated API manifest; `ViewportTexture` описан в отдельном baseline [Offscreen render target и восстановление GPU resources](offscreen-render-target-recovery-baseline.md).
 
-- `Texture2D`;
-- `AtlasTexture`;
-- `ImageTexture`;
-- `ViewportTexture` через отдельный baseline [Offscreen render target и восстановление GPU resources](offscreen-render-target-recovery-baseline.md).
+Base texture resource behavior покрывает размер, alpha, mipmap metadata и opaque-pixel checks. Atlas behavior добавляет source texture, region, margin и filter clipping semantics без ручного списка public members в этом документе.
 
-`Texture2D` является abstract base resource. Он предоставляет:
-
-- `GetWidth()`;
-- `GetHeight()`;
-- `GetSize()`;
-- `HasAlpha()`;
-- `HasMipmaps()`;
-- `GetMipmapCount()`;
-- `IsPixelOpaque(int x, int y)`.
-
-`AtlasTexture` наследуется от `Texture2D` и добавляет:
-
-- `Atlas`;
-- `Region`;
-- `Margin`;
-- `FilterClip`.
-
-Текущее состояние до `T-0227`: если у `Region.Size.X` или `Region.Size.Y` значение `0`, для соответствующей оси используется размер atlas texture; размер региона округляется вниз до `int`, как целочисленный размер изображения. `Margin` и `FilterClip` сохраняются как свойства, но ещё не выполняют полный контракт отрисовки и выборки пикселей Godot 4.7. Внутренний механизм показа кадра из `T-0219` уже разрешает вложенные `AtlasTexture` для поддержанного подмножества `Texture2D -> ImageTexture`, но полный публичный контракт atlas resource, включая `Margin`, `FilterClip`, `GetImage()` и методы отрисовки, остаётся задачей `T-0227`.
+Текущее состояние до `T-0227`: если у `Region.Size.X` или `Region.Size.Y` значение `0`, для соответствующей оси используется размер atlas texture; размер региона округляется вниз до `int`, как целочисленный размер изображения. `Margin` и `FilterClip` сохраняются как свойства, но ещё не выполняют полный контракт отрисовки и выборки пикселей Godot 4.7. Внутренний механизм показа кадра из `T-0219` уже разрешает вложенные atlas-backed resources для поддержанного image-backed subset, но полный контракт atlas resource, включая margin, filter clipping, image copy и drawing behavior, остаётся задачей `T-0227`.
 
 `ImageTexture.LoadFromFile(path)` загружает PNG из filesystem path или `res://` resource path и возвращает immutable texture с реальными RGBA pixels. Поддерживаются non-interlaced PNG:
 

@@ -55,7 +55,7 @@ var manifest = new ApiManifest(
     SchemaVersion: 1,
     ManifestVersion: "0.1-preview",
     EngineVersion: EngineVersion(assembly),
-    ProfileName: "Electron2D 0.1-preview 2D",
+    ProfileName: "Electron2D 0.1-preview",
     GodotBaseline: "4.7-stable",
     GeneratedFrom: new GeneratedFrom(
         CompiledAssembly: RelativePath(arguments.RepositoryRoot, arguments.AssemblyPath),
@@ -153,7 +153,7 @@ static ApiProfile CreateProfile(CompatibilityEntry entry)
 {
     var status = entry.Status.ToLowerInvariant();
     return new ApiProfile(
-        Name: "Electron2D 0.1-preview 2D",
+        Name: "Electron2D 0.1-preview",
         Status: status,
         Parity: status == "supported" ? "parity_verified" : "not_verified",
         OutOfProfile: status != "supported",

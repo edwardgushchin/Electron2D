@@ -133,7 +133,7 @@ OpenAI/Anthropic/Gemini integration, зашитая напрямую в реда
 
 Canonical architecture для `0.1-preview`:
 
-- специализированная node/resource модель Electron2D, совместимая с выбранным API-подмножеством Godot;
+- специализированная node/resource модель Electron2D, совместимая с Godot `4.7-stable` public API contract;
 - `Node2D` и его наследники имеют 2D transform; базовый `Node` не получает обязательный transform;
 - `scene_attach_script` не добавляет отдельный Script-компонент. Операция связывает сериализованный узел с пользовательским C#-типом, наследующим подходящий Electron2D node type, и после сборки создаётся единый экземпляр этого типа;
 - поддерживаемые платформы релизного контракта включают Windows, Linux, macOS, Android, iOS и WebAssembly browser, но mobile/web export может оставаться заблокированным до закрытия соответствующих platform tasks и проверок.
@@ -802,9 +802,9 @@ Release-gate инвариант:
 
 ## Машиночитаемый API manifest
 
-Electron2D должен поставлять версионированный API manifest в JSON. Manifest нужен, чтобы AI-агенты, CLI, Inspector, Wiki, source generators и будущий language server не угадывали границы утверждённого 2D-профиля.
+Electron2D должен поставлять версионированный API manifest в JSON. Manifest нужен, чтобы AI-агенты, CLI, Inspector, Wiki, source generators и будущий language server не угадывали границы утверждённого Godot 4.7 public API contract.
 
-Эталон для `0.1-preview` — Godot `4.7-stable` .NET/C# API. Electron2D реализует 100% публичного C# API только внутри утверждённого 2D-профиля под namespace `Electron2D`; GDScript и API вне профиля не входят в контракт.
+Эталон для `0.1-preview` — Godot `4.7-stable` .NET/C# API. Electron2D реализует публичный C# API утверждённой поверхности под namespace `Electron2D` с полным compatibility evidence; GDScript не входит в публичный authoring path, а намеренные отличия требуют `Deferred`/`Unsupported` через `T-0963`.
 
 Manifest содержит:
 
@@ -828,11 +828,11 @@ Manifest содержит:
 
 ## Карта совместимости с Godot
 
-Electron2D API требует формального profile manifest, а не общей фразы в README. Для каждого публичного типа из 2D-профиля документация должна содержать блок:
+Electron2D API требует формального manifest, а не общей фразы в README. Для каждого публичного типа документация должна содержать блок:
 
 ```text
 Godot 4.7 C# profile compatibility
-Profile: Electron2D 0.1-preview 2D
+Profile: Electron2D 0.1-preview
 Status: Supported / Parity verified
 Out of profile: no
 ```
@@ -857,8 +857,8 @@ JSON output команды использует общий CLI envelope `schemaV
 - `mode = api.compareGodot`;
 - `sourcePath = data/api/electron2d-api-manifest.json`;
 - `type.fullName`, `type.id`, `type.profile.status`, `type.profile.parity` и `type.profile.outOfProfile` взяты из manifest;
-- `result.status = parity_verified` для типа внутри утверждённого 2D-профиля;
-- `result.status = out_of_profile` для типа вне утверждённого 2D-профиля;
+- `result.status = parity_verified` для типа внутри утверждённого Godot 4.7 public API contract;
+- `result.status = out_of_profile` для типа без полного compatibility evidence или утверждённого исключения;
 - `strictParity` содержит `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches` и `unexpectedChanges`.
 
 Для типа внутри профиля команда завершается с `exitCode = 0`, `succeeded = true`, `route = none` и всеми `strictParity` counters равными `0`. Для типа вне профиля команда завершается fail-closed: `exitCode = 1`, `succeeded = false`, `route = none`, `data.result.status = out_of_profile` и diagnostics содержит stable CLI diagnostic `E2D-CLI-0002`. Для неизвестного типа команда также завершается `exitCode = 1` с diagnostic `E2D-CLI-0002`, не предлагая замену или обходной API.
@@ -1226,7 +1226,7 @@ e2d tasks export --status done --format markdown
 - запрет редактировать import cache;
 - правило стабильных UID;
 - правило проверки через `e2d validate`;
-- предупреждение не использовать Godot API вне утверждённого Electron2D 2D-профиля;
+- предупреждение не использовать Godot API вне утверждённого Electron2D Godot 4.7 public API contract;
 - команду `e2d api compare-godot <type>` как strict verifier для спорных API внутри профиля;
 - правило подключаться к активной Editor-сессии, если она открыта;
 - правило использовать `ProjectTaskManager` через Editor, Tooling или MCP;
@@ -1478,7 +1478,7 @@ e2d docs member CharacterBody2D.MoveAndSlide
 e2d docs example "platformer movement"
 ```
 
-Документация каждого публичного API должна содержать назначение, сигнатуру, lifecycle restrictions, thread affinity, ownership/disposal, пример, ошибки, платформенные ограничения и renderer restrictions. Отличия от Godot описываются только для API вне обязательного 2D-профиля `0.1-preview`; для типов внутри профиля требуется `Parity verified`.
+Документация каждого публичного API должна содержать назначение, сигнатуру, lifecycle restrictions, thread affinity, ownership/disposal, пример, ошибки, платформенные ограничения и renderer restrictions. Отличия от Godot допускаются только как утверждённые `Deferred`/`Unsupported` строки через `T-0963`; для типов внутри обязательной публичной поверхности требуется `Parity verified`.
 
 ## Что Agent-native cross-platform 2D game engine не означает
 
